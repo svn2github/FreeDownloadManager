@@ -1,0 +1,31 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "Data Stretcher"=".\Data Stretcher.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+    {8856F961-340A-11D0-A96B-00C04FD705A2}
+    {D27CDB6E-AE6D-11CF-96B8-444553540000}
+}}}
+
+###############################################################################
+
