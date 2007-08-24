@@ -1,0 +1,1326 @@
+; This is language file
+; You can translate it to your native language
+; To do this, follow instructions:
+; - make sure FDM haven't already translated to your language
+;   You may go to FDM web site  (http://freedownloadmanager.org) or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng to your language
+; - send translated file to support@freedownloadmanager.org
+;
+;
+;
+; Translator - Giuseppe Bogetti, 2004 - revised by Mattepiu'.
+; Simple revision by DanieleNA at the end of November 2005. He also translates "BUILDS NEWER THAN 195" and 
+; after.
+;
+; Your language name. Please keep it in English
+;
+Italian
+;
+;
+; Below are the strings to translate:
+;
+Salva tutto
+Taglia
+Copia
+Incolla
+Modalità leggera
+Modalità media
+Modalità pesante
+Opzioni download
+Connessione
+Informazioni su FDM
+Uscita
+File
+Modifica
+Visualizza
+Opzioni
+Strumenti
+Aiuto
+Barra degli Strumenti
+Barra di Stato
+Aiuto Ottimizzazione
+Impostazioni predefinite download
+Impostazioni generali
+Connessione
+Riaggancia quando finito
+Spegni computer quando finito
+Apri Finestra di Aiuto
+FDM homepage
+Dillo ad un amico
+Invia e-mail al gruppo di supporto
+Controlla automaticamente aggiornamenti
+Controlla aggiornamenti adesso
+-
+-
+Cambia in
+Modalità utilizzo traffico
+Registrazione
+Downloads
+Pianificazione
+Visualizzatore Siti
+HTTP//FTP Explorer
+Gestore Siti
+Nuovo download
+Avvia download
+Interrompi download
+Pianifica download
+Nuovo Compito
+Proprietà del Compito
+Scarica i file selezionati
+Stop
+Aggiorna
+Nuovo sito
+Proprietà sito
+Gruppi di download
+Informazioni su download
+Log pianificatore
+Log visualizzatore siti
+Barra laterale
+Crea nuovo download
+Elimina download
+Esegui file
+Apri cartella
+Avvia download automaticamente
+Proprietà download
+Attiva Compito
+Disattiva Compito
+Elimina Compito
+Apri cartella superiore
+Disconnetti
+Scarica
+Impostazioni esploratore siti
+Elimina sito
+Voce temporanea
+Siti
+Visualizza finestra principale
+Monitorizza browser
+Monitorizza memoria
+Avvia tutti i downloads
+Arresta tutti i downloads
+-
+Continua
+-
+-
+-
+-
+-
+Abbandona
+-
+-
+-
+Tutti i gruppi
+Filtri
+Completato
+In esecuzione
+Pianificato
+Arrestato
+Altro
+Crea nuovo gruppo
+Elimina gruppo
+Elimina tutti i downloads
+Elimina tutti i downloads completati
+Apri cartella del gruppo
+Proprietà gruppo
+Nome gruppo:
+Cartella predefinita:
+Estensioni [separate da spazi]:
+Priorità di download predefinita
+Molto lenta
+Lenta
+Media
+Veloce
+Molto veloce
+Per cortesia digita il nome del gruppo
+Errore input
+Un gruppo con lo stesso nome esiste già. Per cortesia usa un altro nome
+Per cortesia digita il nome della cartella
+Seleziona la cartella di default del gruppo
+Digita il nome del gruppo qui
+Cartella predefinita per il salvataggio dei downloads di questo gruppo
+Elenca
+Estensioni del gruppo. Usata per riconoscere il gruppo di download automaticamente
+Priorità di download predefinita per il gruppo
+Abbandona modifiche e chiudi la finestra
+Applica modifiche e chiudi la finestra
+Errore nei gruppi di download
+Per cortesia reinstalla FDM
+Errore
+Non posso caricare la lista dei downloads. Può essere danneggiata o utilizzata da un altra applicazione
+Fallita inizializzazione integrazione con Internet Explorer
+Sei sicuro?
+Questo eliminerà i downloads in tutti i gruppi
+Conferma
+Nome file
+Dimensioni
+Trasferito
+Tempo rimanente
+Sezioni
+Velocità
+Commento
+File attività eseguite
+Progresso
+Ora
+Data
+Informazioni
+Azzera
+Scorrimento automatico
+Errore sconosciuto di rete
+Accesso rifiutato. Nome utente o password non validi
+Accesso rifiutato. Password non valida
+Riuscito
+Non posso connettermi al server
+File non trovato sul server
+Connessione con il server interrotta
+Il server non risponde
+Non riesco a definire il nome del server
+Il server non supporta il riavvio del download. Non interrompere questo download; oppure dovrà ripartire dall'inizio
+Nome utente e password per il proxy obbligatorie
+Errore esteso
+Richiesta non valida. Probabilmente è un URL non valido
+Errore sconosciuto del server
+Connessione interrotta
+URL non valido
+Nessuna connessione Internet
+La versione HTTP selezionata non è supportata da questo server
+Errore sconosciuto
+Non posso cancellare il file dal disco
+Raggiunto il limite di connessioni a questo server
+Raggiunto il limite di connessioni
+Pausa %d sec.
+Sezione
+Avviato
+Eseguito
+Download completato
+Connessione...
+Connessione riuscita
+Redirezione...
+Redirezione riuscita. Apertura nuovo URL
+Avvio download...
+Arrestato
+Creazioni nuova sezione...
+Abbandonato
+Riavvio download...
+Apertura file su disco...
+Nome file troppo lungo
+Il file esiste già. Rinomino come
+Rinomino come
+Il file di destinazione è stato cancellato. Impossibile proseguire
+Il file esiste già. Riscrivo
+Il file esiste già. Riavvio download
+Il file esiste già
+Apertura file su disco fallita
+La dimensione del file è cambiata sul server!
+Aggiustamento per nuova dimensione...
+Non posso sovrascrivere il file
+Il file verrà rinominato
+Non posso rinominare il file al suo nome originale
+Non posso salvare i gruppi
+Non posso salvare il download
+Connessione telefonica
+Connetti a:
+Componi automaticamente
+Connetti
+Seleziona la connessione telefonica
+Spunta questo riquadro se vuoi eseguire la connessione automatica quando necessario
+Componi ora
+Non comporre il numero e chiudi questa finestra
+Nessuna connessione trovata in questo computer
+Linea occupata
+Errore hardware
+Manca il segnale di linea
+Composizione
+Tentativo
+Apertura porta...
+Chiamata al provider...
+Connessione al computer remoto
+Verifica nome utente e password...
+La velocità di connessione è %d BPS
+Disconnessione
+Ripetizione
+Nome utente e password sono obbligatori
+Nome:
+Password:
+Gruppo:
+Salva nella cartella:
+Salva come:
+Avvia
+Automaticamente
+Manualmente
+Pianifica
+Priorità download
+Avanzate
+Indirizzo del file che vuoi scaricare
+Digita il nome utente qui
+Digita la password qui
+Spunta questo riquadro se il server richiede l'autenticazione
+Nome del gruppo in cui inserire il download. I gruppi ti aiutano a gestire i downloads
+Cartella in cui salvare il download
+Nuovo nome del file scaricato. Lascia questo campo vuoto se vuoi mantenere il nome originale
+Breve descrizione del download
+Questo download verrà avviato automaticamente appena possibile
+FDM non cercherà di avviare automaticamente questo download
+Pianifica questo download
+Configura la pianificazione del download
+Priorità del download. Download con priorità alta verranno avviati per primi. Download con priorità bassa verranno avviati successivamente
+Visualizza le impostazione avanzate per questo download
+L'URL digitato non è valido. Per cortesia controllalo
+Per cortesia digita il nome utente
+Seleziona la cartella di destinazione
+Generali
+Informazioni generali
+Download attualmente salvato nel file:
+Nome del file scaricato
+L'URL per questo download non può essere cambiato
+Questo download è attivo. Non posso cambiare il nome del file
+Non posso rinominare il file
+File non trovato
+Percorso non trovato
+Formato .exe non valido
+File in uso da parte di un'altra applicazione
+Accesso rifiutato
+Dispositivo non pronto
+Disco pieno
+Nome file non valido
+Autenticazione obbligatoria
+Connessione
+Rete
+Errori
+Pausa tra i tentativi di connessione [in secondi]:
+Numero massimo di tentativi
+Pausa [in secondi]:
+Dimensione minima:
+Numero minimo:
+Restrizioni al traffico di questo download
+Limiti di traffico
+Ignora tutte le restrizioni
+B
+KB
+MB
+s
+Digita un valore maggiore di %d
+Per cortesia seleziona la dimensione
+Tempo di attesa per riconnessione in caso di errore
+Spunta questa riquadro per limitare il numero massimo di connessioni fallite
+Tempo di attesa per la risposta del server
+Dimensioni minima di una sezione. Il download non verrà suddiviso in sezioni di dimensione inferiore
+Numero massimo di sessioni. Il download non verrà suddivisa in un numero superiore di sezioni
+Specifica quanto traffico (massimo) FDM dovrà utilizzare per il download
+Ignora le restrizioni sul traffico e il numero massimo di connessioni per questo download
+Puoi specificare il valore in bytes (B), kilobytes (KB) o megabytes (MB) in questo campo
+Protocollo
+Identificati con il server come:
+Riferimento:
+Usa HTTP 1.1
+Usa cookies
+Usa modalità passiva
+Modalità trasferimento
+Binaria
+ASCII per i file con estensione:
+Specifica come FDM si identificherà con il server HTTP
+Questa stringa verrà inviata al server HTTP come campo Riferimento. Normalmente non è necessaria
+Spunta questo riquadro se vuoi che FDM usi HTTP versione 1.1
+Spunta questo riquadro se vuoi che FDM usi i cookies
+Spunta questo riquadro se vuoi che FDM usi la modalità passiva per servers FTP. In alcuni casi è necessaria se è presente un firewall
+Usa la modalità binaria per trasferimenti FTP. Imposta questa modalità se il file che stai scaricando non è un file di testo
+Usa la modalità ASCII per trasferimenti FTP. Imposta questa modalità se il file che stai scaricando è un file di testo
+FDM userà la modalità ASCII per i files con le estensioni specificate. Per le altre estensioni FDM userà la modalità binaria
+Proxy
+Recupera impostazioni proxy
+Da Microsoft Internet Explorer
+Specifica manualmente
+Non usare alcun proxy
+Impostazioni
+Indirizzo:
+Porta:
+Per cortesia digita l'indirizzo del proxy
+Per cortesia digita la porta del proxy
+FDM utilizzerà le impostazioni proxy di Internet Explorer
+Tu specifichi le impostazioni proxy
+FDM non userà alcun proxy
+Scegli il tipo di server per cui vuoi impostare il proxy
+Digita l'indirizzo del proxy che vuoi utilizzare qui
+Digita la porta del proxy qui. Di solito, è 3128, 1080 oppure 8080
+Spunta questo riquadro se il server server richiede l'autenticazione
+Varie
+File locale
+Se il file esiste già:
+Riserva spazio su disco per scaricare il file
+Estensioni addizionali per downloads incompleti:
+Internet server
+Non riavviare il download se il riavvio non è supportato dal server
+Se la dimensione del file cambia sul server:
+Arresta su errori
+Chiedi
+Riscrivi
+Rinomina
+Riprendi
+Riavvia
+Adegua
+Per cortesia specificare l'estensione del file
+Qui devi decidere come deve comportarsi FDM se il file esiste già sul disco
+Spunta questo riquadro se vuoi che sia riservato spazio su disco per il download al suo avvio
+Se questo riquadro è spuntato FDM aggiungerà l'estensione specificata al nome del file durante il download. Quando il download sarà terminata FDM rinominerà il file al suo nome originale
+FDM non riprenderà il download se il server remoto non supporta la ripresa del download
+Puoi sceglie come FDM deve comportarsi se la dimensione del file viene cambiata sul server
+Spunta questo riquadro per arrestare il download se il file non è stato trovato sul server
+Spunta questo riquadro per arrestare il download se il nome utente o la password non sono validi
+Modalità di uso del traffico
+Seleziona la modalità da configurare:
+Numero massimo di connessioni:
+Numero massimo di connessioni per server:
+Restrizioni al traffico:
+senza limiti
+Seleziona la modalità di utilizzo del traffico che vuoi configurare
+Spunta questo riquadro per limitare il numero massimo di connessioni
+Spunta questo riquadro per limitare il numero massimo di connessioni per singolo server
+Scegli il traffico (massimo) utilizzato da FDM per scaricare i files
+Tutti i downloads
+Elenco dei downloads
+Salva automaticamente ogni
+min.
+Quando elimini un download incompleto
+Elimina automaticamente i downloads completi
+Non eliminare il file
+Elimina il file
+FDM salva la lista dei downloads automaticamente dopo uno specifico intervallo di tempo. Protegge la lista da possibili blocchi del computer o interruzioni di corrente
+Scegli cosa FDM deve fare del file su disco quando elimina i downloads incompleti
+Spunta questo riquadro se vuoi rimuovere il download dalla lista quando è terminato
+Controllo
+Controlla
+Memoria temporanea
+Controlla i files con le estensioni
+Ignora i files con le estensioni
+ALT non deve essere premuto
+ALT deve essere premuto
+Per cortesia specifica le estensioni
+Spunta questo riquadro se vuoi che FDM controlli i clicks in Internet Explorer
+Spunta questo riquadro se vuoi che FDM controlli la memoria temporanea
+Controlla solo i files per le estensioni specificate
+Non controlla i files per le estensioni specificate
+Controlla solo se il tasto ALT non è premuto
+Controlla solo se il tasto ALT è premuto
+Avvio
+Carica all'avvio
+Avvia ridotto a icona
+Sistema
+Riduci a icona nella barra di Windows
+Bottone "Chiudi" riduce a icona la finestra
+FDM verrà avviato automaticamente all'avvio di Windows
+FDM verrà ridotto a icona dopo l'avvio
+Quando premi il pulsante per ridurre a icona la finestra FDM si sposterà nella barra di Windows
+Se selezionato, premere il pulsante di chiusura della finestra sarà come premere il pulsante per ridurre a icona la finestra
+Aggiornamento
+Indirizzo del server per aggiornamenti
+FDM controllerà automaticamente la presenza di aggiornamenti
+Aiuto di ottimizzazione dell'uso della rete
+Benvenuti nell'aiuto di ottimizzazione dell'uso della rete!
+Usa questo Aiuto per selezionare le impostazioni ottimali per la tua connessione. Vengono impostati i parametri generali e le proprietà predefinite per i downloads.
+Per cortesia seleziona il tipo di connessione
+Finito
+Specifica il tipo della tua connessione Internet qui
+Configura FDM per un funzionamento ottimale con la tua connessione
+Compito
+Ora di avvio
+Prossima ora di avvio
+Ultima ora di avvio
+Non posso caricare la lista dei compiti pianificati. Può essere danneggiata o utilizzata da un altra applicazione
+Non posso caricare la trascrizione delle attività della Pianificazione
+Non posso salvare la lista dei compiti pianificati
+Il Compito "%s" è pianificato. Lo avvio?
+Cambio modalità utilizzo traffico in "%s"
+Riaggancia
+Tutte le connessioni
+Cambia la modalità di utilizzo del traffico in
+Arresta
+Riavvia
+Disconnetti
+Una volta
+Dom
+Lun
+Mar
+Mer
+Gio
+Ven
+Sab
+Nei giorni:
+Ogni
+giorni
+ore
+All'avvio di FDM
+Quando la composizione è riuscita
+Quando la composizione è fallita
+Quando non ci sono downloads attivi
+Quando la velocità è minore o uguale a %d BPS durante %d
+Quando tutti i downloads sono in stato di errore durante
+Mai
+Sconosciuto
+Connessione a "%s" riuscita
+Connessione a "%s" fallita
+Avvio riuscito
+Fuori memoria
+Non posso avviare
+L'esecuzione programmata causa l'arresto del programma all'avvio. Il Compito sarà ignorato
+Numero massimo di tentativi di composizione
+Pausa tra tentativi
+Disconnetti se la velocità è inferiore a:
+Riprova
+Non più di
+Usa la connessione
+Se riuscito
+volte
+Disconnetti tutte le connessioni attive
+Connessione da chiudere
+Nome programma:
+Argomenti:
+Tipo di arresto:
+Forca uscita dell'applicazione
+Avvia programma
+Stabilisci connessione telefonica
+Riaggancia connessione
+Cambia modalità di uso del traffico
+Esci da FDM
+Spegni il computer
+Downloads da avviare
+Downloads da arrestare
+Applicazioni
+Tutti i files
+Mi dispiace, questa opzione è disponibile solo con Windows 2000, XP o superiori
+Per cortesia digita nome del programma
+Per cortesia seleziona i downloads
+Seleziona la modalità di utilizzo del traffico da impostare all'avvio del Compito
+Spunta questo riquadro se vuoi limitare il numero massimo di tentativi di connessione falliti
+Intervallo tra tentativi falliti
+Spunta questo riquadro per utilizzare la connessione ad una velocità non inferiore di quella specificata
+Specifica qui il valore minimo della velocità di connessione
+FDM proverà di nuovo a stabilire la connessione se il riquadro è spuntato
+Spunta questo riquadro se vuoi limitare il numero massimo di tentativi di connessione falliti
+Specifica qui i downloads richiesti
+Lista dei downloads disponibili
+Accoda i downloads selezionati alla lista dei downloads del Compito
+Rimuovi i downloads selezionati dalla lista dei downloads del Compito
+Specifica il programma da avviare qui
+Trova il programma nel computer
+Specifica i parametri di avvio del programma qui
+Specifica come deve essere terminata la sessione qui
+Spunta questo riquadro per forzare l'arresto della sessione. E' utilile se ci sono applicazione bloccate nel sistema. In questo caso però, tutti i dati non salvati andranno perduti
+Specifica l'azione pianificata qui
+Spunta questo riquadro se vuoi che FDM chiuda tutte le connessioni attive
+Specifica le connessioni da chiudere qui
+Nei giorni di
+Domenica
+Lunedì
+Martedì
+Mercoledì
+Giovedì
+Venerdì
+Sabato
+In caso
+Durante
+Bassa velocità:
+min.
+Minuti
+Ore
+Giorni
+Quando la velocità è troppo bassa
+Quando tutti i downloads sono in errore
+Per cortesia specifica i giorni
+Avvia il Compito all'ora definita
+Imposta l'ora di avvio del Compito qui
+Avvia il Compito nella data definita
+Imposta la data di avvio del Compito qui
+Avvia il Compito in certi giorni della settimana
+Avvia il Compito ogni Domenica
+Avvia il Compito ogni Lunedì
+Avvia il Compito ogni Martedì
+Avvia il Compito ogni Mercoledì
+Avvia il Compito ogni Giovedì
+Avvia il Compito ogni Venerdì
+Avvia il Compito ogni Sabato
+Avvia il Compito periodicamente
+Questo campo ti permette di specificare l'intervallo in minuti, ore o giorni
+Avvia il Compito quando avviene un evento
+Specifica la tipologia di evento qui
+Imposta l'intervallo di tempo qui
+Imposta la velocità minima qui
+Una conferma è necessaria per l'esecuzione del Compito
+Attendi la conferma durante
+sec.
+Se spuntato, FDM ti richiederà di confermare l'esecuzione del Compito
+Se spuntato, FDM attenderà la tua conferma durante l'intervallo specificato. Se non riceverà risposta durante questo tempo il Compito verrà avviato
+Indirizzo:
+Generazione lista dei files da scaricare
+Connessione al server
+Provo ad utilizzare il nome utente e la password memorizzate nel Gestore di Siti
+Recupero la lista dei files dal server
+Connessione con il server interrotta. Tentativo di ripristino
+Generazione lista
+Recupero dimensione e data ultima modifica dei files
+Usando questo parametro la velocità può diminuire drasticamente
+Spunta questo riquadro se vuoi che FDM controlli dimensione e data ultima modifica dei files sui servers HTTP
+Nome sito
+Connessioni
+Connessione
+Gruppi
+Non posso caricare la lista dei siti. Può essere danneggiata o utilizzata da un altra applicazione
+Non posso salvare la lista dei siti
+Numero massimo di connessioni simultanee:
+Gruppo predefinito per un nuovo download da questo sito
+Usa FTP in modalità passiva
+Per cortesia digita il nome del sito
+Un sito con questo nome esiste già. Per cortesia digita un altro nome di sito
+Numero massimo di connessioni, deve essere maggiore di 0
+Per cortesia seleziona il gruppo
+Imposta il nome del sito qui
+Spunta questo riquadro per limitare il numero massimo di connessioni simultanee con questo server
+Spunta questo riquadro per aggiungere i downloads da questo server al gruppo selezionato automaticamente
+Chiedi utente
+Non chiedermelo di nuovo
+Errore scrittura su disco
+File "%s" esiste già sul disco. Cosa faccio?
+Non ti richiederà più cosa fare di nuovo. La tua scelta verrà sempre utilizzata
+Sovrascrivi file esistente
+Rinomina questo file
+Riprendi download. (Il download sarà riavviato dalla posizione uguale alla dimensione del file esistente)
+Ferma questo download
+Si
+No
+Scarico
+è stato cancellato. Elimino anche il file su disco ?
+Per cortesia digita il nome utente e la password
+Connessione a "%s"
+Invio nome utente e password specificate al server
+Non connettere a questo server
+La dimensione di "%s" è cambiata sul server. Cosa faccio?
+Riavvia il download dall'inizio
+Aggiorna il download per la nuova dimensione. Sconsigliato
+Attendere prego
+Aggiorna
+Descrizione
+Aggiorna usando:
+Controllo aggiornamento
+Stai già utilizzando la versione più aggiornata
+Trasferimento
+Versione %s build %s è disponibile
+Installazione completa versione %s (%s)
+Aggiorna alla versione %s
+Aggiorna alla versione %s (%s)
+FDM deve essere riavviato. Riavvio adesso?
+Aggiornamento eseguito
+Non posso trovare il gestore degli aggiornamenti
+Imposta la tipologia di aggiornamento qui
+Aggiorna FDM usando l'installazione completa
+Aggiorna FDM usando l'installazione degli aggiornamenti
+Cerca maggiori informazioni sul processo di aggiornamento
+Cosa c'è di nuovo in questa versione?
+Avvia l'aggiornamento di FDM adesso
+Interrompi l'aggiornamento e chiudi questa finestra
+Crea download
+Seleziona contenuto
+Deseleziona contenuto
+Lista dei downloads da aggiungere
+Spunta gli elementi selezionati per aggiungerli alla lista dei downloads
+Non spuntare gli elementi selezionati per non aggiungerli alla lista dei downloads
+Informazioni su FDM
+Copyright (c)
+Tutti i diritti riservati
+Registrato a:
+Già aggiornato. Necessario il riavvio
+Nome utente o password non validi
+Non posso caricare il file di cronologia
+Non posso salvare il file di cronologia
+Impostazioni predefinite HTML Spider
+HTML Spider
+Albero pagine Web
+Scarica sito web
+Impostazioni download pagine Web
+Avvia download
+Arresta download
+Pianifica download
+Elimina
+Apri pagina web nel browser
+Avvia download automaticamente
+URL pagina web
+Files
+Elimina anche i downloads?
+Non posso caricare la lista delle pagine web
+Non posso salvare la lista delle pagine web
+URL della pagina web o HTTP server da dove scaricare
+URL della pagina web o HTTP server da cui il download è stato avviato
+Nome della cartella in cui salvare i downloads
+Cartella di destinazione:
+Pagine web
+Pagine
+Estensione dei files della pagine web che contengono codice HTML:
+Scarica stile della pagina web
+Scarica pagine web da altri siti
+Immagini
+Scarica immagini
+Scarica immagini che collegano ad altri siti
+Profondità di livello:
+Estensioni dei files di pagine web che contengono HTML code. Le pagine web verrano processate alla ricerca di collegamenti ad immagini ed altre pagine da scaricare
+Se spuntato, verranno scaricati anche i file di stile della pagine web (CSS). Consigliato
+Se non spuntato, non verranno scaricare le pagine web appartenenti ad altri siti. Per esempio, se il riquadro non è spuntato e incominci a scaricare da http://example.com/, allora http://othersite.com/some.html non verrà scaricato, ma http://example.com/some.html verrà scaricato
+Se spuntato, verrano scaricate anche le immagini delle pagine web
+Se non spuntato, le immagini delle pagine web che collegano ad altri siti non verranno scaricate
+Profondità di livello. Per esempio, inizi il download da http://ex.com/index.html. C'è un collegamento a http://ex.com/some.html da http://ex.com/index.html. La profondità di http://ex.com/some.html è 1. Impostando la profondità a 0 ti farà scaricare solamente la pagina iniziale.
+Scarica i files dalle pagine web
+Scarica i files da altri siti
+Elimina i file con estensione
+Attiva
+Scarica
+Non scaricare
+files con estensione:
+Spunta questo riquadro per scaricare i files dalla pagine web
+Spunta questo riquadro per scaricare i files di altri siti
+Spunta questo riquadro per ignorare i files con le estensioni specificate
+Files con le estensioni, specificate sotto, verranno scaricati se selezionati
+Files con le estensioni, specificate sotto, non verrano scaricati se selezionati
+Esporta impostazioni
+Importa impostazioni
+Fallito l'avvio di Regedit.exe
+Un errore è accaduto durante l'esportazione delle impostazioni
+Un errore è accaduto durante l'importazione delle impostazioni
+Files di registro FDM
+Eliminazione delle immagini per estensione
+immagini con estensione:
+Spunta questo riquadro per ignorare le immagini con le estensioni specificate
+Immagini con le estensioni, specificate sotto, saranno scaricate se selezionate
+Immagini con le estensioni, specificate sotto, NON saranno scaricate se selezionate
+Non scaricare questo e eliminalo
+Il server non supporta il riavvio del download. Riparto dall'inizio
+Fallito apertura URL
+Mi dispiace, un errore inaspettato è accaduto durante il tentativo di scrittura nel registro
+Grazie per la registrazione! Per cortesia riavvia FDM
+Scarica con Free Download Manager
+Scarica sito web con Free Download Manager
+Aggiungi FDM al menù contestuale di I.E.
+Spunta questo riquadro per aggiungere le voci "Scarica con Free Download Manager" e "Scarica sito web con Free Download Manager" al menù contestuale di Internet Explorer (il menù che appare quando premi il tasto destro del mouse)
+Diminuisci il traffico usato se il browser è attivo
+Diminuisci di un livello
+Imposta la modalità Leggera
+Spunta questo riquadro per diminuire l'utilizzo di traffico quando navighi con il browser. Questo permetterà al tuo browser di navigare più velocemente quando FDM sta scaricando qualcosa
+La modalità di utilizzo del traffico sarà ridotta di un livello. Pesante->Media, Media->Leggera
+La modalità di utilizzo del traffico sarà impostata a Leggera
+Valido per
+Valido per sottodomini
+Spunta questo riquadro per utilizzare il download via HTTP
+Spunta questo riquadro per utilizzare il download via HTTPS
+Spunta questo riquadro per utilizzare il download via FTP
+Spunta questo riquadro per utilizzare il download da sottodomini. Per esempio, per il sito http://site.com sarà http://some.site.com
+Per cortesia seleziona almeno un protocollo
+Massimo numero di downloads attivi
+Spunta questo riquadro se vuoi limitare il numero di downloads attivi contemporaneamente
+Riavvia trasferimento
+Crea una nuova sezione
+Arresta una sezione
+; context: [section x] - Stopped
+Arrestata
+; tray menu
+Riquadro di trascinamento
+;
+Non posso trovare la cartella per Opera Plugin. Vuoi selezionarla manualmente ?
+Non posso trovare la cartella per Netscape Plugin. Vuoi selezionarla manualmente ?
+Non posso installare il monitoraggio di Opera
+Non posso disinstallare il monitoraggio di Opera
+Non posso installare il monitoraggio di Netscape
+Non posso disinstallare il monitoraggio di Netscape
+Spunta questo riquadro se vuoi che FDM intercetti i click in Opera
+Spunta questo riquadro se vuoi che FDM intercetti i click in Netscape
+; create download .dlg
+Interroga dimensione
+; request a size of a download
+Richiesta...
+Interroga la dimensione di un download dal server
+Si a tutti
+No a tutti
+File attività dettagliato
+Se spuntato, FDM visualizzerà le risposte del server
+Le modifiche saranno attive dopo il riavvio del browser
+Lista dei compiti
+Lista dei files
+Lista dei siti
+Lista delle pagine
+Eliminazione download
+Generazione della lista dei downloads
+Creazione sequenza download
+Da:
+A:
+Incremento:
+Bytes metacaratteri:
+Risultato
+Esempio:
+Primo numero della sequenza
+Ultimo numero della sequenza
+Incremento della sequenza. Per esempio, se è 10, allora la sequenza sarà 0, 10, 20, ...
+Numero di bytes da considerare come metacaratteri. Per esempio, se è 1, allora la sequenza sarà 1, 2, 3. Se è 2, allora la sequenza sarà 01, 02, 03.
+Clicca qui per vedere la sequenza generata
+Permetti ad IE di scaricare se viene premuto Abbandona
+Spunta questo riquadro se vuoi permettere a Internet Explorer di scaricare il file quando premi Abbandona nella finestra "Crea download"
+Numero finale della sequenza deve essere maggiore del numero iniziale
+Per cortesia usa un(*) nell'URL per indicare un  formato di URL
+Crea un estensione se il file non ne possiede una
+Spunta questo riquadro per creare l'estensione per un file che non ne possiede una. Per esempio se il file si chiama "file" e specifichi "txt", il risultato sarà "file.txt"
+Visualizza la dimensione solo in bytes
+Spunta questo riquadro per visualizzare tutte le dimensioni in Bytes anziché in KiloBytes o MegaBytes
+Esegui un controllo antivirus
+Parametri:
+Estensioni:
+Spunta questo riquadro per controllare con l'antivirus i file scaricati
+Imposta il nome del programma antivirus qui
+Imposta i parametri per l'antivirus qui
+Imposta le estensioni di file scaricati che devono essere controllate qui
+Per cortesia digita il nome dell'antivirus
+Il nome non è valido. Per cortesia controllalo
+Avvio antivirus
+Disattiva il Compito dopo l'esecuzione
+Elimina il Compito dopo l'esecuzione
+Spunta questo riquadro per disattivare automaticamente il Compito dopo la sua esecuzione
+Spunta questo riquadro per eliminare automaticamente il Compito dopo la sua esecuzione
+Vai
+Indietro
+Genera nome file automaticamente
+Spunta questo riquadro per generare automaticamente il nome del file di download
+Salva con estensione "htm"
+Spunta questo riquadro per salvare tutte le pagine web con l'estensione "htm"
+Premi questo bottone per calcolare il riepilogo di tutte i download
+Mantieni la struttura delle cartelle del server
+Spunta questo bottone per mantenere la struttura originale delle cartelle. Altrimenti tutti i files verranno salvati in una sola cartella
+Hai selezionato un altra cartella. Imposto questa cartella come predefinita per questo gruppo? Puoi cambiare la cartella predefinita anche delle proprietà del gruppo.
+; === ADDED LINES ===
+Un download con questo URL esiste già. Cosa faccio?
+Avvia
+Avvia il file scaricato
+Versione
+Per contattarci
+Scarica la versione più recente
+Attenzione:  Questo programma è protetto dalla Legge sul Diritto d'autore e da trattati internazionali. La riproduzione non autorizzata o la distribuzione di questo programma, o di una porzione di esso, può comportare severe sanzioni civili e/o penali, e sarà perseguito nella misura massima possibile consentita dalla Legge.
+; === new version ===
+Scarica tutto con Free Download Manager
+Aggiungi lista di downloads
+Rimuovi selezionati
+Questa e' la lista degli URLs da aggiungere
+Clicca qui per rimuovere tutti gli URLs selezionati dalla lista
+Non trovo la directory dei plugins di Firefox. Inserire manualmente?
+Impossibile installare il controllo in Firefox
+Impossibile disinstallare il controllo in Firefox
+Seleziona se vuoi che FDM intercetti i clicks in Mozilla Firefox
+Scarica selezionati con Free Download Manager
+Iniziando
+Siti Web
+Downloads attivi
+Non ci sono downloads attivi al momento
+Notifiche
+Usa fumetti nella barra di sistema
+Tempo scaduto
+Marca questo box per abilitare notificazioni fumetti nella barra di sistema quando un download viene fermato o completato. Nota: funziona solo su Windows 2000/XP e più nuovi
+Chiudi automaticamente fumetto dopo questo tempo
+Indirizzi alternativi
+Cerca automaticamente indirizzi URL alternativi
+Massimo numero di indirizzi alternativi
+Calcola velocità dell'indirizzo alternativo
+Ricalcola la velocità di ognuno
+Premi questo pulsante per far cercare automaticamente a FDM indirizzi URL alternativi ad ogni download
+Limita il numero di indirizzi URL alternativi per download. Questo accelera il calcolo della velocità degli indirizzi alternativi
+Premi questo pulsante per far calcolare a FDM la velocità di ogni indirizzo alternativo
+Ricalcola automaticamente la velocità dell'indirizzo alternativo nell'intervallo di tempo specificato
+Non cercare se dimensione file minore di
+FDM non cercherà indirizzi alternativi se la dimensione del file e' minore di quanto specificato
+Non cercare se dimensione file sconosciuta (Raccomandato)
+Aggiungi indirizzo alternativo
+Cerca indirizzo alt.vo
+Aggiungi indirizzo URL alternativo per questo download manualmente
+Cerca indirizzo URL alternativo per questo download con FileMirrors.COM
+Lista indirizzi URL alternativi
+Velocità del server
+In uso
+Velocità indirizzi alternativi
+Misura velocità server indirizzi alternativi
+Informazioni Downloads
+Attendere...
+Indirizzo URL alternativo per il download
+La dimensione del file supera i 2 GB. Il download è supportato solo tramite connessione FTP
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Nuovo Download
+Determina il gruppo per download automatico
+Fissa il gruppo:
+Salva il download nella cartella appropriata al gruppo
+Seleziona questa casella, se desideri che il gruppo di download sia determinato dall'estensione del file o dal Site Manager
+Fissa il gruppo di default manualmente
+Seleziona questa casella, se desideri che il download sia salvato nella cartella di default del gruppo (cfr Proprietà Gruppi)
+Fissa la cartella di destinazione a mano di default
+; END
+; BEGIN: Monitoring page
+Controllo in sottofondo
+Non mostrare il dialogo "Crea download" quando viene aggiunto un download dal browser, se selezionato
+Personalizza
+Seleziona gli elementi del menù da mostrare nel menù contestuale in Internet Explorer
+; END
+Scegli gli elementi del menù da mostrare
+Almeno un elemento del menù deve essere scelto
+Usa suoni
+Premere questo pulsante, se si desidera che FDM esegua un suono per ogni evento (per es., quando il download è completato)
+Scegli un suono per ciascun evento
+; BEGIN : Customize sounds dialog
+Personalizza suoni
+Fissa suono
+Rimuovi
+Prova
+Lista degli eventi di FDM e suoni assegnati. Qui potete stabilire quale suono deve riprodurre FDM quando si verifica un evento.
+Download aggiunto - esegue un suono quando uno o più downloads vengono aggiunti all'elenco dei downloads.
+Download completato - esegue un suono quando un download è completato con successo.
+Download fallito - esegue un suono quando si verifica un errore quando prova a fare il download di un file.
+Connessione riuscita - esegue un suono quando viene eseguita con successo una connessione dal Pianificatore dei lavori.
+Connessione fallita - esegue un suono quando il Pianificatore dei lavori non riesce a stabilire una connessione.
+Stabilisce il suono per l'evento selezionato
+Non esegue il suono quando capita l'evento selezionato
+Prova del suono selezionato
+Evento
+File sonoro
+Nessun suono
+Download aggiunto
+Download completato
+Download fallito
+Connessione stabilita
+Connessione fallita
+Files sonori
+; END
+Ricerca di un indirizzo alternativo...
+Valutazione della velocità dell'indirizzo alternativo...
+Ricerca indirizzi alternativi già fatta
+Ricerca server con collegamento...
+Risultati ottenuti...
+Ci sono %d indirizzi alternativi trovati
+Ricerca di indirizzi alternativi effettuata
+Verifica di un altro indirizzo alternativo...
+Non sono stati trovati indirizzi alternativi
+Fallito
+La velocità degli indirizzi alternativi è stata misurata
+; BEGIN: History page
+Archivio
+Salva la cronologia di collegamenti e cartelle
+Salva solo la cronologia delle cartelle
+Tieni registrati all'interno per
+Numero massimo di voci
+Cancella cronologia
+FDM salverà la cronologia dei collegamenti e cartelle immesse
+FDM salverà solo la cronologia delle cartelle
+FDM cancellerà le voci che esistono nella cronologia da più del periodo di tempo specificato
+Numero massimo di voci nella cronologia. Quando il numero di voci supererà questo limite, FDM cancellerà le voci più vecchie
+Cancella tutte le voci dalla cronologia
+; END
+Importa
+Esporta
+Importa elenco di URL
+Esporta elenco downloads
+Files di testo
+Non può aprire un file
+Esporta tutti i downloads
+Esporta tutti i downloads nell'elenco
+Esporta i downloads selezionati
+Non esporta i downloads completati
+Aggiunge se il file esiste già
+Nome del gruppo non valido. Per favore non usare i simboli / o \ 
+Esci quando finito
+; BEGIN : Downloads History window
+Aggiunto
+Salvato in
+; END
+Cestino
+; BEGIN: Recycle Bin
+Proprietà
+Svuota cestino
+;END
+;BEGIN: Recycle Bin properties
+Non mettere i downloads cancellati nel Cestino
+Conserva al massimo
+downloads
+Non conservare i downloads completati
+Chiedi conferma per cancellare i downloads
+Proprietà Cestino
+Premi questo pulsante, se non vuoi conservare i downloads cancellati nel Cestino
+Premi questo pulsante, se vuoi limitare il numero di downloads cancellati conservati nel Cestino
+Numero massimo di downloads da conservare nel Cestino
+Premi questo pulsante, se vuoi che i downloads completati non siano conservati nel Cestino dopo la cancellazione
+Premi questo pulsante, se vuoi che FDM chieda conferma quando tenti di cancellare un download
+;END
+Ripristina
+Ripristino downloads...
+; History subitems
+Oggi
+Ieri
+Una settimana
+Un mese
+Su misura...
+; end
+Cancella Archivio
+Salva cronologia downloads
+Salva solo la cronologia dei downloads completati
+Premi questo pulsante, se vuoi salvare la cronologia dei tuoi downloads
+Premi questo pulsante, se vuoi conservare solo la cronologia dei downloads completati
+Opzioni cronologia dei downloads
+Costruzione elenco delle voci dell'Archivio...
+; Download Was deleted
+Era cancellato
+Scegli il periodo di tempo
+Trova
+Trova successivo
+Trova per
+; BEGIN : Find dialog
+Cerca in
+Nome file locale
+Specifica cosa vuoi trovare qui
+Cerca in una parte del file di URL
+Cerca nell'intero URL
+Cerca nella nota del download
+Cerca nel nome e percorso del file di download sul disco locale
+Configura opzioni ricerca avanzata
+; ADVANCED settings
+Cerca dove
+Cerca in Elenco Downloads
+Cerca in Archivio dei Downloads
+Cerca per un periodo specificato
+Stabilisci
+Cerca nel Cestino
+Cerca per dimensione del file
+Minimo
+Massimo
+Cerca in Elenco dei Downloads
+Cerca in Archivio dei Downloads
+Cerca solo i downloads che soddisfano il periodo di tempo specificato
+Fissa il periodo di tempo
+Cerca nel Cestino
+Cerca solo i files che soddisfano l'ambito di dimensione del file specificato
+Dimensione minima richiesta
+Dimensione massima richiesta
+Cerca nel gruppo
+Scegli il gruppo dove la ricerca deve essere effettuata
+; END
+Ricerca download...
+Non sono stati trovati elementi
+Non ci sono altri elementi trovati
+Ricerca finita
+URL in memoria temporanea
+Anteprima ZIP
+Almeno un file dovrebbe essere selezionato.
+E' possibile che il file in download sia un archivio ZIP. Volete una sua anteprima?
+Anteprima Audio/Video
+Apertura file fallita.
+Tipo file sconosciuto.
+Per favore, installi DirectX 8.0 o successiva per usare questa possibilità. Puoi trovare l'ultima DirectX nel sito Microsoft
+Informazioni sul file
+Dimensione:
+Disponibile:
+Durata:
+Muto
+Esegui
+Pausa
+Filtro
+Estensioni [divise con spazi, ad es. .zip .rar .arj]:
+Rimuove files con queste estensioni
+Lascia solo i files con queste estensioni
+La stringa non contiene %file% macro. Questa macro è necessaria per indicare al tuo programma antivirus quale file controllare.
+Continuo comunque?
+Attenzione
+Usa attributo nascosto download non completi
+Aggiungi un commento al nome del file quando finito
+Non memorizzare la pagina del server
+Premi questo pulsante, se non vuoi conservare le pagine del server sul tuo computer, ma solo files ed immagini
+Usa anteprima ZIP
+Premi questo pulsante, se vuoi vedere il contenuto di un archivio ZIP all'inizio del download per prelevare solo una parte dell'archivio.
+Disco:
+Avvia download automaticamente
+Premi questo pulsante, se vuoi che FDM avvii ciascun nuovo download automaticamente
+Per favore, seleziona i files da prelevare
+Fissa una collocazione alternativa (URL) per questo download
+Nessuna anteprima in futuro
+Hai disabilitato l'anteprima degli ZIP. Se vuoi riabilitarla, va in Opzioni -> Opzioni Download (Ctrl+O) -> Nuova pagina Download, e seleziona la casella "Usa Anteprima ZIP".
+Elementi da ignorare
+Elenco delle pagine web che saranno ignorate nel fare il download di un sito.
+Sottocartella
+Aggiungi
+Ignora anche tutte le sottocartelle
+; Proxy tab new settings
+Prova a riconnettere per una connessione interrotta
+Dimensione file interrotto
+Bytes
+Seleziona questa opzione, se vuoi riabilitare la funzione di ricollegamento. Questa opzione aiuta a proteggere i downloads dall'essere danneggiati.
+Dimensione del file interrotto. Una dimensione più grande consentirà di lavorare con più tranquillità. La dimensione raccomandata è 3000 Bytes. Si può incrementare questo valore, se il downloads risulta ancora danneggiato.
+; downloader options -> monitor tab
+Non controllare file più piccoli di
+Usa questa opzione, se vuoi che FDM salti files più piccoli di
+KBytes
+Attenzione! Il Cestino è troppo grande. Ciò può diminuire le prestazioni drammaticamente. Si raccomanda di svuotare il Cestino. Volete farlo?
+Non selezionare ciò di nuovo
+Attenzione! L'Archivio dei Downloads è troppo grande. Ciò può diminuire le prestazioni drammaticamente. Si raccomanda di svuotare l'Archivio. Volete farlo?
+Il server non può garantire la riconnessione. La risposta non è valida.
+Copia nella memoria temporanea
+; general settings | skins page
+Skins
+Skin
+Consenti allo skin di usare le sue proprie icone
+Consenti allo skin di usare la sua propria bitmaps
+; default skin
+<default>
+NOTA: Ogni cambiamento sarà effettivo solo dopo il riavvio di Free Download Manager.
+Mostra info sul downloads mentre è in esecuzione
+Salta i files con le estensioni:
+Elenco delle estensioni dei files da saltare
+Nessun download in esecuzione
+Esegue un file sonoro quando tutti i downloads sono completati
+Importa elenco di URL dalla memoria temporanea
+Passwords
+Opzioni Gestore Sito
+; Save password dialog
+Salvo la password?
+Free Download Manager può salvare la password per questo server per evitare la necessità di inserirlo ogni volta.
+Salvo questa password?
+Non suggerirmi di salvare qualsiasi password
+; Site Manager options | Passwords tab
+Usa Gestore Sito per conservare la mia password
+Chiedimi se salvare la password o no
+Non suggerirmi di salvare passwords
+Cancella tutte le passwords prima di uscire
+Cancella tutte le passwords
+; create new HTML Spider task
+Cancella automaticamente i downloads completati (raccomandato)
+Seleziona questa casella, se vuoi che i download di HTML Spider siano cancellati automaticamente. Questo accelera il download di siti grandi.
+I cambiamenti avranno effetto dopo il riavvio di Free Download Manager
+Nuovo Stile
+Vecchio Stile
+Il nome della directory non è valido
+Nascondi le finestre in primo piano in modalità schermo pieno
+Seleziona questa casella, se vuoi che le finestre in primo piano siano nascoste automaticamente in modalità tutto schermo.
+era programmato per essere eseguito.
+Vuoi sia eseguito?
+Avvia il download quando sarà completo
+Per favore, usi (*), (*A) o (*a) nell'URL per specificare un formato di URL
+Cerca server per indirizzi alternativi:
+Congela
+Tenersi pronto
+Ricorda la mia scelta
+Suggerisci di cambiare la cartella di default del gruppo
+Salva file
+Apri file
+Salva file e aprilo
+Tipo di download:
+Collegamento a FDM
+Collegamento a Free Download Manager
+Diletto utilizzatore!
+Free Download Manager è un programma che Le viene fornito gratis. Lei può usarlo per tutto il tempo che vuole gratuitamente.
+Tuttavia, se Free Download Manager ti sembra utile, noi ti chiediamo di aiutarci a diffonderlo mettendo il link a esso nel tuo sito web. Ciò consentirà a molte persone di conoscere Free Download Manager.
+Grazie per il Suo aiuto anticipatamente,\ndal team di sviluppo di Free Download Manager.
+Ricordami ciò fra tre giorni
+Ricordami ciò la prossima volta che io uso Free Download Manager
+Non mostrarmi più questa finestra
+Vedi i collegamenti in codice HTML
+Collegamento a codice HTML
+Altri esempi
+Copia nella memoria temporanea
+Nascondi
+; "Traffic usage mode has beed changed" window
+Il modo di usare il traffico è stato cambiato
+Lei ha cambiato il modo di usare il traffico della rete.\nFree Download Manager ha tre modalità:
+In questa modalità Free Download Manager userà la massima velocità possibile. Questo è il modo più aggressivo.
+In questa modalità Free Download Manager userà una velocità media. Questa modalità consente di navigare in Internet e conservare la migliore velocità di download allo stesso tempo.
+In questa modalità Free Download Manager userà la velocità più bassa. Questa modalità consente di lavorare senza il drammatico rallentamento della rete di comunicazione.
+;
+Rinomina al riavvio
+;
+; [2.1 build 494] may I add this three lines?
+;
+Scrivi un valore inferiore a %d
+; export/import downloads
+Elenco Files URL
+Elenco Files Informazioni Downloads
+;
+Export options
+;
+Fissa la data di un file uguale alla data specificata da un server
+Fissa la stessa data di un file scaricato come l'unico su un server
+Genera descrizione file
+Genera un file con il nome "*.dsc.txt" (* - nome di un file scaricato) che conterrà una piccola descrizione di un file scaricato (commenti + url + data). Questo file sarà generato solo per un download che ha commenti.
+Questo file viene scaricato da
+Non recuperare la data del file da un server
+Questa scelta consente di aumentare la velocità di avvio di un download FTP. Free Download Manager userà il comando Dimensione invece di Elenco.
+Non salvare i logs dei downloads
+Abilitando questa opzione Free Download Manager si avvierà e chiuderà più velocemente e diminuirà la memoria usata.
+;
+Esporta storia dei downloads
+Esporta tutte le voci
+Esporta tutte le voci nella lista
+Esporta le voci selezionate
+Esporta solo le voci dei downloads completati
+;
+Files HTML
+;
+Storia dei Downloads di Free Download Manager
+URL del download
+Scaricato nel file
+Dimensione del file
+Il download è stato completato
+Il download è stato cancellato
+;
+Salvato in
+Dimensione File
+Riprendi il supporto
+Chiudi questo dialogo quando il download è completato o fermato
+Apri
+Vuoi vedere questa finestra in futuro?
+Si, voglio vedere questa finestra per ogni download
+No, non mostrare più questa finestra
+Si, ma NoN per questo download
+Usare il tasto SHIFT significa che questo download sarà cancellato dal disco e non potrete più recuperarlo.\nSei sicuro?
+Scegli un gruppo
+Stabilisci la cartella principale per i gruppi
+Seleziona la cartella principale dei gruppi.\nLe modifiche saranno applicate solo ai nuovi downloads.
+Ultimi files scaricati
+(vuoto)
+Metti in pausa tutti i downloads
+Mostra la finestra di avanzamento del download
+Se selezionata, FDM creerà una speciale finestra con informazioni sul download per ogni download in corso
+; general settings | misc page
+Pausa per conferme
+Avvia download
+Chiedi il tipo di arresto
+Conferma pausa per comando "Strumenti | Riaggancia quando finito"
+Conferma pausa per comando "Strumenti | Esci quando finito".
+Conferma pausa per comando "Strumenti | Spegni computer quando finito".
+Conferma pausa per avvio file scaricato quando il download è completo.
+Se selezionato, FDM chiederà il tipo di spegnimento per comando "Strumenti | Spegni computer quando finito".
+NON chiedere conferma
+; 5 seconds, 10 seconds, ...
+%d secondi
+Attendi mia conferma
+Ignora le pagine da questa cartella
+Scarica solo le pagine da questa cartella
+Includi le sottocartelle
+Ignora tutte le pagine web presenti in questa cartella.
+Scarica solo le pagine in questa cartella e ignora altre pagine web.
+Seleziona questa opzione se vuoi che Spider HTML ignori (o scarichi solo) le pagine in tutte le sottocartelle della cartella specificata.
+Qui puoi specificare l'URL della cartella.\nEsempio: "http://site.com/docs/".
+Tipo
+Ignora
+Solo
+Serie di numeri
+Assegna
+Qui potete specificare la serie di numeri per una lista batch.\nEs. 1-100, o 1-100s2w3.
+Premi questo pulsante per assegnare la serie di numeri usando la finestra di dialogo.
+Numero singolo
+Numero
+Assegna serie di numeri
+Errore di sintassi
+Estrai archivio
+Estrai
+Estrazione
+Cartella di destinazione
+Estrazione fallita. Formato del file sconosciuto.
+Traffico scaricato in questo mese\n(%s è stato scaricato nel mese precedente)
+Velocità totale durante il download
+Disabilita Strumenti | "quando finito" dopo l'esecuzione
+Quando abilitato, ogni Strumento | "quando finito" sarà automaticamente disabilitato dopo l'esecuzione. Così esso sarà lanciato solo una volta.
+; %s
+; 1st - name of a file
+; 2nd, 3rd - file info (size + date).
+"%s" il file già esiste.\n\nVuoi sovrascriverlo\n(%s)\n\ncon il nuovo\n(%s)?
+Si a tutti
+Salta
+Salta tutti
+Il formato dell'archivio è sconosciuto
+Visita il sito web
+Installa il pack
+Per default, FDM supporta solo archivi ZIP, RAR e ARJ.\nPuoi estendere la lista degli archivi supportati installando il pack aggiuntivo supporto archivi per Free Download Manager (è richiesta una connessione Internet).
+Pack FDM supporto archivi
+Muovi su
+Muovi giù
+Muove i download selezionati in alto
+Muove i download selezionati in basso
+Verifica integrità file
+Alcuni siti web forniscono speciali checksum per i files disponibili per il download per consentire agli utenti di essere sicuri che il file scaricato non sia danneggiato. Potete scrivere questo checksum qui e FDM controllerà l'integrità del file.
+Algoritmo
+Checksum
+Incolla dalla clipboard
+Verifica
+Calcolo checksum file scaricato ...
+Verifica integrità file andata a buon fine
+Verifica integrità file non riuscita
+La verifica della integrità del file è stata completata con successo.\nNon sono stati trovati errori nel file.
+La verifica dell'integrità del è stata completata.\nSono stati trovati errori: il file risulta danneggiato durante il download. E' necessario rifare nuovamente il download.
+Non mostrare nuovamente questa finestra se la verifica è andata a buon fine
+Non trovo il file eseguibile del programma antivirus scelto.\nPer favore specificalo.
+La dimensione del files non è uguale
+Salva come:\n(Esempio: file(*)(*A)(*a).txt)
+Salvataggio non corrispondente al modello specificato.\nAssicuratevi esso corrisponda al modello di URL.
+Quando finito
+Quando finito (tutto completato o in errore)
+Applicazioni
+Cosa è questo?
+Opinioni
+;
+Amici!
+Free Download Manager (FDM) è una delle più popolari applicazioni per il download nel mondo, vi sono milioni di utenti attivi, ma ora cerchiamo di fare una comunità e vogliamo di più!
+Se giudichi ciò utile e conosci un programma, chiediamo semplicemente di aiutarci a diffonderlo mettendo un link a esso nel tuo blog, sito web o spazio personale, ad es. Myspace/MSN.
+; %s will be replaced with "FDM buzz ("brusio")" 
+Ufficialmente %s è iniziato il 16 agosto 2006. Il nostro obiettivo è fare di FDM il più veloce programma di diffusione in Internet dopo FireFox!
+Brusio di FDM
+; %s will be replaced with "blog" 
+Puoi seguire le novità di FDM nel nostro %s.
+blog
+Grazie per il tuo aiuto a crescere,\nil team di sviluppo di Free Download Manager
+Non mostrarmi nuovamente questa finestra, ho buona memoria.
+Unisci la voce
+No, grazie
+Comunità di FDM
+Passa a "Opinioni" dopo il download
+Se abilitato, la linguetta "Opinioni" sarà automaticamente attivata quando il download è finito.
+Modifica l'identificazione del network di Internet Explorer
+Se abilitato ciò dirà al sito web in cui sei che Free Download Manager è installato nel tuo programma. Però usare questa opzione può bloccare alcuni siti.
+Malevolo?
+Controlla se qualcuno degli utenti di Free Download Manager scrive riguardo a questo download che esso contiene virus/adware/spyware/etc.
+OK, nessuno degli utilizzatori di Free Download Manager riferisce che questo download sia malevolo.\n\nTuttavia, ciò non garantisce che questo download non sia malevolo e si raccomanda di controllarlo  usando un programma antivirus.
+; keep all %xxx, \n as is.
+Ci sono %d di %d utenti di Free Download Manager a riferire che questo download è malevolo.\nLa media dei giudizi per questo download è %.*g.\n\nMostro le opinioni su questo download?
+Controlla ogni nuovo download prima di scaricarlo per vedere se è malevolo
+Usa questa opzione per una verifica automatica di FDM, prima di scaricarlo, se qualcuno degli utenti riferisce  su questo download che esso sia malevolo.
+Mostra le opinioni durante lo scarico
+Se abilitato, FDM attiverà la linguetta "Opinioni" automaticamente e mostrerà le opinioni sul download durante lo scarico.
+Verifico se il download è malevolo (leggi in opzioni per disabilitare)
+OK, nessuno riferisce essere malevolo
+Attenzione! Alcuni riferiscono che questo download è malevolo
+Chiudi
+Carico
+Non scaricare questo
+Memorizza le operazioni di scrittura dei dati scaricati sul disco
+Se abilitato, FDM userà il buffer della cache interna con la dimensione specificata da te per le operazioni di  scrittura dei dati scaricati. Ciò diminuirà la quantità di tempo di uso del tuo disco rigido. Ciò può aumentare la velocità di scarico per le connessioni ad alta velocità.\nTuttavia poiché i dati scaricati non vengono scritti subito sul disco rigido, ciò comporterà un nuovo scarico di questi dati in caso di esito negativo (al peggio della dimensione indicata).\nRaccomandato per le connessioni ad alta velocità.
+Non posso installare il controllo per SeaMonkey (Mozilla Suite)
+Non posso disinstallare il controllo per SeaMonkey (Mozilla Suite)
+Seleziona questa casella se vuoi che FDM controlli i click nel browser Mozilla Firefox
+Seleziona questa casella se vuoi che FDM controlli i click nel browser SeaMonkey (Mozilla Suite)
+Abilita il browser a scaricare se premi Annulla
+Seleziona questa casella se vuoi che il browser scarichi un file quando premi Annulla nel dialogo "Crea download"
+Aggiungi FDM al menù contestuale del browser
+Seleziona questa casella per aggiungere gli elementi "Scarica con Free Download Manager" e "Scarica sito web con Free Download Manager" al menù contestuale nel browser (il menù che appare quando si preme il tasto destro)
+Seleziona le voci del menù da mostrare nel menù contestuale del browser
+Non posso installare il monitoraggio di Firefox
+Muovi i files alla cartella
+La velocità è troppo bassa. Riavvio la sezione...
+Riavvia se la velocità è troppo bassa per (in min):
+Riavvia la sezione se vi è una forte diminuzione della velocità di download.
+Vuoi vedere nuovamente la finestra di avanzamento del download?
+Spiacente, questo servizio attualmente non è disponibile. Per favore, prova di nuovo più tardi.
+Muovi in cima
+Muovi in fondo
+Metti il download in cima alla lista
+Seleziona questa opzione se desideri che il download sia messo in cima della lista dei downloads.
+Il monitoraggio nel browser Firefox non può essere abilitato perché è installata l'estensione FlashGot.\nDevi disinstallare FlashGot come prima cosa.
+Abilita
+Disabilita
+Cambia
+Se la modalità Trattieni tutti i downloads è abilitata, sarà disabilitata, altrimenti sarà abilitata.
+In via ufficiale %s sarà avviata il 16 agosto 2006. Il nostro obiettivo è fare di FDM la più veloce utility di diffusione in Internet dopo FireFox!

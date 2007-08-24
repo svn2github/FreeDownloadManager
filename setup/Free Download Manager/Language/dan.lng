@@ -1,0 +1,1324 @@
+; This is the Danish language file by Jan Mortensen v1.0.0 for 2.1.494
+; You can translate it into your native language
+; To do this, follow instructions:
+; - PLEASE make sure FDM hasn't already been translated into your language 
+;   You should go to FDM web side (http://freedownloadmanager.org) and 
+;   check the list of available languages
+;   or e-mail to support@freedownloadmanager.org
+; - copy this language fil to xxx.lng, where xxx is the reduced name
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng into your language
+; - send the translated file to support@freedownloadmanager.org 
+;
+;
+;
+; Translator - FreeDownloadManager.ORG, 2004
+;
+
+; Your language name. Please keep it in English
+;
+Danish
+;
+;
+; Below are the strings to translate:
+;
+Gem alt
+Klip
+Kopier
+Sæt ind
+Let tilstand
+Middel tilstand
+Tung tilstand
+Downloadindstillinger
+Ring-op forbindelse
+Om FDM
+Afslut
+Fil
+Rediger
+Vis
+Indstillinger
+Værktøjer
+Hjælp
+Værktøjslinie
+Statuslinie
+Optimeringsskabelon
+Standard downloadindstillinger 
+Generelle indstillinger
+Ring-op forbindelse
+Afbryd når færdig
+Luk computeren når færdig
+Åbn hjælpereference vindue
+FDM hjemmeside
+Fortæl en ven
+Send e-mail til supportgruppe
+Automatisk tjek for opdateringer
+Tjek for opdateringer nu
+-
+-
+Skift til
+Trafikbrug tilstand
+Registrering
+Downloads
+Tidsplaner
+Sidesøger
+HTTP//FTP søger
+Sidemanager
+Tilføj download
+Start download
+Stop download
+Tidsplan download
+Tilføj opgave
+Opgaveegenskaber
+Download valgte filer
+Stop
+Opdater
+Tilføj side
+Sideegenskaber
+Grupper af downloads
+Downloadinfo
+Tidsplaner logbog
+Sidesøgerlogbog
+Sidebjælke
+Opret ny download
+Slet download
+Kør fil
+Åbn mappe
+Start download automatisk
+Downloadegenskaber
+Aktiver opgave
+Deaktiver opgave
+Slet opgave
+Åbn aktuel mappe
+Afbryd
+Download
+Sidesøger indstillinger
+Slet side
+Imidlertidig adgang
+Sider
+Vis hovedvindue
+Browser overvågning
+Udklipsholder overvågning
+Start alle downloads
+Stop alle downloads
+-
+Fortsæt
+-
+-
+-
+-
+-
+Fortryd
+-
+-
+-
+Alle grupper
+Filtere
+Fuldført
+I progres
+Tidsplan
+Stoppet
+Andet
+Opret ny gruppe
+Slet gruppe
+Slet alle downloads
+Slet alle fuldførte downloads
+Åbn gruppe mappe
+Gruppeegenskaber
+Gruppenavn:
+Standardmappe:
+Filtyper (mellemrum separat):
+Standard download priotet
+Meget lav
+Lav
+Middel
+Høj
+Meget høj
+Venligst tast gruppenavn
+Inputfejl
+Gruppe med samme navn eksisterer allederede. Venligst tast et andet navn
+venligst tast mappenavn
+Vælg standard gruppemappe
+Tast gruppenavn her
+Standardmappe til at gemme downloads af denne gruppe til
+Browse
+Filtype for denne gruppe. Bruges til at finde gruppe af download automatisk
+Standard download priotet for denne gruppe
+Fortryd ændringer og luk dialogen
+Anvend ændringer og luk dialogen
+Fejl i downloadgrupper
+Venligst reinstaller Free Download Manager
+Fejl
+Kan ikke hente liste af downloads. Måske den er beskadiget eller bliver brugt af et andet program
+Mislykkedes at initialisere Internet Explorer integration
+Er du sikker?
+Dette vil slette alle gruppedownloads
+Bekræftelse
+Filnavn
+Størrelse
+Downloaded
+Tid tilbage
+Sektioner
+Hastighed
+Kommentar
+Logbog
+Progres
+Tid
+Dato
+Information
+Ryd
+Autoscroll
+Ukendt netværksfejl
+Adgang nægtet. Forkert brugernavn eller adgangskode
+Adgang nægtet. Forkert adgangskode
+Lykkedes
+Kan ikke forbinde til serveren
+Fil ikke fundet på serveren
+Forbindelse til serveren blev afbrudt
+Server svarer ikke
+Kunne ikke finde servernavnet
+Server understøtter ikke download genoptagelse. Stop ikke denne download; ellers må du starte download fra begyndelse igen 
+Proxy brugernavn og adgangskode kræves
+Udvidet fejl
+Dårlig anmodning. Muligvis er dette en dårlig URL
+Ukendt serverfejl
+Forbindelse annulleret
+Dårlig URL
+Ingen internetforbindelse
+valgte HTTP version er ikke understøttet af denne server
+Ukendt fejl
+Kan ikke slette fil fra disken
+Grænsen for forbindelser for denne server er nået 
+Grænseforbindelsen blev nået
+Pause %d sek.
+Sektion
+Startede
+Færdig
+Download fuldført
+Forbinder...
+Forbindelse lykkedes
+Omdirigerer...
+Omdirigering lykkedes. Åbning af ny URL
+Starter download...
+Stoppet
+Opretter ny sektion...
+Annulleret
+Omstarter download...
+Åbner filen på disken...
+Filnavn er for langt
+Filen eksisterer allerede. Omdøb til
+Omdøb til
+Outputfil blev slettet. Umuligt at fortsætte
+Filen eksisterer allerede. Omskriv
+Filen eksisterer allerede. Fortsæt download
+Filen eksisterer allerede
+Kunne ikke åbne filen på disken
+Filstørrelse blev ændret på serveren!
+Justerer for ny størrelse...
+Kan ikke overskrive filen
+Filen vil blive omdøbt
+Kan ikke omdøbe filen tilbage til dets oprindelige navn
+Kan ikke gemme grupper
+Kan ikke gemme downloads
+Ring-op forbindelse
+Tilslut til:
+Ring-op automatisk 
+Tilslut
+Vælg ring-op adgang her
+Check denne boks hvis du vil have ring-op til at starte automatisk næste gang
+Ring-op nu
+Ring ikke op og luk denne dialog
+Ingen ring-op enheder kunne findes på denne computer
+Linie er optaget
+Hardwarefejl
+Ingen ringetone
+Ringer
+Forsøg
+Åbner port...
+Ringer til udbyder...
+Forbindelse til fjerncomputer
+Godkend brugernavn og adgangskode...
+Forbindelseshastighed er %d BPS
+Afbryd
+Gentagelse
+Brugernavn og adgangskode er påkrævet
+Bruger:
+Adgangskode:
+Gruppe:
+Gem til mappe:
+Gem som:
+Start
+Automatisk
+Manuel
+Tidsplan
+Priotet af download
+Advanceret
+Adresse på filen du vil downloade
+Indtast brugernavn her
+Indtast adgangskode her
+Check denne boks hvis serveren kræver godkendelse
+Navn på gruppe at gemme download i. Grupper hjælper dig med at sortere dine downloads
+Mappe til at gemme downloads i
+Nyt navn for den downloadede fil. Efterlad dette felt tomt hvis du vil gemme filen under dets oprindelige navn
+Kort beskrivelse af download
+Denne download startes automatisk så hurtig som muligt
+FDM vil ikke forsøge at starte denne download automatisk
+Tidsplanere denne download
+Indstil download tidsplan
+Download priotet. Downloads med høj priotet vil blive startet først. Downloads med lavere priotet vil blive udskudt
+Vis advancerede indstillinger for denne download
+Tasted URL er forkert. Venligst tjek denne
+Venligst tast brugernavn
+Vælg outputmappe
+Generelt
+Generel information
+Download aktuelle gemte til filen:
+Navn på den downloadede fil
+URL på denne download kan ikke ændres
+Denne download er i progres. Kan ikke ændre filnavn
+Kan ikke omdøbe fil
+Fil ikke fundet
+Sti ikke fundet
+Ugyldig .exe format
+Filen bliver brugt af et andet program
+Adgang nægtet
+Apparatet er ikke klar
+Disken er fuld
+Filnavnet er ugyldigt
+Login er påkrævet
+Forbindelse
+Netværk
+Fejl
+Pause mellem forbindelsesforsøg (i sek):
+maksimum gange af forsøg
+Timeout (i sek):
+Minimum størrelse:
+Maksimum antal:
+Restriktioner for trafik for denne download
+Trafikgrænse
+Ignorer alle restriktioner
+B
+KB
+MB
+s
+Indtast værdi højere end %d
+Venligst vælg dimension
+Ventetid på server re-forbindelse i tilfælde af fejl
+Check denne boks hvis du vil sætte maksimum forsøg af usuccessfulde downloadforsøg
+Ventetid for serversvar
+Minimum størrelse af sektion. Download vil ikke splitte sektioner i mindre størrelser
+Maksimum antal af sektioner. Download vil ikke splitte et større antal af sektioner
+Angiv hvor meget trafik (maksimum) FDM vil tage for download
+Ignorer trafikrestriktioner og restriktion på maksimum antal af forbindelser for denne download
+Du kan angive værdi i bytes (B), kilobytes (KB) eller megabytes (MB) i dette felt
+Protokol
+Identificer på server som:
+Referrerer:
+Brug HTTP 1.1
+Brug cookies
+Brug passiv tilstand
+Overførselstilstand
+Binær
+ASCII for filer af typen:
+Specificer hvordan FDM vil blive identificeret med HTTP server
+Denne streng vil blive sent som referrererfelt til HTTP server. Som hovedregel, er dette ikke påkrævet
+Check denne boks hvis du vil have FDM til at bruge HTTP version 1.1
+Check denne boks hvis du vil have FDM til at bruge cookies
+Check denne boks hvis du vil have FDM til at bruge passiv tilstand for FTP servere. Nogle gange er dette nødvendig når der arbejdes med firewalls
+Brug binær tilstand for FTP overførsler. Brug denne tilstand hvis filen du downloader ikke er en tekst
+Brug ASCII tilstand for FTP overførsler. Brug denne tilstand hvis filen du downloader er en tekst
+FDM vil bruge ASCII tilstand for filer med specifikke udvidelser. For andre filer FDM vil anvende binær tilstand
+Proxy
+Hent proxyindstillinger
+Fra Microsoft Internet Explorer
+Specificer manuelt
+Brug ikke nogen proxy
+Indstillinger
+Tilføjelser:
+Port:
+venligst tast proxytilføjelser
+venligst tast proxyport
+FDM vil tage proxyindstillingerne fra Internet Explorer
+Du kan indstille proxyindstillingerne selv
+FDM vil ikke bruge proxy
+Vælg type af serverere for hvilke du vil specificere proxyen
+Indtast tilføjelser for proxyen du vil bruge
+Indtast proxyporten here. Som en regel, er det port 3128, 1080 eller 8080
+Check denne boks hvis proxyserveren kræver autorisation
+Forskelligt
+Lokal fil
+Hvis filen eksisterer allerede:
+Reserver diskplads for downloading af fil
+Tilføjelses filudvidelser for ikke-fuldførte downloads:
+Internetserver
+Genstart ikke download hvis genoptagelse ikke er understøttet af serveren
+Hvis filstørrelsen blev ændret på serveren:
+Stop ved fejl
+Spørg
+Genskriv
+Omdøb
+Genoptag
+Genstart
+Juster
+venligst specificer filudvidelse
+Her kan du specificere hvad FDM skal gøre hvis filen allerede eksisterer på disken
+Check denne boks hvis du vil have diskplads reserveret for download når den startes
+Hvis denne er checket FDM vil tilføje specificeret udvidelse til et filnavn under downloading. Når downloading er færdig, FDM omdøber filen tilbage til dets originale navn
+FDM vil ikke genstarte downloading hvis remoteserveren ikke understøtter genoptagning
+Du kan specificer her hvad FDM skal gøre hvis filstørrelse bliver ændret på server
+Check denne boks for at stoppe download når fil ikke bliver fundet på server
+Check denne boks for at stoppe download når brugernavn eller adgangskode er ugyldigt
+Trafikbrug tilstande
+Vælg tilstand at konfigurere:
+Maksimum antal af forbindelser:
+Maksimum antal af forbindelser pr. enkelt server:
+Restriktioner af trafik:
+Ubegrænset
+Vælg trafikbrug tilstand som du ønsker at konfigurere her
+Check denne boks til at sætte maksimum antal af forbindelser
+Check denne boks til at sætte maksimum antal af forbindelser pr. enkelt server
+Specificer her FDM trafik (maksimum) for downloading af filer
+Alle downloads
+Liste over downloads
+Autogem hver
+min.
+Når sletning af en ikke-fuldført download
+Automatisk slet fuldførte downloads
+Slet ikke fil
+Slet fil
+FDM gemmer listen af downloads automatisk på det specifirede timeinterval. Denne beskytter listen fra mulige hang-ups af computeren eller strømfejl
+Specificer her hvad FDM skal gøre med fil på disk når sletter ikke-fuldført download
+Check denne boks hvis du vil slette download automatisk fra listen når færdig
+Overvågning
+Monitor
+Udklipsholder
+Overvåg filer med udvidelsen
+Ignorer filer med udvidelsen
+ALT må ikke tastes
+ALT må tastes
+venligst angiv udvidelser
+Check denne boks hvis du vil have FDM til at registrere kliks i Internet Explorer
+Check denne boks hvis du vil have FDM til at overvåge udklipsholder
+Overvågning for filer kun med specificeret udvidelse
+Overvåg ikke for filer med specificeret udvidelse
+Overvåg kun hvis ALT ikke er tastet
+Overvåg kun hvis ALT er tastet
+Opstart
+Kør på opstart
+Start minimeret
+System
+Minimer til meddelesesområdet
+Luk knappen minimer vindue
+FDM startes automatisk når vinduer startes
+FDM startes minimeret efter start
+Når det klikkes på minimerknappen, FDM vil blive minimeret til meddelesesområdet
+Hvis checket, klikning på lukknappen vil blive det samme som med minimerknappen
+Opdatering
+Addresse på opdateringserver
+FDM vil tjekke efter en ny version automatisk
+Netværksbrug optimeringsskabelon
+Velkommen til netværksbrug optimeringsskabelon!
+Denne skabelon vil hjælpe dig med at sætte op de optimale indstillinger for din type af forbindelse. Den vil opsætte download- og standardegenskaber for downloads.
+venligst vælg forbindelsetype
+Færdig
+Specificer typen på din Internetforbindelse her
+Konfigurer FDM for optimal udnyttelse af din forbindelse
+Opgave
+Starttid
+Næste starttid
+Sidste starttid
+Kan ikke hente listen med tidsplaner. Den er måske beskadiget eller bliver brugt af et andet program
+Kan ikke hente tidsplaner log
+Kan ikke hente listen med tidsplaner
+Opgave "%s" var tidsplanlagt. Start denne?
+Ændre trafikbrug tilstand til "%s"
+Læg på
+Alle forbindelser
+Ændre trafikbrug tilstand to
+Luk
+Genstart
+Log af
+En gang
+Søn
+Man
+Tir
+Ons
+Tor
+Fre
+Lør
+På dage:
+Hver
+dage
+time
+På FDM start op
+Når ring-op lykkedes
+Når ring-op mislykkedes
+Når ingen aktive downloads
+Når hastighed er mindre end eller lig med %d BPS under %d
+Når alle downloads er i fejltilstand under
+Aldrig
+Ukendt
+Successfuld tilsluttet til "%s"
+Mislykket at tilslutte til "%s"
+Opstart lykkedes
+Ikke mere hukommelse
+Kan ikke opstarte
+Tidsplan afbrydelse vil resultere en afsluting af programmet under opstart. Tidsplan vil blive ignoreret
+Maksimum ring-op førsøg
+Pause imellem forsøg
+Afbryd hvis forbindelseshastighed er mindre end:
+Prøv igen
+Ikke mere end
+Brug forbindelsen
+Hvis successfuld
+gange
+Afbryd alle aktive forbindelser
+Forbindelse til afbryd
+Programnavn:
+Argumenter:
+Type af lukning:
+Tving applikationer til at afslutte
+Kør program
+Etabler ring-op forbindelse
+Læg-på forbindelse
+Ændre trafikbrug tilstand
+afslut FDM
+Luk computer
+Downloads at starte
+Downloads at stoppe
+Applikationer
+alle filer
+Beklager, denne funktion er kun tilgængelig på Windows 2000, XP og højere
+venligst tast programnavn
+venligst vælg downloads
+Vælg trafikbrug tilstand du vil sætte til denne opgavestart
+Check denne boks hvis du vil sætte en grænse for maksimum antal af mislykkedede ring-op forsøg 
+Tid imellem mislykkede forsøg
+Check denne boks for at etablere forbindelse med hastighed ikke mindre end værdien du angiver
+Angiv værdien for minimum krævet forbindelseshastighed her
+FDM vil forsøge igen at etablere den krævede forbindelse hvis du checker denne boks
+Check denne boks for at begrænse maksimum antal af mislykkedes forsøg på at establere forbindelse
+Angiv ønskede download(s) her
+Liste over alle tilgængelige downloads
+Tilføj valgte download til opgavelisten over downloads
+Fjern valgte download fra opgavelisten over downloads
+Angiv program du vil have til at køre her
+Find program on your computer
+Angiv programargumenter her
+Angiv din type af sessionafbrydelse her
+Check denne boks for at tvinge afbrydelse af din session. Dette er nyttefuldt hvis applikationer fryser i systemet. I dette tilfælde, alle ikke-gemte data vil gå tabt
+Angiv tidsplanshandling her
+Check denne boks hvid du vil have FDM til at afbryde alle aktive forbindelser
+Angiv forbindelse at afbryde her
+På bestemte dage
+Søndag
+Mandag
+Tirsdag
+Onsdag
+Torsdag
+Fredag
+Lørdag
+På begivenhed
+Imens
+Lav hastighed:
+min.
+Minuter
+Timer
+Dage
+Når downloadhastighed er for lav
+Når alle downloads er i fejltilstand
+Venligst angiv dage
+Start opgaven på angivet tidspunkt
+Indstil tidspunktet til at starte opgaven her
+Start opgaven på angivet dato
+Indstil datoen for at starte opgaven her
+Start opgaven på bestemte ugedage
+Start opgaven hver Søndag
+Start opgaven hver Mandag
+Start opgaven hver Tirsdag
+Start opgaven hver Onsdag
+Start opgaven hver Torsdag
+Start opgaven hver Fredag
+Start opgaven hver Lørdag
+Start opgaven periodisk
+Dette felt giver dig mulighed for at angive tidsinterval i minutter, timer eller dage
+Start opgaven når en hændelse sker
+Angiv hædelsestype her
+Tast tidsinterval her
+Tast minimum krævet hastighed her
+Godkendelse kræves for at starte opgaven
+Vent for godkendelse imens
+sek.
+Hvis checket, FDM vil spørge om at godkende start af denne opgave
+Hvis checket, FDM vil vente på godkendelse under det angivede tidsinterval. Hvis der ikke svares indenfor denne tid, vil opgaven startes
+Addresser:
+Opbygger listen af filer til download
+Tilslutter til serveren
+Prøver at anvende brugernavn og adgangskode gemt i sidemanageren
+Modtager liste over filer fra server
+Forbindelse med serveren forsvandt. Prøver at genetablere
+Opbygger liste
+Modtager størrelse og sidste ændringsdato på filer
+Brug af denne parameter kan nedsætte hastigheden væsentligt
+Check denne boks hvis du vil have FDM til at forespørge efter størrelse og dato på filer på HTTP servere
+Sidenavn
+Forbindelser
+Login
+Gruppe
+Kan ikke køre listen på sider. Muligvis er den beskadiget eller bliver brugt af et andet program
+Kan ikke gemme listen på sider
+Maksimum antal af samtidige forbindelser:
+Standardgruppe for en ny download fra denne side
+Brug FTP passiv tilstand
+Venligst tast sidenavn
+Side med samme navn eksisterer allerede. Venligst tast et andet sidenavn
+Maksimum antal af forbindelser der må være højere end 0
+venligst vælg gruppe
+Angiv sidenavn her
+check denne boks for at begrænse maksimum antal af samtidige forbindelser til denne server
+check denne boks for at tilføje downloads fra denne server automatisk til valgte gruppe 
+Spørg bruger
+Spørg mig ikke igen
+Disk skrivefejl
+Filen "%s" eksisterer allerede på disken. Hvad skal gøres?
+Spørg dig ikke om dette igen. Dit valg vil blive accepteret som standardvalg
+Overskriv eksisterende fil
+Omdøb denne fil
+Genoptag downloading. (Downloading vil starte i position lig med størrelse af eksisterende fil)
+Stop denne download
+Ja
+Nej
+Download
+blev slettet. Slet fil på disken også?
+Venligst tast brugernavn og adgangskode
+Login til "%s"
+Send brugernavn og adgangskode du angiver til serveren
+Forbind ikke til denne server
+Størrelse af "%s" blev ændret på serveren. Hvad skal gøres?
+Genstart download fra begyndelsen
+Indstil download for den nye filstørrelse. Ej anbefalet
+Vent venligst
+Opdatering
+Beskrivelse
+Opdatering bruger:
+Tjeker for opdatering
+Du bruger allerde den nyeste version
+Downloading
+Version %s build %s er tilgængelig
+Fuld distribueret af version %s (%s)
+Opgrader til version %s
+Opgrader til version %s (%s)
+Free Download Manager skal genstartes. Genstart nu?
+Opdatering færdig
+Kan ikke finde opdateringer
+Angiv opdateringstype her
+opdatering FDM bruger fuld distributiv
+opdatering FDM bruger opgradering distributiv
+Find mere information om opdateringsprocess
+Hvad er nyt i denne version?
+Start opdatering af FDM nu
+Fortryd opdatering og luk dette vindue
+Opret downloads
+Vælg indhold
+Fravælg indhold
+Liste over downloads at tilføje
+Check valgt mappeindhold og tilføj dette til downloadliste
+Uncheck valgt mappeindhold ikke at tilføje til downloadliste
+Om FDM
+Copyright (c)
+All rights reserved
+Registreret til:
+Allerede opdateret. Genstart er påkrævet
+Ugyldig brugernavn eller adgangskode
+Kan ikke hente historik filen
+Kan ikke gemme historik filen
+HTML Spider standardindstillinger
+HTML Spider
+Websider træ
+Download webside
+Webside downloading indstillinger
+Start downloading
+Stop downloading
+Tidsplaner downloading
+Slet
+Åbn webside i browser
+Start downloading automatisk
+Webside (page) URL
+Filer
+Slet downloads også?
+Kan ikke hente listen over websider
+Kan ikke gemme listen over websider
+URL på webside eller HTTP server du vil downloade fra
+URL på webside eller HTTP server fra hvor downloading blev startet
+Navn på mappe at gemme downloads i
+Outputmappe:
+Websider
+Sider
+Udvidelser af websider’ filer med HTML kode:
+Download CSS filer
+Download websider fra andre sider
+Billeder
+Download billeder
+Download billeder der linker til andre sider
+Dybde af downloading:
+Udvidelser af websider' filer med HTML kode. Websider vil blive skannet for links af billeder og andre sider til download
+Hvis checket, vil CSS filer også blive downloaded. Anbefalet
+Hvis uchecket, vil websider fra andre sider ikke blive downloaded. F.eks. hvis denne boks er uchecket og du starter downloading fra http://example.com/, så vil http://otherside.com/some.html ikke blive downloaded, men http://example.com/some.html vil blive downloaded
+Hvis checket, vil websiders billeder også blive downloaded
+Hvis uchecket, vil websiders billeder der linker til andre sider ikke blive downloaded
+Dybde af downloading. F.eks hvis du starter downloading fra http://ex.com/index.html. hvor der er et link til http://ex.com/some.html fra http://ex.com/index.html. så vil dybden http://ex.com/some.html være 1. indstillingsdybde til 0 hvilket resulterer kun downloading af startsidens indhold.
+Download filer fra websider
+Download filer fra andre sider
+Elimination af filer efter filtype
+Start
+Download
+Download ikke
+Filer med udvidelser:
+Check denne boks for at downloade filer fra websider
+Check denne boks for at download filer fra andre sider
+Check denne boks for at ignorer filer med den angivne udvidelse
+Filer med de udvidelser angivet forneden vil blive downloaded hvis checket
+Filer med de udvidelser angivet forneden vil IKKE blive downloaded hvis checket
+Eksporter indstillinger
+Importer indstillinger
+Kunne ikke køre Regrediger.exe
+En fejl opstod under forsøg af eksporter indstillinger
+En fejl opstod under forsøg af importer indstillinger
+FDM registreringsfiler
+Elimination af billeder med udvidelse
+Billeder med udvidelser:
+check denne boks for at ignorere billeder med angivet udvidelser
+Billeder med de udvidelser angivet forneden vil blive downloaded hvis checket
+Billeder med de udvidelser angivet forneden vil IKKE blive downloaded hvis checket
+Download ikke dette og slet
+Server understøtter ikke download genoptagelse. Genstart fra begyndelsen
+Kunne ikke åbne URL
+Beklager, uventet fejl opstod under forsøget på at skrive til registreringen
+Tak for registreringen! venligst genstart FDM
+Download med Free Download Manager
+Download webside med Free Download Manager
+Tilføj FDM til browsers højreklik menu
+Check denne boks for at tilføje elementerne "Download med Free Download Manager" og "Download webside med Free Download Manager" til browsers højreklik menu
+Reducer trafikbrug på browseraktivitet
+Reducer med et niveau
+Angiv Light tilstand
+Check denne boks for at reducere trafikbruget automatisk når der surfes på internet. Dette giver mulighed for at surfe hurtigere imens FDM downloader
+Trafikbrug tilstand vil blive reduceret med et niveau. Heavy->Medium, Medium->Light
+Trafikbrug tilstand vil blive ændret til Light-tilstand
+Gyldig for
+Gyldig for sub-domæner
+Check denne boks for at bruge denne post til downloading via HTTP
+Check denne boks for at bruge denne post til downloading via HTTPS
+Check denne boks for at bruge denne post til downloading via FTP
+Check denne boks for at bruge denne post til downloading fra sub-domæne servere. F.eks. for siden http://side.com vil dette blive til http://some.side.com
+Venligst vælg mindst en protokol
+Maksimum antal af kørende downloads
+Check denne boks hvis du vil sætte et maksimum for antal af downloads kørende på samme tid
+Genstart download
+Opret en sektion mere
+Stop en sektion
+; indhold: [section x] - Stoppet
+Stoppet
+; meddelesesområdet
+Dropboks
+;
+Kan ikke finde Opera Plugin-mappe. Vil du angive dette manuelt?
+Kan ikke finde Netscape Plugin-mappe. Vil du angive dette manuelt?
+Kan ikke installere Opera overvågning
+Kan ikke afinstallere Opera overvågning
+Kan ikke installere Netscape overvågning
+Kan ikke afinstallere Netscape overvågning
+Check denne boks hvis du vil have FDM til at registrere kliks i Opera browser
+Check denne boks hvis du vil have FDM til at registrere kliks i Netscape browser
+; opret download dlg
+Forespørg størrelse
+; spørg om størrelsen på en download
+Spørg...
+Forespørg om størrelsen på en download fra serveren
+Ja til alle
+Nej til alle
+Detaljeret log
+Hvis checket, FDM vil vise respons fra serveren
+Ændringerne vil træde i kraft efter genstart af browseren
+Liste over opgaver
+Liste over filer
+Liste over steder
+Liste over sider
+Sletter downloads
+Opbygger listen over downloads
+Opret batch download
+Fra:
+Til:
+Steps:
+Wildcard bytes:
+Resultater
+Sample:
+Sekvens startnummer
+Sekvens slutnummer
+Sekvenssteps. F.eks. hvis denne er 10, vil sekvensen blive 0, 10, 20, ...
+Antal af wildcard bytes. F.eks. hvis denne er 1, vil sekvensen blive 1, 2, 3. hvis denne er 2, bliver sekvensen 01, 02, 03.
+Klik her for at kigge på de genererede sekvenser
+Giv browser lov til at downloade, hvis du vælger fortryd
+Check denne boks hvis du vil have din browser til at downloade fil når du klikker fortryd i "opret download" dialogen
+Det endelige sekvensnummer skal være højere end startnummeret
+Venligst brug (*) i URL'en til at specificere skabelon for URL
+Opret en udvidelse hvis en fil ikke har en
+Check denne boks for at oprette en specificeret udvidelse for en fil som ikke har en. F.eks. hvis filnavnet er "fil" og du specificer "txt", vil resultatet blive "fil.txt"
+Vis størrelser i bytes kun
+Check denne boks for at vis alle størrelser i bytes istedet for kilobytes eller megabytes
+Udfør virustjek
+Argumenter:
+Udvidelser:
+Check denne boks for at tjekke downloaded filer med antivirus automatisk
+Specificer navn for antivirusprogram her
+Specificer argumenter for antivirus her
+Specificer udvidelser for downloaded filer der skal tjekket her
+Venligst tast antivirusnavn
+Navn er ugyldigt. venligst tjek igen
+Kører antivirus
+Deaktiver opgave efter afbrydelse
+Slet opgave efter afbrydelse
+Check denne boks for at deaktivere opgave automatisk efter afbrydelse
+Check denne boks for at slette opgave automatisk efter afbrydelse
+Gå
+Tilbage
+Generer et filnavn automatisk
+Check denne boks for at generere et filnavn på download automatisk 
+Gem med "htm" udvidelse
+Check denne boks for at gemme alle websider med "htm" udvidelse
+Klik denne knap for at kalkulere totalstørrelse over alle downloads
+Behold servermappers struktur
+Check denne knap for at beholde den originale servermappes struktur. Ellers vil alle filer på server kun blive gemt i en mappe
+Du har valgt en anden mappe. Angiv denne mappe som standard for denne gruppe? Du kan også ændre standardmappen i gruppens egenskaber.
+; === ADDED LINES ===
+Download med denne URL eksisterer allerede. Hvad skal gøres?
+Kør
+Kør den downloadede fil
+Version
+Klik her for at kontakte os
+Klik her for at downloade den nyeste version
+Advarsel: Dette computerprogram er beskyttet med copyright. Uautoriseret reproduktion eller distribution af dette program, vil blive retsforfulgt.
+; === new version ===
+Download alle med Free Download Manager
+Tilføj liste med downloads
+Fjern valgte
+Dette er listen over URLs der skal tilføjes
+Klik denne knap for at fjerne alle valgte URLs fra listen
+Kan ikke finde Firefox plugin-mappen. Vil du angive denne manuelt?
+Kan ikke installere Firefox overvågning
+Kan ikke afinstallere Firefox overvågning
+Check denne boks hvis du vil have FDM til at registrere kliks i Mozilla Firefox browser
+Download valgte med Free Download Manager
+Starter
+Websider
+Aktive downloads
+Der er ingen aktive downloads på nuværende tidspukt
+Meddelelser
+Brug "pop-ups" i meddelesesområdet 
+Timeout
+Check denne boks for at anvende "pop-up" meddelelser i meddelesesområdet når en download er stoppet eller er færdig. Note: Denne funktion virker kun på Windows 2000/XP eller højere
+En "pop-up" vil blive lukket automatisk efter denne tids udløbning
+Mirrors
+Automatisk søg efter mirror URLs
+Maksimum antal af mirrors
+Kalkuler mirrors hastighed
+Rekalkuler hastighed hver
+Check denne boks for at få FDM til at søge efter mirror URLs automatisk for hver download
+Begrænse antallet af mirror URLs pr. download. Dette giver dig mulighed for at reducere mirrors hastighedskalkulationstid
+Check denne boks for at få FDM til at kalkulere hastigheden på hver mirror server
+Mirrors hastighed vil blive rekalkuleret automatisk på det angivet tidsinterval
+Søg ikke hvis filstørrelsen er mindre end
+FDM vil ikke søge efter mirrors hvis filstørrelsen er mindre end den angivet størrelse
+Søg ikke hvis filstørrelsen er ukendt (Anbefalet)
+Tilføj mirror
+Søg efter mirrors
+Tilføj mirror URL for denne download manuelt
+Søg efter mirror URLs for denne download med filsearching.com
+Liste over mirror URLs
+Serverhastighed
+I brug
+Målsæt mirrors hastighed
+Målsæt mirror servers hastighed
+Downloads Info
+Venter...
+Mirror URL for download
+filstørrelse overskrider 2GB. Sådanne downloads understøttes kun via FTP
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGYND: Ny Download side
+Ny Download
+Afgør gruppe for download automatisk
+Gruppe:
+Gem download til dets gruppes tilegnede mappe
+check denne boks hvis du vil have downloadgruppen til at afgøre udfra udvidelse af fil eller indstillinger fra sidemanager
+Angiv standardgruppe manuelt
+Check denne boks hvis du vil have download gemt til dets gruppes standardmappe (se gruppens egenskaber)
+Angiv standard outputmappe manuelt
+; SLUT
+; BEGYND: Overvågningsside
+Stille overvågning
+Hvis checket, vil "opret download" dialogen ikke blive vist når der tilføjes download fra browser
+Tilpas
+Vælg menuindhold at vise i browserens højrekliksmenu
+; SLUT
+Vælg menuindhold at vise
+Mindst et menuindhold skal vælges
+Brug lyde
+check denne boks hvis du vil have FDM til at afspille lyde til nogle hændelser (f.eks. når download er fuldført)
+Vælg lyd for hver hændelse
+; BEGYND : Tilpas lydedialog
+Tilpas lyd
+Angiv lyd
+Fjern
+Test
+Liste over FDM's hændelser og tilegnede lyde. Her kan du indstille FDM til at afspille en lyd når nogle hændelser har opstået
+Download tilføjet - afspil lyd når en eller flere downloads er blevet tilføjet til listen over downloads
+Download fuldført - afspil lyd når download er blevet fuldført med success.
+Download mislykkedes - afspil lyd når en fejl er opstået under et forsøg på at downloade en fil.
+Ring-op lykkedes - afspil lyd når tidsplanens opgave "Etabler ring-op forbindelse" er blevet fuldført med success.
+Ring-op mislykkedes - afspil lyd når tidsplanens opgave "Etabler ring-op forbindelse" mislykkedes af en eller anden grund.
+Angiv lyd for valgte hændelse
+Afspil ikke en lyd når valgte hændelse er opstået
+Test valgte lyd
+Hændelse
+Lydfil
+Ingen lyd
+Download tilføjet
+Download fuldført
+Download mislykkedes
+Ring-op lykkedes
+Ring-op mislykkedes
+Lydfiler
+; SLUT
+Søger efter mirrors...
+Målsætter mirrors hastighed...
+Søgning efter mirrors er allerede blevet fuldført 
+Tilslutter søg server...
+Modtager resultater...
+Der er fundet %d mirrors
+Mirror søgning færdig
+Prøver en anden mirror...
+Der er ingen mirrors fundet
+mislykkedes
+Mirrors hastighed blev målsat
+; BEGYND: Historik side
+Historik
+Gem historik over links og mapper
+Gem historik over mapper kun
+Behold poster indenfor
+Maksimum antal af poster
+Ryd historik
+FDM vil gemme historik over links og indtastede mappenavne
+FDM vil gemme historik over mapper kun
+FDM vil slette poster der har eksisteret i historiken længere end den angivne tidsperiode
+Maksimum antal af poster i historiken. Når antallet af poster overskrider denne værdi, FDM vil slette de ældste poster
+Slet alle poster fra historiken
+; SLUT
+Importer
+Eksporter
+Importer liste over downloads
+Exporter liste over downloads
+Tekstfiler
+Kan ikke åbne en fil
+Exporter alle downloads
+Exporter alle downloads på listen
+Exporter valgte downloads
+Exporter ikke fuldførte downloads
+Tilføj hvis fil eksisterer allerede
+Ugyldig gruppenavn. Brug venligst ikke  / eller \ symboler.
+Afslut når færdig
+; BEGYND : Downloads historik vindue
+Tilføjet
+Gemt til
+; SLUT
+Papirkurv
+; BEGYND: Papirkurv
+egenskaber
+Ryd papirkurv
+;SLUT
+;BEGYND: Papirkurv egenskaber
+Placer ikke slettet downloads i papirkurv
+Behold maksimum
+downloads
+Behold ikke fuldførte downloads
+Spørg efter bekræftelse når sletter downloads
+Papirkurv egenskaber
+Check denne boks hvis du ikke vil gemme slettede downloads i papirkurv
+Check denne boks hvis du vil begrænse antallet af slettede downloads gemt i papirkurven
+Maksimum antal af downloads at gemme i papirkurv
+Check denne boks hvis du ikke vil have fuldførte downloads gemt i papirkurv efter sletning
+Check denne boks hvis du vil have FDM til at spørge om en bekræftelse når der forsøges at slette en download
+;SLUT
+Gendan
+Gendanner downloads...
+; Historik hovedelementer
+I dag
+I går
+En uge
+En måned
+Tilpas...
+; slut
+Ryd historik
+Gem historik over downloads
+Gem historik over fuldførte downloads kun
+Check denne boks hvis du vil gemme historik over dine downloads
+Check denne boks hvis du vil gemme historik over fuldførte downloads kun
+Downloads historikindstillinger
+Opbygger liste over historiks poster...
+; Download blev slettet
+Blev slettet
+Angiv tidsområde
+Find
+Find næste
+Find hvad
+; BEGYND : Find dialog
+Søg i
+Lokal filnavn
+Angiv hvad du vil finde her
+Søg i filpart af URL
+Søg i hele URL
+Søg i kommentar af download
+Søg i navn og sti af downloaded fil på lokal disk
+Opsæt advanceret søgeindstillinger
+; ADVANCERET indstillinger
+Søg hvor
+Søg i listen over downloads
+Søg i historik over downloads
+Søg med angivet time
+Indstil
+Søg i papirkurv
+Søg med angivet filstørrelse
+Minimal
+Maksimal
+Søg i listen over downloads
+Søg i historik over downloads
+Søg kun efter downloads der opfylder det angivet tidsområde
+Angiv tidsområdet
+Søg i papirkurv
+Søg kun efter filer der opfylder det angivet filstørrelsesområde
+Minimal størrelse krævet
+Maksimal størrelse krævet
+Søg i gruppe
+Vælg gruppen hvor søgningen vil blive udført
+; SLUT
+Søger download...
+Der blev ikke nogle elementer fundet
+Der blev ikke flere elementer fundet
+Søgning udført
+URL til udklipsholder
+ZIP preview
+Mindst en fil skal vælges.
+Det er muligt at denne fil der downloades er et ZIP-arkiv. Vil du previewe den?
+Audio/Video preview
+Mislykkedes at åbne filen.
+Ukendt medietype.
+Venligst installer DirectX 8.0 eller højere for at bruge denne funktion. Du kan download den seneste DirectX fra microsoft.com.
+Medie Info
+Størrelse:
+Tilgængelig:
+Længde:
+Mute
+Afspil
+Pause
+Filter
+Udvidelser (adskilt af mellemrum, f.eks. zip rar arj):
+Fjern filer med sådanne udvidelser
+Behold filer med sådanne udvidelser kun
+Argumentstreng indeholder ikke %fil% makro. Denne makro er nødvendig for at give en indikation over hvilken fil der skal tjekkes med dit antivirus program.
+Fortsæt alligevel?
+Advarsel
+Brug skjulte attributter for ikke-fuldførte downloads
+Tilknyt kommentar til filnavnet når færdig
+Gem ikke servers sider
+Check denne boks hvis du ikke vil gemme serversider på din computer, men kun filer og billeder
+Brug ZIP-preview
+Check denne boks hvid du vil previewe indholdet af ZIP-arkiv i begyndelsen af downloading til download af kun enkelte dele af arkivet.
+Volume:
+Start download automatisk
+Check denne boks hvis du vil have FDM til at starte hver ny download automatisk
+Venligst tjek filerne til download
+Angiv alternativ lokation (URLs) for denne download
+Preview ikke i fremtiden
+Du har deaktiveret ZIP-preview. Hvis du vil slå den til, venligst gå til indstillinger -> Downloadindstillinger (Ctrl+O) -> Ny Downloadside, og check "Brug ZIP-preview" boksen. 
+Ignorer liste
+Liste over websider der skal ignoreres under downloading af en side.
+Undermapper
+Tilføj
+Ignorer også alle undermapper
+; Proxy tab nye indstillinger
+Brug rollback på afbrudte forbindelser
+Størrelse på rollback
+bytes
+Check denne indstilling hvis du vil aktivere rollback. Denne indstilling hjælper med at beskytte dine downloads fra at blive beskadiget.
+størrelse på rollback. Større størrelse vil give rollback mulighed for at arbejde mere sikkert. Anbefalet størrelse er 3000 bytes. Du kan forøge denne værdi hvis dine downloads stadig forbliver beskadiget.
+; downloaderindstillinger -> overvågnings tab
+Overvåg ikke for filer mindre end
+Brug denne indstilling hvis du vil have FDM til at springe over filer der er mindre end den angivne størrelse
+KBytes
+Advarsel! Papirkurven er for stor. Dette kan nedsætte ydeevnen dramatisk. Det er anbefalet at ryde papirkurven. Vil du gøre dette?
+Check ikke denne igen
+Advarsel! Downloadhistoriken er for stor. Dette kan nedsætte ydeevnen dramatisk. Det er anbefalet at ryde downloadhistoriken. Vil du gøre dette?
+Server kan ikke garantere dets genoptagelseskapabiliteter. Svar er ugyldig.
+Kopier til udklipsholder
+; generelle indstillinger | temaside
+Temaer
+Tema
+Accepter at temaer bruger egne ikoner
+Accepter at temaer bruger egne bitmaps
+; standardtema
+<standard>
+NOTE: Alle ændringer vil kun træde i kraft efter genstart af Free Download Manager.
+Vis downloads info mens i progres
+Annuller filer med udvidelser:
+Liste over udvidelser af filer at annullere
+Ingen aktive downloads
+Afspil lydfil når alle downloads er fuldførte
+Importer liste over URLs fra udklipsholder
+Adgangskoder
+Sidemanager indstillinger
+; Gem adgangskode dialog
+Gem adgangskode?
+Free Download Manager kan gemme adgangskode for denne server for at undgå indtastning hver gang der downloades fra denne server.
+Gem denne adgangskode?
+Forslå ikke gemning af adgangskoder
+; sidemanager indstillinger | adgangskoder tab
+Brug sidemanager til gemning af mine adgangskoder
+Spørg mig om gemning af adgangskode eller ej
+Forslå ikke gemning af adgangskoder
+Slet alle adgangskoder ved afslutning
+Slet alle adgangskoder
+; opret ny HTML Spider opgave
+Fjern fuldførte downloads fra listen (anbefalet)
+Check denne boks hvis du vil have HTML Spiders downloads til at blive slettet automatisk. Dette forøger hastigheden ved downloading af store sider.
+Ændringer vil træde i kraft efter genstart af Free Download Manager
+Ny stil
+Gammel stil
+Biblioteksnavnet er ugyldigt
+Skjul flydende vinduer i fuldskærmstilstand
+check denne boks hvis du vil have flydende vinduer skal skjules automatisk i fuldskærmstilstand.
+var tidsplaneret til at blive kørt.
+Vil du køre denne?
+Kør download når den er fuldført
+Venligst brug (*), (*A) eller (*a) i URL'en for at angive skabelon for URL
+Mirrors søgeserver:
+Dvale
+Standby
+Husk mit valg
+Forslå ændring af gruppes standardmappe
+Gem fil
+Åbn fil
+Gem fil og åbn den
+Downloadtype:
+Link til FDM
+Link til Free Download Manager
+Kære bruger!
+Free Download Manager er et program tilegnet til dig frit. Du kan anvende det så længe du vil frit.
+Hvis du finder Free Download Manager brugbart, beder dig om at hjælpe os med at udbrede det ved at linke til det på din webside. Dette vil hjælpe andre med at kende til Free Download Manager.
+På forhånd tak for din hjælp \nFree Download Manager development teamet.
+Påmind mig igen om 3 dage
+Påmind mig næste gang jeg kører Free Download Manager
+Vis mig ikke dette vindue igen
+Vis link HTML kode
+Link HTML kode
+Flere eksempler
+Kopier til udklipsholder
+Skjul
+; "trafikbrug tilstand er blevet ændret" vindue
+trafikbrug tilstand er blevet ændret
+Du har skiftet netværk trafikbrug tilstand.\nFree Download Manager har 3 tilstande:
+I denne tilstand vil Free Download Manager downloade med maksimum hastighed. Dette er den mest aggressive tilstand.
+I denne tilstand vil Free Download Manager downloade med middel hastighed. Denne tilstand giver mulighed for at være på internettet samtidigt med der downloades filer med god hastighed.
+I denne tilstand vil Free Download Manager downloade med lav hastighed. Denne tilstand downloader med henblik på ikke at overbelaste netværksforbindelsen.
+;
+Omdøb ved genstart
+Indtast en værdi mindre end %d
+; eksporter/importer downloads
+URL listefiler
+Downloads information listfiler
+;
+Eksporter indstillinger
+;
+Indtil datoen på en fil identisk med datoen angivet af en server
+Indstil samme dato på en downloaded fil som den på server
+Generer beskrivelsesfil
+Generer en fil med navnet "*.dsc.txt" (* - navn på en downloaded fil) der vil indholde en kort beskrivelse over en downloaded fil (kommentar + url + dato). Denne fil vil kun blive genereret for en download der har kommentarer.
+Denne fil er blevet downloaded fra
+Modtag ikke fildato fra en server
+Denne indstilling giver dig mulighed for at forøge hastigheden ved startning af en FTP download. Free Download Manager vil bruge størrelse kommando istedet for LIST.
+Gem ikke logs over downloads
+Aktivering af denne indstilling vil gøre Free Download Manager start og afslutning hurtigere og vil reducere hukommelsesbrug.
+;
+Eksporter historik over downloads
+Eksporter alle poster
+Eksporter alle poster på listen
+Eksporter valgte poster
+Eksporter poster over fuldførte downloads kun
+;
+HTML filer
+;
+Free Download Manager downloadhistorik
+URL over download
+Downloaded til fil
+Størrelse på fil
+Download blev fuldført
+Download blev slettet
+;
+Gemt i
+filstørrelse
+Genoptag understøtning
+Luk denne dialog når download er fuldført eller stoppet
+Åbn
+Vil du se dette vindue igen?
+Ja, jeg vil se dette vindue for hver download
+Nej, vis mig ikke dette vindue mere
+Ja, men nej for denne download
+Brug af SHIFT-tasten betyder at denne download vil blive slettet fra disken og du vil ikke være i stand til at genskabe den.\nEr du sikker?
+Vælg gruppe
+Angiv gruppers rodmappe
+Vælg gruppers rodmappe.\nÆndringer vil kun blive tildelt til nye downloads.
+Sidste downloaded filer
+(tom)
+Tilbagehold alle downloads
+Vis downloading progresvindue
+Hvis checket, FDM vil oprette et specialvindue med information om downloading for hvert kørende download
+; generelle indstillinger | forskellige sider
+Timeouts for bekræftelser
+Kør download
+Spørg for type af lukning
+Bekræftelsestimeout for "værktøjer | Læg-på når færdig" kommando.
+Bekræftelsestimeout for "værktøjer | afslut når færdig" kommando.
+Bekræftelsestimeout for "værktøjer | Luk computer når færdig" kommando.
+Bekræftelsestimeout for kør downloaded fil når download er fuldført.
+Hvis cheked, vil FDM spørge efter type af nedlukning for "værktøjer | Luk computer når færdig" kommando.
+Spørg ikke efter bekræftelse
+; 5 sekunder, 10 sekunder, ...
+%d sekunder
+Vent for min bekræftelse
+Ignorer sider fra denne mappe
+Download sider fra denne mappe kun
+Inkluder undermapper
+Ignorer alle websider der er i denne mappe.
+Download websider der er i denne mappe kun og ignorer andre websider.
+Check denne indstilling hvis du vil have HTML Spider til ignorere (eller download kun) sider der er i alle undermapper i den angivne mappe.
+Her skal du angive URL fpr mappen.\nEksempel: "http://side.com/docs/".
+Type
+Ignorer
+Kun
+Angiv antal
+Tildel
+Her skal du angive antallet for batchlisten.\nEks. 1-100, eller 1-100s2w3.
+Klik denne knap for at tildele antallet der bruger dialogvinduet.
+Enkelt antal
+Antal
+Tildel antal
+Syntaxfejl
+Udpak arkiv
+Udpak
+Udpakning
+Destinationsmappe
+Udpakning mislykkedes. Filformatet er ukendt.
+Trafikdownloaded i denne måned\n(%s blev downloaded i sidste måned)
+Totalhastighed over downloading
+Deaktiver værktøjer | "når færdig" opgave efter kørsel
+Når anvendt, alle værktøjer | "når færdig" opgave vil blive automatisk deaktiveret efter kørsel. Så det vil kun blive kørt en gang.
+; %s
+; første - navn på en fil
+; anden, tredie - fil info (størrelse + dato).
+"%s" fil eksisterer allerede.\n\nVil du erstatte den\n(%s)\n\nmed denne\n(%s)?
+Ja til alle
+Spring over
+Spring over alle
+Format på arkiv er ukendt
+Besøg webside
+Installer pakke
+Som standard, understøtter FDM kun ZIP, RAR og ARJ arkiver.\nDu kan tilføje flere understøttet arkiver ved at installere arkiv-supportpakken for Free Download Manager (Internetforbindelse er påkrævet).
+FDM arkiv-supportpakke
+Flyt op
+Flyt ned
+Flyt valgte download(s) op
+Flyt valgte download(s) ned
+Check filintegritet
+Nogle websider tilbyder specielle checksums for filer der er tilgængelige til download, for at sikre brugerne at den downloade fil ikke er beskadiget. Du kan indtaste denne checksum her og FDM vil tjekke filintegriteten.
+Algoritme
+Checksum
+Sæt ind fra udklipsholder
+Tjek
+Kalkulerer downloaded fils checksum...
+Filintegritet tjek lykkedes
+Filintegritet tjek mislykkedes
+Filintegritet tjek blev fuldført med success.\nDer blev ikke fundet nogle fejl i den downloadede fil.
+Filintegritet tjek blev fuldført.\nDer blev fundet fejl: Filen blev beskadiget under downloading processen. Det er påkrævet at genstarte downloading fra begyndelsen igen.
+Vis ikke dette vindue igen hvis tjek fuldførtes
+Kunne ikke finde programfilen på det antivirusprogram du har valgt.\nvenligst angiv dette selv.
+Filers størrelse er ikke ens
+Gem som:\n(Eks.: fil(*)(*A)(*a).txt)
+Ugyldig gemning som angivet skabelon.\nVær sikker på at denne stemmer overens med skabelonen på URL.
+Når færdig
+Når færdig (alle fuldførte eller ved fejl)
+Programmer
+Hvad er dette?
+Meninger
+;
+Kære folkens!
+Free Download Manager (FDM) er en af det meste populære downloadingsprogrammer i verden, vi har millioner af aktive brugere, nu efter dette er blevet et selskab, vil vi have mere!
+Hvis du finder programmet brugbart og et must-have program som vi gør, spørger vi venligst dig om og hjælpe os at sprede det rundt i verden ved at linke til det i din blog, webside eller personlige space, som eks. Myspace/MSN.
+; %s vil blive erstattet med "FDM buzz" 
+Officelt blev %s startet August 16, 2006. Vores mål er at få FDM til at være den hurtigst-spredende internetutility efter FireFox!
+FDM buzz
+; %s vil blive erstattet med "blog" 
+Du kan følge FDM's progres i vores %s.
+blog
+Tak for din hjælp på forhånd,\nFree Download Manager development teamet
+Vis mig ikke dette vindue igen, Jeg har en god hukommelse.
+Tilmeld dig buzz'en
+Nej, ellers tak
+FDM fællesskab
+Skift til "meninger" efter download
+Hvis checket, "meninger" tab vil blive automatisk aktiveret når download er færdig.
+Ændre Internet Explorer's netværksidentifikation
+Hvis checket, vil dette instruere de websider du browser at Free Download Manager er installeret på dit system. Brug af denne indstilling kan resultere i blokering af nogle sider.
+Trussel?
+Tjek om nogle af Free Download Manager's brugere har reporteret om denne download skulle indeholde virus/adware/spyware/m.m.
+OK, ingen af Free Download Manager's brugere har reporteret at denne download skulle udgøre en trussel.\n\nDog, dette er ingen garanti at denne download ikke udgør en trussel og det er anbefalet at tjekke den med et antivirusprogram.
+; behold alle %xxx, \n som er.
+Der er %d af %d af Free Download Manager's brugere der har reporteret at denne download udgør en trussel.\nMiddel bedømmelse for denne download er %.*g.\n\nvis meninger om denne download?
+Tjek alle nye downloads før downloading om de udgør en trussel
+Brug denne indstilling for at få FDM til at tjekke automatisk, før downloading, om nogle brugere har reporteret om denne download skulle udgøre en trussel.
+Vis meninger når downloading
+Hvis checket, FDM vil aktivere "meninger" tab automatisk og vise meninger om download under downloadingen.
+Tjekker om download er en trussel (se indstillinger for at deaktiver dette)
+OK, ingen reporteringer at dette skulle udgøre en trussel
+Advarsel! Nogen har reporteret at denne download udgør en trussel
+Luk
+Loading
+Download ikke dette
+Cache skriveoperationer for downloaded data til disk
+Hvis checket, FDM vil bruge et internt cachebuffer med den størrelse du angiver for skriveoperationer for downloaded data. Dette vil reducere antallet af forbrugstid på din harddisk. Dette kan forøge hastigheden under downloading på højhastighedsforbindelser.\nDog da downloaded data ikke skrives til harddisken med det samme vil dette kunne resultere i en re-download af data ved en computerfejl (ved værste tilfælde, størrelsen du angiver).\nAnbefalet for højhastighedsforbindelser.
+Kan ikke installe SeaMonkey (Mozilla Suite) overvågning
+Kan ikke afinstalle SeaMonkey (Mozilla Suite) overvågning
+Check denne boks hvis du vil have FDM til at registrere kliks i Mozilla Firefox browser
+Check denne boks hvis du vil have FDM til at registrere kliks i SeaMonkey (Mozilla Suite) browser
+Giver browser lov til at downloade hvis du vælger fortryd
+Check denne boks hvis du vil have browser til at downloade fil når du vælger fortryd i "opret download" dialogen
+Tilføj FDM til browsers højreklik menu
+Check denne boks for at tilføje elementerne "Download med Free Download Manager" og "Download webside med Free Download Manager" til browserens højreklik menu (menu vises når du højreklikker)
+Vælg menuelementer at vise i browsers højreklik menu
+Kan ikke installe Firefox overvågning
+Flyt filer til mappe
+Hastighed er for lav. Genstarter sektion...
+Genstart hvis hastigheden er for lav (i min.):
+Genstart sektion ved dramatisk reducering af hastigheden under downloading.
+Vil du se downloadingprogres vinduet igen?
+Beklager, denne service er imidlertidig ikke tilgængelig. venligst prøv igen senere.
+Flyt top
+Flyt bund
+Placer download til top af listen
+Check denne instilling hvis du vil have download placeet i toppen af listen over downloads.
+Overvågning i Firefox browser kan ikke anvendes da en FlashGot udvidelse er installeret.\nDu skal afinstallere FlashGot først.
+Anvend
+Deaktiver
+Skift
+Hvis tilbagehold alle downloads tilstand er aktiveret vil den blive deaktiveret, ellers vil den blive anvendt.
+Officelt vil %s blive startet August 16, 2006. Vores mål er at få FDM til at være den hurtigst-spredende internetutility efter FireFox!

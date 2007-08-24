@@ -1,0 +1,1587 @@
+; This is language file
+; You can translate it to your native language
+; To do this, follow instructions:
+; - PLEASE make sure FDM hasn't already been translated into your language 
+;   You should go to FDM web site (http://freedownloadmanager.org) and 
+;   check the list of available languages
+;   or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng to your language
+; - send translated file to support@freedownloadmanager.org 
+;
+;
+;
+; Translator - Modified and re-translated for v2.3 by Nedim Çelik , April 2007
+;
+
+; Your language name. Please keep it in English
+;
+Turkish
+;
+;
+; Below are the strings to translate:
+;
+Tümünü Kaydet
+Kes
+Kopyala
+Yapýþtýr
+Seyrek mod
+Orta mod
+Yoðun mod
+Ýndirme seçenekleri
+Çevirmeli baðlantý
+FDM Hakkýnda
+Çýkýþ
+Dosya
+Düzen
+Görünüm
+Seçenekler
+Araçlar
+Yardým
+Araç Çubuðu
+Durum Çubuðu
+Optimizasyon Sihirbazý
+Varsayýlan indirme ayarlarý 
+Genel Ayarlar
+Çevirmeli baðlantý
+Bitince baðlantýyý kes
+Bitince bilgisayarý kapat
+Yardým Kaynaklarý Penceresini Aç
+FDM Anasayfa
+Arkadaþýna Öner
+Destek grubuna e-posta gönder
+Güncellemeleri otomatik kontrol et
+Güncelleme için kontrol et
+-
+-
+Geçiþ Yap
+Trafik kullanýmý modu
+Kayýt
+Ýndirmeler
+Planlayýcý
+Site Tarayýcýsý
+HTTP//FTP Tarayýcýsý
+Site Yöneticisi
+Ýndirme ekle
+Ýndirmeyi baþlat
+Ýndirmeyi durdur
+Ýndirmeyi planla
+Görev ekle
+Görev özellikleri
+Seçili dosyalarý indir
+Dur
+Yenile
+Site ekle
+Site özellikleri
+Ýndirme gruplarý
+Ýndirme bilgisi
+Planlayýcý günlüðü
+Site Tarayýcýsý günlüðü
+Kenar çubuðu
+Yeni indirme oluþtur
+Ýndirmeyi sil
+Dosyayý aç
+Klasörü aç
+Ýndirmeyi otomatik baþlat
+Ýndirme özellikleri
+Görevi etkinleþtir
+Görevi devre dýþý býrak
+Görevi sil
+Ana klasörü aç
+Baðlantýyý kes
+Ýndir
+Site Tarayýcýsý ayarlarý
+Siteyi sil
+Geçici giriþ
+Siteler
+Ana pencereyi göster
+Tarayýcý izlemesi
+Pano izlemesi
+Tüm indirmeleri baþlat
+Tüm indirmeleri durdur
+-
+Devam Et
+-
+-
+-
+-
+-
+Ýptal
+-
+-
+-
+Tüm Gruplar
+Filtreler
+Tamamlanan
+Devam eden
+Planlanan
+Durdurulan
+Diðer
+Yeni grup oluþtur
+Grubu sil
+Tüm indirmeleri sil
+Tüm tamamlanmýþ indirmeleri sil
+Grup klasörünü aç
+Grup özellikleri
+Grup adý:
+Varsayýlan klasör:
+Dosya uzantýlarý [boþlukla ayrýlmýþ olarak]:
+Varsayýlan indirme önceliði
+Çok düþük
+Düþük
+Ortalama
+Yüksek
+Çok yüksek
+Lütfen grup adý giriniz
+Giriþ hatasý
+Ayný adlý grup zaten var. Lütfen baþka bir ad giriniz.
+Lütfen klasör adý giriniz
+Varsayýlan grup klasörünü seç
+Grup adýný buraya giriniz
+Bu grubun indirmelerini saklamak için varsayýlan klasör
+Gözat
+Bu grup için dosya uzantýsý. Ýndirme grubunu otomatik saptamak için kullanýlýr
+Bu grup için varsayýlan indirme önceliði
+Deðiþiklikleri iptal et ve pencereyi kapat
+Deðiþiklikleri uygula ve pencereyi kapat
+Ýndirme gruplarýnda hata
+Lütfen FDM'yi yeniden yükleyiniz
+Hata
+Ýndirme listesi yüklenemiyor. Muhtemelen zarar görmüþ veya baþka bir uygulama tarafýndan kullanýlýyor.
+Internet Explorer ile bütünleþme baþlatýlamadý
+Emin misiniz?
+Bu iþlem tüm grup indirmelerini silecektir
+Onaylama
+Dosya adý
+Boyut
+Ýndirilen
+Kalan zaman
+Parça
+Hýz
+Açýklama
+Günlük
+Ýlerleme
+Zaman
+Tarih
+Bilgi
+Temizle
+Otomatik kaydýrma
+Bilinmeyen að hatasý
+Eriþim engellendi. Geçersiz kullanýcý adý veya parola
+Eriþim engellendi. Geçersiz parola
+Baþarýlý
+Sunucuya baðlanýlamýyor
+Dosya sunucuda bulunamadý
+Sunucuyla olan baðlantý bozuldu
+Sunucu yanýt vermiyor
+Sunucu adý bulunamýyor
+Sunucu indirmeye devam desteði saðlamýyor. Bu indirmeyi durdurmayýnýz; aksi halde indirmeyi baþtan baþlatmanýz gerekecek
+Proxy kullanýcý adý ve parolasý gerekiyor
+Uzatýlmýþ hata
+Bozuk istek . Muhtemelen bu bozuk bir URL
+Bilinmeyen sunucu hatasý
+Baðlantý kesildi
+Bozuk URL
+Internet baðlantýsý yok
+Seçili HTTP sürümü bu sunucu tarafýndan desteklenmiyor
+Bilinmeyen hata
+Dosya diskten silinemiyor
+Bu sunucuya baðlantý sayýsý limitine eriþildi
+Baðlantý sayýsý limitine eriþildi
+%d sn duraklat.
+Parça
+Baþlatýldý
+Tamamlandý
+Ýndirme tamamlandý
+Baðlanýyor...
+Baðlantý kuruldu
+Yönlendiriliyor...
+Yönlendirme baþarýlý. Yeni URL açýlýyor
+Ýndirme baþlatýlýyor...
+Durduruldu
+Yeni parça oluþturuluyor...
+Ýptal edildi
+Ýndirme yeniden baþlatýlýyor...
+Diskteki dosya açýlýyor...
+Dosya adý çok uzun
+Dosya zaten var. Yeni ad:
+Yeni ad giriniz
+Çýktý dosyasý silindi. Devam edilemiyor
+Dosya zaten var. Üzerine yaz
+Dosya zaten var. Ýndirme devam ediyor
+Dosya zaten var
+Diskteki dosya açýlamadý
+Sunucudaki dosyanýn boyutu deðiþti!
+Yeni boyut için ayarlanýyor...
+Dosyanýn üzerine yazýlamýyor
+Dosya yeniden adlandýrýlacak
+Dosya asýl adýyla adlandýrýlamýyor
+Gruplar saklanamýyor
+Ýndirmeler saklanamýyor
+Çevirmeli baðlantý
+Baðlan:
+Otomatik çevir
+Baðlan
+Çevirme giriþini buradan seçiniz
+Bir sonraki seferde çevirmeyi otomatik baþlatmak istiyorsanýz bu kutuyu iþaretleyiniz
+Þimdi çevir
+Çevirme ve bu pencereyi kapat
+Bu bilgisayarda çevirmeli baðlantý bulunamadý
+Hat meþgul
+Donaným hatasý
+Çevirme sesi yok
+Arýyor
+Dene
+Port açýlýyor...
+Saðlayýcý aranýyor...
+Uzak bilgisayara baðlanýldý
+Kullanýcý adý ve parolasý doðrulanýyor...
+Baðlantý hýzý %d BPS
+Baðlantýyý kes
+Tekrarlama
+Kullanýcý adý ve parolasý gerekiyor
+Kullanýcý:
+Parola:
+Grup:
+Klasöre kaydet:
+Farklý kaydet:
+Baþlat
+Otomatik
+El ile
+Planla
+Ýndirme önceliði
+Geliþmiþ
+Ýndirmek istediðiniz dosyanýn adresi
+Kullanýcý adýný giriniz
+Parolayý giriniz
+Sunucu izin gerektiriyorsa bu kutuyu iþaretleyiniz
+Ýndirmenin yerleþtirileceði yer için grup adý. Gruplar indirmelerinizi düzelmenize yardým eder
+Ýndirmelerin saklanacaðý klasör
+Ýndirilen dosya için yeni ad. Eðer dosyayý orijinal adýyla kaydetmek istiyorsanýz bu alaný boþ býrakýnýz
+Ýndirmenin kýsa açýklamasý
+Bu indirme mümkün olan en kýsa zamanda otomatik olarak baþlatýlacak
+FDM bu indirmeyi otomatik olarak baþlatmaya çalýþmayacak
+Bu indirmeyi planla
+Ýndirme planlarýný ayarla
+Ýndirme önceliði. Yüksek öncelikli indirmeler önce baþlatýlýr. Düþük öncelikli indirmeler daha sonra baþlatýlýr
+Bu indirme için geliþmiþ ayarlarý görüntüle
+Girilen URL yanlýþ. Lütfen kontrol ediniz
+Lütfen kullanýcý adýný giriniz
+Çýktý klasörünü seçiniz
+Genel
+Genel bilgi
+Ýndirmenin kaydedildiði dosya:
+Ýndirilen dosyanýn adý
+Bu indirmenin URL'si deðiþtirilemez
+Bu indirme devam ediyor. Dosya adý deðiþtirilemiyor
+Dosya yeniden adlandýrýlamýyor
+Dosya bulunamadý
+Yol bulunamadý
+Geçersiz .exe formatý
+Dosya baþka bir uygulama tarafýndan kullanýlýyor
+Eriþim engellendi
+Aygýt hazýr deðil
+Disk dolu
+Dosya adý geçersiz
+Kullanýcý adý ve parolasý gerekiyor
+Baðlantý
+Að
+Hatalar
+Baðlantý denemelerinin arasýndaki duraklama (sn):
+Maksimum deneme sayýsý
+Zaman aþýmý (sn):
+Minimum parça boyutu :
+Maksimum parça sayýsý:
+Bu indirme için trafik sýnýrlamasý
+Trafiði sýnýrla
+Tüm sýnýrlamalarý yoksay
+B
+KB
+MB
+; second. e.g. KB/s
+s
+%d deðerinden büyük bir deðer giriniz
+Lütfen boyutu seçiniz
+Hata durumunda sunucuya tekrar baðlanmayý bekleme süresi
+Baþarýsýz indirme denemelerinin maksimum sayýsýný sýnýrlamak istiyorsanýz bu kutuyu iþaretleyiniz
+Sunucu yanýtý için bekleme süresi
+Parçalarýn minimum boyutu. Ýndirme daha küçük boyuttaki parçalara bölünmeyecek
+Parçalarýn maksimum sayýsý . Ýndirme daha fazla parçaya bölünmeyecek
+FDM'nin indirme için maksimum ne kadar trafik kullanacaðýný belirtiniz
+Trafik sýnýrlamalarýný ve bu indirme için kurulan baðlantýlarýn maksimum sayý sýnýrlamasýný yoksay
+Bu alanda byte(B), kilobyte(KB) ya da megabyte(MB) olarak bir deðer belirtebilirsiniz
+Protokol
+Sunucudaki kimlik:
+Referans veren:
+HTTP 1.1'i kullan
+Çerezleri kullan
+Pasif modu kullan
+Transfer modu
+Binary
+Aþaðýdaki uzantýlara sahip dosyalar için ASCII
+FDM'nin HTTP sunucusuna nasýl baðlanacaðýný belirtiniz
+Bu karakter dizisi HTTP sunucusuna referans veren alaný olarak gönderilecek. Genelde, bu gerekmez
+FDM'nin HTTP 1.1'i kullanmasýný istiyorsanýz bu kutuyu iþaretleyiniz
+FDM'nin çerezleri kullanmasýný istiyorsanýz bu kutuyu iþaretleyiniz
+FDM'nin FTP sunucularý için pasif modu  kullanmasýný istiyorsanýz bu kutuyu iþaretleyiniz. Güvenlik duvarlarýya çalýþýrken bazen bu gereklidir
+FTP transferleri için binary modu kullan. Ýndirdiðiniz dosya metin deðilse bu modu seçiniz
+FTP transferleri için ASCII modu kullan. Ýndirdiðiniz dosya metin ise bu modu seçiniz
+FDM belirli uzantýlara sahip dosyalar için ASCII modu kullanacak. Diðer dosyalar için FDM binary modu kullanacak
+Proxy
+Proxy ayarlarýný al
+Microsoft Internet Explorer'dan
+Kendim ayarlamak istiyorum
+Proxy kullanma
+Ayarlar
+Adres:
+Port:
+Lütfen proxy adresini giriniz
+Lütfen proxy portunu giriniz
+FDM proxy ayarlarýný Microsoft Internet Explorer'dan alýr
+Proxy ayarlarýný siz belirlersiniz
+FDM proxy kullanmaz
+Burada belirtmek istediðiniz proxy için sunucu tipini seçersiniz
+Kullanmak istediðiniz proxy adresini giriniz
+Proxy portunu buraya giriniz. Genellikle bu port 3128, 1080 ya da 8080'dir
+Proxy sunucusu izin gerektiriyorsa bu kutuyu iþaretleyiniz
+Diðer
+Yerel dosya
+Dosya zaten varsa:
+Ýndirilen dosya için diskte yer aç
+Tamamlanmayan indirmeler için ilave uzantý:
+Internet sunucusu
+Sunucu devam desteði saðlamýyorsa indirmeyi yeniden baþlatma
+Sunucudaki dosyanýn boyutu deðiþtirilirse:
+Aþaðýdaki hatalar oluþtuðunda dur
+Sor
+Üzerine Yaz
+Yeniden Adlandýr
+Devam Et
+Yeniden Baþlat
+Uyum Göster
+Lütfen dosya uzantýsýný belirtiniz
+Burada dosya diskte zaten varsa FDM'nin ne yapacaðýný ayarlayabilirsiniz
+Ýndirilen dosya için, indirme baþladýðýnda, diskte yer açýlmasý için bu kutuyu iþaretleyiniz
+Eðer iþaretlenirse FDM belirlenen uzantýyý indirme esnasýnda dosya adýna ekler.Ýndirme bitince FDM dosyayý orijinal adýyla yeniden kaydeder.
+Sunucu devam desteði saðlamýyorsa, FDM indirmeyi yeniden baþlatmaz
+Sunucudaki dosyanýn boyutu deðiþtirilirse FDM'nin ne yapmasý gerektiðini buradan ayarlayabilirsiniz
+Dosya sunucuda bulunamadýðýnda indirmeyi durdurmak için bu kutuyu iþaretleyiniz
+Kullanýcý adý veya parolasý geçersiz olduðunda indirmeyi durdurmak için bu kutuyu iþaretleyiniz
+Trafik kullanýmý modlarý
+Ayarlanacak modu seçiniz:
+Maksimum baðlantý sayýsý:
+Her bir sunucuya maksimumum baðlanma sayýsý:
+Trafik sýnýrlamasý:
+sýnýrsýz
+Kullanmak istediðiniz trafik kullaným modunu buradan seçebilirsiniz
+Maksimum baðlantý sayýsýný sýnýrlamak için bu kutuyu iþaretleyiniz
+Her bir sunucuya maksimumum baðlanma sayýsýný sýnýrlamak için bu kutuyu iþaretleyiniz
+Buradan indirilen dosyalar için FDM'nin maksimum trafiðini belirleyiniz
+Tüm indirmeler
+Ýndirme Listesi
+Otomatik kaydetme aralýðý
+dk.
+Tamamlanmamýþ indirme silindiðinde
+Tamamlanmýþ indirmeleri otomatik olarak sil
+Dosyayý silme
+Dosyayý sil
+FDM indirme listesini belirtilen bir zaman aralýðý geçtikten sonra otomatik olarak kaydeder. Bu listeyi baðlantý ya da güç kesintilerinden korur
+Burada tamamlanmamýþ bir indirme listeden silindiðinde diskteki dosyaya FDM'nin ne yapacaðý belirlenir.
+Bitince indirmenin otomatik olarak listeden silinmesini istiyorsanýz bu kutuyu iþaretleyiniz
+Ýzleme
+Ýzle
+Pano
+Aþaðýdaki uzantýlara sahip dosyalarý izle
+Aþaðýdaki uzantýlara sahip dosyalarý yoksay
+ALT tuþuna basýlmamalý
+ALT tuþuna basýnca izleme yap
+Lütfen uzantýlarý belirtiniz
+FDM'nin Internet Explorer'daki týklamalara duyarlý olmasýný istiyorsanýz bu kutuyu iþaretleyiniz
+FDM'nin panoyu izlemesini istiyorsanýz bu kutuyu iþaretleyiniz
+Sadece belirtilen uzantýlý dosyalarý izle
+Belirtilen uzantýlý dosyalarý izleme
+Sadece ALT tuþuna basýlý deðilken izle
+Sadece ALT tuþuna basýlý olduðunda izle
+Baþlatma
+Bilgisayar baþlatýlýrken yükle
+Simge durumunda küçültülmüþ olarak baþlat
+Sistem
+Bildirim Alanýna küçült
+Kapatma düðmesi pencereyi simge durumuna küçültsün
+FDM Windows baþladýðýnda otomatik olarak baþlar
+FDM baþlatýldýktan sonra simge durumunda küçültülür
+Simge durumunda küçültüldüðünde Bildirim alanýna küçültülür
+Ýþaretlenirse, kapatma düðmesi simge durumunda küçült düðmesine benzer özellik gösterir
+Güncelleme
+Güncelleme sunucusunun adresi
+FDM yeni sürümü otomatik olarak kontrol edecek
+Að kullanýmý optimizasyon sihirbazý
+Að kullanýmý optimizasyon sihirbazýna hoþ geldiniz!
+Bu sihirbaz sizin baðlantý tipiniz için en uygun ayarlarý kurmanýza yardým edecek. Sihirbaz, bu uygulamanýn özelliklerini ve indirme için varsayýlan özellikleri ayarlar.
+Lütfen baðlantý tipini seçiniz
+Bitir
+Burada Internet baðlantýnýzý belirtiniz
+FDM'yi baðlantý tipinizle en uygun çalýþmaya ayarlar
+Görev
+Baþlangýç zamaný
+Sonraki baþlangýç zamaný
+Son baþlangýç zamaný
+Plan listesi yüklenemiyor. Muhtemelen zarar görmüþ ya da baþka bir uygulama tarafýndan kullanýlýyor
+Planlayýcý günlüðü yüklenemiyor
+Plan listesi kaydedilemiyor
+"%s" görevi planlandý. Baþlatýlsýn mý?
+Trafik kullaným modu "%s" yapýlýyor...
+Baðlantýyý kes
+Tüm baðlantýlar
+Yeni trafik kullaným modu
+Bilgisayarý Kapat
+Yeniden baþlat
+Oturumu kapat
+Bir kez
+Paz
+Pzt
+Sal
+Çar
+Per
+Cum
+Cmt
+Günlerde:
+Her
+gün
+saat
+FDM baþlatýlýrken
+Çevirme baþarýlý olduðunda
+Çevirme baþarýsýz olduðunda
+Aktif indirme yokken
+Hýz %d BPS'den düþükken, Süre: %d
+Tüm indirmeler hatalý durumdayken
+Hiç
+Bilinmiyor
+"%s" ile baðlantý kuruldu 
+"%s" ile baðlantý kurulamadý 
+Açýldý
+Yetersiz bellek
+Açýlamýyor
+Planýn uygulanmasý uygulama baþlatýlýrken çýkýlmasýna yol açtý. Plan yoksanacak
+Maksimum çevirme denemesi
+Denemeler arasýndaki duraklama [s]
+Baðlantýyý kesecek en küçük hýz:
+Tekrar dene
+En az
+Kullanýlacak baðlantý
+Baþarýlýysa
+defa
+Tüm aktif baðlantýlarý kes
+Kesilecek baðlantý
+Uygulama adý:
+Deðiþkenler:
+Kapatma tipi:
+Bilgisayar kapanýrken uygulamalarý kapanmaya zorla
+Uygulama aç
+Çevirmeli baðlantý kur
+Baðlantýyý kes
+Trafik kullanýmý modunu deðiþtir
+FDM'den çýk
+Bilgisayarý kapat
+Baþlatýlacak indirmeler
+Durdurulacak indirmeler
+Uygulamalar
+Tüm dosyalar
+Üzgünüm, bu özellik sadece Windows 2000, XP ve üzeri sürümlerde geçerli
+Lütfen uygulama adýný giriniz
+Lütfen indirmeyi seçiniz
+Görev baþlangýcýnda ayarlanmasýný istediðiniz trafik kullaným modunu seçiniz
+Maksimum baþarýsýz çevirme denemesi sayýsýný sýnýrlamak istiyorsanýz, bu kutuyu iþaretleyiniz
+Baþarýsýz denemeler arasýndaki müddet
+Belirttiðiniz deðerin altýndaki bir hýz deðeri ile baðlantý kurulmamasýný istiyorsanýz bu kutuyu iþaretleyiniz
+Burada gereken minimum baðlantý hýzýný belirtiniz
+Bu kutuyu iþaretlerseniz FDM gereken baðlantýyý kurmak için tekrar deneyecektir
+Maksimum baþarýsýz baðlantý kurma denemesi sayýsýný sýnýrlamak istiyorsanýz, bu kutuyu iþaretleyiniz
+Gereken indirmeleri burada belirtiniz
+Var olan tüm indirmelerin listesi
+Seçili indirmeleri indirmeler görev listesine ekle
+Seçili indirmeleri indirmeler görev listesinden sil
+Açmak istediðiniz uygulamayý burada belirtiniz
+Bilgisayarýnlzda uygulama bulun
+Uygulama deðiþkenlerini burada belirtiniz
+Oturumunuzun sonlandýrýlma tipini burada belirtiniz
+Oturumunuzu sonlandýrmaya zorlamak için bu kutuyu iþaretleyiniz. Bu sisteminizde çalýþan uygulamalar varsa faydalýdýr. Fakat bu durumda kaydedilmemiþ tüm veriler kaybedilir
+Burada planlanan hareketi belirtiniz
+FDM'nin tüm aktif baðlantýlarý kesmesini istiyorsanýz bu kutuyu iþaretleyiniz
+Burada kesilecek baðlantýyý belirtiniz
+Belirli günlerde
+Pazar
+Pazartesi
+Salý
+Çarþamba
+Perþembe
+Cuma
+Cumartesi
+Olayda
+Süre
+Düþük hýz
+dk.
+dakikada
+saatte
+günde
+Ýndirme hýzý çok yavaþken
+Tüm indirmeler hatalý durumdayken
+Lütfen gün belirtiniz
+Görevi belirtilmiþ zamanda baþlatýr
+Görevi baþlatmak için zamaný ayarlar
+Görevi belirtilmiþ tarihte baþlatýr
+Görevi baþlatmak için tarihi ayarlar
+Görevi haftanýn belirli günlerinde baþlatýr
+Görevi her Pazar baþlatýr
+Görevi her Pazartesi baþlatýr
+Görevi her Salý baþlatýr
+Görevi her Çarþamba baþlatýr
+Görevi her Perþembe baþlatýr
+Görevi her Cuma baþlatýr
+Görevi her Cumartesi baþlatýr
+Görevi her belirli aralýklarla baþlatýr
+Bu alan dakika, saat ya da gün cinsinden aralýklar belirtebilmenize olanak saðlar
+Görevi bir olay gerçekleþtiðinde baþlatýr.
+Burada olay tipini belirtiniz
+Zaman aralýðýný buraya giriniz
+Gereken minimum hýzý buraya giriniz
+Görevi gerçekleþtirmek için onaylama gerekiyor
+Onaylama için bekleme süresi
+sn.
+Ýþaretliyse, FDM görevin gerçekleþtirilmesi için onay ister
+Ýþaretliyse, FDM onayýnýzý belirtilen süre müddetince bekler. Bu süre boyunca bir tepki vermezseniz görev baþlatýlýr
+Adres:
+Ýndirilecek dosyalarýn listesi oluþturuluyor
+Sunucuyla baðlantý kuruluyor
+Site Yöneticisinde saklanan kullanýcý adý ve parolalarý kullanmaya çalýþýyor
+Sunucudan dosyalarýn listesi alýnýyor
+Sunucuyla kurulan baðlantý bozuldu. Yeniden kurmaya çalýþýyor
+Liste oluþturuluyor
+Dosyalarýn boyut ve son deðiþtirilme tarihlerini al
+Bu parametreyi kullanmak hýzý büyük ölçüde azaltabilir
+FDM'nin HTTP sunucusundaki dosyalarýn boyutunu ve tarihini sorgulamasýn istiyorsanýz bu kutuyu iþaretleyiniz
+Site adý
+Baðlantýlar
+Giriþ
+Grup
+Site listesi yüklenemiyor. Muhtemelen zarar görmüþ ya da baþka bir program tarafýndan kullanýlýyor
+Site listesi kaydedilemiyor
+Maksimum eþ zamanlý baðlantý:
+Bu siteden yeni bir indirme için varsayýlan grup
+FTP pasif modunu kullan
+Lütfen site adýný giriniz
+Ayný adlý bir site var. Lütfen baþka bir site adý giriniz
+Maksimum baðlantý sayýsý 0'dan büyük olmalýdýr
+Lütfen grup seçiniz
+Buraya site adýný yazýnýz
+Maksimum eþ zamanlý baðlantý sayýsýný sýnýrlamak için bu kutuyu iþaretleyiniz
+Bu sunucudan indirilen dosyalarý seçilen gruba otomatik kaydetmek için bu kutuyu iþaretleyiniz
+Kullanýcýya sor
+Bana tekrar sorma
+Diske yazma hatasý
+"%s" zaten diskte var. Ne yapýlmasýný istersiniz?
+Bir daha bu soruyu sorma. Seçiminiz varsayýlan olarak kabul edilecektir
+Var olan dosyanýn üzerine yazýlýyor
+Bu dosyayý yeniden adlandýr
+Ýndirmeye devam et. (Ýndirme var olan dosyanýn boyutuna eþit durumda baþlatýlacaktýr)
+Bu indirmeyi durdur
+Evet
+Hayýr
+Ýndir
+silindi. Diskteki dosya da silinsin mi?
+Lütfen bir kullanýcý adý ve bir parolasý giriniz
+"%s" için giriþ yap
+Belirttiðiniz kullanýcý adý ve parolasýný sunucuya gönder
+Bu sunucuya baðlanma
+Sunucudaki "%s" dosyasýnýn boyutu deðiþtirildi. Ne yapýlmasýný istersiniz?
+Ýndirmeyi baþtan baþlat
+Yeni dosya boyutuna uyum göster. Önerilmez
+Lütfen bekleyiniz
+Güncelle
+Açýklama
+Kullanýlacak güncelleme:
+Güncellemeler kontrol ediliyor
+Zaten en yeni sürümü kullanýyorsunuz
+Ýndiriliyor
+Sürüm %s kurulum %s var
+%s (%s) sürümünün tamamý
+%s sürümüne güncelleniyor
+%s (%s) sürümüne güncelleniyor
+FDM yeniden baþlatýlmalý. Þimdi baþlatýlsýn mý?
+Güncelleme tamamlandý
+Güncelleyici bulunamadý
+Burada güncelleme tipini belirtiniz
+FDM'yi tamamýný yeniden yükleyerek güncelle
+FDM'yi güncelleme daðýtýcýsýný kullanarak güncelle
+Güncelleme süreci hakkýnda daha fazla bilgi için bak
+Bu sürümde neler yeni?
+FDM'nin güncellemesine þimdi baþlanýyor
+Güncellemeyi iptal et ve bu pencereyi kapat
+Ýndirme oluþtur
+Ýçeriði seç
+Ýçeriði seçme
+Eklenecek indirme listesi
+Seçili klasörleri indirme listesine eklemek için iþaretle
+Seçili klasörleri indirme listesine eklememek için iþaretleme
+FDM Hakkýnda
+Telif hakký (c)
+Tüm haklarý saklýdýr
+Bu ürünün kayýtlý kullanýcýsý:
+Zaten güncellendi. Yeniden baþlatmak gerekiyor
+Geçersiz kullanýcý adý ya da parolasý
+Geçmiþ dosyasý yüklenemiyor
+Geçmiþ dosyasý kaydedilemiyor
+HTML Örümceði varsayýlan ayarlar
+HTML Örümceði
+Web sayfasý aðacý
+Web sitesini indir
+Web sitesi indirme ayarlarý
+Ýndirmeye baþla
+Ýndirmeyi durdur
+Ýndirmeyi planla
+Sil
+Web sayfasýný tarayýcýda aç
+Ýndirmeye otomatik baþla
+Web sitesi (Sayfasý) URL
+Dosyalar
+Ýndirmeler de silinsin mi?
+Web sayfasý listesi yüklenemiyor
+Web sayfasý listesi kaydedilemiyor
+Web sayfasýnýn URL'si ya da indirme yapýlan HTTP sunucusu
+Web sayfasýnýn URL'si ya da HTTP sunucusundan indirilme baþlatýldý
+Ýndirmelerin kaydedileceði klasör adý
+Çýktý klasörleri:
+Web sayfalarý
+Sayfa
+HTML kodlu Web sayfasý dosyalarýnýn uzantýlarý:
+CCS dosyalarýný indir
+Diðer sitelerden web sayfasý indir
+Resimler
+Resimleri indir
+Baþka sitelere baðlý resimleri indir
+Ýndirme derinliði:
+HTML kodlu web sayfasý uzantýlarý. Web sayfalarý indirilecek resim baðlantýlar ve diðer sayfalara olan baðlantýlar için taranýr
+Ýþaretlenirse, web sayfalarý stilleri (CSS) de indirilir. Önerilir
+Ýþaretlenmemiþse, diðer sitelerin sayfalarý indirilmez. Örneðin, burayý iþaretlemediniz ve http://www.ornek.com/ sitesinden indirmeye baþladýnýz, bu durumda http://www.digersite.com/mac.html indirilmez, fakat http://www.ornek.com/mac.html indirilir
+Ýþaretlenmiþse, web sayfasýnýn resimleri de indirilir
+Ýþaretlenmemiþse, diðer sitelere baðlantýsý olan resimler indirilmez
+Ýndirme derinliði. Örneðin, http://mac.com/index.html sitesinden indirmeye baþladýnýz ve bu sayfadan http://mac.com/falan.html sayfasýna bir baðlantý var. Bu durumda, http://mac.com/falan.html sayfasýnýn derinliði 1'dir. Derinliði 0 seçerseniz sadece baþlanan sayfanýn içeriðini indirebilirsiniz.
+Web sayfasýndan dosya indir
+Diðer sitelerden dosya indir
+Bazý uzantýlara sahip dosyalarýn silinmesi
+Etkinleþtir
+Ýndir
+Ýndirme
+Bu uzantýlara sahip dosyalar:
+Web sayfalarýndan dosya indirmek için bu kutuyu iþaretleyiniz
+Diðer sitelerdeki dosyalarý indirmek için bu kutuyu iþaretleyiniz
+Belirtilen uzantýlara sahip dosyalarý yoksaymak için bu kutuyu iþaretleyiniz
+Ýþaretlenirse, aþaðýda belirtilen uzantýlara sahip dosyalar indirilir
+Ýþaretlenirse, aþaðýda belirtilen uzantýlara sahip dosyalar indirilmez
+Ayarlarý ver
+Ayarlarý al
+Regedit.exe açýlamadý
+Ayarlar verilmeye çalýþýlýrken hata oluþtu
+Ayarlar alýnmaya çalýþýlýrken hata oluþtu
+FDM kayýt (registry) dosyalarý
+Bazý uzantýlara sahip resimlerin silinmesi
+Bu uzantýlara sahip resimler:
+Belirtilen uzantýlara sahip resimleri yoksaymak için bu kutuyu iþaretleyiniz
+Ýþaretlenirse, aþaðýda belirtilen uzantýlara sahip resimler indirilir
+Ýþaretlenirse, aþaðýda belirtilen uzantýlara sahip resimler indirilmez
+Bunu indirme ve sil
+Sunucu indirmeye devam desteði saðlamýyor. Baþtan baþlatýnýz
+URL açýlamadý
+Üzgünüm, Kayýtlara (registry) yazýlýrken beklenmeyen bir hata oluþtu
+Tescil ettirdiðiniz için teþekkürler! Lütfen FDM'yi yeniden baþlatýnýz
+Free Download Manager ile indir
+Free Download Manager ile siteyi indir
+FDM'yi internet tarayýcýsý'nýn içerik menüsüne ekle
+"Free Download Manager ile indir" ve "Free Download Manager ile siteyi indir" seçeneklerini internet tarayýcýsýnýn içerik menüsüne (sað týklanýnca görünen menü) eklemek için iþaretleyiniz
+Tarayýcýyla gezinirken trafik kullanýmýný azalt
+Bir seviye azalt
+Seyrek moda ayarla
+Trafik kullanýmýný internette gezinirken otomatik olarak azaltmak için bu kutuyu iþaretleyiniz. Böylece FDM bir þey indirirken çok daha hýzlý gezinebilirsiniz
+Trafik kullaným modu bir seviye azaltýlýr. Yoðun->Orta, Orta->Seyrek
+Trafik kullaným modunu Seyrek yapar
+Geçerlilik
+Alt etki alanlarý için geçerli
+Bu kaydý HTTP yoluyla indirme için kullanacaksanýz bu kutuyu iþaretleyiniz
+Bu kaydý HTTPS yoluyla indirme için kullanacaksanýz bu kutuyu iþaretleyiniz
+Bu kaydý FTP yoluyla indirme için kullanacaksanýz bu kutuyu iþaretleyiniz
+Bu kaydý alt etki alaný sunucularýndan (DNS) indirmeler için de kullanacaksanýz bu kutuyu iþaretleyiniz. Örneðin, http://site.com için alt etki alaný http://falan.site.com 'dur
+Lütfen en az bir protokol seçiniz
+Maksimum aktif indirme sayýsý
+Ayný anda çalýþan maksimum indirme sayýsýný sýnýrlamak için bu kutuyu iþaretleyiniz
+Yeniden indir
+Parça sayýsýný artýr
+Parça sayýsýný azalt
+; context: [section x] - Stopped
+Durduruldu
+; tray menu
+Sürükle-Býrak kutusu
+;
+Opera eklenti (Plugin) klasörü bulunamýyor. Kendiniz belirlemek ister misiniz?
+Netscape eklenti (Plugin) klasörü bulunamýyor. Kendiniz belirlemek ister misiniz?
+Opera için izleme yüklenemiyor
+Opera için izleme kaldýrýlamýyor
+Netscape için izleme yüklenemiyor
+Netscape için izleme kaldýrýlamýyor
+FDM'nin Opera'da týklamalara duyarlý olmasýný istiyorsanýz bu kutuyu iþaretleyiniz
+FDM'nin Netscape'te týklamalara duyarlý olmasýný istiyorsanýz bu kutuyu iþaretleyiniz
+; create download dlg
+Boyutu sorgula
+; request a size of a download
+Sorgulanýyor...
+Sunucudaki dosyanýn boyut bilgisi alýnýr
+Tümüne evet
+Tümüne hayýr
+Detaylý günlük defteri
+Ýþaretlenirse, FDM sunucudan verilen cevaplarý gösterir
+Deðiþiklikler tarayýcýyý yeniden baþlattýktan sonra etkili olacak
+Görev listesi
+Dosya listesi
+Site listesi
+Sayfa listesi
+Ýndirmeler siliniyor
+Ýndirme listesi oluþturuluyor
+Toplu dosya indirme
+Baþlangýç:
+Son:
+Aralýk:
+Basamak sayýsý:
+Sonuçlar
+Örnek:
+Dizinin baþlangýç sayýsý
+Dizinin bitiþ sayýsý
+Dizi aralýðý. Örneðin, aralýk 10 ise dizi 0, 10, 20, ... olur
+Basamak sayýsý. Örneðin, bu deðer 1 ise, dizi 1, 2, 3 olur. Eðer 2 ise dizi 01, 02, 03 olur
+Üretilen diziye bakmak için buraya týklayýnýz
+Ýptale basýnca, internet tarayýcýsýnýn indirmesine izin ver
+Internet tarayýcýsýnýn "Ýndirme ekle" penceresinde "Ýptal"e basýnca dosya indirebilmesini istiyorsanýz, bunu iþaretleyiniz
+Dizinin son sayýsý baþlangýç sayýsýndan büyük olmalýdýr
+Lütfen URL'de (*)'ý kullanarak bir URL þablonu belirtiniz
+Dosyanýn uzantýsý yoksa oluþtur
+Uzantýsý olmayan dosyalara bir uzantý belirlemek için bu kutuyu iþaretleyiniz. Örneðin, dosya adý "dosya" ise ve siz "txt" belirlemiþseniz, sonuç "dosya.txt" olur
+Boyutlarý yalnýzca byte olarak göster
+Tüm boyutlarý kilobyte veya megabyte yerine byte olarak görmek için bu kutuyu iþaretleyiniz
+Virüs kontrolü gerçekleþtir
+Deðiþkenler:
+Uzantýlar:
+indirilen dosyalarýn antivirus tarafýndan otomatik olarak kontrol edilmesi için iþaretleyiniz
+Antivirüs programýnýn adýný belirtiniz
+Antivirüs deðiþkenlerini belirtiniz
+Kontrol edilecek dosyalarýn uzantýlarýný buraya yazýnýz
+Antivirüs programýnýn adýný giriniz
+Ad geçersiz. Lütfen kontrol ediniz
+Antivirüs açýlýyor
+Görevi çalýþtýktan sonra devre dýþý býrak
+Görevi yapýldýktan sonra sil
+Görevi çalýþtýktan sonra otomatik olarak devre dýþý býrakmak için bu kutuyu iþaretleyiniz
+Görevi yapýldýktan sonra otomatik olarak silmek için bu kutuyu iþaretleyiniz
+Git
+Geri
+Otomatik olarak bir dosya adý oluþtur
+Otomatik olarak bir dosya adý oluþturmak için bu kutuyu iþaretleyiniz
+"htm" uzantýsýyla kaydet
+Tüm web sayfalarýný "htm" uzantýsý altýnda kaydetmek için bu kutuyu iþaretleyiniz
+Tüm indirmelerin boyutunu hesaplamak için bu düðmeye basýnýz
+Sunucudaki klasör yapýsýný koru
+Sunucunun klasörlerinin orijinal yapýsýný korumak için iþaretleyiniz. Aksi halde sunucudaki tüm dosyalar bir klasöre kaydedilir
+Baþka bir klasör seçtiniz. Bu grup için bu klasör varsayýlan olarak atansýn mý? Varsayýlan klasörü grup özelliklerinden de deðiþtirebilirsiniz.
+; === ADDED LINES ===
+Böyle bir indirme zaten var. Ne yapýlmasýný istersiniz?
+Aç
+Ýndirilen dosyayý aç
+Sürüm
+Bizimle baðlantýya geçmek için burayý týklayýnýz
+En yeni sürümü indirmek için burayý týklayýnýz
+Uyarý: Bu bilgisayar programý telif hakký yasalarý ve uluslararasý yaptýrýmlar tarafýndan korunmaktadýr. Bu ürünün, ya da bir kýsmýnýn izinsiz çoðaltýlmasý veya daðýtýlmasý suçtur ve bunu yapanlar hakkýnda kanunun yasal ve cezai hükümleri geçerli olacaktýr.                  *Türkçe'ye çeviren: Nedim Çelik (nedim.celik@gmail.com)
+; === new version ===
+Free Download Manager ile tümünü indir
+Ýndirme listesi ekle
+Seçili olaný sil
+Bu eklenecek URL listesi
+Seçili URL'lerin tümünü listeden silmek için bu düðmeye basýnýz
+Firefox eklenti (Plugin) klasörü bulunamýyor. Kendiniz belirlemek ister misiniz?
+Firefox için izleme yüklenemiyor
+Firefox için izleme kaldýrýlamýyor
+FDM'nin Mozilla Firefox'da týklamalara duyarlý olmasýný istiyorsanýz bu kutuyu iþaretleyiniz
+Free Download Manager ile seçileni indir
+Baþlatýlýyor
+Web siteleri
+Aktif indirmeler
+Þu an aktif indirme yok
+Bildirimler
+Görev çubuðunda bildirim balonlarýný kullan
+Zaman aþýmý
+Ýndirme durduðunda ve bitince, bildirim balonlarýný etkinleþtirmek için bu kutuyu iþaretleyiniz. Not: Bu özellik yalnýzca Windows 2000/XP ve üzerinde çalýþýr
+Balonu bu sürenin sonunda otomatik olarak kapatýr
+Yansýmalar
+Yansýma URL'leri için otomatik arama yap
+Maksimum yansýma sayýsý
+Yansýmalarýn hýzýný hesapla
+Her birinin hýzýný tekrar hesapla
+FDM'nin her bir indirme için otomatik yansýma URL'si aramasýný istiyorsanýz burayý iþaretleyiniz
+Her bir indirme için yansýma URL'si sayýsýný sýnýrlar. Böylece yansýmalarýn hýzýnýn hesap süresi azalýr
+FDM'nin her bir yansýma sunucusunun hýzýný hesaplamasý için burayý iþaretleyiniz
+Yansýmalarýn hýzýný belirli bir zaman aralýðýnda otomatik olarak yeniden hesapla
+Arama yapýlmasý için en küçük dosya boyutu
+FDM belirlenen bu dosya boyutundan küçük dosyalar için yansýma aramasý yapmaz
+Dosya boyutu bilinmiyorsa arama yapma (Önerilir)
+Yansýma ekle
+Yansýma ara
+Bu indirme için kendim yansýma URL'si ekleyeyim
+Bu indirme için FileMirrors.COM'da yansýma URL ara 
+Yansýma URL'si listesi
+Sunucu Hýzý
+Kullaným
+Yansýma hýzýný ölç
+Yansýma sunucusunun hýzýný ölç
+Ýndirme Bilgisi
+Bekliyor...
+Ýndirme için yansýma URL'si
+Dosya boyutu 2GB'den fazla. Böyle indirmeler sadece FTP tarafýndan desteklenir
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Yeni Ýndirme
+Ýndirme için grubu otomatik belirle
+Ayarlanacak grup:
+Ýndirmeyi kendi grubunun klasörüne kaydet
+Ýndirme grubunun dosya uzantýsýna veya Site Yöneticisi'nin ayarlarýna göre belirlenmesini istiyorsanýz, iþaretleyiniz
+Varsayýlan grubu ayarla
+Ýndirmenin varsayýlan grubuna indirilmesini istiyorsanýz, bu kutuyu iþaretleyiniz (bkz. Grup Özellikleri)
+Varsayýlan çýktý klasörünü ayarla
+; END
+; BEGIN: Monitoring page
+Sessiz izleme
+Ýþaretlenirse, tarayýcýdan indirme eklendiðinde "Ýndirme ekle" penceresi gözükmez
+Düzenle
+Internet tarayýcýsýnýn içerik menüsünde gösterilecek menü nesnelerini seç
+; END
+Gösterilecek menü nesnelerini seçiniz
+En az bir menü nesnesi seçilmeli
+Ses çýkar
+FDM'nin bazý olaylarda(indirme tamamlandýðýnda v.b.) ses çýkarmasýný istiyorsanýz, iþaretleyiniz
+Her bir olay için ses seçiniz
+; BEGIN : Customize sounds dialog
+Sesleri düzenle
+Ses ayarla
+Sil
+Deneme
+FDM'nin olay listesi ve uygulanacak sesler. Burada bazý olaylar olduðunda FDM'nin bir ses çalmasýný saðlayabilirsiniz.
+Ýndirme eklendi - indirme listesine bir ya da daha fazla indirme eklendiðinde ses çalar.
+Ýndirme tamamlandý - indirme baþarýyla tamamlandýðýnda ses çalar.
+Ýndirme baþarýsýz - bir dosyayý indirmeye çalýþýrken hata oluþursa ses çalar.
+Çevirme baþarýlý - Planlayýcý'nýn "Çevirmeli baðlantý kur" görevi baþarýyla gerçekleþtirildiðinde ses çalar.
+Çevirme baþarýsýz - Planlayýcý'nýn "Çevirmeli baðlantý kur" görevi bazý sebeplerden dolayý gerçekleþtirilemediðinde ses çalar.
+Seçilen olaylar için ses ayarlar
+Seçilen olay oluþtuðunda ses çalmaz
+Seçilen sesi çalar
+Olay
+Ses dosyasý
+Sessiz
+Ýndirme eklendi
+Ýndirme tamamlandý
+Ýndirme baþarýsýz
+Çevirme baþarýlý
+Çevirme baþarýsýz
+Ses dosyalarý
+; END
+Yansýmalar aranýyor...
+Yansýmalarýn hýzlarý ölçülüyor...
+Yansýmalar daha önce zaten arandý
+Arama sunucusuna baðlanýlýyor...
+Sonuçlar alýnýyor...
+%d yansýma bulundu
+Yansýma aramasý tamamlandý
+Diðer yansýma deneniyor...
+Yansýma bulunamadý
+Baþarýsýz
+Yansýmalarýn hýzý ölçüldü
+; BEGIN: History page
+Geçmiþ
+Baðlantýlarýn ve klasörlerin geçmiþ bilgisini sakla
+Sadece klasörlerin geçmiþ bilgisini sakla
+Kayýtlarýn tutulacaðý süre
+En fazla kayýt sayýsý
+Geçmiþi temizle
+FDM yazdýðýnýz baðlantý ve klasörlerin geçmiþini saklar
+FDM yalnýzca klasörlerin geçmiþini saklar
+Belirlenen zaman aralýðýndakinden daha eski kayýtlarý siler
+Geçmiþte saklayabileceðiniz en fazla kayýt sayýsý. Kayýt sayýsý bu deðeri aþtýðýnda, FDM en eski kayýtlarý siler
+Geçmiþteki tüm kayýtlarý siler
+; END
+Al...
+Ver...
+URL'ler listesi al
+Ýndirmeler listesi ver
+Metin dosyalarý
+Dosya açamýyor
+Tüm indirmeleri ver
+Listedeki tüm indirmeleri ver
+Seçilen indirmeleri ver
+Tamamlanan indirmeleri verme
+Dosya varsa sonuna ekle
+Geçersiz grup adý. Lütfen / ve \ sembollerini kullanmayýnýz
+Bitince kapat
+; BEGIN : Downloads History window
+Eklenme tarihi
+Kaydedildiði yer
+; END
+Geri Dönüþüm Kutusu
+; BEGIN: Recycle Bin
+Özellikler
+Geri Dönüþüm Kutusunu boþalt
+;END
+;BEGIN: Recycle Bin properties
+Silinen indirmeleri Geri Dönüþüm Kutusuna atma
+Maksimum saklama:
+indirme
+Tamamlanmýþ indirmeleri saklama
+Ýndirmeleri silerken onay iste
+Geri Dönüþüm Kutusu Özellikleri
+Geri Dönüþüm Kutusunda silinmiþ indirmeleri saklamak istemiyorsanýz, bu kutuyu iþaretleyiniz
+Geri Dönüþüm Kutusunda saklanan indirme sayýsýný sýnýrlamak istiyorsanýz, bu kutuyu iþaretleyiniz
+Geri Dönüþüm Kutusunda depolanacak maksimum indirme sayýsý
+Silinmesinden sonra tamamlanmýþ indirmeleri saklamak istemiyorsanýz, bu kutuyu iþaretleyiniz
+Bir indirmeyi silmeye çalýþýrken FDM'nin sizden onay istemesini istiyorsanýz bu kutuyu iþaretleyiniz
+;END
+Geri al
+Ýndirmeler eski yerine alýnýyor
+; History subitems
+Bugün
+Dün
+Bir hafta önce
+Bir ay önce
+Özel...
+; end
+Geçmiþi Temizle
+Ýndirme geçmiþini sakla
+Sadece tamamlanmýþ indirmelerin geçmiþini sakla
+Ýndirme geçmiþini saklamak istiyorsanýz bu kutuyu iþaretleyiniz
+Sadece tamamlanmýþ indirmelerin geçmiþini saklamak istiyorsanýz bu kutuyu iþaretleyiniz
+Ýndirme Geçmiþi Ayarlarý
+Geçmiþ kayýtlarýnýn listesi oluþturuluyor...
+; Download Was deleted
+Silinmiþ
+Zaman aralýðýný seçiniz
+Bul
+Sonrakini Bul
+Aranan:
+; BEGIN : Find dialog
+Aranýlacak yerler
+Yerel dosya adý
+Ne aramak istediðinizi buraya yazýnýz
+URL'nin dosya kýsmýnda arar
+URL'nin tamamýnda arar
+Ýndirmenin açýklama kýsmýnda arar
+Yerel diske indirilen dosyanýn yolunda ve adýnda arar
+Geliþmiþ ayarlarý düzenler
+; ADVANCED settings
+Aranacak yer
+Ýndime Listesi içerisinde ara
+Ýndirme Geçmiþi içerisinde ara
+Belirli bir tarih aralýðýnda ara
+Ayarla
+Geri Dönüþüm Kutusu içerisinde ara
+Belirli bir dosya boyutu aralýðýnda ara
+En az
+En çok
+Ýndime Listesi içerisinde arar
+Ýndirme Geçmiþi içerisinde arar
+Sadece bu belirlenen tarih aralýðýný saðlayan dosyalar içerisinde arar
+Zaman aralýðýný ayarlar
+Geri Dönüþüm Kutusu içerisinde arar
+Sadece bu dosya boyutu aralýðýný saðlayan dosyalar içerisinde arar
+Ýstenilen dosya boyutunun alt sýnýrý
+Ýstenilen dosya boyutunun üst sýnýrý
+Grupta ara
+Aramanýn gerçekleþtirileceði grubu seçiniz
+; END
+Ýndirmeler aranýyor...
+Aranan öðe bulunamadý
+Bundan daha fazla öðe bulunamadý
+Arama tamamlandý
+URL'yi panoya ekle
+ZIP Önizleme
+En az bir dosya seçilmeli.
+ZIP arþivi yüklüyor olmanýz muhtemel. Ýçeriðini görüntülemek ister misiniz?
+Ses/Video Önizleme
+Dosya açýlamadý.
+Bilinmeyen ortam tipi.
+Bu özelliði kullanmak için lütfen DirectX 8.0 veya daha üst sürümünü yükleyiniz. Son DirectX sürümünü microsoft.com'dan indirebilirsiniz.
+Ortam Bilgisi
+Boyut:
+Ýzlenebilir kýsým:
+Süre:
+Sessiz
+Aç
+Duraklat
+Filtre
+Uzantýlar [boþlukla ayrýlmýþ zip rar arj gibi]:
+Þu uzantýlý dosyalarý sil
+Sadece þu uzantýlý dosyalarý býrak
+Deðiþken dizisi %file% makrosu içermiyor. Bu makro antivirüs programýnýzýn hangi dosyayý tarayacaðýný belirlemesi için gerekli.
+Devam edilsin mi?
+Uyarý
+Tamamlanmamýþ indirmeleri gizli dosya yap
+Tamamlandýðýnda dosyaya yorum ekle
+Sunucunun sayfalarýný saklama
+Sunucunun sayfalarýný kaydetmek istemiyorsanýz burayý iþaretleyiniz
+ZIP önizlemesini kullan
+ZIP arþivinin indirme baþlangýcýnda içeriðini göstermek için sadece bir kýsmýný indirmek istiyorsanýz burayý iþaretleyiniz
+Ses:
+Ýndirmeyi otomatik olarak baþlat
+FDM'ye her yeni indirmeyi otomatik baþlattýrmak için burayý iþaretleyiniz
+Lütfen indirilecek dosyalarý iþaretleyiniz
+Bu indirme için alternatif URL'ler belirle
+Bir daha önizleme yapma
+ZIP önizlemesini kapattýnýz. Yeniden etkinleþtirmek için: Seçenekler -> Ýndirme Seçenekleri -> Yeni Ýndirme sayfasý içerisinde ZIP önizlemeyi etkinleþtiriniz.
+Yoksayma Listesi
+Bir site indirilirken yoksayýlacak web sayfalarýnýn listesi.
+Alt klasörler
+Ekle
+Tüm alt klasörleri de yoksay
+; Proxy tab new settings
+Kesilen baðlantýlarda geriden almayý kullan
+Geriden alma boyutu
+byte
+Geriden almayý etkinleþtirmek için bu kutuyu iþaretleyiniz. Bu indirmelerin zarar görmesini engelleyebilen bir önlemdir.
+Geriden alma boyutu. Bu deðer büyüdükçe geriden alma daha güvenilir olur. 3000 byte önerilen boyuttur. Ýndirmeleriniz hala bozuksa bu deðeri artýrabilirsiniz.
+; downloader options -> monitor tab
+Ýzlenecek en büyük dosya boyutu :
+Bu özellik FDM'nin belirlenen boyuttan küçük dosyalarý indirmemesi için kullanýlýr
+KBytes
+Uyarý! Geri Dönüþüm kutusu çok büyük. Bu performansý önemli ölçüde etkileyebilir. Geri Dönüþüm kutusunu boþaltmanýz önerilir. Boþaltmak ister misiniz?
+Bunu bir daha kontrol etme
+Uyarý! Ýndirme Geçmiþi çok büyük. Bu performansý önemli ölçüde etkileyebilir. Geçmiþi silmeniz önerilir. Þimdi silmek ister misiniz?
+Sunucu devam etmeyi temin edemiyor. Cevap geçersiz.
+Panoya kopyala
+; general settings | skins page
+Dýþ Görünümler
+Dýþ Görünüm
+Kabuðun kendi simgelerini kullanmasýna izin ver
+Kabuðun kendi bitmaplarýný kullanmasýna izin ver
+; default skin
+<varsayýlan>
+NOT: Deðiþiklikler Free Download Manager yeniden baþlatýldýktan sonra etkinleþecektir.
+Ýndirme esnasýnda indirme bilgisini göster
+Þu uzantýlara sahip dosyalarý atla:
+Atlanacak dosyalarýn uzantý listesi
+Etkin indirme yok
+Tüm indirmeler tamamlandýðýnda ses dosyasý çal
+Panodan URL listesi al...
+Parolalar
+Site Yöneticisi seçenekleri
+; Save password dialog
+Parola saklansýn mý?
+Bu sunucudan her dosya indirmenizde parola sorulmamasý için Free Download Manager bu sunucu için parolanýzý saklayabilir.
+Bu parola saklansýn mý?
+Bir daha parola saklamayý önerme
+; Site Manager options | Passwords tab
+Site yöneticisini parolalarýmý depolamak için kullan
+Parolayý saklayýp saklamayacaðýmý sor
+Parolalarý saklamayý önerme
+Çýkýþtan önce tüm parolalarý sil
+Tüm parolalarý sil
+; create new HTML Spider task
+Tamamlanan indirmeleri otomatik sil (önerilir)
+HTML Örümceðinin indirmelerinin otomatik silinmesini istiyorsanýz bunu seçiniz. Böylece büyük sitelerin indirilmesini hýzlandýrabilirsiniz.
+Deðiþiklikler Free Download Manager yeniden baþlatýldýktan sonra etkinleþir.
+Yeni Stil
+Eski Stil
+Klasör adý geçersiz
+Kayan pencereleri tam ekran modunda gizle
+Tam ekran modunda kayan pencerelerin otomatik olarak gizlenmesini istiyorsanýz bu kutuyu iþaretleyiniz.
+baþlatýlmak üzere planlandý.
+Baþlatmak istiyor musunuz?
+Ýndirme tamamlandýðýnda aç
+Lütfen URL þablonu oluþturmak için (*), (*A) veya (*a) kullanýnýz
+Yansýma arama sunucusu:
+Hazýrda Beklet
+Beklemede
+Seçimimi hatýrla
+Grubun varsayýlan klasörünü deðiþtirmeyi öner
+Dosyayý kaydet
+Dosya aç
+Dosyayý kaydet ve aç
+Ýndirme tipi:
+FDM'ye baðlantý
+Free Download Manager baðlantýsý
+Deðerli kullanýcýmýz!
+Free Download Manager size tamamen ücretsiz olarak sunulmaktadýr. Bu programý istediðiniz sürece ücretsiz kullanabilirsiniz.
+Ancak, eðer Free Download Manager'ý yararlý buluyorsanýz web sitenize FDM'ye bir baðlantý yerleþtirerek bizim FDM'yi yaygýnlaþtýrmamýza yardýmcý olabilirsiniz. Böylece daha çok kiþi FDM'yi tanýyabilecektir.
+Yardýmlarýnýz için þimdiden teþekkürler, \nFree Download Manager geliþtirme takýmý.
+Üç gün içinde hatýrlat
+Bir dahaki Free Download Manager baþlangýcýnda hatýrlat
+Bu pencereyi bir daha gösterme
+Baðlantý HTML kodunu görüntüle
+Baðlantý HTML kodu
+Daha fazla örnek
+Panoya kopyala
+Gizle
+; "Traffic usage mode has beed changed" window
+Trafik kullaným modu deðiþtirildi
+Að trafik kullaným modunu deðiþtirdiniz. \nFree Download Manager þu üç moda sahiptir:
+Bu modda Free Download Manager mümkün olan maksimum hýzda indirme yapar. Bu mod en mütecaviz moddur.
+Bu modda Free Download Manager ortalama hýzda indirme yapar. Bu mod ayný anda internette gezinmenize ve yüksek indirme hýzýný korumanýza olanak saðlamaktadýr.
+Bu modda Free Download Manager düþük hýzda indirme yapar. Bu mod aðý büyük ölçüde yavaþlatmadan indirme yapmanýza olanak saðlamaktadýr.
+;
+Yeniden baþlatýnca da ad deðiþtir
+%d deðerinden daha küçük bir sayý giriniz
+; export/import downloads
+URL Listesi Dosyalarý
+Ýndirme Bilgisi Dosyalarý
+;
+Seçenekleri ver
+;
+Dosya tarihini sunucuda belirtildiði gibi ayarla
+Ýndirilen dosya tarihini sunucuda belirtildiði gibi ayarla
+Açýklama dosyasý oluþtur
+Ýndirilen dosya hakkýnda küçük bir açýklama (yorumlar + adres + tarih) içeren "*.dsc.txt" (* - indirilen dosya adý) adlý bir dosya oluþtur. Bu dosya yalnýzca yorum içeren indirmeler için oluþturulacaktýr.
+Bu dosyanýn indirildiði yer
+Dosya tarihini sunucudan alma
+Bu seçenek FTP indirmelerinizin baþlama hýzýný artýrmanýzý saðlayacaktýr. Free Download Manager LIST komutu yerine SIZE komutunu kullanacaktýr.
+Ýndirme kayýtlarýný saklama
+Bu seçeneði etkinleþtirilmesi, Free Download Manager'ýn daha hýzlý açýlýp kapanmasýný ve bellek kullanýmýný azaltmasýný saðlar.
+;
+Ýndirme geçmiþini ver
+Tüm kayýtlarý ver
+Listedeki tüm kayýtlarý ver
+Seçili kayýtlarý ver
+Sadece tamamlanmýþ indirme kayýtlarýný ver
+;
+HTML Dosyalarý
+;
+Free Download Manager Ýndirme Geçmiþi
+Ýndirilen adres
+Ýndirilen dosya
+Dosya boyutu
+Ýndirme tamamlandý
+Ýndirme silindi
+;
+Kaydedildiði yer
+Dosya boyutu
+Devam etme desteði
+Ýndirme tamamlandýðýnda ya da durdurulduðunda bu pencereyi kapat
+Aç
+Bu pencereyi tekrar görmek ister misiniz?
+Evet, her indirme için bu pencereyi görmek istiyorum
+Hayýr, bu pencereyi artýk gösterme
+Evet, ama bu indirme için deðil
+SHIFT tuþu ile indirme geri dönüþüm kutusuna gönderilmeden diskinizden tamamen silinecektir.\nEmin misiniz?
+Grup seçiniz
+Grup ana klasörünü ayarla
+Grup ana klasörünü seçiniz.\nDeðiþiklikler sadece yeni indirmelere uygulanacaktýr.
+Son indirilen dosyalar
+(boþ)
+Tüm indirmeleri duraklat
+Ýndirme ilerleme penceresini göster
+Ýþaretlenirse, FDM indirilen her dosya için indirme bilgisi içeren özel bir pencere oluþturur
+; general settings | misc page
+Onaylama için zaman aþýmý
+Ýndirmeyi aç
+Bilgisayarý kapatma tipini sor
+"Araçlar | Bitince baðlantýyý kes" komutu onaylama zaman aþýmý.
+"Araçlar | Bitince kapat" komutu onaylama zaman aþýmý.
+"Araçlar | Bitince bilgisayarý kapat" komutu onaylama zaman aþýmý.
+Ýndirme tamamlandýðýnda indirilen dosyayý açma onaylama zaman aþýmý.
+Etkinleþtirilirse, FDM "Araçlar | Bitince bilgisayarý kapat" komutu için kapatma tipini soracaktýr.
+Onaylama isteme
+; 5 seconds, 10 seconds, ...
+%d saniye
+Onayýmý bekle
+Bu dizinden sayfalarý yoksay
+Sadece bu dizinden sayfalar indir
+Alt dizinler dahil
+Bu dizinde bulunan tüm web sayfalarýný yoksay.
+Sadece bu dizinde bulunan sayfalarý indir ve diðer web sayfalarýný yoksay.
+Etkinleþtirilirse, HTML Örümceði belirlenen dizinin tüm alt dizinlerindeki sayfalarý yok sayar ya da indirir.
+Buraya dizinin adresini yazmalýsýnýz.\nÖrnek: "http://www.site.com/dokuman/".
+Tip
+Yoksay
+Sadece
+Sayý kümesi
+Sayý Ata
+Buraya toplu iþ listesi için sayý kümesini yazýnýz.\nÖr. 1-100, veya 1-100s2w3.
+Yeni bir pencere kullanarak sayý kümesi atamak için bu düðmeye týklayýnýz
+Tek sayý
+Sayý
+Sayý kümesini ata
+Yazým hatasý
+Arþivi çýkar
+Çýkar
+Çýkarma
+Hedef klasör
+Çýkarma iþlemi baþarýsýz. Dosya biçemi bilinmiyor.
+Bu ay indirme trafiði\n(Geçen ay %s indirildi)
+Toplam indirme hýzý
+Çalýþtýrdýktan sonra Araçlar | "Bitince" görevini devre dýþý býrak
+Etkinleþirse, herhangi bir Araçlar | "Bitince" görevi çalýþtýrýldýktan sonra otomatik olarak devre dýþý býrakýlacaktýr. Böylece sadece bir kez çalýþtýrýlacaktýr.
+; %s
+; 1st - name of a file
+; 2nd, 3rd - file info (size + date).
+"%s" adlý dosya zaten var.\n\nBu dosyayý\n(%s)\n\naþaðýdaki yenisiyle deðiþtirmek ister misiniz?\n(%s)?
+Tümüne evet
+Atla
+Tümünü atla
+Arþiv biçemi bilinmiyor
+Web sitesini ziyaret et
+Paket yükle
+Varsayýlan olarak, FDM yalnýzca ZIP, RAR ve ARJ arþivlerini desteklemektedir.\nDesteklenen arþiv tiplerini Free Download Manager ek arþiv destek paketleri ile artýrabilirsiniz. (Internet baðlantýsý gerekir).
+FDM arþiv destek paketi
+Yukarý taþý
+Aþaðý taþý
+Seçilen indirme(ler)i yukarý taþýr
+Seçilen indirme(ler)i aþaðý taþýr
+Dosya bütünlüðünü kontrol et
+Bazý web siteleri kullanýcýlarýn dosyanýn zarar görmediðinden emin olabilmesi için indrilecek dosyalara özel saðlama saðlamaktadýr. Buraya bu kontrolü girebilirsiniz böylece FDM dosya bütünlüðünü kontrol eder.
+Algoritma
+Saðlama toplamý(Checksum)
+Panodan yapýþtýr
+Kontrol et
+Ýndirilen dosyanýn saðlama toplamý hesaplanýyor...
+Dosya bütünlüðü kontrolü baþarýlý
+Dosya bütünlüðü kontrolü baþarýsýz
+Dosya bütünlüðü kontrolü baþarýyla tamamlandý.\nÝndirilen dosyada hata bulunamadý.
+Dosya bütünlüðü kontrolü tamamlandý.\nÝndirilen dosyada hatalar bulundu: dosya indirme iþlemi sýrasýnda hasar görmüþ. Ýndirmenin baþtan baþlatýlmasý gerekiyor.
+Eðer kontrol baþarýlý ise bu pencereyi gösterme
+Seçtiðiniz antivirüs programýnýn çalýþtýrýlabilir dosyasý bulunamadý.\nLütfen kendiniz belirtiniz.
+Dosyalarýn boyutlarý eþit deðil
+Farklý kaydet:\n(Örnek: dosya(*)(*A)(*a).txt)
+Geçersiz farklý kaydet þablonu belirtildi.\nLütfen bir URL þablonu olduðundan emin olunuz.
+Bitince
+Bitince (hepsi tamamlanýnca veya hatalý ise)
+Uygulamalar
+Bu nedir?
+Görüþler
+;
+Deðerli kullanýcý!
+Milyonlarca etkin kullanýcýya sahip olan Free Download Manager (FDM) dünyadaki en popüler indirme uygulamalarýndan biri, ancak bundan sonra FDM'nin daha da sosyal olmasýný istiyoruz.
+Eðer siz de bizim gibi bu FDM'yi faydalý ve sahip olunmasý gereken bir program olarak görüyosanýz; sitenizden, blog'unuzdan ya da Myspace/MSN gibi kiþisel alanýnýzdan FDM'ye bir baðlantý ekleyerek programý yaygýnlaþtýrmamýza yardým etmenizi rica ediyoruz.
+; %s will be replaced with "FDM buzz" 
+Resmi %s 16 Aðustos 2006'da baþlatýldý. Hedefimiz FDM'yi Firefox'dan sonra en hýzlý yayýlan Internet aracý haline getirmek!
+FDM buzz
+; %s will be replaced with "blog" 
+FDM'nin geliþimini %s 'umuzdan takip edebilirsiniz.
+blog
+Yardýmýnýz için þimdiden teþekkürler \n Free Download Manager geliþtirme ekibi
+Bu pencereyi bir daha gösterme, iyi bir hafýzam vardýr.
+Buzz'a katýl
+Hayýr, teþekkür ederim
+FDM Topluluðu
+Ýndirmeden sonra "Görüþler" sekmesine geçiþ yap
+Etkinleþtirilirse, indirme tamamlandýðýnda "Görüþler" sekmesi otomatik olarak etkinleþir.
+Internet Explorer'ýn að kimliðini deðiþtir
+Etkinleþtirilirse, taradýðýnýz web siteleri sizin Free Download Manager'ý yüklediðinizi görecektir. Ancak bu seçeneði kullanmak bazý sitelerde engellenmeye sebep olabilir.
+Zararlý mý?
+Free Download Manager kullanýcýlarýndan birinin bu indirme hakkýnda virüs/reklam/casus/vb. rapor edip etmediðini kontrol etmek için iþaretleyiniz.
+Free Download Manager kullanýcýlarýndan hiçbiri bu indirmenin zararlý olduðunu rapor etmedi.\n\nAncak bu, indirmenin zararlý olmadýðýnýn garantisini vermez ve indirmeyi bir antivirüs programý ile kontrol etmeniz önerilir.
+; keep all %xxx, \n as is.
+Bu indirmenin zararlý olduðuna dair Free Download Manager kullanýcýlarýnýn %d/%d adet raporu var. \nBu indirme için ortalama %.*g oranýnda oylama yapýldý.\n\nBu indirme hakkýndaki görüþler görüntülensin mi?
+Her yeni indirmenin zararlý olup olmadýðýný indirmeye baþlamadan önce kontrol et
+Bu seçeneði kullanýcýlardan birinin bu indirmenin zararlý olup olmadýðýný, FDM'nin, indirmeden önce, otomatik olarak kontrol etmesini istiyorsanýz kullanýnýz.
+Ýndirme yaparken görüþleri göster
+Etkinleþtirilirse, FDM "Görüþler" sekmesine otomatik olarak geçiþ yapar ve indirme indiriliyorken görüþleri gösterir.
+Ýndirmenin zararlý olup olmadýðý kontrol ediliyor (bunu devre dýþý býrakmak için seçeneklere bakýnýz)
+Zararlý olduðuna dair rapor yok
+Uyarý! Bu indirmenin zararlý olduðu rapor edilmiþ
+Kapat
+Yükleniyor
+Bunu indirme
+Ýndirilen verilerin diske yazma iþlemlerini önbelleðe al
+Etkinleþtirilirse, FDM indirilen verilerin diske yazma iþlemleri için belirttiðiniz boyut kadar dahili önbellek tamponunu kullanacaktýr. Bu yerel diskinizin kullanýlma sayýsýný azaltýr ve yüksek hýzlý baðlantýda indirme hýzýný artýrýr.\nAncak indirilen veriler anýnda yerel diske yazýlmadýðýndan herhangi bir bilgisayar kazasýnda (en kötü ihtimalle sizin belirlediðiniz boyut kadar) verinin yeniden indirilmesi gerekecektir.\nYüksek hýzlý baðlantýlar için önerilir.  
+SeaMonkey (Mozilla Suite) izlemesi yüklenemiyor
+SeaMonkey (Mozilla Suite) izlemesi kaldýrýlamýyor
+Bu kutuyu FDM'nin Mozilla Firefox tarayýcýsýndaki týklamalarý yakalamasýný istiyorsanýz iþaretleyiniz.
+Bu kutuyu FDM'nin SeaMonkey (Mozilla Suite) tarayýcýsýndaki týklamalarý yakalamasýný istiyorsanýz iþaretleyiniz.
+Ýptal'e basýnca tarayýcýnýn indirmesine izin ver
+Bu kutuyu "Ýndirme oluþtur" penceresinde Ýptal'e basýnca tarayýcýnýzýn dosyayý indirmesini istiyorsanýz iþaretleyiniz.
+FDM'yi tarayýcýnýn sað tuþ menüsüne ekle
+"Free Download Manager ile indir" ve "Free Download Manager ile site indir" seçeneklerini tarayýcýnýn sað tuþ menüsüne eklemek için bu seçeneði iþaretleyiniz.
+Tarayýcýnýn sað tuþ menüsünde gösterilecek seçenekleri belirtiniz
+Firefox izlemesi yüklenemiyor
+Dosyalarý klasöre taþý
+Hýz çok düþük. Parça yeniden baþlatýlýyor...
+Hýz þu süre boyunca çok düþükse yeniden baþlat (dk):
+Parçayý indirme hýzýndaki aþýrý düþüþlerde yeniden baþlat.
+Ýndirme ilerlemesi penceresini yeniden görmek istiyor musunuz?
+Üzgünüz, bu hizmet þu an mevcut deðil. Lütfen sonra yeniden deneyiniz.
+En üste taþý
+En alta taþý
+Ýndirmeyi listenin en üstüne yerleþtir
+Bu seçeneði indirmenin, indirmeler listesinde en üste yerleþmesini istiyorsanýz iþaretleyiniz.
+Firefox tarayýcýnýza FlashGot eklentisi yüklendiði için izleme etkinleþtirilemiyor.\nBunu etkinleþtirmek için öncelikle FlashGot'ý silmeniz gerekmektedir.
+Etkinleþtir
+Devre dýþý býrak
+Geçiþ Yap
+Eðer tüm indirmeleri duraklat modu etkinse devre dýþý býrakýlacak, deðilse bu mod etkinleþtilecek.
+Resmi %s  16 Aðustos 2006'da  baþlatýldý. Amacýmýz FDM'i Firefox'tan sonra internetin en hýzlý yayýlan aracý yapmak!
+Güncelleþtirmeleri otomatik olarak yükle ve kur
+Güncelleþtirme olduðunda sadece uyar
+Otomatik güncelleþtirmeleri kapat
+%s izlemesi þimdi aktif.
+Kaydý sil
+Silinsin mi?
+Free Download Manager klasörünün yazma izni yok.\nFree Download Manager'in veri dosyalarýný saklayabilmesi için yazma izni vermelisiniz, aksi halde Free Download Manager yeniden baþladýðýnda tüm veri dosyalarý yok olacak.
+Bu küçük kutu tarayýcýnýzýndaki linkleri Free Download Manager içine sürükleyip býrakmanýzý saðlar.\nÜzerinde farenizin sol tuþuna çift týklayarak Free Download Manager'in penceresini gösterip gizleyebilirsiniz.\n\nTekrar gizlemek için üzerinde sað tuþla týklayýp "Sürükle-Býrak kutusu" seçimini kaldýmalýsýnýz.
+Free Download Manager'in Sürükle-Býrak kutusu
+Toplu dosya indirmeleri için tüm uyarýlarý devre dýþý býrak
+"%s" komutu tarafýndan oluþturulmuþ tüm uyarýlarý (balon, ses) devre dýþý býrakmak için bu seçeneði seçin.
+Atlama listesi
+Ýzleme yapýlmayacak dosya uzantýlarýnýn ve sitelerin listesini belirtin.
+Bu sitelerden dosya indirme (boþluk ayrýmlý):
+Free Download Manager bu listede belirtilen sitelerdeki indirmeleri izlemeyecektir. Buraya etki alaný adlarý belirtin (örn. "site.com"). '*' sembolleri kullanabilirsiniz.
+Uyarý!\nVirus taramasý gerçekleþtirilirken bir hata oluþtu.\nÝndirilmiþ dosyayý yine de açacak mýsýnýz?
+Bütünlük
+Dosya indireleceði zaman bütünlük kontrolü yap
+Bütünlük kontrolü yapýlabilmesi için Free Download Manager'in dosyanýn geçerli saðlama (checksum) bilgisini bilmesi gereklidir. Bir çok durumda her indirme için bunu saðlamalýsýnýz.
+Eðer kontrol baþarýsýz olursa
+Bu dosyanýn geçerli saðlamasý (checksum)
+Bir þey yapma
+Bütünlük kontrolü baþarýsýz olursa FDM'nin ne yapmasý gerektiðini belirtin.\nSor - FDM ne yapýlacaðýný sorar.\nYeniden Baþlat - FDM bu indirmeyi baþýndan itibaren yeniden baþlatýr.\nBir þey yapma - FDM indirmenin kontrol baþarýsýzlýðý ile ilgili günlük kaydýna yazar ve artýk bir þey yapmaz.
+Bütünlük kontrolü yapýlýyor...
+Bütünlük kontrolü baþarýlý.
+Bütünlük kontrolü baþarýsýz!
+Bütünlük kontrolü aloritmasý belirtin.
+Geçerli saðlama (checksum)
+Saðlama (checksum) sonucu
+; zip preview window
+Seç/Seçimleri kaldýr
+; group's properties dialog
+Makrolar
+bir sunucu adý (örn. "freedownloadmanager.org")
+sunucudan indirilecek dosyanýn yolu
+geçerli yýl
+geçerli ay (1'den 12'ye)
+geçerli gün
+; don't translate "%year%-%month%-%day%" here
+"%year%-%month%-%day%"'e eþit
+;
+Mozilla Firefox'dan
+FDM proxy ayarlarýný Mozilla Firefox'dan alacak
+; new download settings
+Bu grubu kullan
+; Downloads -> Schedule ->
+Baþla
+Dur
+Ýndirme baþlangýcýný planla
+Ýndirme sonunu planla
+;
+; downloads that not completed or were completed recently
+Tamamlanmamýþ+En son
+Üst grup
+;
+; create new download dialog -> set output folder as default dialog
+Tüm indirme gruplarý için varsayýlan olarak ayarla
+; %s - place of name of the group. don't change this
+Bu klasörü "%s" grubu için varsayýlan çýktý klasörü olarak ayarla?
+;
+;
+Ýndirme listesini çýkar
+Yüklemeler
+Yükleme dosyalarý
+Yüklemeyi baþlat
+Yüklemeyi durdur
+Yüklemeyi planla
+Seçili yükleme(leri) yukarý taþý
+Seçili yükleme(leri) aþaðý taþý
+Yüklendi
+Yüklemelerin listesi
+Ana sunucudan hedef yükleme URL'si alýnýyor...
+Durdur
+; outlook express: view | insert file | ...
+Ek olarak
+Link olarak (yükleme)
+Klasör
+;
+Dosya ekle
+Klasör ekle
+Bittorrent
+Bittorrent protokol desteðini etkinleþtir
+Yükleme trafiðini sýnýrla
+Yükleme baðlantý sayýsýný sýnýrla
+Aralýktaki portlarý kullan
+ile
+DHT etkin
+Bittorrent protokol desteðini etkinleþtirir/devre dýþý býrakýr. Bununla birlikte FDM Geri Dönüþüm Kutusu listesinde herhangi bir Bittorrent indirmesi varsa, Bittorrent protokolü tamamýyla devre dýþý kalmayacaktýr.
+Yükleme baðlantýlarýnýn maksimum toplam hýzýný sýnýrla. Bu Bittorrent protokolü için önerilmez ve indirme hýzýnýzý düþürebilir.
+Yükleme baðlantýlarýnýn maksimum toplam sayýsýný sýnýrla. Çok küçük sayýlara ayarlamak indirme hýzýnýzý azaltabilir.
+Buraya FDM'nin yükleme baðlantýlarý için kullanacaðý port aralýðýný belirtin.
+DHT uzantýsýný etkinleþtir
+Ýsmi
+Ýzleyici için Oturum açma bilgisi gerekli
+Bittorrent indirmesini ekle
+Bu torrent dosyasýný indirmeye çalýþýrken bir hata oluþtu.
+Torrent dosyasý
+Sanýrým bir .torrent dosyasý indirmeye çalýþýyorsunuz. Free Download Manager'in bunu yapabilmesi için Bittorrent desteðinin etkinleþtirilmesi gereklidir.\n\nBittorrent desteðini etkinleþtirmek ister misiniz?
+Þifrelerinizi tekrar giriniz: girdiðiniz þifreler uyuþmuyor.
+Yüklemek istediðiniz dosyalarý belirtiniz.
+Yükleme özellikleri
+Metalink bilgi dosyasý tespit edildi. Yüklemeye devam et.
+Bittorrent bilgi dosyasý tespit edildi. Yüklemeye devam et.
+Diskteki dosyalara eriþim hatasý.
+Ýzleyiciye baðlanýyor...
+Ýzleyiciden geçerli bir yanýt alýnamadý.
+Ýzleyiciden yanýt baþarýyla alýndý.
+Ýndirilen bölümün parça kontrolü baþarýsýz. Tekrar indiriliyor...
+Bütün bant geniþliðini bu indirmeye ayýr
+Windown baþlangýcýndaki tüm Free Download Manager yüklemelerini devre dýþý býrak?
+Üzgünüm, FDM Topluluðu servisi þu an mevcut deðil. Daha sonra tekrar deneyin.
+Dosya adý \ / : * ? " < > | sembollerinden herhangi birini içeremez. Lütfen farklý bir ad girin.
+Klasör adý  : * ? " < > | sembollerinden herhangi birini içeremez. Lütfen farklý bir ad girin.
+Kayan pencereleri özelleþtir
+Saydamlýk
+Veri
+Bütün veri dosyalarýný geçerli kullanýcý klasöründe tut
+Dosyalarý bu klasörde tut
+Deðiþiklikler Free Download Manager yeniden baþlatýldýðýnda geçerli olacak.
+Ýndirme bilgi penceresini göster
+Taþýnabilir sürüm yarat
+Free Download Manager'in taþýnabilir sürümü, farklý bilgisayarlarda kurulum ve ayar gerektirmeden kullaným içindir.\n\nÖrneðin bir flash disk üzerine kaydedebilirsiniz.\n\nÝlk çalýþtýrmada kendisini bilgisayar sistemine kayýt edecek ve tarayýcýlarla tümleþik hale gelecektir.Çýkýþta da kendisini otomatik olarak kayýtlardan silecektir.\n\nBu sürümü yaratmak için yol veriniz. Bu taþýnabilir bir sürücüdeki bir klasör olabilir.\n\nÖrneðin "I:\Taþýnabilir Programlarým\".
+Bütünleþme
+Free Download Manager'i .torrent dosyalarýyla iliþkilendir
+Yeni indirmelerde her zaman bu grubu kullan
+Her zaman bu grubu kullan ve son çýktý klasörünü hatýrla
+Flash Video Ýndirmeleri
+Videoyu Free Download Manager ile indir
+Bu site desteklenmiyor. Desteklenen sitelerin listesine bakýnýz.
+Ýndirmelere geç
+Bu sayfada flash video var. Flash video indiriliyor...
+Dönüþtürülüyor...
+Dönüþtür
+Dönüþtürme seçenekleri
+Dosya biçimi
+Video boyutu
+; video quality
+Kalite
+Çok düþük
+Düþük
+Normal
+Ortalama
+Yüksek
+Çok yüksek
+;
+AVI kullanarak MPEG-4 (*.avi)
+AVI kullanarak XVID (*.avi)
+Deðiþtirme
+Video bit hýzý
+Ses bit hýzý
+Ayarlarý varsayýlan olarak hatýrla
+;
+Flash video indirmesi oluþtur
+Ýndirilmiþ videoyu otomatik olarak belirtilen biçime dönüþtür
+Geliþmiþ ayar seçenekleri
+Desteklenen siteler listesine bak
+; used in "create flash video download" window
+örn.
+Ýzleyiciye sonraki baðlantý denemesine %d saniye
+Disk üzerindeki dosyalar hazýrlanýyor... Bu bir kaç dakika alabilir
+Durum
+Disk üzerindeki dosyalar hazýrlanýyor...
+iPod/PSP için MP4 (MPEG4 + AAC, *.mp4)
+Ortam Önizleme/Dönüþtürme
+Ortam dosyasýný dönüþtür
+Bu sekmeye otomatik dön
+;keep "\n\n%s\n" as is
+Ortam dosyasý \n\n%s\n içine baþarýyla dönüþtürüldü.
+Ortam dosyasý dönüþtürülemedi\n\n%s.
+Yeni indirme grubu
+Doðrulama bilgisi
+Eþler
+Ýstemci
+Parçalar
+Ýzleyici
+Ýzleyici durumu
+Yükleme hýzý
+Yüklenen Byte
+Paylaþým oraný
+Atýk byte sayýsý
+Torrent dosya URL'si
+Emin misiniz?\nBu, indirmeyi baþýndan tekrar baþlatacak.
+Bu ay kullanýlan trafik ("indirilmiþ"; "yüklenmiþ")\n(geçen ay %s kullanýldý)
+Toplam hýz ("indirme"; "yükleme")
+Yüklenecek dosyalar
+Paket adý
+Sýkýþtýr
+Bu indirmeyi þifrele
+Tekrar girin
+Bu dosyalarý koru
+Varsayýlan indirme sayýsý
+Kataloðumuz içinde bu dosyalara link ekle
+Geliþmiþ bilgi içersin (tüm sahalar seçimlik)
+Tanýmlama
+Etiketler
+Adýnýz
+e-postanýz
+Alýcýnýn e-postasý
+10'dan az
+10 ile 100
+100'den çok
+2 gün
+7 gün
+1 ay
+;compression methods
+Yok
+Hýzlý
+Ortalama
+En iyi
+Yükleyici ayarlarý
+Yükleyiciyi bütünleþtir
+Explorer içerik menüsü
+Explorer "Gönder" menüsü
+Basit yükleme menüsü kullan
+Yüklenecek minimum dosya boyu
+HTTP proxy ayarlarý
+Yükleme aktivasyonu
+Yükleme aktivasyon gerektirir. Bu, sunucumuzu otomatik yüklemelerden korumak için gereklidir. Aktivasyon kodunu giriniz.
+Yükleme sunucusuna baðlanýyor
+Yükleme sunucusuna baþarýyla baðlandý
+Dosya sunucuya baþarýyla yüklendi
+Dosya yüklemesi durduruldu
+Yüklenecek dosyalarýn zip arþivi oluþturuluyor...
+Zip arþivi oluþturulamadý
+Zip arþivi baþarýyla oluþturuldu
+Sunucuya istek gönderiliyor
+Sunucuya bu yüklemeyle ilgili bilgi gönderiliyor
+Bilgi gönderildi
+Sunucuya bu yüklemeyle ilgili bilgi gönderilemedi
+Yükleme aktive ediliyor...
+Yükleme baþarýyla aktive edildi
+Yükleme aktive edilemedi
+Disk üzerindeki yükleme dosyasý deðiþtirildi
+Beklenmedik hata
+Doðrulama hesaplanýyor...
+; "I agree to terms" string in two lines
+Kabul ediyorum
+Koþullar
+Koþullarý kabul etmelisiniz.
+Güncellemeler kontrol edilemedi
+Yeni sürüm var. Güncelleme gerekli.\nÞimdi güncellemek ister misiniz?
+Free Download Manager güncellemesi gerekli
+Free Download Manager'in yeniden baþlatýlmasý gerekli
+Yükleme ekleri için öneride bulun
+Zarfa ekle (Yavaþ)...
+Yükle ve link ekle (çok hýzlý)...
+Yükleme baþlatýlmaya çalýþýlýrken bir hata oluþtu. Baðlantýnýzý kontrol edin ya da daha sonra tekrar deneyin.
+Büyük dosyalar eklediniz.\nBir çok nedenlerden dolayý büyük dosyalarý ek olarak göndermemeniz önerilir, ancak yine de dosyalarý yükleyebilir ve linklerini gönderebilirsiniz.\n\nYüklemek istiyor musunuz?
+Yükleme önerilir
+Bütünleþme ayarlarý
+%s yüklemesi tamamlandý.\nBu URL'yi indirme linki olarak kullanmalýsýnýz:
+Toplam boyut
+Tarayýcýda aç
+Free Download Manager'in bu sürümü artýk dosya yüklemek için kullanýlamaz. Güncellemeniz gerekli.
+Free Upload Manager'in bu sürümü artýk kullanýlamaz.Güncellemeniz gerekli. Lütfen freedownloadmanager.org sitesini ziyaret edin.
+Çok uzun girdi.
+Yükleme yöneticisi bütünleþme ayarlarý
+Free Upload Manager bütünleþme ayarlarý
+Yükle
+Güncelleme indiriliyor...
+Beslemeyi etkinleþtir
+Beslemeyi varsayýlan olarak devre dýþý býrak

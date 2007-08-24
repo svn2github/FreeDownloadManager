@@ -1,0 +1,1324 @@
+; This is the Swedish language file by Daniel Mester Pirttijärvi (mester_daniel@yahoo.se) v. 1.3
+; You can translate it to your native language
+; To do this, follow instructions:
+; - make sure FDM haven't already translated to your language 
+;   You may go to FDM web site  (http://freedownloadmanager.org) or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng to your language
+; - send translated file to support@freedownloadmanager.org 
+;
+;
+;
+; Translator - Daniel Mester Pirttijärvi, 2004-2006
+;
+; Created for FDM version 2.1
+;
+
+; Your language name. Please keep it in English
+;
+Swedish
+;
+;
+; Below are the strings to translate:
+;
+Spara alla
+Klipp ut
+Kopiera
+Klistra in
+Lätt trafik
+Normal trafik
+Tät trafik
+Alternativ
+Anslut
+Om FDM
+Avsluta
+Arkiv
+Redigera
+Visa
+Alternativ
+Verktyg
+Hjälp
+Verktygsfält
+Statusfält
+Optimera nätverkstrafiken
+Standardinställningar för nedladdningar
+Allmänna inställningar
+Anslut
+Koppla ner vid slutförd nedladdning
+Stäng av datorn vid slutförd nedladdning
+Hjälpavsnitt
+FDM på webben
+Tipsa en vän
+Skicka ett e-brev till supportgruppen
+Kontrollera automatiskt för uppdateringar
+Kontrollera om det finns nya uppdateringar nu
+-
+-
+Växla till
+Trafikdensitet
+Registration
+Nedladdningar
+Schemaläggaren
+Forskaren
+HTTP//FTP-program
+Webbplatshanteraren
+Lägg till nedladdning
+Starta nedladdning
+Stoppa nedladdning
+Schemalägg nedladdning
+Lägg till åtgärd
+Åtgärdsegenskaper
+Ladda ner markerade filer
+Stoppa
+Uppdatera
+Lägg till webbplats
+Webbplatsegenskaper
+Nedladdningsgrupper
+Nedladdningsstatus
+Schemaläggningslogg
+Forskarens logg
+Sidofält
+Ladda ner en ny fil
+Radera nedladdning
+Kör fil
+Öppna mapp
+Starta nedladdning automatiskt
+Egenskaper
+Aktivera åtgärd
+Avaktivera åtgärd
+Radera åtgärd
+Öppna filens sökväg
+Koppla ner
+Ladda ner
+Forskarens alternativ
+Radera webbplats
+Temporär webbplats
+Webbplatshanteraren
+Visa huvudfönster
+Övervaka webbläsare
+Övervaka urklipp
+Starta alla nedladdningar
+Stoppa alla nedladdningar
+-
+Fortsätt
+-
+-
+-
+-
+-
+Avbryt
+-
+-
+-
+Alla grupper
+Filter
+Slutförda
+Under aktivitet
+Schemalagda
+Stoppade
+Övrigt
+Skapa ny grupp
+Radera grupp
+Radera alla nedladdningar
+Radera alla slutförda nedladdningar
+Öppna gruppmapp
+Gruppalternativ
+Gruppnamn:
+Standardsökväg:
+Filändelser [separerade med mellanslag]:
+Standardprioritet
+Väldigt låg
+Låg
+Normal
+Hög
+Väldigt hög
+Ange ett namn för gruppen
+Fel
+En grupp med detta namn existerar redan. Var god välj ett nytt namn
+Ange ett namn på mapp
+Välj standardgruppssökväg
+Ange gruppnamn här
+Standardsökväg för filer i denna grupp
+Bläddra
+Filändelser för denna grupp. Används för att välja grupp automatiskt
+Standardprioritet för denna grupp vid nedladdning
+Avslutar dialog utan att spara ändringarna
+Sparar ändringarna och ständer dialogen
+Fel i nedladdningsgrupper
+Ominstallera FDM
+Fel
+Det gick inte att ladda listan på nedladdningar. Antingen är den skadad, eller också så används den av ett annat program
+Ett fel uppstod vid försök av start av Internet Explorer-plugin
+Är du säker?
+Alla grupper kommer att raderas
+Bekräfta borttagning
+Filnamn
+Storlek
+Nedladdat
+Återstående tid
+Sektioner
+Hastighet
+Kommentarer
+Logg
+Förlopp
+Tid
+Datum
+Information
+Töm
+Autoscrolla
+Okänt nätverksproblem
+Åtkomst nekad. Felaktigt användarnamn eller lösenord
+Åtkomst nekad. Felaktigt lösenord
+Lyckades
+Kunde inte ansluta till servern
+Filen kunde inte hittas på servern
+Anslutningen till servern bröts
+Servern svarar inte
+Det gick inte att hitta servern
+Denna server stöder inte återupptagna nedladdningar. Stoppa inte denna nedladdning! Annars måste du starta om hela nedladdningen från början
+Proxyanvändarnamn och lösenord krävs
+Utökat fel
+Felaktig förfrågan. Detta är troligen en ogiltig adress
+Okänt serverfel
+Anslutning avbruten
+Ogiltig adress
+Ingen Internetanslutning
+Vald HTTP-version stöds inte av denna server
+Okänt fel
+Kan inte radera denna fil från hårddisken
+Antalet anslutningar på denna server är begränsat
+Antalet anslutningar är begränsat
+Pausar %d sekunder
+Sektion
+Påbörjad
+Slutförd
+Nedladdningen är färdig
+Ansluter...
+Anslutning slutförd
+Omdirigerar...
+Omdirigering slutförd. Öppnar ny adress
+Startar nedladdning...
+Stoppad
+Skapar ny sektion...
+Avbruten
+Startar om nedladdning...
+Öppnar filen på hårddisken...
+Filnamnet är för långt
+Filen existerar redan. Byter namn till
+Byter namn till
+Output file was deleted. Impossible to continue
+Filen finns redan. Skriver över
+Filen finns redan. Fortsätter nedladdning
+Filen finns redan
+Det gick inte att öppna filen på hårddisken
+Filstorleken är ändrad på servern!
+Justerar för ny filstorlek...
+Det går inte att skriva över filen
+Filens namn byts ut
+Det går inte att ändra tillbaka till filens ursprungliga namn
+Det går inte att spara grupperna
+Det går inte att spara nedladdningarna
+Anslut
+Anslut till:
+Ring upp automatiskt
+Ring upp
+Välj fjärranslutning här
+Kryssa för denna ruta om du vill ringa upp automatiskt nästa gång
+Ring upp nu
+Ring inte upp och stäng fönstret
+Inga fjärranslutningar funna på denna dator
+Linjen är upptagen
+Det uppstod ett hårdvarurelaterat fel
+Ingen kopplingston
+Ringer upp
+Försök
+Öppnar port...
+Ringer upp fjärrdator...
+Ansluten till fjärrdator
+Verifierar användarnamn och lösenord...
+Anslutningens hastighet är %d bit//s
+Kopplar ner
+Återförsök
+Användarnamn och lösenord krävs
+Användarnamn:
+Lösenord:
+Grupp:
+Spara i:
+Spara som:
+Starta
+Automatiskt
+Manuellt
+Schemalägg
+Prioritet
+Avancerat
+Adress till den fil du vill ladda ner
+Ange användarnamn här
+Ange lösenord här
+Kryssa för denna ruta om servern kräver autentisering
+Gruppens namn, i vilken du vill placera nedladdningen. Grupper hjälper dig att hålla ordning på dina nedladdningar
+Sökväg, där nedladdningen ska sparas
+Nytt namn för den nedladdade filen. Lämna detta fält tomt om du vill behålla originalnamnet
+Kort beskrivning av nedladdning
+Denna nedladdning kommer att startas automatiskt så snart det blir möjligt
+FDM kommer inte att försöka starta denna nedladdning automatiskt
+Schemalägg denna nedladdning
+Konfigurera denna fils schema
+Prioritet för nedladdning. Nedladdningar med högre prioritet kommer att startas först. Nedladdningar med längre nedladdningar skjuts fram och laddas ner efter att nedladdningar med högre prioritet är slutförda
+Visa avancerade inställningar för denna nedladdning
+Den angivna adressen är inte giltig. Var vänlig kontrollera
+Ange användarnamn
+Välj destinationssökväg
+Allmänt
+Allmän information
+Temporär nedladdningsfil:
+Namn för nedladdad fil
+Adressen för denna nedladdning kan ej ändras
+Denna nedladdning är just nu i arbete. Kan inte ändra filnamn
+Kan inte ändra filnamnet
+Kunde inte hitta filen
+Kunde inte hitta sökväg
+Ogiltig exekverbar fil
+Filen används av en annan användare eller applikation
+Åtkomst nekad
+Enheten är inte redo
+Disken är full
+Filnamnet är ogiltigt
+Inloggning krävs
+Anslutning
+Internetanslutning
+Anslutningsfel
+Paus mellan anslutningsförsök (i sekunder):
+Maximalt antal försök
+Timeout (i sekunder):
+Minimal storlek:
+Maximalt antal:
+Trafikbegränsning
+Begränsa trafiken till
+Ignorera alla globala begränsningar
+b
+KiB
+MiB
+s
+Ange värde större än %d
+EN: Please select dimension
+Tid mellan uppringningsförsök
+Kryssa för denna ruta om du vill begränsa antalet avbrutna nedladdningsförsök
+Väntetid för serversvar
+Minimalt antal sektioner. Nedladdningar kommer inte att splittras i flera sektioner med mindre filstorlek
+Maximalt antal sektioner. Nedladdningar kommer inte att splittras i fler sektioner
+Specificerar hur mycket trafik som FDM får bruka för nedladdningen (maximalt)
+Ignorera trafikbegränsningar och begränsningar för antalet anslutningar för denna nedladdning
+Ange här i vilket format du angivit trafikbegränsningen. Antal byte, kibibyte eller mebibyte per sekund.
+Protokoll
+Identifiera som detta på servern:
+Omdirigeringar:
+Använd HTTP 1.1
+Använd kakor (cookies)
+Använd passivt läge
+Hämtningsmetod
+Binär
+ASCII för filer med följande filändelser:
+Anger hur FDM ska identifiseras med HTTP-servern
+Denna sträng kommer att sändas i HTTP-huvudet som omdirigationssträng. I regel är detta ej nödvändigt
+Kryssa för denna ruta om du vill att FDM ska använda HTTP version 1.1
+Kryssa för denna ruta om du vill att FDM ska använda kakor (cookies)
+Kryssa för denna ruta om du vill att FDM ska använda passivt läge för FTP-servrar. Ibland är detta nödvändigt vid användande av brandväggar
+Använd binärt läge för FTP-överföringar. Använd detta läge om du laddar ner filer i annat format än text, t.ex. körbara programfiler
+Använd ASCII-läge för FTP-överföringar. Använd detta läge om du laddar ner en fil i textformat
+FDM kommer att använda ASCII-läge för filer med följande filändelser. För andra filer kommer FDM använda binärt läge
+Proxy
+Proxy-inställningar
+Som i Microsoft Internet Explorer
+Ange manuellt
+Använd inte proxy
+Inställningar
+Adress:
+Port:
+Ange proxyadress
+Ange proxyport
+FDM kommer att använda Internet Explorers proxyinställningar
+Med detta alternativ får du ange proxyinställningarna själv
+Med detta alternativ kommer FDM inte att använda proxy
+Välj de typer av servrar, för vilka du vill använda proxy, här
+Ange proxyadressen som du vill använda
+Ange proxyport här. I regel är den 3128, 1080 eller 8080
+Kryssa denna ruta om proxyservern kräver autentisering
+Diverse
+Lokal fil
+Om filen redan existerar:
+Reservera diskutrymme för nedladdningar
+Extra filändelser för icke slutförda nedladdningar:
+Internetserver
+Starta inte om nedladdningar om servern inte stöder återupptagande
+Om filstorleken på servern är ändrad:
+Stoppa vid fel
+Fråga
+Skriv över
+Byt namn
+Återuppta
+Starta om
+Justera
+Ange filändelser
+Här kan du bestämma vad FDM ska göra om filen redan existerar på disken
+Kryssa denna ruta om du vill reservera diskutrymme åt nedladdningar när de startas
+Om detta är angivit, kommer FDM att lägga till den angivna filändelsen på filer som ej är färdignedladdade. När den är färdig, tas denna ändelse automatiskt bort
+Med denna funktion aktiv, kommer inte FDM att starta om nedladdningar från början om servern inte stöder återupptagande.
+Här kan du ange vad FDM ska göra om filstorleken blivit ändrad på servern
+Kryssa för denna ruta för att stoppa nedladdningar när filen inte hittas på servern
+Kryssa för denna ruta för att stoppa nedladdningar när användarnamn och/eller lösenord är ogiltiga
+Trafikanvändning
+Välj läge för trafikdensitet:
+Maximalt antal anslutningar:
+Maximalt antal anslutningar/server:
+Trafikbegränsning:
+obegränsad
+Välj den trafikdensitet du vill konfigurera här
+Kryssa för denna ruta för att begränsa antalet anslutningar
+Kryssa för denna ruta för att begränsa antalet anslutningar per server
+Ange här den maximala trafiken som FDM får använda till nedladdningar
+Alla nedladdningar
+Lista över nedladdningar
+Autospara var
+min.
+Vid radering av icke slutförda nedladdningar
+Radera slutförda nedladdningar automatiskt
+Radera inte filer
+Radera filer
+FDM sparar listan över nedladdningar automatiskt med en angiven intervall. Detta skyddar listan för ev. låsning eller avstängning
+Ange här vad FDM ska göra med filer på disken, när icke slutförda nedladdningar raderas
+Kryssa för denna ruta om du vill radera nedladdningar automatiskt från listan, när den är slutförd
+Övervakning
+Övervaka
+Urklippsminne
+Övervaka filer med filändelserna
+Ignorera filer med filändelserna
+ALT får inte hållas nedtryckt
+ALT måste hållas nedtryckt
+Ange filändelser
+Kryssa här om du vill att FDM ska hantera klick i Internet Explorer
+Kryssa här om du vill att FDM ska övervaka urklippsminnet
+Detta alternativ gör så att FDM endast kommer att söka efter filer med dessa filändelser
+Sök inte efter filer med följande filändelser
+Övervaka endast om ALT inte är nedtryckt
+Övervaka endast om ALT är nedtryckt
+Uppstart
+Kör FDM vid uppstart
+Starta minimerat
+System
+Minimera till aktivitetsfältet
+Stängknappen ska minimera fönstret
+FDM kommer att startas automatiskt tillsammans med Windows
+FDM kommer att vara minimerat när det startats
+När du klickar på minimeraknappen kommer FDM försvinna till aktivitetsfältet
+Med detta alternativ aktiverat, kommer FDM att minimeras när du klickar på stängknappen
+Uppdateringar
+Adress till uppdateringsserver
+FDM kommer att söka efter nya uppdateringar automatiskt
+Optimera nätverkstrafiken
+Välkommen till Guiden för optimerad nätverkstrafik!
+Denna guide kommer att hjälpa dig med att välja de mest passande inställningarna för din typ av Internetanslutning. Dessa kommer sedan att sättas som standardalternativ för nedladdningar.
+Typ av Internetanslutning
+Slutför
+Välj den typ av Internetanslutning du använder här
+Konfigurerar FDM för optimalt prestanda med din anslutning
+Aktivitet
+Starttid
+Nästa starttid
+Sista starttid
+Det går inte att ladda listan över schemalagda aktiviteter. Antingen är den skadad, eller också så används den av ett annat program
+Det går inte att ladda loggfilen över schemalagda aktiviteter
+Det går inte att spara listan över schemalagda aktiviteter
+Aktiviteten "%s" har blivit schemalagd. Vill du aktivera den?
+Ändra trafikdensiteten till "%s"
+Koppla ner
+Alla anslutningar
+Ändra trafikdensiteten till
+Stäng av
+Starta om
+Logga ut
+En gång
+Sön
+Mån
+Tis
+Ons
+Tor
+Fre
+Lör
+På dagar:
+Var
+dagar
+timmar
+Vid FDM-uppstart
+När uppkoppling är slutförd
+När uppkoppling misslyckats
+När inga aktiva nedladdningar finns
+När hastigheten är mindre eller är likamed %d BPS under %d
+När alla nedladdningar har felstatus under
+Aldrig
+Okänt
+Uppkoppling lyckats till "%s"
+Uppkoppling misslyckats till "%s"
+Körning slutförd
+Minnet är slut
+Det gick inte att köra filen
+Körning av schemalagd aktivitet kommer att resultera i avslutande av FDM vid uppstart. Aktiviteten kommer att ignoreras
+Maximalt antal uppringningsförsök
+Paus mellan försök
+Koppla ner om anslutningens hastighet underskrider:
+Försök igen
+Inga fler än
+Använd anslutningen
+Om lyckad
+gånger
+Koppla ner alla aktiva anslutningar
+Anslutning som ska kopplas ner
+Programnamn:
+Argument:
+Typ av avstängning:
+Tvinga avstängning
+Kör program
+Koppla upp fjärranslutning
+Koppla ner fjärranslutning
+Ändra trafikdensiteten
+Avsluta FDM
+Stäng av datorn
+Nedladdningar som ska startas
+Nedladdningar som ska stoppas
+Program
+Alla filer
+Tyvärr är denna funktion endast tillgänglig i Windows 2000 och XP eller senare
+Ange programmets namn
+Markera nedladdningar
+Markera trafikdensiteten som ska användas vid start av denna aktivitet
+Kryssa för denna ruta om du vill begränsa antalet misslyckade uppringningsförsök
+Tid mellan varje misslyckat uppringningsförsök
+Kryssa för denna ruta för att inte tillåta FDM att behålla en uppringd anslutning, vars hastighet underskrider det värde du angivit
+Ange här den minimala anslutningshastigheten som krävs för att behålla anslutningen
+FDM kommer att försöka ringa upp den nödvändiga anslutningen om du kryssar för denna ruta
+Kryssa här om du vill begränsa det antal misslyckade uppringningsförsök som får ske för att skapa en anslutning
+Ange här nödvändiga nedladdningar
+Lista över alla nedladdningar
+Lägg till markerad nedladdning till listan över aktiva nedladdningar
+Ta bort markerad nedladdning från listan över aktiva nedladdningar
+Ange det program du vill köra här
+Hitta program på din dator
+Ange argument här
+Välj här vilken typ av avstängning du föredrar
+Om denna ruta är markerad kommer alla program att tvingas avsluta, även om de väntar på svar från dig. Observera att inget som är öppet kommer att sparas om du väljer detta alternativ. Rekommenderas ej, om du inte har problem med program som låser sig.
+Ange schemalagd händelse här
+Kryssa för denna ruta om du vill att FDM ska koppla ner alla aktiva anslutningar
+Ange anslutning som ska kopplas ner här
+Varje vecka
+Söndag
+Måndag
+Tisdag
+Onsdag
+Torsdag
+Fredag
+Lördag
+Vid händelse
+Under
+Gränsvärde:
+min.
+minut
+timme
+dag
+När nedladdningshastigheten är för låg
+När alla nedladdningar har felstatus
+Ange dagar
+Starta aktiviteten vid angiven tid
+Ange tiden för start av aktiviteten här
+Starta aktiviteten vid angivet datum
+Ange datumet för start av aktiviteten här
+Starta aktiviteten på särskilda dagar i veckan
+Starta aktiviteten varje söndag
+Starta aktiviteten varje måndag
+Starta aktiviteten varje tisdag
+Starta aktiviteten varje onsdag
+Starta aktiviteten varje torsdag
+Starta aktiviteten varje fredag
+Starta aktiviteten varje lördag
+Starta aktiviteten med en bestämd intervall
+I detta fält kan du ange hur lång intervallen mellan körpunkterna ska vara. Du kan ange den i minuter, timmar och dagar
+Kör aktiviteten när en speciell händelse inträffar
+Ange händelsetyp här
+Ange tidsintervall här
+Ange den lägsta acceptabla hastigheten här
+Bekräftelse krävs för att köra denna aktivitet
+Vänta på bekräftelse i
+sekunder
+Om detta alternativ är markerat, kommer FDM att be dig bekräfta att du vill köra aktiviteten vid körpunkten
+Om detta alternativ är markerat, kommer FDM att vänta på din bekräftelse under det antal sekunder du angivit. Svarar du inte på bekräftelsen inom denna tid, kommer aktiviteten att köras ändå
+Adress:
+Skapar listan över nedladdningar
+Ansluter till server
+Försöker att använda användarnamn och lösenord, angivna i Webbplatshanteraren
+Ta emot lista över filer från servern
+Anslutningen till servern avbröts. Försöker att återställa den
+Skapar lista
+Fråga efter storlek och "senast ändrad"-datum på filerna
+Denna inställning kommer att minska hämtningshastigheten!
+Kryssa för denna ruta om du vill att FDM ska fråga efter filers storlek och datum på webbservrar
+Webbplatsens namn
+Anslutningar
+Logga in
+Grupp
+Det går inte att ladda lista över webbplatser. Antingen är den skadad, eller så används den av ett annat program
+Det går inte att spara listan över webbplatser
+Maximalt antal samtidiga anslutningar:
+Standardgrupp för nya nedladdningar från denna webbplats:
+Använd passivt läge i FTP
+Ange webbplatsens namn
+Enn webbplats med samma namn existerar redan. Ange ett annat namn för webbplatsen
+Det maximala antalet anslutningar måste vara större än 0
+Välj grupp
+Ange webbplatsens namn här
+Kryssa för denna ruta för att begränsa det maximala antalet samtidiga anslutningar på denna server
+Kryssa för denna ruta för att välja grupp för nedladdningar från denna server automatiskt
+Fråga användare
+Fråga mig inte igen
+Fel vid skrivning till disk
+Filen "%s" existerar redan. Vad ska göras?
+Frågar dig inte igen om detta. Ditt val kommer att accepteras som standard
+Skriv över existerande fil
+Byt namn på denna fil
+Fortsätt nedladdning. (nedladdningen kommer att starta på den position, vilken matchar den existerande filens filstorlek)
+Stoppa denna nedladdning
+Ja
+Nej
+Nedladdningen
+är borttagen. Ska även den nedladdade filen på disken raderas?
+Ange ett användarnamn och lösenord
+Logga in till "%s"
+Skicka användarnamnet och lösenordet du angivit till servern
+Anslut inte till denna server
+Filstorleken för "%s" är ändrad på servern. Vad ska göras?
+Starta om nedladdningen från början
+Justera nedladdningen för den nya filstorleken. Rekommenderas ej
+Arbetar...
+Uppdatera
+Beskrivning
+Uppdateringen använder:
+Söker efter uppdateringar
+Du använder redan den senaste versionen
+Hämtar
+Version %s bygge??? %s är tillgänglig
+Full distribution av version %s (%s)
+Uppdatera till version %s
+Uppdatera till version %s (%s)
+FDM måste startas om. Ska omstarten ske nu?
+Uppdatering slutförd
+Det går inte att hitta uppdateraren
+Ange uppdateringstyp här
+Uppdatera FDM med den fullständiga distributionen (allt ominstalleras)
+Uppdatera FDM med uppdateringsdistributionen (ominstallerar endast nya och ändrade komponenter)
+Visa mer information om uppdateringsförloppet
+Vad är nytt i denna version?
+Uppdatera FDM nu
+Avbryt uppdateringen och stäng denna dialog
+Skapa nedladdningar
+Markera innehåll
+Avmarkera innehåll
+Lista över nya nedladdningar
+EN: Check the selected folder items to add them to download list
+EN: Uncheck selected folder items not to add them to download list
+Om FDM
+Copyright ©
+Alla rättigheter reserverade
+Registrerad till:
+Redan uppdaterad. Omstart krävs
+Ogiltigt användarnamn och/eller lösenord
+Det går inte att ladda innehållet i Tidigare
+Det går inte att spara innehållet i Tidigare
+Webbrobotens standardinställningar
+Webbrobot
+Visa trädstruktur
+Ladda ner webbplats
+Nedladdningsalternativ för webbsida
+Starta nedladdning
+Stoppa nedladdning
+Schemalägg nedladdning
+Radera
+Öppna webbsidan i webbläsaren
+Starta nedladdningen automatiskt
+Webbplatsens adress
+Filer
+Vill du även radera det nedladdade materialet?
+Det går inte att ladda listan över webbsidor
+Det går inte att spara listan över webbsidor
+Adress till webbsidan eller webbservern du vill ladda ner från
+Adress till webbsidan eller webbservern, från vilken nedladdningen startades
+Namn på den mapp, där nedladdningarna ska sparas
+Spara i:
+Webbsidor
+Sidor
+Filändelser för webbsidor med HTML-kod:
+Ladda ner webbsidornas ev. stilmallar
+Ladda ner sidor från andra domäner
+Bilder
+Ladda ner bilder
+Ladda ner bilder från andra domäner
+Antal nivåer som ska laddas ner:
+Filändelser till filer som innehåller HTML-kod. Dessa filer kommer att bli genomsökta efter bilder och länkar till andra sidor, som ska laddas ner
+Med detta alternativ laddas även stilmallar (CSS) ner tillsammans med webbsidan. Rekommenderas
+Med detta alternativ inaktiverat, kommer sidor som hör till andra webbplatser inte att laddas ner. Vi säger att du har detta alternativ avstängt, och har startat en nedladdning från http://www.exempel.se/. Då kommer inte webbsidor med adressen http://www.annan-sida.se/valkommen.html att laddas ner. Däremot kommer sidor med adressen http://www.exempel.se/exemplet.html att laddas ner
+Även bilder kommer att laddas ner med detta alternativ markerat
+Om detta alternativ inte är markerat, kommer inte bilder som hör till andra webbplatser att laddas ner
+Nivåer som ska laddas ner. Vi säger att du startat en nedladdning från http://www.exempel.se/index.html. Där finns det en länk som leder till sidan http://www.exempel.se/annansida.html. Då kommer den senare att räknas till nivå 1, och sidor som är länkade från denna sida, kommer att räknas till nivå 2. Sätts denna inställning till 0, kommer endast startsidan att laddas ner
+Ladda ner filer
+Ladda ner filer från andra domäner
+Begränsa filer efter filändelse
+Aktivera
+Ladda ner...
+Ladda inte ner...
+...filer med filändelserna:
+Kryssa för denna ruta för att ladda ner även filer från webbsidor
+Kryssa för denna ruta för att ladda ner även filer från webbsidor som inte hör till den angivna webbplatsen
+Kryssa här för att begränsa filer med de angivna filändelserna
+Filer med filändelserna som finns angivna nedan, kommer att laddas ner och detta alternativ är markerat
+Filer med filändelserna som finns angivna nedan, kommer INTE att laddas ner och detta alternativ är markerat
+Exportera inställningar
+Importera inställningar
+Ett fel uppstod när Regedit.exe skulle köras
+Ett fel uppstod när inställningarna skulle exporteras
+Ett fel uppstod när inställningarna skulle importeras
+FDM:s registerfiler
+Begränsa bilder efter filändelse
+...bilder med filändelserna:
+Kryssa för denna ruta för att ignorera bilder med de angivna filändelserna
+Bilder med de nedan angivna filändelserna, kommer att laddas ner med detta alternativ markerat
+Bilder med de nedan angivna filändelserna, kommer INTE att laddas ner med detta alternativ markerat
+Ta bort denna och ladda inte ner den
+Servern stöder inte återupptagande. Startar om från början
+Ett fel uppstod när adressen skulle öppnas
+Ett okänt problem uppstod vid skrivning till systemregistret
+Tack för din registrering! Starta om FDM
+Ladda ner med Free Download Manager
+Ladda ner webbplats med Free Download Manager
+Lägg till FDM i Internet Explorer:s högerklicksmeny
+Kryssa för denna ruta för att lägga till valen "Ladda ner med Free Download Manager", "Ladda ner webbplats med Free Download Manager", "Ladda ner allt med Free Download Manager" och "Ladda ner markerat med Free Download Manager" i Interner Explorers högerklicksmeny
+Reglera trafikdensiteten beroende på webbläsarens aktivitet
+Minska med ett steg
+Minska till Lätt trafik
+Kryssa för denna ruta för att reglera hur stor trafiken till FDM ska vara till följd av hur du använder webbläsaren just då. Detta gör så att du inte behöver tänka på att stänga av FDM varje gång du ska surfa för att det går för segt
+Trafikdensiteten kommer att minska med ett steg med detta alternativ. Tät trafik blir Normal, och Normal trafik blir Lätt trafik
+Trafikdensiteten kommer med denna inställning att ändras till Lätt trafik
+Godkänd för
+Godkänn underdomäner
+Kryssa för denna ruta för att använda denna webbplats för nedladdningar via HTTP
+Kryssa för denna ruta för att använda denna webbplats för nedladdningar via HTTPS
+Kryssa för denna ruta för att använda denna webbplats för nedladdningar via FTP
+Kryssa för denna ruta för att använda denna webbplats för att ladda ner filer från underdomäner. Som exempel kommer http://webbplats.se bli http://någon.webbplats.se
+Välj åtminstone ett protokoll
+Maximalt antal aktiva nedladdningar
+Kryssa för denna ruta för att begränsa antalet aktiva nedladdningar
+Starta om nedladdning
+Skapa en till sektion
+Stoppa en sektion
+; context: [sektion x] - Stoppad
+Stoppad
+; tray menu
+Åtkomstikon
+;
+Det går inte att hitta Opera-komponenten. Vill du ange den manuellt?
+Det går inte att hitta Netscape-komponenten. Vill du ange den manuellt?
+Det går inte att installera övervakningen för Opera
+Det går inte att avinstallera övervakningen för Opera
+Det går inte att installera övervakningen för Netscape
+Det går inte att avinstallera övervakningen för Netscape
+Kryssa för denna ruta om du vill att FDM ska hantera klick i Opera
+Kryssa för denna ruta om du vill att FDM ska hantera klick i Netscape
+; create download dlg
+Fråga efter filstorlek
+; request a size of a download
+Frågar...
+Frågar server om filstorlek
+Ja till alla
+Nej till alla
+Detaljerad logg
+Om detta är markerat, kommer FDM att svara servern
+Ändringarna kommer att slutföras då du startat om webbläsaren
+Lista över aktiviteter
+Lista över filer
+Lista över webbplatser
+Lista över webbsidor
+Radera nedladdningar
+Skapar listan över nedladdningar
+Skapa serienedladdning
+Serien är från:
+till:
+Steg:
+Utfyllning:
+Resultat
+Exempel:
+Det första talet i serien
+Det sista talet i serien
+Hur stora steg det ska vara i serien. Om det första talet är 0 och detta värde är satt till 10, kommer serien att bli 0, 10, 20 osv.
+Antalet siffror som ska visas. Antag att detta värde är satt till 1, så kommer serien att bli 1, 2, 3. Om det är att till 2, kommer serien att bli 01, 02, 03 osv...
+Klicka här för att se hur serien blir
+Tillåt Internet Explorer att ladda ner om du klickar Avbryt
+Kryssa för denna ruta om du vill tillåta Internet Explorer att ladda ner en fil, om du klickar på Avbryt i "Ny nedladdning"-dialogen.
+Det sista talet i serien måste vara större än det första
+Använd (*) i adressen där siffrorna i serien ska läggas in.
+Lägg till denna filändelse om filen inte har någon:
+Kryssa här för att skapa specifika filändelser för filer som inte har det. Heter en fil som exempel "fil", och du angivit "txt" här, kommer detta resultera i filnamnet "fil.txt"
+Visa storlekar endast i byte
+Kryssa för denna ruta för att visa alla storlekar i byte istället för kibibyte och mebibyte
+Utför antiviruskontroll
+Argument:
+Filändelser:
+Kryssa för denna ruta om du vill att nedladdade filer automatiskt ska kontrolleras efter virus
+Ange antivirusprogrammets namn här
+Ange de argument som ska skickas till antivirusprogrammet här
+Ange de filändelser, vars filer ska kontrolleras efter virus här nedan
+Ange antivirusprogrammets namn
+Namnet är ogiltigt. Kontrollera det
+Begär viruskontroll
+Avaktivera aktivitet efter körning
+Radera aktivitet efter körning
+Kryssa för denna ruta för att avaktivera denna schemalagda aktivitet automatiskt efter körning
+Kryssa för denna ruta för att radera aktiviteten direkt efter att den körts
+Gå till
+Tillbaka
+Skapa filnamn automatiskt
+Kryssa här för att skapa filnamn för nedladdning automatiskt
+Spara med "htm"-ändelse
+Kryssa för denna ruta för att spara alla webbsidor som "htm"-filer
+Klicka här för att beräkna total storlek för alla nedladdningar
+Behåll serverns filstruktur
+Kryssa för denna ruta för att behålla serverns filstruktur. Annars kommer alla filer att sparas i samma mapp
+Du har angivit en annan sökväg. Vill du använda denna sökväg som standard för denna grupp i fortsättningen? Detta kan även göras i gruppens inställningar.
+; === ADDED LINES ===
+En nedladdning med denna adress existerar redan. Vad ska göras?
+Kör
+Kör den nedladdade filen
+Version
+Klicka här för att kontakta oss
+Klicka här för att ladda ner den senaste versionen
+Varning! Detta program är skyddat av internationell upphovsrättslagsstiftning. Otillåten kopiering eller distribution av detta, eller delar av detta program, kan i Sverige leda till böter eller fängelse upp till två år, samt eventuell skadeståndsskyldighet inför upphovsrättsinnehavaren.
+; === new version ===
+Ladda ner allt med Free Download Manager
+Lägg till i listan för nedladdningar
+Radera markerade
+Till denna lista läggs alla adresser till
+Klicka på denna knapp för att ta bort alla markerade adresser i listan
+Det går inte att hitta Firefox:s plugin-sökväg. Vill du ange den manuellt?
+Det går inte att installera Firefox-övervakningen
+Det går inte att avinstallera Firefox-övervakningen
+Kryssa för denna ruta om du vill att FDM ska hantera klick i Mozilla Firefox
+Ladda ner markerat med Free Download Mananger
+Startar
+Webbplatshanteraren
+Aktiva nedladdningar
+Det är för tillfället inga aktiva nedladdningar
+Meddelanden
+Aktivera pratbubblorna i aktivitetsfältet
+Visa dem i
+Kryssa här för att aktivera pratbubblan i aktivitetsfältet, som meddelar att en nedladdning blivit avbruten eller färdig. Notera att Windows 2000/XP eller senare krävs för att detta ska fungera
+Stäng pratbubblan automatiskt efter denna tid
+Speglar
+Sök automatiskt efter spegelservrar
+Maximalt antal spegelservrar
+Beräkna spegelns hastighet
+Mät varje spegels bandbredd var
+Kryssa här för att få FDM att söka efter spegelservrar automatiskt vid varje nedladdning
+Begränsa antalet speglar. Detta alternativ gör så att tiden som går åt till att beräkna bandbredder kan reduceras
+Kryssa här om du vill att FDM ska räkna ut hastigheten hos varje spegelserver
+Omräkna spegelserverns hastighet automatiskt i denna angivna intervall
+Sök inte om filstorleken är mindre än
+FDM kommer inte att söka efter spegelservrar om filstorleken underskrider detta värde
+Sök inte om filstorleken är okänd (rekommenderas)
+Lägg till spegel
+Sök efter speglar
+Lägg till speglar för denna nedladdning manuellt
+Sök efter speglar till denna nedladdning via FileSearching.COM
+Lista över spegelservrar
+Bandbredd
+Används
+Spegelns bandbredd
+Mäter spegelservrers hastighet
+Nedladdningsinfo
+Väntar...
+Spegeladress för nedladdning
+Filstorleken överskred 2GiB. Sådana nedladdningar är endast möjliga via FTP
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Ny nedladdning
+Avgör nedladdningsgrupp automatiskt
+Standardgrupp:
+Spara filen i gruppens standardmapp
+Kryssa för denna ruta om du vill att nedladdningsgrupper ska väljas automatiskt av filändelser eller Webbplatshanterarens inställningar
+Välj standardgrupp manuellt
+Kryssa för denna ruta om du vill att nedladdningar ska sparas i den mapp som är angiven som respektive grupps standardmapp (se gruppalternativ)
+Ange standardmapp manuellt
+; END
+; BEGIN: Monitoring page
+Starta nedladdningar direkt utan dialog
+Dialogen "Ny nedladdning" visas inte när du klickar på en länk i webbläsaren, om denna ruta är kryssad
+Anpassa
+Välj menyval i Internet Explorer:s högerklicksmeny
+; END
+Välj de menyval som ska visas
+Åtminstone ett menyval måste markeras
+Spela upp ljud
+Markera denna ruta om du vill att FDM ska spela upp ljud vid olika händelser (ex vid slutförd nedladdning)
+Välj ljud för respektive händelse
+; BEGIN : Customize sounds dialog
+Anpassa ljud
+Välj ljud
+Radera
+Testa
+Här en lista över de ljud som FDM kommer att spela upp vid respektive händelse. Här kan du anpassa dem.
+Nedladdning tillagd - detta ljud spelas upp när en eller flera nedladdningar lagts till i listan över nedladdningar.
+Nedladdning slutförd - detta ljud spelas upp när en nedladdning har blivit klar.
+Nedladdning misslyckades - detta ljud spelas upp när ett fel uppstått i en nedladdning.
+Uppkoppling slutförd - detta ljud spelas upp när Schemaläggarens "Koppla upp fjärranslutning" lyckats.
+Uppkoppling misslyckad - detta ljud spelas upp när Schemaläggarens "Koppla upp fjärranslutning" misslyckats av någon anledning.
+Väljer ljud för den markerade händelsen
+Spela inte upp några ljud när den markerade händelsen inträffar
+Testar det markerade ljudet
+Händelse
+Ljudfil
+Inget ljud
+Nedladdning tillagd
+Nedladdning slutförd
+Nedladdning misslyckad
+Uppkoppling slutförd
+Uppkoppling misslyckad
+Ljudfiler
+; END
+Söker efter speglar...
+Mäter spegelns bandbredd...
+Du har redan sökt efter speglar
+Ansluter till sökserver...
+Tar emot resultat...
+%d speglar hittades
+Spegelsökning slutförd
+Provar en annan spegel...
+Inga speglar hittades
+Misslyckades
+Spegelns bandbredd är mätt
+; BEGIN: History page
+Tidigare
+Spara filnamn och mappar i Tidigare
+Spara endast mappar i Tidigare
+Spara poster i
+Maximalt antal poster:
+Töm Tidigare
+FDM kommer att spara filnamn och adresser som du angivit i Tidigare
+FDM kommer endast att spara adresser som du angivit i Tidigare
+FDM kommer med denna inställning att radera poster i Tidigare som är äldre än detta antal dagar
+Det maximala antalet poster som kommer att sparas i Tidigare. När detta antal är uppnått, kommer FDM att börja radera de äldsta.
+Raderar allt i Tidigare
+; END
+Importera
+Exportera
+Importera lista över adresser
+Exportera lista över adresser
+Textfiler
+Det gick inte att öppna filen
+Exportera alla nedladdningar
+Exportera nedladdningar i denna lista
+Exportera markerade nedladdningar
+Exportera endast ej slutförda nedladdningar
+Lägg till i slutet i redan existerande filer
+Ogiltigt gruppnamn. Använd inga / eller \.
+Avsluta vid slutförd nedladdning
+; BEGIN : Downloads History window
+Tillagd
+Sparad i
+; END
+Papperskorgen
+; BEGIN: Recycle Bin
+Egenskaper
+Töm Papperskorgen
+;END
+;BEGIN: Recycle Bin properties
+flytta inte raderade nedladdningar till Papperskorgen
+Behåll maximalt
+nedladdningar
+Behåll inte slutförda nedladdningar
+Fråga efter bekräftelse vid raderande av nedladdningar
+Papperskorgens egenskaper
+Kryssa för denna ruta om du inte vill förvara raderade nedladdningar i Papperskorgen
+Kryssa för denna ruta om du vill begränsa antalet raderade nedladdningar i Papperskorgen
+Det maximala antalet raderade nedladdningar som ska sparas i Paperskorgen
+Kryssa för denna ruta om du vill att slutförda nedladdningar inte ska sparas i Papperskorgen efter borttagning
+Kryssa för denna ruta om du vill att FDM ska kräva en bekräftelse av dig för att radera en nedladdning
+;END
+Återställ
+Återställer nedladdningar...
+; History subitems
+Idag
+Igår
+Denna vecka
+Denna månad
+Anpassat...
+; end
+Töm Tidigare
+Spara nedladdningar i Tidigare
+Spara endast slutförda nedladdningar i Tidigare
+Kryssa för denna ruta om du vill att nedladdningar ska sparas i Tidigare
+Kryssa för denna ruta om du vill att endast slutförda nedladdningar ska sparas i Tidigare
+Inställningar för Tidigare
+Skapar lista över sparade nedladdningar...
+; Download Was deleted
+Nedladdningen/-arna raderades
+Välj tidsrymd
+Sök
+Sök nästa
+Sök efter
+; BEGIN : Find dialog
+Sök i
+Lokal fil
+Ange vad du vill söka efter här
+Sök i adresser
+Sök hela dresser
+Sök i kommentarer för nedladdningar
+Sök i filnamnet och sökvägen där nedladdningen lokalt är sparad
+Avancerade sökalternativ
+; ADVANCED settings
+Sök i
+Sök i listan över nedladdningar
+Sök i Tidigare
+Sök efter en angiven tid
+Ange
+Sök i Papperskorgen
+Sök efter en angiven filstorlek
+Minimalt
+Maximalt
+Sök i listan över nedladdningar
+Sök i Tidigare
+Sök bara bland filer som ligger inom den tidsrymd som angivits
+Ange tidsrymden
+Sök i Papperskorgen
+Sök bara bland filer som ligger inom den storleksrymd som angivits
+Minimal filstorlek som krävs
+Maximal filstorlek som krävs
+Sök i grupper
+Välj den grupp, där du vill att sökningen ska genomföras
+; END
+Söker efter nedladdningar...
+Det finns inga resultat att visa
+Inga fler träffar hittades
+Sökning slutförd
+Kopiera adress
+Förhandsgranska innehållet i komprimerade mappar
+Åtminstone en fil måste markeras.
+Det är möjligt att den fil du laddar ner är en komprimerad mapp. Vill du förhandsgranska den?
+Ljud-/Videoförhandsgranskning
+Ett fel uppstod när filen skulle öppnas.
+Okänd mediatyp.
+För att använda denna funktion måste du installera DirectX 8.0 eller senare. Du kan ladda ner den senaste versionen från http://download.microsoft.com.
+Mediainformation
+Storlek:
+Tillgängligt:
+Speltid:
+Ljud på/av
+Spela upp
+Pausa
+Filter
+Filändelser [avgränsade med mellanslag, exempelvis "zip rar arj"]:
+Radera filer med dessa filändelser
+Lämna endast filer med dessa filändelser
+Argumenten innehåller inte %file%. Detta är nödvändigt för att antivirusprogrammet ska veta vilken fil som ska sökas efter virus.
+Vill du fortsätta ändå?
+Varning
+Dölj icke slutförda nedladdningar i Utforskaren
+Lägg till kommentaren i filnamnet vid slutförd nedladdning
+Lagra inte serversidor
+Kryssa för denna ruta om du inte vill att serversidor ska laddas ner till din dator, utan endast filer och bilder
+Förhandsgranska komprimerade mappar
+Kryssa för denna ruta för att förhandsgranska innehållet i en komprimerad mapp när en nedladdning startas, för att endast ladda ner en del av arkivet.
+Volym:
+Starta nedladdningen automatiskt
+Kryssa för denna ruta om du vill att FDM ska starta varje nedladdning automatiskt efter "Ny nedladdning"-dialogen
+Kryssa för de filer du vill ladda ner
+Ange alternativa adresser för denna nedladdning
+Förhandsgranska inte i framtiden
+Du har avaktiverat förhandsgranskningen av komprimerade mappar. Om du skulle vilja aktivera den igen, klicka på Alternativ, Alternativ, fliken Ny nedladdning och kryssa för rutan "Förhandsgranska komprimerade mappar".
+Ignoreras
+Lista över webbsidor som ska ignoreras under nedladdning av en webbplats.
+Undermappar
+Lägg till
+Ignorera även alla undermappar
+; Proxy tab new settings
+Använd återställning för avbrutna anslutningar
+Återställningsstorlek:
+byte
+Kryssa för denna ruta för att aktivera automatisk återställning efter avbrutna förbindelser med servern. Denna funktion förhindrar nedladdningar från att bli skadade.
+Storlek för återställning. En större storlek för återställning innebär att nedladdningen blir säkrare. En storlek på 3000 byte rekommenderas. Om du får problem med skadade nedladdningar kan du prova med att höja detta värde.
+; downloader options -> monitor tab
+Sök inte efter filer som är mindre än
+Använd detta alternativ för att förhindra att FDM visar sin nedladdningsdialog för mindre filer
+KiB
+Varning! Papperskorgen är full. Detta kan sänka prestandan, och du rekommenderas att tömma papperskorgen för att öka prestandan. Vill du göra det nu?
+Kontrollera inte detta igen
+Varning! Tidigare är full. Detta kan sänka prestandan, och du rekommenderas att tömma Tidigare för att öka prestandan. Vill du göra det nu?
+Servern kan inte garantera dess stöd för återupptagna nedladdningar. Ogiltigt svar.
+Kopiera till urklipp
+; general settings | skins page
+Skal
+Skal
+Tillåt att skal använder egna ikoner
+Tillåt att skal använder egna bilder 
+; default skin
+<standard>
+Observera att ändringarna inte träder i kraft förrän du startat om Free Download Manager.
+Visa status för aktiva nedladdningar
+Hoppa över filer med ändelserna:
+Lista över filändelser, vars filer ska hoppas över
+Inga aktiva nedladdningar
+Spela upp ljud när alla nedladdningar är klara
+Importera lista över nedladdningar från urklipp
+Lösenord
+Webbplatshanterarens alternativ
+; Save password dialog
+Spara lösenord?
+Free Download Manager kan spara detta lösenord åt dig, så det i fortsättningen inte är nödvändigt att ange det varje gång du laddar ner från denna server.
+Spara detta lösenord?
+Fråga mig inte om att spara lösenord
+; Site Manager options | Passwords tab
+Använd Webbplatshanteraren till att spara lösenord
+Fråga mig om att spara lösenord eller inte
+Fråga mig inte om att spara lösenord
+Radera alla lösenord innan avstängning
+Radera alla lösenord
+; create new HTML Spider task
+Radera slutförda nedladdningar automatiskt (rekommenderas)
+Kryssa för denna ruta om du vill att Webbrobotens nedladdningar automatiskt ska raderas när de är slutförda. Detta snabbar på nedladdningen av stora webbplatser.
+Ändringarna träder i kraft efter omstart av Free Download Manager
+Nytt gränssnitt
+Gammalt gränssnitt
+Sökvägen är ogiltig
+Dölj statusfönstret i helskämsläge
+Kryssa för denna ruta om du vill att statusfönstret ska döljas automatiskt i helskärmsläge.
+var schemalagd att bli körd.
+Vill du köra aktiviteten?
+Kör filen när nedladdningen är slutförd
+Använd (*), (*A) eller (a*) i adressen för att bestämma formatet på adresserna
+Sök speglar på:
+Viloläge
+Vänteläge
+Kom ihåg mitt val
+Föreslå ändring av gruppers standardsökvägar
+Spara filen
+Öppna filen
+Spara filen och öppna den därefter
+Ladda ner och ...
+Länka till FDM
+Länka till Free Download Manager
+Kära användare,
+Free Download Manager är ett program som tillhandahålls utan kostand. Du kan använda det så länge du vill helt gratis.
+Hur som helst, om du tycker att Free Download Manager är användbart, är vi tacksamma om du skulle kunna hjälpa oss genom att länka till oss på din hemsida. Detta gör att ännu fler personer får reda på Free Download Manager.
+Tack för din hjälp,\nFree Download Managers utvecklingsgrupp.
+Påminn mig om 3 dagar
+Påminn mig nästa gång jag startar Free Download Manager
+Visa inte detta fönster igen
+Visa länkkod
+Länkkod
+Fler exempel
+Kopiera kod
+Dölj
+; "Traffic usage mode has beed changed" window
+Ändring av trafikdensiteten
+Du har nu valt att ändra inställningen för trafikdensitet.\nFree Download Manager har tre lägen för trafiken:
+I detta läge kommer Free Download Manager att ladda ner med maximal hastighet; alltså den mest bandbreddskrävande metoden.
+I detta läge kommer Free Download Manager att ladda ner med måttlig hastighet. Detta läge tillåter dig att surfa med din webbläsare samtidigt som du laddar ner, utan att hastigheten anmärkningsvärt försämras.
+I detta läge kommer Free Download Manager att ladda ner med låg hastighet. Detta läge medför att du kan ladda ner utan den prestandasänkning som annars kan uppstå i nätverket.
+;
+Byt namn även vid omstart av nedladdning
+Ange ett värde mindre än %d
+; export/import downloads
+Adresslistor
+Listor med nedladdningsinformation
+;
+Export options
+;
+Sätt filens datum till datum angivet av servern
+Sätter datumet som indikerar skapandet på nedladdad fil till samma datum som filen hade på servern
+Skapa beskrivningsfil
+Skapar en fil med namnet "*.dsc.txt" (* - namn på nedladdad fil) som innehåller en kort beskrivning av nedladdningen (kommentarer + adress + datum). Denna fil är endast genererad för nedladdningar som har kommentarer.
+Denna fil har blivit nedladdad från
+Ta inte emot fildatum från servern
+Detta alternativ låter dig minska tiden det tar att starta en FTP-nedladdning genom att använda kommandot SIZE istället för LIST.
+Spara inte nedladdningsloggar
+Genom att aktivera detta alternativ kan du snabba på uppstarten och nedstängningen av FDM och minska minnesanvändningen.
+;
+Exportera Tidigare
+Exportera alla nedladdningar
+Exportera nedladdningar i denna grupp
+Exportera markerade nedladdningar
+Exportera endast slutförda nedladdningar
+;
+HTML Files
+;
+Nedladdningslogg från Free Download Manager
+Adress
+Nedladdat till
+Filstorlek
+Nedladdning slutförd
+Nedladdning raderad
+;
+Sparas som
+Filstorlek
+Stöd för återupptagna nedladdningar
+Stäng denna dialogruta när nedladdningen är slutförd eller stoppad
+Öppna
+Vill du att denna dialogruta ska visas i fortsättningen?
+Ja, jag vill att den ska visas vid alla nedladdningar
+Nej, jag vill inte att den ska visas i fortsättningen
+Ja, men inte vid denna nedladdning
+Du håller på att radera en nedladdning med tillhörande fil genom att hålla inne SHIFT. Filen går då inte att återställa.\nVill du fortsätta?
+Välj grupp
+Ange gruppens rotmapp
+Markera gruppens rotmapp.\nÄndringen kommer bara gälla nya nedladdningar.
+Senast nedladdad fil
+(tom)
+Pausa alla nedladdningar
+Visa fönstret för nedladdningsstatus
+Om du markerar detta, kommer FDM att öppna ett speciellt fönster med information för alla aktva nedladdningar
+; general settings | misc page
+Väntetid för bekräftningar
+Kör nedladdning
+Fråga efter avstängningsmetod
+Väntetid för bekräftning av "Verktyg | Koppla ner vid slutförd nedladdning"-kommandot.
+Väntetid för bekräftning av "Verktyg | Avsluta vid slutförd nedladdning"-kommandot.
+Väntetid för bekräftning av "Verktyg | Stäng av datorn vid slutförd nedladdning"-kommandot.
+Väntetid för bekräftning innan slutförd nedladdad fil körs.
+Om detta är markerat kommer FDM fråga dig efter hur du vill stänga av datorn för "Verktyg | Stäng av datorn vid slutförd nedladdning"-kommandot.
+Fråga inte om bekräftning
+; 5 seconds, 10 seconds, ...
+%d sekunder
+Vänta på min bekräftelse
+Ignorera sidor i denna mapp
+Ladda endast ned filer i denna mapp
+Inkludera undermappar
+Ignorera alla webbsidor i denna mapp.
+Ladda endast ned sidor i denna mapp och ignorera andra webbsidor.
+Kryssa för detta alternativ om Webbroboten ska ignorera (eller bara ladda ned) sidor i alla undermappar till den angivna mappen.
+Här anger du adressen till mappen.\nExempel: "http://webbplats.com/dokument/".
+Typ
+Ignorera
+Endast
+Nummerserie
+Ange
+Här kan du ange inom vilket område numrena för serienedladdningen ska vara.\nExempel: 1-100, eller 1-100s2w3.
+Klicka på denna knapp för att ange seriens definitionsmängd genom att använda dialogrutan.
+Enstaka nummer
+Nummer
+Ange en serie nummer
+Syntaxfel
+Extrahera komprimerad mapp
+Extrahera
+Extrahering
+Målmapp
+Extraheringen misslyckades. Filformatet är okänt.
+Trafik för nedladdningar denna månad\n(%S har blivit nedladdat förra månaden)
+Total nedladdningshastighet
+Inaktivera "Verktyg | [...] vid slutförd nedladdning" efter körning
+Om detta alternativ är markerat kommer alla "vid slutförd nedladdning"-val i Verktygsmenyn automatiskt inaktiveras efter körning så att det endast kommer att köras en gång.
+; %s
+; 1st - name of a file
+; 2nd, 3rd - file info (size + date).
+Filen "%s" existerar redan.\n\nVill du skriva över\n(%s)\n\nmed den nya\n(%s)?
+Ja till alla
+Hoppa över
+Hoppa över alla
+Formatet av den komprimerade mappen är okänt
+Besök vår webbplats
+Installera paket
+Som standard stöder FDM endast formaten ZIP, RAR och ARJ. Du kan själv öka antalet stödda format genom att installera extra kromprimeringsstöd från vår hemsida (Internetanslutning krävs).
+Stödda komprimeringsformat
+Flytta upp
+Flytta ner
+Flytta markerade nedladdningar upp
+Flytta markerade nedladdningar ner
+Kontrollera checksumma
+Vissa webbplatser erbjuder stöd för checksummor för filer på servern för att användarna ska kunna vara säkra på att nedladdningar inte är skadade. Du kan ange denna checksumma här för att låta FDM kontrollera den mot filens.
+Algoritm
+Checksumma
+Klistra in från urklipp
+Kontrollera
+Beräknar nedladdad fils checksumma...
+Kontrollen lyckades
+Kontrollen misslyckades
+Kontrollen har nu blivit slutförd.\nInga fel hittades i den nedladdade filen.
+Kontrollen har nu blivit slutförd.\nFel hittades, vilket inebär att filen skadats under nedladdningsprocessen. Du måste starta om nedladdningen från början för att åtgärda felet.
+Visa inte detta fönster igen om kontrollen lyckas
+FDM kunde inte hitta antivirusprogrammet du angivit.\nVänligen ange sökvägen själv.
+Filstorlekarna är inte lika
+Spara som:\n(Exempel: fil(*)(*A)(*a).txt)
+Ogiltigt format för spara som-namn.\nKontrollera att det motsvarar formatet på adressen.
+Vid slutförd nedladdning
+Vid slutförd nedladdning (även för stoppade)
+Program
+Vad är det här?
+Recensioner
+;
+Välkommen!
+Free Download Manager (FDM) är en av de mest populära nedladdningshanterarna i världen och har miljontals användare. Nu när det har blivit så spritt, vill vi ha mer!
+Om du tycker att detta program är ett sådant "måste ha"-program, ber vi dig vänligen att hjälpa oss genom att sprida länkar till FDM i din blogg, hemsida eller personlig sida, såsom Myspace och Mitt krypin.
+; %s will be replaced with "FDM buzz" 
+Officiellt startade %s den 16 Augusti 2006. Vårt mål är att FDM, efter Firefox, ska bli det program som snabbast spritts på nätet!
+FDM buzz
+; %s will be replaced with "blog" 
+Du kan följa målet i vår %s
+blogg
+Tack på förhand,\nFree Download Manager:s utvecklingsteam
+Visa inte denna dialog igen. Jag har bra minne.
+Gå med i buzzen
+Nej, tack
+FDM Community
+Växla till "Recensioner" efter nedladdning
+Om detta är aktiverat, kommer fliken "Recensioner" automatiskt visas efter att en nedladdning är färdig.
+Ändra Internet Explorer:s användaragentsträng
+Om detta är aktiverat kommer alla hemsidor som du besöker kunna ta reda på att du har Free Download Manager installerat. Detta kan i vissa fall leda till att vissa sidor blir blockerade.
+Sabotage?
+Kontrollera om någon av Free Download Manager:s användare har rapporterat att denna nedladdning innehåller virus, spionprogram, annonsvisare m.m.
+Ingen av FDM:s användare har rapporterat att denna nedladdning innehåller sabotageprogram.\n\nObservera att detta inte garanterar att nedladdningen är fri från sabotageprogram. Vi rekommenderar att du söker igenom filen med ditt antivirusprogram.
+; keep all %xxx, \n as is.
+%d av %d av Free Download Manager:s användare har rapporterat att nedladdningen innehåller sabotageprogram.\nProcentuellt blir det %.*g.\n\nVill du läsa programmets recensioner?
+Kontrollera alla nya nedladdningar efter sabotageprogram innan de startar
+Använd denna funktion om du vill att FDM automatiskt ska kontrollera om någon av användarna har rapporterat att nedladdningen innehåller sabotageprogram.
+Visa recensioner under nedladdning
+Om detta är aktiverat kommer FDM automatiskt att växla till fliken "Recensioner" vid nedladdning.
+Kontrollerar om nedladdningen innehåller sabotageprogram
+Ingen har rapporterat att sabotageprogram medföljer denna nedladdning
+Varning! Någon har rapporterat att sabotageprogram medföljer denna nedladdning
+Stäng
+Laddar
+Ladda inte ner detta
+Buffra skrivoperationer av nedladdad data till disk
+Om detta är aktiverat kommer FDM att spara nedladdad data i en intern buffert med av dig specifierad storlek innan de skrivs till hårddisken. Detta reducerar antalet gånger som din hårddisk används och kan även göra nedladdningarna snabbare om du har en höghastighetsanslutnin till nätet.\nObservera att eftersom senast nedladdad data inte sparas på hårddisken, kommer du att bli tvungen att ladda om denna vid datorhaveri.\nRekommenderas vid höghastighetsanslutningar.
+Det gick inte att aktivera övervakning av SeaMonkey (Mozilla Suite)
+Det gick inte att inaktivera övervakning av SeaMonkey (Mozilla Suite)
+Kryssa för denna ruta om du vill att FDM ska fånga alla nedladdningar i Mozilla Firefox
+Kryssa för denna ruta om du vill att FDM ska fånga alla nedladdningar i SeaMonkey (Mozilla Suite)
+Låt webbläsaren ladda ned om du klickar Avbryt
+Kryssa för denna ruta om du vill att webbläsaren ska ladda ned filen om du klickar Avbryt i FDM:s nedladdningsdialog
+Lägg till FDM i webbläsarens högerklicksmeny
+Kryssa för denna ruta för att lägga till menyvalen "Ladda ner med Free Download Manager" och "Ladda ner webbplats med Free Download Manager" i webbläsarens högerklicksmeny
+Välj vilka menyval som ska visas i webbläsarens högerklicksmeny
+Det gick inte att aktivera övervakning av Firefox
+Flytta filer till mapp
+Hastighet är för låg. Startar om sektion...
+Starta om då hastigheten är för låg under (i min):
+Startar om sektioner om nedladdningshastigheten hastigt minskas.
+Vill du se fönstret för nedladdningsstatus igen?
+Tyvärr är denna tjänst för tillfället ej tillgänglig. Försök igen senare.
+Flytta längst upp
+Flytta längst ner
+Lägg nedladdningen längst upp i listan
+Kryssa för detta alternativ om du vill att denna nedladdning ska läggas längst upp i nedladdningslistan.
+Övervakningen i Firefox kunde inte aktiveras, då tilläggsprogrammet FlashGot är installerat.\nDu måste avinstallera FlashGot först.
+Aktivera
+Inaktivera
+Växla
+Om läget Pausa alla nedladdningar är aktiverat kommer det att inaktiveras, annars kommer det att aktiveras.
+Officiellt kommer %s att starta den 16 Augusti 2006. Vårt mål är att FDM, efter Firefox, ska bli det program som snabbast spritts på nätet!

@@ -1,0 +1,1322 @@
+; Ğây laÌ hôÌ sõ ngôn ngıŞ
+; Baòn coì thêÒ diòch noì tõìi ngôn ngıŞ quê hıõng cuÒa Baòn
+; ĞêÒ laÌm ğiêÌu naÌy, haŞy theo nhıŞng chiÒ dâŞn:
+; - Khi FDM chãìc chãìn ğaŞ chıa ğıõòc diòch cho ngôn ngıŞ cuÒa baòn 
+;   Baòn coì thêÒ tõìi web-site FDM (http://Freedownloadmanager.org) hoãòc E-mail tõìi support@freedownloadmanager.org
+; - sao cheìp hôÌ sõ ngôn ngıŞ naÌy thaÌnh xxx.lng, võìi xxx laÌ tên ruìt goòn 
+;   cuÒa ngôn ngıŞ cuÒa baòn. Nhı tiêìng Anh noì laÌ eng
+; - diòch nhıŞng tâìt caÒ chuôŞi cuÒa xxx.lng tõìi ngôn ngıŞ cuÒa baòn
+; - gõÒi hôÌ sõ diòch tõìi support@freedownloadmanager.org 
+;
+;
+;
+; NgıõÌi diòch - danubeblue43@gmail.com, 2006
+;
+
+; Tên ngôn ngıŞ cuÒa Baòn. Xin giıŞ noì bên trong tiêìng Anh
+;
+Vietnamese
+;
+;
+; Bên dıõìi laÌ nhıŞng chuôŞi ğêÒ diòch :
+;
+Lıu tâìt caÒ
+Cãìt
+Cheìp
+Daìn
+KiêÒu nheò nhaÌng
+KiêÒu vıÌa phaÒi
+KiêÒu nãòng nêÌ
+TuÌy choòn taÒi xuôìng
+Quay sôì kêìt nôìi
+Noìi vêÌ FDM
+Thoaìt
+HôÌ sõ
+Biên tâòp
+TriÌnh baÌy
+TuÌy choòn
+Công cuò
+Trõò giuìp
+Thanh công cuò
+Thanh traòng thaìi
+Ğaình giaì Chiình
+Thiêìt ğãòc mãòc ğiònh cho TaÒi xuôìng ..
+Thiêìt ğãòt TôÒng quaìt...
+Quay sôì kêìt nôìi...
+Gaìc maìy khi xong
+Shutdown maìy tiình khi xong
+MõÒ CıÒa SôÒ Trõò giuìp Tham khaÒo
+Trang ChuÒ FDM
+Goòi cho môòt ngıõÌi baòn
+GõÒi e-mail cho nhoìm hôŞ trõò
+Tıò ğôòng kiêÒm tra cho Câòp nhâòt
+KiêÒm tra cho Câòp nhâòt ngay bây giõÌ
+-
+-
+ChuyêÒn ğôÒi tõìi
+KiêÒu duÌng Vâòn chuyêÒn
+Ğãng kyì
+Caìc TaÒi xuôìng
+Liòch biêÒu
+Khaìm phaì Site
+Khaìm phaì HTTP//FTP
+QuaÒn lyì Site
+Thêm viêòc taÒi vêÌ
+Cho taÒi vêÌ
+Ngıng taÒi vêÌ
+Liòch biêÒu taÒi vêÌ
+Thêm taìc vuò...
+Tiình châìt taìc vuò...
+Choòn caìc hôÌ sõ taÒi vêÌ
+NgıÌng laòi
+LaÌm tıõi mõìi
+Thêm Site
+Tiình châìt cuÒa Site...
+Caìc nhoìm cuÒa caìc TaÒi vêÌ
+Thông tin taÒi vêÌ
+HôÌ sõ nhâòt kyì Liòch triÌnh
+HôÌ sõ nhâòt kyì khaìm phaì Site
+Thanh trıõòt
+Taòo mõìi cuôòc taÒi vêÌ...
+Xoaì taÒi vêÌ
+MõÒ hôÌ sõ ğang choòn
+MõÒ thı muòc chıìa hôÌ sõ naÌy
+Chaòy tıò ğôòng TaÒi vêÌ
+Tiình châìt taÒi vêÌ...
+Hiêòu lıòc taìc vuò naÌy
+Vô hiêòu taìc vuò naÌy
+Xoaì taìc vuò naÌy
+MõÒ thı muòc bên trên
+Ngãìt kêìt nôìi
+TaÒi vêÌ
+Thiêìt ğãòt caìch khaìm phaì Site...
+Xoaì boÒ Site
+ĞêÌ muòc taòm thõÌi
+Sites
+HiêÒn thiò cıÒa sôÒ chiình
+Giaìm saìt triÌnh Duyêòt
+Giaìm saìt Bôò nhõì ğêòm
+Chaòy tâìt caÒ caìc TaÒi vêÌ
+DıÌng tâìt caÒ caìc TaÒi vêÌ
+-
+Tiêìp tuòc
+-
+-
+-
+-
+-
+BoÒ qua
+-
+-
+-
+Caìc nhoìm
+Bôò loòc
+ĞâÌy ğuÒ
+Trong tiêìn triÌnh
+Liòch biêÒu
+NgıÌng laòi
+Khaìc
+Taòo Nhoìm mõìi...
+Xoaì boÒ nhoìm
+Xoaì boÒ tâìt caÒ caìc taÒi xuôìng
+Xoaì boÒ tâìt caÒ caìc taÒi xuôìng ğaŞ hoaÌn tâìt
+MõÒ nhoìm thı muòc
+Tiình châìt Nhoìm...
+Tên Nhoìm:
+Thı muòc mãòc ğiònh:
+PhâÌn mõÒ rôòng cuÒa hôÌ sõ [phân caìch bõÒi khoaÒng trãìng]:
+Mãòc ğiònh İu tiên taÒi vêÌ
+Râìt thâìp
+Thâìp
+Trung biÌnh
+Cao
+Râìt cao
+Xin nhâòp vaÌo môòt tên Nhoìm
+LôŞi nhâòp liêòu
+Nhoìm võìi cuÌng tên naÌy ğaŞ tôÌn taòi. Xin nhâòp tên khaìc
+Xin nhâòp vaÌo tên thı muòc
+Choòn thı muòc mãòc ğiònh cho Nhoìm
+Nhâòp tên Nhoìm vaÌo ğây
+Thı muòc mãòc ğiònh ğêÒ lıu caìc taÒi vêÌ cuÒa nhoìm naÌy
+Duyêòt
+PhâÌn tên mõÒ rôòng cho hôÌ sõ Nhoìm naÌy. DuÌng doÌ tiÌm Nhoìm khi taÒi vêÌ tıò ğôòng
+Mãòc ğiònh İu tiên taÒi vêÌ cho Nhoìm naÌy
+BoÒ qua caìc thay ğôÒi vaÌ ğoìng hôòp thoaòi
+Hiêòu lıòc caìc thay ğôÒi vaÌ ğoìng hôòp thoaòi
+LôŞi trong Nhoìm taÒi vêÌ
+Vui loÌng caÌi ğãòt laòi FDM
+LôŞi
+Không thêÒ taÒi môòt danh saìch cuÒa caìc taìc vuò taÒi vêÌ. Coì leŞ noì biò hı hoÒng hoãòc hiêòn ğang ğıõòc duÌng bõÒi môòt ıìng duòng khaìc
+Thâìt baòi trong viêòc khõÒi taòo sıò hõòp nhâìt võìi Internet Explorer
+Baòn chãìc chãìn thêì?
+Coì yì ğiònh xoaì hêìt caìc Nhoìm taÒi vêÌ
+Xaìc nhâòn
+Tên HôÌ sõ
+Kiìch cõŞ
+TaÒi xuôìng
+ThõÌi gian coÌn laòi
+Chia goìi
+Tôìc ğôò
+Chuì dâŞn
+Nhâòt kyì
+Tiêìn triÌnh
+GiõÌ
+NgaÌy
+Thông tin
+Doòn deòp
+Tıò ğôòng cuôìn
+Không biêìt lôŞi maòng naÌy
+Truy câòp biò tıÌ chôìi. Tên hay mâòt khâÒu không phuÌ hõòp
+Truy câòp biò tıÌ chôìi. Mâòt khâÒu không hõòp lêò
+ThaÌnh công
+Không kêìt nôìi tõìi maìy chuÒ ğıõòc
+Không tiÌm thâìy hôÌ sõ naÌy trên maìy chuÒ
+Kêìt nôìi tõìi maìy chuÒ ğaŞ mâìt
+Maìy chuÒ không traÒ lõÌi
+Không thêÒ phân tiìch tên maìy phuòc vuò naÌy
+Maìy phuòc vuò không hôŞ trõò viêòc cho taÒi laòi. Viêòc taÒi vêÌ phaÒi liên tuòc, nêìu không baòn phaÒi chaòy laòi tıÌ ğâÌu
+CâÌn coì tên sıÒ duòng vaÌ mâòt khâÒu cho Proxy naÌy
+LôŞi phâÌn tên mõÒ rôòng
+Yêu câÌu xâìu. Coì leŞ ğây laÌ URL xâìu
+Không biêìt lôŞi tıÌ maìy phuòc vuò
+Kêìt nôìi ğaŞ thâìt baòi
+URL xâìu
+Không coì kêìt nôìi Internet naÌo
+Phiên baÒn HTTP ğaŞ choòn không hôŞ trõò maìy chuÒ naÌy
+LôŞi không biêìt
+Không xoaì ğıõòc hôÌ sõ naÌy tıÌ ôÒ ğiŞa
+Giõìi haòn cuÒa sıò kêìt nôìi tõìi maìy phuòc vuò ğaŞ ğaòt tõìi
+Giõìi haòn cuÒa kêìt nôìi naÌy ğaŞ ğaòt tõìi
+Taòm dıÌng %d giây.
+ThaÌnh phâÌn
+Bãìt ğâÌu
+HoaÌn tâìt
+TaÒi xuôìng ğaŞ hoaÌn tâìt
+Ğang kêìt nôìi...
+Kêìt nôìi thaÌnh công
+Goòi laòi
+Goòi laòi thaÌnh công. MõÒ ra URL mõìi
+Bãìt ğâÌu taÒi vêÌ...
+NgıÌng laòi
+Taòo thaÌnh phâÌn mõìi...
+HuyÒ boÒ
+Chaòy laòi viêòc taÒi vêÌ...
+MõÒ hôÌ sõ trên ğiŞa...
+Tên hôÌ sõ quaì daÌi
+HôÌ sõ naÌy ğaŞ tôÌn taòi. ĞôÒi tên laÌ
+ĞôÒi tên laÌ
+HôÌ sõ ğâÌu ra ğaŞ biò xoaì. Không thêÒ tiêìp tuòc
+HôÌ sõ ğaŞ tôÌn taòi. Viêìt laòi noì
+HôÌ sõ ğaŞ tôÌn taòi. Tiêìp tuòc taÒi xuôìng
+HôÌ sõ ğaŞ tôÌn taòi
+Không mõÒ ğıõòc hôÌ sõ trên ğiŞa
+Kiìch cõŞ hôÌ sõ ğaŞ thay ğôÒi trên maìy phuòc vuò !
+ĞiêÌu chiÒnh theo kiìch cõŞ mõìi...
+Không thêÒ ghi ğeÌ lên hôÌ sõ
+HôÌ sõ seŞ ğıõòc ğôÒi tên
+Không thêÒ ğôÒi tên hôÌ sõ vêÌ laòi tên gôìc cuÒa noì
+Không thêÒ lıu giıŞ caìc Nhoìm
+Không thêÒ lıu giıŞ caìc taÒi xuôìng
+Kêìt nôìi quay sôì
+Kêìt nôìi tõìi :
+Quay sôì tıò ğôòng
+Kêìt Nôìi
+Choòn ğêÌ muòc quay sôì õÒ ğây
+Ğãòt dâìu KiêÒm vaÌo ğây nêìu baòn muôìn quay sôì seŞ chaòy tıò ğôòng trong lâÌn tõìi
+Quay sôì ngay
+Không quay sôì vaÌ ğoìng hôòp thoaòi naÌy
+Không coì muòc goòi quay sôì naÌo tiÌm thâìy trên maìy tiình naÌy
+ĞıõÌng dây thiÌ bâòn rôòn
+Sıò thâìt baòi qua PhâÌn cıìng
+Không coì âm quay sôì naÌo
+Quay sôì
+Ğang thıÒ
+MõÒ côÒng...
+Quay sôì tõìi nhaÌ cung câìp...
+Kêìt nôìi tõìi maìy tiình tıÌ xa
+Xaìc minh tên vaÌ mâòt khâÒu...
+Tôìc ğôò kêìt nôìi laÌ %d BPS
+Ngãìt kêìt nôìi
+Lâòp laòi
+Yêu câÌu tên vaÌ mâòt khâÒu sıÒ duòng
+NgıõÌi duÌng:
+Mâòt khâÒu:
+Nhoìm:
+Lıu tõìi thı muòc:
+Lıu ra nhı:
+Chaòy
+Tıò ğôòng
+BãÌng tay
+Liòch biêÒu
+İu tiên taÒi vêÌ
+Nâng cao
+Ğiòa chiÒ hôÌ sõ baòn muôìn taÒi vêÌ
+Nhâòp tên ngıõÌi duÌng vô ğây
+Nhâòp mâòt khâÒu vô ğây
+Ğãòt dâìu kiêÒm nêìu maìy phuòc vuò yêu câÌu sıò cho pheìp
+Tên cuÒ nhoìm ğêÒ ğãòt taÒi xuôìng. Caìc nhoìm giuìp baòn quaÒn lyì
+Thı muòc câìt giıŞ caìc taÒi xuôìng
+Têìn mõìi cho hôÌ sõ seŞ taÒi xuôìng. ĞêÒ ô naÌy rôŞn nêìu baòn muôìn lıu trıŞ hôÌ sõ theo tên nguyên baÒn
+DiêŞn giaÒi ngãìn cho taÒi xuôìng
+TaÒi xuôìng naÌy seŞ ğıõòc chaòy tıò ğôòng caÌng sõìm caÌng tôìt
+FDM seŞ không thêÒ chaòy chaòy taÒi xuôìng tıò ğôòng naÌy
+Hoaòch ğiònh taÒi xuôìng naÌy
+Câìu hiÌnh liòch triÌnh taÒi xuôìng
+QuyêÌn İu tiên taÒi xuôìng. Caìc taÒi xuôìng võìi quyêÌn ıu tiên cao seŞ chaòy trıõìc. Caìc taÒi xuôìng coì ıu tiên iìt hõn thiÌ seŞ triÌ hoaŞn vêÌ sau
+Xem thiêìt ğãòt nâng cao cho taÒi xuôìng naÌy
+Nhâòp URL sai. Xin kiêÒm tra noì
+Xin nhâòp tên ngıõÌi duÌng
+Choòn nõi hôÌ sõ xuâìt ra
+TôÒng quaìt
+Thông tin chung
+TaÒi xuôìng hiêòn ğaŞ ğıõòc lıu thaÌnh hôÌ sõ:
+Tên cuÒa hôÌ sõ taÒi vêÌ
+URL cuÒa taÒi vêÌ naÌy không thêÒ thay ğôÒi
+TaÒi vêÌ naÌy ğang trong tiêìn triÌnh. Không thêÒ ğôÒi tên hôÌ sõ
+Không thêÒ ğôÒi tên hôÌ sõ
+Không tiÌm thâìy hôÌ sõ
+Không tiÌm thâìy ğıõÌng dâŞn
+Không ğuìng ğiònh daòng .exe
+HôÌ sõ ğang ğıõòc duÌng bõÒi ıìng duòng khaìc
+Truy câòp biò tıÌ chôìi
+Thiêìt biò ğoì không sãŞn coì
+ĞiŞa ğaŞ ğâÌy
+Tên hôÌ sõ không hõòp lêò
+Yêu câÌu ğãng nhâòp
+Kêìt nôìi
+Maòng
+LôŞi
+Taòm dıÌng giıŞa luìc kêìt nôìi coì thıÒ laòi [sôì giây]:
+Sôì lâÌn tôìi ğa ğêÒ thıÒ laòi
+ThõÌi gian trêŞ [sôì giây]:
+Kiìch cõŞ tôìi thiêÒu:
+Sôì goìi tôìi ğa:
+Haòn chêì sıò vâòn chuyêÒn taÒi xuôìng naÌy
+Giõìi haòn vâòn chuyêÒn
+LõÌ ği tâìt caÒ caìc giõìi haòn
+b
+Kb
+Mb
+s
+Nhâòp vaÌo giaì triò lõìn hõn %d
+Xin choòn kiìch thıõìc
+ThõÌi gian ğõòi maìy phuòc vuò ngãìt kêìt nôìi trong trıõÌng hõòp coì lôŞi
+Ğãòt dâìu kiêÒm vô ğây nêìu baòn muôìn giõìi haòn mıìc tôìi ğa sôì lıõòng thâìt baòi côì gãìng taÒi xuôìng
+ThõÌi gian ğõòi sıò hôÌi baìo tıÌ maìy phuòc vuò
+Kiìch thıõìc tôìi thiêÒu cuÒa thaÌnh phâÌn. TaÒi xuôìng seŞ không chia tıÌng phâÌn vaÌo trong caìc thaÌnh phâÌn võìi kiìch thıõìc nhoÒ hõn
+Sôì tôìi ğa cuÒa caìc thaÌnh phâÌn. TaÒi xuôìng seŞ không chia tıÌng phâÌn vaÌo trong caìc thaÌnh phâÌn lõìn hõn
+ChiÒ roŞ (tôìi ğa) bao nhiêu laÌn vâòn chuyêÒn FDM seŞ giıŞ lâìy cho taÒi xuôìng
+LõÌ ği caìc haòn chêì vaÌ haòn chêì sıò vâòn chuyêÒn cho mıìc tôìi ğa cuÒa nhıŞng kêìt nôìi cho taÒi xuôìng naÌy
+Baòn coì thêÒ chiÒ roŞ caìc giaì triò trong bytes (b), kilobytes (Kb) hoãòc megabyte (Mb) trong ô naÌy
+Giao thıìc
+Nhâòn diêòn maìy phuòc vuò nhı:
+Quy vaÌo:
+SıÒ duòng HTTP 1.1
+SıÒ duòng cookies
+SıÒ duòng kiêÒu thuò ğôòng
+Caìch chuyêÒn giao
+Binary
+ASCII cho hôÌ sõ coì phâÌn mõÒ rôòng:
+ChiÒ roŞ caìch FDM seŞ nhâòn diêòn võìi maìy phuòc vuò HTTP
+ChuôŞi naÌy seŞ gõÒi ği nhı trıõÌng dıŞ liêòu Referrer tõìi maìy phuòc vuò HTTP.  Nhı môòt quy tãìc, noì thiÌ chıa ğıõòc yêu câÌu
+Ğãòt dâìu kiêÒm vô hôòp naÌy nêìu baòn muôìn FDM duÌng phiên baÒn HTTP 1.1
+Ğãòt dâìu kiêÒm vô hôòp naÌy nêìu baòn muôìn FDM sıÒ duòng cookies
+Ğãòt dâìu kiêÒm vô hôòp naÌy nêìu baòn muôìn FDM duÌng kiêÒu thuò ğôòng cho caìc maìy phuòc vuò FTP. Ğôi khi noì laÌ câÌn thiêìt khi laÌm viêòc võìi tıõÌng lıÒa
+SıÒ duòng caìc kiêÒu nhiò phân cho sıò chuyêÒn giao FTP. Ğãòt kiêÒu naÌy nêìu hôÌ sõ baòn taÒi xuôìng không phaÒi chiÒ laÌ môòt vãn baÒn
+SıÒ duòng caìc kiêÒu ASCII cho sıò chuyêÒn giao FTP. Ğãòt kiêÒu naÌy nêìu hôÌ sõ baòn taÒi xuôìng chiÒ laÌ môòt vãn baÒn
+FDM seŞ duÌng kiêÒu ASCII cho caìc hôÌ sõ võìi phâÌn mõÒ rôòng xaìc ğiònh. Võìi nhıŞng hôÌ sõ khaìc FDM seŞ sıÒ duòng kiêÒu nhiò phân
+UyÒ nhiêòm
+Thiêìt ğãòt uÒy nhiêòm coì ğıõòc
+TıÌ Microsoft Internet Explorer
+ChiÒ ğiònh bãÌng tay
+Không duÌng môòt UyÒ nhiêòm
+Thiêìt ğãòt...
+Ğiòa chiÒ
+CôÒng:
+Xin nhâòp ğiòa chiÒ uyÒ nhiêòm
+Xin nhâòp côÒng uyÒ nhiêòm
+FDM seŞ duÌng thiêìt ğãòt uyÒ nhiêòm tıÌ Internet Explorer
+Baòn chiÒ roŞ caìc uyÒ nhiêòm do baòn thiêìt ğãòt
+FDM seŞ không duÌng uyÒ nhiêòm
+Choòn kiêÒu maìy phuòc vuò maÌ tıÌ ğoì baòn muôìn chiÒ roŞ uyÒ nhiêòm õÒ ğây
+Nhâòp ğiòa chiÒ cuÒa uyÒ nhiêòm baòn muôìn sıÒ duòng
+Nhâòp côÒng uyÒ nhiêòm õÒ ğây.  Nhı môòt quy tãìc, noì laÌ 3128, 1080 hoãòc 8080
+Ğãòt dâìu kiêÒm vô hôòp naÌy nêìu maìy phuòc vuò uyÒ nhiêòm yêu câÌu sıò câìp pheìp
+HôŞn hõòp
+HôÌ sõ cuòc bôò
+Nêìu hôÌ sõ ğaŞ tôÌn taòi thiÌ:
+Không gian ğiŞa dıò trıŞ ğêÒ taÒi xuôìng hôÌ sõ
+PhâÌn mõÒ rôòng hôÌ sõ bôÒ sung cho taÒi xuôìng chıa xong:
+Maìy phuòc vuò Internet
+Không chaòy laòi taÒi xuôìng nêìu sıò taÒi laòi chıa hôŞ trõò tıÌ maìy phuòc vuò
+Nêìu kiìch cõŞ hôÌ sõ thay ğôÒi trên maìy phuòc vuò:
+DıÌng khi coì lôŞi
+HoÒi laòi
+Viêìt laòi
+ĞôÒi tên
+Lâìy laòi
+KhõÒi ğôòng laòi
+ĞiêÌu chiÒnh
+Xin chiÒ roŞ phâÌn mõÒ rôòng hôÌ sõ
+Nõi ğây baòn coì thêÒ chiÒ ra caìch FDM phaÒi laÌm nêìu hôÌ sõ ğaŞ tôÌn taòi trên ğiŞa
+Ğãòt dâìu kiêÒm vaÌo hôòp naÌy nêìu baòn muôìn không gian ğiŞa ğıõòc dıò trıŞ cho taÒi xuôìng môòt khi khõÒi ğôòng
+Nêìu noì ğıõòc kiêÒm tra FDM seŞ nôìi vaÌo phâÌn mõÒ rôòng xaìc ğiònh tõìi môòt tên hôÌ sõ khi taÒi xuôìng. Khi taÒi xuôìng hoaÌn tâìt FDM ğôÒi tên hôÌ sõ sau tõìi tên gôìc cuÒa noì
+FDM seŞ không khõÒi ğôòng laòi taÒi xuôìng nêìu maìy phuòc vuò tıÌ xa không hôŞ trõò taÒi laòi
+Baòn coì thêÒ chiÒ roŞ ra õÒ ğây FDM câÌn phaÒi laÌm giÌ nêìu kiìch thıõìc hôÌ sõ thay ğôÒi trên maìy phuòc vuò
+Ğãòt dâìu kiêÒm õÒ hôòp naÌy ğêÒ dıÌng taÒi xuôìng khi hôÌ sõ chıa tiÌm thâìy trên maìy phuòc vuò
+Ğãòt dâìu kiêÒm õÒ hôòp naÌy ğêÒ dıÌng taÒi xuôìng khi tên ngıõÌi duÌng hoãòc mâòt khâÒu sai
+NhıŞng kiêÒu vâòn chuyêÒn
+Choòn kiêÒu ğêÒ câìu hiÌnh:
+Sôì lıõòng tôìi ğa caìc kêìt nôìi:
+Sôì lıõòng tôìi ğa caìc kêìt nôìi cho môòt maìy phuòc vuò:
+Haòn chêì cuÒa vâòn chuyêÒn:
+vô tâòn
+Lıòa choòn caìch vâòn chuyêÒn naÌo Baòn muôìn câìu hiÌnh õÒ ğây
+Ğãòt dâìu kiêÒm õÒ hôòp naÌy ğêÒ giõìi haòn sôì lıõòng tôìi ğa caìc kêìt nôìi
+Ğãòt dâìu kiêÒm õÒ hôòp naÌy ğêÒ giõìi haòn sôì lıõòng tôìi ğa caìc kêìt nôìi cho môòt maìy phuòc vuò
+ChiÒ roŞ õÒ ğây FDM vâòn chuyêÒn (tôìi ğa) ğêÒ taÒi xuôìng caìc hôÌ sõ
+Tâìt caÒ caìc taÒi xuôìng
+Liêòt kê caìc taÒi vêÌ
+Tıò ğôòng lıu sau môŞi
+phuìt.
+Khi viêòc xoìa taÒi xuôìng không hoaÌn tâìt
+Tıò ğôòng xoìa nhıŞng taÒi xuôìng ğaŞ hoaÌn thaÌnh
+Không xoìa hôÌ sõ
+Xoìa hôÌ sõ
+FDM lıu danh saìch caìc tıò ğôòng taÒi xuôìng sau khoaÒng thõÌi gian chiÒ roŞ. Noì baÒo vêò danh saìch khoÒi viêòc biò treo cuÒa maìy tiình hoãòc sıò hı hoÒng nguôÌn ğiêòn
+ChiÒ roŞ FDM câÌn phaÒi laÌm giÌ võìi hôÌ sõ trên ğiŞa khi viêòc xoìa không ğâÌy ğuÒ sıò taÒi xuôìng
+Ğãòt dâìu kiêÒm vô hôòp naÌy nêìu baòn muôìn xoìa taÒi xuôìng tıò ğôòng tıÌ danh saìch khi kêìt thuìc
+Theo doŞi
+Theo doŞi
+Bôò nhõì ğêòm
+Theo doŞi caìc hôÌ sõ võìi phâÌn mõÒ rôòng
+LõÌ ği caìc hôÌ sõ võìi phâÌn mõÒ rôòng
+ALT không ğıõòc nhâìn
+ALT phaÒi ğıõòc nhâìn
+Xin chiÒ roŞ phâÌn mõÒ rôòng
+Ğãòt dâìu kiêÒm vô hôòp naÌy nêìu baòn muôìn FDM bãìt caìc cuì nhâìn trong Internet Explorer
+Ğãòt dâìu kiêÒm vô hôòp naÌy nêìu baòn muôìn FDM theo doŞi bôò nhõì ğêòm cuÒa baòn
+Theo doŞi caìc hôÌ sõ chiÒ võìi phâÌn mõÒ rôòng xaìc ğiònh
+Không theo doŞi caìc hôÌ sõ võìi phâÌn mõÒ rôòng xaìc ğiònh 
+Theo doŞi chiÒ nêìu ALT không ğıõòc nhâìn
+Theo doŞi chiÒ nêìu ALT ğıõòc nhâìn
+KhõÒi ğôòng
+TaÒi khi khõÒi ğôòng
+Chaòy tôìi thiêÒu
+Hêò thôìng
+Thu nhoÒ vaÌo khay
+Nuìt ğoìng tôìi thiêÒu cıÒa sôÒ
+FDM seŞ khõÒi ğôòng tıò ğôòng khi Windows chaòy
+FDM seŞ thu tôìi thiêÒu sau khi bãìt ğâÌu
+Khi baòn nhâìn nuìt Minimize FDM seŞ thu nhoÒ tõìi khay hêò thôìng
+Nêìu ğıõòc kiêÒm, kiìch vaÌo nuìt Ğoìng seŞ tıõng tıò nhı nhâìn nuìt Tôìi thiêÒu
+Câòp nhâòt
+Ğiòa chiÒ cuÒa maìy phuòc vuò câòp nhâòt
+FDM seŞ kiêÒm tra cho phiên baÒn mõìi tıò ğôòng
+Hıõìng dâŞn tôìi ıu hoìa caìch duÌng Maòng
+ChaÌo ğoìn baòn ğêìn võìi Hıõìng dâŞn tôìi ıu hoìa caìch duÌng maòng!
+Hıõìng dâŞn naÌy seŞ giuìp baòn tôìi ıu caìc thiêìt ğãòt cho caìch maÌ baòn kêìt nôìi maòng. Noì seŞ ğãòt caìc thuôòc tiình TaÒi xuôìng vaÌ nhıŞng thuôòc tiình mãòc ğiònh khi taÒi xuôìng.
+Xin lıòa choòn kiêÒu kêìt nôìi
+HoaÌn tâìt
+ChiÒ roŞ kiêÒu kêìt nôìi Internet cuÒa baòn õÒ ğây
+Câìu hiÌnh FDM cho tôìi ıu võìi kêìt nôìi cuÒa baòn
+Taìc vuò
+GiõÌ bãìt ğâÌu
+GiõÌ chaòy tiêìp
+GiõÌ kêìt thuìc
+Không thêÒ taÒi liêòt kê caìc liòch biêÒu. Coì leŞ noì biò hı hoãòc ğang ğıõòc duÌng bõÒi ıìng duòng khaìc
+Không thêÒ taÒi log Liòch biêÒu
+Không thêÒ lıu liêòt kê cuÒa caìc Liòch biêÒu
+Taìc vuò "%s" ğaŞ hoaòch ğiònh. Chaòy noì?
+Thay ğôÒi qua laòi kiêÒu duÌng tõìi "%s"
+Gaìc maìy
+Tâìt caÒ caìc kêìt nôìi
+Thay ğôÒi qua laòi kiêÒu duÌng
+Tãìt maìy
+Chaòy laòi
+Ğãng xuâìt
+Môòt lâÌn vaÌo ngaÌy
+Ch.nhâòt
+Th.hai
+Th.ba
+Th.tu
+Th.nam
+Th.sau
+Th.bay
+VaÌo caìc ngaÌy:
+MôŞi lâÌn
+ngaÌy
+giõÌ
+Khi FDM khõÒi ğôòng
+Khi quay sôì thaÌnh công
+Khi quay sôì thâìt baòi
+Khi không coì haÌnh ğôòng taÒi xuôìng naÌo
+Khi tôìc ğôò iìt hõn hoãòc bãÌng %d BPS trong %d
+Khi tâìt caÒ caìc taÒi xuôìng õÒ trong traòng thaìi lôŞi
+Không hêÌ
+Không biêìt
+Kêìt nôìi thaÌnh công tõìi "%s"
+Thâìt baòi kêìt nôìi tõìi "%s"
+Goòi ra thaÌnh công
+Hêìt bôò nhõì
+Không thêÒ goòi
+Liòch triÌnh thi haÌnh laÌ nguyên nhân ğoìng Chıõng triÌnh khi khõÒi ğôòng. Liòch triÌnh seŞ ğıõòc lõÌ ği
+Sôì lâÌn tôìi ğa thıÒ quay sôì
+Taòm dıÌng giıŞa caìc sıò thıÒ
+Gaìc maìy nêìu mıìc kêìt nôìi iìt hõn:
+ThıÒ lâÌn nıŞa
+Không nhiêÌu hõn
+SıÒ duòng kêìt nôìi
+Nêìu thaÌnh công
+ThõÌi baìo
+Gaìc laòi tâìt caÒ caìc kêìt nôìi tiìch cıòc
+Kêìt nôìi ğaŞ treo
+Tên chıõng triÌnh:
+Caìc ğôìi sôì:
+KiêÒu cuÒa shutdown:
+Bãìt buôòc caìc ıìng duòng thoaìt ra
+Giõìi thiêòu chıõng triÌnh
+Thiêìt lâòp kêìt nôìi quay sôì
+Gaìc laòi kêìt nôìi
+ĞôÒi caìch vâòn chuyêÒn
+Thoaìt ra tıÌ FDM
+Maìy tiình Shutdown
+Caìc taÒi xuôìng bãìt ğâÌu
+Caìc taÒi xuôìng ğaŞ dıÌng
+Caìc ıìng duòng
+Tâìt caÒ caìc hôÌ sõ
+Râìt tiêìc, ğãòc tiình naÌy chiÒ sãŞn coì trong Windows 2000, XP vaÌ cao hõn
+Xin nhâòp tên chıõng triÌnh
+Xin choòn caìc taÒi xuôìng
+Lıòa choòn kiêÒu vâòn chuyêÒn baòn muôìn õÒ taìc vuò khõÒi ğôòng
+Ğãòt dâìu kiêÒm vaÌo hôòp naÌy nêìu baòn muôìn giõìi haòn mıìc tôìi ğa cuÒa caìc sıò thıÒ quay sôì không thaÌnh công
+ThõÌi gian giıŞa caìc sıò thıÒ không thaÌnh công
+Ğãòt dâìu kiêÒm vaÌo hôòp naÌy ğêÒ thiêìt lâòp kêìt nôìi võìi tôìc ğôò không dıõìi giaì triò maÌ baòn chiÒ roŞ
+ChiÒ roŞ ra õÒ ğây giaì triò yêu câÌu tôìi thiêÒu tôìc ğôò kêìt nôìi
+FDM seŞ thıÒ lâÌn nıŞa thiêìt lâòp kêìt nôìi ğoÌi hoÒi nêìu baòn ğãòt dâìu kiêÒm õÒ hôòp naÌy
+Ğãòt dâìu kiêÒm vaÌo hôòp naÌy ğêÒ giõìi haòn sôì tôìi ğa caìc thâìt baòi khi côì gãìng ğêÒ thiêìt lâòp kêìt nôìi
+ChiÒ roŞ caìc yêu câÌu taÒi xuôìng õÒ ğây
+Liêòt kê tâìt caÒ caìc taÒi xuôìng sãŞn coì
+Thêm taÒi xuôìng ğaŞ choòn vaÌo danh saìch taìc vuò taÒi xuôìng
+Loaòi boÒ taÒi xuôìng ğaŞ choòn tıÌ danh saìch taìc vuò caìc taÒi xuôìng
+ChiÒ roŞ ıìng duòng baòn muôìn giõìi thiêòu õÒ ğây
+TiÌm ıìng duòng trên maìy tiình cuÒa baòn
+ChiÒ roŞ caìc ğôìi sôì chıõng triÌnh õÒ ğây
+ChiÒ roŞ kiêÒu kêìt thuìc phiên cuÒa baòn õÒ ğây
+Ğãòt dâìu kiêÒm vaÌo hôòp naÌy ğêÒ bãìt buôòc kêìt thuìc phiên cuÒa baòn. Noì hıŞu iìch nêìu caìc ıìng duòng trong hêò thôìng biò treo. TrıõÌng hõòp naÌy, tâìt caÒ dıŞ liêòu không lıu giıŞ seŞ mâìt
+ChiÒ roŞ Liòch biêÒu hoaòt ğôòng õÒ ğây
+Ğãòt dâìu kiêÒm vaÌo hôòp naÌy nêìu baòn muôìn FDM gaìc maìy võìi tâìt caÒ caìc kêìt nôìi tiìch cıòc
+ChiÒ roŞ kêìt nôìi ğêÒ gaìc maìy õÒ ğây
+Trong vaÌi ngaÌy nhâìt ğiònh
+ChuÒ nhâòt
+Thıì hai
+Thıì Ba
+Thıì tı
+Thıì nãm
+Thıì saìu
+Thıì baÒy
+Trên sıò kiêòn
+Trong
+Tôìc ğôò thâìp nhâìt:
+phuìt.
+Phuìt
+GiõÌ
+NgaÌy
+Khi tôìc ğôò taÒi xuôìng thâìp quaì
+Khi tâìt caÒ caìc taÒi xuôìng ğêÌu õÒ traòng thaìi lôŞi
+Xin chiÒ roŞ caìc ngaÌy
+Chaòy taìc vuò õÒ thõÌi gian xaìc ğiònh
+Ğãòt thõÌi gian ğêÒ chaòy taìc vuò õÒ ğây
+Chaòy taìc vuò õÒ ngaÌy thaìng xaìc ğiònh
+Ğãòt ngaÌy thaìng ğêÒ chaòy taìc vuò õÒ ğây
+Chaòy taìc vuò trên vaÌi ngaÌy nhâìt ğiònh cuÒa tuâÌn
+Chaòy taìc vuò môŞi ChuÒ nhâòt
+Chaòy taìc vuò môŞi Thıì hai
+Chaòy taìc vuò môŞi ngaÌy thıì Ba
+Chaòy taìc vuò môŞi Thıì tı
+Chaòy taìc vuò môŞi Thıì nãm
+Chaòy taìc vuò môŞi Thıì saìu
+Chaòy taìc vuò môŞi Thıì baÒy
+Chaòy taìc vuò ğiònh kyÌ
+Nõi ô naÌy cho pheìp baòn chiÒ roŞ thõÌi gian khoaÒng trong vaÌi phuìt, nhiêÌu giõÌ hoãòc nhiêÌu ngaÌy
+Chaòy taìc vuò khi sıò kiêòn naÌo ğoì xaÒy ra
+ChiÒ roŞ kiêÒu sıò kiêòn õÒ ğây
+Nhâòp khoaÒng thõÌi gian õÒ ğây
+Nhâòp yêu câÌu tôìc ğôò tôìi thiêÒu õÒ ğây
+Sıò xaìc nhâòn khi yêu câÌu thi haÌnh taìc vuò
+Ğõòi sıò xaìc nhâòn ngay ğây
+giây.
+Nêìu kiêÒm chıìng, FDM seŞ hoÒi baòn ğêÒ xaìc nhâòn sıò thıòc hiêòn cuÒa taìc vuò naÌy
+Nêìu kiêÒm chıìng, FDM seŞ ğõòi xaìc nhâòn cuÒa baòn trong khoaÒng thõÌi gian xaìc ğiònh. Nêìu baòn không phaÒn ıìng laòi trong thõÌi gian naÌy taìc vuò seŞ khõÒi chaòy
+Address:
+Xây dıòng danh saìch caìc hôÌ sõ taÒi xuôìng
+Kêìt nôìi tõìi maìy phuòc vuò
+Côì gãìng sıÒ duòng tên vaÌ mâòt khâÒu ngıõÌi duÌng ğıõòc câìt giıŞ trong Site Manager
+Khôi phuòc caìc hôÌ sõ liêòt kê tıÌ maìy phuòc vuò
+Kêìt nôìi võìi maìy phuòc vuò thiÌ biò mâìt. Ğang thıÒ khôi phuòc
+Xây dıòng danh saìch
+TiÌm kiìch cõŞ vaÌ ngaÌy sıÒa ğôÒi cuôìi cuÌng cuÒa caìc hôÌ sõ
+Viêòc duÌng tham sôì naÌy coì thêÒ laÌm giaÒm ğaìng kêÒ tôìc ğôò
+Ğãòt dâìu kiêÒm õÒ ğây nêìu baòn muôìn FDM truy vâìn kiìch cõŞ vaÌ ngaÌy thaìng caìc hôÌ sõ õÒ caìc maìy phuòc vuò HTTP
+Tên Site
+Caìc kêìt nôìi
+Ğãng nhâòp
+Nhoìm
+Không thêÒ taÒi danh saìch cuÒa caìc site. Coì leŞ noì biò hı hoãòc ğang ğıõòc duÌng bõÒi ıìng duòng khaìc
+Không thêÒ lıu danh saìch cuÒa caìc site
+Tôìi ğa caìc kêìt nôìi ğôÌng thõÌi:
+Nhoìm mãòc ğiònh cho môòt taÒi xuôìng mõìi tıÌ viò triì naÌy
+SıÒ duòng FTP kiêÒu thuò ğôòng
+Xin nhâòp tên site
+Site coì cuÌng tên ğoì ğaŞ tôÌn taòi. Xin nhâòp tên site khaìc
+Sôì cuÒa caìc kêìt nôìi tôìi ğa phaÒi lõìn hõn 0
+Xin choòn nhoìm
+ChiÒ roŞ tên site õÒ ğây
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ giõìi haòn tôìi ğa sôì lıõòng kêìt nôìi ğôÌng thõÌi tõìi maìy phuòc vuò naÌy
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ thêm caìc taÒi xuôìng tıÌ maìy phuòc vuò naÌy ğêìn nhoìm ğıõòc choòn tıò ğôòng 
+HoÒi ngıõÌi duÌng
+Không hoÒi tôi lâÌn nıŞa
+LôŞi viêìt vô ĞiŞa
+HôÌ sõ "%s" ğaŞ coì trên ğiŞa.  PhaÒi laÌm giÌ?
+Không hoÒi baòn ğiêÌu naÌy lâÌn nıŞa. Choòn lıòa cuÒa Baòn seŞ ğıõòc châìp nhâòn theo mãòc ğiònh
+Ghi ğeÌ lên hôÌ sõ hiêòn hıŞu
+ĞôÒi tên hôÌ sõ naÌy
+Lâìy laòi taÒi xuôìng.  (TaÒi xuôìng seŞ ğıõòc chaòy õÒ viò triì tıÌ kiìch thıõìc cuÒa hôÌ sõ hiêòn hıŞu)
+DıÌng taÒi xuôìng naÌy
+Coì
+Không
+TaÒi xuôìng
+ğaŞ biò xoìa. Xoìa hôÌ sõ trên ğiŞa naÌy?
+Xin nhâòp môòt tên ngıõÌi duÌng vaÌ mâòt khâÒu
+Ğãng nhâòp tõìi "%s"
+GıÒi tên ngıõÌi duÌng vaÌ mâòt khâÒu baòn chiÒ roŞ cho maìy phuòc vuò
+Không nôìi tõìi maìy phuòc vuò naÌy
+Kiìch thıõìc cuÒa "%s" ğaŞ thay ğôÒi trên maìy phuòc vuò. PhaÒi laÌm giÌ?
+KhõÒi ğôòng taÒi xuôìng laòi tıÌ ğâÌu
+ĞiêÌu chiÒnh taÒi xuôìng cho hôÌ sõ kiìch thıõìc mõìi. Không khuyêìn khiìch
+Xin ğõòi
+Câòp nhâòt
+DiêŞn giaÒi
+Câòp nhâòt sıÒ duòng:
+KiêÒm tra câòp nhâòt
+Baòn ğang duÌng phiên baÒn mõìi nhâìt
+Ğang taÒi vêÌ
+Phiên baÒn %s xây dıòng %s thiÌ sãŞn coì
+Sıò phân biêòt ğâÌy ğuÒ cuÒa phiên baÒn %s (%s)
+Nâng câìp tõìi phiên baÒn %s
+Nâng câìp tõìi phiên baÒn %s (%s)
+FDM phaÒi ğıõòc khõÒi ğôòng laòi. KhõÒi ğôòng laòi bây giõÌ?
+Câòp nhâòt ğaŞ xong
+Không thêÒ tiÌm thâìy câòp nhâòt
+ChiÒ roŞ kiêÒu câòp nhâòt õÒ ğây
+Câòp nhâòt FDM duÌng phân phôìi ğâÌy ğuÒ
+Câòp nhâòt FDM duÌng phân phôìi nâng câìp
+NhiÌn ğêÒ biêìt chi tiêìt hõn quaì triÌnh câòp nhâòt
+Coì giÌ mõìi õÒ phiên baÒn naÌy?
+Bãìt ğâÌu câòp nhâòt FDM bây giõÌ
+HuÒy boÒ câòp nhâòt vaÌ ğoìng hôòp thoaòi naÌy
+Taòo ra caìc taÒi xuôìng
+Choòn nôòi dung
+Nôòi dung không ğıõòc choòn
+Liêòt kê caìc taÒi xuôìng ğêÒ thêm
+KiêÒm tra thı muòc ğaŞ choòn caìc muòc ğêÒ thêm chuìng vaÌo liêòt kê taÒi xuôìng
+BoÒ choòn thı muòc ğaŞ choòn caìc muòc ğêÒ không thêm chuìng vaÌo liêòt kê taÒi xuôìng
+Noìi vêÌ FDM
+BaÒn quyêÌn (c)
+GiıŞ moòi baÒn quyêÌn
+Ğãng kyì tõìi:
+ĞaŞ câòp nhâòt. KhõÒi ğôòng laòi ğıõòc yêu câÌu
+Sai tên ngıõÌi duÌng hoãòc mâòt khâÒu
+Không thêÒ taÒi hôÌ sõ liòch sıÒ
+Không thêÒ lıu hôÌ sõ liòch sıÒ
+Thiêìt ğãòt mãòc ğiònh HTML Spider...
+HTML Spider
+Cây caìc trang Web
+Web-site taÒi xuôìng...
+Caìc thiêìt ğãòt taÒi xuôìng Trang Web...
+Bãìt ğâÌu taÒi xuôìng
+DıÌng taÒi xuôìng
+Hoaòch ğiònh taÒi xuôìng...
+Xoìa
+MõÒ trang Web trong triÌnh duyêòt
+Bãìt ğâÌu taÒi xuôìng tıò ğôòng
+Web site (trang) URL
+HôÌ sõ
+Xoìa caìc taÒi xuôìng cuŞng giôìng nhı thêì?
+Không thêÒ taÒi danh saìch caìc trang Web
+Không thêÒ câìt giıŞ danh saìch caìc trang Web
+URL cuÒa trang Web hoãòc maìy phuòc vuò HTTP baòn muôìn taÒi xuôìng tıÌ ğoì
+URL cuÒa trang Web hoãòc maìy phuòc vuò HTTP tıÌ ğoì taÒi xuôìng ğaŞ khõÒi ğôòng
+Tên cuÒa thı muòc lıu caìc taÒi xuôìng bên trong
+Thı muòc ğâÌu ra:
+Caìc trang Web
+Caìc trang
+PhâÌn mõÒ rôòng caìc hôÌ sõ cuÒa caìc trang Web võìi maŞ HTML:
+TaÒi xuôìng trang Web coì cuÌng kiêÒu
+TaÒi xuôìng caìc trang Web tıÌ caìc site khaìc
+Caìc hiÌnh aÒnh
+TaÒi xuôìng caìc hiÌnh aÒnh
+TaÒi xuôìng caìc caìc hiÌnh aÒnh laÌ liên kêìt tõìi viò triì khaìc
+Ğôò sâu cuÒa viêòc taÒi xuôìng:
+PhâÌn mõÒ rôòng cuÒa caìc hôÌ sõ cuÒa caìc trang Web võìi maŞ HTML. Caìc trang Web seŞ ğıõòc queìt caìc môìi liên kêìt cuÒa caìc hiÌnh aÒnh vaÌ caìc trang taÒi vêÌ khaìc
+Nêìu kiêÒm chıìng, kiêÒu (CSS) cuÒa caìc trang Web cuŞng seŞ ğıõòc taÒi xuôìng. Nêm laÌm
+Nêìu không kiêÒm chıìng, caìc trang Web cuÒa site khaìc seŞ không ğıõòc taÒi xuôìng. Cho viì duò, nêìu ô naÌy không dâìu kiêÒm vaÌ baòn bãìt ğâÌu taÒi xuôìng tıÌ http://example.com/, thiÌ http://othersite.com/some.html seŞ không ğıõòc taÒi xuôìng, Nhıng http://example.com/some.html seŞ ğıõòc taÒi xuôìng
+Nêìu kiêÒm chıìng, caìc hiÌnh aÒnh cuÒa caìc trang Web cuŞng ğıõòc taÒi xuôìng
+Nêìu không kiêÒm chıìng, caìc hiÌnh aÒnh cuÒa caìc trang Web laÌ liên kêìt tõìi viò triì khaìc seŞ không ğıõòc taÒi xuôìng
+Mıìc ğôò cuÒa taÒi xuôìng. Cho viì duò, baòn bãìt ğâÌu taÒi xuôìng tıÌ http://Ex.com/index.html. Coì môìi liên kêìt tõìi http://Ex.com/some.html tıÌ http://Ex.com/index.html. RôÌi laÌ chiêÌu sâu cuÒa http://Ex.com/some.html seŞ laÌ 1. Ğãòt chiêÌu sâu tõìi 0 seŞ kêìt quaÒ taÒi xuôìng chiÒ nôòi dung cuÒa trang khõÒi ğâÌu.
+TaÒi xuôìng caìc hôÌ sõ tıÌ caìc trang Web
+TaÒi xuôìng caìc hôÌ sõ tıÌ caìc site khaìc
+Xoìa caìc hôÌ sõ võìi mõÒ rôòng
+Bâòt
+TaÒi xuôìng
+Không taÒi xuôìng
+caìc hôÌ sõ võìi phâÌn mõÒ rôòng:
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ taÒi xuôìng caìc hôÌ sõ tıÌ caìc trang Web
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ taÒi xuôìng caìc hôÌ sõ tıÌ caìc site khaìc
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ lõÌ ği caìc hôÌ sõ võìi caìc mõÒ rôòng xaìc ğiònh
+Caìc hôÌ sõ võìi caìc mõÒ rôòng, ğıõòc chiÒ roŞ õÒ bên dıõìi, seŞ ğıõòc taÒi xuôìng nêìu kiêÒm chıìng
+Caìc hôÌ sõ võìi caìc mõÒ rôòng, ğıõòc chiÒ roŞ õÒ bên dıõìi, seŞ không ğıõòc taÒi xuôìng nêìu kiêÒm chıìng
+Xuâìt khâÒu caìc thiêìt ğãòt...
+Nhâòp khâÒu caìc thiêìt ğãòt...
+Không goòi ğıõòc Regedit.exe
+Môòt lôŞi xuâìt hiêòn trong khi côì gãìng xuâìt khâÒu caìc thiêìt ğãòt
+Môòt lôŞi xuâìt hiêòn trong khi côì gãìng nhâòp khâÒu caìc thiêìt ğãòt
+NhıŞng hôÌ sõ nõi ğãng kyì FDM
+Loaòi boÒ phâÌn  mõÒ rôòng nhıŞng hiÌnh aÒnh
+caìc hiÌnh aÒnh võìi phâÌn mõÒ rôòng:
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ lõÌ ği nhıŞng hiÌnh aÒnh võìi caìc mõÒ rôòng xaìc ğiònh
+Caìc hiÌnh aÒnh võìi nhıŞng mõÒ rôòng, ğıõòc chiÒ roŞ õÒ bên dıõìi, seŞ ğıõòc taÒi xuôìng nêìu kiêÒm chıìng
+Caìc hiÌnh aÒnh võìi nhıŞng mõÒ rôòng, ğıõòc chiÒ roŞ õÒ bên dıõìi, seŞ không ğıõòc taÒi xuôìng nêìu kiêÒm chıìng
+Không taÒi xuôìng ğiêÌu naÌy vaÌ xoìa noì
+Maìy phuòc vuò không hôŞ trõò taÒi xuôìng lâìy laòi. Chaòy laòi tıÌ ğâÌu
+Không mõÒ ğıõòc URL
+Râìt tiêìc, bâìt ngõÌ lôŞi xuâìt hiêòn trong khi thıÒ ğêÒ viêìt ğêìn nõi ğãng kyì
+Caìm õn baòn ğaŞ ğãng kyì! Xin khõÒi ğôòng laòi FDM
+TaÒi xuôìng bõÒi Free Download Manager
+TaÒi xuôìng web-site bõÒi Free Download Manager
+Thêm FDM vaÌo menu ngıŞ caÒnh Internet Explorer
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ thêm caìc muòc "TaÒi xuôìng bõÒi Free Download Manager" vaÌ "TaÒi xuôìng web-site bõÒi Free Download Manager" vaÌo menu ngıŞ caÒnh Internet Explorer (menu xuâìt hiêòn khi baòn nhâìn phiìm phaÒi)
+GiaÒm bõìt caìch duÌng vâòn chuyêÒn trên hoaòt ğôòng bôò duyêòt
+GiaÒm bõìt môòt mıìc
+Ğãòt kiêÒu Nheò
+Ğãòt vô hôòp dâìu kiêÒm ğêÒ giaÒm bõìt caìch vâòn chuyêÒn tıò ğôòng khi baòn duyêòt Internet. ĞiêÌu naÌy cho pheìp baòn duyêòt nhanh hõn khi FDM ğang taÒi xuôìng caìi giÌ ğoì
+KiêÒu caìch vâòn chuyêÒn seŞ ğıõòc giaÒm bõìt môòt mıìc. Nãòng -> Trung biÌnh, Trung biÌnh -> Nheò
+KiêÒu caìch vâòn chuyêÒn seŞ ğıõòc thay ğôÒi tõìi Nheò
+Hõòp lêò cho
+Hõòp lêò cho mıìc dıõìi domains
+Ğãòt vô hôòp dâìu kiêÒm ğêÒ sıÒ duòng baÒn ghi naÌy cho taÒi xuôìng HTTP
+Ğãòt vô hôòp dâìu kiêÒm ğêÒ sıÒ duòng baÒn ghi naÌy cho taÒi xuôìng HTTPS
+Ğãòt vô hôòp dâìu kiêÒm ğêÒ sıÒ duòng baÒn ghi naÌy cho taÒi xuôìng FTP
+Ğãòt vô hôòp dâìu kiêÒm ğêÒ sıÒ duòng baÒn ghi naÌy cho caìc taÒi xuôìng tıÌ nhıŞng maìy phuòc vuò mıìc dıõìi domains. Cho viì duò, cho viò triì http://site.com noì seŞ laÌ http://some.site.com
+Xin choòn môòt giao thıìc tôìi thiêÒu
+Sôì tôìi ğa viêòc chaòy caìc taÒi xuôìng ğôÌng thõÌi
+Ğãòt dâìu kiêÒm vô hôòp naÌy nêìu baòn muôìn giõìi haòn sôì lıõòng tôìi ğa caìc taÒi xuôìng chaòy cuÌng luìc
+Chaòy laòi taÒi xuôìng
+Taòo nhiêÌu hõn môòt phân ğoaòn
+NgıÌng môòt phân ğoaòn
+; context: [section x] - Stopped
+NgıÌng laòi
+; tray menu
+Hôòp bung xuôìng
+;
+Không tiÌm thâìy thı muòc Plugin Opera. Baòn muôìn chiÒ roŞ noì bãÌng tay không?
+Không tiÌm thâìy thı muòc Netscape Plugin. Baòn muôìn chiÒ roŞ noì bãÌng tay không?
+Không thêÒ thiêìt ğãòt theo doŞi Opera
+Không thêÒ theo doŞi gõŞ caÌi ğãòt Opera
+Không thêÒ thiêìt ğãòt theo doŞi Netscape
+Không thêÒ theo doŞi gõŞ caÌi ğãòt Netscape
+HaŞy KiêÒm tra caìi hôòp naÌy nêìu baòn muôìn rãÌng FDM bãìt caìc cuì nhâìn vaÌo Opera
+HaŞy KiêÒm tra caìi hôòp naÌy nêìu baòn muôìn rãÌng FDM bãìt caìc cuì nhâìn vaÌo Netscape
+; create download dlg
+Truy vâìn kiìch cõŞ
+; request a size of a download
+Yêu câÌu...
+Truy vâìn kiìch cõŞ cuÒa môòt taÒi xuôìng tıÌ maìy phuòc vuò
+Coì tâìt caÒ
+Không tâìt caÒ
+HiêÒ thiò Log chi tiêìt
+Nêìu kiêÒm chıìng, FDM seŞ hiêÒn thiò caìc ğaìp ıìng tıÌ maìy phuòc vuò
+Caìc thay ğôÒi seŞ hiêòu lıòc sau khi baòn khõÒi ğôòng laòi bôò duyêòt
+Liêòt kê caìc taìc vuò
+Liêòt kê caìc hôÌ sõ
+Liêòt kê caìc site
+Liêòt kê caìc trang
+Xoìa caìc taÒi xuôìng
+Xây dıòng danh saìch cuÒa caìc taÒi xuôìng
+Taòo ra ğõòt taÒi xuôìng...
+TıÌ:
+Tõìi:
+Bıõìc:
+Dâìu gôòp bytes:
+Kêìt quaÒ
+MâŞu:
+Sıò Nôìi tiêìp khõÒi ğôòng ghi sôì
+Sôì kêìt thuìc nôìi tiêìp
+Bıõìc nôìi tiêìp. Cho viì duò, nêìu noì laÌ 10, thiÌ sıò nôìi tiêìp seŞ laÌ 0, 10, 20,...
+Ğêìm dâìu gôòp bytes. Cho viì duò, nêìu noì laÌ 1, thiÌ sıò nôìi tiêìp seŞ laÌ 1, 2, 3.  Nêìu noì laÌ 2, thiÌ sıò nôìi tiêìp seŞ laÌ 01, 02, 03.
+Nhâìn ğêÒ õÒ ğây xem sıò nôìi tiêìp phaìt sinh
+Cho pheìp Internet Explorer taÒi xuôìng nêìu baòn nhâìn Cancel
+HaŞy KiêÒm tra ğiêÌu naÌy nêìu baòn muôìn Internet Explorer taÒi xuôìng hôÌ sõ khi baòn nhâìn Cancel trong hôòp thoaòi "Taòo ra taÒi xuôìng"
+DaŞy sôì cuôìi phaÒi laÌ lõìn hõn khi khõÒi ğôòng môòt
+Vui loÌng duÌng (*) trong URL ğêÒ chiÒ roŞ khung mâŞu cuÒa URL
+Taòo ra phâÌn mõÒ rôòng nêìu không phaÒi chiÒ  coì môòt hôÌ sõ
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ chiÒ roŞ phâÌn mõÒ rôòng taòo ra cho hôÌ sõ maÌ noì không coì. Cho viì duò nêìu hôÌ sõ tên laÌ "file" vaÌ baòn chiÒ roŞ "txt", kêìt quaÒ seŞ laÌ "file.txt"
+Cho thâìy caìc kiìch thıõìc chiÒ trong bytes
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ hiêÒn thiò tâìt caÒ caìc kiìch thıõìc trong bytes thay viÌ kilobyte hoãòc megabyte
+Thıòc hiêòn kiêÒm tra virus bõÒi:
+NhıŞng ğôìi sôì:
+PhâÌn mõÒ rôòng:
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ tıò ğôòng kiêÒm tra virus khi taÒi caìc hôÌ sõ
+ChiÒ roŞ tên cuÒa chıõng triÌnh antivirus õÒ ğây
+ChiÒ roŞ caìc ğôìi sôì cho antivirus õÒ ğây
+ChiÒ roŞ phâÌn mõÒ rôòng cuÒa nhıŞng hôÌ sõ taÒi xuôìng seŞ ğıõòc kiêÒm tra õÒ ğây
+Xin nhâòp tên chıõng triÌnh antivirus
+Tên không hõòp lêò. Xin kiêÒm tra laòi
+Goòi kiêÒm tra antivirus
+Vô hiêòu taìc vuò sau khi thi haÌnh
+Xoaì taìc vuò sau khi thi haÌnh
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ vô hiêòu hoìa nhiêòm vuò tıò ğôòng sau khi thıòc hiêòn
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ xoìa nhiêòm vuò tıò ğôòng sau khi thıòc hiêòn
+Ği
+LuÌi
+Tıò ğôòng phaìt sinh môòt tên hôÌ sõ
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ tıò ğôòng phaìt sinh môòt tên hôÌ sõ cuÒa taÒi xuôìng 
+Lıu võìi phâÌn mõÒ rôòng "htm"
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ lıu tâìt caÒ caìc trang Web võìi phâÌn mõÒ rôòng "htm"
+Nhâìn nuìt naÌy ğêÒ tiình toaìn kiìch thıõìc toìm lıõòc cuÒa tâìt caÒ caìc taÒi xuôìng
+GiıŞ câìu truìc caìc thı muòc maìy phuòc vuò
+Ğãòt dâìu kiêÒm vô nuìt naÌy ğêÒ giıŞ câìu truìc baÒn chiình caìc thı muòc cuÒa maìy phuòc vuò. Nêìu không tâìt caÒ hôÌ sõ cuÒa maìy phuòc vuò seŞ ğıõòc câìt giıŞ trong môòt thı muòc
+Baòn ğaŞ choòn thı muòc khaìc. Ğãòt thı muòc naÌy nhı môòt mãòc ğiònh cho nhoìm naÌy? Baòn coì thêÒ cuŞng thay ğôÒi thı muòc mãòc ğiònh trong caìc thuôòc tiình cuÒa nhoìm.
+; === ADDED LINES ===
+TaÒi xuôìng võìi URL nhı vâòy ğaŞ tôÌn taòi.  PhaÒi laÌm giÌ?
+Goòi ra
+Goòi taÒi xuôìng hôÌ sõ
+Phiên baÒn
+Nhâìn õÒ ğây ğêÒ tiêìp xuìc võìi chuìng tôi
+Nhâìn õÒ ğây ğêÒ taÒi xuôìng phiên baÒn mõìi nhâìt
+Warning:  this computer program is protected by copyright law and international treaties. Unauthorized reproduction or distribution of this program, or any portion of it, may result in serve civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law.
+; === new version ===
+TaÒi xuôìng moòi thıì bõÒi Free Download Manager
+Thêm danh saìch caìc taÒi xuôìng
+Loaòi boÒ caìi lıòa choòn
+Ğây laÌ danh saìch cuÒa URLs seŞ ğıõòc thêm
+Nhâìn nuìt naÌy ğêÒ loaòi boÒ tâìt caÒ URLs ğaŞ choòn tıÌ danh saìch
+Không tiÌm thâìy thı muòc Firefox Plugin. Baòn muôìn chiÒ roŞ noì bãÌng tay?
+Không thêÒ thiêìt ğãòt Firefox theo doŞi
+Không thêÒ gõŞ caÌi ğãòt Firefox theo doŞi
+Ğãòt dâìu kiêÒm vô caìi hôòp naÌy nêìu baòn muôìn rãÌng FDM bãìt caìc cuì nhâìp trong Mozilla Firefox
+TaÒi xuôìng caìi ğıõòc choòn bõÒi Free Download Manager
+Bãìt ğâÌu
+Websites
+Caìc taÒi xuôìng Tiìch cıòc
+Không coì caìc taÒi xuôìng tiìch cıòc hiêòn thõÌi
+Caìc thông baìo
+DuÌng khay "balloons"
+ThõÌi gian trêŞ
+Ğãòt dâìu kiêÒm vô hôòp naÌy ğêÒ cho pheìp caìc thông baìo "balloon" õÒ khay khi môòt taÒi xuôìng dıÌng hoãòc ğaŞ kêìt thuìc. Ghi chuì: nhıŞng ğãòc tiình naÌy chiÒ coì trên Windows 2000/XP vaÌ cao hõn
+Tıò ğôòng ğoìng "balloon" sau khi hêìt haòn thõÌi gian naÌy
+Mirrors
+Tıò ğôòng tiÌm kiêìm mirrors URLs
+Sôì tôìi ğa caìc mirrors
+Tiình toaìn tôìc ğôò cuÒa caìc mirrors
+Tôìc ğôò tiình laòi tıÌng caìi
+Ğãòt dâìu kiêÒm vô nuìt naÌy ğêÒ cho pheìp FDM tiÌm mirror URLs cho môŞi taÒi xuôìng tıò ğôòng
+Giõìi haòn sôì mirrors URLs TaÒi xuôìng. ğêÒ cho pheìp giaÒm bõìt sıò tiình toaìn tôìc ğôò cuÒa thõÌi gian caìc mirrors
+Ğãòt dâìu kiêÒm vô nuìt naÌy ğêÒ cho pheìp FDM tiình toaìn spead cuÒa môŞi maìy phuòc vuò mirror
+Tıò ğôòng tiình laòi tôìc ğôò cuÒa caìc mirrors xuyên qua khoaÒng thõÌi gian xaìc ğiònh
+Không tiÌm kiêìm nêìu kiìch thıõìc hôÌ sõ thiÌ iìt hõn
+FDM seŞ không tiÌm kiêìm caìc mirrors nêìu kiìch thıõìc hôÌ sõ iìt hõn kiìch thıõìc ğıõòc chiÒ roŞ
+Không tiÌm kiêìm nêìu kiìch thıõìc hôÌ sõ thiÌ không biêìt (Nên laÌm)
+Thêm mirror
+TiÌm caìc mirror
+Thêm mirror URL cho taÒi xuôìng naÌy bãÌng tay
+TiÌm mirror URLs cho taÒi xuôìng naÌy võìi FileSearching.COM
+Liêòt kê mirror URLs
+Tôìc ğôò maìy phuòc vuò
+Ğıõòc sıÒ duòng
+Tôìc ğôò so võìi mirrors
+Tôìc ğôò so võìi caìc maìy phuòc vuò mirrors
+Thông tin caìc taÒi xuôìng
+Xin chõÌ...
+Mirror URL cho taÒi xuôìng
+Kiìch cõŞ HôÌ sõ vıõòt hõn 2GB. caìc taÒi xuôìng nhı vâòy chiÒ ğıõòc hôŞ trõò bõÒi FTP
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+TaÒi xuôìng Mõìi
+Xaìc ğiònh nhoìm cho taÒi xuôìng tıò ğôòng
+Ğãòt Nhoìm tõìi:
+Lıu taÒi xuôìng tõìi thı muòc thiìch hõòp cuÒa nhoìm cuÒa noì
+Ğãòt dâìu kiêÒm vô hôòp naÌy nêìu baòn muôìn caìc nhoìm taÒi xuôìng seŞ ğıõòc xaìc ğiònh bõÒi phâÌn mõÒ rôòng cuÒa hôÌ sõ hoãòc thiêìt ğãòt cuÒa Site Manager
+Ğãòt nhoìm mãòc ğiònh bãÌng tay
+Ğãòt dâìu kiêÒm vô hôòp naÌy nêìu baòn muôìn taÒi xuôìng seŞ ğıõòc câìt giıŞ tõìi thı muòc mãòc ğiònh cuÒa nhoìm cuÒa noì (xem caìc thuôòc tiình Nhoìm)
+Ğãòt thı muòc ğâÌu ra mãòc ğiònh bãÌng tay
+; END
+; BEGIN: Monitoring page
+Yên lãòng theo doŞi
+Không mõÒ hôòp thoaòi "Taòo ra taÒi xuôìng" khi thêm taÒi xuôìng tıÌ bôò duyêòt, nêìu ğãòt dâìu kiêÒm
+TuÌy biêìn
+Choòn caìc muòc thıòc ğõn ğêÒ triÌnh baÌy trong thıòc ğõn ngıŞ caÒnh cuÒa Internet Explorer
+; END
+Choòn caìc tiêìt muòc hiêÒn thiò õÒ menu
+Tôìi thiêÒu môòt muòc õÒ thıòc ğõn phaÒi ğıõòc choòn
+SıÒ duòng caìc âm thanh
+Ğãòt dâìu kiêÒm vô nuìt naÌy nêìu baòn muôìn FDM chõi caìc âm thanh cho vaÌi sıò kiêòn ( Viì duò: khi taÒi xuôìng hoaÌn tâìt)
+Choòn âm thanh cho môŞi sıò kiêòn
+; BEGIN : Customize sounds dialog
+TuyÌ biêìn âm thanh
+Ğãòt âm thanh
+BoÒ
+ThıÒ nghiêòm
+Liêòt kê caìc sıò kiêòn cuÒa FDM vaÌ duÌng caìc âm thanh thiìch hõòp. õÒ ğây baòn coì thêÒ ğiêÌu chiÒnh FDM ğêÒ phaìt môòt âm thanh khi sıò kiêòn naÌo ğoì xuâìt hiêòn
+TaÒi xuôìng bôÒ sung -  âm thanh khi môòt hay nhiêÌu TaÒi xuôìng ğıõòc thêm tõìi danh saìch caìc TaÒi xuôìng
+TaÒi xuôìng hoaÌn thaÌnh - âm thanh khi TaÒi xuôìng ğaŞ hoaÌn toaÌn thaÌnh công.
+TaÒi xuôìng thâìt baòi - âm thanh khi môòt lôŞi xuâìt hiêòn luìc côì gãìng TaÒi xuôìng môòt hôÌ sõ.
+Quay sôì ğıõòc - âm thanh khi Taìc vuò "Thiêìt lâòp kêìt nôìi quay sôì" thi haÌnh thaÌnh công .
+Quay sôì thâìt baòi - âm thanh khi Taìc vuò "Thiêìt lâòp kêìt nôìi quay sôì" thâìt baòi viÌ lyì do naÌo ğoì.
+Ğãòt Âm thanh cho sıò kiêòn ğıõòc choòn
+Không phaìt âm thanh khi sıò kiêòn ğıõòc choòn xuâìt hiêòn
+ThıÒ nghiêòm âm thanh lıòc choòn
+Sıò kiêòn
+HôÌ sõ Âm thanh
+ Không coì âm naÌo
+Thêm TaÒi xuôìng
+TaÒi xuôìng ğaŞ hoaÌn thaÌnh
+TaÒi xuôìng thâìt baòi
+Quay sôì thaÌnh công
+Quay sôì thâìt baòi
+Caìc hôÌ sõ Âm thanh
+; END
+TiÌm kiêìm mirrors...
+Ğo tôìc ğôò cuÒa caìc mirrors...
+Sıò TiÌm kiêìm caìc mirrors ğıõòc thıòc hiêòn rôÌi
+Kêìt nôìi võìi maìy phuòc vuò tiÌm kiêìm...
+Coì kêìt quaÒ...
+Nõi ğoì coì %d mirrors ğıõòc tiÌm thâìy
+Sıò tiÌm kiêìm caìc mirrors ğaŞ xong
+ThıÒ mirror khaìc...
+Không tiÌm thâìy mirrors naÌo
+Thâìt baòi
+Tôìc ğôò nhıŞng mirrors ğıõòc ğo
+; BEGIN: History page
+Liòch sıÒ
+Câìt giıŞ liòch sıÒ cuÒa nhıŞng môìi liên kêìt vaÌ nhıŞng thı muòc
+Câìt giıŞ liòch sıÒ chiÒ cuÒa nhıŞng thı muòc
+GiıŞ caìc baÒn ghi trong khoaÒng thõÌi gian
+Sôì lıõòng tôìi ğa cuÒa nhıŞng baÒn ghi
+Doòn deòp Liòch sıÒ
+FDM seŞ câìt giıŞ liòch sıÒ cuÒa caìc liên kêìt vaÌ caìc thı muòc baòn nhâòp vaÌo
+FDM chiÒ seŞ câìt giıŞ liòch sıÒ cuÒa caìc thı muòc
+FDM seŞ xoìa caìc baÒn ghi coì trong liòch sıÒ quaì thõÌi gian ğaŞ chiÒ ğiònh
+Sôì lıõòng tôìi ğa cuÒa caìc baÒn ghi trong liòch sıÒ.  Khi sôì lıõòng nhıŞng baÒn ghi vıõòt hõn giaì triò naÌy, FDM seŞ xoìa nhıŞng baÒn ghi cuŞ nhâìt
+Xoìa tâìt caÒ nhıŞng baÒn ghi tıÌ liòch sıÒ
+; END
+Nhâòp khâÒu
+Xuâìt khâÒu
+Nhâòp khâÒu danh saìch URLs...
+Xuâìt khâÒu Danh saìch caìc taÒi xuôìng...
+NhıŞng hôÌ sõ Vãn baÒn
+Không thêÒ mõÒ môòt hôÌ sõ
+Xuâìt khâÒu tâìt caÒ caìc taÒi xuôìng
+Xuâìt khâÒu tâìt caÒ taÒi xuôìng trong danh saìch
+Xuâìt khâÒu coì lıòa choòn nhıŞng taÒi xuôìng
+Xuâìt khâÒu nhıŞng taÒi xuôìng không hoaÌn tâìt
+Nôìi vaÌo nêìu hôÌ sõ tôÌn taòi rôÌi
+Sai nhoìm tên. Xin không sıÒ duòng nhıŞng kyì hiêòu / hoãòc \ .
+Thoaìt ra khi naÌo xong
+; BEGIN: Downloads History window
+VaÌo danh saìch
+Lıu tõìi
+; END
+ThuÌng raìc
+; BEGIN: Recycle Bin
+Tiình châìt...
+Doòn deòp thuÌng raìc
+; END
+; BEGIN: Recycle Bin properties
+Không ğãòt caìc taÒi xuôìng ğaŞ xoìa vaÌo ğây (xoìa luôn)
+GiıŞ laòi tôìi ğa laÌ
+caìc taÒi xuôìng
+Không giıŞ caìc taÒi xuôìng ğaŞ hoaÌn thaÌnh
+HoÒi laòi khi xoìa caìc taÒi xuôìng
+NhıŞng thuôòc tiình cuÒa ThuÌng raìc
+Ğãòt dâìu kiêÒm nêìu baòn không muôìn câìt giıŞ caìc taÒi xuôìng trong ThuÌng raìc
+Ğãòt dâìu kiêÒm nêìu baòn muôìn giõìi haòn sôì lıõòng cuÒa caìc taÒi xuôìng biò xoìa boÒ trong kho ThuÌng raìc
+Sôì lıõòng tôìi ğa caìc taÒi xuôìng câìt giıŞ trong ThuÌng raìc
+Ğãòt dâìu kiêÒm nêìu baòn không muôìn nhıŞng taÒi xuôìng ğaŞ hoaÌn thaÌnh tõìi kho chıìa cuÒa ThuÌng raìc sau khi xoìa boÒ
+Ğãòt dâìu kiêÒm nêìu baòn muôìn FDM hoÒi laòi baòn khi baòn thıÒ xoìa môòt taÒi xuôìng
+; END
+Phuòc hôÌi
+Phuòc hôÌi caìc taÒi xuôìng...
+; History subitems
+Hôm nay
+Hôm qua
+Môòt tuâÌn
+Môòt thaìng
+TuÌy choòn...
+; end
+Xoìa Liòch sıÒ
+Lıu Liòch sıÒ caìc taÒi vêÌ
+Luu Liòch sıÒ cuÒa chiÒ caìc taÒi xuôìng ğaŞ hoaÌn thaÌnh
+Ğãòt dâìu kiêÒm vaÌo ğây ğêÒ lıu Liòch sıÒ caìc taÒi xuôìng cuÒa baòn
+Ğãòt dâìu kiêÒm vaÌo ğây ğêÒ lıu Liòch sıÒ cuÒa chiÒ caìc taÒi xuôìng ğaŞ hoaÌn thaÌnh
+Thiêìt ğãòt Liòch sıÒ taÒi xuôìng
+Xây dıòng danh saìch caìc baÒn ghi Liòch sıÒ...
+; Download Was deleted
+thiÌ ğaŞ biò xoìa
+Choòn vuÌng thõÌi gian
+TiÌm...
+TiÌm nıŞa
+TiÌm caìi giÌ
+; BEGIN : Find dialog
+TiÌm trong
+Tên hôÌ sõ cuòc bôò
+ChiÒ roŞ caìi maÌ baòn muôìn tiÌm õÒ ğây
+TiÌm kiêìm trong hôÌ sõ bôò phâòn cuÒa URL
+TiÌm kiêìm trong toaÌn bôò URL
+TiÌm kiêìm trong chuì dâŞn cuÒa taÒi xuôìng
+TiÌm kiêìm trong tên vaÌ ğıõÌng dâŞn cuÒa hôÌ sõ taÒi xuôìng trên ğiŞa nôòi bôò
+CaÌi ğãòt nâng cao tiÌm kiêìm caìc thiêìt ğãòt
+; ADVANCED settings
+TiÌm kiêìm õÒ ğâu
+TiÌm trong Danh saìch cuÒa caìc taÒi xuôìng
+TiÌm trong Liòch sıÒ cuÒa caìc taÒi xuôìng
+TiÌm kiêìm võìi thõÌi gian xaìc ğiònh
+Trong khoaÒng
+Nõi ThuÌng Raìc
+TiÌm kiêìm võìi kiìch thıõìc hôÌ sõ xaìc ğiònh
+Tôìi thiêÒu
+Tôìi ğa
+TiÌm õÒ Danh saìch caìc taÒi xuôìng
+TiÌm kiêìm trong Liòch sıÒ cuÒa caìc taÒi xuôìng
+Sıò TiÌm kiêìm chiÒ taÒi xuôìng satifies maÌ phaòm vi thõÌi gian chiÒ roŞ
+Ğãòt vuÌng thõÌi gian
+TiÌm kiêìm trong ThuÌng Raìc
+ChiÒ  tiÌm kiêìm nhıŞng hôÌ sõ thoÒa maŞn phaòm vi kiìch thıõìc hôÌ sõ chiÒ roŞ
+Kiìch thıõìc Cıòc tiêÒu ğıõòc yêu câÌu
+Kiìch thıõìc Tôìi ğa ğıõòc yêu câÌu
+TiÌm kiêìm trong nhoìm
+Choòn nhoìm nõi sıò tiÌm kiêìm seŞ ğıõòc thıòc hiêòn
+; END
+TiÌm kiêìm taÒi xuôìng...
+Không tiÌm thâìy muòc ğoì
+Không tiÌm thâìy caìc muòc ğoì
+TiÌm xong
+GõÒi URL tõìi bôò nhõì ğêòm
+Xem trıõìc ZIP
+At least one file should be selected.
+It is possible that the file you are downloading is ZIP archive. Do you want to preview it?
+Xem trıõìc Audio/Video
+Thâìt baòi viêòc mõÒ hôÌ sõ.
+Không biêìt loaòi media naÌy.
+Xin caÌi ğãòt DirectX 8.0 hoãòc tôìy hõn cho sıŞ duòng ğãòc biêòt naÌy. Baòn coì thêÒ taÒi DirectX mõìi nhâìt tıÌ microsoft.com.
+Thông tin Media
+Kiìch cõŞ:
+SãŞn coì:
+ThõÌi gian:
+Mute
+Play
+Pause
+Loòc
+PhâÌn mõÒ rôòng [caìch nhau bõÒi khoaÒng trãìng, v.d. zip rar arj]:
+HuyÒ boÒ caìc hôÌ sõ coì caìc phâÌn mõÒ rôòng nhı thêì
+ChiÒ cho pheìp caìc hôÌ sõ coì caìc phâÌn mõÒ rôòng nhı thêì
+Caìc chuôŞi ğôìi sôì không thêÒ chıìa %file% macro. Macro naÌy thiÌ  câÌn ğêÒ chiÒ roŞ ğêÒ chıõng triÌnh antivirus cuÒa baòn biêìt kiêÒm tra hôÌ sõ naÌo.
+Tiêìp tuòc duÌ coì sao ği nıŞa?
+CaÒnh baìo
+SıÒ duòng thuôòc tiình âÒn giâìu cho taÒi xuôìng chıa ğâÌy ğuÒ
+Nôìi thêm vaÌo chuì dâŞn tõìi tên hôÌ sõ khi naÌo xong
+Không câìt giıŞ caìc trang cuÒa maìy phuòc vuò
+Ğãòt dâìu KiêÒm vaÌo nuìt naÌy nêìu baòn không muôìn câìt giıŞ caìc trang maìy phuòc vuò trên maìy tiình cuÒa baòn, ngoaòi trıÌ caìc hôÌ sõ vaÌ caìc hiÌnh aÒnh
+SıÒ duòng sıò xem trıõìc ZIP
+Ğãòt dâìu KiêÒm vaÌo nuìt naÌy nêìu baòn muôìn xem trıõìc nôòi dung cuÒa ZIP khi bãìt ğâÌu cuÒa viêòc taÒi xuôìng chiÒ taÒi xuôìng môòt phâÌn cuÒa lıu trıŞ.
+ThêÒ tiìch:
+Chaòy taÒi xuôìng tıò ğôòng
+Ğãòt dâìu KiêÒm vaÌo nuìt naÌy nêìu baòn muôìn FDM seŞ chaòy môŞi taÒi xuôìng mõìi tıò ğôòng
+Xin kiêÒm tra nhıŞng hôÌ sõ ğêÒ taÒi xuôìng
+Ğãòt thay thêì nhıŞng viò triì ( URLs) cho taÒi xuôìng naÌy
+Không xem trıõìc trong tıõng lai
+Baòn ğaŞ tãìt sıò xem trıõìc ZIP. Nêìu baòn muôìn mõÒ noì lên, xin ği tõìi TuÌy-choòn - > TuyÌ-choòn TaÒi-xuôìng ( Ctrl + O) - > TaÒi xuôìng trang Mõìi, vaÌ ğãòt dâìu kiêÒm vaÌo nuìt "DuÌng xem trıõìc ZIP".
+LõÌ danh saìch ği
+List of web pages that should be ignored while downloading a site.
+Thı muòc con
+Thêm
+LõÌ ği tâìt caÒ caìc thı muòc con
+; Proxy tab new settings
+DuÌng cuôòn luÌi trên caìc kêìt nôìi biò ğıìt quaŞng
+Kiìch cõŞ cuÒa cuôòn luÌi
+bytes
+Ğãòt dâìu kiêÒm vô tuÌy choòn nêìu baòn muôìn ğêÒ bâòt sıò ğãòc trıng cuôòn luÌi. TuÌy choòn naÌy giuìp baòn baÒo vêò caìc taÒi xuôìng cuÒa baòn tıÌ hı hoÒng hiêòn nay.
+Kiìch cõŞ cuôòn luÌi. Greater size will allow rollback to work more safely. Recommended size is 3000 bytes. You may increase this value if your download still remains damaged.
+; downloader options -> monitor tab
+Không theo doŞi nhıŞng hôÌ sõ naÌo nhoÒ hõn
+DuÌng tuÌy choòn naÌy nêìu baòn muôìn FDM nhaÒy qua caìc hôÌ sõ naÌo maÌ nhoÒ hõn kiìch cõŞ ğaŞ chiÒ ğiònh
+KBytes
+CaÒnh baìo! ThuÌng raìc thiÌ quaì lõìn. Noì laÌm châòm ğôòt ngôòt sıò thıòc hiêòn. Noì ğıõòc khuyêìn caìo ğêÒ doòn deòp ThuÌng raìc. Baòn coì muôìn laÌm ğiêÌu naÌy?
+Không kiêÒm tra lâÌn nıŞa
+CaÒnh baìo! Liòch sıÒ caìc TaÒi xuôìng thiÌ quaì lõìn. Noì laÌm châòm ğôòt ngôòt sıò thıòc hiêòn. Noì ğıõòc khuyêìn caìo ğêÒ doòn deòp Liòch sıÒ. Baòn coì muôìn laÌm ğiêÌu naÌy?
+Maìy Phuòc vuò không baÒo ğaÒm khaÒ nãng lâìy laòi chuìng. Sıò phaÒn ıìng thiÌ vô hiêòu.
+Sao cheìp tõìi Bôò nhõì ğêòm
+; general settings | skins page
+Skins
+Skin
+Cho pheìp skin duÌng caìc biêÒu tıõòng cuÒa noì
+Cho pheìp skin duÌng caìc aÒnh bitmap cuÒa noì
+; default skin
+<default>
+LÕÌI DÃòN: Caìc thay ğôÒi chiÒ coì hiêòu lıòc sau khi chaòy laòi Free Download Manager.
+HiêÒn thiò thông tin taÒi xuôìng luìc trong tiêìn triÌnh
+BoÒ qua caìc hôÌ sõ coì phâÌn mõÒ rôòng:
+Liêòt kê caìc mõÒ rôòng cuÒa caìc hôÌ sõ seŞ boÒ qua
+Không coì kiìch hoaòt taÒi xuôìng
+Phaìt hôÌ sõ âm thanh khi tâìt caÒ caìc taÒi xuôìng ğaŞ hoaÌn thaÌnh
+Nhâòp khâÒu danh saìch caìc URL tıÌ bôò nhõì ğêòm
+Mâòt khâÒu
+TuÌy choòn QuaÒn lyì Site
+; Save password dialog
+Lıu giıŞ Mâòt khâÒu?
+Free Download Manager coì thêÒ lıu giıŞ mâòt khâÒu cho maìy phuòc vuò naÌy ğêÒ khoÒi phaÒi nhâòp laòi noì khi naÌo baòn taÒi xuôìng tıÌ maìy phuòc vuò naÌy.
+Lıu giıŞ Mâòt khâÒu naÌy?
+Không ğêÌ nghiò lıu giıŞ bâìt cıì mâòt khâÒu naÌo
+; Site Manager options | Passwords tab
+DuÌng QuaÒn lyì Site laÌm kho chıìa caìc mâòt khâÒu cuÒa baòn
+HoÒi laòi tôi coì muôìn lıu giıŞ mâòt khâÒu hay không
+Không ğêÌ nghiò lıu giıŞ mâòt khâÒu naÌo
+Xoìa boÒ tâìt caÒ caìc mâòt khâÒu khi thoaìt
+Xoìa boÒ tâìt caÒ caìc mâòt khâÒu
+; create new HTML Spider task
+HuÒy boÒ toaÌn bôò caìc taÒi xuôìng tıÌ danh saìch (khuyêìn caìo)
+Ğaình dâìu vaÌo hôòp naÌy nêìu baòn muôìn caìc taÒi xuôìng õÒ HTML Spider ğıõòc boÒ ği tıò ğôòng. Caìc tôìc ğôò trên taÒi xuôìng cuÒa site quaì lõìn.
+Sıò thay ğôÒi hiêòu ıìng seŞ coì sau khi khõÒi ğôòng laòi Free Download Manager
+Phong caìch Mõìi
+Phong caìch CôÒ xıa
+Tên thı muòc thiÌ không hõòp lêò
+ÂÒn caìc cıÒa sôÒ trôi nôÒi trong chêì ğôò toaÌn maÌn hiÌnh
+Ğaình dâìu hôòp naÌy nêìu baòn muôìn cıÒa sôÒ trôi nôÒi naÌy tıò ğôòng âÒn ği trong chêì ğôò toaÌn maÌn hiÌnh.
+coì liòch biêÒu ğêÒ goòi lên.
+Baòn coì muôìn goòi noì ra?
+Goòi taÒi xuôìng khi noì ğaŞ hoaÌn tâìt
+Xin sıÒ duòng (*), (*A) hoãòc (*a) trong URL tõìi mâŞu daòng chiÒ roŞ cho URL
+TiÌm kiêìm caìc maìy phuòc vuò Mirror
+Hibernate
+Stand By
+Ghi nhõì choòn lıòa cuÒa tôi
+ĞêÌ nghiò thay ğôÒi thı muòc mãòc ğiònh cho nhoìm
+Lıu trıŞ hôÌ sõ
+MõÒ hôÌ sõ
+Lıu trıŞ hôÌ sõ vaÌ mõÒ noì ra
+KiêÒu loaòi TaÒi xuôìng:
+Liên kêìt tõìi FDM
+Liên kêìt tõìi Free Download Manager
+NgıõÌi duÌng thân mêìn!
+Free Download Manager laÌ môòt chıõng triÌnh cung câìp cho baòn caìch miêŞn phiì. Baòn coì thêÒ duÌng noì lâu daÌi nhı baòn thiìch sıò tıò do.
+Tuy nhiên, nêìu baòn tiÌm thâìy nõi Free Download Manager sıò hıŞu iìch naÌo ğoì, baòn coì thêÒ giuìp chuìng tôi truyêÌn baì noì bõÒi viêòc ğãòt liên kêìt tõìi noì trên web site cuÒa baòn. ĞiêÌu naÌy giuìp cho nhiêÌu ngıõÌi khaìc hiêÒu hõn vêÌ Free Download Manager.
+CaÒm õn sıò trõò giuìp cuÒa baòn trong sıò ğêÌ xuâìt,\nNhoìm phaìt triêÒn Free Download Manager.
+Nhãìc cho tôi trong 3 ngaÌy
+Nhãìc cho tôi trong lâÌn tõìi khi tôi goòi Free Download Manager
+Không ğêÒ tôi thâìy cıÒa sôÒ naÌy lâÌn tõìi
+Xem maŞ liên kêìt HTML
+MaŞ liên kêìt HTML
+NhiêÌu viì duò nıŞa
+Sao cheìp tõìi bôò nhõì ğêòm
+ÂÒn dâìu
+; "Traffic usage mode has been changed" window
+ThêÒ thıìc vâòn chuyêÒn ğaŞ thay ğôÒi
+Baòn ğaŞ chuyêÒn ğôÒi thêÒ thıìc vâòn chuyêÒn qua maòng.\nFree Download Manager coì ba thêÒ thıìc:
+Trong thêÒ thıìc naÌy Free Download Manager coì thêÒ taÒi xuôìng võìi tôìc ğôò tôìi ğa. Noì laÌ thêÒ thıìc xông xaìo nhâìt.
+Trong thêÒ thıìc naÌy Free Download Manager coì thêÒ taÒi xuôìng võìi tôìc ğôò trung biÌnh. ThêÒ thıìc naÌy cho pheìp bôò duyêòt cuÒa baòn duyêòt Internet vaÌ giıŞ cho tôìc ğôò cao cuÒa taÒi xuôìng cuÌng thõÌi gian.
+Trong thêÒ thıìc naÌy Free Download Manager coì thêÒ taÒi xuôìng võìi tôìc ğôò thâìp. ThêÒ thıìc naÌy cho pheìp baòn taÒi xuôìng maÌ không caÒm giaìc suy giaÒm cuÒa maòng.
+;
+ĞôÒi tên khi khõÒi chaòy laòi
+Nhâòp vaÌo môòt giaì triò nhoÒ hõn %d
+; export/import downloads
+Liêòt kê caìc HôÌ sõ URL
+Thông tin Liêòt kê caìc HôÌ sõ TaÒi xuôìng
+;
+TuÌy choòn Xuâìt khâÒu
+;
+Ğãòt ngaÌy cuÒa môòt hôÌ sõ giôìng nhı ngaÌy ğaŞ chiÒ ra bõÌi maìy phuòc vuò
+Ğãòt cuÌng mâŞu võìi ngaÌy cuÒa taÒi xuôìng hôÌ sõ nhı trên môòt maìy phuòc vuò
+Phaìt sinh diêŞn giaÒi cho hôÌ sõ
+Phaìt sinh ra môòt hôÌ sõ võìi tên "*.dsc.txt" (* - tên cuÒa môòt hôÌ sõ taÒi xuôìng) noì chıìa ğıòng môòt diêŞn giaÒi nhoÒ cho hôÌ sõ taÒi xuôìng (chuì dâŞn + url + ngaÌy). hôÌ sõ naÌy phaìt sinh ra cho môòt taÒi xuôìng nhı môòt biÌnh luâòn.
+HôÌ sõ naÌy ğıõòc taÒi xuôìng tıÌ
+Không lâìy laòi hôÌ sõ naÌy theo ngaÌy thaìng tıÌ maìy phuòc vuò
+TuÌy choòn naÌy cho pheìp baòn tãng thêm tôìc ğôò cuÒa khõÒi chaòy môòt taÒi xuôìng qua FTP. Free Download Manager thiÌ duÌng mêònh lêònh SIZE thay thêì cuÒa LIST.
+Không lıu laòi nhâòt kyì caìc cuôòc taÒi xuôìng
+Hiêu lıòc tuÌy choòn naÌy thiÌ laÌm cho Free Download Manager chaòy vaÌ xuôìng maìy vaÌ giaÒm bõìt viêòc sıÒ duòng bôò nhõì.
+;
+Xuâìt khâÒu Liòch sıÒ taÒi xuôìng
+Xuâìt khâÒu moòi ğêÌ muòc
+Xuâìt khâÒu tâìt caÒ caìc ğêÌ muòc nõi danh saìch
+Xuâìt khâÒu caìc ğêÌ muòc ğaŞ choòn
+Xuâìt khâÒu caìc ğêÌ muòc khi ğaŞ taÒi xuôìng hoaÌn tâìt
+;
+Caìc hôÌ sõ HTML
+;
+Free Download Manager Liòch sıÒ TaÒi xuôìng
+URL cuÒa taÒi xuôìng
+TaÒi xuôìng cho hôÌ sõ
+Kiìch cõŞ HôÌ sõ
+TaÒi xuôìng ğaŞ hoaÌn thaÌnh
+TaÒi xuôìng ğaŞ ğıõòc xoìa boÒ
+;
+Lıu trıŞ trong
+Kiìch cõŞ hôÌ sõ
+HôŞ trõò lâìy tiêìp
+Ğoìng hôòp thoaòi naÌy khi taÒi xuôìng thiÌ hoaÌn thaÌnh hoãòc dıÌng laòi
+MõÒ ra
+Baòn coì muôìn xem cıÒa sôÒ naÌy lâÌn nıŞa?
+Coì, Cho tôi xem cıÒa sôÒ naÌy môŞi lâÌn taÒi xuôìng
+Không, ğıÌng hiêÒn thiò cıÒa sôÒ naÌy nıŞa
+Coì, nhıng không phaÒi cho lâÌn taÒi xuôìng naÌy
+SıÒ duòng phiìm SHIFT cho viêòc taÒi xuôìng naÌy khi muôìn xoìa boÒ tıÌ ğiŞa vaÌ baòn thiÌ không thêÒ phuòc hôÌi noì.\nBaòn chãìc chãìn?
+Choòn nhoìm
+Ğãòt thı muòc gôìc cho nhoìm
+Choòn thı muòc gôìc cho nhoìm.\nCaìc thay ğôÒi naÌy chiÒ aìp duòng tõìi caìc taÒi xuôìng mõìi.
+Caìc hôÌ sõ taÒi xuôìng cuôìi cuÌng
+(rôŞng)
+Ngãn trõÒ caìc taÒi xuôìng
+HiêÒn thiò cıÒa sôÒ Tiêìn triÌnh taÒi xuôìng
+Nêìu kiêÒm chıìng, FDM seŞ taòo ra môòt cıÒa sôÒ ğãòc biêòt võìi thông tin noìi vêÌ viêòc taÒi xuôìng downloading for each running download
+; general settings | misc page
+ThõÌi gian taòm ngıng cho sıò xaìc nhâòn
+Goòi viêòc taÒi xuôìng
+HoÒi laòi caìch shutdown
+Xaìc nhâòn thõÌi gian trêŞ cho lêònh "Công cuò | Gaìc maìy khi xong".
+Xaìc nhâòn thõÌi gian trêŞ cho lêònh "Công cuò | Thoaìt ra khi xong".
+Xaìc nhâòn thõÌi gian trêŞ cho lêònh "Công cuò | Shutdown maìy tiình khi xong".
+Xaìc nhâòn thõÌi gian trêŞ cho viêòc goòi hôÌ sõ taÒi xuôìng khita3i xuôìng hoaÌn tâìt.
+Nêìu ğaình dâìu, FDM seŞ hoÒi baòn cho kiêÒu  cuÒa shutdown cho lêònh "Công cuò | Shutdown maìy tiình khi xong".
+Không câÌn hoÒi sıò xaìc nhâòn
+; 5 giây, 10 giây, ...
+%d giây
+Ğõòi baòn xaìc nhâòn
+LõÌ ği caìc trang cho thı muòc naÌy
+TaÒi xuôìng caìc trang cho chiÒ thı muòc naÌy
+Bao gôÌm caìc thı muòc con
+LõÌ ği caìc trang web õÒ trong thı muòc naÌy.
+TaÒi xuôìng caìc trang õÒ chiÒ trong thı muòc naÌy vaÌ lõÌ ği caìc trang web khaìc.
+Ğaình dâìu tuÌy choòn naÌy nêìu baòn muôìn HTML Spider lõÌ ği (hoãòc chiÒ taÒi xuôìng) caìc trang õÒ trong tâìt caÒ caìc thı muòc con cuÒa thı muòc ğaŞ chiÒ roŞ.
+Nõi ğây baòn câÌn chiÒ ra URL cuÒa thı muòc.\nViì duò: "http://site.com/docs/".
+Nhâòp vaÌo
+LõÌ ği
+Duy nhâìt
+Ğãòt caìc sôì hiêòu
+Âìn ğiònh
+Nõi ğây baòn câÌn chiÒ ra sıò ğãòt caìc sôì hiêòu cho liêòt kê caÒ lô.\nv.d. 1-100, hoãòc 1-100s2w3.
+Nhâìp vaÌo nuìt naÌy ğêÒ âìn ğiònh viêòc ğãòt cuÒa caìc sôì hiêòu sıÒ duÌng cho cıÒa sôÒ hôòp thoaòi.
+Sôì ğõn
+Sôì
+Âìn ğiònh viêòc ğãòt caìc sôì
+LôŞi cuì phaìp
+Triìch ra lıu giıŞ
+Triìch ra
+Viêòc triìch ra
+Thı muòc ğiìch ğêìn
+Thâìt baòi viêòc triìch ra. Ğiònh daòng hôÌ sõ thiÌ không biêìt.
+Vâòn chuyêÒn taÒi xuôìng trong thaìng naÌy\n(%s ğaŞ taÒi xuôìng trong thaìng trıõìc)
+TÔÒng sôì tôìc ğôò taÒi xuôìng
+Công cuò Vô hiêòu | "khi xong" taìc vuò seŞ thi haÌnh sau
+Khi hiêòu lıòc, Bâìt cıì Công cuò naÌo | "khi xong" taìc vuò seŞ tıò ğôòng vô hiêòu sıò thi haÌnh sau. Nhı vâòy noì seŞ ğıõòc goòi chiÒ môòt lâÌn.
+; %s
+; 1st - tên cuÒa hôÌ sõ
+; 2nd, 3rd - thông tin hôÌ sõ (Kiìch cõŞ + ngaÌy).
+"%s" HôÌ sõ ğaŞ sãŞn coì.\n\nBaòn coì muôìn thay thêì noì\n(%s)\n\nbõÒi môòt baÒn mõìi\n(%s)?
+Coì cho tâìt caÒ
+NhaÒy qua
+NhaÒy qua tâìt caÒ
+Ğiònh daòng cuÒa sıò lıu giıŞ naÌy thiÌ không biêìt
+Viêìng thãm web site
+Goìi thiêìt ğãòt
+Mãòc ğiònh, FDM chiÒ hôŞ trõò caìc ZIP, RAR vaÌ ARJ.\nBaòn coì thêÒ mõÒ rôòng danh saìch hôŞ trõò bõÒi thiêìt ğãòt thêm caìc hôŞ trõò cho Free Download Manager (câÌn coì kêìt nôìi Internet).
+FDM hôŞ trõò goìi lıu trıŞ
+DõÌi lên
+DõÌi xuôìng
+DõÌi caìc taÒi xuôìng ğaŞ choòn lên trên
+DõÌi caìc taÒi xuôìng ğaŞ choòn xuôìng dıõìi
+KiêÒm tra sıò toaÌn veòn cuÒa hôÌ sõ
+Caìc Web site naÌo ğoì quy ğiònh sıò kiêòn tôÒng kiêÒm tra cho caìc hôÌ sõ sãŞn coì ğêÒ taÒi xuôìng trong thıì tıò ğêÒ cho pheìp caìc ngıõÌi duÌng laÌm viêòc taÒi xuôìng caìc hôÌ sõ ğoì maÌ không biò hı hoÒng. Baòn coì thêÒ nhâòp vaÌo tôÒng kiêÒm tra naÌy nõi ğây vaÌ FDM seŞ kiêÒm tra tiình toaÌn veòn cuÒa hôÌ sõ.
+Thuâòt Toaìn
+TôÒng kiêÒm tra
+Daìn ra tıÌ bôò nhõì ğêòm
+KiêÒm tra
+Tiình toaìn tôÒng kiêÒm tra caìc hôÌ sõ taÒi xuôìng...
+Sıò toaÌn veòn hôÌ sõ thiÌ ğaŞ kiêÒm tra thaÌnh công
+Sıò toaÌn veòn hôÌ sõ thiÌ ğaŞ kiêÒm tra thâìt baòi
+Sıò toaÌn veòn hôÌ sõ thiÌ ğaŞ kiêÒm tra coì kêìt quaÒ thaÌnh công.\nKhông tiÌm ra lôŞi naÌo trong hôÌ sõ taÒi xuôìng.
+Sıò toaÌn veòn hôÌ sõ thiÌ ğaŞ kiêÒm tra thâìt baòi.\nĞaŞ tiÌm ra lôŞi: hôÌ sõ naÌy ğaŞ hı hoÒng trong luìc tiêìn triÌnh taÒi xuôìng. Noì câÌn phaÒi khõÒi chaòy laòi viêòc taÒi xuôìng tıÌ ğâÌu.
+Không hiêÒn thiò cıÒa sôÒ naÌy lâÌn nıŞa nêìu kiêÒm tra thaÌnh công
+Không thêÒ tiÌm hôÌ sõ thıòc thi cuÒa chıõng triÌnh antivirus maÌ baòn choòn.\nVui loÌng chiÒ roŞ noì.
+Kiìch cõŞ caìc hôÌ sõ thiÌ không bãÌng nhau
+Lıu trıŞ nhı:\n(Viì duò: file(*)(*A)(*a).txt)
+Không thêÒ lıu trıŞ nhı baÒn mâŞu ğaŞ chiÒ.\nHaŞy laÌm cho noì phuÌ hõòp võìi baÒn mâŞu cuÒa URL.
+Khi xong
+Khi xong (tâìt caÒ hoaÌn thaÌnh hoãòc gãòp lôŞi)
+Caìc İìng duòng
+Caìi giÌ?
+Ğaình giaì
+;
+Baòn thân mêìn!
+Free Download Manager (FDM) laÌ môòt trong nhıŞng ıìng duòng taÒi xuôìng ğıõòc nhiêÌu ngıõÌi yêu chuôòng trên thêì giõìi, coì haÌng triêòu ngıõÌi duÌng, nhıng bây giõÌ sau khi noì trõÒ thaÌnh phôÒ duòng chuìng ta ıõìc muôìn nhiêÌu hõn!
+Nêìu baòn tiÌm noì nhı sıò hıŞu iìch vaÌ môòt chıõng triÌnh câÌn thiêìt nhı chuìng ta laÌm, chuìng ta ân câÌn hoÒi baòn ğêÒ giuìp chuìng tôi truyêÌn baì trên thêì giõìi bõÒi viêòc ğâŞy lên môòt liên kêìt tõìi noì trong blog cuÒa baòn, website hoãòc không gian caì nhân, nhı laÌ Myspace/MSN.
+; %s bãÌng loÌng thay thêì bõÒi "FDM buzz" 
+Chiình thıìc, %s seŞ bãìt ğâÌu vaÌo August 16, 2006. Chuìng ta coì muòc ğiìch laÌ laÌm FDM ğıõòc truyêÌn baì laÌ tiêòn iìch cho Internet tiêìp sau FireFox!
+FDM lan truyêÌn
+; %s ğıõòc thay thêì bõÒi "blog" 
+Baòn coì thêÒ ğêÒ dâìu vêìt FDM tiêìn triêÒn ğêìn chuìng ta qua %s.
+blog
+Thanks for your help in advance,\nthe Free Download Manager development team
+Không hiêÒn thiò võìi tôi cıÒa sôÒ naÌy nıŞa, Tôi coì triì nhõì râìt tôìt.
+Tham dıò sıò lan truyêÌn
+Không, CaÒm õn baòn
+FDM SõÒ hıŞu chung
+ChuyêÒn tõìi "Sıò ğaình giaì" sau khi taÒi xuôìng
+Nêìu hiêòu lıòc, theÒ "Sıò ğaình giaì" seŞ tıò ğôòng kiìch hoaòt khi taÒi xuôìng ğaŞ hoaÌn tâìt.
+SıÒa ğôÒi Internet Explorer nhâòn diêòn maòng
+Nêìu hiêòu lıòc naÌy võìi sıò cho biêìt web sites baòn duyêòt qua cho Free Download Manager thiêìt ğãòt trên chıõng triÌnh cuÒa baòn. Tuy nhiên dıÒ duòng tuÌy choòn naÌy coì thêÒ laÌ trõÒ ngaòi trong môòt sôì sites.
+Sıò hiêÒm ğôòc?
+Nêìu ngıõÌi kiêÒm tra naÌo ğoì cuÒa nhıŞng ngıõÌi sıÒ duòng Free Download Manager baìo rãÌng taÒi xuôìng naÌy coì chıìa virus/adware/spyware/v.v.
+OK, keÒ bâìt taÌi cuÒa nhıŞng ngıõÌi sıÒ duòng Free Download Manager baìo rãÌng taÒi xuôìng naÌy coì chıìa nõi noì sıò hiêÒm ğôòc.\n\nTuy nhiên, viêòc naÌy không baÒo ğaÒm taÒi xuôìng naÌy thiÌ không hiêÒm ğôòc vaÌ noì ğêÌ nghiò kiêÒm tra noì bõÒi duÌng chıõng triÌnh antivirus naÌo ğoì.
+; keep all %xxx, \n as is.
+Nõi %d of %d cuÒa Free Download Manager coì caìc ngıõÌi duÌng baìo rãÌng taÒi xuôìng naÌy âÒn chıìa sıò hiêÒm ğôòc.\nMıìc ğaình giaì trung laÌ %.*g.\n\nCoì hiêÒn thiò caìc quan ğiêÒm vêÌ taÒi xuôìng naÌy không?
+KiêÒm tra cuôòc taÒi xuôìng mõìi trıõìc khi taÒi xuôìng nêìu noì âÒn chıìa sıò hiêÒm ğôòc
+DuÌng tuÌy choòn naÌy ğêÒ FDM kiêÒm tra tıò ğôòng, trıõìc khi taÒi xuôìng, nêìu ngıõÌi naÌo ğoì cuÒa caìc ngıõÌi duÌng baìo caìo vêÌ taÒi xuôìng naÌy coì âÒn chıìa sıò hiêÒm ğôòc.
+TriÌnh baÌy caìc ğaình giaì khi taÒi xuôìng
+Nêìu hiêòu lıòc, FDM seŞ kiìch hoaòt theÒ "Opinions" tıò ğôòng vaÌ hiêÒn thiò sıò ğaình giaì vêÌ taÒi xuôìng ğang khi cho taÒi xuôìng.
+KiêÒm tra laòi nêìu taÒi xuôìng chıìa sıò hiêÒm ğôòc (xem caìc tuÌy choòn mıìc ğôò ğêÒ vô hiêòu)
+OK, ngıõÌi bâìt taÌi noìi rãÌng noì thiÌ hiêÒm ğôòc
+CaÒnh baìo! NgıõÌi naÌo ğoì baìo caìo rãÌng taÒi xuôìng naÌy chıìa sıò hiêÒm ğôòc
+Ğoìng
+Ğang taÒi
+Không laÌm TaÒi xuôìng naÌy
+Bôò ğêòm hoaòt ğôòng cho viêòc viêìt dıŞ liêòu taÒi xuôìng tõìi ğiŞa
+Nêìu hiêòu lıòc, FDM seŞ duÌng bôò ğêòm nôi bôò võìi kiìch cõŞ maÌ baòn chiÒ roŞ cho caìc hoaòt ğôòng cuÒa sıò viêìt dıŞ liêòu khi taÒi xuôìng. ĞiêÌu naÌy laÌm giaÒm sôì lıõòng thõÌi gian sıÒ duòng HDD cuÒa baòn. Sıò tãng thêm tôìc ğôò naÌy cuÒa taÒi xuôìng cho caìc kêìt nôìi tôìc-ğôò-cao.\nTuy nhiên bõÒi viÌ dıŞ liêòu taÒi xuôìng không trıòc tiêìp viêìt vaÌo HDD noì seŞ yêu câÌu taÒi xuôìng laòi dıŞ liêòu naÌy lâÌn nıŞa trên maìy tiình naÌo ğoì biò thâìt baòi (taòi sıò xâìu nhâìt cuÒa kiìch cõŞ baòn ğaŞ chiÒ).\nĞêÌ nghiò naÌy cho kêìt nôìi tôìc-ğôò-cao.
+Coì thêÒ thiêìt ğãòt viêòc giaìm saìt  SeaMonkey (Mozilla Suite)
+Coì thêÒ gõŞ boÒ viêòc giaìm saìt SeaMonkey (Mozilla Suite)
+Ğãòt dâìu kiêÒm nõi hôòp naÌy nêìu baòn muôìn FDM nãìm lâìy caìc cuì nhâìp chuôòt trong bôò duyêòt Mozilla Firefox
+Ğãòt dâìu kiêÒm nõi hôòp naÌy nêìu baòn muôìn FDM nãìm lâìy caìc cuì nhâìp chuôòt trong bôò duyêòt SeaMonkey (Mozilla Suite)
+ĞêÒ cho bôò duyêòt tıò taÒi xuôìng nêìu baòn nhâìn Cancel
+Ğãòt dâìu kiêÒm nõi hôòp naÌy nêìu baòn muôìn bôò duyêòt taÒi xuôìng hôÌ sõ khi baòn nhâìn Cancel trong hôòp thoaòi "Create download"
+Thêm FDM tõìi triÌnh ğõn ngıŞ caÒnh cuÒa bôò duyêòt
+Dâìu kiêÒm nõi hôòp naÌy seŞ thêm caìc ğêÌ muòc "Download with Free Download Manager" vaÌ "Download web site with Free Download Manager" tõìi triÌnh ğõn ngıŞ caÒnh cuÒa bôò duyêòt (triÌnh ğõn xuâìt hiêòn khi baòn nhâìp chuôòt phaÒi)
+Choòn caìc ğêÌ muòc nõi triÌnh ğõn ğêÒ triÌnh baÌy trong triÌnh ğõn ngıŞ caÒnh nõi bôò duyêòt
+Coì thêÒ thiêìt ğãòt sıò giaìm saìt Firefox
+Di chuyêÒn caìc hôÌ sõ tõìi thı muòc
+Tôìc ğôò thiÌ quaì châòm. Chaòy trõÒ laòi Phân ğoaòn...
+KhõÒi chaòy laòi nêìu tôìc ğôò laÌ quaì châòm (phuìt):
+Choòn khõÒi chaòy laòi taòi luìc suy giaÒm cuÒa tôìc ğôò cuÒa taÒi xuôìng.
+Baòn coì muôìn xem cıÒa sôÒ tiêìn triÌnh taÒi xuôìng lâÌn nıŞa?
+Râìt tiêìc, sıò phuòc vuò naÌy thiÌ hiêòn thõÌi không sãŞn coì. Vui loÌng thıÒ laòi sau naÌy.
+DõÌi lên ğiÒnh
+DõÌi xuôìng ğaìy
+Ğãòt TaÒi xuôìng lên ğâÌu danh saìch
+Ğaình dâìu tuÌy choòn naÌy nêìu baòn muôìn sıò taÒi xuôìng ğıõòc ğãòt lên ğâÌu cuÒa danh saìch caìc taÒi xuôìng.
+Viêòc giaìm saìt trong bôò duyêòt Firefox không thêÒ hiêòu lıòc tõìi phâÌn mõÒ rôòng FlashGot ğıõòc thiêìt ğãòt.\nBaòn phaÒi gõŞ caÌi ğãòt FlashGot trıõìc.
+Hiêòu lıòc
+Vô hiêòu
+Traìo ğôÒi
+Nêìu sıò Ngãn trõÒ tâìt caÒ caìc thêÒ thıìc taÒi xuôìng laÌ hiêòu lıòc noì thiÌ vô hiêòu, ngıõòc laòi noì seŞ hiêòu lıòc.
+Chiình thıìc %s seŞ khõÒi chaòy vaÌo August 16, 2006. Muòc ğiìch cuÒa chuìng ta laÌ laÌm FDM ğıõòc truyêÌn baì laÌ tiêòn iìch Internet utility theo sau FireFox!

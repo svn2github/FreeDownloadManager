@@ -1,0 +1,1133 @@
+; This is language file
+; You can translate it to your native language
+; To do this, follow instructions:
+; - make sure FDM haven't already translated to your language 
+;   You may go to FDM web site  (http://freedownloadmanager.org) or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng to your language
+; - send translated file to support@freedownloadmanager.org 
+;
+;
+;
+; Translator - Matti Viljanen
+;
+
+; Your language name. Please keep it in English
+;
+Finnish
+;
+;
+; Below are the strings to translate:
+;
+Tallenna kaikki
+Leikkaa
+Kopioi
+Liitä
+Pieni nopeus
+Kohtalainen nopeus
+Täysi nopeus
+Latausasetukset
+Puhelinverkkoyhteys
+Tietoja ohjelmasta
+Sulje
+Tiedosto
+Muokkaa
+Näytä
+Asetukset
+Työkalut
+Ohje
+Työkalurivi
+Tilarivi
+Optimointivelho
+Latauksen oletusasetukset
+Yleiset asetukset
+Puhelinverkkoyhteys
+Katkaise yhteys latauksen päätyttyä
+Sammuta tietokone latauksen päätyttyä
+Avaa ohjetiedosto
+FDM:n kotosivu
+Kerro kaverille
+Sähköpostipalaute
+Tarkista päivitykset automaattisesti
+Tarkista päivitykset nyt
+-
+-
+Vaihda
+Kaistankäyttötila
+Rekisterointi
+Lataukset
+Ajastin
+Sivustoselain
+HTTP//FTP-selain
+Sivustomanageri
+Lisää lataus
+Aloita lataus
+Lopeta lataus
+Ajasta lataus
+Lisää tehtävä
+Tehtävän ominaisuudet
+Lataa valitut tiedostot
+Pysäytä
+Päivitä
+Lisää sivusto
+Sivuston ominaisuudet
+Latausryhmät
+Latauksen tiedot
+Ajastimen loki
+Sivustoselaimen loki
+Sivupalkki
+Luo uusi lataus
+Poista lataus
+Suorita//avaa tiedosto
+Avaa kansio
+Suorita//avaa ladattu tiedosto automaattisesti
+Latauksen asetukset
+Suorita tehtävä
+Älä suorita tehtävää
+Poista tehtävä
+Avaa ylempi kansio
+Katkaise yhteys
+Lataa
+Sivustoselaimen asetukset
+Poista sivusto
+Väliaikainen tieto
+Sivustot
+Näytä pääikkuna
+Selaimen tarkkailu
+Leikepöydän tarkkailu
+Aloita kaikki lataukset
+Pysäytä kaikki lataukset
+-
+Jatka
+-
+-
+-
+-
+-
+Keskeytä
+-
+-
+-
+Kaikki ryhmät
+Suodattimet
+Valmis
+Kesken
+Ajastettu
+Pysäytetty
+Muu
+Luo uusi ryhmä
+Poista ryhmä
+Poista kaikki lataukset
+Poista kaikki valmiit lataukset
+Avaa ryhmän kansio
+Ryhmän ominaisuudet
+Ryhmän nimi:
+Oletuskansio:
+Tiedostopäätteet [välilyöntierotteisesti]:
+Latauksen oletusprioiriteetti:
+Alhainen
+Melko alhainen
+Keskitaso
+Melko korkea
+Korkea
+Anna ryhmän nimi
+Syötevirhe
+Samanniminen ryhmä on jo olemassa. Anna ryhmälle eri nimi
+Anna kansion nimi
+Valitse ryhmän oletuskansio
+Kirjoita tähän ryhmän nimi
+Tallenna ryhmän lataukset oletuksena kansioon
+Selaa
+Ryhmän käyttämät tiedostopäätteet. Tätä käytetään latauksen automaattiseen ryhmittelyyn
+Ryhmän latauksen oletusprioriteetti
+Kumoa muutokset ja sulje ikkuna
+Vahvista muutokset ja sulje ikkuna
+Virhe latausryhmissä
+Asenna FDM uudestaan
+Virhe
+Latausten listaa ei voi ladata. Tiedosto voi olla vaurioitunut tai toisen sovelluksen käytössä
+Internet Explorer -liitännäisosan käyttöönotto epäonnistui
+Oletko varma?
+Tämä poistaa kaikki ryhmälataukset
+Vahvistus
+Tiedostonimi
+Koko
+Ladattu
+Aikaa jäljellä
+Osat
+Nopeus
+Kommentti
+Loki
+Tilanne
+Aika
+Päivämäärä
+Tietoja
+Tyhjennä
+Automaattinen vieritys
+Tuntematon tietoverkkovirhe
+Pääsy estetty. Virheellinen käyttäjätunnus tai salasana
+Pääsy estetty. Virheellinen salasana
+Onnstui
+Palvelimeen ei saatu yhteyttä
+Tiedostoa ei löydy palvelimelta
+Yhteys palvelimeen katkesi
+Palvelin ei vastaa
+Palvelimen nimeä ei voitu selvittää
+Palvelin ei tue latauksen jatkamista. Jos keskeytät tämän latauksen, sinun on ladattava se uudestaan alusta asti
+Välityspalvelin vaatii käyttäjänimen ja salasanan
+Jatkettu virhe
+Virheellinen pyyntö. Osoite voi olla virheellinen
+Tuntematon palvelinvirhe
+Yhteys keskeytetty
+Virheellinen osoite
+Ei yhteyttä
+Palvelin ei tue haluttua HTTP-versiota
+Tuntematon virhe
+Tiedostoa ei voitu poistaa levyltä
+Palvelinyhteyksien yläraja saavutettu
+Yhteyksien yläraja saavutettu
+Tauko %d sek.
+Osa
+Aloitettu
+Valmis
+Lataus valmis
+Yhdistetään...
+Yhdistäminen onnistui.
+Uudellenohjataan...
+Uudelleenohjaus onnistui. Avataan uusi osoite...
+Aloitetaan lataus...
+Pysäytetty
+Luodaan uusi osalataus...
+Keskeytetty
+Aloitetaan latausta uudelleen...
+Avataan tiedostoa levyltä...
+Tiedostonimi on liian pitkä
+Tiedostonimi on jo olemassa. Uudellennimeä tiedostoksi
+Nimeä uudelleen:
+Latauksen tallennustiedosto poistettiin. Latausta ei voida jatkaa.
+Tiedosto on jo olemassa. Kirjoitetaan päälle
+Tiedosto on jo olemassa. Jatketaan latausta
+Tiedosto on jo olemassa
+Tiedoston avaaminen levyltä epäonnistui!
+Tiedoston koko palvelimella on vaihtunut!
+Mukaudutaan uuteen kokoon...
+Tiedostoa ei voi ylikirjoittaa
+Tiedosto uudelleennimetään
+Tiedostoa ei voi nimetä takaisin alkuperäiseksi
+Ryhmiä ei voitu tallentaa
+Latauksia ei voida tallentaa
+Puhelinverkkoyhteys
+Yhdistä:
+Soita automaattisesti
+Yhdistä
+Valitse haluamasi puhelinverkkoyhteys
+Valitse tämä, jos haluat soitettavan tähän puhelinverkkoyhteyteen automaattisesti seuraavalla kerralla
+Muodosta yhteys nyt
+Älä muodosta yhteyttä ja sulje ikkuna
+Tietokoneelta ei löytynyt puhelinverkkoyhteyksiä
+Linja varattu
+Laitteistovirhe
+Ei valintaääntä
+Soitetaa
+Yritys
+Avataan porttia...
+Soitetaan palveluntarjoajalle...
+Yhdistetään etäpalvelimeen...
+Tarkistetaan käyttäjätunnus ja salasana...
+Yhdistetty nopeudella %d bps
+Katkaise yhteys
+Toistetaan
+Tarvitaan käyttäjätunnus ja salasana
+Käyttäjätunnus:
+Salasana:
+Ryhmä:
+Tallenna kansioon:
+Tallenna nimella:
+Aloita
+Automaattisesti
+Manuaalisesti
+Ajasta
+Latauksen tärkeysarvo
+Lisävalinnat
+URL-osoite tiedostoon, jonka haluat ladata
+Anna käyttäjätunnus tähän
+Anna salasana tähän
+Palvelin vaatii kirjautumisen
+Ryhmän nimi, johon haluat sijoittaa latauksen. Ryhmittely auttaa latausten hallinnassa
+Kansion nimi, johon haluat tallentaa tiedoston
+Tallenna tiedosto toiselle nimelle. Jätä tämä tyhjäksi, jos haluat käyttää alkuperäistä nimeä
+Latauksen lyhyt kuvaus
+Tämä lataus aloitetaan välittömästi
+Latausta ei aloiteta automaattisesti
+Ajasta tämän tiedoston lataus
+Mukauta latausaikataulua
+Latauksen prioriteetti. Korkean prioriteetin lataukset aloitetaan ensin, matalan prioriteetin lataukset myöhemmin
+Näytä latauksen lisävaihtoehdot
+URL-osoite on virheellinen, tarkista osoite
+Anna käyttäjätunnus
+Valitse tallennuskanio
+Yleinen
+Yleistä tietoa
+Lataa nyt tallennettu tiedostoon:
+Ladatun tiedoston nimi
+Tämän latauksen URL-osoitetta ei voi muuttaa
+Lataus on käynnissä. Tiedostonimeä ei voi muuttaa
+Ei voida nimetä uudelleen
+Tiedostoa ei löydy
+Polkua ei löydy
+Virheellinen exe-tiedosto
+Toinen prosessi käyttää tiedostoa
+Pääsy estetty.
+Laite ei ole valmis
+Levy täynnä
+Virheellinen tiedostonimi
+Kirjautumista edellytetään
+Yhteys
+Verkko
+Virheet
+Odotusaika yritysten välillä [sekuntia]:
+Yrityskerrat
+Aikakatkaisu [sekuntia]:
+Pienin koko:
+Suurin määrä:
+Kaistanhallinta latauksen yhteydessä
+Rajoita kaistankäyttöä
+Ohita kaikki rajoitukset
+t
+Kt
+Mt
+s
+Anna suurempi arvo kuin %d
+Valitse ulottuvuus
+Palvelinyhteyden uudelleenmuodostuksen odotusaika virhetilanteessa
+Valitse tämä, jos haluat rajoittaa virhetilanteissa yhteyden uudelleenmuodostuskertojen lukumäärää
+Palvelimen vastauksen odottamisaika
+Latausosan pienin koko. Pienempiä latausosia ei luoda
+Latausosien suurin määrä. Tiedosto ladataan korkeintaan näin monessa osassa
+Määritä, kuinka paljon kaistaa FDM voi käyttää lataukseen
+Ohita kaistarajoitukset ja yhteysmäärän ylärajan rajoitus tämän latauksen kohdalla
+Voit antaa arvon tavuina (t), kilotavuina (Kt) tai megatavuina (Mt) tähän kenttään
+Protokolla
+Tunnistaudu serverille nimellä:
+Viittaaja:
+Käytä HTTP-versiota 1.1
+Käytä evästeitä
+Käytä passiivista tilaa
+Siirtotila
+Binääri
+ASCII seuraavien tiedostotyyppien yhteydessä:
+Määritä, miten FDM tunnistautuu latauspalvelimelle
+Tämän kentän sisältö lähetetään viittajana latauspalvelimelle. Se ei kuitenkaan ole pakollinen.
+Valitse tämä, jos haluat FDM:n käyttävän HTTP-protokollan versiota 1.1
+Valitse tämä, jos haluat FDM:n käyttävän evästeitä tarvittaessa
+Valitse tämä, jos haluat FDM:n käyttävän passiivista siirtotilaa FTP-yhteyksissä. Tämä voi olla tarpeen joidenkin palomuurien yhteydessä.
+Käytä binäärisiirtomuotoa FTP-latauksissa. Käytä tätä muodoa muiden kuin tekstimuotoisten tiedostojen lataamisessa
+Käytä ASCII-muotoa FTP-latauksessa. Käytä tätä muotoa tekstimuotoisten tiedostojen lataamisessa
+FDM käyttää ASCII-muotoa määrättyjen tiedostotyyppien lataamiseen. Muut tiedostotyypit ladataan binääritilassa
+Välityspalvelin
+Välityspalvelimen asetukset
+Hae asetukset Microsoft Internet Explorer -selaimelta
+Määritä itse
+Ei välityspalvelinta
+Asetukset
+Osoite:
+Portti:
+Anna välityspalvelimen osoite
+Anna välityspalvelimen portti
+FDM käyttää MSIE:n käyttämiä välityspalvelimen asetuksia
+Määritä itse käytettävät välityspalvelinasetukset
+FDM ei käytä välityspalvelinta
+Valitse palvelintyypit, joiden kanssa haluat käyttää välityspalvelitna
+Anna käytettävän välityspalvelimen osoite
+Anna välityspalvelimen käyttämä portti [yleensä 3128, 1080 tai 8080]
+Valitse tämä, jos välityspalvelin vaatii kirjautumisen
+Muut asetukset
+Paikellinen tiedosto
+Jos tiedosto on jo olemassa:
+Varaa latauksen tarvitsema levytila etukäteen
+Lisää tiedostonimeen pääte keskeneräisiin latauksiin
+Internet-palvelin
+Älä käynnistä latausta uudelleen, jos palvelin ei tue latauksen jatkamista
+Jos tiedoston koko on vaihtunut palvelimella:
+Pysäytä virheen sattuessa
+Kysy
+Uudellenkirjoita
+Uudelleennimeä
+Jatka
+Uudelleenkäynnistä
+Mukaudu
+Anna tiedostopääte
+Täällä voit määrittää mitä FDM tekee, jos samanniminen tiedosto on jo olemassa tallennuskansiossa
+Valitse tämä, jos haluat, että FDM varaa levyltä ladatun tiedoston vaatiman tilan aloitettaessa
+Jos valittu, FDM lisää ladattavan tiedoston ylimääräisen tiedostopäätteen. Latauksen valmistuttua FDM nimeää tiedoston alkuperäiseksi
+FDM ei aloita latausta uudelleen, jos palvelin ei tue latauksen jatkamista.
+Täällä voit määrittää, mitä FDM tekee, jos tiedoston koko muuttuu palvelimella
+Valitse tämä, jos haluat, että lataus keskeytetään, jos tiedostoa ei löydy palvelimelta
+Valitse tämä, jos haluat, että lataus keskeytetään, jos käyttäjätunnus tai salasana eivät kelpaa
+Kaistankäyttötilat
+Valitse tila, jota haluat mukauttaa:
+Yhteyksien kokonaismäärän yläraja:
+Yhden palvelimen yhteyksien yläraja:
+Kaistanrajoitus:
+ei rajoitusta
+Valitse kaistanrajoitustila, jota haluat mukauttaa
+Valitse tämä, jos haluat rajoittaa FDM:n luomien yhteyksien maksimimäärää
+Valitse tämä, jos haluat rajoittaa yhteen palvelimeen luotavien yhteyksien maksimimäärää
+Määritä FDM:n tiedostojen latauksiin käyttämän kaistan määrä
+Kaikki lataukset
+Latauslista
+Tallenna jokainen automaattisesti
+min.
+Kun poistetaan keskeneräistä latausta
+Poista automaattisesti valmiit lataukset
+Älä poista tiedostoa
+Poista tiedosto
+FDM tallentaa latauslistan automaattisesti tietyin väliajoin. Se suojaa listaa tietokoneen jumiutumiselta ja virtakatkoilta
+Voit määrittää, mitä FDM tekee poistettaessa keskeneräistä latausta
+Valitse tämä, jos haluat latauksen poistuvan listasta automaattisesti latauksen valmistuttua
+Seuraaminen
+Seuraa
+Leikepöytä
+Seuraa tiedostopäätteen mukaan
+Ohitea tiedostopäätteen mukaan
+ALT-näppäin ei saa olla painettu
+ALT-näppäin täytyy olla painettu
+Anna tiedostopäätteet
+Valitse tämä, jos haluat, että FDM kaappaa Internet Explorerin lataukset
+Valitse tämä, jos haluat, että FDM tarkkailee leikepöytää
+Tarkkaile vain määrätyn tiedostopäätteen omaavia tiedostoja
+Ohita määrätyn tiedostopäätteen omaavat tiedostot
+Seuraa vain, jos ALT-näppäin ei ole pohjassa
+Seuraa vain, jos ALT-näppäin on pohjassa
+Käynnistys
+Lataa käynnistymisen yhteydessä
+Pienennä aloitettaessa
+Järjestelmä
+Pienennä tehtäväriville
+Sulje-painike pienentää ikkunan
+FDM käynnistetään Windowsin käynnistymisen yhteydessä
+FDM pienennetän tehtäväriville käynnistymisen yhteydessä
+Kun Pienennä-painiketta klikataan, FDM siirtyy ilmoitusalueelle
+Jos valittu, Sulje-painike toimii kuten Pienennä-painike
+Päivitä
+Päivityspalvelimen osoite
+FDM tarkistaa päivitykset automaattisesti
+Verkonkäytön optimointivelho
+Tervetuloa verkonkäytön optimointivelhoon!
+Tämä velho auttaa sinua asettamaan optimaaliset asetukset yhteystyyppiisi nähden. Se vaikuttaa Lataimen asetuksiin ja latauksen oletusasetuksiin.
+Valitse käytössäsi olevan yhteyden tyyppi
+Valmis
+Valitse Internet-yhteytesi tyyppi
+Mukauta FDM toimimaan parhaiten yhteytesi kanssa
+Tehtävät
+Aloitusaika
+Seuraava aloitusaika
+Viimeinen aloitusaika
+Ajoituslistaa ei voi ladada. Tiedosto voi olla vaurioitunut tai toisen prosessin käytössä.
+Ajastimen lokia ei voi ladata.
+Ajastimen listaa ei voi talentaa.
+tehtävä "%s" on ajastettu. Aloitetaanko tehtävä?
+Vaihdetaan kaistankäyttötilaksi "%s"
+Katkaise yhteys
+Kaikki yhteydet
+Vaihda kaistankäyttötilaksi
+Sammuta
+Käynnistä uudelleen
+Kirjaudu ulos
+Kerran
+Su
+Ma
+Ti
+Ke
+To
+Pe
+La
+Päivinä:
+Joka
+päivää
+tuntia
+FDM:n käynnistyksen yhteydessä
+Kun yhteyden muodostus onnistui
+Kun yhteyden muodostus epäonnistui
+Kun aktiivisia latauksia ei ole
+Kun nopeus on pienempi tai yhtä suuri kuin %d bps %d aikana
+Kun kaikki lataukset ovat virhetilassa aikana
+Ei koskaan
+Tuntematon
+Yhteyden muodostus onnistui kohteeseen "%s"
+Yhteyden muodostus epäonnistui kohteeseen "%s"
+Aloitus onnistui
+Muisti vähissä
+Ei voi aloittaa
+Ajastuksen suoritus aiheuttaa ohjelman sulkemisen käynnistyksen yhteydessä. Ajastustoimenpiteitä ei suoriteta
+Suurin uudelleensoittojen määrä
+Odotusaika yrityskertojen välillä
+Sulje yhteys, jos nopeus on pienempi kuin:
+Yritä uudelleen
+Ei enmpää kuin
+Käytä yhteyttä
+Jos onnistuneesti
+kertaa
+Sulje kaikki aktiiviset yhteydet
+Suljettava yhteys
+Ohjelman nimi:
+Lisäkomennot:
+Sammutuksen tyyppi:
+Pakota ohjelmat sammumaan
+Suorita ohjelma
+Muodosta puhelinverkkoyhteys
+Sulje puhelinverkkoyhteys
+Vaihda kaistankäyttötilaa
+Sulje FDM
+Sammuta tietokone
+Aloitettavat lataukset
+Pysäytettävät latatukset
+Sovellukset
+Kaikki tiedostot
+Valitettavsti tämä ominaisuus on käytettävissä vain Windows 2000:n, XP:n ja niitä uudempien Windowsien kanssa
+Anna ohjelman nimi
+Valitse lataukset
+Valitse kaistankäyttötila, jonka haluat tulevan valituksi latauksen käynnistyessä
+Valitse tämä, jos haluat rajoittaa epäonnistuneen yhteyden muodostuksen uudelleenyrityskertoja
+Odotusaika ennen uudelleenyrittämistä
+Valitse tämä muodostaaksesi yhteyden, jonka nopeus ei ole pienempi kuin antamasi arvo
+Määritä pienin sallittu yhteysnopeus
+Valitse tämä, jos haluat, että FDM yrittää muodostaa yhteyden uudelleen
+Valitse tämä, jos haluat rajoittaa epäonnistuneiden yhteydenottokertojen määrää
+Määritä lataus//lataukset tässä
+Käytettävissä olevat lataukset
+Lisää lataus ajoitettujen latausten listaan
+Poista valittu lataus ajoitettujen latausten listasta
+Määritä ohjelma, jonka haluat suorittaa
+Etsi suoritettava ohjelma
+Määritä ohjelman parametrit
+Määritä session sulkemistyyppi
+Valitse tämä, jos haluat pakottaa session lopetuksen. Se on kätevä, jos sovelluksia on jumiutunut, mutta kaikki tallentamaton data menetään.
+Määritä ajastettava tehtävä
+Valitse tämä, jos haluat, että FDM sulkee kaikki aktiiviset yhteydet
+Määritä katkaistava yhteys tässä
+Tiettyinä päivinä
+Sunnuntai
+Maanantai
+Tiistai
+Keskiviikko
+Torstai
+Perjantai
+Lauantai
+Tapahtuma
+Aikana
+Alhainen nopeus:
+min.
+Minuutit
+Tunnit
+Päivät
+Kun latausnopeus on liian alhainen
+Kun kaikki lataukset ovat virhetilassa
+Määritä päivät
+Aloita tehtävä määrättynä ajankohtana
+Anna tehtävän suoritusaika tähän
+Suorita tehtävä tiettynä päivänä
+Anna tehtävän suorituspäivämäärä tähän
+Aloita tehtävä tiettynä viikonpäivänä
+Aloita tehtävä joka sunnuntai
+Aloita tehtävä joka maanantai
+Aloita tehtävä joka tiistai
+Aloita tehtävä joka keskiviikko
+Aloita tehtävä joka torstai
+Aloita tehtävä joka perjantai
+Aloita tehtävä joka lauantai
+Suorita tämä tehtävä toistuvasti
+Tähän kenttään voit määritellä suoritusten aikavälin minutteina, tunteina tai päivinä
+Suorita tehtävä, kun jokin tapahtuma suoritetaan
+Määritä tapahtuman tyyppi tähän
+Anna aikaväli tähän
+Anna pienin sallittu nopeus tähän
+Tehtävän suorittaminen vaatii käyttäjän varmistuksen
+Odota vahvistusta
+s.
+Jos valittu, FDM varmistaa käyttäjältä tehtävän aloituksen
+Jos valittu, FDM odottaa käyttäjän varmistusta tietyin aikavälein. Jos käyttäjä ei vastaa varmistukseen, tehtävä aloitetaan
+Osoite:
+Laaditaan ladattavien tiedostojen listaa...
+Yhdistetään palvelimelle...
+Yritetään Sivustonhallintaan tallennetuilla käyttäjätiedoilla...
+Noudetaan tiedostolistaa palvelmelta...
+Yhteys palvelimeen katkesi. Yritetään uudelleen
+Rakennetaan listaa
+Noudetaan tiedostojen kokoja ja päivämääriä
+Tämän valitsimen käyttö voi nopeuttaa prosessia huomattavasti
+Valitse tämä, jos haluat, että FDM kysyy tiedostojen koon ja päivämäärän HTTP-palvelimilta
+Sivuston nimi
+Yhteydet
+Kirjautuminen
+Ryhmä
+Sivustojen listaa ei voi ladata. Tiedosto voi olla vaurioitunut tai toisen prosessin käytössä
+Sivustojen listaa ei voi tallentaa.
+Suurin sallitty yhteysmäärä:
+Oletusryhmä saman palvelimen toiselle lataukselle
+Käytetään passiivista FTP-tilaa
+Anna sivuston nimi
+Samanniminen sivusto on jo olemassa. Anna toinen nimi
+Yhteyksien maksimimäärän on oltava enemmän kuin nolla
+Valitse ryhmä
+Anna sivuston nimi tähän
+Valitse tämä, jos haluat rajoittaa palvelimeen otettavien yhteyksien maksimimäärää
+Valitse tämä, jos haluat ryhmitellä tämän palvelimen lataukset automaattisesti
+Varmista käyttäjältä
+Älä kysy tätä uudelleen
+Virhe kirjoitettaessa levylle
+Tiedosto "%s" on jo olemassa. Miten toimitaan?
+Älä kysy tätä kysymystä uudelleen. Tekemäsi valinta otetaan käyttöön automaattisesti
+Korvaa samanniminen tiedosto
+Nimeä lataus uudelleen
+Jatka latausta (tiedoston alkua ei ladata uudelleen)
+Keskeytä lataus
+Kyllä
+Ei
+Lataa
+poistettiin. Poistetaanko myös levyllä oleva tiedosto?
+Anna käyttäjätunnus ja salasana
+Kirjaudutaan: "%s"
+Lähetä määrittämäsi käyttäjätunnus ja salasana palvelimelle
+Älä yhdistä tähän palvelimeen
+Tiedoston "%s" koko on muuttunut. Miten toimitaan?
+Aloita lataus alusta
+Mukauta lataus muuttuneeseen kokoon (ei-suositeltava vaihtoehto)
+Odota
+Päivitä
+Kuvaus
+Päivitä käyttäen:
+Tarkistetaan päivityksiä...
+Sinulla on uusin versio!
+Ladataan
+Version %s käännös %s on saatavana!
+Täysi asennuspaketti versioon %s (%s)
+Päivitä versioon %s
+Päivitä versioon %s (%s)
+Jotta muutokset tulisivat voimaan, FDM täytyy käynnistää uudelleen. Käynnistetäänkö FDM uudelleen nyt?
+Päivitys valmis
+Päivittäjää ei löydy
+Anna päivityksen tyyppi tähän
+Päivitä käyttäen täyttä asennuspakettia
+Päivitä käyttäen päivityspakettia
+Lisätietoja päivitysprosessista
+Mitä uutta tässä versiossa on?
+Aloita päivittäminen nyt
+Keskeytä päivitys ja sulje ikkuna
+Luo lataukset
+Valitse sisältö
+Poista sisällön valinta
+Käytettävien latausten lista
+Valitse haluamasi kohteet lisätäksesi ne latauslistaan
+Poista haluamiesi kohteiden valinta poistaakseni ne latauslistasta
+Tietoja ohjelmasta
+Copyright (c)
+Kaikki oikeudet pidätetään
+Rekisteröity käyttäjä:
+Ohjelma on jo päivitetty. Käynnistä ohjelma uudelleen
+Virheellinen käyttäjätunnus tai salasana
+Historiatiedostoa ei voi ladata
+Historiatiedostoa ei voi tallentaa
+HTML-spiderin oletusasetukset
+HTML-spider
+Internet-sivujen hakemistopolku
+Lataa Internet-sivusto
+Sivujen latausasetukset
+Aloita lataaminen
+Pysäytä lataaminen
+Ajasta lataaminen
+Poista
+Avaa sivu Internet-selaimessa
+Aloita lataaminen automaattisesti
+Internet-sivun osoite
+Tiedostot
+Poista myös lataukset?
+Internet-sivujen listaa ei voi ladata
+Internet-sivujen listaa ei voi tallentaa
+Sivun tai HTTP-palvelimen osoite, jolta haluat ladata
+Sivun tai HTTP-palvelimen osotie, jolta lataus alkoi
+Kansion nimi, johon lataukset tallennetaan
+Tallennuskansio:
+Intenet-sivut
+Sivut
+HTML-muotoisten sivujen tiedostopäätteet
+Lataa sivujen tyylitiedostot
+Lataa sivuja muiltakin palvelimilta
+Kuvat
+Lataa kuvat
+Lataa kuvat muille palvelimille linkitetyt kuvat
+Latauksen syvyys:
+Tiedostopäätteet Internetsivuille, joiden sisältö on HTML-muotoinen. Sivut skannataan linkkien ja kuvalinkkien lataamiseksi
+Jos valittu, myös Internet-sivujen tyylitiedostot (.css) ladataan. Suositeltava
+Jos ei valittu, web pages of other sites will not be downloaded. Esimerkiksi: jos ladattava sivu sijaitsee palvelimella http://palvelin.fi/ sivu http://palvelin.fi/sivu.html ladataan, mutta sivua http://serveri.fi/sivu.html ei ladata, vaikka siihen olisi alkuperäisellä sivulla linkki
+Jos valittu, myös Internet-sivuilla näytettävät kuvat ladataan
+Jos ei valittu, Internet-sivuilla näytettäviä kuvia, jotka sijaitsevat eri palvelimella kuin itse sivu, ei ladata
+Linkkien seurantasyvyys. Esimerkiksi: lataat sivua http://servo.fi/sivu.html, jolla on linkki sivulle http://servo.fi/sivu2.html, jolla on edelleen linkki sivulle http://servo.fi/sivu3.html. Sivun http://servo.fi/sivu3.html syvyysarvo on 3, eikä sitä ladata, jos syvyysarvo on pienempi kuin kolme. Sivu http://servo.fi/sivu2.html kuitenkin ladataan, sillä sen syvyysarvo on kaksi.
+Lataa tiedostot Internet-sivuilta
+Lataa tiedostot myös muilta palvelimilta
+Tiedostojen ohittaminen tiedostopäätteisesti
+Päälle
+Lataa
+Älä lataa
+tiedostoja, joiden pääte on
+Jos valittu, myös Internet-sivuilla olevat tiedostolinkit ladataan
+Jos valittu, myös muilla palvelimilla olevat linkitetyt tiedostot ladataan
+Jos valittu, määritetyn tyyppisiä tiedostoja ei ladata
+Jos valittu, tiedostot, joiden pääte on listattu alapuolella, LADATAAN
+Jos valittu, tiedostoja, joiden pääte on listattu alapuolella, EI LADATA
+Vie asetukset
+Tuo asetukset
+Ohjelman Regedit.exe suorittaminen epäonnistui
+Virhe vietäessä asetuksia
+Virhe tuotaessa asetuksia
+FDM rekisteritiedostot
+Kuvien ohitus tiedostopäätteittäin
+kuvat, joiden pääte on:
+Jos valittu, kuvia, joiden tiedostopääte on listattu, ei ladata
+Jos valittu, kuvat, joiden pääte on listattu alapuolella, LADATAAN
+Jos valittu, kuvia, joiden pääte on listattu alapuolella, EI LADATA
+Älä lataa ja poista
+Palvelin ei tue latauksen jatkamista. Aloitetaan alusta.
+Osoiteen avaaminen epäonnistui!
+Tuntematon virhe kirjoitettaessa järjestelmärekisteriin
+Kiitos rekisteröinnistä! Ole hyvä ja käynnistä FDM uudelleen.
+Lataa FDM:llä
+Lataa sivusto FDM:llä
+Lisää FDM Internet Explorerin pudotusvalikkoon
+Valitse tämä lisätäksesi "Lataa FDM:llä" ja "Lataa sivusto FDM:llä" Microsoft Internet Explorerin pudotusvalikkoon (hiiren kakkospainike)
+Pienennä liikennettä muun liikenteen yhteydessä
+Aseta seuraavaksi pienempi tila
+Aseta pienin tila
+Valitse tämä vähentääksesi FDM:n käyttämää kaistaa, kun muut ohjelmat käyttävät yhteyttä. Tämä mahdollistaa sulavamman Internet-selaimen käytön FDM:n ladatessa tiedostoja
+Kaistankäyttötilaa lasketaan yhdellä pykälällä (Täysi->Kohtalainen, Kohtalainen->Pieni)
+Kaistanköyttätilaksi asetetaan Pieni
+Kelpaa
+Kelpaa aladomaineille
+Valitse tämä, jos haluat tätä tallennetta käytettävän HTTP-latauksissa
+Valitse tämä, jos haluat tätä tallennetta käytettävän HTTPS-latauksissa
+Valitse tämä, jos haluat tätä tallennetta käytettävän FTP-latauksissa
+Valitse tämä, jos haluat käyttää tätä tallennetta kaikille palvelimen alapalvelimille. Esimerkiksi: palvelimelle http://servo.fi käytettävää tietoa käytetään myös palvelimen http://alempi.servo.fi yhteyksissä
+Valitse ainakin yksi protokolla
+Yhtäaikaisten latausten suurin määrä
+Valitse tämä, jos haluat asettaa ylärajan yhtä aikaa suoritettavien latausten määrälle
+Lataa uudelleen
+Luo yksi uusi latausosa
+Pysäytä yksi latausosa
+; context: [section x] - Stopped
+Pysäytetty
+; tray menu
+Pudotusvalikko
+;
+Opera-selaimen plugin-kansiota ei löydy! Haluatko määrittää sen itse?
+Netscape-selaimen plugin-kansiota ei löydy! Haluatko määrittää sen itse?
+Opera-seurantaa ei voi asettaa
+Opera-seurantaa ei voi poistaa
+Netscape-seurantaa ei voi asettaa
+Netsecape-seurantaa ei voi poistaa
+Valitse tämä, jos haluat, että FDM käsittelee Operan tiedostolataukset
+Valitse tämä, jos haluat, että FDM käsittelee Netscapen tiedostolataukset
+; create download dlg
+Tiedostokoko?
+; request a size of a download
+Kysytään...
+Kysy tiedoston koko palvelimelta
+Kyllä kaikkiin
+Ei kaikkiin
+Tarkennettu loki
+Jos valittu, FDM näyttää kaikki palvelimen vastaukset
+Muutokset tulevat voimaan selaimen uudelleenkäynnistämisen jälkeen
+Tehtävälista
+Tiedostolista
+Sivustolista
+Sivulista
+Poistetaan latauksia
+Luodaan latauslistaa
+Luo ajastettu lataus
+Mistä:
+Mihin:
+Askel:
+Sarjamerkit:
+Tulokset
+Näyte:
+Sarjan aloitusnumero
+Sarjan päätösnumero
+Sarjan asekeleen suuruus. Esimerkiksi: jos arvo on 10, sarja on 0, 10, 20, 30...
+Sarjamerkkien määrä. Esimerkiksi: jos arvo on yksi, sarja voi olla 0, 1, 2, 3... Jos arvo on kaksi, sarja voi olla 00, 01, 02...
+Klikkaa tästä katsellaksesi luotua sarjaa
+Anna Internet Explorerin ladata, jos painat Peruuta
+Valitse tämä, jos haluat antaa latauksen takaisin Internet Explorerille painaessasi Peruuta-nappia Uusi lataus -ikkunassa
+Sarjan päätösnumeron on oltava suurempi kuin aloitusnumeron
+Käytä tähteä (*) osoitteessa määrittääksesi mallitiedoston
+Luo tiedostopääte, jos tiedostolla ei sellaista ole
+Valitse tämä luodaksesi määrätyn tiedostopäätteen tiedostoille, joilla ei sitä ole. Esimerkiksi: jos tiedoston nimi on "asiakirja" ja määrittelemäsi tiedostopääte on "txt", tuloksena olisi "asiakirja.txt". Tiedostopääte BAK on melko turvallinen vaihtoehto.
+Näytä koko aina tavuina
+Valitse tämä, jos haluat näyttää kaikki koot tavuina kilotavujen tai megatavujen sijaan
+Suoria virustarkastus
+Määritteet:
+Tiedostopäätteet:
+Valitse tämä, jos haluat suorittaa ladatuille tiedostoille automaattisesti virustarkastuksen
+Anna virustentorjuntaohjelmiston nimi tähän
+Anna virustentorjunnassa käytettävän ohjelman vaatimat määritteet tähän
+Anna ne tiedostopäätteet, joille haluat suorittaa automaattisen virustarkastuksen
+Anna virustentorjuntaohjelmiston nimi
+Nimi ei kelpaa, tarkista nimi
+Suoritetaan virustarkistusta...
+Pysäytä tehtävä suorittamisen jälkeen
+Poista tehtävä suorittamisen jälkeen
+Valitse tämä, jos haluat automaattisesti pysäyttää tehtävän suorituksen jälkeen
+Valitse tämä, jos haluat automaattisesti poistaa tehtävän suorituksen jälkeen
+Mene
+Takaisin
+Luo tiedostonimi automaattisesti
+Valitse tämä, jos haluat että ladattava tiedosto nimetään automaattisesti
+Tallenna päätteellä "htm"
+Valitse tämä, jos haluat tallentaa kaikki Internet-sivut "htm" -päätteellä
+Valitse tämä, jos haluat laskea kaikkien latausten koon yhteen
+Säilytä palvelimen hakemistorakenne
+Valitse tämä, jos haluat säilyttää palvelimen alkuperäisen hakemistorakenteen. Muulloin kaikki ladatut tiedostot tallennetaan yhteen hakemistoon
+Olet valinnut toisen kansion. Asetetaanko tämä kansio ryhmän oletustallennuskansioksi? Voit vaihtaa oletuskansion ryhmän asetuksissa
+; === ADDED LINES ===
+Lataus, jolla on sama osoite, on jo olemassa. Mitä tehdään?
+Suorita
+Suorita ladattu tiedosto
+Versio
+Ota yhteyttä tekijöihin
+Lataa viimeisin versio
+Varoitus: Tämä tietokoneohjelma on suojattu tekijänoikeuslaulla ja kansainvälisillä sopimuksilla. Ohjelman tai sen osan luvaton tuottaminen tai jakelu saattaa johtaa oikeudellisiin toimiin ja korvauksiin lain sallimiin maksimirangaistuksiin asti.
+; === new version ===
+Lataa kaikki FDM:llä
+Lisää latauslista
+Poista valitut
+Tässä on lista lisättävistä osotteista
+Klikkaa tästä poistaaksesi kaikki valinnat listasta
+Firefox-selaimen plugin-kansiota ei löydy! Haluatko määrittää sen itse?
+Firefox-seurantaa ei voi asettaa
+Firefox-seurantaa ei voi poistaa
+Valitse tämä, jos haluat, että FDM käsittelee Mozilla Firefoxin tiedostolataukset
+Lataus valittu FDM:n toimesta
+Aloitetaan...
+Sivustot
+Aktiiviset lataukset
+Aktiivisia latauksia ei tällä hetkellä ole
+Huomautukset
+Käytä ilmoitusrivin puhekuplia
+Viive
+Valitse tämä, jos haluat, että puhekupla ilmoittaa keskeytyneestä tai päättyneestä latauksesta. Huom! Tämä toimii vain Windows 2000 -käyttöjärjestelmästä eteenpäin!
+Sulkee puhekuplan tietyn ajan kuluttua
+Lähteet
+Automaattinen peilipalvelimien etsiminen
+Peilipalvelimien maksimäärä
+Laske peilipalvelimien nopeus
+Laske nopeus joka...
+Valitse tämä, jos haluat suorittaa uuden latauksen yhteydessä haun palvelimista, joilta voi ladata samaa tiedostoa
+Rajoita käytettävien peilipalvelimien määrää. Tämä vähentää nopeuden uudelleenlaskentaan kuluvaa aikaa
+Valitse tämä, jos haluat määrittää kunkin peilipalvelimien nopeuden hitaiden palvelimien karsimiseksi
+Suorittaa peilipalvelimien nopeuksien laskennan tietyin väliajoin
+Älä suoria hakua, jos koko on alle
+Hakua ei suoriteta, jos ladattavan tiedoston koko on alle asetetun rajan
+Älä suorita hakua, jos tiedostokoko on tuntematon (Suositus!)
+Lisää peilipalvelin
+Etsi peilipalvelimia
+Lisää peilipalvelin tälle lataukselle manuaalisesti
+Etsi peilipalvelimia FileSearching.com -palveun avulla
+Peilipalvelimien osoitteet
+Nopeus
+Käytössä
+Mittaa peilien nopeus
+Mittaa peilipalvelimien nopeus
+Latausten tiedot
+Odotetaan...
+Peililatauksen osoite
+Tiedostokoko on yli 2Gt. Vain FTP-protokolla pystyy käsittelemään tällaiset lataukset!
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Uusi lataus
+Määritä latauksen ryhmä automaattisesti
+Ryhmä:
+Tallenna lataus ryhmämääritteiseen kansioon
+Valitse tämä, jos haluat, että lataus ryhmitellään automaattisesti tiedostopäätteen tai sivuston asetusten mukaan.
+Aseta ryhmään manuaalisesti
+Valitse tämä, jos haluat tallentaa latauksen automaattisesti ryhmän oletushakemistoon (katso Ryhmien asetukset)
+Aseta oletuslatauskansio manuaalisesti
+; END
+; BEGIN: Monitoring page
+Taustalla seuraaminen
+Jos valittu, "Uusi lataus" -ikkunaa ei näytetä kaapattaessa lataus selaimelta
+Mukauta
+Valitse Internet Explorerin pudotusvalikossa näytettävät kohteet
+; END
+Valitse näytettävät valikkokohteet
+Ainakin yksi kohde täytyy olla valittuna!
+Käytä ääniä
+Valitse tämä, jos haluat, että FDM toistaa äänitiedoston tiettyjen tapahtumien merkiksi (esim. lataus suoritettu loppuun)
+Valitse ääni kullekin tapahtumalle
+; BEGIN : Customize sounds dialog
+Mukauta ääniä
+Aseta ääni
+Poista
+Toista
+Lista FDM:n tapahtumista ja vastaavista äänistä. Täällä voit asettaa FDM:n toistamaan äänen tiettyjen tapahtumien tapahtuessa
+Lataus lisätty - toista ääni, kun lataus lisätään onnistuneesti latauslistaan
+Lataus valmis - toista ääni, kun lataus on onnistuneesti suoritettu loppuun
+Lataus epäonnistui - toista ääni, kun lataus on jostain syystä keskeytynyt tai epäonnistunut
+Soittaminen onnistui - toista ääni, kun Ajastimeen määritetty yhteyden muodostaminen soittosarjan avulla onnistui
+Soittaminen epäonnistui - toista ääni, kun Ajastimeen määritetty yhteyden muodostaminen epäonnistui
+Valitse tapahtumaan liitettävä ääni
+Älä toista ääntä tapahtuman kohdalla
+Kokeile valittua ääntä
+Tapahtuma
+Äänitiedosto
+Ei ääntä
+Lataus lisätty
+Lataus valmis
+Lataus epäonnistui
+Soittaminen onnistui
+Soittaminen epäonnistui
+Äänitiedostot
+; END
+Etsitään peilipalvelimia...
+Mitataan peilipalvelimien nopeutta...
+Peilipalvelimien haku on jo suoritettu
+Yhdistetään hakupalvelimelle...
+Luetaan vastausta...
+Peilipalvelimia löytyi %d kpl
+Peilihaku päättyi
+Kokeillaan toista palvelinta...
+Peilipalvelimia ei löytynyt
+Epäonnistui
+Peilipalvelimien nopeus on mitattu
+; BEGIN: History page
+Historia
+Tallenna linkkien ja kansioiden historia
+Tallenna vain kansioiden historia
+Säilytä merkinnät
+Suurin merkintöjen lukumäärä:
+Tyhjennä historia
+FDM tallettaa käyttämiesi kansioiden ja tiedostojen käyttöhistorian
+FDM tallettaa vain kansioiden käyttöhistoriat
+FDM poistaa automaattisesti historiasta merkinnät, jotka ovat vanhentuneet
+Historiamerkintöjen suurin sallittu määrä. Kun raja-arvo saavutetaan, FDM poistaa vanhimman latauksen merkinnät.
+Poistaa kaikki merkinnät käyttöhistoriasta
+; END
+Tuo
+Vie
+Tuo osoitteiden lista
+Vie latausten lista
+Tekstitiedostot
+Tiedostoa ei voi avata
+Vie kaikki lataukset
+Vie kaikki lataukset listalta
+Vie valitut lataukset
+Älä vie valmiita latauksia
+Jatka tiedostoa, jos se on jo olemassa
+Epäkelpo ryhmänimi. Älä käytä merkkejä \ ja /
+Sulje, kun lataukset ovat valmiit
+; BEGIN : Downloads History window
+Lisätty
+Tallennuskansio
+; END
+Roskakori
+; BEGIN: Recycle Bin
+Ominaisuudet
+Tyhjennä roskakori
+;END
+;BEGIN: Recycle Bin properties
+Älä siirrä poistettuja latauksia roskakoriin
+Pidä enintään
+latausta
+Älä säilytä valmiita latauksia
+Kysy varmistus latauksia poistettaessa
+Roskakorin ominaisuudet
+Valitse tämä, jos et halua käyttää roskakoria, vaan poistetut lataukset hävitetään välittömästi
+Valitse tämä, jos haluat rajoittaa roskaskorissa olevien latausten maksimimäärää
+Suurin latausten määrä roskakorissa
+Valitse tämä, jos et halua siirtää valmiita latauksia roskakoriin niitä poistettaessa, vaan että ne tuhotaan välittömästi
+Valitse tämä, jos haluat, että FDM kysyy sinulta vahvistuksen latausta poistettaessa
+;END
+Jatka
+Jatketaan latauksia...
+; History subitems
+Tänään
+Eilen
+Viikon sisällä
+Kuukauden sisällä
+Valitse...
+; end
+Tyhjennä historia
+Tallenna lataushistoria
+Tallenna historiamerkinnät vain valmiista latauksista
+Check this button if you want to save history of your downloads
+Check this button if you want to store history of completed downloads only
+Latausten historiamerkinnät
+Laaditaan historiamerkintälistaa...
+; Download Was deleted
+Poistettiin
+Valitse aikaväli
+Etsi
+Etsi seuraava
+Mitä etsitään
+; BEGIN : Find dialog
+Hakukohteet
+Paikalliset tiedostonimet
+Määritä tähän, mitä haluat etsiä
+Etsi osoitteen tiedostonimestä
+Etsi koko osoitteesta
+Etsi latausten kommenteista
+Etsi latausten tallennusnimistä ja hakemistoista
+Määritä haun lisävalinnat
+; ADVANCED settings
+Hakukohteet
+Etsi latauslistasta
+Etsi lataushistoriasta
+Etsi tietyn aikavälin latauksista
+Aseta
+Etsi roskakorista
+Etsi tietyn kokoisista tiedostoista
+Pienin koko
+Suurin koko
+Etsi nykyisten latausten listasta
+Etsi latausten historiamerkinnöistä
+Etsi vain niistä latauksista, jotka osuvat halutulle aikavälille
+Aseta aikaväli
+Etsi roskakorista
+Etsi vain niistä latauksista, joiden koko osuu halutulle välille
+Pienin tiedoston koko, joka hyväksytään etsintään
+Suurin tiedoston koko, joka hyväksytään etsintään
+Etsi ryhmästä
+Valitse ryhmä, josta etsitään
+; END
+Etsitään latausta...
+Ei osumia.
+Uusia osumia ei löytynyt.
+Etsintä valmis
+Kopioi osoite leikepöydälle
+ZIP-esikatselu
+Ainakin yhden tiedoston tulee olla valittuna
+Lataus saattaa olla ZIP-paketti. Haluatko yrittää esikatselua?
+Äänen/videon esikatselu
+Tiedoston avaaminen epäonnistui
+Tuntematon mediatyyppe
+Tämä ominaisuus vaatii DirectX:n version 8 tai sitä uudemman. Lataa viimeisin DirectX-versio osoitteesta http://www.microsoft.com/directx
+Leikkeen tiedot
+Koko:
+Käytettävissä:
+Kesto:
+Vaimenna
+Toista
+Pysäytä
+Suodatin
+Päätteet (välilyöntierotteisesti, esim "rar arj zip")
+Poista määrätyn tyyppiset tiedostot
+Poista muut kuin määrätyn tyyppiset tiedostot
+Määrityskenttä ei sisällä %file% (tiedostonimi) -makroa. Tämä tieto on välitettävä virustutkalle, jotta se tietäisi mikä tiedosto tutkia.
+Jatketaanko kuitenkin?
+Varoitus
+Aseta "piilotettu" -lippu keskeneräiselle lataukselle
+Lisää kommentti tiedostonimeen latauksen valmistuttua
+Älä tallenna palvelimen sivuja
+Valitse tämä, jos et halua tallentaa itse sivuja, vaan ainoastaan tiedostot ja kuvat
+Käytä ZIP-esikatselua
+Valitse tämä, jos haluat esikatsella paketin sisältöä latauksen alussa, jos haluat ladata vain osan paketista.
+Paketti:
+Aloita lataaminen automaattisesti
+Valitse tämä, jos haluat, että FDM aloittaa uudet lataukset ilman käyttäjän vahvistusta
+Valitse ladattavat tiedostot
+Aseta ladattavalle tiedostolle peilipalvelimet
+Älä käytä esikatselua jatkossa
+ZIP-esikatselu on poistettu käytöstä. Jos haluat sen päälle, mene Asetukset -> Latausasetukset (Ctrl+O) -> Uusi lataus -välilehti ja aseta ruksi kohtaan "ZIP-esikatselu"
+Ohituslista
+Lista sivuista, jotka ohitetaan ladattaessa sivustoa.
+Alikansiot
+Lisää
+Ohita myös kaikki alikansiot
+; Proxy tab new settings
+Käytä takautumaa rikkoutuneissa yhteyksissä
+Takautuman koko
+tavua
+Valitse tämä, jos haluat ottaa takautuman käyttöön. Tämä valinta auttaa ehkäisemään vaurioituneita latauksia.
+Size of rollback. Greater size will allow rollback to work more safely. Recommended size is 3000 bytes. You may increase this value if your downloads still remains damaged.
+; downloader options -> monitor tab
+Älä kaappaa pienempiä latauksia kuin
+Valitse tämä, jos haluat, että FDM ei kaappaa latauksia, jotka ovat kooltaan pienempiä kuin määritetty arvo
+Kt
+Roskakorissa on liikaa kohteita! Tämä saattaa hidastaa ohjelman toimintaa huomattavasti! Haluatkä tyhjentää roskakorin nyt?
+Älä tarkista tätä uudelleen
+Varoitus! Lataushistoriassa on liikaa kohteita! Tämä saattaa hidastaa ohjelman toimintaa huomattavasti! Haluatko tyhjentää lataushistorian nyt?
+Palvelimen tukea latauksen jatkamiselle ei tiedetä, koska palvelimen vastaus oli epäkelpo.
+Kopioi leikepöydälle
+; general settings | skins page
+Teemat
+Teema
+Käytä teeman kuvakkeita
+Käytä teeman bittikarttoja
+; default skin
+<default>
+Huom! Muutokset tulevat voimaan uudelleenkäynnistyksen jälkeen!
+Näytä latauksen tiedot ladattaessa
+Ohita tiedostot, joiden pääte on
+Ohita ne tiedostot, joiden tiedostopääte on listassa
+Ei aktiivisia latauksia
+Toista ääni, kun kaikki lataukset ovat valmit
+Tuo osoitelista leikepöydältä
+Salasanat
+Sivustonhallinnan asetukset
+; Save password dialog
+Tallenna salasana?
+FDM voi tallentaa tälle palvelimelle käytetyn salasanan, jotta sitä ei tarvitsisi joka kerta syöttää uudelleen käsin.
+Tallennetaanko tämä salasana?
+Älä tallenna salasanoja
+; Site Manager options | Passwords tab
+Käytä sivustonhallintaa salasanojen tallennukseen
+Kysytäänkö salasanojen tallennusta vai ei
+Älä ehdota salasanojen tallentamista
+Poista kaikki salasanat poistuttaessa
+Poista kaikki salasanat
+; create new HTML Spider task
+Poista valmiit lataukset automaattisesto (suositus)
+Valitse tämä, jos haluat poistaa valmiit HTML-spider-lataukset. Tämä nopeuttaa suurten sivustojen lataamista.
+Muutokset tulevat voimaan ohjelman uudelleenkäynnistämisen jälkeen.
+Uusi tyyli
+Vanha tyyli
+Kansion nimi ei kelpaa
+Piilota ponnahdusikkunat koko ruudun tilassa
+Valitse tämä, jos haluat piilottaa kaikki ponnahdusikkunat koko ruudun tilassa työskenneltäessä.
+ajastettiin suorittamista varten.
+Haluatko suorittaa sen?
+Suorita ladattu tiedosto, kun se on valmis
+Käytä merkkejä (*) (*A) tai (*a) määrittääksesi osoitteen rungon
+Peilihakupalvelin:
+Lepotila
+Valmiustila
+Muista valinta
+Ehdota ryhmän oletuskansion vaihtoa
+Tallenna tiedosto
+Avaa tiedosto
+Tallenna ja avaa tiedosto
+Latauksen tyyppi:
+Linkitä FDM:ään
+Linkitä Free Download Manager -ohjelmaan
+Arvoisa käyttäjä,
+Free Download Manager on ilmainen ohjelma. Voit käyttää sitä maksutta niin kauan kuin haluat.
+Jos Free Download Manager on mielestäsi hyödyllinen ohjelma, ja sinulla on kotisivut, pyydämme, että mainostaisit ohjelmaa kotisivuillasi.
+Kiitos avustasi jo etukäteen,\nFree Download Managerin kehitystiimi
+Muistuta minua kolmen päivän kuluttua
+Muistuta minua seuraavalla käynnistyskerralla
+Älä näytä tätä ikkunaa uudelleen
+Näytä linkin HTML-koodi
+Linkin HTML-koodi
+Lisää esimerkkejä
+Kopioi leikepöydälle
+Piilota
+; "Traffic usage mode has beed changed" window
+Kaistanköyttötilaa on vaihdettu!
+Olet vaihtanut kaistankäyttötilaa.\nFree Download Managerissa on kolme eri kaistankäyttötilaa:
+Tämä tila sallii FDM:n käyttää yhteyden tarjoamaa kaistaa kokonaisuudessaan. Tämä on aggressiivisin vaihtoehto.
+Tämä tila sallii FDM:n käyttää yhteyden tarjoamaa kaistaa osan ajasta. Tämä tila sallii sekä sulavan Internetin selailun, että kohtalaisen nopean latauksen.
+Tämä tila sallii FDM:n käyttää vain osaa yhteyden tarjoamasta kaistasta. Tämä tila mahdollistaa lataukset ilman, että verkko kuormittuu huomattavasti.
+;
+Nimeä uudelleen myös uudelleenkäynnistettäessä

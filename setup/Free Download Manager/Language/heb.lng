@@ -1,0 +1,1009 @@
+; This is language file
+; You can translate it to your native language
+; To do this, follow instructions:
+; - make sure FDM haven't already translated to your language 
+;   You may go to FDM web site  (http://freedownloadmanager.org) or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng to your language
+; - send translated file to support@freedownloadmanager.org 
+;
+;
+;
+; Translator - FreeDownloadManager.ORG, 2004
+;
+
+; Your language name. Please keep it in English
+;
+Hebrew
+;
+;
+; Below are the strings to translate:
+;
+שמור הכל
+גזור
+העתק
+הדבק
+מצב קל
+מצב בינוני
+מצב כבד
+אפשרויות הורדה
+חיבור בחיוג
+אודות FDM
+יציאה
+קובץ
+עריכה
+תצוגה
+אפשרויות
+כלים
+עזרה
+סרגל כלים
+שורת סטטוס
+אשף האופטימיזציה
+הגדרות ברירת מחדל להורדה
+הגדרות כלליות
+חיבור בחיוג
+נתק בסיום
+כבה מחשב בסיום
+הפניות לעזרה
+דף הבית FDM
+ספר לחבר
+שלח מייל לתמיכה
+בדוק עדכונים אוטומטית
+בדוק עדכונים עכשיו
+-
+-
+עבור אל
+מצב שימוש ברשת
+רישום
+הורדות
+תזמונים
+סייר האתרים
+סייר FTP/HTTP
+מנהל האתרים
+הוסף הורדה
+התחל הורדה
+עצור הורדה
+תזמן הורדה
+הוסף משימה
+אפשרויות משימה
+הורד קבצים נבחרים
+עצור
+רענן
+הוסף אתר
+אפשרויות אתר
+קבוצות הורדות
+נתוני הורדה
+לוג תזמונים
+לוג סייר האתרים
+חלון צד
+צור הורדה חדשה
+מחק הורדה
+הפעל קובץ
+פתח תיקיה
+התחל להוריד אוטומטית
+אפשרויות הורדה
+אפשר משימה
+דכא משימה
+מחק משימה
+פתח תיקית אב
+נתק
+הורד
+הגדרות סייר האתרים
+מחק אתר
+כניסה זמנית
+אתרים
+הראה חלון ראשי
+ניטור הסייר
+ניטור הלוח
+התחל כל ההורדות
+עצור כל ההורדות
+-
+המשך
+-
+-
+-
+-
+-
+בטל
+-
+-
+-
+כל הקבוצות
+מסננים
+הושלם
+בהורדה
+תוזמן
+נעצר
+אחר
+צור קבוצה חדשה
+מחק קבוצה
+מחק כל ההורדות
+מחק כל ההורדות שהושלמו
+פתח תיקית הקבוצה
+אפשרויות קבוצה
+שם הקבוצה:
+תיקית ברירת מחדל:
+סיומת קובץ [מופרד ברווח]:
+עדיפות הורדה ברירת מחדל
+נמוך מאד
+נמוך
+ממוצע
+גבוה
+גבוה מאד
+הכנס שם קבוצה
+שגיאה בקלט
+קיימת קבוצה בשם זה, נא הזן שם אחר
+הכנס שם תיקיה בבקשה
+בחר תיקית ברירת מחדל עבור הקבוצה
+הכנס כאן את שם הקבוצה
+תיקית ברירת מחדל בה ישמרו ההורדות מקבוצה זו
+עיין
+סיומת קבצים לקבוצה זו. נדרש בכדי לזהות את הקבוצה אוטומטית
+עדיפות הורדה ברירת מחדל עבור קבוצה זו
+בטל שינויים וסגור את החלון
+החל שינויים וסגור את החלון
+שגיאה בקבוצות הורדה
+התקן את FDM מחדש בבקשה
+שגיאה
+לא יכול לטעון רשימת הורדה, יתכן שניזוקה או שנמצאת בשימוש בתוכנה אחרת
+כשלון באתחול השילוב באינטרנט אקספלורר
+אתה בטוח?
+פעולה זו תמחוק את כל הורדות הקבוצה
+אישור
+שם קובץ
+גודל
+ירד
+זמן נותר
+חלקים
+מהירות
+הערה
+לוג
+התקדמות
+זמן
+תאריך
+מידע
+נקה
+גלול אוטומטית
+שגיאת רשת לא ידועה
+אין גישה, שם משתמש או סיסמה לא נכונים
+אין גישה, סיסמה לא נכונה
+הצליח
+לא יכול להתחבר לשרת
+הקובץ לא נמצא בשרת
+הקשר לשרת אבד
+השרת אינו מגיב
+לא מצליח למצוא את שם השרת
+השרת אינו תומך בשחזור הורדות, אל תעצור את ההורדה - אחרת תאלץ להתחיל להוריד מחדש
+שם משתמש וסיסמה דרושים עבור הפרוקסי
+שגיאה מורחבת
+בקשה שגויה, יתכן וזוהי כתובת לא נכונה
+שגיאת שרת לא ידועה
+החיבור הופסק
+כתובת שגויה
+אין חיבור לאינטרנט
+גירסת HTTP הנבחרת לא נתמכת על ידי השרת
+שגיאה לא ידועה
+לא יכול למחוק קובץ מהדיסק
+זוהי מגבלת החיבורים עבור שרת זה
+זוהי מגבלת החיבורים
+הפסק %d שניות
+חלק
+התחיל
+סיים
+הורדה הושלמה
+מתחבר...
+חיבור הצליח
+מפנה...
+הפניה הצליחה, פותח קובץ
+מתחיל בהורדה...
+נעצר
+יוצר חלק חדש...
+בוטל
+מתחיל הורדה מחדש...
+פותח קובץ על הדיסק...
+שם הקובץ ארוך מדי
+שם הקובץ קיים, שנה ל
+שנה ל
+קובץ הפלט נמחק, לא ניתן להמשיך
+הקובץ קיים, שכתב
+הקובץ קיים, מחדש הורדה
+הקובץ קיים
+כשלון בפתיחת קובץ מהדיסק
+גודל הקובץ שונה בשרת!
+מתכוונן לגודל החדש...
+לא יכול לשכתב את הקובץ
+שם הקובץ ישונה
+לא יכול להחליף שם הקובץ חזרה לשמו המקורי
+לא יכול לשמור קבוצות
+לא יכול לשמור הורדת
+חיבור בחיוג
+התחבר אל:
+חייג אוטומטית
+התחבר
+Choose dial-up entry here
+Check this box if you want dial-up to be started automatically at the next time
+חייג עכשיו
+Don't dial-up and close this dialog
+No dial-up entries found on this computer
+הקו תפוס
+Hardware failure
+No dial tone
+מחייג
+נסיון
+פותח פורט...
+Dialing to provider...
+Connected to remote computer
+Verifying user name and password...
+Connection speed is %d BPS
+התנתק
+חזרה
+User name and password are required
+שם משתמש:
+סיסמה:
+קבוצה:
+שמור לתיקיה:
+שמור בשם:
+התחל
+אוטומטית
+ידנית
+תזמן
+קדימות ההורדה
+מתקדם
+Address of the file you want to download
+Enter user name here
+Enter password here
+Check this box if the server requires authorization
+Name of the group to place download into. Groups help you to manage your downloads
+Folder to save downloads in
+New name for the downloaded file. Leave this field empty if you want to save file with its original name
+Short description of download
+This download will be started automatically as soon as possible
+FDM will not try to start this download automatically
+תזמן הורדה זו
+Configure download schedule
+Download priority. Downloads with higher priority will be started first. Downloads with less priority will be postponed
+View advanced settings for this download
+Entered URL is incorrect. Please check it
+Please enter user name
+Choose output folder
+כללי
+מידע כללי
+Download currently saved to the file:
+Name of the downloaded file
+URL of this download can't be changed
+This download is in the progress. Can't change file name
+Can't rename file
+File not found
+Path not found
+Invalid .exe format
+File is being used by another application
+Access denied
+Device is not ready
+Disk is full
+File name is invalid
+Login is required
+חיבור
+רשת
+שגיאות
+Pause between the connection attempts [in seconds]:
+Maximum number of attempts
+Timeout [in seconds]:
+Minimum size:
+Maximum number:
+Restriction of traffic for this download
+הגבל תנועת רשת
+Ignore all restrictions
+b
+Kb
+Mb
+s
+Enter the value greater than %d
+Please select dimension
+Waiting time of server reconnection in case of error
+Check this box if you want to limit the maximum number of unsuccessful downloading attempts
+Waiting time for the server response
+Minimum size of section. Download will not be splitted into sections with the less size
+Maximum number of sections. Download will not be splitted into greater number of sections
+Specify how much traffic (maximum) FDM will take for the download
+Ignore traffic restrictions and restriction for the maximum number of connections for this download
+You can specify value in bytes (b), kilobytes (Kb) or megabytes (Mb) in this field
+פרוטוקול
+Identify on server as:
+Referrer:
+Use HTTP 1.1
+Use cookies
+Use passive mode
+Transfer mode
+Binary
+ASCII for the files with the extensions:
+Specify how FDM will be identified with HTTP server
+This string will be send as Referrer field to HTTP server. As a rule, it is not required
+Check this box if you want FDM to use HTTP version 1.1
+Check this box if you want FDM to use cookies
+Check this box if you want FDM to use the passive mode for FTP servers. Sometimes it is necessary when working with firewalls
+Use the binary mode for FTP transfers. Set this mode if the file you downloading is not a text one
+Use the ASCII mode for FTP transfers. Set this mode if the file you downloading is a text one
+FDM will use the ASCII mode for the files with specified extensions. For the other files FDM will use the binary mode
+Proxy
+Get proxy settings
+From Microsoft Internet Explorer
+Specify manually
+Don't use any proxy
+הגדרות
+כתובת:
+פורט:
+Please enter proxy address
+Please enter proxy port
+FDM will take proxy settings from the Internet Explorer
+You specify proxy settings yourself
+FDM will not use proxy
+Choose type of servers for which you want to specify the proxy here
+Enter address of the proxy you want to use
+Enter proxy port here. As a rule, it is 3128, 1080 or 8080
+Check this box if proxy server requires authorization
+שונות
+קובץ מקומי
+If the file already exists:
+Reserve disk space for downloading file
+Additional file extension for uncompleted download:
+שרת אינטרנט
+Don't restart the download if resume is not supported by server
+If the file size was changed on server:
+עצור בשגיאות
+שאל
+שכתב
+שנה שם
+המשך
+התחל מחדש
+כוונן
+Please specify file extension
+Here you may specify what FDM should do if the file already exists on the disk
+Check this box if you want disk space to be reserved for download when one is started
+If it is checked FDM will append specified extension to a file name while downloading. When downloading is finished FDM renames file back to its original name
+FDM will not restart downloading if the remote server does not support resuming
+You may specify here what FDM should do if the file size was changed on server
+Check this box to stop download when the file was not found on server
+Check this box to stop download when user name or password is invalid
+מצבי שימוש ברשת תקשורת
+Select mode to configure:
+Maximum number of connections:
+Maximum number of connections per one server:
+Restriction of traffic:
+בלתי מוגבל
+Select traffic usage mode which you wish to configure here
+Check this box to limit the maximum number of connections
+Check this box to limit the maximum number of connections per one server
+Specify here FDM traffic (maximum) for downloading files
+כל ההורדות
+רשימת ההורדות
+שמור כל אחד אוטומטית
+min.
+When deleting incomplete download
+Automatically delete completed downloads
+אל תמחק קובץ
+מחק קובץ
+FDM saves the list of downloads automatically after specified time interval. It protects the list from possible hang-up of computer or power failure
+Specify here what FDM should do with the file on the disk when deleting incomplete download
+Check this box if you want to delete download automatically from the list when finished
+ניטור
+מוניטור
+לוח
+Monitor files with the extensions
+Ignore files with the extensions
+ALT must not be pressed
+ALT must be pressed
+Please specify extensions
+Check this box if you want FDM to catch clicks in the Internet Explorer
+Check this box if you want FDM to monitor your clipboard
+Monitor for files with specified extensions only
+Don't monitor files with the specified extensions 
+Monitor only if ALT is not pressed
+Monitor only if ALT is pressed
+אתחול
+טען באתחול המחשב
+הפעל ממוזער
+מערכת
+מזער לשורת התחלה
+כפתור סגירה ממזער החלון
+FDM יפתח אוטומטית עם עליית חלונות
+FDM ימוזער אחרי העליה
+When you click Minimize button FDM will be minimized to tray
+If checked, clicking on the Close button will be similar to the clicking on the Minimize button
+עדכן
+Address of update server
+FDM will check for new version automatically
+Network usage optimization Wizard
+Welcome to network usage optimization Wizard!
+This Wizard will help you to setup optimal settings for your type of connection. It will set the Downloader properties and default properties for the download.
+Please select connection type
+סיים
+Specify type of your Internet connection here
+Configure FDM for optimal working with your connection
+משימה
+זמן התחלה
+זמן התחלה הבא
+זמן התחלה האחרון
+Can't load the list of schedules. Possibly it was damaged or is being used by another application
+Can't load the Scheduler log
+Can't save the list of schedules
+Task "%s" was scheduled. Start it?
+Changing traffic usage mode to "%s"
+נתק
+כל החיבורים
+Change traffic usage mode to
+כבר
+התחל מחדש
+נתק
+פעם אחת
+א
+ב
+ג
+ד
+ה
+ו
+ש
+בימים:
+כל
+ימים
+שעות
+בעליית FDM
+כשהחיוג מצליח
+כשהחיוג נכשל
+When no active downloads
+When speed less or equal than %d BPS during %d
+When all downloads are in the error state during
+לעולם לא
+לא ידוע
+Successfully connected to "%s"
+Failed to connect to "%s"
+הפעלה הצליחה
+Out of memory
+Can't launch
+Schedule execution will cause exiting the program at startup. Schedule will be ignored
+Maximum dialing attempts
+Pause between attempts
+Hang up if connection speed is less than:
+נסה שוב
+לא יותר מ
+השתמש בחיבור
+אם הצליח
+פעמים
+נתק את כל החיבורים הפעילים
+חיבור לניתוק
+שם התוכנית:
+פרמטרים:
+סוג הכיבוי:
+חייב אפליקציות לצאת
+הפעל תוכנית
+הפעל חיבור בחיוג
+נתק חיבור
+שנה מצב שימוש בתקשורת
+צא
+כבה את המחשב
+הורדות להתחלה
+הורדות לעצירה
+יישומים
+כל הקבצים
+Sorry, this feature is available only in Windows 2000, XP and above
+Please enter program name
+Please select downloads
+Select traffic usage mode you want to be set at the task start
+Check this box if you want to limit the maximum number of unsuccessful dialing attempts 
+Time between the unsuccessful attempts
+Check this box to establish connection with the speed no less than the value you specified
+Specify here the value of minimum required connection speed
+FDM will attempt again to establish required connection if you check this box
+Check this box to limit the maximum number of unsuccessful attempts to establish connection
+Specify here required download(s)
+List of all available downloads
+Add selected download to the task list of downloads
+Remove selected download from the task list of downloads
+Specify program you want to launch here
+Find program on your computer
+Specify program arguments here
+Specify type of your session termination here
+Check this box to force terminating your session. It is useful if hanged applications are in the system. But in this case, all unsaved data will be lost
+Specify scheduled action here
+Check this box if you want FDM to hang up all active connections
+Specify connection to hang-up here
+בימים מסוימים
+ראשון
+שני
+שלישי
+רביעי
+חמישי
+שישי
+שבת
+באירוע
+במהלך
+מהירות נמוכה:
+min.
+דקות
+שעות
+ימים
+When downloading speed is too low
+When all downloads are in error state
+Please specify days
+Start the task at specified time
+Set the time to start task here
+Start the task at specified date
+Set the date to start task here
+Start the task in certain days of week
+Start the task every Sunday
+Start the task every Monday
+Start the task every Tuesday
+Start the task every Wednesday
+Start the task every Thursday
+Start the task every Friday
+Start the task every Saturday
+Start the task periodically
+This field allows you to specify the time interval in minutes, hours or days
+Start the task when some event happens
+Specify the event type here
+Enter time interval here
+Enter minimum required speed here
+Confirmation is required to execute the task
+Wait for confirmation during
+sec.
+If checked, FDM will ask you to confirm execution of this task
+If checked, FDM will wait for your confirmation during the specified time interval. If you will not react during this time the task will be started
+Address:
+Building the list of files to download
+Connecting to the server
+Trying to use user name and password stored in the Site Manager
+Retrieving list of files from server
+Connection with the server was lost. Trying to restore
+Building list
+Retrieve size and last modification date of files
+Using this parameter may dramatically decrease speed
+Check this box if you want FDM to query size and date of files on HTTP servers
+שם האתר
+חיבורים
+כניסה
+קבוצה
+Can't load the list of sites. Possibly it was damaged or is being used by another application
+Can't save the list of sites
+Maximum simultaneous connections:
+Default group for a new download from this site
+Use FTP passive mode
+Please enter site name
+Site with the same name already exists. Please enter another site name
+Number of maximum connections must be greater than 0
+Please select group
+Specify site name here
+Check this box to limit the maximum number of simultaneous connections to this server
+Check this box to add downloads from this server to selected group automatically 
+שאל את המשתמש
+אל תשאל שוב
+Disk write error
+File "%s" already exists on the disk. What to do?
+Don't ask you about this again. Your choice will be accepted by default
+Overwrite existing file
+שנה שם קובץ זה
+Resume downloading. (Downloading will be started at position equal to the size of existing file)
+עצור הורדה זו
+כן
+לא
+הורדה
+was deleted. Delete file on the disk too?
+Please enter a user name and a password
+Login to "%s"
+Send the user name and the password you specified to the server
+Don't connect to this server
+The size of "%s" was changed on the server. What to do?
+Restart download from the beginning
+Adjust download for the new file size. Not recommended
+נא המתן
+עדכן
+תיאור
+Update using:
+Checking for update
+You are already using the newest version
+מוריד
+Version %s build %s is available
+Full distributive of version %s (%s)
+Upgrade to version %s
+Upgrade to version %s (%s)
+FDM should be restarted. Restart now?
+עדכון הושלם
+Can't find updater
+Specify the update’s type here
+Update FDM using full distributive
+Update FDM using upgrade distributive
+Look for more information about update process
+What's new in this version?
+Start updating FDM now
+Cancel updating and close this dialog
+צור הורדות
+Select content
+Unselect content
+List of downloads to add
+Check the selected folder items to add them to download list
+Uncheck selected folder items not to add them to download list
+אודות FDM
+Copyright (c)
+כל הזכויות שמורות
+Registered to:
+Already updated. Restart is required
+Invalid user name or password
+Can't load history file
+Can't save history file
+הגדות ברירת מדל לעכביש HTML
+עכביש HTML
+עץ דפי רשת
+הורד את האתר
+הגדרות הורדת אתר
+התחל הורדה
+הפסק הורדה
+תזמן הורדה
+מחק
+פתח דף בדפדפן
+התחל הורדה אוטומטית
+כתובת אתר
+קבצים
+Delete downloads also?
+Can't load the list of web pages
+Can't save the list of web pages
+URL of web page or HTTP server you want to download from
+URL of web page or HTTP server from which downloading was started
+Name of the folder to save downloads in
+ספריית פלט
+דפי רשת
+דפים
+Extensions of web pages’ files with HTML code:
+Download web page styles
+Download web pages from other sites
+תמונטצ
+הורת תמונות
+הורד תמונות המקשרות לאתר אחר
+עומק ההורדה
+Extensions of web pages' files with HTML code. Web pages will be scanned for links of images and other pages to download
+If checked, web pages' style (CSS) will be downloaded also. Recommended
+If unchecked, web pages of other sites will not be downloaded. For example, if this box is unchecked and you started downloading from http://example.com/, then http://othersite.com/some.html will not be downloaded, but http://example.com/some.html will be downloaded
+If checked, web pages' images will be downloaded also
+If unchecked, web pages' images that link to other sites will not be downloaded
+Depth of downloading. For example, you started downloading from http://ex.com/index.html. There is the link to http://ex.com/some.html from http://ex.com/index.html. Then depth of http://ex.com/some.html will be 1. Setting depth to 0 will result downloading of content of start page only.
+Download files from web pages
+Download files from other sites
+Delete files with extension
+מופעל
+הורד
+אל תוריד
+קבצים בעלי סיומת:
+Check this box to download files from web pages
+Check this box to download files from other sites
+Check this box to ignore files with the specified extensions
+Files with the extensions, specified below, will be downloaded if checked
+Files with the extensions, specified below, will NOT be downloaded if checked
+ייצא הגדרות
+ייבא הגדרות
+Failed to launch Regedit.exe
+An error occurred while trying to export settings
+An error occurred while trying to import settings
+FDM registry files
+Elimination of images by extension
+images with the extensions:
+Check this box to ignore images with the specified extensions
+Images with the extensions, specified below, will be downloaded if checked
+Images with the extensions, specified below, will NOT be downloaded if checked
+Don't download this and delete
+Server doesn't support download resuming. Restart from the beginning
+Failed to open URL
+Sorry, unexpected error has occurred while trying to write to the registry
+Thank you for registration! Please restart FDM
+Download by Free Download Manager
+Download web site by Free Download Manager
+Add FDM to the Internet Explorer context menu
+Check this box to add items "Download by Free Download Manager" and "Download web site by Free Download Manager" to the Internet Explorer context menu (menu appears when you right click)
+Decrease traffic usage on browser activity
+Decrease by one level
+הפעל מצב קל
+Check this box to decrease the traffic usage automatically when you browsing the Internet. This allows you to browse much faster when FDM is downloading something
+Traffic usage mode will be decreased by one level. Heavy->Medium, Medium->Light
+Traffic usage mode will be changed to the Light one
+Valid for
+Valid for sub domains
+Check this box to use this record for downloading via HTTP
+Check this box to use this record for downloading via HTTPS
+Check this box to use this record for downloading via FTP
+Check this box to use this record for downloads from sub domains servers. For example, for the site http://site.com it will be http://some.site.com
+Please select one protocol at least
+Maximum number of running downloads
+Check this box if you want to limit the maximum number of downloads running at the same time
+התחל הורדה מחדש
+צור חלק נוסף
+עצור חלק אחד
+; context: [section x] - Stopped
+נעצר
+; tray menu
+קופסה נופלת
+;
+Can't find Opera Plugin directory. Do you wish to specify it manually?
+Can't find Netscape Plugin directory. Do you wish to specify it manually?
+Can't install Opera monitoring
+Can't uninstall Opera monitoring
+Can't install Netscape monitoring
+Can't uninstall Netscape monitoring
+Check this box if you want FDM to catch clicks in Opera
+Check this box if you want FDM to catch clicks in Netscape
+; create download dlg
+בדוק גודל
+; request a size of a download
+Request...
+Query size of a download from the server
+כן להכל
+לא להכל
+לוג מפורט
+If checked, FDM will show responses from the server
+Changes will be affected after you restart browser
+רשימת משימות
+רשימת קבצים
+רשימת אתרים
+רשימת דפים
+מוחק הורדות
+Building the list of downloads
+Create batch download
+מ:
+אל:
+שלב:
+Wildcard bytes:
+Results
+Sample:
+Sequence start number
+Sequence finish number
+Sequence step. For example, if it is 10, then sequence will be 0, 10, 20, ...
+Count of wildcard bytes. For example, if it is 1, then sequence will be 1, 2, 3. If it is 2, then sequence will be 01, 02, 03.
+Click here to look at the generated sequence
+Allow Internet Explorer to download if you pressed Cancel
+Check this if you want Internet Explorer to download file when you press Cancel in the "Create download" dialog
+Final sequence number must be greater then start one
+Please use (*) in the URL to specify template of URL
+Create the extension if file hasn't one
+Check this box to create specified extension for the file which hasn't it. For example if the file name is "file" and you specified "txt", result will be "file.txt"
+Show sizes in bytes only
+Check this box to show all sizes in bytes instead of kilobytes or megabytes
+Perform virus check
+Arguments:
+Extensions:
+Check this box to check downloaded files by antivirus automatically
+Specify the name of antivirus program here
+Specify the arguments for antivirus here
+Specify the extensions of downloaded files to be checked here
+Please enter antivirus name
+Name is invalid. Please check it
+Launching antivirus
+Disable task after execution
+Delete task after execution
+Check this box to disable task automatically after execution
+Check this box to delete task automatically after execution
+עבור אל
+הקודם
+Generate a file name automatically
+Check this box to generate a file name of download automatically 
+Save under the "htm" extension
+Check this box to save all web pages under "htm" extension
+Click this button to calculate summary size of all downloads
+Keep the server folders structure
+Check this button to keep the server's folders original structure. Otherwise all files of the server will be saved in one folder
+You have selected another folder. Set this folder as a default for this group? You can also change the default folder in the group's properties.
+; === ADDED LINES ===
+Download with such URL already exists. What to do?
+הפעל
+הפעל את הקובץ שירד
+גירסה
+לחץ כאן ליצירת קשר
+Click here to download the latest version
+Warning:  this computer program is protected by copyright law and international treaties. Unauthorized reproduction or distribution of this program, or any portion of it, may result in serve civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law.
+; === new version ===
+Download all by Free Download Manager
+Add list of downloads
+Remove selected
+This is the list of URLs to be added
+Click this button to remove all selected URLs from list
+Can't find Firefox Plugin directory. Do you wish to specify it manually?
+Can't install Firefox monitoring
+Can't uninstall Firefox monitoring
+Check this box if you want FDM to catch clicks in Mozilla Firefox
+Download selected by Free Download Manager
+מתחיל
+אתרים
+Active downloads
+There are no active downloads currently
+Notifications
+Use tray "balloons"
+Timeout
+Check this box to enable tray "balloon" notifications when an download stopped or finished. Note: this feature works only on Windows 2000/XP and above
+Automatically close the "balloon" after the expiration of this time
+אתרים חלופיים
+Automatically search for mirror URLs
+Maximum number of mirrors
+Calculate mirrors' speed
+Recalculate speed each
+Check this button to get FDM search for mirror URLs for each download automatically
+Limit the number of mirror URLs per download. This allows to reduce the mirrors' speed calculation time
+Check this button to get FDM calculate the spead of each mirror server
+Automatically recalculate the mirrors' speed through the specified time interval
+Don't search if the file size is less than
+FDM will not search for mirrors if the file size is less than size specified
+Don't search if the file size is unknown (Recommended)
+הוסף אתר חלופי
+חפש אתרים חלופיים
+Add mirror URL for this download manually
+Search for mirror URLs for this download with FileSearching.COM
+List of mirror URLs
+Server speed
+בשימוש
+Measure mirrors speed
+Measure mirrors servers' speed
+נתוני הורדות
+ממתין...
+Mirror URL for download
+File size exceeds 2GB. Such downloads are supported via FTP only
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+New Download
+Determine group for download automatically
+Set group to:
+Save download to its group's appropriate folder
+Check this box if you want download's group to be determined by extension of file or settings of Site Manager
+Set default group manually
+Check this box if you want download to be saved to its group's default folder (see Group's properties)
+Set default output folder manually
+; END
+; BEGIN: Monitoring page
+Silent monitoring
+Don't show "Create download" dialog when adding download from browser, if checked
+Customize
+Select menu items to display in Internet Explorer's context menu
+; END
+Choose menu items to show
+At least one menu item must be chosen
+Use sounds
+Check this button if you want to get FDM play sounds on some events (e.g. when download completed)
+Choose sound for each event
+; BEGIN : Customize sounds dialog
+Customize sounds
+Set sound
+Remove
+Test
+List of FDM's events and appropriate sounds. Here you can adjust FDM to play an sound when some event occured
+Download added - play sound when one or more downloads was added to the list of downloads
+Download completed - play sound when download was completed successfully.
+Download failed - play sound when an error occured while trying to download a file.
+Dialing succeded - play sound when Scheduler's task "Establish dial-up connection" was executed successfully.
+Dialing failed - play sound when Scheduler's task "Establish dial-up connection" failed due to some reason.
+Set sound for selected event
+Don't play sound when selected event occured
+Test selected sound
+Event
+Sound file
+No sound
+Download added
+Download completed
+Download failed
+Dialing succeded
+Dialing failed
+Sound files
+; END
+Searching for mirrors...
+Measuring mirrors' speed...
+Searching of mirrors was performed already
+Connecting search server...
+Getting results...
+There are %d mirrors found
+Mirror searching done
+Trying another mirror...
+There are no mirrors found
+Failed
+Mirrors speed was measured
+; BEGIN: History page
+היסטוריה
+Save history of links and folders
+Save history of folders only
+Keep records within
+Maximum number of records
+נקה היסטוריה
+FDM will save history of links and folders you typed
+FDM will save history of folders only
+FDM will delete records that exists in the history more than specified period of time
+Maximum number of records in the history. When number of records will exceed this value, FDM will delete oldest records
+Delete all records from the history
+; END
+ייבא
+ייצא
+Import list of URLs
+Export list of downloads
+קבצי טקסט
+Can't open a file
+Export all downloads
+Export all downloads in the list
+Export selected downloads
+Don't export completed downloads
+Append if the file exists already
+Invalid group name. Please don't use / or \ symbols.
+צא בסיום
+; BEGIN : Downloads History window
+נוסף
+נשמר אל
+; END
+סל מחזור
+; BEGIN: Recycle Bin
+תכונות
+נקה סל מחזור
+;END
+;BEGIN: Recycle Bin properties
+Don't place deleted downloads in Recycle Bin
+Keep maximum
+הורדות
+Don't keep completed downloads
+Ask for confirmation when deleting downloads
+Recycle Bin properties
+Check this button if you do not want to store deleted downloads in Recycle Bin
+Check this button if you want to limit number of deleted downloads stored in Recycle Bin
+Maximum number of downloads to store in Recycle Bin
+Check this button if you want completed downloads do not stored in Recycle Bin after deletion
+Check this button if you want to get FDM ask your confirmation when you trying to delete an download
+;END
+שחזר
+Restoring downloads...
+; History subitems
+היום
+אתמול
+השבוע
+החודש
+מותאם אישית...
+; end
+נקה היסטוריה
+Save history of downloads
+Save history of completed downloads only
+Check this button if you want to save history of your downloads
+Check this button if you want to store history of completed downloads only
+Downloads History settings
+Building list of History's records...
+; Download Was deleted
+נמחק
+בחר פרק זמן
+מצא
+מצא את הבא
+מצא את
+; BEGIN : Find dialog
+חפש ב
+שם קובץ מקומי
+Specify what you want to find here
+Search in file part of URL
+Search in whole URL
+Search in comment of download
+Search in the name and path of download's file on the local disk
+Setup advanced search settings
+; ADVANCED settings
+חפש ב
+Search in List of Downloads
+Search in History of Downloads
+Search with specified time
+Set
+Search in Recycle Bin
+Search with specified file size
+Minimal
+Maximal
+Search in List of Downloads
+Search in History of Downloads
+Search only downloads that satifies the time range specified
+Set the time range
+Search in Recycle Bin
+Search only files that satisfies the file size range specified
+Minimal size required
+Maximal size required
+Search in group
+Choose the group where the searching will be performed
+; END
+Searching download...
+There are no items found
+There are no more items found
+Find done
+URL to clipboard
+

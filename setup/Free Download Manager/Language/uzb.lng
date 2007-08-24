@@ -1,0 +1,1247 @@
+; Translator - Sherzod Mamatkulov, 2006
+;
+
+; Your language name. Please keep it in English
+;
+Uzbek
+;
+;
+; Below are the strings to translate:
+;
+Barchasini saqla
+Qirqish
+Nusxalash
+Qo'yish
+Yengil uslub
+O'rtacha uslub
+Og'ir uslub
+Download tanlovlari
+Dial-up aloqa
+FDM haqida
+Chiqish
+Fayl
+Tahrir
+Ko'rinish
+Tanlovlar
+Asboblar
+Yordam
+Uskunalar majmuasi
+Holat satri
+Optimallash sehrgari
+Odatiy download sharoiti 
+Umumiy sharoit
+Dial-up aloqa
+Tugallangach aloqani uz
+Tugallangach kompyuterni o'chir
+Yordam oynasini ochish
+FDM uy sahifasi
+Og'aynilarga aytish
+Support jamoasiga e-mail jo'natish
+Avtomatik ravishda apdeytni tekshir
+Apdeytni hozir tekshirish
+-
+-
+Ushbu sahifani ko'rsat
+Trafik ishlatish uslubi
+Registratsiya
+Downloadlar
+Jadval
+Sayt kezuvchi
+HTTP//FTP Explorer
+Sayt menejeri
+Download qo'shish
+Downloadni boshlash
+Downloadni to'xtatish
+Downloadni jadvalga qo'shish
+Vazifa qo'shish
+Vazifa xossalari
+Tanlangan fayllarni download qilish
+To'xtat
+Yangilash
+Sayt qo'shish
+Sayt xossalari
+Downloadlar guruhi
+Download ma'lumoti
+Jadval logi
+Sayt kezuvchi logi
+Yon tomondagi panel
+Yangi download yaratish
+Downloadni o'chir
+Faylni och
+Papkani och
+Downloadni avtomatik ravishda boshla
+Download xossalari
+Vazifani ishga tushir
+Vazifani to'xtat
+Vazifani o'chirib tashla
+Parent papkani och
+Uzilish
+Download
+Sayt kezuvchi sharoiti
+Saytni o'chirib tashla
+Vaqtinchalik ibora
+Saytlar
+Asosiy oynani ko'rsat
+Brouzerni nazorat qil
+Clipboardni nazorat qil
+Barcha downloadlarni boshla
+Barcha downloadlarni to'xtat
+-
+Davom et
+-
+-
+-
+-
+-
+Bekor
+-
+-
+-
+Guruhlar
+Filtrlar
+Tugallangan
+Ketayotgan
+Jadvaldagi
+To'xtatilgan
+Boshqa
+Yangi guruh yaratish
+Guruhni o'chirib tashla
+Barcha downloadlarni o'chirib tashla
+Barcha tugallangan downloadlarni o'chirib tashla
+Guruh papkasini och
+Guruh xossalari
+Guruh nomi:
+Odatiy papka:
+Fayl kengaytmalari [bo'shliq bilan ajratilgan]:
+Download odatiy dolzarbligi
+O'ta past
+Past
+O'rtacha
+Yuqori
+O'ta yuqori
+Marhamat qilib guruh nomini kiriting
+Kiritishda xatolik yuz berdi
+Xuddi shu nomli guruh oldindan mavjud. Marhamat qilib boshqa nom kiriting
+Marhamat qilib papka nomini kiriting
+Odatiy guruh papkasini tanlang
+Buyerga guruh nomini kiriting
+Ushbu guruhdagi downloadlarni saqlash uchun odatiy papka
+Belgila
+Bu guruh uchun fayl kengaytmasi. Downloadning guruhini avtomatik ravishda aniqlash uchun ishlatiladi
+Bu guruh uchun download odatiy dolzarbligi
+O'zgarishlarni bekor qilib, oynani yopish
+O'zgarishlarni qo'llash va oynani yopish
+Download guruhlarida xatolik yuz berdi
+Marhamat qilib FDMni qaytadan o'rnating
+Xato
+Downloadlar ro'yxatini yuklay olmadim. U shikastlangan yoki boshqa dastur tomonidan ishlatilayotgan bo'lishi mumkin
+Internet Explorer integratsiyasini boshlash amalga oshmadi
+Bunga aminmisiz?
+Barcha guruh downloadlari o'chirib tashlanadi
+Tasdiq
+Fayl nomi
+Hajmi
+Olindi
+Qolgan vaqt
+Bo'laklar
+Tezlik
+Sharh
+Logga yozib ol
+Rivoj
+Vaqt
+Sana
+Ma'lumot
+Tozala
+Avto scroll
+Tarmoqda noma'lum xato yuz berdi
+Kirish taqiqlandi. Yuzer nomi yoki parol yaroqsiz
+Kirish taqiqlandi. Parol yaroqsiz
+Amalga oshdi
+Serverga ulanishning iloji yo'q
+Fayl serverda topilmadi
+Server bilan aloqa yo'qoldi
+Server javob bermayapti
+Server nomini yecha olmadim
+Server downloadlarni davomlay olmaydi. Bu downloadni to'xtatmang; aks holda uni boshidan qayta boshlashingizga to'g'ri keladi
+Proksi uchun yuzer nomi va parol kerak
+Kengaytirilgan xato
+Talab noma'lum. URL yaroqsiz bo'lishi mumkin
+Serverda noma'lum xato yuz berdi
+Aloqa uzildi
+URL yaroqsiz
+Internet aloqasi yo'q
+Tanlangan HTTP versiyasi bilan ushbu server ishlay olmaydi
+Noma'lum xato
+Faylni diskdan o'chira olmadim
+Bu serverga ulanishlar limitiga yetildi
+Ulanishlar limitiga yetildi
+%d sekund pauza.
+Bo'lak
+Boshlandi
+Tayyor
+Download tamomlandi
+Ulanilmoqda...
+Ulanish amalga oshdi
+Qayta yo'naltirilmoqda...
+Qayta yo'naltirish amalga oshdi. Yangi URL ochilmoqda
+Download boshlanmoqda...
+To'xtatildi
+Yangi bo'lak yaratilmoqda...
+Bekor qilindi
+Download qayta boshlanmoqda...
+Fayl diskdan ochilmoqda...
+Fayl nomi haddan tashqari uzun
+Fayl oldindan mavjud. Bunga qayta nomla
+Bunga qayta nomla
+Natijaviy fayl o'chirilgan. Davom etishning iloji yo'q
+Fayl oldindan mavjud. Ustidan yoz
+Fayl oldindan mavjud. Download davomlanmoqda
+Fayl oldindan mavjud
+Faylni diskdan ocholmadim
+Fayl hajmi serverda o'zgargan!
+Yangi hajmga moslashtirilmoqda...
+Faylni ustidan yozolmadim
+Fayl qayta nomlanadi
+Faylni original nomiga qayta nomlay olmadim
+Guruhlarni saqlay olmadim
+Downloadlarni saqlay olmadim
+Dial-up aloqa
+Ushbu aloqaga ulan:
+Avtomatik ravishda raqamni ter
+Ulanish
+Buyerda dial-up aloqasini tanlang
+Keyingi gal avtomatik ravishda raqam terilishini xohlasangiz, buni belgilang
+Raqamni hozir ter
+Raqam termasdan dialogni yop
+Bu kompyuterda hechqanday dial-up aloqasi topilmadi
+Liniya band
+Hardware pand berdi
+Raqam terganda ton chiqmayapti
+Raqam terilmoqda
+Urinish
+Port ochilmoqda...
+Provayder raqami terilmoqda...
+Masofaviy kompyuterga ulanildi
+Yuzer nomi va parol tekshirilmoqda...
+Ulanish tezligi %d BPS
+Uzilish
+Qayta urinish
+Yuzer nomi va parol kerak
+Yuzer:
+Parol:
+Guruh:
+Ushbu papkaga saqla:
+Bu nomda saqla:
+Boshlash
+Avtomatik ravishda
+Qo'lda
+Jadvalga asosan
+Download dolzarbligi
+Ilg'or
+Download qilinadigan fayl manzili
+Yuzer nomini buyerga kiriting
+Parolni buyerga kiriting
+Serverga tanitish kerak bo'lsa buni belgilang
+Downloadni qo'yish uchun guruhning nomi. Guruhlar sizga downloadlarni boshqarishda yengillik tug'diradi
+Downloadlarni saqlashga papka
+Download qilingan fayl uchun yangi nom. Faylni original nomi bilan saqlamoqchi bo'lsangiz bu joyni bo'sh qoldiring
+Downloadning qisqa ta'rifi
+Bu download imkon tug'ilishi bilanoq darhol boshlanadi
+FDM bu downloadni avtomatik ravishda boshlashga urinmaydi
+Bu downloadni jadvalga qo'sh
+Download jadvalini sozlash
+Download dolzarbligi. Yuqoriroq dolzarblikdagi downloadlar birinchi bo'lib boshlanadi. Pastroq dolzarblikdagi downloadlar qoldirib turiladi
+Bu download uchun ilg'or sharoitni ko'rish
+Kiritilgan URL noto'g'ri. Tekshirib ko'ring
+Marhamat qilib yuzer nomini kiriting
+Faylni saqlashga papka tanlang
+Umumiy
+Umumiy ma'lumot
+Download ushbu faylga saqlanadi:
+Download qilingan fayl nomi
+Bu download URLini o'zgartirish mumkin emas
+Bu download ketmoqda. Faylni nomini o'zgartirib bo'lmaydi
+Faylni qayta nomlay olmadim
+Fayl topilmadi
+Yo'lak topilmadi
+Yaroqsiz .exe formati
+Fayl boshqa dastur tomonidan ishlatilmoqda
+Kirish taqiqlangan
+Qurilma tayyor emas
+Disk to'lgan
+Fayl nomi yaroqsiz
+Tanitish talab qilinadi
+Aloqa
+Tarmoq
+Xatolar
+Ulanishga urinishlar orasidagi pauza [sekundda]:
+Qayta urinishlar maksimum soni
+Vaqt tugashi [sekundda]:
+Minimum hajmi:
+Maksimum soni:
+Bu download uchun trafikni cheklash
+Trafikni ushbu miqdorga chekla
+Hechqanday cheklovlarni inobatga olma
+B
+KB
+MB
+s
+%d dan yuqoriroq qiymat kiriting
+Marhamat qilib o'lchamni kiriting
+Xato yuz berganda serverga qayta ulanishni kutish vaqti
+Buni belgilash orqali download amalga oshmasa qayta urinishlar sonini cheklsh mumkin
+Server javobini kutishga ajratilgan vaqt
+Bo'lakning minimum hajmi. Bundan kichikroq hajmdagi download bo'laklarga bo'linmaydi
+Bo'laklar maksimum soni. Download bundan ko'p bo'laklarga bo'linmaydi
+FDM download uchun qancha trafik (maksimum) ishlatishini tayinlang
+Bu download uchun trafik cheklovlari va ulanishlar maksimum soniga oid cheklovlarni inobatga olma
+Buyerda qiymatni baytda (B), kilobaytda (KB) yoki megabaytda (MB) ko'rsatish mumkin
+Protokol
+Serverda quyidagicha tanishtir:
+Yo'naltiruvchi:
+HTTP 1.1 ishlat
+Cookielardan foydalan
+Passiv uslubni ishlat
+Oldi-berdi uslubi
+Ikkilik
+Quyidagi kengaytmali fayllar uchun ASCII:
+FDM o'zini HTTP serveriga qanday tanishtirishini tayinlang
+Bu satr HTTP serveriga yo'naltiruvchi sifatida jo'natiladi. Qoidaga ko'ra bu shart emas
+Buni belgilasangiz, FDM HTTP 1.1 versiyasini ishlatadi
+Buni belgilasangiz, FDM cookielardan foydalanadi
+Buni belgilasangiz, FDM FTP serverlar uchun passiv uslubni ishlatadi. Bu ba'zida firewall bilan ishlashda kerak
+FTP oldi-berdi uchun ikkilik uslubini ishlatish. Olinadigan fayl matnli bo'lmasa buni belgilang
+FTP oldi-berdi uchun ASCII uslubini ishlatish. Olinadigan fayl matnli bo'lsa buni belgilang.
+FDM berilgan kengaytmalar bilan ASCII uslubini ishlatadi. Qolgan fayllar uchun esa ikkilik uslubi ishlatiladi
+Proksi
+Proksi sharoitini bundan ol
+Microsoft Internet Explorer
+Qo'lda tayinlash
+Hechqanday proksi ishlatma
+Sharoit
+Manzil:
+Port:
+Marhamat qilib proksi manzilini kiriting
+Marhamat qilib proksi portini kiriting
+FDM proksi sharoitini Internet Explorerdan oladi
+Proksi sharoitni o'zingiz tayinlaysiz
+FDM proksidan foydalanmaydi
+Proksi tayinlanadigan serverlar turini tanlang
+Ishlatiladigan proksining manzilini kiriting
+Buyerga proksi portini kiriting. Qoidaga ko'ra u 3128, 1080 yoki 8080 bo'ladi
+Proksiga tanitish zarur bo'lsa buni belgilang
+Har-xil
+Lokal fayl
+Fayl oldindan mavjud bo'lsa:
+Olinayotgan fayl uchun diskda joy tayyorlab qo'y
+Tugallanmagan download uchun qo'shimcha kengaytma:
+Internet server
+Server davomlay olmasa downloadni qaytadan boshlama
+Fayl hajmi serverda o'zgartirilgan bo'lsa:
+Quyidagi xatolar yuz berganda to'xtat
+So'ra
+Qayta yoz
+Qayta nomla
+Davomla
+Qayta boshla
+Moslashtir
+Marhamat qilib fayl kengaytmasini bering
+Buyerda fayl diskda oldindan mavjud bo'lgan holda FDM nima qilishi lozimligini tayinlash mumkin
+Download boshlanishi bilanoqa unda diskda bo'shliq egallab qo'yilishi uchun buni belgilang
+Buni belgilasangiz, FDM faylni olayotganda unga ko'rsatilgan kengaytmani qo'shadi. Download tugallangach, FDM fayl nomini original nomga qayta nomlaydi
+Masofaviy server davomlay olmasa FDM downloadni qaytadan boshlamaydi
+Buyerda fayl hajmi serverda o'zgarganda FDM nima qilishi lozimligini tayinlash mumkin
+Fayl serverda topilmaganda downloadni to'xtatish uchun buni belgilang
+Yuzer nomi yoki parol yaroqsiz bo'lganida downloadni to'xtatish uchun buni belgilang
+Trafikni ishlatish uslublari
+Sozlanadigan uslubni tanlang:
+Ulanishlar maksimum soni:
+Bitta serverga ulanishlarning maksimum soni:
+Trafikni cheklash
+cheklanmagan
+Buyerda siz sozlashni istagan trafikni ishlatish uslubini tanlang
+Ulanishlarning maksimum sonini cheklash uchun buni belgilang
+Bitta serverga ulanishlar maksimum sonini cheklash uchun buni belgilang
+Buyerda fayllarni download qilish uchun FDMga (maksimum) trafikni tayinlang
+Barcha downloadlar
+Downloadlar ro'yxati
+Avtomatik ravishda saqla, har
+min.
+Tugallanmagan downloadlarni o'chirishda
+Tugallangan downloadlarni avtomatik ravishda o'chirib tashla
+Faylni o'chirma
+Faylni o'chirib tashla
+FDM tayinlangan vaqt oralig'ida avtomatik ravishda downloadlar ro'yxatini saqlab qo'yadi. Bu kompyuter osilib qolganda yoki tok o'chib qolganda yordam beradi
+Tugallanmagan downloadni o'chirayotganda FDM diskdagi faylni nima qilishini buyerda tayinlang
+Download tugallangach uni avtomatik ravishda ro'yxatdan olib tashlash uchun buni belgilang
+Nazorat
+Nazorat qilish
+Clipboardni nazorat qil
+Ushbu kengaytmali fayllarni nazorat qil
+Bu kengaytmali fayllarga e'tibor berma
+ALT bosilmagan bo'lishi kerak
+ALT bosilishi shart
+Marhamat qilib kengaytmalarni ko'rsating
+FDM Internet Explorerdan kliklarni tutishini istasangiz buni belgilang
+FDM clipboardni nazorat qilishini istasangiz buni belgilang
+Faqat tayinlangan kengaytmali fayllarni nazorat qilish
+Ko'rsatilgan kengaytmali fayllarni nazorat qilmaslik
+Faqat ALT bosilmagan bo'lsa nazorat qil
+Faqat ALT bosilgan bo'lsa nazorat qil
+Boshlanish
+Tizim boshlanishida dasturni ham yukla
+Dasturni minimized holda boshla
+Tizim
+Trayga minimize qil
+Yopish tugmasi oynani minimize qiladi
+Windows boshlanganida FDM avtomatik ravishda boshlanadi
+FDM boshlanganidan keyin minimize qilinadi
+Minimize tugmasi bosilganda FDM trayga minimize qilinadi
+Bu belgilansa, Yopish tugmasini bosish Minimize tugmasini bosish bilan bir xil natijaga ega bo'ladi
+Apdeyt
+Apdeyt serverining manzili
+FDM yangi versiyani avtomatik ravishda tekshiradi
+Tarmoqdan foydalanishni optimallash sehrgari
+Tarmoqdan foydalanishni optimallash sehrgariga xush kelibsiz!
+Bu sehrgar sizning aloqa turingiz uchun optimal sharoitni sozlashga yordam beradi. U Downloader xossalari va odatiy download xossalarini tayinlaydi.
+Marhamat qilib aloqa turingizni tanlang
+Tamom
+Marhamat qilib buyerda Internet aloqangiz turini ko'rsating
+FDM sizning aloqangiz bilan optimal ishlashi uchun sozlash
+Vazifa
+Boshlash vaqti
+Keyingi boshlash vaqti
+Oxirgi boshlash vaqti
+Jadvallar ro'yxatini yuklay olmadim. U shikastlangan yoki boshqa dastur tomonidan ishlatilayotgan bo'lishi mumkin
+Jadval logini yuklay olmadim
+Jadvallar ro'yxatini saqlay olmadim
+"%s" vazifa jadvalga qo'yildi. Uni boshlaymizmi?
+Trafikni ishlatish uslubi "%s"ga qo'yilmoqda
+Go'shakni qo'yib qo'y
+Barcha ulanishlar
+Trafikni ishlatish uslubini bunga o'zgartir
+Kompyuterni o'chir
+O'chirib qayta yoq
+Logoff
+Bir marta
+Dsh
+Ssh
+Chr
+Psh
+Jum
+Shn
+Yak
+Bu kunlarda:
+Har
+kun
+soat
+FDM boshlanganida
+Raqam terish amalga oshganda
+Raqam terish amalga oshmaganda
+Faol downloadlar mavjud bo'lmagan paytda
+Tezlik %d dan kam yoki teng BPS bo'lsa (%d chog'ida)
+Bu mobaynida barcha downloadlar xato holatida bo'lganda
+Hechqachon
+Noma'lum
+Muvaffaqiyatli tarzda "%s"ga ulanildi
+"%s" ga ulanish amalga oshmadi
+Ochish amalga oshdi
+Xotira yetmadi
+Ocha olmadim
+Jadval bajarilsa boshlanishda dasturdan chiqiladi. Jadval inobatga olinmaydi
+Raqam terishga urinish maksimum soni
+Urinishlar orasidagi pauza
+Aloqa tezligi bundan past bo'lsa go'shakni qo'y:
+Qayta urin
+Bundan ko'p emas
+Aloqani ishlat
+Agar muvaffaqiyatli tarzda
+marta
+Barcha faol ulanishlarni uzib qo'y
+Uzib qo'yiladigan aloqa
+Dastur nomi:
+Argumentlar:
+O'chirib qo'yish turi:
+Dasturlarni yopilishga majburla
+Dasturni och
+Dial-up aloqa o'rnat
+Aloqani uzib qo'y
+Trafikni ishlatish uslubini o'zgartir
+FDMdan chiq
+Kompyuterni o'chir
+Boshlanadigan downloadlar
+To'xtatiladigan downloadlar
+Dasturlar
+Barcha fayllar
+Uzr, bu xususiyat faqat Windows 2000, XP va yangiroqlarda mavjud
+Marhamat qilib dastur nomini kiriting
+Marhamat qilib downloadlarni tanlang
+Vazifa boshlanganda qo'yiladigan trafik ishlatish uslubini tanlang
+Raqam terishga urinishlar maksimum sonini cheklamoqchi bo'lsangiz buni belgilang
+Urinishlar orasidagi vaqt
+Siz ko'rsatgan qiymatdan kam bo'lmagan tezlikda aloqa o'rnatish uchun buni belgilang
+Buyerda minimum aloqa tezligini ko'rsating
+Buni belgilasangiz, FDM keraki aloqani o'rnatish uchun qaytadan urinib ko'radi
+Buni belgilab aloqani o'rnatishga urinishlarning maksimum sonini cheklash mumkin
+Buyerda kerakli download(lar)ni ko'rsating
+Barcha mavjud downloadlarni ro'yxatla
+Tanlangan downloadni vazifa ro'yxatiga qo'sh
+Tanlangan downloadni vazifa ro'yxatidan olib tashla
+Buyerda ochmoqchi bo'lgan dasturni tanlang
+Dasturni kompyuteringizda topish
+Buyerda dastur argumentlarini ko'rsating
+Buyerda sessiyani tugallash turini ko'rsating
+Sessiyangizni majburan to'xtatish uchun buni belgilang. Bu tizimda osilib qolgan dasturlar bor bo'lganda foydali. Lekin bu holda barcha saqlanmagan datadan mahrum bo'lasiz
+Buyerda jadvalga qo'yilgan amalni tayinlang
+FDm barcha faol aloqalarni uzib qo'yishini xohlasangiz buni belgilang
+Buyerda uzib qo'yiladigan aloqani tayinlang
+Muayyan kunlari
+Yakshanba
+Dushanba
+Seshanba
+Chorshanba
+Payshanba
+Juma
+Shanba
+Ushbu voqeada
+Bu davomida
+Past tezlik:
+min.
+Minut
+Soat
+Kun
+Download qilish tezligi o'ta past bo'lganda
+Barcha downloadlar xato holatiga bo'lganda
+Marhamat qilib kunlarni tayinlang
+Vazifani tayinlangan vaqtda boshla
+Buyerda vazifa boshlanadigan vaqtni qo'ying
+Vazifani muayyan sanada boshla
+Buyerda vazifa boshlanadigan kunni qo'ying
+Vazifani haftaning muayyan kunlari boshla
+Vazifani har Yakshanba kuni boshla
+Vazifani har Dushanba kuni boshla
+Vazifani har Seshanba kuni boshla
+Vazifani har Chorshanba kuni boshla
+Vazifani har Payshanba kuni boshla
+Vazifani har Juma kuni boshla
+Vazifani har Shanba kuni boshla
+Vazifani vaqti-vaqti bilan boshla
+Buyerda vaqt oralig'ini minutda, soat yoki kunlarda tayinlashingiz mumkin
+Vazifani bironta voqea ro'y berganda boshla
+Buyerda voqea turini tayinlang
+Buyerda vaqt oralig'ini kiriting
+Buyerda shart bo'lgan eng past tezlikni kiriting
+Vazifa boshlanishdan oldin tasdiqlanishi lozim
+Tasdiq dialogini buncha vaqtga kut
+sek.
+Bu belgilansa, FDM sizdan vazifani boshlashni tasdiqlashingizni so'raydi
+Bu belgilansa, FDM berilgan vaqt oralig'ida sizdan tasdiq kutadi. Bu vaqt mobaynida siz bironta harakat qilmasangiz, vazifa boshlanadi
+Manzil:
+Download qilishga fayllar ro'yxati tuzilmoqda
+Serverga ulanilmoqda
+Sayt menejerida saqlangan yuzer nomi va parolni ishlatishga urinilmoqda
+Serverdan fayllar ro'yxati olinmoqda
+Serverga aloqa yo'qoldi. Tiklashga urinilmoqda
+Ro'yxat tuzilmoqda
+Fayllarning hajmi va oxirgi o'zgargan vaqtini ol
+Bu parametrni ishlatsangiz tezlik ancha kamayishi mumkin
+Buni belgilasangiz, FDM HTTP serverlardan fayllarning hajmi va sanasini oladi
+Sayt nomi
+Ulanishlar
+Login
+Guruh
+Saytlar ro'yxatini yuklay olmadim. U shikastlangan yoki boshqa dastur tomonidan ishlatilayotgan bo'lishi mumkin
+Saytlar ro'yxatini saqlay olmadim
+Bir vaqtning o'zidagi ulanishlar maksimum soni:
+Bu saytdan olinadigan yangi download uchun odatiy guruh
+FTP passiv uslubni ishlat
+Marhamat qilib sayt nomini kiriting
+Xuddi shu nomli sayt oldindan mavjud. Marhamat qilib sayt uchun boshqa nom kiriting
+Maksimum ulanishlar soni 0 dan kattaroq bo'lishi shart
+Marhamat qilib guruhni tanlang
+Buyerda sayt nomini ko'rsating
+Bu serverga bir vaqtning o'zidagi ulanishlar maksimum sonini cheklash uchun buni belgilang
+Bu serverdan downloadlarni avtomatik tarzda tanlangan guruhga qo'shish uchun buni belgilang
+Yuzerdan so'rash
+Mendan boshqa so'rama
+Diskka yozishda xato yuz berdi
+"%s" fayli diskda oldindan mavjud. Nima qilmoq kerak?
+Bu haqda sizdan boshqa so'ramaslik. Tanlaganingiz odatiy tarzda qabul qilinadi
+Mavjud faylning ustidan yozib yubor
+Bu faylni qayta nomla
+Downloadni davomla. (Mavjud faylning hajmiga teng nuqtadan boshlab olish boshlanadi)
+Bu downloadni to'xtat
+Ha
+Yo'q
+Bu download
+o'chirildi. Diskdagi faylni ham o'chirib tashlaymi?
+Marhamat qilib yuzer nomi va parolni kiriting
+"%s" ga login qilish
+Siz bergan yuzer nomi va parolni serverga uzatish
+Bu serverga ulanma
+Serverda "%s" hajmi o'zgargan. Nima qilmoq kerak?
+Downloadni boshidan qayta boshla
+Downloadni faylning yangi hajmiga moslashtir. Tavsiya etilmaydi
+Kutib turing
+Apdeyt
+Ta'rif
+Bu bilan yangila:
+Apdeyt tekshirilmoqda
+Sizda versiya eng yangisi
+Olinmoqda
+%s versiyasi %s nashr chiqarilgan
+%s (%s) versiyaning to'liq distributivi
+%s versiyasiga yangila
+%s (%s) versiyasiga yangila
+FDMni qayta boshlash lozim. Hozir yopib ochaymi?
+Yangilash amalga oshdi
+Yangilovchini topolmadim
+Buyerda yangilovchi turini ko'rsating
+FDMni to'liq distributiv yordamida yangila
+FDMni yangilash distributivi yordamida yangila
+Apdeyt jarayoni haqida kengroq ma'lumot uchun buyerga qarang
+Bu versiyada nimalar yangi?
+FDMni yangilashni boshla
+Yangilashni bekor qilib, dialogni yop
+Downloadlar yarat
+Tarkibni tanla
+Tarkibni tashla
+Qo'shiladigan downloadlar ro'yxati
+Tanlangan papka qismlarini download ro'yxatiga qo'shish uchun ularni belgilang
+Tanlangan papka qismlarini download ro'yxatiga qo'shmaslik uchun belgilarini olib tashlang
+FDM haqida
+Copyright (c)
+Barcha huquqlar himoyalangan
+Dastur egasi:
+Yangilangan. Qayta boshlash lozim
+Yuzer nomi yoki parol yaroqsiz
+Tarix faylini yuklay olmadim
+Tarix faylini saqlay olmadim
+HTML o'rgimchagi odatiy sharoiti
+HTML o'rgimchagi
+Web sahifalar daraxti
+Web saytni download qilish
+Web sahifani download qilish sharoiti
+Olishni boshla
+Olishni to'xtat
+Olishni jadvalga qo'y
+O'chir
+Web sahifani brouzerda och
+Olishni avtomatik tarzda boshla
+Web sayt (sahifa) URLi
+Fayllar
+Downloadlarni ham o'chirib tashlaymi?
+Web sahifalar ro'yxatini yuklay olmadim
+Web sahifalar ro'yxatini saqlay olmadim
+Siz download qilmoqchi bo'lgan web sahifa yoki HTTP serverining URLi
+Download boshlangan web sahifa yoki HTTP serverining URLi
+Olingan fayllar saqlanadigan papka nomi
+Chiqarish papkasi:
+Web sahifalar
+Sahifalar
+HTML kodli web sahifalarining kengaytmalari:
+CSS fayllarini ham ol
+Boshqa saytlardan web sahifalarni ol
+Rasmlar
+Rasmlarni ol
+Boshqa saytlarga ulangan rasmlarni ol
+Download qilish chuqurligi:
+HTML kodli web sahifalarining kengaytmalari. Web sahifalaridan rasm va olinadigan boshqa sahifalarga ulanmalar izlanadi
+Bu belgilansa, CSS fayllari ham olinadi. Tavsiya etiladi
+Bu belgilanmasa, boshqa saytlarning web sahifalari olinmaydi. Misol uchun, bu belgilanmaganda siz http://example.com/ dan olishni boshlasangiz, http://othersite.com/some.html olinmaydi, lekin http://example.com/some.html olinadi
+Bu belgilansa, web sahifalarining rasmlari ham olinadi
+Bu belgilanmasa, boshqa saytlarga ulanma qilingan rasmlar olinmaydi
+Download qilish chuqurligi. Misol uchun, siz http://ex.com/index.html dan olishni boshladingiz. Uyerda http://ex.com/some.html ga ulanma qo'yilgan. Bunda http://ex.com/some.html chuqurligi 1 bo'ladi. Chuqurlik Oga qo'yilsa faqat boshidagi sahifa tarkibigina olinadi.
+Web sahifalardan fayllarni ol
+Boshqa saytlardan fayllarni ol
+Ma'lum kengaytmali fayllarni tanlab olish
+Ishga tushir
+Ko'chirib ol
+Ko'chirib olma
+ushbu kengaytmali fayllarni:
+Sahifalardan fayllarni download qilish uchun buni belgilang
+Boshqa saytlardan fayllarni download qilish uchun buni belgilang
+Ko'rsatilgan kengaytmali fayllarni inobatga olmaslik uchun buni belgilang
+Bu belgilansa quyida ko'rsatilgan kengaytmali fayllar download qilinadi
+Bu belgilansa quyida ko'rsatilgan kengaytmali fayllar download qilinMAYdi
+Sharoitni eksport qil
+Sharoitni import qil
+Regedit.exe faylini ochish amalga oshmadi
+Sharoitni eksport qilish chog'ida xato yuz berdi
+Sharoitni import qilish chog'ida xato yuz berdi
+FDM registry fayllari
+Rasmlarni kengaytma bo'yicha tanlab olish
+ushbu kengaytmali rasmlarni:
+Ko'rsatilgan kengaytmali rasmlarni inobatga olmaslik uchun buni belgilang
+Bu belgilansa quyida ko'rsatilgan kengaytmali rasmlar download qilinadi
+Bu belgilansa quyida ko'rsatilgan kengaytmali rasmlar download qilinMAYdi
+Buni download qilmasdan o'chirib tashla
+Server olishni davomlay olmaydi. Boshidan qayta boshlang
+URLni ochish amalga oshmadi
+Uzr, registryga yozish chog'ida kutilmagan xato yuz berdi
+Qayd qilganingiz uchun rahmat! Marhamat qilib FDMni qayta boshlang
+Free Download Manager bilan ol
+Web saytni Free Download Manager bilan ol
+FDMni Internet Explorer kontekst menyusiga qo'sh
+Buni belgilasangiz, Internet Explorer kontekst menyusiga (o'ng-klikda paydo bo'ladigan) "Free Download Manager bilan ol" va "Web saytni Free Download Manager bilan ol" bandlari qo'shiladi
+Brouzer harakatida trafikni ishlatishni quyidagicha kamaytir
+Bir bosqich kamaytir
+Yengil uslubga o'tkaz
+Buni belgilasangiz, Internetni kezish boshlanganida avtomatik ravishda trafik ishlatish kamayadi. Shunda brouzerda kezish tezligi ancha ortadi
+Trafikni ishlatish uslubi bir bosqich kamayadi. Og'ir->O'rtacha, O'rtacha->Yengil
+Trafikni ishlatish uslubi Yengilga o'tadi
+Bunga yaroqli
+Sub domainlar uchun yaroqli
+Bu yozuvni HTTP orqali download qilishda ishlatish uchun buni belgilang
+Bu yozuvni HTTPs orqali download qilishda ishlatish uchun buni belgilang
+Bu yozuvni FTP orqali download qilishda ishlatish uchun buni belgilang
+Bu yozuvni subdomain serverlaridan download qilishda ishlatish uchun buni belgilang. Misol uchun, http://site.com sayti uchun bu http://some.site.com bo'ladi
+Marhamat qilib kamida bitta protokolni tanlang
+Ketayotgan downloadlarning maksimum soni
+Buni belgilab, bir vaqtning o'zida ketadigan downloadlarning maksimum sonini cheklash mumkin
+Downloadni qayta boshla
+Yana bitta bo'lakni boshla
+Bitta bo'lakni to'xtat
+; context: [section x] - Stopped
+To'xtadi
+; tray menu
+Tashlash hududi
+;
+Opera Plugin katalogini topolmadim. Uni o'zingiz ko'rsatishni istaysizmi?
+Netscape Plugin katalogini topolmadim. Uni o'zingiz ko'rsatishni istaysizmi?
+Opera nazoratini o'rnata olmadim
+Opera nazoratini o'chira olmadim
+Netscape nazoratini o'rnata olmadim
+Netscape nazoratini o'chira olmadim
+Buni belgilasangiz, FDM Operadagi kliklarni tutishni boshlaydi
+Buni belgilasangiz, FDM Netscapedagi kliklarni tutishni boshlaydi
+; create download dlg
+Hajmni so'ra
+; request a size of a download
+Talab...
+Serverdan download hajmini so'ra
+Hammasiga ha
+Hammasiga yo'q
+Batafsil log
+Buni belgilasangiz, FDM serverdan kelgan javoblarni ko'rsatadi
+O'zgartirishlar brouzer qayta boshlanganidan so'ng kuchga kiradi
+Vazifalar ro'yxati
+Fayllar ro'yxati
+Saytlar ro'yxati
+Sahifalar ro'yxati
+Downloadlar o'chirilmoqda
+Downloadlar ro'yxati tuzilmoqda
+Yoppasiga download yaratish
+Bundan:
+bungacha:
+Qadam:
+Wildcard baytlar:
+Natijalar
+Namuna:
+Davomatning boshlanish raqami
+Davomatning tugash raqami
+Davomat qadami. Misol uchun, agar u 10 bo'lsa, davomat 0, 10, 20, ... bo'ladi
+Wildcard baytlar soni. Misol uchun, agar u 1 bo'lsa, davomat 1, 2, 3 bo'ladi. Agar 2 bo'lsa, davomat 01, 02, 03 bo'ladi.
+Tuzilgan davomatni ko'rish uchun buyerga kliklang
+Bekor bosilganda Internet Explorer download qilishiga ruxsat ber
+Buni belgilasangiz, "Download yaratish" dialogida Bekorni bosganingizda faylni Internet Explorer download qiladi
+Davomatning tugash raqami boshlanishidan kattaroq bo'lishi shart
+URL andozasini ko'rsatish uchun URLda (*) qo'llang
+Faylda kengaytma bo'lmasa unga quyidagini qo'shib qo'y
+Buni belgilasangiz, faylda bo'lmasa unga tayinlangan kengaytma qo'shiladi. Misol uchun, agar faylning nomi "file" bo'lsa va siz "txt" ni tayinlagan bo'lsangiz, natijaviy fayl "file.txt" nomli bo'ladi
+Hajmlarni faqat baytlarda ko'rsat
+Buni belgilasangiz, barcha hajmlar kilobayt yoki megabaytda emas, baytda ko'rsatiladi
+Virusdan tekshir
+Argumentlar:
+Kengaytmalar:
+Buni belgilasangiz, olingan fayllar avtomatik ravishda antivirus bilan tekshiriladi
+Buyerda antivirus dasturi nomini ko'rsating
+Buyerda antivirus uchun argumentlarni ko'rsating
+Buyerda tekshiriladigan fayllarning kengaytmasini kiriting
+Marhamat qilib antivirus nomini kiriting
+Nom yaroqsiz. Tekshirib ko'ring
+Aantivirus ochilmoqda
+Vazifani bajargandan so'ng uni to'xtat
+Vazifani bajargandan so'ng uni o'chirib tashla
+Buni belgilasangiz, vazifa bajarilgandan so'ng ishdan to'xtatiladi
+Buni belgilasangiz, vazifa bajarilgandan so'ng o'chirib tashlanadi
+Boshla
+Orqaga
+Fayl nomini avtomatik ravishda tuz
+Buni belgilasangiz, downloadning fayl nomi avtomatik ravishda tuziladi
+"htm" kengaytmasi bilan saqla
+Buni belgilasangiz, barcha web sahifalari "htm" kengaytmasi bilan saqlanadi
+Bu tugmani bossangiz barcha downloadlarning jami hajmi hisoblanadi
+Serverdagi papkalar strukturasini saqla
+Buni belgilasangiz, serverdagi papkalarning original strukturasi saqlanib qoladi. Aks holda serverdagi barcha fayllar bitta papkada saqlanadi
+Siz boshqa papkani tanladingiz. Bu papkani ushbu guruh uchun odatiy qilib tayinlaymi? Odatiy papkani guruhning xossalarida ham o'zgartirish mumkin.
+; === ADDED LINES ===
+Bu URL bilan download oldindan mavjud. Nima qilmoq kerak?
+Bajar
+Download qilingan faylni ochish
+Versiya
+Biz bilan bog'lanish uchun buyerga kliklang
+Eng so'nggi versiyani olish
+Ogohlantirish:  ushbu kompyuter dasturi mualliflik huquqi haqidagi qonun hamda xalqaro kelishuvlar bilan himoyalangan. Bu dasturni, yoki uning biron-bir qismini beruxsat qayta chiqarish va tarqatish qat'iy jinoiy va fuqarolik javobgarligiga olib kelishi mumkin hamda bu javobgarlik qonun cheklagan maksimum chegaralargacha uzaytiriladi.
+; === new version ===
+Barchasini Free Download Manager bilan ol
+Downloadlar ro'yxatini qo'sh
+Tanlanganni olib tashla
+Bu qo'shiladigan URLlar ro'yxati
+Bu tugmani kliklasangiz barcha tanlangan URLlar ro'yxatdan olib tashlanadi
+Firefox Plugin katalogini topolmadim. Uni o'zingiz ko'rsatishni istaysizmi?
+Firefox nazoratini o'rnata olmadim
+Firefox nazoratini o'chira olmadim
+Buni belgilasangiz, FDM Mozilla brouzeri (Firefox yoki Suite)dagi kliklarni tutishni boshlaydi
+Tanlanganni Free Download Manager bilan ol
+Boshlanmoqda
+Websaytlar
+Faol downloadlar
+Hozir hechqanday faol download yo'q
+Eslatmalar
+Tray "pufak"laridan foydalan
+Vaqt tugashi
+Buni belgilasangiz, download to'xtagan yoki tugallanganda tray "pufak" eslatmalaridan foydalaniladi. Qayd: bu xususiyat faqat Windows 2000/XP va yangiroqlarda ishlaydi
+Buncha vaqt o'tgach "pufak" avtomatik ravishda yopiladi
+Ko'zgular
+Avtomatik ravishda ko'zgu URLlarini izla
+Ko'zgular maksimum soni
+Ko'zgular tezligini hisobla
+Tezlikni qayta hisobla, har
+Buni belgilasangiz, FDM har bir download uchun avtomatik ravishda ko'zgu URLlarni qidiradi
+Har bir download uchun ko'zgu URLlar sonini cheklash. Bunda ko'zgu tezligini hisoblash vaqti kamayadi
+Buni belgilasangiz, FDM har bir ko'zgu serverning tezligini hisoblaydi
+Tayinlangan vaqt oralig'ida ko'zgular tezligini avtomatik ravishda qayta hisobla
+Fayl hajmi bundan kichikroq bo'lsa izlama
+Agar fayl hajmi ko'rsatilganidan kichikroq bo'lsa, FDM ko'zgularni izlamaydi
+Fayl hajmi noma'lum bo'lsa izlama (Tavsiya etiladi)
+Ko'zgu qo'sh
+Ko'zgularni izla
+Bu download uchun ko'zgu URLini qo'lda kiritish
+Bu download uchun ko'zgu URLlarini FileSearching.COM bilan izla
+Ko'zgu URLlar ro'yxati
+Server tezligi
+Ishlatilmoqda
+Ko'zgular tezligini o'lcha
+Ko'zgu serverlar tezligini o'lcha
+Downloadlar ma'lumoti
+Kutilmoqda...
+Download uchun ko'zgu URL
+Fayl hajmi 2GB dan katta. Bunaqangi downloadlar faqat FTP orqali amalga oshirilishi mumkin
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Yangi download
+Download uchun guruhni avtomatik ravishda aniqla
+Guruh:
+Downloadni o'z guruhining tegishli papkasiga saqla
+Buni belgilasangiz, downloadning guruhi faylning kengaytmasi yoki Sayt menejeri sharoitiga qarab aniqlanadi
+Odatiy guruhni qo'lda qo'y
+Buni belgilasangiz, download o'z guruhining odatiy papkasiga saqlanadi (guruh xossalarini ko'ring)
+Odatiy chiqarish papkasini qo'lda tayinla
+; END
+; BEGIN: Monitoring page
+Jimjit nazorat
+Bu belgilansa, brouzerdan download qo'shilayotganda "Download yaratish" dialogi ko'rsatilmaydi
+Sozlash
+Internet Explorer kontekst menyusida ko'rsatiladigan bandlarni tanlang
+; END
+Ko'rsatiladigan menyu bandlarini tanlang
+Kamida bitta band tanlanishi lozim
+Tovushlardan foydalan
+Buni belgilasangiz, FDM ba'zi voqealarda (mas. download tugallanganda) tovush chiqaradi
+Har bir voqea uchun tovush tanlash
+; BEGIN : Customize sounds dialog
+Tovushlarni sozlash
+Tovushni tayinla
+Olib tashla
+Sina
+FDM voqealari va tegishli tovushlar ro'yxati. Buyerda bironta voqea ro'y berganda FDM tovush chiqarishini belgilash mumkin
+Download qo'shildi - downloadlar ro'yxatiga bitta yoki undan ortiq download qo'shilgandan tovush chiqarish
+Download tugallandi - download muvaffaqiyatli tugallanganda tovush chiqarish
+Download amalga oshmadi - bironta faylni download qilishga urinilganda xato yuz bersa tovush chiqarish
+Raqam terish amalga oshdi - jadvaldagi "Dial-up aloqa o'rnat" vazifasi muvaffaqiyatli amalga oshganda tovush chiqarish
+Raqam terish amalga oshmadi - jadvaldagi "Dial-up aloqa o'rnat" vazifasi bironta sabab bilan amalga oshmaganda tovush chiqarish.
+Tanlangan voqea uchun tovushni tayinla
+Tanlangan voqea ro'y berganda tovush chiqarma
+Tanlangan tovushni sinab ko'r
+Voqea
+Tovush fayli
+Tovushsiz
+Download qo'shildi
+Download tugallandi
+Download amalga oshmadi
+Raqam terish amalga oshdi
+Raqam terish amalga oshmadi
+Tovush fayllar
+; END
+Ko'zgular izlanmoqda...
+Ko'zgular tezligi o'lchanmoqda...
+Ko'zgularni izlash allaqachon bajarilgan
+Izlash serveriga ulanilmoqda...
+Natijalar olinmoqda...
+%d ta ko'zgu topildi
+Ko'zgu izlash tugallandi
+Boshqa ko'zgu ulanilmoqda...
+Hechqanday ko'zgu topilmadi
+Amalga oshmadi
+Ko'zgular tezligi o'lchandi
+; BEGIN: History page
+Tarix
+Ulanma va papkalar tarixini saqla
+Faqat papkalar tarixini saqla
+Yozuvlarni quyidagicha muddatga saqla
+Yozuvlar maksimum soni
+Tarixni tozala
+FDM kiritilgan ulanma va papkalar tarixini saqlaydi
+FDM faqat papkalar tarixini saqlaydi
+FDM belgilangan vaqt oralig'idan ko'proq tarixda turgan yozuvlarni o'chirib tashlaydi
+Tarixdagi yozuvlar maksimum soni. Yozuvlar soni bu qiymatdan oshib ketganda FDM eng eski yozuvlarni o'chiradi
+Tarixdagi barcha yozuvlarni o'chirib tashlaydi
+; END
+Import qilish
+Eksport qilish
+Downloadlar ro'yxatini import qil
+Downloadlar ro'yxatini eksport qil
+Matnli fayllar
+Faylni ocholmadim
+Barcha downloadlarni eskport qil
+Ro'yxatdagi barcha downloadlarni eksport qil
+Tanlangan downloadlarni eksport qil
+Tugallangan downloadlarni eksport qilma
+Fayl oldindan mavjud bo'lsa oxiriga qo'sh
+Guruh nomi yaroqsiz. Marhamat qilib / yoki \ belgilaridan foydalanmang.
+Tugallangach dasturdan chiq
+; BEGIN : Downloads History window
+Qo'shilgan vaqti
+Bunga saqlangan
+; END
+Chiqindi qutisi
+; BEGIN: Recycle Bin
+Xossalari
+Chiqindi qutisini tozala
+;END
+;BEGIN: Recycle Bin properties
+O'chirilgan fayllarni Chiqindi qutisiga qo'yma
+Saqlash maksimumi:
+ta download
+Tugallangan downloadlarni saqlama
+Downloadlarni o'chirishdan oldin tasdiqlashni kut
+Chiqindi qutisi xossalari
+Buni belgilasangiz, o'chirilgan downloadlar Chiqindi qutisida saqlanmaydi
+Buni belgilasangiz, Chiqindi qutisida saqlanadigan o'chirilgan downloadlar soni cheklanadi
+Chiqindi qutisida saqlanadigan downloadlar maksimum soni
+Buni belgilasangiz, tugallangan downloadlar o'chirilgandan so'ng Chiqindi qutisida saqlanmaydi
+Buni belgilasangiz, downloadni o'chirmoqchi bo'lganingizda FDM tasdiq so'raydi
+;END
+Qayta tikla
+Downloadlar qayta tiklanmoqda...
+; History subitems
+Bugun
+Kecha
+Bir hafta
+Bir oy
+Boshqa...
+; end
+Tarixni tozala
+Downloadlar tarixini saqla
+Faqat tugallangan downloadlar tarixini saqla
+Buni belgilasangiz, downloadlaringiz tarixi saqlanadi
+Buni belgilasangiz, faqat tugallangan downloadlar tarixi saqlanadi
+Downloadlar tarixi sharoiti
+Tarix yozuvlari ro'yxati tuzilmoqda...
+; Download Was deleted
+O'chirilgan
+Vaqt oralig'ini tanlang
+Topish
+Keyingisini top
+Nimani topish
+; BEGIN : Find dialog
+Bundan izla
+Lokal fayl nomi
+Buyerda nimani topish kerakligini ko'rsating
+URLning fayl qismidan izla
+Butun URLdan izla
+Download sharhidan izla
+Downloadning diskdagi faylining nomi va yo'lagidan izla
+Izlashning ilg'or sharoitini sozlash
+; ADVANCED settings
+Qayerdan izlash kerak
+Downloadlar ro'yxatidan izla
+Downloadlar tarixidan izla
+Belgilangan vaqtda izla
+Tayinla
+Chiqindi qutisidan izla
+Quyida belgilangan fayl hajmi bilan izla
+Minimal
+Maksimal
+Downloadlar ro'yxatidan izla
+Downloadlar tarixidan izla
+Vaqt ko'rsatilgan vaqt oralig'iga mos keladigan downloadlardan izla
+Vaqt oralig'ini tayinlash
+Chiqindi qutisidan izla
+Faqat ko'rsatilgan fayl hajmiga mos keladigan fayllarni izla
+Kerakli minimal hajm
+Kerakli maksimal hajm
+Ushbu guruhdan izla
+Izlash amalga oshiriladigan guruhni tanlang
+; END
+Download izlanmoqda...
+Hechnima topilmadi
+Boshqa hechnima topilmadi
+Topish tugallandi
+URLni clipboardga ol
+ZIP fayli tarkibini ko'rish
+Kamida bitta fayl tanlanishi lozim.
+Siz download qilayotgan fayl ZIP arxivi bo'lishi mumkin. Uni oldindan ko'rasizmi?
+Audio/videoni ko'rish
+Faylni ocha olmadim.
+Mediya turi noma'lum.
+Bu xususiyatdan foydalanish uchun marhamat qilib DirectX 8.0 yoki yangirog'ini o'rnating. Eng so'nggi DirectXni microsoft.com manzilidan olish mumkin.
+Mediya ma'lumoti
+Hajmi:
+Olindi:
+Davomiyligi:
+Tovushsiz
+Play
+Pauza
+Filtr
+Kengaytmalar [bo'shliq bilan ajratilgan, mas. zip rar arj]:
+Shunaqa kengaytmali fayllarni olib tashla
+Faqat shunaqa kengaytmali fayllarni qoldir
+Argumentlar satrida %file% macro yozilmagan. Antivirus dasturi bilan qaysi faylni tekshirishni bilish uchun bu macro kerak.
+Davom etaverasizmi?
+Ogohlantirish
+Tugallanmagan downloadga hidden (yashirin) atributini qo'y
+Tugallangach fayl nomiga sharh qo'sh
+Server sahifalarini saqlama
+Buni belgilasangiz, kompyuteringizda server sahifalari emas, balki faqat fayl va rasmlar saqlanadi
+ZIP fayllari tarkibini ko'rsat
+Buni belgilasangiz, download boshlanishida ZIP arxivining tarkibini ko'rish yoki arxivning faqat bir qismini download qilish imkoni bo'ladi.
+Tovush:
+Downloadni avtomatik ravishda boshla
+Buni belgilasangiz, FDM har bir yangi downloadni avtomatik ravishda boshlaydi
+Download qilinadigan fayllar tekshiring
+Ushbu download uchun muqobil manzil (URL) lar qo'y
+Bundan keyin oldindan ko'rishni qo'llama
+ZIP tarkibini ko'rishni o'chirib qo'ydingiz. Uni qayta ishga tushirmoqchi bo'lsangiz, Tanlovlar -> Download tanlovlari (Ctrl+O) -> Yangi download sahifasini oching va "ZIP fayllari tarkibini ko'rsat"ni belgilang.
+Rad etish
+Bironta saytni download qilishda e'tibor berilmaydigan web sahifalari ro'yxati.
+Nimpapkalar
+Qo'sh
+Barcha nimpapkalarni ham inobatga olma
+; Proxy tab new settings
+Uzilgan aloqada rollback qo'lla
+Rollback hajmi
+bayt
+Buni belgilasangiz, rollback xususiyati ishga tushadi. Bunda downloadlarga shikast yetishining oldi olinadi.
+Rollback hajmi. Hajm kattaroq bo'lsa rollback ishonchliroq amalga oshadi. Tavsiya etilgan hajmi 3000 bayt. Agar downloadlaringizga shikast yetaversa, bu hajmni oshirishingiz mumkin.
+; downloader options -> monitor tab
+Bundan kichikroq fayllarni nazorat qilma
+Buni belgilasangiz, FDM ko'rsatilgan hajmdan kichikroq fayllarni tashlab ketadi
+KBayt
+Ogohlantirish! Chiqindi qutisi haddan tashqari katta. Bu holda ishlash o'ta sekinlashishi mumkin. Chiqindi qutisini tozalash tavsiya etiladi. Tozalashni amalga oshirasizmi?
+Buni boshqa tekshirma
+Ogohlantirish! Downloadlar tarixi haddan tashqari katta. Bu holda ishlash o'ta sekinlashishi mumkin. Tarixni tozalash tavsiya etiladi. Tozalashni amalga oshirasizmi?
+Server davomlash qobiliyatiga kafolat bera olmaydi. Noma'qul javob olindi.
+Clipboardga nusxala
+; general settings | skins page
+Skinlar
+Skin
+Skinlar o'z ikonlarini ishlatishiga ruxsat ber
+Skinlar o'z bitmaplarini ishlatishiga ruxsat ber
+; default skin
+<odatiy>
+QAYD: har qanday o'zgartirishlar Free Download Manager yopilib, qayta ochilgandan keyingina kuchga kiradi.
+Downloadlar ketayotganda ma'lumotlarini ko'rsat
+Quyidagi kengaytmali fayllarni tashlab ket:
+Tashlab ketiladigan fayllarning kengaytmalari ro'yxati
+Faol download yo'q
+Barcha downloadlar tugallanganda tovush chiqar
+URLlar ro'yxatini clipboarddan import qil
+Parollar
+Sayt menejeri tanlovlari
+; Save password dialog
+Parolni saqlaymi?
+Free Download Manager bu server uchun parolni saqlab qo'yishi mumkin, shunda har gal undan download qilganda qayta kiritishga ehtiyoj qolmaydi.
+Bu parolni saqlaymi?
+Hechqaysi parolni saqlashni so'rama
+; Site Manager options | Passwords tab
+Parollarimni saqlash uchun Sayt menejeridan foydalan
+Parolni saqlash-saqlamaslikni mendan so'ra
+Parolni saqlashlikni so'rama
+Chiqishda barcha parollarni o'chirib tashla
+Barcha parollarni o'chir
+; create new HTML Spider task
+Tugallangan downloadlarni ro'yxatdan olib tashla (tavsiya etiladi)
+Buni belgilasangiz, HTML o'rgimchagining downloadlari avtomatik tarzda o'chirib tashlanadi. Bunda yirik saytlarni download qilish tezlashadi.
+O'zgarishlar Free Download Manager qayta ochilgandan so'ng kuchga kiradi
+Yangi stil
+Eski stil
+Katalog nomi yaroqsiz
+To'liq ekran uslubida suzuvchi oynalarni yashir
+Buni belgilasangiz, to'liq ekran uslubida suzuvchi oynalar avtomatik ravishda yashirib qo'yiladi.
+bajarilishi jadvalga qo'yilgan.
+Uni bajarishni xohlaysizmi?
+Download tugallangandan so'ng uni bajar
+URL uchun andozani belgilash uchun URLda (*), (*A) yoki (*a) kiriting
+Ko'zgularni izlash serveri:
+Hibernate
+Stand By
+Tanlovni eslab qol
+Guruhning odatiy katalogini o'zgartirishni so'ra
+Faylni saqla
+Faylni och
+Faylni saqlab, och
+Download turi:
+FDMga ulanma
+Free Download Managerga ulanma
+Hurmatli foydalanuvchi!
+Free Download Manager bepul dasturdir. Undan istaganingizcha foydalanishingiz mumkin.
+Shu bilan birga, agar Free Download Manager siz uchun foydali bo'lsa, uni tarqatishga bizga yordam berishingizni so'raymiz. Buni websaytingizda unga link qo'yish orqali bajarish mumkin. Shu yo'l bilan ko'proq foydalanuvchilar Free Download Manager haqida xabar topadilar.
+Yordamingiz uchun oldindan rahmat,\nFree Download Manager mualliflari.
+Menga 3 kundan keyin eslat
+Keyingi gal Free Download Manager ochilganda eslat
+Bu oynani boshqa ko'rsatma
+Ulanma HTML kodini ko'rish
+Ulanma HTML kodi
+Ko'proq misollar
+Clipboardga nusxala
+Yashir
+; "Traffic usage mode has been changed" window
+Trafikni ishlatish uslubi o'zgardi
+Tarmoqda trafikni ishlatish uslubini almashtirdingiz.\nFree Download Managerda uchta uslub bor:
+Bu uslubda Free Download Manager mumkin bo'lgan maksimum tezlik bilan download qiladi. Bu eng agressiv uslubdir.
+Bu uslubda Free Download Manager o'rtacha tezlikda download qiladi. Bu uslub bir vaqtning o'zida yuqori tezlikda download qilish bilan birga Internetda kezish imkonini ham beradi.
+Bu uslubda Free Download Manager past tezlikda download qiladi. Bu uslub tarmoqqa og'irlik tushirmagan holda fayllarni download qilish imkonini beradi.
+;
+Qayta boshlashda nomla
+%d dan kichikroq qiymat kiriting
+; export/import downloads
+URL ro'yxati fayllari
+Downloadlar ma'lumoti ro'yxati fayllari
+;
+Eksport tanlovlari
+;
+Faylning sanasiga server ko'rsatgan sanani qo'y
+Download qilingan faylning sanasiga serverdagisini qo'y
+Ta'rif faylini tuz
+Olingan faylning qisqa ta'rifi (sharh + url + sanasi) berilgan "*.dsc.txt" nomli fayl yaratish (* - olingan fayl nomi). Bu fayl faqat sharh mavjud bo'lgan download uchun tuziladi.
+Ushbu fayl buyerdan olingan
+Serverdan fayl sanasini olma
+Bu tanlov FTPdan downloadni tezroq boshlash imkonini beradi. Free Download Manager LIST buyrug'ining o'rniga SIZE buyrug'ini ishlatadi.
+Downloadlar logini saqlama
+Bu tanlovni belgilasangiz, Free Download Manager tezroq ochilib, tezroq yopiladi va kamroq xotirani ishlatadi.
+;
+Downloadlar tarixini eksport qilish
+Barcha iboralarni eksport qilish
+Ro'yxatdagi barcha iboralarni eksport qilish
+Tanlangan iboralarni eksport qilish
+Faqat tugallangan downloadlar haqidagi iboralarni eksport qilish
+;
+HTML Files
+;
+Free Download Manager downloadlar tarixi
+Download URLi
+Ushbu faylga olindi
+Fayl hajmi
+Download tugallangan
+Download o'chirib tashlangan
+;
+Buyerda saqlandi
+Fayl hajmi
+Davomlashni qo'llash
+Download tugallansa yoki to'xtatilsa, bu dialogni yop
+Ochish
+Bu oynani yanagi gal ham ko'rishni xohlaysizmi?
+Ha, bu oynani har bir download uchun ko'rishni xohlayman
+Yo'q, bu oynani boshqa ko'rsatma
+Ha, lekin aynan shu download uchun emas
+SHIFT bilan bosilsa, bu download diskdan o'chirib tashlanadi va uni tiklashning iloji bo'lmaydi.\nBunga aminmisiz?
+Guruhni tanlang
+Guruhning tub (root) papkasini tayinlang
+Guruhning tub papkasini tanlang.\nO'zgarishlar faqat yangi downloadlarga nisbatan qo'llaniladi.
+Oxirgi download qilingan fayllar
+(bo'sh)
+Barcha downloadlarni pauza qil
+Download rivoji oynasini ko'rsat
+Bu belgilansa, FDM har bir ketayotgan download haqida ma'lumot berilgan maxsus oynani ko'rsatadi
+; general settings | misc page
+Tasdiqlarning vaqti tugashi
+Downloadni boshla
+O'chirish turini so'ra
+"Asboblar | Tugallangach aloqani uz" buyrug'i uchun tasdiq vaqtining tugashi.
+"Asboblar | Tugallangach dasturni yop" buyrug'i uchun tasdiq vaqtining tugashi.
+"Asboblar | Tugallangach kompyuterni o'chir" buyrug'i uchun tasdiq vaqtining tugashi.
+Download tugallangach olingan faylni ochish uchun tasdiq vaqtining tugashi.
+Bu belgilansa, FDM "Asboblar | Tugallangach kompyuterni o'chir" buyrug'i uchun o'chirish turini so'raydi.
+Tasdiqlashni so'rama
+; 5 seconds, 10 seconds, ...
+%d sekund
+Tasdiqlashimni kutib tur
+Bu papkadan sahifalarni inobatga olma
+Faqat shu papkadan sahifalarni download qil
+Nimkataloglar bilan birga
+Bu papkada joylashgan web sahifalarni inobatga olma.
+Faqat bu papkada joylashgan sahifalarni download qil va boshqa web sahifalarni inobatga olma.
+Buni belgilasangiz, HTML Spider tayinlangan papkaning barcha nimkataloglarida joylashgan sahifalarni inobatga olmaydi (yoki faqat shularni download qiladi).
+Buyerda papkaning URLini kiritish kerak.\nMasalan: "http://site.com/docs/".
+Turi
+Inobatga olma
+Faqat
+Raqamlar majmui
+Tayinla
+Buyerda yoppasiga ro'yxat uchun raqamlar majmuini ko'rsatishingiz kerak.\nMas. 1-100, yoki 1-100s2w3.
+Dialog oynasi yordamida raqamlar majmuini tayinlash uchun bu tugmani kliklang.
+Yakka raqam
+Raqam
+Raqamlar majmuini tayinla
+Sintaksis xatosi
+Arxivni ajratish
+Ajratish
+Ajratuv
+Mo'ljal papka
+Ajratish amalga oshmadi. Fayl formati noma'lum.
+Bu oyda olingan trafik\n(%s oldingi oyda olingan)
+Downloadlarning umumiy tezligi
+Asboblar | "tugallangach" vazifasi tugallagach, o'chirib qo'y
+Bu belgilansa, Asboblar | "tugallangach" vazifalari bajarilganidan so'ng avtomatik tarzda o'chirib qo'yiladi. Shunda u faqat bir marta bajariladi.
+; %s
+; 1st - name of a file
+; 2nd, 3rd - file info (size + date).
+"%s" fayli oldindan mavjud.\n\nBu faylning o'rniga\n(%s)\n\nbunisini yozishni xohlaysizmi\n(%s)?
+Hammasiga ha
+Tashlab ket
+Hammasini tashlab ket
+Arxivning formati noma'lum
+Web sahifasiga tashrif
+To'plamni o'rnat
+Odatiy tarzda, FDM faqat ZIP, RAR va ARJ arxivlari bilan ishlay oladi.\nTushuniladigan arxivlar ro'yxatini uzaytirish uchun Free Download Managerga qo'shimcha arxivlar to'plamini o'rnatish mumkin (Internet aloqasi kerak).
+FDM arxiv to'plami
+Yuqoriga sur
+Pastga sur
+Tanlangan download(lar)ni yuqoriga surish
+Tanlangan download(lar)ni pastga surish
+Fayl butunligini tekshirish
+Ba'zi web saytlarda download qilinadigan fayllar uchun maxsus checksumlar ham bo'ladi, ular yordamida foydalanuvchilar olingan faylning shikastlanmaganiga amin bo'lishlari mumkin. Buyerda o'sha checksumni kiritsangiz, FDM fayl butunligini tekshiradi.
+Algoritm
+Checksum
+Clipboarddan qo'y
+Tekshir
+Olingan faylning checksumi hisoblanmoqda...
+Fayl butunligini tekshirish muvaffaqiyatli amalga oshdi
+Fayl butunligini tekshirish amalga oshmadi
+Fayl butunligini tekshirish muvaffaqiyatli amalga oshdi.\nDownload qilingan faylda hechqanday xatolik topilmadi.
+Fayl butunligini tekshirish tugallandi.\nBirnechta xatolar topildi: download qilish chog'ida fayl shikastlangan. Download qilishni boshida qayta boshlash zarur.
+Tekshirish joyida bo'lsa, bu oynani boshqa ko'rsatma
+Siz tanlagan antivirus dasturining executable faylini topa olmadim.\nMarhamat qilib uni o'zingiz ko'rsating.
+Fayllarning hajmi teng emas
+Quyidagicha saqla:\n(Misol: fayl(*)(*A)(*a).txt)
+Tayinlangan saqlash andozasi yaroqsiz.\nUning URL andozasiga mos kelishiga amin bo'ling.
+Tugallangach
+Tugallangach (tugallangan yoki xatoda)
+Dasturlar
+Bu nima?

@@ -1,0 +1,1587 @@
+; This is the German language file by User_99 (user_99@gmx.at) v2.3.8 for 2.3.682
+; You can translate it into your native language
+; To do this, follow instructions:
+; - PLEASE make sure FDM hasn't already been translated into your language 
+;   You should go to FDM web site (http://freedownloadmanager.org) and 
+;   check the list of available languages
+;   or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng into your language
+; - send the translated file to support@freedownloadmanager.org 
+;
+;
+;
+; Translator - FreeDownloadManager.ORG, 2004
+;
+
+; Your language name. Please keep it in English
+;
+German
+;
+;
+; Below are the strings to translate:
+;
+Alles Speichern
+Ausschneiden
+Kopieren
+Einfügen
+Wenig Bandbreite
+Normale Bandbreite
+Maximale Bandbreite
+Downloadoptionen
+DFÜ-Verbindung
+Über FDM
+Beenden
+Datei
+Bearbeiten
+Ansicht
+Optionen
+Extras
+Hilfe
+Toolbar
+Statusleiste
+Optimierungsassistent
+Standard-Downloadeinstellungen 
+Allgemeine Einstellungen
+DFÜ Verbindung
+Nach Abschluss Verbindung trennen
+Nach Abschluss Computer herunterfahren
+Öffne Hilfefenster
+FDM-Homepage
+An einen Freund empfehlen
+E-Mail an den Support
+Überprüfe automatisch auf Updates
+Überprüfe jetzt auf Updates
+-
+-
+Umschalten zu
+Datenübertragungsmodus
+Registrierung
+Downloads
+Zeitplaner
+Webseiten-Explorer
+HTTP//FTP-Explorer
+Webseiten-Manager
+Download hinzufügen
+Download starten
+Download anhalten
+Download planen
+Aufgabe hinzufügen
+Aufgabeneigenschaften
+Markierte Dateien herunterladen
+Anhalten
+Aktualisieren
+Webseite hinzufügen
+Webseiteneigenschaften
+Downloadgruppen
+Downloadinformation
+Zeitplanerprotokoll
+Webseiten-Explorer-Protokoll
+Seitenleiste
+Neuen Download erstellen
+Download löschen
+Datei ausführen
+Ordner öffnen
+Download automatisch starten
+Downloadeigenschaften
+Aufgabe aktivieren
+Aufgabe deaktivieren
+Aufgabe löschen
+Übergeordneten Ordner öffnen
+Verbindung trennen
+Download
+Webseiten-Explorer-Einstellungen
+Webseite löschen
+Temporärer Eintrag
+Seiten
+Zeige Hauptfenster
+Browserüberwachung
+Zwischenablageüberwachung
+Alle Downloads starten
+Alle Downloads anhalten
+-
+Weiter
+-
+-
+-
+-
+-
+Abbrechen
+-
+-
+-
+Alle Gruppen
+Filter
+Abgeschlossen
+In Bearbeitung
+Geplant
+Angehalten
+Sonstiges
+Neue Gruppe erstellen
+Gruppe löschen
+Alle Downloads löschen
+Alle abgeschlossenen Downloads löschen
+Gruppenordner öffnen
+Gruppeneigenschaften
+Gruppenname:
+Standardordner:
+Dateiendungen (mit Leerzeichen getrennt):
+Standard-Downloadpriorität
+Niedrigste
+Niedrig
+Normal
+Hoch
+Höchste
+Bitte geben Sie einen Gruppennamen an.
+Eingabefehler
+Eine Gruppe mit diesem Namen existiert bereits. Bitte geben Sie einen anderen ein.
+Bitte geben Sie einen Ordnernamen ein.
+Standardgruppenordner wählen
+Gruppennamen hier eingeben
+Standardordner für Downloads dieser Gruppe
+Durchsuchen
+Dateierweiterung für diese Gruppe. Damit wird die Downloadgruppe automatisch zugewiesen.
+Standarddownloadpriorität für diese Gruppe
+Änderungen verwerfen und Fenster schließen
+Änderungen speichern und Fenster schließen
+Fehler in Downloadgruppe
+Bitte installieren Sie FDM neu!
+Fehler
+Kann die Liste der Downloads nicht laden. Entweder sie ist beschädigt oder wird von einer anderen Anwendung verwendet.
+Internet Explorer Integration fehlgeschlagen
+Sind Sie sicher?
+Es werden alle Gruppendownloads gelöscht
+Bestätigung
+Dateiname
+Größe
+Heruntergeladen
+Verbleibende Zeit
+Abschnitt
+Geschwindigkeit
+Bemerkung
+Protokoll
+Fortschritt
+Zeit
+Datum
+Information
+Löschen
+Automatisch blättern
+Unbekannter Netzwerkfehler
+Zugriff verweigert. Ungültiger Name oder Kennwort.
+Zugriff verweigert. Ungültiges Kennwort.
+Erfolgreich
+Keine Verbindung zum Server
+Datei auf Server nicht gefunden
+Verbindung zum Server unterbrochen
+Keine Rückmeldung vom Server
+Kann Servername nicht auflösen
+Server unterstützt eine Wiederaufnahme abgebrochener Downloads nicht. Diesen Download nicht anhalten, sonst muss erneut vom Anfang an begonnen werden.
+Proxy: Benutzername und Kennwort sind erforderlich.
+Erweiterter Fehler
+Fehlerhafte Anfrage. Fehlerhafte URL möglich.
+Unbekannter Serverfehler
+Verbindung abgebrochen
+Fehlerhafte URL
+Keine Internetverbindung
+Gewählte HTTP-Version wird von diesem Server nicht unterstützt
+Unbekannter Fehler
+Kann die Datei nicht löschen
+Max. Anzahl der Verbindungen zu diesem Server wurden erreicht
+Max. Anzahl der Verbindungen wurden erreicht
+Pause %d sek.
+Abschnitt
+Begonnen
+Erledigt
+Download abgeschlossen
+Verbinde...
+Verbindung erfolgreich
+Umleitung...
+Umleitung erfolgreich. Öffne neue URL
+Beginne mit Download...
+Angehalten
+Erzeuge neuen Abschnitt...
+Abgebrochen
+Download neu starten...
+Datei öffnen...
+Dateiname ist zu lang
+Datei bereits vorhanden. Umbenennen zu
+Umbenennen zu
+Ausgabedatei wurde gelöscht. Fortsetzen nicht möglich.
+Datei bereits vorhanden. Überschreiben
+Datei bereits vorhanden. Download fortsetzen
+Datei bereits vorhanden.
+Öffnen der Datei fehlgeschlagen
+Dateigröße wurde auf Server geändert!
+Einstellungen für neue Größe...
+Kann Datei nicht überschreiben
+Datei wird umbenannt
+Kann Datei nicht auf ursprünglichen Namen umbenennen
+Kann Gruppe nicht speichern
+Kann Downloads nicht speichern
+DFÜ-Verbindung
+Verbinden mit:
+DFÜ-Verbindung automatisch 
+Verbinden
+Wähle DFÜ-Verbindung hier
+DFÜ-Verbindung automatisch beim nächsten Start herstellen
+DFÜ-Verbindung jetzt herstellen
+Keine DFÜ-Verbindung und Fenster schließen
+Es wurden keine DFÜ-Verbindungen auf diesem Rechner gefunden
+Telefonleitung ist besetzt
+Hardwarefehler
+Kein Freizeichen
+Wähle...
+Versuch
+Öffne Port...
+Wähle Provider...
+Verbindung zu einem entfernten Computer
+Benutzername und Kennwort überprüfen...
+Verbindungsgeschwindigkeit ist %d BPS
+Verbindung beendet
+Wiederholung
+Benutzername und Kennwort sind notwendig
+Benutzer:
+Kennwort:
+Gruppe:
+Speicherordner:
+Speichern als:
+Start
+Automatisch
+Manuell
+Zeitplaner
+Downloadpriorität
+Erweitert
+Adresse der Datei die Sie herunterladen wollen
+Geben Sie den Benutzernamen hier ein
+Geben Sie das Kennwort hier ein
+Serverauthentifizierung erforderlich
+Name der Gruppe, um den Download hinzuzufügen. Gruppen helfen Ihnen, die Downloads zu verwalten.
+Ordner zum Speichern der Downloads
+Neuer Name für die heruntergeladene Datei. Lassen Sie das Feld leer, um die Datei mit ihrem ursprünglichen Namen zu speichern.
+Kurzbeschreibung für diesen Download
+Dieser Download wird so bald wie möglich automatisch starten
+FDM wird diesen Download nicht automatisch starten
+Zeitplanung für diesen Download
+Bearbeite Downloadzeitplaner
+Downloadpriorität. Downloads mit hoher Priorität werden früher begonnen als mit niederer Priorität.
+Zeige erweiterte Einstellungen für diesen Download
+Die eingegebene URL ist falsch. Bitte überprüfen!
+Bitte geben Sie den Benutzernamen ein
+Ausgabeordner wählen
+Allgemein
+Allgemeine Informationen
+Download derzeit gespeichert als Datei:
+Name der heruntergeladenen Datei
+URL dieses Downloads kann nicht geändert werden
+Dieser Download ist gerade aktiv. Der Name kann nicht geändert werden.
+Kann Datei nicht umbenennen
+Datei nicht gefunden
+Pfad nicht gefunden
+Ungültiges .exe-Format
+Datei wird von einer anderen Anwendung verwendet
+Zugriff verweigert
+Gerät ist nicht bereit
+Laufwerk ist voll
+Dateiname ist ungültig
+Anmeldung erforderlich
+Verbindung
+Netzwerk
+Fehler
+Pause zwischen den Verbindungsversuchen (in Sekunden)
+Maximale Anzahl der Verbindungsversuche
+Zeitüberschreitung (in Sekunden)
+Minimale Größe:
+Maximale Anzahl:
+Beschränkung des Datenverkehrs für diesen Download
+Geschwindigkeitsbegrenzung
+Alle Beschränkungen ignorieren
+Bytes
+KB
+MB
+; second. e.g. KB/s
+s
+Eingabe eines Wertes größer als %d
+Bitte Größe wählen
+Wartezeit für eine Serverneuverbindung im Fehlerfall
+Anzahl der maximalen, nicht erfolgreichen, Downloadversuche begrenzen
+Wartezeit für Serverantwort
+Minimale Größe der Teile. Ein Download wird nicht unterhalb dieser Größe aufgeteilt.
+Maximale Anzahl der Teile. Ein Download wird in nicht mehr Teile aufgeteilt.
+Angabe des Datentransfers (maximal) den FDM für einen Download verwendet
+Ignoriere Datentransferbeschränkungen und maximale Anzahl der Verbindungen für diesen Download
+Sie können Werte in Bytes (b), Kilobytes (Kb) oder Megabytes (Mb) in diesem Feld eingeben.
+Protokoll
+Identifizierung am Server als:
+Herkunft (Referrer):
+Verwende HTTP 1.1
+Verwende Cookies
+Verwende passiven Modus
+Übertragungsmodus
+Binär
+ASCII für Dateien mit den Erweiterungen:
+Geben Sie an, wie FDM am HTTP Server erkannt wird
+Diese Zeichenkette wird als Bezeichnungsfeld an den HTTP Server gesendet. In der Regel wird es nicht angefordert.
+Aktivieren, damit FDM HTTP-Version 1.1 verwendet
+Aktivieren, damit FDM Cookies verwendet
+Aktivieren, damit FDM den passiven Modus bei FTP-Servern verwendet. Manchmal notwendig bei der Verwendung einer Firewall.
+Verwende Binärmodus für FTP-Übertragung. Verwendung wenn Sie keine Textdatei herunterladen wollen
+Verwende ASCII Modus für FTP-Übertragung. Verwendung wenn Sie eine Textdatei herunterladen wollen
+FDM verwendet ASCII-Modus für die angegebenen Erweiterungen. Sonst wird der Binärmodus verwendet
+Proxy
+Proxy-Einstellungen übernehmen
+Von Microsoft Internet Explorer
+Manuelle Eingabe
+Keinen Proxy verwenden
+Einstellungen
+Adresse:
+Port:
+Bitte geben Sie eine Proxy-Adresse an
+Bitte geben Sie einen Proxy-Port an
+FDM übernimmt Proxy-Einstellungen von Internet Explorer
+Sie geben die Proxy-Einstellungen selbst ein
+FDM verwendet keinen Proxy
+Wählen Sie den Servertyp, für den Sie den Proxy hier konfigurieren wollen
+Eingabe der Adresse des Proxy, den Sie verwenden wollen
+Eingabe des Proxy Port. In der Regel meistens 3128, 1080 oder 8080
+Aktivieren, falls der Proxy-Server eine Authentifizierung erfordert
+Diverses
+Lokale Datei
+Falls die Datei bereits vorhanden ist:
+Reserviere Speicherplatz für heruntergeladene Datei
+Zusätzliche Erweiterung für unvollständige Downloads:
+Internetserver
+Kein DL-Neustart, wenn die Wiederaufnahme nicht unterstützt wird
+Wenn Dateigröße am Server geändert wurde:
+Bei Fehlern anhalten
+Nachfragen
+Überschreiben
+Umbenennen
+Fortsetzen
+Neustart
+Anpassen
+Bitte geben Sie die Dateierweiterung an
+Hier können Sie definieren, wie sich FDM bei bestehenden Dateien auf der Festplatte verhalten soll
+Aktivieren, damit der Speicherplatz für den Download reserviert wird, sobald dieser begonnen wird
+Falls aktiv, verwendet FDM diese Erweiterung für die Datei während des Herunterladen. Nach Beendigung wird die Datei wieder in den ursprünglichen Namen umbenannt.
+FDM wird keinen Neustart für den Download anfordern, wenn der Server diese Wiederaufnahme nicht unterstützt
+Hier können Sie festlegen, wie sich FDM bei einer Änderung der Dateigröße auf dem Server verhalten soll
+Aktivieren, um Download anzuhalten, falls die Datei nicht am Server vorhanden ist
+Aktivieren, um Download anzuhalten, falls Benutzername und Kennwort falsch sind
+Datentransfermodus
+Wähle Modus für Einstellung:
+Maximale Anzahl der Verbindungen:
+Maximale Anzahl der Verbindungen zu einem Server:
+Beschränkungen für Datenverkehr:
+Keine
+Wähle den Datentransfermodus, welcher hier eingestellt werden kann
+Aktivieren, um die maximale Anzahl der Verbindungen zu begrenzen
+Aktivieren, um die maximale Anzahl der Verbindungen zu einem Server zu begrenzen
+Angabe des FDM-Datenverkehrs (maximal) für Dateidownloads
+Alle Downloads
+Liste der Downloads
+Automatisch speichern alle
+Minuten
+Lösche unvollständige Downloads
+Lösche vollständige Downloads automatisch aus der Liste
+Datei nicht löschen
+Datei löschen
+FDM speichert die Liste der Downloads automatisch nach einer gewissen Zeit. Dadurch wir der Informationsverlust bei einem Absturz verhindert.
+Legen Sie hier fest, wie FDM mit unvollständigen Downloads umgehen soll
+Aktivieren, um den erfolgreichen Download automatisch bei Abschluss aus der Liste zu löschen
+Überwachung
+Überwachung
+Zwischenablage
+Überwache Dateien mit dieser Erweiterung:
+Ignoriere Dateien mit dieser Erweiterung:
+ALT-Taste muss nicht gedrückt werden
+ALT-Taste muss gedrückt werden
+Geben Sie die Erweiterungen ein
+Aktivieren, damit FDM Klicks im Internet Explorer übernimmt
+Aktivieren, damit FDM die Zwischenablage überwacht
+Überwache nur Dateien mit angegebener Erweiterung
+Keine Überwachung, nur Dateien mit angegebener Erweiterung
+Überwachung nur, wenn ALT-Taste nicht gedrückt wurde
+Überwachung nur, wenn ALT-Taste gedrückt wurde
+Beim Starten
+Programm mit Windows starten
+Programm minimiert starten
+System
+Programm in Taskleiste minimieren
+'Beenden'-Schaltfläche minimiert das Programm
+FDM startet automatisch mit Windows
+FDM wird minimiert beim Starten
+Wenn Sie die Schaltfläche 'Minimieren' benutzen, wird FDM in die Taskleiste minimiert.
+Wenn aktiviert, funktioniert 'Beenden' wie die 'Minimieren'-Schaltfläche
+Aktualisierung
+Serveradresse
+FDM überprüft automatisch auf eine neuere Version
+Netzwerkoptimierungsassistent
+Willkommen beim Netzwerkoptimierungsassistent!
+Dieser Assistent wird Sie bei der Einstellung der optimalen Verbindungskonfiguration unterstützen und wird für die Download- und Standardeinstellungen verwendet.
+Bitte wählen Sie Ihre Verbindungsart aus:
+Beenden
+Geben Sie hier Ihre Internetverbindung an
+Einstellung für optimale Verbindung
+Aufgabe
+Startzeit
+Nächste Startzeit
+Letzte Startzeit
+Kann die Liste der Aufgaben nicht laden. Sie ist möglicherweise beschädigt oder wird von einer anderen Anwendung verwendet
+Kann die Protokolldatei des Aufgabenplaners nicht laden
+Kann die Liste des Aufgabenplaners nicht speichern
+Aufgabe "%s" wurde geplant. Ausführen?
+Ändere den Datentransfermodus in "%s"
+Auflegen
+Alle Verbindungen
+Ändere den Datentransfermodus in
+Herunterfahren
+Neustarten
+Abmelden
+Einmal
+Son
+Mon
+Die
+Mit
+Don
+Fre
+Sam
+An Tagen:
+Jeden
+Tage
+Stunden
+Beim Start von FDM
+Falls Einwahl erfolgreich
+Falls Einwahl nicht erfolgreich
+Falls keine aktiven Downloads
+Falls Geschwindigkeit geringer/gleich %d BPS während %d
+Falls alle Downloads im Fehlerstatus während
+Niemals
+Unbekannt
+Erfolgreich verbunden mit "%s"
+Fehlerhaft verbunden mit "%s"
+Ausführung erfolgreich
+Vom Speicher
+Kann nicht ausführen
+Zeitplanausführung wird das Programm beim Start beenden. Zeitplan wird ignoriert
+Maximale Wahlwiederholungsversuche
+Pause zwischen den Versuchen
+Auflegen falls die Verbindungsgeschwindigkeit geringer ist als:
+Neuversuch
+Mehr als
+Verwende die Verbindung
+Wenn erfolgreich
+mal
+Alle aktiven Verbindungen trennen
+Verbindung beenden
+Programmname:
+Parameter:
+Art des Beenden:
+Erzwinge Anwendungsende
+Programm ausführen
+DFÜ-Verbindung herstellen
+Verbindung beenden
+Datenübertragungsmodus
+FDM beenden
+Computer herunterfahren
+Zu startende Downloads
+Zu stoppende Downloads
+Anwendungen
+Alle Dateien
+Diese Funktion ist nur unter Windows 2000/XP und höher möglich!
+Bitte geben Sie den Programmname an
+Bitte wählen Sie den Download
+Wählen Sie den Datentransfermodus, der für den Aufgabenstart gewählt werden soll
+Aktivieren, falls Sie die Anzahl der nicht erfolgreichen Verbindungsversuche begrenzen wollen
+Zeit zwischen den nicht erfolgreichen Versuchen
+Aktivieren, damit eine Verbindung nur aufgebaut wird, deren Geschwindigkeit nicht kleiner ist als wie von Ihnen definiert
+Geben Sie hier den Wert der minimal geforderten Verbindungsgeschwindigkeit an
+FDM wird versuchen die erforderliche Verbindung wieder herzustellen, wenn diese Funktion aktiviert wurde
+Aktivieren, falls Sie die Anzahl der nicht erfolgreichen aufgebauten Verbindungsversuche begrenzen wollen
+Geben Sie hier die geforderten Download(s) an
+Liste aller verfügbaren Downloads
+Hinzufügen des markierten Downloads zur Aufgabenliste der Downloads
+Entfernen des markierten Downloads zur Aufgabenliste der Downloads
+Wählen sie das Programm das hier ausgeführt werden soll
+Nach dem Programm suchen
+Angabe der Programmargumente hier
+Angabe der Art der Aufgabenbeendigung hier
+Aktivieren, damit alle Programme erzwungen beendet werden. Kann bei Programmproblemen hilfreich sein, ungespeicherte Daten gehen aber verloren
+Angabe der zeitgesteuerten Aufgabe hier
+Aktivieren, damit FDM alle aktiven Verbindungen trennt
+Angabe der zu trennenden Verbindung hier
+An bestimmten Tagen
+Sonntag
+Montag
+Dienstag
+Mittwoch
+Donnerstag
+Freitag
+Samstag
+Bei Ereignis
+Während
+Min. Geschw.:
+min.
+Minuten
+Stunden
+Tage
+Falls Downloadgeschwindigkeit zu gering
+Falls alle Downloads im Fehlerstatus stehen
+Angabe der Tage
+Beginne die Aufgabe zu einer bestimmten Zeit
+Angabe der Startzeit für die Aufgabe hier
+Beginne die Aufgabe an einem bestimmten Datum
+Angabe des Startdatum für die Aufgabe hier
+Beginne die Aufgabe an bestimmten Tagen der Woche
+Beginne die Aufgabe jeden Sonntag
+Beginne die Aufgabe jeden Montag
+Beginne die Aufgabe jeden Dienstag
+Beginne die Aufgabe jeden Mittwoch
+Beginne die Aufgabe jeden Donnerstag
+Beginne die Aufgabe jeden Freitag
+Beginne die Aufgabe jeden Samstag
+Beginne die Aufgabe periodisch
+Dieses Feld ermöglicht die Eingabe von Zeitintervallen in Minuten, Stunden oder Tagen
+Beginne die Aufgabe wenn bestimmte Ereignisse auftreten
+Wählen Sie die Ereignisart hier
+Eingabe des Zeitintervalls hier
+Eingabe der geforderten Geschwindigkeit hier
+Eine Bestätigung ist für die Ausführung notwendig
+Warte auf die Bestätigung für
+Sekunden
+Wenn aktiviert wird FDM Sie für die Ausführung dieser Aufgabe fragen
+Wenn aktiviert wird FDM auf die Bestätigung von Ihnen die definierte Zeit warten. Nach Ablauf dieser Zeit wird die Aufgabe ausgeführt
+Adresse:
+Erstelle die Liste der zu ladenden Dateien
+Verbindung zum Server
+Es wird versucht Benutzername und Kennwort, gespeichert im Webseiten Manager, zu verwenden
+Erhalte Dateiliste vom Server
+Verbindung zum Server unterbrochen. Neuaufbau wird versucht
+Erstelle Liste
+Erhalte Größe und letztes Änderungsdatum der Dateien
+Die Verwendung dieses Parameters kann die Geschwindigkeit drastisch verringern
+Aktivieren, damit FDM die Größe und Datum der zu übertragenden Datei vom HTTP-Server abfragt
+Webseitenname
+Verbindungen
+Anmelden
+Gruppe
+Kann die Liste der Seiten nicht laden. Sie ist möglicherweise beschädigt oder wird von einer anderen Anwendung verwendet
+Kann die Liste der Seiten nicht speichern
+Maximale Verbindungen gleichzeitig:
+Standardgruppe für einen neuen Download von dieser Webseite:
+Verwende passiven FTP-Modus
+Webseitennamen eingeben
+Eine Webseite mit diesem Namen ist bereits vorhanden. Bitte geben Sie einen anderen Namen an
+Anzahl der maximalen Verbindungen muss größer als 0 sein
+Bitte wählen Sie eine Gruppe
+Webseitennamen hier eingeben
+Aktivieren, um die maximale Anzahl der gleichzeitigen Verbindungen zum Server zu begrenzen
+Aktivieren, um Downloads von diesem Server zur markierten Gruppe automatisch hinzuzufügen
+Nachfragen
+Nicht mehr fragen
+Schreibfehler
+Datei "%s" ist bereits vorhanden. Was möchten Sie tun?
+Nicht mehr nachfragen. Wird als Standardwert gespeichert.
+Überschreibe vorhandene Datei
+Datei umbenennen
+Herunterladen fortsetzen. (Das Herunterladen wird in der Position begonnen, die mit der Anzahl der vorhandenen Dateien übereinstimmt)
+Download anhalten
+Ja
+Nein
+Löschen der Datei:
+Soll die Datei auch aus dem Downloadordner entfernen werden?
+Bitte geben Sie einen Benutzername und Kennwort ein
+Anmelden an "%s"
+Übermittle eingegebenen Benutzername und Kennwort dem Server
+Keine Verbindung zu diesem Server
+Die Größe von "%s" wurde am Server geändert. Was ist zu tun?
+Neustart des Downloads von Anfang an
+Stelle Download auf die neue Dateigröße ein. Nicht empfohlen
+Bitte warten
+Aktualisierung
+Beschreibung
+Aktualisierung verwendet:
+Überprüfe auf aktuelle Programmversion
+Sie verwenden bereits die aktuellste Programmversion!
+Beim Herunterladen
+Version %s Build %s ist verfügbar
+Gesamtpaket der Version %s (%s)
+Aktualisierung auf Version %s
+Aktualisierung auf Version %s (%s)
+FDM sollte neu gestartet werden. Jetzt Neustarten?
+Aktualisierung erfolgreich
+Kann Aktualisierung nicht finden
+Wählen Sie den Aktualisierungsart hier
+Aktualisiere FDM mittels Gesamtpaket
+Aktualisiere FDM mittels Aktualisierungspaket
+Zeige weitere Informationen zum Aktualisierungsvorgang an
+Was ist neu in dieser Version?
+Beginne mit der Aktualisierung von FDM jetzt
+Aktualisierung abbrechen und Fenster schließen
+Erzeuge Downloads
+Wähle Inhalt 
+Wähle keinen Inhalt
+Liste der Downloads hinzufügen
+Überprüfen Sie die vorgewählten Ordnerelemente, um sie der Downloadliste hinzuzufügen
+Überprüfen Sie die vorgewählten Ordnerelemente, um sie nicht der Downloadliste hinzuzufügen
+Über FDM
+Copyright (c)
+Alle Rechte vorbehalten
+Registriert für:
+Bereits aktualisiert. Neustart erforderlich
+Ungültiger Benutzername oder Kennwort
+Kann Verlaufliste nicht laden
+Kann Verlaufliste nicht speichern
+HTML-Spider Standardeinstellungen
+HTML-Spider
+Webseitenbaum
+Download Webseite
+HTML-Spider Einstellungen
+Herunterladen beginnen
+Herunterladen anhalten
+Zeitgesteuertes herunterladen
+Löschen
+Öffne Webseite im Browser
+Herunterladen automatisch beginnen
+Webseitenlink:
+Dateien
+Auch Downloads löschen?
+Kann die Liste der Webseiten nicht laden
+Kann die Liste der Webseiten nicht speichern
+URL der Webseite oder HTTP-Server von der heruntergeladen werden soll
+URL der Webseite oder HTTP-Server von der der Download gestartet wurde
+Name des Ordners zum Speichern der Downloads
+Ausgabeordner:
+Webseiten
+Seiten
+Erweiterungen der Dateien der Webseite mit HTML-Code:
+Lade auch Webseitenstyledateien (CSS) herunter
+Lade Webseiten von anderen Seiten herunter
+Bilder
+Bilder herunterladen
+Lade Bilder herunter, die auf andere Webseiten zeigen
+Downloadtiefe:
+Erweiterungen der Dateien der Webseite mit HTML-Code. Webseiten werden auf Links von Bildern und andere Webseiten überprüft
+Wenn ausgewählt, werden auch CSS Dateien heruntergeladen. Wird empfohlen
+Wenn nicht ausgewählt, dann werden Webseiten anderer Seiten nicht heruntergeladen. Als Beispiel, Sie wollen die Seite http://example.com/ herunterladen, dann wird http://othersite.com/some.html nicht, aber http://example.com/some.html sehr wohl heruntergeladen
+Wenn ausgewählt, werden Bilder auch heruntergeladen
+Wenn nicht ausgewählt, werden  Bilder die auf andere Webseiten zeigen nicht heruntergeladen
+Downloadtiefe. Als Beispiel, Sie wollen http://ex.com/index.html herunterladen. Es gibt einen Link auf http://ex.com/some.html von http://ex.com/index.html. Dann soll die Tiefe von http://ex.com/some.html 1 sein. Bei einer Wahl von 0 wird nur die Startseite heruntergeladen
+Dateien der Webseite herunterladen
+Dateien anderer Webseiten herunterladen
+Dateien mit dieser Erweiterung löschen
+Einschalten für
+Herunterladen
+Nicht Herunterladen
+Dateien mit den Erweiterungen:
+Aktivieren, um Dateien der Webseite herunterzuladen
+Aktivieren, um Dateien anderer Webseite herunterzuladen
+Aktivieren, um Dateien mit angegebenen Erweiterungen zu ignorieren
+Dateien mit nachstehender angegebener Erweiterung werden heruntergeladen
+Dateien mit nachstehender angegebener Erweiterung werden nicht heruntergeladen
+Einstellungen exportieren
+Einstellungen importieren
+Regedit.exe konnte nicht ausgeführt werden
+Während des Export der Einstellungen ist ein Fehler aufgetreten
+Während des Import der Einstellungen ist ein Fehler aufgetreten
+FDM-Registrierungsdateien
+Bildern nach Erweiterung löschen
+Bildern mit den Erweiterungen:
+Aktivieren, um Bilder mit angegebenen Erweiterungen zu ignorieren
+Bilder mit nachstehender Erweiterungen werden heruntergeladen
+Bilder mit nachstehender Erweiterungen werden nicht heruntergeladen
+Nicht herunterladen und löschen
+Server unterstützt Dateiwiederaufnahme nicht. Neustart von Anfang an
+Fehler beim Öffnen der URL
+Ein unerwarteter Fehler trat beim Erstellen der Registrierungseinträge auf
+Vielen Dank für die Registrierung! Bitte starten Sie FDM neu!
+Datei mit FDM herunterladen
+Webseite mit FDM herunterladen
+FDM dem Browser-Kontextmenü hinzufügen
+Aktivieren, um die Einträge "Mit FDM herunterladen" und "Webseiten mit FDM herunterladen" dem Browser-Kontextmenü hinzuzufügen (Menü erscheint bei Rechtsklick)
+Verringere Downloadgeschwindigkeit bei Browseraktivität
+Um eine Stufe verringern
+Wenig Bandbreite nutzen
+Aktivieren, um die Downloadgeschwindigkeit zu verringern, wenn Sie nebenher browsen. Damit können Sie schneller surfen, falls FDM gerade etwas für Sie herunterlädt
+Downloadgeschwindigkeit wird um eine Stufe verringert. Maximal -> Normal, Normal -> Wenig
+Downloadgeschwindigkeit wechselt auf 'Wenig Bandbreite'
+Gültig für
+Auch für Sub-domains
+Aktivieren, um diesen Datensatz mittels HTTP herunterzuladen
+Aktivieren, um diesen Datensatz mittels HTTPS herunterzuladen
+Aktivieren, um diesen Datensatz mittels FTP herunterzuladen
+Aktivieren, um diesen Datensatz von einer Sub-domains herunterzuladen. Beispiel: Für die Webseite http://site.com wird http://some.site.com verwendet.
+Bitte wählen Sie mindestens ein Protokoll
+Maximale Anzahl der laufenden Downloads
+Aktivieren, um die maximale Anzahl der gleichzeitig laufenden Downloadvorgänge zu begrenzen
+Download neu starten
+Einen weiteren Abschnitt erzeugen
+Einen Abschnitt anhalten
+; context: [section x] - Stopped
+Angehalten
+; tray menu
+Sammelbox
+;
+Kann Opera-Pluginordner nicht finden. Wollen Sie jetzt danach suchen?
+Kann Netscape-Pluginordner nicht finden. Wollen Sie jetzt danach suchen?
+Kann Operaüberwachnung nicht installieren
+Kann Operaüberwachnung nicht deinstallieren
+Kann Netscapeüberwachnung nicht installieren
+Kann Netscapeüberwachnung nicht deinstallieren
+Aktivieren, damit FDM Klicks in Opera überwacht
+Aktivieren, damit FDM Klicks in Netscape überwacht
+; create download dlg
+Größe abfragen
+; request the size of a download
+Anfrage...
+Abfrage der Downloadgröße von einem Server
+Ja zu allen
+Nein zu allen
+Ausführliches Protokoll
+Aktivieren, damit FDM Serverantworten anzeigt
+Änderungen werden nach Neustart des Browser wirksam
+Liste aller Aufgaben
+Liste aller Dateien
+Liste aller Seiten
+Liste aller Webseiten
+Downloads löschen
+Liste aller Downloads erstellen
+Sammeldownloads erstellen
+Von:
+Bis:
+Abstand:
+Nummernstellen:
+Ergebnis
+Beispiel:
+Sequenzanfangszahl
+Sequenzendezahl
+Sequenzschritte. Beispiel: Wenn 10 gewählt, dann ist die Sequenz 0, 10, 20, ...
+Anzahl der Nummernstellen (Wildcard Bytes). Beispiel: wenn 1 gewählt, dann ist die Sequenz 1, 2, 3. Falls 2 gewählt, dann ist die Sequenz 01, 02, 03
+Zeige die erzeugte Sequenz
+Erlaube dem Browser das Herunterladen, wenn Sie auf 'Abbrechen' drücken
+Aktivieren, damit der Browser die Datei herunterlädt, wenn Sie auf "Abbrechen" im "Erzeuge Download" - Fenster drücken
+Sequenzendzahl muss größer als die Anfangszahl sein
+Bitte benutzen Sie (*) in der URL um eine URL-Vorlage zu definieren
+Erzeuge Erweiterung, falls die Datei keine solche besitzt
+Aktivieren, damit Dateien die keine Erweiterung besitzen eine vorher angegebene Erweiterung erhalten. Als Beispiel, wenn der Dateiname "file" und Sie "txt" angegeben haben, erhalten Sie "file.txt" als Ergebnis
+Zeige Größen nur in Bytes an
+Aktivieren, damit werden alle Größen in Bytes anstatt Kilobytes oder Megabytes angezeigt
+Virusüberprüfung durchführen
+Argumente:
+Erweiterungen:
+Aktivieren, damit alle heruntergeladenen Dateien automatisch auf Viren überprüft werden
+Geben Sie das Antivirusprogramm hier an
+Geben Sie die Argumente für das Antivirusprogramm hier an
+Geben Sie hier die Erweiterungen der heruntergeladenen Dateien an
+Eingabe des Programmnamen
+Name ist ungültig. Bitte überprüfen
+Antivirusprogramm ausführen
+Aufgabe nach Ausführung deaktivieren
+Aufgabe nach Ausführung löschen
+Aktivieren, damit die Aufgabe nach Ausführung automatisch deaktiviert wird
+Aktivieren, damit die Aufgabe nach Ausführung automatisch gelöscht wird
+Los
+Zurück
+Dateiname automatisch erstellen
+Aktivieren, damit ein Dateiname automatisch erstellt wird
+Speichern mit "htm" - Erweiterung
+Aktivieren, dann werden alle Webseiten mit der "htm" - Erweiterung gespeichert
+Aktivieren, um die Gesamtgröße aller Downloads zu berechnen
+Ordnerstruktur des Servers beibehalten
+Aktivieren, damit die originale Ordnerstruktur des Servers beibehalten wird. Sonst werden alle Dateien vom Server in einem einzigen Ordner gespeichert
+Sie haben einen anderen Ordner gewählt. Soll dieser Ordner der Standardordner für die Gruppe werden? Kann auch in den Gruppeneigenschaften eingestellt werden
+; === ADDED LINES ===
+Download mit dieser URL ist bereits verfügbar. Was ist zu tun?
+Ausführen
+Heruntergeladene Datei ausführen
+Version
+Link zur Supportseite
+Link zur Downloadseite
+Achtung: Dieses Programm ist durch das Urheberrechtsgesetz und internationale Verträge geschützt. Unerlaubte Vervielfältigung oder Weitergabe dieses Programms (auch nur von Teilen) ist strafbar und wird sowohl zivil- als auch strafrechtlich verfolgt werden.
+; === new version ===
+Alles mit FDM herunterladen
+Downloadliste hinzufügen
+Markierte entfernen
+Das ist die Liste der URLs die hinzugefügt werden
+Benutzen Sie diese Schaltfläche um die markierten URLs aus der Liste zu entfernen
+Kann Firefox-Pluginordner nicht finden. Wollen Sie jetzt danach suchen?
+Kann Firefoxüberwachung nicht installieren
+Kann Firefoxüberwachung nicht entfernen
+Aktivieren, um FDM Klicks in Mozilla (Firefox/Suite/SeaMonkey) zu überwachen
+Auswahl mit FDM herunterladen
+Beginne
+Webseiten
+Aktueller Download
+Es gibt derzeit keine aktuellen Downloads
+Benachrichtigungen
+Verwende Sprechblasen in der Taskleiste
+Anzeigedauer:
+Aktivieren, damit Benachrichtigungen in der Taskleiste als Sprechblase angezeigt werden, wenn ein Download angehalten oder beendet wurde. Hinweis: Nur unter Windows 2000/XP und höher verfügbar.
+Schließe das Benachrichtigungsfenster nach Ablauf dieser Zeit
+Spiegel
+Suche automatisch nach Spiegel - URLs
+Maximale Anzahl der benutzten Spiegel
+Bestimme die Spiegelgeschwindigkeit
+Geschwindigkeitsneuberechnung für
+Aktivieren, damit FDM nach Spiegelserver für diese URLs automatisch sucht
+Anzahl der Spiegel-URLs pro Download. Das ermöglicht die Ermittlung der Spiegelgeschwindigkeit zu verringern
+Aktivieren, damit FDM die Geschwindigkeit von jedem Spiegelserver berechnen kann
+Automatische Geschwindigkeitsneuberechnung für die Spiegelserver nach vorgegebenem Zeitintervall
+Keine Suche bei Dateigröße kleiner als
+FDM wird keine Spiegelserversuche durchführen, falls die Datei kleiner als der vorgegebene Wert ist
+Keine Suche, falls die Dateigröße unbekannt ist (empfohlen)
+Spiegel hinzufügen
+Spiegelserver
+Spiegel-URL für diesen Download manuell hinzufügen
+Spiegel-URLs für diesen Download bei FileMirrors.com suchen
+Liste der Spiegel-URLs
+Servergeschwindigkeit
+In Verwendung
+Geschwindigkeitstest
+Spiegelservergeschwindigkeit ermitteln
+Downloadfortschritt
+Bitte warten...
+Spiegel-URL für Download
+Die Dateigröße überschreitet 2GB. Derartige Downloads werden nur bei FTP unterstützt!
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Neuer Download
+Bestimme Gruppe für Download automatisch
+Einstellungen für:
+Speichere Download in den für dessen Gruppe bestimmten Ordner
+Aktivieren, damit die Downloadgruppe entweder über die Dateierweiterung oder durch die Einstellungen im Webseiten Manager bestimmt werden
+Bestimme Standardgruppe manuell
+Aktivieren, damit der Download in dessen Gruppenstandardordner gespeichert wird (siehe auch Gruppeneigenschaften)
+Bestimme Standardausgabeordner manuell
+; END
+; BEGIN: Monitoring page
+Stille Überwachung
+Zeige "Erzeuge Download" - Dialog nicht, wenn ein Download im Browser hinzugefügt worden ist
+Bearbeiten
+Wähle die Menüeinträge, die im Browser-Kontextmenü angezeigt werden sollen
+; END
+Einträge im IE-Browserkontextmenü
+Es muss mindestens ein Eintrag ausgewählt werden!
+Verwende Klänge
+Aktivieren, falls FDM Klänge bei verschiedenen Ereignissen abspielen soll (Bsp.: Download ist abgeschlossen)
+Wähle Klang für das einzelne Ereignis
+; BEGIN : Customize sounds dialog
+Klänge auswählen
+Auswählen
+Entfernen
+Abspielen
+Liste der Ereignisse und zugehöriger Klänge. Hier besteht die Möglichkeit, den jeweiligen Ereignisse Klänge zuzuweisen.
+Download hinzufügen - spielt einen Klang, falls Downloads der Liste hinzugefügt werden
+Download abgeschlossen - spielt einen Klang, wenn der Download erfolgreich abgeschlossen wurde
+Download fehlgeschlagen - spielt einen Klang, wenn ein Fehler während des Downloads aufgetreten ist
+Einwahl erfolgreich - spielt einen Klang, wenn die zeitgesteuerte Aufgabe "DFÜ-Verbindung aufbauen" erfolgreich ausgeführt wurde
+Einwahl fehlgeschlagen - spielt einen Klang, wenn die zeitgesteuerte Aufgabe "DFÜ-Verbindung aufbauen" nicht erfolgreich ausgeführt wurde
+Klangeinstellung für ausgewähltes Ereignis
+Kein Klang, wenn ausgewähltes Ereignis eintritt
+Teste ausgewählten Klang
+Ereignis
+Klangdatei
+Kein Klang
+Download hinzugefügt
+Download abgeschlossen
+Download fehlgeschlagen
+Einwahl erfolgreich
+Einwahl fehlgeschlagen
+Klangdatei
+; END
+Suche nach Spiegeln...
+Bestimme Spiegelgeschwindigkeit...
+Die Spiegelsuche wurde bereits durchgeführt
+Verbinde zu Suchserver...
+Erhalte Ergebnisse...
+Es wurden %d Spiegel gefunden
+Spiegelsuche beendet
+Versuche weiteren Spiegel...
+Es wurde kein Spiegel gefunden
+Fehlgeschlagen
+Spiegelgeschwindigkeit wurde gemessen
+; BEGIN: History page
+Verlauf
+Speichere den Verlauf von Links und Ordnern
+Speichere den Verlauf nur von Ordnern
+Behalte die Einträge der letzten
+Maximale Anzahl der Einträge
+Lösche Verlauf
+FDM speichert den Verlauf der eingegebenen Links und Ordnern die eingegeben wurden
+FDM speichert nur den Verlauf der Ordner
+FDM löscht die Einträge im Verlauf nach Ablauf einer bestimmten Zeitperiode
+Maximale Anzahl der Einträge im Verlauf. Wenn die Anzahl der Einträge diesen Wert überschreitet, dann wird der älteste Eintrag überschrieben
+Lösche alle Einträge im Verlauf
+; END
+Import
+Export
+Importiert eine Liste von URLs
+Exportiert eine Liste von Downloads
+Textdatei
+Konnte Datei nicht öffnen
+Alle Downloads exportieren
+Alle Downloads in eine Liste exportieren
+Ausgewählte Downloads exportieren
+Exportiere keine abgeschlossenen Downloads
+Hinzufügen, falls die Datei bereits vorhanden ist
+Ungültiger Gruppenname. Verwende nicht / oder \.
+Nach Abschluss beenden
+; BEGIN : Downloads History window
+Hinzugefügt
+Speichern als
+; END
+Papierkorb
+; BEGIN: Recycle Bin
+Eigenschaften
+Papierkorb leeren
+;END
+;BEGIN: Recycle Bin properties
+Gelöschte Downloads nicht im Papierkorb speichern
+Behalte maximal
+Downloads
+Abgeschlossene Downloads löschen
+Bestätigung für Löschen von Downloads notwendig
+Eigenschaften Papierkorb
+Aktivieren, damit keine gelöschten Downloads im Papierkorb gespeichert werden
+Aktivieren, damit die Anzahl der gelöschten Downloads im Papierkorb begrenzt wird
+Maximale Anzahl der Downloads die im Papierkorb gespeichert werden
+Aktivieren, damit keine abgeschlossenen Downloads im Papierkorb gespeichert werden
+Aktivieren, damit eine Bestätigung für das Löschen eines Downloads notwendig ist
+;END
+Wiederherstellen
+Downloads wiederherstellen...
+; History subitems
+Heute
+Gestern
+Letzte Woche
+Letzten Monat
+Benutzerdefiniert...
+; end
+Verlauf löschen
+Verlauf der Downloads speichern
+Nur den Verlauf abgeschlossener Downloads speichern
+Aktivieren, damit der Verlauf aller Downloads gespeichert wird
+Aktivieren, damit nur der Verlauf der abgeschlossenen Downloads gespeichert wird
+Eigenschaften Verlauf
+Liste für Einträge im Verlauf erstellen...
+; Download was deleted
+Wurde gelöscht
+Zeitbereich auswählen
+Suchen
+Weitersuchen
+Suche nach
+; BEGIN : Find dialog
+Suchen in
+Lokalen Dateinamen
+Angabe nach was gesucht werden soll
+Suche in Teilen der URL
+Suche in vollständiger URL
+Suche in der Anmerkung zum Download
+Suche in Name und Pfad der heruntergeladenen Datei auf der Festplatte
+Einstellungen für erweiterte Suche
+; ADVANCED settings
+Wo suchen
+Suche in der Downloadliste
+Suche im Downloadverlauf
+Zeitabschnitt festlegen
+Einstellen
+Suche im Papierkorb
+Suche mit bestimmter Dateigröße
+Minimal
+Maximal
+Suche in der Downloadliste
+Suche im Downloadverlauf
+Suche nur nach Downloads, die mit einem bestimmten Zeitrahmen übereinstimmen
+Zeitabschnitt festlegen
+Suche im Papierkorb
+Suche nur nach Downloads, die mit einem bestimmten Zeitrahmen übereinstimmen
+Minimal geforderte Größe
+Maximal geforderte Größe
+Suche in Gruppe:
+Wahl der Gruppe in der die Suche ausgeführt werden soll
+; END
+Suche nach Downloads...
+Es wurden keine Elemente gefunden
+Es wurden keine weiteren Elemente gefunden
+Suche abgeschlossen
+URL in Zwischenablage
+ZIP-Vorschau
+Es muss mindestens eine Datei ausgewählt werden
+Sie laden vermutlich ein ZIP-Archiv herunter. Soll eine Vorschau dieser Datei gezeigt werden?
+Audio/Video Vorschau
+Datei kann nicht geöffnet werden
+Unbekannter Medientyp
+Sie benötigen DirectX 8.0 oder höher für diese Funktion. DirectX kann von www.microsoft.com heruntergeladen werden
+Medieninformation
+Größe:
+Verfügbar:
+Laufzeit:
+Stumm
+Abspielen
+Pause
+Filter
+Dateiendungen (durch Leerzeichen trennen, Bsp. zip rar arj):
+Dateien mit diesen Dateiendungen entfernen
+Dateien mit diesen Dateiendungen behalten
+Die Parameter beinhalten das Makro %file% nicht. Dieses Makro ist für die Dateiangabe erforderlich, die Ihr Antivirusprogramm überprüfen soll.
+Fortfahren?
+Achtung
+Unvollständigen Download mit Attribut "versteckt" kennzeichnen
+Anmerkung bei Beendigung dem Dateinamen hinzufügen
+Keine Serverseiten speichern
+Aktivieren, damit um keine Serverseiten, sondern nur Dateien und Bilder zu speichern
+ZIP-Vorschau verwenden
+Aktivieren, damit eine Vorschau des Inhalts eines ZIP Archivs bereits beim Herunterladen geladen und angezeigt wird
+Inhalt:
+Download automatisch beginnen
+Aktivieren, damit FDM jeden neuen Download automatisch startet
+Wählen Sie die Datei(en) zum Herunterladen aus:
+Eingabe einer alternativen Adresse (URL) für diesen Download
+Zeige keine Vorschau mehr an
+ZIP-Vorschau wurde abgeschaltet. Zum Aktivieren: Optionen > Downloadoptionen > Neuer Download > Verwende ZIP Vorschau
+Ausschlußliste
+Liste von Webseiten die beim Herunterladen ausgeschlossen werden sollen.
+Unterordner
+Hinzufügen
+Auch alle Unterordner ignorieren
+; Proxy tab new settings
+Verwende Wiederaufnahme für abgebrochene Verbindungen
+Aufnahmegröße bei
+Bytes
+Aktivieren, damit die Wiederaufnahmefunktion verwendet wird. Dadurch kann vor einem unvollständigen Download geschützt werden.
+Dateigröße für Wiederaufnahme. Größere Werte bieten bessere Sicherheit. Werte von 3000 Bytes werden empfohlen. Vergrößern Sie diesen Wert falls Sie immer noch beschädigte Dateien erhalten.
+; downloader options -> monitor tab
+Keine Überwachung für Dateien kleiner als
+Verwenden Sie diese Option, damit FDM kleinere Dateien als diese Größe überspringt
+KBytes
+Achtung! Papierkorb ist zu größ. Geschwindigkeitseinbussen sind möglich. Es wird empfohlen, den Papierkorb zu leeren. Möchten Sie das nun tun?
+Nicht wieder überprüfen
+Achtung! Downloadverlauf ist zu groß. Geschwindigkeitseinbussen sind möglich. Es wird empfohlen, den Papierkorb zu leeren. Möchten Sie das nun tun?
+Die Server-Antwort ist ungültig, es kann nicht für eine Download-Wiederaufnahme garantiert werden.
+Kopieren
+; general settings | skins page
+Skins
+Skin
+Skineigene Symbole verwenden
+Skineigene Bitmaps verwenden
+; default skin
+<Standard>
+HINWEIS: Alle Änderungen sind erst nach einem Neustart von FDM wirksam.
+Zeige Downloadinformation während des Herunterladen
+Überspringe Dateien mit der Erweiterung:
+Liste der zu überspringenden Dateierweiterungen
+Keine aktiven Downloads
+Klang abspielen, wenn alle Downloads abgeschlossen wurden
+Liste von URLs aus Zwischenablage importieren
+Kennwort
+Einstellungen Webseiten-Manager
+; Save password dialog
+Kennwort speichern?
+FDM kann das Kennwort für diesen Server abspeichern, damit eine erneute Eingabe beim nächste Download nicht mehr notwendig ist.
+Dieses Kennwort speichern?
+Speichern der Kennwörter nicht mehr vorschlagen
+; Site Manager options | Passwords tab
+Webseiten-Manager für Kennwortspeicherung verwenden
+Nachfrage für Kennwortspeicherung
+Keine Nachfrage für Kennwortspeicherung
+Alle Kennwörter beim Schließen löschen
+Alle Kennwörter löschen
+; create new HTML Spider task
+Abgeschlossene Downloads automatisch löschen (Empfohlen)
+Aktivieren, damit HTML Spider Downloads automatisch gelöscht werden. Erhöht die Downloadgeschwindigkeit großer Webseiten.
+Änderungen sind erst nach einem Neustart von FDM wirksam
+Neuer Style
+Alter Style
+Der Ordnername ist ungültig
+Programmfenster im Vollbildmodus ausblenden
+Markieren Sie diese Option, wenn Sie das Programmfenster im Vollbildmodus ausblenden möchten.
+wurde als Termin eingetragen.
+Möchten Sie es starten?
+Heruntergeladene Datei öffnen, wenn Download abgeschlossen ist
+Bitte geben Sie ein (*), (*A) oder (*a) in der URL ein, um eine Vorlage auszuwählen
+Spiegel der Suchserver:
+Ruhezustand (Hibernate)
+Stand-By
+Auswahl merken
+Vorschlag, den Standardordner für diese Gruppe ändern
+Datei speichern
+Datei öffnen
+Datei speichern und öffnen
+Downloadtyp:
+Link zu FDM
+Link zu Free Download Manager
+Sehr geehrter Benutzer!
+Free Download Manager ist ein kostenloses Programm. Sie können es uneingeschränkt lange benutzen.
+Sollten Sie Free Download Manager nützlich finden, so bitten wir Sie, einen Link zu uns auf Ihrer Webseite zu erstellen, um so Ihre Gäste auf Free Download Manager aufmerksam zu machen.
+Vielen Dank für Ihre Unterstützung, Free Download Manager Entwicklungsteam.
+In 3 Tagen nochmal erinnern
+Beim nächsten Start von Free Download Manager erinnern
+Nicht nochmal nachfragen
+HTML-Code für Link zeigen
+HTML-Code für Link
+Mehr Beispiele
+Kopieren
+Ausblenden
+; "Traffic usage mode has been changed" window
+Der Bandbreiten-Modus wurde geändert
+Sie haben den Bandbreiten-Modus geändert.\nFree Download Manager hat drei Modi:
+In diesem Modus lädt Free Download Manager mit maximaler Bandbreite herunter. Dies ist der schnellste Modus.
+In diesem Modus lädt Free Download Manager mit durchschnittlicher Bandbreite herunter. In diesem Modus können Sie nebenher noch bequem surfen und haben trotzdem eine hohe Downloadgeschwindigkeit.
+In diesem Modus lädt Free Download Manager mit geringer Bandbreite herunter. In diesem Modus wird die Netzwerkverbindung kaum belastet.
+;
+Bei erneutem Start umbenennen:
+Wert kleiner als %d eingeben
+; export/import downloads
+URL Dateiliste
+Download-Information-Dateiliste
+;
+Exporteinstellungen
+;
+Setze Dateidatum identisch dem gegebenen Serverdatum gleich
+Setze Datum der heruntergeladenen Datei dem Serverdatum gleich
+Erstelle eine Dateibeschreibung des Downloads
+Erstellt eine Datei mit der Endung "*.dsc.txt" (* - Name der Datei) die eine kurze Beschreibung (Bemerkung + Link + Datum) der heruntergeladenen Dateien beinhaltet. Diese Datei wird nur erzeugt, falls Bemerkungen vorhanden sind.
+Diese Datei wurde heruntergeladen von
+Dateidatum vom Server nicht abfragen
+Diese Option beschleunigt den Downloadvorgang. FDM verwendet den SIZE-Befehl anstelle von LIST.
+Protokoll der Downloads nicht speichern
+Eine Aktivierung beschleunigt den Programmstart und verringert die Speichernutzung.
+;
+Export des Downloadverlauf
+Export aller Einträge
+Export aller Einträge der Liste
+Export ausgewählter Einträge
+Export Einträge aller abgeschlossenen Downloads
+;
+HTML Dateien
+;
+FDM-Downloadverlauf
+URL des Download
+Download in Datei
+Dateigröße
+Download abgeschlossen
+Download gelöscht
+;
+Gespeichert nach
+Dateigröße
+Wiederaufnahme
+Schließe dieses Fenster, wenn Download vollständig oder angehalten
+Öffnen
+Soll das Fenster wieder angezeigt werden?
+Ja, aber temporär nicht mehr für diesen Download
+Nein, nicht mehr anzeigen
+Ja, aber nicht mehr für diesen Download
+Verwendung der UMSCHALT-Taste löscht die heruntergeladene Datei im Ordner, ohne sie dann wieder herstellen zu können.\nSind Sie sicher?
+Gruppe auswählen
+Gruppenstammverzeichnis auswählen
+Gruppenstammverzeichnis auswählen. Die Änderungen sind erst bei neuen Downloads wirksam.
+Neueste Downloads
+(leer)
+Alle Downloads anhalten
+Zeige Download-Fortschrittsanzeige
+Aktivieren, damit FDM ein eigenes Fenster mit Informationen für jeden laufenden Download anzeigt
+; general settings | misc page
+Zeitüberschreitung für Bestätigungen
+Download starten
+Frage nach Art des Herunterfahrens
+Bestätigungszeit für "Extras | Nach Abschluss Verbindung trennen" Befehl.
+Bestätigungszeit für "Extras | Nach Abschluss beenden" Befehl.
+Bestätigungszeit für "Extras | Nach Abschluss Computer herunterfahren" Befehl.
+Bestätigungszeit für Ausführen der heruntergeladenen Datei nach vollständigem Download.
+Aktivieren, um die Arten des Herunterfahren im Menü "Extras" einzustellen
+Keine Bestätigung notwendig
+; 5 seconds, 10 seconds, ...
+%d Sekunden
+Manuelle Bestätigung
+Seiten aus diesem Ordner ignorieren
+Seiten nur aus diesem Ordner herunterladen
+Inklusive Unterordner
+Alle Webseiten aus diesem Ordner ignorieren.
+Nur Seiten aus diesem Ordner herunterladen und andere ignorieren.
+Verwenden Sie diese Option, damit HTML-Spider Seiten aus allen Unterordnern des gewählten Ordners ignoriert (oder nur herunterlädt).
+Hier geben Sie die URL des Ordners an.\nBeispiel: "http://webseite.de/links/".
+Typ
+Ignorieren
+Nur
+Zahlenbereich
+Zuweisen
+Hier geben Sie die Anzahl der Zahlen für die Batchliste an.\nBsp. 1-100, oder 1-100s2w3.
+Klicken Sie auf die Schaltfläche, um die Anzahl der Zahlen zu übernehmen.
+Einzelne Zahl
+Zahl
+Anzahl der Zahlen zuweisen
+Syntaxfehler
+Archiv entpacken
+Entpacken
+Extraktion
+Zielordner
+Entpacken war nicht möglich, da unbekanntes Datenformat.
+Diesen Monat heruntergeladen\n(%s wurde im vorherigen Monat heruntergeladen)
+Gesamtgeschwindigkeit der Downloads
+"Extras" - Aufgaben nach Abschluß nicht ausführen.
+Wenn aktiviert, wird jede "Extras" - Aufgabe nach Abschluß nicht gestartet. Sie wird nur einmal ausgeführt.
+; %s
+; 1st - name of a file
+; 2nd, 3rd - file info (size + date).
+Datei "%s" existiert.\n\nSoll die Datei\n(%s)\n\n durch die neue Datei\n(%s)ersetzt werden?
+Ja für alle
+Überspringen
+Alle überspringen
+Archivformat ist unbekannt!
+Webseite besuchen
+Installieren
+FDM unterstützt derzeit nur ZIP, RAR und ARJ Archive. Sie können aber die Anzahl erweitern, indem Sie die zusätzlichen FDM-Archivformate nachinstallieren (Internetverbindung ist notwendig).
+FDM-Archivformate
+Nach oben
+Nach unten
+Gewählte Download(s) nach oben
+Gewählte Download(s) nach unten
+Prüfe Dateiintegrität
+Einige Server unterstützen spezielle Prüfsummen, um sicher zu stellen, dass die heruntergeladenen Dateien vollständig sind. Sie können die Prüfsumme nun hier eingeben und FDM prüft die Dateiintegrität.
+Algorithmus
+Prüfsumme
+Aus Zwischenablage einfügen
+Überprüfen
+Berechne Prüfsumme der heruntergeladenen Dateien...
+Prüfung der Dateiintegrität erfolgreich
+Prüfung der Dateiintegrität fehlerhaft
+Die Prüfung der Dateien wurde erfolgreich abgeschlossen. Es wurden keine fehlerhaften Dateien heruntergeladen.
+Die Prüfung der Dateien wurde abgeschlossen. Es wurden Fehler gefunden und Dateien wurden fehlerhaft herunter- geladen. Der Download muss nochmals neu gestartet werden.
+Nicht mehr zeigen, wenn die Prüfung erfolgreich ist.
+Programmdatei des Antivirus-Programm konnte nicht gefunden werden.\nBitte nochmals durchsuchen.
+Dateigrößen sind nicht gleich!
+Speichern als:\n(Beispiel: Datei(*)(*A)(*a).txt)
+Ungültige Vorlage abgespeichert.\nStellen Sie sicher, dass die Vorlage der URL übereinstimmt.
+Wenn fertig
+Wenn fertig (abgeschlossen oder mit Fehlern)
+Anwendungen
+Was macht diese Einstellung?
+Meinungen
+;
+Sehr geehrter FDM-Benutzer!
+Free Download Manager (FDM) ist ein sehr populäres Download-Programm, dass viele Freunde hat, aber nun wollen wir mehr!
+Wenn Sie das Programm, so wie wir, sehr nützlich finden, dann bitten wir Sie anderen darüber zu erzählen und einen Link auf Ihrer Webseite/Blog zu veröffentlichen.
+; %s wird ersetzt durch "FDM buzz" 
+Offiziell startet %s am 16. August 2006. Unser Ziel ist es aus FDM eines der weitverbreitesten Browser-Hilfsmittel nach FireFox zu machen!
+FDM buzz
+; %s will be replaced with "blog" 
+Sie können den Fortschritt von FDM hier %s beobachten.
+Blog
+Danke für Ihre Unterstützung,\nIhr Free Download Manager Entwicklungsteam.
+Nicht mehr anzeigen.
+Bei "buzz" Mitglied werden.
+Nein, vielen Dank.
+FDM-Gemeinschaft
+Nach dem Download zu "Meinungen" umschalten
+Öffnet nach einem Download automatisch das Meinungen-Fenster.
+Internet Explorer's Identifikation (UserAgent) bearbeiten
+Wenn aktiviert, dann können Webseiten erkennen, dass Sie FDM installiert haben. Das kann dazu führen, dass manche Webseiten blockiert werden.
+Verdächtiges?
+Prüfe, ob ein FDM-Benutzer einen Virus/Adware/ Spyware/usw. in diesem Download festgestellt hat
+Kein FDM-Benutzer hat in diesem Download verdächtiges festgestellt.\n\nPrüfen Sie trotzdem mit einem aktuellen Antivirus-Programm diesen Download.
+; keep all %xxx, \n as is.
+%d von %d FDM-Benutzern haben diesen Download bemängelt.\nDie durchschnittliche Bewertung dieses Downloads ist %.*g.\n\nZeige Meinungen über diesen Download?
+Prüfe vor dem Herunterladen jeden neuen Download nach verdächtigen Inhalt
+Verwenden Sie diese Option, um automatisch zu überprüfen, ob ein FDM-Benutzer in diesen Download einen verdächtigen Inhalt gemeldet hat.
+Zeige Meinungen beim Herunterladen
+Aktivieren, um den Reiter "Meinungen" und Meldungen über diesen Download anzuzeigen.
+Überprüfe Download nach verdächtigen Inhalt (Ausschalten in Optionen)
+Gut, niemand hat in diesem Download verdächtiges festgestellt. 
+Warnung! Diese Datei wurde als verdächtig eingestuft!
+Schließen
+Herunterladen
+Nicht herunterladen
+Interner Speicher für Schreiboperation der Downloads auf Festplatte
+Aktivieren, um den internen Speicher (mit von Ihnen gewählter Größe) von FDM für die Schreiboperationen der heruntergeladenen Dateien zu verwenden. Dadurch werden die Festplattenzugriffe vermindert und bei einer schnellen Verbindung die Download\ngeschwindigkeit erhöht.\nEs kann dadurch aber zu Datenverlusten (max. in der von Ihnen gewählten Größe) bei Fehlern kommen und die Daten müssen nochmals heruntergeladen werden, da die Daten nicht sofort auf der Festplatte gespeichert werden.\nEmpfohlen für schnelle Verbindungen.
+Die Überwachung für SeaMonkey (Mozilla Suite) konnte nicht eingerichtet werden.
+Die Überwachung für SeaMonkey (Mozilla Suite) konnte nicht deinstalliert werden.
+Aktivieren, um FDM Klicks in Mozilla Firefox zu überwachen.
+Aktivieren, um FDM Klicks in SeaMonkey (Mozilla Suite) zu überwachen.
+Erlaube dem Browser das Herunterladen, wenn Sie auf 'Abbrechen' drücken
+Aktivieren, damit der Browser die Datei herunterlädt, wenn Sie auf "Abbrechen" im "Erzeuge Download" - Fenster drücken.
+FDM dem Browser-Kontextmenü hinzufügen
+Aktivieren, um die Einträge "Mit FDM herunterladen" und "Webseiten mit FDM herunterladen" dem Browser-Kontextmenü hinzuzufügen (Menü erscheint bei Rechtsklick).
+Menüelemente auswählen, die im Kontextmenü des Browsers erscheinen sollen
+Die Überwachung für Mozilla Firefox konnte nicht eingerichtet werden.
+Dateien in Ordner verschieben
+Geschwindigkeit zu langsam. Abschnittneustart...
+Neustart, wenn Geschw. abnimmt innerhalb von (in Min.):
+Abschnittneustart bei drastischer Abnahme der Geschwindigkeit während des Herunterladens.
+Wollen Sie die Download-Fortschrittsanzeige wieder sehen?
+Dieses Service ist derzeit nicht verfügbar. Bitte versuchen Sie es etwas später nochmals.
+Nach oben
+Nach unten
+In der Liste ganz nach oben setzen
+Aktivieren, um den Download an den Anfang der Liste zu setzen.
+Eine Überwachung im Firefox Browser ist mit aktiver Flashgot Erweiterung nicht möglich.\nSie müssen Flashgot zuerst deinstallieren.
+Aktivieren
+Ausschalten
+Umschalten
+Falls der Modus aktivert ist, wird er ausgeschaltet, ansonsten wird er aktiviert.
+Offiziell startet %s am 16. August 2006. Unser Ziel ist es aus FDM eines der weitverbreitesten Browser-Hilfsmittel nach FireFox zu machen!
+Updates automatisch herunterladen und installieren
+Nur benachrichtigen, wenn ein Update verfügbar ist
+Automatische Updates abschalten
+Überwachung ist aktiviert für %s.
+Eintrag löschen
+Wirklich löschen?
+Kein Schreibzugriff im FDM-Ordner.\nFDM benötigt in diesem Ordner einen Schreibzugriff, um notwendige Daten zu speichern. Andernfalls gehen die Daten nach einem Neustart verloren.
+Die Sammelbox erlaubt es einfach per Drag&&Drop Links aus dem Browser nach FDM zu verschieben.\nSie ermöglicht es über einen Doppelklick mit der linken Maustaste das FDM-Hauptfenster anzuzeigen oder auszublenden.\n\nÜber das Kontextmenü der Sammelbox können Sie das Symbol abschalten.
+Free Download Manager Sammelbox
+Alle Benachrichtigungen für Sammeldownloads ausschalten
+Aktivieren, um alle Benachrichtigungen (Sprechblasen, Klänge) für Downloadbefehle erzeugt von "%s" abzuschalten.
+Ausschlussliste
+Definieren Sie eine Liste von Dateierweiterungen und Webseiten, die nicht überwacht werden sollen.
+Keine Downloads von diesen Webseiten (mit Leerzeichen trennen):
+FDM wird keine Downloads von diesen angegeben Webseiten überwachen. Domainnamen sind z.B. 'site.com'. Sie können auch '*'-Symbole verwenden.
+Achtung!\nEs ist ein Fehler währen der Virusprüfung aufgetreten.\nMöchten Sie die heruntergeladene Datei trotzdem ausführen?
+Integrität
+Prüfe Integrität, während die Datei heruntergeladen wird
+Um die Dateiintegrität zu überprüfen, muss FDM die gültige Prüfsumme von jeder Datei kennen. In den meisten Fällen sollten Sie die Prüfsumme für jeden Download erhalten.
+Bei fehlerhafter Prüfung
+Gültige Prüfsumme für diese Datei
+Nichts
+Geben Sie hier die weitere Vorgehensweise bei fehlgeschlagener Integritätsprüfung an.\n+ Nachfragen: Sie entscheiden die weitere Vorgehensweise\n+ Neustart: Der Download beginnt von neuem\n+ Nichts: Die Datei wird nur als fehlgeschlagener Download in der Logdatei hinzugefügt.
+Prüfe Integrität...
+Integritätüberprüfung erfolgreich.
+Integritätüberprüfung fehlgeschlagen!
+Algorithmus für Integritätüberprüfung festlegen.
+Gültige Prüfsumme
+Ergebnis Prüfsumme
+; zip preview window
+Alles/Nichts wählen
+; group's properties dialog
+Variablen
+Name eines Server (z.B. "freedownloadmanager.org")
+Pfad zu herunterzuladender Datei am Server
+aktuelles Jahr
+aktueller Monat (Zahl von 1 bis 12)
+aktueller Tag
+; don't translate "%year%-%month%-%day%" here
+Entsprechend für "%year%-%month%-%day%"
+;
+Von Mozilla Firefox
+FDM übernimmt Proxy-Einstellungen von Firefox
+; new download settings
+Verwende folgende
+; Downloads -> Schedule ->
+Start
+Stopp
+Geplanter Download start
+Geplanter Download stopp
+;
+; downloads that not completed or were completed recently
+Nicht abgeschlossen+kürzlich
+Stammgruppe
+;
+; create new download dialog -> set output folder as default dialog
+Als Standard für alle anderen Downloadgruppen festlegen
+; %s - place of name of the group. don't change this
+Diesen Ordner wirklich als Standardordner für die "%s" Gruppe festlegen?
+;
+;
+Downloadliste löschen
+Hochladen
+Dateien hochladen
+Hochladen beginnen
+Hochladen abbrechen
+Geplantes hochladen
+Markierte Datei(en) für hochladen hinauf
+Markierte Datei(en) für hochladen hinunter
+Hochgeladen
+Liste der hochzuladenden Dateien
+Erhalte Ziel-URL für Hochladen vom Stammserver...
+Abbruch
+; outlook express: view | insert file | ...
+Als Anhang
+Als Link (hochladen)
+Ordner
+;
+Dateien hinzufügen
+Ordner hinzufügen
+Bittorrent
+Unterstützung für Bittorrent-Protokoll aktivieren
+Grenze für ausgehende Bandbreite
+Grenze für Anzahl der ausgehenden Verbindungen
+Verwende Portbereich zwischen
+und
+DHT aktivieren
+Unterstützung für Bittorrent-Protokoll aktivieren. Falls ein Bittorrent-Link in einer Liste oder im Papierkorb vorhanden ist, wird das Bittorrent-Protokoll nicht vollständig ausgeschaltet.
+Grenze für die maximale ausgehende Bandbreite. Für das Bittorrent-Protokoll wird eine Begrenzung nicht empfohlen und kann die Downloadgeschwindigkeit vermindern.
+Grenze für Anzahl der maximal ausgehenden Verbindungen. Wenige Verbindungen erhöhen möglicherweise Ihre Downloadgeschwindigkeit.
+Angabe des zu verwendenden Portbereichs, den FDM für ein Hochladen verwenden kann.
+DHT-Erweiterung aktivieren
+Name
+Anmelden für Tracker erforderlich
+Bittorrent-Download hinzufügen
+Es ist ein Fehler während der Verarbeitung der Torrent-Datei aufgetreten.
+Torrent-Datei
+Sie möchten vermutlich eine Torrent-Datei herunterladen. Dafür müssen Sie in FDM das Bittorrent-Protokoll aktivieren.\n\nMöchten Sie die Unterstützung für Bittorrent aktivieren?
+Nochmalige Kennworteingabe: Kennwörter stimmen nicht überein.
+Geben Sie die hochzuladenden Dateien an.
+Einstellungen für Hochladen
+Metalink-Information vorhanden. Herunterladen wird fortgesetzt.
+Bittorrent-Information vorhanden. Herunterladen wird fortgesetzt
+Dateizugriff auf Festplatte fehlgeschlagen.
+Verbindung zu Tracker...
+Keine gültige Antwort von Tracker erhalten.
+Gültige Antwort von Tracker erhalten.
+Hash-Prüfung des Downloadteils fehlgeschlagen. Neubeginn...
+Gesamte Bandbreite diesem Download zur Verfügung stellen
+FDM nicht automatisch mit Windows starten?
+Service der FDM-Gemeinschaft derzeit nicht verfügbar. Bitte versuchen Sie es später nochmals. 
+Name der Datei darf folgende Symbole nicht beinhalten: \ / : * ? " < > |. Bitte einen anderen Namen angeben.
+Name des Ordners darf folgende Symbole nicht beinhalten: * ? " < > |. Bitte einen anderen Namen angeben.
+Fenstereinstellungen...
+Transparenz
+Daten
+Alle Dateien im aktuellen Benutzerordner speichern
+Alle Dateien in diesem Ordner speichern
+Änderungen werde erst nach einem Neustart von FDM übernommen.
+Fortschrittsanzeige anzeigen
+Erstelle portable Version
+Die portable Version von Free Download Manager ist für die Nutzung auf verschiedenen Rechnern gedacht ohne die benötigte Installation oder Einrichtung.\n\nSie können diese Version zB. von einem USB-Stick nutzen.\n\nBeim Start registriert und integriert sich FDM dann selbstständig in das System sowie Browser. Nach Beendigung de-registriert sich FDM wieder automatisch.\n\nGeben Sie hier nun den Pfad ein, wo portable FDM erstellt werden soll. Der Pfad sollte sich auf einem tragbarem Medium befinden.\n\nBeispiel: "I:\Meine portablen Programme\"
+Integration
+Torrent-Dateityp mit FDM registrieren
+Diese Gruppe für alle neuen Downloads verwenden
+Immer diese Gruppe und den zuletzt angegebenen Speicherordner verwenden
+Flash-Video-Downloads
+Videos mit FDM herunterladen
+Diese Webseite wird nicht unterstützt. Beachten Sie die Liste der unterstützten Webseiten.
+Im Downloadsfenster anzeigen
+Webseite mit Flash-Video vorhanden. Lade Flash-Video herunter...
+Konvertiere...
+Konvertierung
+Konvertierungseinstellungen
+Dateiformat
+Videogröße
+; video quality
+Qualität
+Sehr gering
+Gering
+Normal
+Durchschnittlich
+Hoch
+Sehr hoch
+;
+AVI mit MPEG-4 (*.avi)
+AVI mit XVID (*.avi)
+Keine Änderung
+Video-Bitrate
+Audio-Bitrate
+Einstellungen als Standard speichern
+;
+Flash-Video Download erstellen
+Automatische Konvertierung der heruntergeladenen Videos in das angegebene Format
+Erweiterte Einstellungen
+Zeige Liste der unterstützten Webseiten
+; used in "create flash video download" window
+z.B.
+Nächster Versuch für Trackerverbindung in %d Sekunden
+Dateien werden gerade lokal bearbeitet... Dieser Vorgang kann einige Minuten dauern
+Status
+Dateien werden gerade lokal bearbeitet...
+MP4 für iPod/PSP (MPEG4 + AAC, *.mp4)
+Medien-Vorschau/Konvertierung
+Konvertiere Mediendatei
+Automatisch zu diesem Reiter wechseln
+;keep "\n\n%s\n" as is
+Mediendatei wurde erfolgreich konvertiert und gespeichert unter:\n\n%s
+Mediendatei\n\n%s\n\nkonnte nicht erfolgreich konvertiert werden.
+Gruppe neuer Downloads
+Hash-Information
+Verbindungen
+Client
+Stücke
+Tracker
+Tracker-Status
+Hochladegeschwindigkeit
+Bytes hochgeladen
+Teilerverhältnis
+Anzahl verlorener Bytes
+Torrent-Datei URL
+Sind Sie sicher?\nDamit startet der Download nochmals neu.
+Gesamte Datenmenge in diesem Monat: ("Heruntergeladen"; "Hochgeladen")\n(Vormonat: %s)
+Gesamtgeschwindigkeit ("Heruntergeladen"; "Hochgeladen")
+Dateien hochzuladen
+Paketname
+Kompression
+Kennwort für diesen Download setzen
+Wiederholen
+Daten folgende Zeit behalten
+Gesch. Anzahl der Downloads
+Link zu diesen Dateien unserem Katalog hinzufügen
+Zusätzliche Informationen hinzufügen (alle Felder sind optional)
+Beschreibung
+Kennzeichnung
+Mein Name
+Meine E-Mail
+Empfänger E-Mail
+Weniger als 10
+Zwischen 10 und 100
+Mehr als 100
+2 Tage
+7 Tage
+1 Monat
+;compression methods
+Keine
+Schnellste
+Durchschnittlich
+Beste
+Upload-Einstellungen
+Uploader integrieren in
+Windows Explorer Kontextmenü
+Windows Explorer "Senden an..." Menü
+Verwende einfaches Upload-Menü
+Die Mindestdateigröße für Uploads beträgt
+HTTP-Proxy-Einstellungen
+Uploadaktivierung
+Hochladen benötigt eine Aktivierung. Das wird benötigt, um unsere Server vor unberechtigten Hochladen zu schützen. Aktivierungscode eingeben.
+Verbinde mit Upload-Server
+Verbindung mit Upload-Server war erfolgreich
+Dateien wurden erfolgreich hochgeladen
+Hochladen der Dateien wurde angehalten
+Zip-Archiv der hochzuladenden Dateien erstellen...
+Zip-Archiv könnte nicht erzeugt werden
+Zip-Archiv könnte erfolgreich erzeugt werden
+Anfrage an Server übermitteln
+Information über diesen Upload an Server übermitteln
+Information wurde übermittelt
+Information über diesen Upload an Server konnte nicht übermittelt werden
+Upload aktivieren...
+Upload wurde erfolgreich aktiviert
+Upload konnte nicht aktiviert werden
+Hochzuladende Datei wurde verändert
+Unbekannter Fehler
+Berechne Prüfsumme...
+; "I agree to terms" string in two lines
+Ich stimme folgendem zu:
+Bedingungen
+Sie müssen den Bestimmungen zustimmen.
+Überprüfung auf Aktualisierungen fehlgeschlagen
+Neue Version ist verfügbar. Eine Aktualisierung wird empfohlen.\nMöchten Sie jetzt aktualisieren?
+Eine Aktualisierung von Free Download Manager ist notwendig
+Ein Neustart von Free Download Manager ist notwendig
+Empfehlung Anhänge auch hochzuladen
+Der Nachricht anhängen (langsam)...
+Hochladen und als Link hinzufügen (sehr schnell)...
+Ein Fehler ist während des Hochladens aufgetreten. Bitte prüfen Sie Ihre Verbindung oder versuchen Sie es später nochmals.
+Sie haben große Dateien angegeben.\nAus verschiedenen Gründen wird es nicht empfohlen, große Dateien als Anhänge zu versenden. Stattdessen können Sie die Dateien aber hochladen und Links zu ihnen dann versenden.\n\nMöchten Sie nun hochladen? 
+Hochladen wird empfohlen
+Integrationseinstellungen
+Hochladen von %s war erfolgreich.\nVerwenden Sie folgenden Link für das Herunterladen der Datei:
+Gesamtgröße
+Im Browser öffnen
+Die derzeit eingesetzte Free Download Manager-Version kann für Uploads nicht weiter verwendet werden. Eine Aktualisierung ist erforderlich.
+Die derzeit eingesetzte Free Upload Manager-Version kann nicht weiter verwendet werden. Eine Aktualisierung ist erforderlich. Bitte besuchen Sie die Webseite: freedownloadmanager.org.
+Eingabe zu lang.
+Einstellungen Upload-Manager-Integration
+Einstellungen Free Upload-Manager-Integration
+Hochladen
+Aktualisierung wird heruntergeladen...
+Seeding aktivieren
+Seeding standardmäßig nicht aktivieren

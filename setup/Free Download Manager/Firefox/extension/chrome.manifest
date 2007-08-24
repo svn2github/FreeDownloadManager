@@ -1,0 +1,5 @@
+content fdm_ffext chrome/content/
+
+overlay chrome://browser/content/browser.xul chrome://fdm_ffext/content/fdm_ffext.xul
+
+overlay	chrome://mozapps/content/downloads/unknownContentType.xul chrome://fdm_ffext/content/fdm_ffextDM.xul

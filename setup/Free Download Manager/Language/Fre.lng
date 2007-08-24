@@ -1,0 +1,1324 @@
+; This is a language file
+; You can translate it into your native language
+; To do this, follow instructions:
+; - PLEASE make sure FDM hasn't already been translated into your language 
+;   You should go to FDM web site (http://freedownloadmanager.org) and 
+;   check the list of available languages
+;   or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng into your language
+; - send the translated file to support@freedownloadmanager.org 
+;
+;
+;
+; Translator - Niko the Shadow, 2005
+;
+
+; Your language name. Please keep it in English
+;
+French
+;
+;
+; Below are the strings to translate:
+;
+Enregistrer tout
+Couper
+Copier
+Coller
+Mode d'utilisation suspendu de la bande passante
+Mode d'utilisation coopératif de la bande passante
+Mode d'utilisation illimité de la bande passante
+Options du téléchargeur
+Connexion à Internet
+À propos de FDM
+Quitter
+Fichier
+Édition
+Affichage
+Options
+Outils
+Aide
+Barre d'outils
+Barre de statut
+Assistant d'optimisation
+Paramètres de téléchargement par défaut
+Paramètres généraux
+Connexion à Internet
+Se déconnecter une fois terminé
+Éteindre une fois terminé
+Ouvrir l'aide
+Site de FDM
+Signaler ce logiciel à un ami
+Envoyer un email au groupe de support
+Vérifier automatiquement les mises à jour
+Vérifier les mises à jour maintenant
+-
+-
+Changer la vue
+Mode d'utilisation de la bande passante
+Inscription
+Téléchargements
+Planificateur de tâches
+Explorateur de sites
+Explorateur HTTP//FTP
+Gestionnaire de sites
+Ajouter un téléchargement
+Démarrer le téléchargement
+Arrêter le téléchargement
+Planifier le téléchargement
+Ajouter une tâche
+Propriétés de la tâche
+Télécharger les fichier sélectionnés
+Arrêter
+Rafraîchir
+Ajouter un site
+Propriétés du site
+Groupes de téléchargements
+Informations de téléchargement
+Historique du planificateur de tâches
+Historique de l'explorateur de sites
+Barre latérale
+Télécharger un nouveau fichier
+Effacer le téléchargement
+Exécuter le fichier
+Ouvrir le dossier
+Démarrer le téléchargement automatiquement
+Propriétés de téléchargement
+Activer la tâche
+Désactiver la tâche
+Effacer la tâche
+Ouvrir le dossier parent
+Déconnecter
+Télécharger
+Paramètres de l'explorateur de sites
+Effacer le site
+Entrée temporaire
+Sites
+Montrer la fenêtre principale
+Surveillance du navigateur
+Surveillance du presse-papiers
+Démarrer tous les téléchargements
+Arrêter tous les téléchargements
+-
+Continuer
+-
+-
+-
+-
+-
+Annuler
+-
+-
+-
+Tous les groupes
+Filtres
+Terminé
+En cours
+Planifié
+Arrêté
+Autre
+Créer un nouveau groupe
+Effacer le groupe
+Effacer tous les téléchargements
+Effacer tous les téléchargement terminés
+Ouvrir le dossier du groupe
+Propriétés du groupe
+Nom du groupe :
+Dossier par défaut :
+Extensions des fichiers [séparées par des espaces] :
+Priorité de téléchargement par défaut
+Très basse
+Basse
+Moyenne
+Haute
+Très haute
+Veuillez entrer un nom de groupe
+Erreur de saisie
+Un groupe avec le même nom existe déjà. Veuillez entrer un autre nom
+Veuillez entrer le nom du dossier
+Choisissez le dossier par défaut
+Entrez le nom du groupe ici
+Dossier par défaut pour sauver les téléchargements de ce groupe
+Parcourir
+Extension des fichiers de ce groupe. Utilisé pour détecter automatiquement le groupe de téléchargement
+Priorité de téléchargement par défaut pour ce groupe
+Annuler les changement et fermer cette fenêtre de dialogue
+Appliquer les changement et fermer cette fenêtre de dialogue
+Erreur dans les groupes de téléchargement
+Veuillez réinstaller FDM
+Erreur
+Ne peut pas charger une liste de téléchargements. Il est possible qu'elle ait été endommagée ou qu'elle soit utilisée par une autre application
+Échec de l'initialisation de l'intégration à Internet Explorer
+Êtes-vous sûr?
+Cela va effacer tous les groupes de téléchargement
+Confirmation
+Nom du fichier
+Taille
+Téléchargé
+Temps restant
+Sections
+Vitesse
+Commentaire
+Historique
+Progression
+Heure
+Date
+Information
+Effacer
+Défilement automatique
+Erreur réseau inconnue
+Accès refusé. Nom d'utilisateur ou mot de passe invalide
+Accès refusé. Mot de passe invalide
+Réussi
+N'arrive pas à se connecter au serveur
+Fichier non trouvé sur le serveur
+La connexion avec le serveur a été perdue
+Le serveur ne répond pas
+Incapable de résoudre le nom de serveur
+Le serveur ne soutient pas la reprise de téléchargement. N'arrêtez pas ce téléchargement; autrement vous devrez le recommencer à partir du début
+Le nom et le mot de passe d'utilisateur du proxy sont exigés
+Erreur prolongée
+Mauvaise requête. Il s'agit probablement d'une mauvaise URL
+Erreur de serveur inconnue
+La connexion a échouée
+Mauvaise URL
+Pas de connexion à Internet
+La version choisie de HTTP n'est pas supportée par ce serveur
+Erreur inconnue
+Ne peut pas effacer le fichier du disque
+La limite du nombre des connexions à ce serveur est atteinte
+La limite du nombre des connexions est atteinte
+Pause %d sec.
+Section
+Démarré
+Terminé
+Téléchargement terminé
+Connexion en cours...
+Connexion établie
+Redirection...
+Redirection réussie. Ouvre une nouvelle URL
+Démarrage du téléchargement...
+Arrêté
+Crée une nouvelle section...
+Annulé
+Redémarrage du téléchargement...
+Ouvre un fichier sur le disque...
+Le nom de fichier est trop long
+Le fichier existe déjà. Renommé en
+Renommer
+Le fichier de sortie a été supprimé. Impossible de continuer
+Le fichier existe déjà. Réécrire
+Le fichier existe déjà. Reprendre le téléchargement
+Le fichier existe déjà
+À échoué à ouvrir un fichier sur le disque
+La taille du fichier a changé sur le serveur !
+Ajustement à la nouvelle taille...
+Ne peut pas écraser le fichier
+Le fichier sera renommé
+Ne peut pas renommer le fichier avec son nom original
+Ne peut pas enregistrer les groupes
+Ne peut pas enregistrer les téléchargements
+Connexion Internet
+Se connecter à :
+Connexion automatique
+Se connecter
+Choisir la connexion ici
+Cocher cette case si vous voulez vous connecter automatiquement au démarrage la prochaine fois
+Connexion maintenant
+Ne pas se connecter et fermer cette fenêtre de dialogue
+Pas de connexion trouvée sur cet ordinateur
+La ligne est occupée
+Échec de matériel
+Aucune tonalité
+Composer
+Tentative
+Ouvre un port...
+Connexion au fournisseur...
+Connecté à l'ordinateur distant
+Vérifie le nom d'utilisateur et le mot de passe...
+La vitesse de connexion est de %d o/s
+Déconnecté
+Répétition
+Nom et mot de passe requis
+Nom d'utilisateur :
+Mot de passe :
+Groupe :
+Enregistrer dans le dossier :
+Enregistrer sous :
+Démarrer
+Automatiquement
+Manuellement
+Planifier
+Priorité de téléchargement
+Avancé
+Adresse du fichier que vous voulez télécharger
+Entrez le nom d'utilisateur ici
+Entrez le mot de passe ici
+Cochez cette case si le serveur requière une autorisation
+Nom du groupe où placer les téléchargements. Les groupes vous permettent de gérer vos téléchargements
+Dossier dans lequel enregistrer
+Nouveau nom du fichier téléchargé. Laissez ce champ libre si vous voulez enregistrer le fichier avec son nom original
+Petite description du téléchargement
+Ce téléchargement démarrera dès que possible
+FDM n'essaiera pas de télécharger ce fichier automatiquement
+Planifier ce téléchargement
+Configurer le planificateur de téléchargements
+Priorité de téléchargement. Les téléchargements avec une priorité plus haute démarreront en premier. Les téléchargements avec une priorité basse seront remis à plus tard
+Afficher les paramètres avancés pour ce téléchargement
+L'URL entrée est incorrect. Veuillez la vérifier
+Veuillez entrer le nom d'utilisateur
+Choisissez le dossier de destination
+Général
+Information générale
+Téléchargement actuellement sauvegardé dans le fichier :
+Nom du fichier téléchargé
+L'URL de ce téléchargement ne peut pas être changée
+Ce téléchargement est en cours. Impossible de changer le nom du fichier
+Impossible de renommer le fichier
+Fichier non trouvé
+Chemin non trouvé
+Format .exe invalide
+Le fichier est utilisé par une autre application
+Accès refusé
+Le lecteur n'est pas prêt
+Le disque est plein
+Le nom du fichier est invalide
+L'ouverture d'une session est requise
+Connexion
+Réseau
+Erreurs
+Pause entre les tentatives de connexion [en sec] :
+Nombre maximum de tentatives :
+Temps d'arrêt [en secondes] :
+Taille minimum :
+Nombre maximum :
+Restriction de la bande passante pour ce téléchargement
+Limiter la bande passante :
+Ignorer toutes les restrictions
+o
+Ko
+Mo
+s
+Entrez la valeur supérieure à %d
+Veuillez choisir la dimension
+Temps d'attente de reconnexion au serveur en cas d'erreur
+Cochez cette case si vous voulez limiter le nombre maximum de tentatives de téléchargement non réussies
+Temps d'attente pour la réponse du serveur
+Taille minimum de la section. Le téléchargement ne sera pas découpé en sections avec une taille inférieure
+Nombre maximum de sections. Le téléchargement ne sera pas découpé en un nombre supérieur de sections
+Spécifie combien de bande passante (maximum) prendra FDM pour le téléchargement
+Ignore la restriction de la bande passante et les restrictions pour le nombre maximum des raccordements pour ce téléchargement
+Vous pouvez spécifier les valeurs en octets (o), kilo octets (Ko) ou mégaoctets (Mo) dans ce champ
+Protocole :
+S'identifier sur le serveur en tant que :
+Page référante :
+Utiliser HTTP 1.1
+Utiliser les cookies
+Utiliser le mode passif
+Mode de transfert
+Binaire
+ASCII pour les fichiers avec les extensions :
+Spécifie comment FDM sera identifié avec le serveur HTTP
+Cette chaîne de caractères sera envoyée comme champ de page référante au serveur HTTP. En règle générale, ce n'est pas exigé
+Cochez cette case si vous voulez que FDM utilise HTTP version 1.1
+Cochez cette case si vous voulez que FDM utilise les cookies
+Cochez cette case si vous voulez que FDM utilise le mode passif pour les serveurs FTP. Parfois c'est nécessaire en travaillant en travaillant avec des pare-feu
+Utiliser le mode binaire pour des transferts FTP. Sélectionnez ce mode si le fichier que vous téléchargez n'est pas un fichier texte
+Utilise le mode ASCII pour des transferts FTP. Sélectionnez ce mode si le fichier que vous téléchargez est un fichier texte
+FDM utilisera le mode ASCII pour les fichiers avec les extensions spécifiées. Pour les autres fichiers, FDM utilisera le mode binaire
+Proxy
+Récupérer les paramètres du proxy
+À partir de Microsoft Internet Explorer
+Spécifier manuellement
+Ne pas utiliser de proxy
+Paramètres
+Adresse :
+Port :
+Veuillez entrer l'adresse du proxy
+Veuillez entrer le port du proxy
+FDM prendra les paramètres du proxy d'Internet Explorer
+Vous spécifiez vous même les paramètres du proxy
+FDM n'utilisera pas de proxy
+Choisissez le type des serveurs pour lesquels vous voulez spécifier le proxy ici
+Entrez l'adresse du proxy que vous voulez utiliser
+Entrez le port du proxy ici. En général, il s'agit de 3128, 1080 ou 8080
+Cochez cette case si le serveur de proxy requière une autorisation
+Divers
+Fichier local
+Si le fichier existe déjà :
+Réserver l'espace disque pour le fichier téléchargé
+Ext. de fichier additionnelle pour téléch. incomplets :
+Serveur Internet
+Ne pas redémarrer si le serveur ne supporte pas la reprise
+Si la taille du fichier a changé sur le serveur :
+Arrêt sur des erreurs
+Demander
+Écraser
+Renommer
+Reprendre
+Redémarrer
+Ajuster
+Veuillez spécifier l'extension du fichier
+Ici, vous pouvez spécifier ce que FDM devrait faire si le fichier existe déjà sur le disque
+Cochez cette case si vous voulez que de l'espace disque soit réservé pour le téléchargement quand un est démarré
+Si c'est coché, FDM apposera l'extension à un nom de fichier pendant le téléchargement. Quand le téléchargement sera fini, FDM renommera le fichier en son nom original
+FDM ne redémarrera pas le téléchargement si le serveur à distance ne soutient pas la reprise
+Vous pouvez spécifier ici ce que FDM pourrait faire si la taille du fichier a changé sur le serveur
+Cochez cette case pour arrêter le téléchargement quand le fichier n'est pas trouvé sur le serveur
+Cochez cette case pour arrêter le téléchargement quand le nom d'utilisateur ou le mot de passe est invalide
+Modes d'utilisation de la bande passante
+Sélectionnez le mode d'utilisation :
+Nombre maximum de connexions :
+Nombre maximum de connexions par serveur :
+Restriction de la bande passante :
+illimité
+Sélectionnez le mode d'utilisation de la bande passante que vous voulez configurer ici
+Cochez cette case pour limiter le nombre maximum de connexions
+Cochez cette case pour limiter le nombre maximum de connexions par serveur
+Spécifiez ici la bande passante (maximum) de FDM pour télécharger les fichiers
+Tous les téléchargements
+Liste des téléchargements
+Sauvegarde automatique toutes les :
+min.
+En supprimant le téléchargement inachevé :
+Effacer automatiquement les téléchargements terminés
+Ne pas effacer le fichier
+Effacer le fichier
+FDM sauvegarde la liste des téléchargements automatiquement après avoir spécifié un intervalle de temps. Cela protège la liste d'éventuels problèmes sur l'ordinateur ou des pannes de courant
+Spécifiez ici ce que FM devrait faire avec le fichier sur le disque lors de l'effacement de téléchargements incomplets
+Cochez cette case si vous voulez effacer automatiquement les téléchargements de la liste lorsqu'ils sont terminés
+Surveillance
+Dispositif de surveillance
+Presse-papiers
+Surveiller les fichiers avec les extensions
+Ignorer les fichiers avec les extensions
+ALT ne doit pas être enfoncé
+ALT doit être enfoncé
+Veuillez spécifier les extensions
+Cochez cette case si vous voulez que FDM intercepte les clics dans Internet Explorer
+Cochez cette case si vous voulez que FDM surveille votre presse-papiers
+Surveiller seulement les fichiers avec les extensions spécifiées
+Ne pas surveiller les fichiers avec les extensions spécifiées
+Surveiller seulement si ALT n'est pas enfoncé
+Surveiller seulement si ALT est enfoncé
+Démarrage
+Charger au démarrage
+Démarrer en mode réduit
+Système
+Réduire en icône
+Le bouton Fermer réduit la fenêtre
+FDM démarrera automatiquement au démarrage de Windows
+FDM sera réduit au démarrage
+Quand vous cliquez sur le bouton Réduire, FDM sera réduit en icône
+Si coché, cliquer sur le bouton Fermer aura le même effet que cliquer sur le bouton Réduire
+Mise à jour
+Adresse du serveur de mises à jour
+FDM vérifiera automatiquement s'il a été mis à jour
+Assistant d'optimisation du réseau
+Bienvenue dans l'assistant d'optimisation du réseau !
+Cet assistant vous aidera à configurer de manière optimale votre type de connexion. Cela ajustera les propriétés du Téléchargeur et les propriétés par défaut pour le téléchargement.
+Veuillez sélectionner votre type de connexion
+Terminé
+Spécifiez le type de votre connexion Internet ici
+Configure FDM pour un travail optimal avec votre connexion
+Tâche
+Quand commencer
+Prochaine heure de départ
+Dernière heure de départ
+Impossible de charger la liste des tâches planifiées. Elle a probablement été endommagée ou est utilisée par une autre application
+Impossible de charger le journal du planificateur de tâches
+Impossible d'enregistrer la liste des tâches planifiées
+La tache "%s" a été planifiée. La démarrer ?
+Changer le mode d'utilisation de la bande passante en "%s"
+Raccrocher :
+Toutes les connexions
+Changer le mode d'utilisation de la bande passante en
+Éteindre :
+Redémarrer
+Fermer la session
+Une fois
+Dim
+Lun
+Mar
+Mer
+Jeu
+Ven
+Sam
+Les jours :
+Chaque
+jours
+heures
+Au démarrage de FDM
+La connexion à Internet a réussi
+La connexion à Internet a échoué
+Il n'y a pas de téléchargement actif
+Quand la vitesse est inférieure ou égale à %d o/s pendant %d
+Tous les téléchargements ont le statut Erreur
+Jamais
+Inconnu
+Connecté avec succès à "%s"
+Échec de connexion à "%s"
+Lancement réussi
+Dépassement de la mémoire
+Impossible de lancer
+L'exécution de la planification fera quitter le programme au démarrage. La planification sera ignorée
+Tentatives de compositions de numéro maximum
+Pause entre les tentatives
+Raccrochez si la vitesse de connexion est inférieure à :
+Essayer encore
+Pas plus que
+Utiliser la connexion
+Si avec succès
+Heures
+Couper toutes les connexion actives
+Connexion à couper
+Nom du programme :
+Arguments :
+Type d'arrêt :
+Forcer à quitter l'application
+Lancer le programme
+Établir une connexion
+Couper la connexion
+Changer le mode d'utilisation de la bande passante
+Quitter FDM
+Arrêter l'ordinateur
+Téléchargements à démarrer
+Téléchargement à arrêter
+Applications
+Tous les fichiers
+Désolé, cette fonctionnalité n'est disponible que sous Windows 2000, XP et supérieures
+Veuillez entrer le nom du programme
+Veuillez sélectionner les téléchargements
+sélectionnez le mode d'utilisation de la bande passante que vous voulez associer au début de la tâche
+Cochez cette case si vous voulez limiter le nombre maximum de tentatives de connexions non réussies
+Temps entre deux tentatives non réussies
+Cocher cette case pour établir une connexion avec la vitesse pas plus basse que la valeur que vous avez indiquée
+Spécifiez ici la valeur minimum requise de la vitesse de connexion
+FDM tentera d'établir à nouveau une connexion requise si vous cochez cette case
+Cochez cette case pour limiter le nombre maximum de tentatives non réussies pour établir la connexion
+Spécifiez ici le(s) téléchargements(s) requis
+Liste de tous les téléchargements disponibles
+Ajouter le téléchargement sélectionné à la liste des tâches de téléchargements
+Effacer le téléchargement sélectionné de la liste des tâches de téléchargements
+Spécifiez le programme que vous voulez lancer ici
+Trouver le programme sur votre ordinateur
+Spécifiez les arguments du programme ici
+Spécifiez le type de votre arrêt de session ici
+Cochez cette case pour forcer à terminer votre session. C'est utile pour les applications accrochées dans le système. Mais dans ce cas-ci, toutes les données non sauvegardées seront perdues
+Spécifiez l'action planifiée ici
+Cochez cette case si vous voulez que FDM coupe toutes les connexions actives
+Spécifiez la connexion à couper ici
+Certains jours
+Dimanche
+Lundi
+Mardi
+Mercredi
+Jeudi
+Vendredi
+Samedi
+À l'évènement
+Pendant
+Vitesse basse :
+min.
+Minutes
+Heures
+Jours
+La vitesse de téléchargement est trop basse
+Tous les téléchargements ont le statut Erreur
+Veuillez spécifier les jours
+Démarrer la tâche à l'heure spécifiée
+Marquez l'heure à laquelle commencer la tâche ici
+Démarrer la tâche à la date spécifiée
+Marquez la date de démarrage de tâche ici
+Démarrer la tâche certains jours de la semaine
+Démarrer la tâche chaque Dimanche
+Démarrer la tâche chaque Lundi
+Démarrer la tâche chaque Mardi
+Démarrer la tâche chaque Mercredi
+Démarrer la tâche chaque Jeudi
+Démarrer la tâche chaque Vendredi
+Démarrer la tâche chaque Samedi
+Démarrer la tâche périodiquement
+Ce champ permet de spécifier l'intervalle de temps en minutes, heures ou jours
+Démarrer la tâche quand certains évènements se produisent
+Spécifier le type d'évènement ici
+Entrez l'intervalle de temps ici
+Entrez la vitesse minimum requise ici
+Une confirmation est requise pour exécuter la tâche
+Attendre la confirmation pendant
+sec.
+Si cochée, FDM vous demandera de confirmer l'exécution de cette tâche
+Si cochée, FDM attendra votre confirmation pendant l'intervalle de temps spécifié. Si vous ne réagissez pas pendant cet intervalle, la tâche démarrera
+Adresse :
+Construire la liste des fichier à télécharger
+Se connecte au serveur
+Essaye d'utiliser le nom et le mot de passe stockés dans le gestionnaire de sites
+Recherche de la liste des fichiers du serveur
+La connexion avec le serveur a été perdue. En train d'essayer de la récupérer
+Construit la liste
+Cherche taille et dernière date de modif. des fichiers
+Ce paramètre peut diminuer la vitesse de façon drastique
+Cochez cette case si vous voulez que FDM questionne les serveurs HTTP sur la taille et la date des fichiers
+Nom du site
+Connexions
+Ouverture de session
+Groupe
+Impossible de charger la liste des sites. Elle a probablement été endommagée ou est utilisée par une autre application
+Impossible d'enregistrer la liste des sites
+Connexions simultanées maximum :
+Groupe par défaut pour un nouveau téléchargement depuis ce site
+Utiliser le mode passif FTP
+Veuillez entrer le nom du site ici
+Un site avec le même nom existe déjà. Veuillez entrer un autre nom
+Le nombre de connexions maximum doit être supérieur à 0
+Veuillez sélectionner le groupe
+Spécifiez le nom du site ici
+Cochez cette case pour limiter le nombre maximum de connexions simultanées à ce serveur
+Cochez cette case pour ajouter automatiquement les téléchargements à partir de ce serveur au groupe sélectionné
+Demander à l'utilisateur
+Ne pas me redemander
+Erreur d'écriture sur le disque
+Le fichier "%s" existe déjà sur le disque. Que faire ?
+Ne pas reposer la question. Votre choix sera accepté par défaut
+Écraser le fichier existant
+Renommer ce fichier
+Reprendre le téléchargement. (Le téléchargement démarrera à la position égale à la taille du fichier existant)
+Arrêter ce téléchargement
+Oui
+Non
+Télécharge
+a été effacé. Effacer le fichier du disque aussi ?
+Veuillez entrer un nom d'utilisateur et un mot de passe
+Ouvre une session sur "%s"
+Envoyer le nom d'utilisateur et le mot de passe spécifiés au serveur
+NE pas se connecter à ce serveur
+La taille de "%s" a changé sur le serveur. Que faire ?
+Redémarrer le téléchargement depuis le début
+Ajuster le téléchargement à la nouvelle taille du fichier. Non recommandé
+Veuillez attendre
+Mise à jour
+Description
+La mise à jour utilise :
+Vérifier les mises à jour
+Vous utilisez déjà la version la plus récente
+Télécharge
+La version %s build %s est disponible
+Distribution complète de la version %s (%s)
+Améliorer avec la version %s
+Améliorer avec la version %s (%s)
+FDM dot être redémarré. Redémarrer maintenant ?
+Mise à jour effectuée
+Impossible de trouver les mises à jour
+Spécifier le type de mise à jour ici
+Mettre FDM à jour à partir de la version complète
+Mettre FDM à jour à partir des composants améliorés
+Recherchez plus d'informations sur le processus de mise à jour
+Quoi de neuf dans cette version ?
+Démarrer la mise à jour de FDM maintenant
+Annuler la mise à jour et fermer cette fenêtre de dialogue
+Créer les téléchargements
+Sélectionner le contenu
+Désélectionner le contenu
+La liste des téléchargement à ajouter
+Vérifier les dossiers sélectionnés pour les ajouter à la liste des téléchargements
+Ne pas vérifier les dossier sélectionnés pour ne pas les ajouter à la liste des téléchargements
+À propos de FDM
+Copyright (c)
+Tous droits réservés
+Enregistré par :
+Déjà mis à jour. Un redémarrage est requis
+Nom d'utilisateur ou mot de passe invalide
+Impossible de charger le fichier historique
+Impossible d'enregistrer le fichier historique
+Paramètres par défaut de l'aspirateur de sites
+Aspirateur de sites
+Arborescence du site
+Télécharger le site
+Paramètres de téléchargement du site
+Démarrer le téléchargement
+Arrêter le téléchargement
+Planifier le téléchargement
+Effacer
+Ouvrir la page dans un navigateur
+Démarrer automatiquement le téléchargement
+URL du site (page)
+Fichiers
+Effacer également les téléchargements
+Impossible de charger la liste des pages Web
+Impossible d'enregistrer la liste des pages Web
+URL de la page Web ou du serveur HTTP à partir duquel vous voulez télécharger
+URL de la page Web ou du serveur HTTP à partir duquel le téléchargement a été démarré
+Nom du dossier dans lequel enregistrer les téléchargements
+Dossier de sortie :
+Pages Web
+Pages
+Extensions des fichiers de pages Web avec du code HTML :
+Télécharger les feuilles de styles de la page Web
+Télécharger des pages Web provenant d'autre sites
+Images
+Télécharger les images
+Télécharger les images provenant d'autres sites
+Profondeur de téléchargement :
+Les extensions des fichiers de pages Web avec du code HTML. Les pages seront scannées pour trouver les liens, les images et les autres pages à télécharger
+Si cochée, les feuilles des style (CSS) des pages Web seront également téléchargées. Recommandé
+Si décochée, les pages Web en provenance d'autres sites ne seront pas téléchargées. Par exemple, si cette cas est décochée et que vous téléchargez à partir du site http://exemple.com/, alors http://autresite.com/page.html ne sera pas téléchargé, mais http://exemple.com/page.html sera téléchargé
+Si cochée, les images des pages Web seront également téléchargées
+Si décochée, les images des pages Web provenant d'autres sites ne seront pas téléchargées
+Profondeur de téléchargement. Par exemple, vous démarrer le téléchargement à partir de http://ex.com/index.html. Il y a le lien vers http://ex.com/some.html à partir de http://ex.com/index.html. Alors la profondeur de http://ex.com/some.html sera 1. Paramétrer une profondeur de 0 revient à télécharger seulement le contenu de la page de démarrage
+Télécharger les fichiers provenant des pages Web
+Télécharger les fichiers provenant d'autres sites
+Effacer les fichiers avec les extensions
+Basculer vers :
+Télécharger
+Ne pas télécharger
+les fichiers avec les extensions :
+Cochez cette case pour télécharger les fichiers en provenance des pages Web
+Cochez cette case pour télécharger les fichiers en provenance d'autres sites
+Cochez cette case pour ignorer les fichiers avec les extensions spécifiées
+Les fichiers avec les extensions spécifiées ci-dessous seront téléchargés si la case est cochée
+Les fichiers avec les extensions spécifiées ci-dessous NE seront PAS téléchargés si la case est cochée
+Exporter les paramètres
+Importer les paramètres
+Échec de lancement de regedit.exe
+Une erreur s'est produite en essayant d'exporter des paramètres
+Une erreur s'est produite en essayant d'importer des paramètres
+Fichiers d'enregistrement de FDM
+Élimination des images par extension
+images avec les extensions :
+Cochez cette case pour ignorer les images avec les extensions spécifiées
+Les images avec les extensions spécifiées ci-dessous, seront téléchargées si la case est cochée
+Les images avec les extensions spécifiées ci-dessous, NE seront PAS téléchargées si la case est cochée
+Ne pas télécharger ça et effacer
+Le serveur ne supporte pas la fonction de reprise de téléchargement. Redémarrer depuis le début
+Échec d'ouverture de l'URL
+Désolé, une erreur inattendue s'est produite lors d'une tentative d'écriture dans le registre
+Merci de vous être enregistré ! Veuillez redémarrer FDM
+Télécharger avec Free Download Manager
+Télécharger le site avec Free Download Manager
+Ajouter FDM au menu contextuel d'IE
+Cocher cette case pour ajouter "Télécharger avec Free Download Manager" et "Télécharger le site avec Free Download Manager" au menu contextuel d'Internet Explorer (le menu apparaît en faisant un clic du bouton droit)
+Baisser le niveau de bande passante quand vous surfez sur le web :
+Diminuer d'un niveau
+Minimiser le niveau
+Cochez cette case pour diminuer l'utilisation de la bande passante automatiquement quand vous surfez sur Internet. Cela vous permet de surfer plus vite quand FDM télécharge quelque chose
+Le mode d'utilisation de la bande passante diminuera d'un niveau. Illimité->Coopératif, Coopératif->Suspendu
+Le mode d'utilisation de la bande passante changera pour le mode suspendu
+Valide pour
+Valide pour les sous domaines
+Cocher cette case pour utiliser cet enregistrement pour télécharger via HTTP
+Cochez cette case pour utiliser cet enregistrement pour télécharger via HTTPS
+Cocher cette case pour utiliser cet enregistrement pour télécharger via FTP
+Cocher cette case pour utiliser cet enregistrement pour télécharger à partir de serveurs de sous domaines. Par exemple, pour le site http://site.com ce sera http://some.site.com
+Veuillez sélectionner au moins un protocole
+Nombre maximum de téléchargements simultanés :
+Cocher cette case si vous voulez limiter le nombre maximum de téléchargements se déroulant en même temps
+Redémarrer le téléchargement
+Créer une section supplémentaire
+Arrêter une section
+; contexte: [section x] - Arrêté
+Arrêté
+; tray menu
+Boîte flottante
+;
+Impossible de trouver le répertoire des plugins d'Opera. Souhaitez-vous le spécifier manuellement ?
+Impossible de trouver le répertoire des plugins de Netscape. Souhaitez-vous le spécifier manuellement ?
+Impossible d'installer la surveillance d'Opera
+Impossible de désinstaller la surveillance d'Opera
+Impossible d'installer la surveillance de Netscape
+Impossible de désinstaller la surveillance de Netscape
+Cochez cette case si vous voulez que FDM intercepte les clics dans Opera
+Cochez cette case si vous voulez que FDM intercepte les clics dans Netscape
+; create download dlg
+Demander la taille
+; request a size of a download
+Requête...
+Demande la taille d'un téléchargement à partir d'un serveur
+Oui à tous
+Non à tous
+Journal détaillé
+Si coché, FDM affichera les réponses du serveur
+Les changements prendront effet au prochain démarrage de votre navigateur
+Liste des tâches
+Liste des fichiers
+Liste des sites
+Liste des pages
+Efface les téléchargements
+Construit la liste des téléchargements
+Télécharger par lot
+De :
+À :
+Pas :
+Nombre de chiffres :
+Résultats
+Exemple :
+Numéro de départ de la séquence
+Numéro de fin de la séquence
+Pas de la séquence. Par exemple, si c'est 10, la séquence sera 0, 10, 20, etc.
+Nombre de chiffres utilisés pour représenter chaque nombre. Par exemple, si c'est 1, la séquence sera 1, 2, 3. Si c'est 2, la séquence sera 01, 02, 03.
+Cliquez ici pour voir la séquence générée
+Permettre à IE de télécharger si vous cliquez sur Annuler
+Cocher cette case si vous voulez qu'Internet Explorer télécharge le fichier quand vous cliquez sur Annuler dans la fenêtre de dialogue "Télécharger un nouveau fichier"
+Le numéro de fin de la séquence doit être plus grand que celui de départ
+Veuillez utiliser (*) dans l'URL pour spécifier le format de l'URL
+Créer l'extension si le fichier n'en a pas :
+Cochez cette case pour créer une extension spécifique pour les fichiers qui n'en ont pas. Par exemple, si le fichier s'appelle "fichier" et que vous avez spécifié "txt", le résultat sera "fichier.txt"
+Voir les tailles en octets seulement
+Cochez cette case pour afficher toutes les tailles en octets plutôt qu'en kilo octets ou mégaoctets
+Exécutez un contrôle des virus :
+Arguments :
+Extensions :
+Cochez cette case pour vérifier automatiquement les fichiers téléchargés avec votre antivirus
+Spécifiez le nom de votre programme antivirus ici
+Spécifiez les arguments de l'antivirus ici
+Spécifiez les extensions des fichiers téléchargés à contrôler ici
+Veuillez entrer le nom de l'antivirus
+Nom invalide. Veuillez le vérifier
+Lance l'antivirus
+Désactiver la tâche après exécution
+Effacer la tâche après exécution
+Cocher cette case pour désactiver la tâche automatiquement après son exécution
+Cocher cette case pour effacer la tâche automatiquement après son exécution
+Aller
+Retour
+Générer un nom de fichier auto.
+Cocher cette case pour générer un nom de fichier automatiquement au téléchargement
+Enregistrer sous l'extension "htm"
+Cochez cette case pour enregistrer toutes les pages Web avec l'extension "htm"
+Cliquez sur ce bouton pour calculer la taille cumulée de tous les téléchargements
+Gardez la structure des dossiers du serveur
+Cliquez sur ce bouton pour garder la structure originale des dossiers du serveur. Sinon, tous les fichiers du serveur seront enregistrés dans un unique dossier commun
+Vous avez sélectionné un autre dossier. Garder ce dossier par défaut pour ce groupe ? Vous pouvez aussi changer le dossier par défaut dans les propriétés du groupe.
+; === ADDED LINES ===
+Un téléchargement à partir de la même URL existe déjà? Que faire ?
+Lancement
+Lancement du fichier téléchargé
+Version
+Cliquez ici pour nous contacter
+Cliquez ici pour télécharger la dernière version
+Attention : ce programme est protégé par des lois et des traités internationaux sur les droits d'auteurs. Toute reproduction ou distribution de ce programme, ou d'une de ses parties, peut avoir comme conséquence des pénalités civiles et criminelles, et pourra entraîner des poursuites jusqu'au degré maximum possible en vertu de la loi.
+; === new version ===
+Tout télécharger avec Free Download Manager
+Ajouter la liste des téléchargements
+Effacer
+C'est la liste des URL à ajouter
+Cliquez sur ce bouton pour effacer toutes les URL sélectionnées de la liste
+Impossible de trouver le répertoire des plugins de Firefox. Souhaitez-vous le spécifier manuellement ?
+Impossible d'installer la surveillance de Firefox
+Impossible de désinstaller la surveillance de Firefox
+Cochez cette case si vous voulez que FDM intercepte les clics dans Firefox
+Télécharger la sélection avec Free Download Manager
+Démarre
+Sites
+Téléchargements actifs
+Il n'y a pas de téléchargements actifs actuellement
+Notifications
+Utiliser les infobulles de notification
+Arrêt :
+Cocher cette case pour activer les infobulles de notifications quand un téléchargement s'arrête ou est terminé. \nNote: cette fonctionnalité ne marche qu'avec Windows 2000/XP et supérieur
+Fermer automatiquement les infobulles après l'expiration de ce temps
+Miroirs
+Chercher automatiquement des URL miroirs
+Nombre maximum de miroirs :
+Calculer la vitesse des miroirs :
+Recalculer la vitesse de chaque miroir :
+Cliquez sur ce bouton pour que FDM cherche automatiquement des URL miroirs pour chaque téléchargement
+Limite le nombre d'URL miroirs par téléchargement. Cela permet de réduire le temps de calcul de la vitesse des miroirs
+Cliquez sur ce bouton pour permettre à FDM de calculer la vitesse de chaque serveur miroir
+Recalculer automatiquement la vitesse des miroirs par l'intervalle indiqué de temps
+Ne pas chercher si la taille du fichier est inférieure à :
+FDM ne cherchera pas de miroir si la taille du fichier est inférieure à celle spécifiée
+Ne pas chercher si la taille est inconnue (recommandé)
+Ajouter un miroir
+Chercher miroirs
+Ajouter manuellement un miroir pour ce téléchargement
+Chercher des miroirs pour ce téléchargement avec filemirrors.com
+Liste des Miroirs
+Vitesse du serveur
+Est utilisé
+Vitesse des miroirs
+Vitesse des serveurs miroirs
+Informations de téléchargement
+Attendre...
+URL miroir pour télécharger
+La taille du fichier dépasse 2Go. De tels téléchargements ne sont supportés que via FTP
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Nouveau Téléchargement
+Déterminer le groupe de téléchargement automatiquement
+Placer dans le groupe :
+Sauvegarder le téléchargement dans le répertoire associé à son groupe
+Cochez cette case si vous voulez que le groupe de téléchargement soit déterminé par l'extension ou les paramètres du Gestionnaire de Sites
+Mettre manuellement le groupe par défaut
+Cochez cette case si vous voulez que le téléchargement soit sauvegardé dans le répertoire par défaut de son groupe (voir les propriétés de groupes)
+Mettre manuellement le répertoire de sortie par défaut
+; END
+; BEGIN: Monitoring page
+Surveillance silencieuse
+Ne pas montrer la fenêtre "Ajouter le téléchargement" lors de l'ajout d'un téléchargement à partir du navigateur, si la case est cochée
+Personnaliser
+Sélectionnez les éléments de menu à afficher dans le menu contextuel d'Internet Explorer
+; END
+Choisissez les éléments à montrer dans le menu
+Au moins un élément de menu doit être choisi
+Utiliser des sons
+Cochez cette case si vous voulez que FDM joue des sons lors de certains évènements (c.a.d. quand le téléchargement est terminé)
+Choisissez un son pour chaque évènement
+; BEGIN : Customize sounds dialog
+Personnaliser les sons
+Assigner un son
+Effacer
+Tester
+Liste des évènements de FDM et des sons appropriés. Ici, vous pouvez ajuster FDM pour qu'il joue des sons quand certains évènements se produisent
+Téléchargement ajouté - joue le son quand un ou plusieurs sont ajoutés à la liste des téléchargements.
+Téléchargement terminé - joue le son quand le téléchargement est terminé avec succès.
+Téléchargement échoué - joue le son quand une erreur se produit pendant l'essai de téléchargement d'un fichier.
+Connexion réussie - joue le son quand la tâche du Planificateur "Établir une connexion" est exécutée avec succès.
+Connexion échouée - joue le son quand la tâche du Planificateur "Établir une connexion" a échoué pour une quelconque raison.
+Assigner le son pour l'élément sélectionné
+Ne pas jouer le son quand l'évènement sélectionné se produit
+Test le son sélectionné
+Évènement
+Fichier son
+Pas de son
+Téléchargement ajouté
+Téléchargement terminé
+Téléchargement échoué
+Connexion réussie
+Connexion échouée
+Fichiers son
+; END
+Cherche des miroirs...
+Mesure la vitesse du miroir...
+La recherche de miroirs a déjà été effectuée
+Se connecte au serveur de recherche...
+Récupère les résultats...
+Il y a %d miroirs de trouvés
+Recherche de miroirs terminée
+Essaye un autre miroir...
+Aucun miroir trouvé
+Échoué
+La vitesse des miroirs a été mesurée
+; BEGIN: History page
+Historique
+Sauvegarder l'historique des liens et des répertoires
+Sauvegarder seulement l'historique des répertoires
+Garder les enregistrements pendant :
+Nombre maximum d'enregistrements :
+Effacer l'historique
+FDM sauvegardera l'historique des liens et des répertoires que vous avez tapé
+FDM sauvegardera seulement l'historique des répertoires
+FDM effacera les enregistrements qui existent dans l'historique plus vieux que la période de temps spécifiée
+Nombre maximum d'enregistrements dans l'historique. Quand le nombre d'enregistrements aura dépassé cette valeur, FDM effacera les enregistrements les plus anciens
+Efface tous les enregistrements de l'historique
+; END
+Importer
+Exporter
+Importer la liste des URL
+Exporter la liste des téléchargements
+Fichiers texte
+Ne peut pas ouvrir un fichier
+Exporter tous les téléchargements
+Exporter tous les téléchargements dans la liste
+Exporter les téléchargements sélectionnés
+Ne pas exporter les téléchargements terminés
+Ajouter si le fichier existe déjà
+Nom de groupe invalide. Veuillez ne pas utiliser de symboles / ou \.
+Quitter une fois terminé
+; BEGIN : Downloads History window
+Ajouté
+Sauvegardé dans
+; END
+Corbeille
+; BEGIN: Recycle Bin
+Propriétés
+Vider la corbeille
+;END
+;BEGIN: Recycle Bin properties
+Ne pas placer les téléchargements effacés dedans
+Garder au maximum
+télécharg.
+Ne pas garder les téléchargements terminés
+Demander une confirmation lors de l'effacement
+Propriétés de la corbeille
+Cochez cette case si vous ne voulez pas conserver les téléchargements effacés dans la corbeille
+Cochez cette case si vous voulez limiter le nombre de téléchargements conservés dans la corbeille
+Nombre maximum de téléchargements conservés dans la corbeille
+Cochez cette case si vous voulez que les téléchargements ne soient pas conservés dans la corbeille après l'effacement
+Cochez cette case si vous voulez que FDM demande votre confirmation quand vous effacez un téléchargement
+;END
+Restaurer
+Restaure les téléchargements...
+; History subitems
+Aujourd'hui
+Hier
+Une semaine
+Un mois
+Personnalisé.
+; end
+Efface l'historique
+Sauvegarder l'historique des téléchargements
+Seulement pour les téléchargements terminés
+Cocher cette case si vous voulez sauvegarder l'historique de vos téléchargements
+Cochez cette case si vous voulez stocker seulement l'historique des téléchargements terminés
+Paramètres de l'historique des téléchargements
+Construit l'enregistrement de la liste de l'historique...
+; Download Was deleted
+A été effacé
+Choisir l'intervalle de temps
+Trouver
+Trouver le suivant
+Trouver quoi
+; BEGIN : Find dialog
+Chercher dans
+Nom de fichier local
+Spécifier ce que vous voulez trouver ici
+Chercher dans le fichier le morceau d'URL
+Chercher dans l'ensemble des URL
+Chercher dans les commentaires des téléchargements
+Chercher dans le nom et le chemin des fichiers téléchargés sur le disque local
+Configuration avancée des paramètres de recherche
+; ADVANCED settings
+Chercher où
+Chercher dans la liste des téléchargements
+Chercher dans l'historique des téléchargements
+Chercher avec des heures spécifiées
+Définir
+Chercher dans la corbeille
+Chercher avec des tailles spécifiées
+Minimale
+Maximale
+Chercher dans la liste des téléchargements
+Chercher dans l'historique des téléchargements
+Chercher seulement les téléchargements qui satisfont les contraintes de temps
+Définir l'intervalle de temps
+Chercher dans la corbeille
+Chercher seulement dans les fichiers qui satisfont les contraintes de taille
+Taille minimale requise
+Taille maximale requise
+Chercher dans le groupe
+Choisir le groupe dans lequel la recherche sera effectuée
+; END
+Cherche le téléchargement...
+Il n'y a pas d'élément de trouvé
+Il n'y a pas d'autres éléments de trouvés
+Recherche terminée
+URL dans le presse-papier
+Aperçu de l'archive ZIP
+Au moins un fichier doit être sélectionné.
+Il est possible que le fichier que vous téléchargez soit une archive ZIP. Voulez vous avoir un aperçu de son contenu ?
+Aperçu Audio/Vidéo
+Echec d'ouverture du fichier.
+Type de média inconnu.
+Veuillez installer DirectX 8.0 ou supérieur pour utiliser cette fonction. Vous pouvez télécharger la dernière version de DirectX sur le site microsoft.fr.
+Informations sur le Média
+Taille :
+Disponible :
+Durée :
+Muet
+Lecture
+Pause
+Filtre
+Extensions [séparées par des espaces, par ex. zip rar arj] :
+Effacer les fichiers avec ces extensions
+Laisser seulement les fichiers avec ces extensions
+La chaîne d'arguments ne contient pas la macro %file%. Cette macro est nécessaire pour indiquer à votre antivirus quel fichier vérifier.
+Continue quand même ?
+Alerte
+Utiliser l'attribut caché pour les téléchargements incomplets
+Ajouter le commentaire au nom du fichier une fois terminé
+Ne pas stocker les pages du serveur
+Cochez cette case si vous ne voulez pas stocker les pages du serveur sur votre ordinateur, mais seulement les fichiers et les images
+Utiliser l'aperçu des archives ZIP
+Cochez cette case si vous voulez avoir l'aperçu du contenu des archives ZIP au début du téléchargement pour ne télécharger qu'une partie de l'archive.
+Volume :
+Démarrer le téléchargement automatiquement
+Cochez cette case si vous voulez que FDM commence chaque nouveau téléchargement automatiquement
+Veuillez cocher les fichiers à télécharger
+Spécifier des adresses alternatives (URLs) pour ce téléchargement
+Pas d'aperçu à l'avenir
+Vous avez désactivé l'aperçu des archives ZIP. Si vous souhaitez le réactiver, veuillez vous rendre dans Options -> Options du téléchargeur (Ctrl+O) -> Nouveau Téléchargement, et cochez "Utiliser l'aperçu des archives ZIP".
+Liste des ignorés
+Liste des pages web qui doivent être ignorées pendant le téléchargement d'un site.
+Sous dossiers
+Ajouter
+Ignorer tous les sous-dossiers
+; Proxy tab new settings
+Utiliser la récupération en cas de connexions perdues
+Taille de la récup. :
+octets
+Cochez cette option si vous souhaitez activer les fonctionnalités de récupération. Cette option vous aide à protéger vos téléchargements de dommages.
+Taille de récupération. Une grande taille permettra de travailler plus sûrement. La tailel recommandée est de 3000 octets. Vous pouvez augmenter cette valeur si vos téléchargements ont déjà subit des dommages.
+; downloader options -> monitor tab
+Ne pas surveiller les fichiers plus petit que :
+Utilisez cette option si vous souhaitez que FDM ignore les fichiers plus petits que la taille spécifiée
+Ko
+Attention ! La corbeille contient trop d'éléments. Cela peut ralentir dramatiquement les performances. Il est recommandé de vider la corbeille. Voulez-vous le faire ?
+Ne pas redemander
+Attention ! Le journal des téléchargements contient trop d'éléments. Cela peut ralentir dramatiquement les performances. Il est recommandé de vider le journal. Voulez-vous le faire ?
+Le serveur ne peut gartantir sa capacité à reprendre les transferts. La réponse est invalide.
+Copier dans le presse papier
+; general settings | skins page
+Skins
+Skin
+Autoriser les skins à utiliser leurs propres icônes
+Autoriser les skins à utiliser leurs propres bitmaps
+; default skin
+<défaut>
+Note : tout changement ne prendra effet qu'après le redémarrage de FDM.
+Informations de téléchargement
+Ignorer les fichiers avec les extensions :
+Liste des extensions de fichier à ignorer
+Pas de téléchargement actif
+Jouer un fichier sonore quand tous les téléchargements sont terminés
+Importer la liste des URLs à partir du presse papier
+Mots de passe
+Option du Gestionnaire de sites
+; Save password dialog
+Sauvegarder le mot de passe ?
+FDM peut sauvegarder le mot de passe pour ce serveur pour ne pas avoir à le spécifier à chaque fois que vous téléchargerez sur ce serveur.
+Sauvegarder ce mot de passe ?
+Ne pas me proposer de sauvegarder les mots de passe
+; Site Manager options | Passwords tab
+Utiliser le gestionnaire de sites pour stocker mes mots de passe :
+Me demander s'il faut sauvegarder le mot de passe ou pas
+Ne pas me proposer de sauvegarder les mots de passe
+Effacer tous les mots de passe avant de quitter
+Effacer tous les mots de passe
+; create new HTML Spider task
+Effacer les téléchargement terminés automatiquement (recommandé)
+Cochez cete case si vous souhaitez que les téléchargements de l'Aspirateur de sites soient effacés automatiquement. Cela accélère la vitesse sur les gros sites.
+Les changements ne prendront effet qu'après le redémarrage de FDM
+Nouveau Style
+Ancien Style
+Le nom de répertoire est invalide
+Cacher les fenêtres flottantes en mode plein écran
+Cocher cette case si vous voulez que les fenêtres flottantes soient automatiquement cachées en  mode plein écran.
+a été planifié pour être exécuté.
+Désirez-vous l'exécuter?
+Exécuter le téléchargement lorsqu'il sera terminé
+Utilisez (*), (*A) ou (*a) dans l'URL pour spécifier le modèle d'URL à utiliser
+Serveur de recherche de miroirs :
+Hiberner
+En suspens
+Mémoriser mon choix
+Suggérer le changement du dossier par défaut du groupe
+Sauver fichier
+Ouvrir fichier
+Sauver et ouvrir fichier
+Type de téléchargement:
+Lien vers FDM
+Lien vers Free Download Manager
+Cher utilisateur!
+Free Download Manager est un programme gratuit. Vous pouvez l'utiliser autant de temps que vous le désirez.
+Toutefois, si vous trouvez Free Download Manager utile et satisfaisant, nous souhaiterions une aide de votre part en plaçant un lien sur votre site. Cela nous permettra de faire découvrir Free Download Manager à ceux qui visitent votre site.
+Merci d'avance de votre aide,\nl'équipe de développement de Free Download Manager.
+Me rappeler dans 3 jours
+Me rappeler au prochain démarrage de Free Download Manager
+Ne plus afficher cette fenêtre
+Afficher le code HTML du lien
+Code HTML du lien
+Plus d'exemples
+Copier le code
+Cacher
+; "Traffic usage mode has beed changed" window
+Le mode d'utilisation de la bande passante a été changé
+Vous avez changé le mode d'utilisation de la bande passante.\nFree Download Manager possède trois modes:
+Avec ce mode Free Download Manager téléchargera à vitesse maximum. Il s'agit du mode agressif et illimité.
+Avec ce mode Free Download Manager téléchargera à une vitesse moyenne. Il s'agit du mode coopératif car il vous permet de naviguer sur Internet et de télécharger de manière régulière.
+Avec ce mode Free Download Manager téléchargera à une vitesse faible. Il s'agit du mode où vous téléchargez à faible vitesse sans ressentir les ralentissements du réseau.
+;
+Renommer aussi au redémarrage
+Entrer une valeur inférieure à %d
+; export/import downloads
+Fichiers de liste d'URL
+Fichiers de liste d'information de téléchargement
+;
+Options d'exportation
+;
+Définir la date d'un fichier identique à la date indiquée sur un serveur
+Définir la même date pour un fichier téléchargé que pour celui sur un serveur
+Produire un fichier de description
+Produire un fichier avec le nom « *.dsc.txt » (* - nom d'un fichier téléchargé) qui contiendra une courte description d'un fichier téléchargé (commentaires + URL + date). Ce fichier sera produit seulement pour un téléchargement qui a des commentaires.
+Ce fichier a été téléchargé de
+Ne pas rechercher la date de fichier depuis le serveur
+Cette option vous permet d'augmenter la vitesse de démarrage d'un téléchargement FTP. Free Download Manager emploiera la commande TAILLE au lieu de LISTE.
+Ne pas sauver les journaux des téléchargements
+Choisir cette option permettra à Free Download Manager de démarrer et de s'arrêter plus rapidement et diminuera l'utilisation de la mémoire.
+;
+Exporter l'historique des téléchargements
+Exporter toutes les entrées
+Exporter toutes les entrées sur la liste
+Exporter les entrées choisies
+Exporter seulement pour les téléchargements terminés
+;
+HTML Files
+;
+Historique des téléchargements de Free Download Manager
+URL de téléchargement
+Téléchargé vers le fichier
+Taille de fichier
+Téléchargement effectué
+Téléchargement supprimé
+;
+Sauvegardé dans
+Taille de fichier
+Supporte la reprise
+Fermé ce dialogue quand le téléchargement est effectué ou arrêté
+Ouvrir
+Voulez-vous revoir cette fenêtre ?
+Oui, je veux voir cette fenêtre pour chaque téléchargement
+Non, ne plus me montrer cette fenêtre
+Oui, mais jamais pour ce téléchargement
+Employer la touche MAJ. signifie que ce téléchargement sera supprimé du disque et que vous ne pourrez pas le restaurer. \nEtes vous sûr ?
+Choisir le groupe
+Définir le dossier racine des groupes
+Choisir le dossier racine des groupes. \ nLes changements seront appliqués aux nouveaux téléchargements seulement.
+Derniers fichiers téléchargés
+(vide)
+Retenir tous les téléchargements
+Montrer la fenêtre de progression des téléchargements
+Si cette case est cochée, FDM créera une fenêtre spéciale avec des informations sur le téléchargement pour chaque téléchargement en cours ; general settings | misc page
+Temps maxi pour les confirmations
+Lancer le téléchargement :
+Demander le type d'arrêt
+Temps maxi de confirmation pour la commande « Outils | Se déconnecter une fois terminé » .
+Temps maxi de confirmation pour la commande « Outils | Quitter une fois terminé » .
+Temps maxi de confirmation pour la commande « Outils | Eteindrer une fois terminé » .
+Temps maxi de confirmation pour lancer le fichier quand le téléchargement est effectué.
+Si cette case est cochée, FDM vous demandera le type d'arrêt pour la commande « Outils | Eteindrer une fois terminé » .
+; general settings | misc page
+Ne pas demander confirmation
+; 5 seconds, 10 seconds, ...
+%d secondes
+Attendre ma confirmation
+Ignorer les pages de ce dossier
+Télécharger les pages de ce dossier seulement
+Y compris des sous dossiers
+Ignorer toutes les pages Web situées dans ce dossier.
+Télécharger les pages situées dans ce dossier seulement et ignorer les autres pages Web.
+Choisissez cette option si vous voulez que l'aspirateur de sites ignore (ou télécharge seulement) les pages situées dans tous les sous dossiers du dossier indiqué.
+Ici vous devriez indiquer l'URL du dossier. \nExemple : « http://site.com/docs/ ».
+Type
+Ignorer
+Seulement
+Suite de nombres
+Assigner
+Vous devriez indiquer ici la suite de nombres pour la liste par lots. \nEx. 1-100, ou 1-100s2w3.
+Cliquer sur ce bouton pour définir la suite de nombres en utilisant la boîte de dialogue.
+Nombre unique
+Nombre
+Définir la suite de nombres
+Erreur de syntaxe
+Extraire l'archive
+Extraire
+Extraction
+Dossier de destination
+N'a pas pu extraire. Le format de fichier est inconnu.
+Trafic téléchargé ce mois\n (%s a été téléchargé le mois précédent)
+Vitesse totale de téléchargement
+Désactiver les tâches « Outils | ...une fois terminé » après l'exécution
+Une fois activé, toutes les tâches « Outils | ...une fois terminé » seront automatiquement désactivées après exécution. Ainsi elles seront lancées seulement une fois.
+; %s
+; 1er - nom d'un fichier
+; 2ème, 3ème - info fichier (taille + date).
+Le fichier « %s » existe déjà. \n\nVoulez vous le remplacer \n(%s)\n\navec le nouveau \n(%s) ?
+Oui pour tous
+Sauter
+Sauter tous
+Le format des archives est inconnu
+Visiter le site Web
+Installer le pack
+Par défaut, FDM supporte les archives ZIP, RAR et ARJ seulement. \nVous pouvez étendre la liste des archives supportées en installant le pack additionnel de support d'archives pour Free Download Manager (Connexion à Internet requise).
+Pack de support d'archives pour FDM
+Monter
+Descendre
+Monter les téléchargements choisis
+Descendre les téléchargements choisis
+Vérifier l'intégrité du fichier
+Certains sites Web fournissent des sommes de contrôle pour les fichiers à télécharger afin de permettre aux utilisateurs de s'assurer que le fichier n'est pas endommagé. Vous pouvez entrer cette somme ici et FDM vérifiera l'intégrité du fichier.
+Algorithme
+Somme de contrôle
+Copier depuis le presse-papiers
+Vérifier
+Calcule de la somme de contrôle du fichier téléchargé…
+Le contrôle d'intégrité du fichier a réussi
+Le contrôle d'intégrité du fichier a échoué
+Le contrôle d'intégrité du fichier est terminé avec succès. \nIl n'a pas été trouvé d'erreur dans le fichier téléchargé.
+Le contrôle d'intégrité de dossier est terminé. \nIl a été trouvé des erreurs : le fichier a été endommagé pendant le processus de téléchargement. Il est conseillé de recommencerle téléchargement du début.
+Ne pas montrer cette fenêtre de nouveau si le contrôle réussit
+Incapable de trouver le fichier exécutable du programme antivirus que vous avez choisi. \nSVP indiquez le vous-même.
+Les tailles des fichiers ne sont pas égales
+Sauvegarder comme : \n(Exemple : fichier(*)(*A)(*a).txt)
+Impossible de sauvegarder comme le modèle spécifié. \nAssurez vous qu'il correspond au modèle de l'URL.
+Une fois terminé
+Une fois terminé (tout effectué ou en erreur)
+Applications
+Qu'est-ce que c'est ?
+Avis
+;
+Chers amis !
+Free Download Manager (FDM) est l'une des applications de téléchargement les plus populaires dans le monde, ayant des millions d'utilisateurs actifs ; mais maintenant qu'il est devenu social nous en voulons plus !
+Si vous le trouvez aussi utile et indispensable que nous, nous vous demandons aimablement de nous aider à le diffuser en mettant un lien vers lui dans votre blog, site Web ou espace personnel, tel que Myspace/MSN.
+; %s will be replaced with "FDM buzz" 
+Le %s officiel commencera le 16 août 2006. Notre but est de faire de FDM l'utilitaire se propageant le plus rapidement sur Internet après FireFox !
+FDM buzz
+; %s sera remplacé avec "blog"
+Vous pouvez suivre les progrès de FDM dans notre %s.
+blog
+Merci d'avance pour votre aide, l'équipe de développement de Free Download Manager
+Ne pas me montrer de nouveau cette fenêtre, j'ai une bonne mémoire.
+Joindre le buzz
+Non, merci
+Communauté de FDM
+Basculer vers « avis » après téléchargement
+Si cette case est cochée, l'onglet  « avis » sera automatiquement activé quand le téléchargement sera fini.
+Modifier l'identification réseau d'Internet Explorer
+Si selectionnée, ceci informera les sites Web que vous visitez que Free Download Manager est installé sur votre système. Toutefois utiliser cette option peut avoir comme conséquence le blocage de quelques sites.
+Malveillant ?
+Vérifier si quelqu'un parmi les utilisateurs de Free Download Manager a signalé au sujet de ce téléchargement qu'il contient des virus/adware/spyware/etc.
+OK, personne parmi les utilisateurs de Free Download Manager n'a signalé que ce téléchargement est malveillant. \n\nToutefois, ceci ne garantit pas que ce téléchargement n'est pas malveillant et on recommande de le vérifier en employant un antivirus.
+; keep all %xxx, \n as is.
+Il y a %d de %d des utilisateurs de Free Download Manager qui a signalé que ce téléchargement est malveillant. \nLa note moyenne pour ce téléchargement est %.*g.\n\nMontrer les avis pour ce téléchargement ?
+Pour chaque nouveau téléchargement, vérifier avant de télécharger s'il est malveillant
+Utiliser cette option pour que FDM vérifie automatiquement, avant de télécharger, si des utilisateurs ont signalé que ce téléchargement était malveillant.
+Montrer les avis en téléchargeant
+Si cette case est cochée, FDM activera l'onglet « Avis » automatiquement et montrera des avis au sujet du téléchargement au moment de télécharger.
+Vérifie si le téléchargement est malveillant (voir les options pour désactiver ceci)
+OK, personne n'a signalé qu'il est malveillant
+Avertissement ! Quelqu'un a signalé que ce téléchargement est malveillant
+Fin
+Chargement
+Ne pas télécharger ceci
+Cacher l'écriture des données téléchargées sur le disque dur :
+Si cette case est cochée, FDM emploiera l'antémémoire interne avec la taille que vous avez indiquée pour les opérations d'écriture des données téléchargées. Ceci réduira le temps d'utilisation de votre disque dur. Ceci peut augmenter la vitesse de téléchargement pour les connexions à haut débit. \nToutefois comme les données téléchargées ne sont pas écrites sur le disque immédiatement il faudra re-télécharger ces données de nouveau en cas de défaillance de l'ordinateur pendant le téléchargement (au pire de la taille vous avez indiquée). \nRecommandé pour les connexions à haut débit.
+Ne peut pas installer la surveillance de SeaMonkey (suite de Mozilla)
+Ne peut pas désinstaller la surveillance de SeaMonkey (suite de Mozilla)
+Sélectionnez cette case si vous voulez que FDM capture les clics dans le navigateur Mozilla Firefox
+Sélectionnez cette case si vous voulez que FDM capture les clics dans le navigateur SeaMonkey (suite de Mozilla)
+Permettre au navigateur de télécharger si vous appuyez sur Annuler
+Sélectionnez cette case si vous voulez que le navigateur télécharge le fichier quand vous appuyez sur Annuler dans le dialogue « Créer un téléchargement »
+Ajouter FDM au menu contextuel du navigateur
+Sélectionnez cette case  pour ajouter les entrées « Télécharger avec Free Download Manager » et « Télécharger le site Web avec Free Download Manager » au menu contextuel du navigateur (le menu apparaît quand vous cliquez avec le bouton droit)
+Choisir les entrées de menu à montrer dans le menu contextuel de navigateur
+Ne peut pas installer la surveillance de Firefox
+Déplacer les fichiers dans le dossier
+La vitesse est trop basse. Redémarre la section…
+Redémarrer si la vitesse est basse pendant (en minutes) :
+Redémarre la section suite à la diminution dramatique de la vitesse de téléchargement.
+Voulez-vous voir encore la fenêtre de progression du téléchargement ?
+Désolé, ce service est actuellement indisponible. Essayez plus tard SVP.
+En haut
+En bas
+Placer le téléchargement au sommet de la liste
+Sélectionnez cette option si vous voulez que le téléchargement soit placé au dessus de la liste de téléchargements.
+La surveillance dans le navigateur Firefox ne peut être activée car l'extension FlashGot est installée. \nVous devriez désinstaller FlashGot d'abord.
+Activer
+Désactiver
+Permuter
+Si le mode Restreindre tous les téléchargements est activé il sera désactivé, autrement il sera activé.
+Le %s officiel commencera le 16 août 2006. Notre but est de faire de FDM l'utilitaire se propageant le plus rapidement sur Internet après FireFox !

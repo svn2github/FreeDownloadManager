@@ -1,0 +1,1133 @@
+; This is language file
+; You can translate it to your native language
+; To do this, follow instructions:
+; - make sure FDM haven't already translated to your language 
+;   You may go to FDM web site  (http://freedownloadmanager.org) or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng to your language
+; - send translated file to support@freedownloadmanager.org 
+;
+;
+;
+; Translator --  Besmir Godole  --  behadesgo1_8@yahoo.com, 2005
+;
+
+; Your language name. Please keep it in English
+;
+Albanian
+;
+;
+; Below are the strings to translate:
+;
+Ruaje Gjithçka
+Prite
+Kopjo
+Hidh
+e Lehtë
+e Mesme
+e Rëndë
+Mundësitë e shkarkimit
+Lidhje Dial-up
+Rreth FDM-së
+Dil
+Skedar
+Edito
+Pamje
+Mundësi
+Mjete
+Ndihmë
+Shufra e mjeteve
+Shufra e statusit
+Optimizim Ekspert
+Kuadro tipikë mbi shkarkimin 
+Kuadro të përgjithshëm
+Lidhje Dial-up
+Mbylle telefonin në përfundim
+Mbylle kompjuterin në përfundim
+Hap Dritaren e Referimeve për Ndihmë
+Faqja zyrtare e FDM-së
+Tregoja një shoku
+Dërgo e-postë tek grupi i përkrahjes
+Automatikisht kërko për ridatime
+Kërko tani për ridatime
+-
+-
+Shko në
+Mënyra përdoruese e trafikut
+Regjistrimi
+Shkarkime
+Me orar
+Eksplorues Siti
+Eksplorues HTTP//FTP
+Menaxher Siti
+Shto një shkarkesë
+Fillo shkarkimin
+Ndale shkarkimin
+Programoje shkarkimin
+Shto një detyrë
+Vetitë e detyrës
+Shkarko skedarët e zgjedhur
+Ndalo
+Rifresko
+Shto një sit
+Vetitë e sitit
+Grupet e shkarkesave
+Informacion
+Ditari i programuesit
+Ditari i Eksploruesit të Sitit
+Shufra e anës
+Shto një shkarkesë
+Fshije shkarkesën
+Nis skedarin
+Hap këmishën
+Nise automatikisht
+Vetitë e shkarkimit
+Lejoje detyrën
+Gjymtoje detyrën
+Fshije detyrën
+Hap skedarin mëmë
+Shkëputu
+Shkarko
+Kuadro për Eksploruesin e Sitit
+Fshije sitin
+Hyrje e përkohshme
+Site
+Shfaq dritaren kryesore
+Monitoro shfletuesin
+Monitoro fushëkapjen
+Nisi të gjithë
+Ndali të gjithë
+-
+Më tej
+-
+-
+-
+-
+-
+Anulo
+-
+-
+-
+Gjithë grupet
+Filtra
+Të përfunduar
+Në progres
+Me orar
+Të ndaluar
+Tjetër
+Krijo një grup të ri
+Fshije grupin
+Fshiji gjithë shkarkimet
+Fshiji gjithë shkarkimet e përfunduar
+Hap këmishën e grupit
+Vetitë e grupit
+Emri i grupit:
+Këmisha tipike:
+Me shtojcë skedari [hapësirë e ndarë]:
+Parësia tipike shkarkuese
+Tepër e ulët
+e Ulët
+e Mesme
+e Lartë
+Tepër e lartë
+Ju lutemi shkruani emrin e grupit
+Gabim inputi
+Tashmë grupi me të njëjtin emër ekziston. Ju lutemi shkruani një tjetër
+Ju lutemi shkruani emrin e këmishës
+Zgjidhni këmishën tipike për këtë grup
+Shkruani emrin e grupit
+Këmisha tipike për të ruajtur shkarkesat e këtij grupi
+Shfleto
+Shtojca e skedarit për këtë grup. E përdorur për të diktuar automatikisht grupin e shkarkimit
+Parësia tipike e shkarkimit për këtë grup
+Hiqi ndryshimet dhe mbylle tabelën
+Zbato ndryshimet dhe mbylle tabelën
+Gabim në grupet e shkarkimit
+Ju lutemi riinstalojeni FDM-në
+Gabim
+Lista e shkarkesave s'mund të ngarkohet. Ka mundësi që ajo të jetë dëmtuar ose po përdoret nga një tjetër aplikim
+Nisja e integritetit në Internet Explorer dështoi
+A jeni i sigurtë?
+Kjo do i fshijë gjithë shkarkesat e grupit
+Miratim
+Emri i skedarit
+Përmasa
+e Shkarkuar
+Kohëmbetja
+Sektorë
+Shpejtësia
+Komenti
+Ditari
+Progresi
+Ora
+Data
+Informacion
+Pastroje
+Autolisto
+Gabim i panjohur rrjeti
+Hyrja mohohet. Përdoruesi ose fjalëkalimi janë invalidë
+Hyrja mohohet. Fjalëkalimi është invalid
+Me sukses
+Tek serveri s'mund të ketë lidhje
+Skedari nuk gjendet në server
+Lidhja me serverin humbi
+Serveri nuk përgjigjet
+E pamundur të zgjidhet emri i serverit
+Serveri nuk e përkrah rimarrjen e shkarkimit. Mos e ndalni këtë shkarkesë; përndryshe do t'ju duhet ta nisni nga fillimi
+Nevojiten përdoruesi dhe fjalëkalimi i proxy-t
+Gabim i zgjeruar
+Kërkesë e keqe. Ka mundësi të jetë një URL i keq
+Gabim serveri i panjohur
+Lidhja dështoi
+URL i keq
+Asnjë lidhje me Internet
+Versioni HTTP i zgjedhur nuk përkrahet nga ky server
+Gabim i panjohur
+Skedari nuk mund të fshihet nga disku
+Kufiri i lidhjeve tek ky serveri u arrit
+Kufiri i lidhjeve u arrit
+Pushim %d sek.
+Sektori
+Nisi
+Mbaroi
+Shkarkimi përfundoi
+Në lidhje...
+Lidhja pati sukses
+Ridrejtim...
+Ridrejtimi pati sukses. Po hapet një URLi i ri
+Shkarkimi filloi...
+Ndalim
+Po krijohet një sektor i ri...
+Anulim
+Shkarkimi po rinis...
+Skedari në disk po hapet...
+Emri i skedarit është tepër i gjatë
+Tashmë skedari ekziston! Riemërtoje në
+Riemërtoje në
+Skedari dalës u fshi! E pamundur të vazhdohet
+Tashmë skedari ekziston! Rishkruaje
+Tashmë skedari ekziston! Shkarkimi po rimarret
+Tashmë skedari ekziston!
+Hapja e skedarit në disk dështoi
+Përmasa e skedarit u ndryshua nga serveri!
+Përmasa e re po rregullohet...
+Skedari nuk mund të mbishkruhet
+Skedari do të riemërtohet
+Skedari nuk mund të riemërtohet sikurse emri origjinal
+Grupet nuk mund të ruhen
+Shkarkesat nuk mund të ruhen
+Lidhje Dial-up
+Lidhu me:
+Automatikisht telefono
+Lidhu
+Zgjidhni hyrjen dial-up
+Zgjidheni këtë kuti nëse doni që dial-up të nisë automatikisht herën tjetër
+Telefono tani
+Mos telefono dhe mbylle këtë tabelë
+Në kompjuter nuk u gjet asnjë hyrje dial-up
+Linja është e zënë
+Hardueri dështoi
+Asnjë ton telefoni
+Formim i numrit
+Përpjekja
+Porti u hap...
+Telefonim tek provajderi...
+Lidhje tek kompjuteri i largët
+Përdoruesi dhe fjalëkalimi po verifikohen...
+Shpejtësia e lidhjes është %d BPS
+Shkëputuni
+Ripërsëritje
+Me përdorues dhe me fjalëkalim
+Përdoruesi:
+Fjalëkalimi:
+Grupi:
+Ruaje në këmishën:
+Ruaje si:
+Fillo
+Automatikisht
+Me dorë
+Me orar
+Përparësia e shkarkimit
+e Avancuar
+Adresa e skedarit që doni të shkarkoni
+Shkruani emrin e përdoruesit
+Shkruani fjalëkalimin
+Zgjidheni këtë kuti nëse serveri kërkon autorizim
+Emri i grupit për të vendosur shkarkesën. Grupet ju ndihmojnë juve t'i menaxhoni shkarkesat tuaja
+Këmisha për ruajtjen e shkarkesave
+Emri i ri i skedarit të shkarkuar. Lëreni bosh këtë fushë nëse doni ta ruani skedari me emrin e tij origjinal
+Përshkrim i shkurtër i shkarkesës
+Kjo shkarkesë do të nisë automatikisht sa më shpejt të jetë e mundur
+FDM nuk do të përpiqet ta nisë automatikisht këtë shkarkesë
+Programojeni këtë shkarkim
+Konfiguroni orarin e shkarkimit
+Përparësia shkarkuese. Shkarkesat me përparësi të lartë do të nisin në fillim. Ato me më pak përparësi do të shtyhen për më vonë
+Shih kuadro të avancuar për këtë shkarkesë
+URLi i shkruar është i pasaktë. Ju lutemi verifikojeni
+Ju lutemi shkruani përdoruesin
+Zgjidhni këmishën dalëse
+Në përgjithësi
+Informacion i përgjithshëm
+Shkarkesa aktualisht e ruajtur në skedar:
+Emri i skedarit të shkarkuar
+URLi i kësaj shkarkese nuk mund të ndryshohet
+Kjo shkarkesë po përparon. Emri i skedarit s'mund të ndryshojë
+Skedari s'mund të riemërtohet
+Skedari nuk gjendet
+Shtegu nuk gjendet
+Format invalid .exe
+Skedari po përdoret nga një tjetër aplikim
+Hyrja mohohet
+Aparati s'është gati
+Disku është plot
+Emri i skedarit është invalid
+Kërkohet Login
+Lidhja
+Rrjet
+Gabime
+Pushimi midis përpjekjeve për lidhje [në sekonda]:
+Numri maksimal i përpjekjeve
+Jashtëkoha [në sekonda]:
+Përmasa minimale:
+Numri maksimal:
+Kufizimi i trafikut për këtë shkarkesë
+Kufizoje trafikun
+Përbuzi gjithë kufizimet
+B
+KB
+MB
+s
+Shkruaj një vlerë më të madhe se %d
+Ju lutemi zgjidhni dimensionin
+Koha e pritjes për rilidhje të serverit në rast gabimi
+Zgjidheni këtë kuti nëse doni ta kufizoni numrin maksimal të përpjekjeve për shkarkim të pasuksesshëm
+Koha e pritjes për përgjigje të serverit
+Përmasa minimale e sektorit. Shkarkesa nuk do të ndahet në sektorë me përmasë më të vogël
+Numri maksimal i sektorëve. Shkarkesa nuk do të ndahet në numër më të madh sektorësh
+Saktësoni se sa trafik (maksimum) do të marrë FDM për shkarkesën
+Përbuzi kufizimet e trafikut dhe kufizimin për numrin maksimal të lidhjeve për këtë shkarkesë
+Në këtë fushë mund të përcaktoni vlerën në bajt (B), kilobajt (KB) ose megabajt (MB)
+Protokolli
+Identifikohu tek serveri si:
+Referuesi:
+Përdor HTTP 1.1
+Përdor 'cookies'
+Përdor mënyrë pasive
+Mënyra e transferimit
+Binare
+ASCII për skedarë me shtojcë:
+Përcaktoni se si do të identifikohet FDM me serverin HTTP
+Ky varg do të dërgohet si fusha 'Referuesi' tek serveri HTTP. Si rregull, nuk kërkohet
+Zgjidheni këtë kuti nëse doni që FDM të përdorë versionin HTTP 1.1
+Zgjidheni këtë kuti nëse doni që FDM të përdorë 'cookies'
+Zgjidheni këtë kuti nëse doni që FDM të përdorë mënyrën pasive për serverat FTP. Ndonjëherë është e nevojshme kur punohet me fajruolle.
+Përdoreni mënyrën binare për transfertat FTP. Vendoseni këtë mënyrë nëse skedari që ju po shkarkoni nuk është tekst
+Përdoreni mënyrën ASCII për transfertat FTP. Vendoseni këtë mënyrë nëse skedari që ju po shkarkoni është tekst
+FDM do të përdorë mënyrën ASCII për skedarë me shtojcë të caktuar. Për skedarë të tjerë FDM do të përdorë mënyrën binare
+Proxy
+Merr kuadro proxy
+Nga Microsoft Internet Explorer
+Përcaktoje me dorë
+Mos përdor asnjë proxy
+Kuadro
+Addresa:
+Porti:
+Ju lutemi shkruani adresën proxy
+Ju lutemi shkruani portin proxy
+FDM do t'i marrë kuadrot proxy nga Internet Explorer
+Ju i përcaktoni vetë kuadrot proxy
+FDM nuk do të përdorë proxy
+Zgjidhni llojet e serverave për të cilët doni të përcaktoni proxy-n
+Shkruani adresën e proxy-t që doni të përdorni
+Shkruani portin e proxy-t. Si rregull, është 3128, 1080 ose 8080
+Zgjidheni këtë kuti nëse serveri proxy kërkon autorizim
+Të ndryshme
+Skedarë lokalë
+Nëse skedari ekziston tashmë:
+Ruaje hapësirën e diskut për skedarin
+Krijo një shtojcë për skedarët e papërfunduar:
+Serveri i Internetit
+Mos e rinis shkarkimin nëse serveri nuk e përkrah rimarrjen
+Kur serveri e ndryshon përmasën e skedarit:
+Ndalo gjatë gabimeve
+Më pyet
+Rishkruaje
+Riemërtoje
+Rimerre
+Rifilloje
+Rregulloje
+Ju lutemi përcaktoni shtojcën e skedarit
+Këtu mund të përcaktoni se ç'duhet të bëjë FDM nëse tashmë skedari ekziston në disk
+Zgjidheni këtë kuti nëse doni të ruani hapësirë disku kur njëra shkarkesë fillon
+Nëse zgjidhet, FDM do t'i bashkangjisë një shtojcë të caktuar emrit të skedarit ndërsa ai shkarkohet. Kur shkarkimi të përfundojë FDM do e riemërtojë sërish skedarin me emrin e tij origjinal
+FDM nuk do ta rinisë shkarkimin nëse serveri i largët nuk e përkrah rimarrjen
+Këtu mund të përcaktoni se ç'duhet të bëjë FDM nëse përmasa e skedarit ndryshohet nga serveri
+Zgjidheni këtë kuti për ta ndalur shkarkimin kur skedari nuk gjendet në server
+Zgjidheni këtë kuti për ta ndalur shkarkimin kur përdoruesi ose fjalëkalimi janë invalidë
+Mënyra përdoruese e trafikut
+Zgjidhni mënyrën për konfigurim:
+Numri maksimal i lidhjeve:
+Numri maksimal i lidhjeve për një server:
+Kufizim i trafikut:
+pa kufi
+Zgjidhni mënyrën përdoruese të trafikut që doni të konfiguroni
+Zgjidheni këtë kuti për të kufizuar numrin maksimal të lidhjeve
+Zgjidheni këtë kuti për të kufizuar numrin maksimal të lidhjeve për një server
+Përcaktoni trafikun e FDM-së (maksimum) për shkarkimin e skedarëve
+Gjithë shkarkesat
+Lista e shkarkesave
+Autoruaje çdo
+min.
+Kur një shkarkesë e papërfunduar fshihet
+Automatikisht fshiji shkarkesat e përfunduara
+Mos e fshij skedarin
+Fshije skedarin
+FDM automatikisht e ruan listën e shkarkesave pas një intervali të caktuar kohe. Ai e mbron listën nga një mbyllje e mundshme e kompjuterit ose nga avari të energjisë
+Përcaktoni se ç'duhet të bëjë FDM me skedarin në disk kur fshihet një shkarkesë e papërfunduar
+Zgjidheni këtë kuti nëse automatikisht doni ta fshini shkarkesën nga lista kur ajo të përfundojë
+Monitorim
+Monitorim
+Fushëkapje
+Monitoro skedarë me shtojcë
+Përbuzi skedarët me shtojcë
+ALT nuk duhet shtypur
+ALT duhet shtypur
+Ju lutemi përcaktoni shtojcat
+Zgjidheni këtë kuti nëse doni që FDM të kapë klikimet në Internet Explorer
+Zgjidheni këtë kuti nëse doni që FDM të monitorojë fushëkapjen tuaj
+Monitoro vetëm skedarët me shtojcë të përcaktuar
+Mos i monitoro skedarët me shtojcë të përcaktuar
+Monitoro vetëm nëse nuk shtypet ALT
+Monitoro vetëm nëse shtypet ALT
+Fillesë
+Nise në fillesë
+Fillo në minimum
+Sistem
+Minimizo në tabaka
+Butoni 'Mbylle' minimizon dritaren
+FDM automatikisht do të nisë me Windows-in
+FDM do të minimizohet pas nisjes
+Kur të klikoni butonin 'Minimizo', FDM do të minimizohet në tabaka
+Nëse zgjidhet, klikimi në butonin 'Mbylle' do të jetë i ngjashëm me butonin 'Minimizo'
+Ridato
+Adresa e serverit për ridatim
+FDM automatikisht do të kërkojë për versionin më të ri
+Optimizim Ekspert i shfrytëzimit të rrjetit
+Mirëserdhët në Optimizimin Ekspert të shfrytëzimit të rrjetit!
+Kjo Ekspertizë do t'ju ndihmojë të ndërtoni kuadro optimalë për llojin e lidhjes tuaj dhe se si të vendosni vetitë e Shkarkimit dhe vetitë tipike për shkarkesën.
+Ju lutemi zgjidhni llojin e lidhjes
+Mbaro
+Përcaktoni llojin e lidhjes tuaj në Internet
+Konfigurojeni FDM-në për punim optimal me lidhjen tuaj
+Detyra
+Kohënisja
+Kohënisja tjetër
+Kohënisja e fundit
+Lista e orareve s'mund të hapet. Ka mundësi që të jetë dëmtuar ose po përdoret nga një tjetër aplikim
+Ditari i Programuesit s'mund të hapet!
+Lista e orareve s'mund të ruhet
+Detyra "%s" u programua. Të fillojë?
+Mënyra përdoruese e trafikut ndryshoi në "%s"
+Mbylle telefonin
+Gjithë lidhjet
+Ndrysho mënyrën përdoruese të trafikut në
+Mbylle
+Rifillo
+Tërhiqu
+Një herë
+Die
+Hën
+Mar
+Mër
+Enj
+Pre
+Sht
+Në ditët:
+Çdo
+ditë
+orë
+FDM nis
+Telefonimi ka sukses
+Telefonimi dështon
+S'ka shkarkesa aktive
+Kur shpejtësia më pak ose barabar se %d BPS gjatë %d
+Kur gjithë shkarkesat janë në gjendjen gabuese gjatë
+Kurrë
+e Panjohur
+Me sukses i lidhur tek "%s"
+Lidhja tek "%s" dështoi
+Hedhja pati sukses
+Jashtë kujtese
+S'mund të hidhet
+Ekzekutimi me orar do të shkaktojë daljen e programit në fillesë. Orari do të përbuzet
+Përpjekjet maksimale telefonuese
+Pusho midis përpjekjeve
+Mbylle nëse shpejtësia e lidhjes është më pak se:
+Provo përsëri
+Jo më tepër se
+Përdor lidhjen
+Nëse me sukses
+herë
+Mbylli gjithë lidhjet aktive
+Lidhja për mbyllje
+Emri i programit:
+Argumente:
+Lloji i mbylljes:
+Detyroji aplikimet të dalin
+Lësho programin
+Themelo lidhje dial-up
+Mbylle lidhjen
+Ndryshoje mënyrën përdoruese të trafikut
+Dil nga FDM
+Mbylle kompjuterin
+Shkarkesat për fillim
+Shkarkesat për ndalim
+Aplikime
+Gjithë skedarët
+Na falni, kjo veçori vlen vetëm në Windows 2000, XP dhe më sipër
+Ju lutemi shkruani emrin e programit
+Ju lutemi zgjidhni shkarkesat
+Zgjidhni mënyrën përdoruese të trafikut që do të donit të vendosnit në fillim të detyrës
+Zgjidheni këtë kuti nëse doni të kufizoni numrin maksimal të telefonatave pa sukses
+Koha midis përpjekjeve pa sukses
+Zgjidhe këtë kuti për të themeluar lidhje me shpejtësi jo më pak sesa vlera e përcaktuar
+Përcaktoni vlerën e shpejtësisë minimale të kërkuar për lidhje
+FDM do të përpiqet sërish të themelojë lidhjen e kërkuar nëse e zgjidhni këtë kuti
+Zgjidheni këtë kuti për të kufizuar numrin maksimal të përpjekjeve pa sukses për të themeluar lidhjen
+Përcaktoni shkarkesat e kërkuara
+Lista e gjithë shkarkesave të vlefshme
+Shtoje shkarkesën e zgjedhur tek lista e detyrave të shkarkesave
+Hiqe shkarkesën e zgjedhur nga lista e detyrave të shkarkesave
+Përcaktoni programin që doni të lëshoni
+Gjeje programin në kompjuter
+Përcaktoni argumentet e programit
+Përcaktoni llojin e mbarimit të sesionit tuaj
+Zgjidheni këtë kuti për të forcuar mbarimin e sesionit tuaj. Është i dobishëm nëse në sistem ka aplikime të ngrira. Por në këtë rast, gjithë të dhënat e paruajtura do të humbasin
+Përcaktoni veprimin e programuar
+Zgjidheni këtë kuti nëse doni që FDM t'i mbyllë gjithë lidhjet aktive
+Përcaktoni lidhjen për mbyllje
+Në disa ditë
+të Dielën
+të Hënën
+të Martën
+të Mërkurën
+të Enjten
+të Premten
+të Shtunën
+Me ndodhi, kur
+Gjatë
+Shpejtësi e ulët:
+min.
+Minuta
+Orë
+Ditë
+Shpejtësia e shkarkimit është tepër e ulët
+Gjithë shkarkesat janë në gjendje gabimi
+Ju lutemi përcaktoni ditët
+Nise detyrën në orën e caktuar
+Vendosni orën për nisjen e detyrës
+Nise detyrën në datën e caktuar
+Vendosni datën për nisjen e detyrës
+Nise detyrën në ditë të caktuara të javës
+Nise detyrën çdo të diel
+Nise detyrën çdo të hënë
+Nise detyrën çdo të martë
+Nise detyrën çdo të mërkurë
+Nise detyrën çdo të enjte
+Nise detyrën çdo të premte
+Nise detyrën çdo të shtunë
+Nise detyrën periodikisht
+Kjo fushë ju lejon të përcaktoni intervalin e kohës në minuta, orë ose ditë
+Nise detyrën kur ndodh ndonjë ngjarje
+Përcaktoni llojin e ngjarjes
+Shkruani intervalin e kohës
+Shkruani shpejtësinë minimale të kërkuar
+Kërko miratim për ekzekutimin e detyrës
+Për dritaren e miratimit prit
+sek.
+Nëse zgjidhet, FDM do t'ju pyesë ta miratoni ekzekutimin e kësaj detyre
+Nëse zgjidhet, FDM do të presë për miratimin tuaj gjatë një intervali të caktuar kohe. Nëse nuk do të reagoni gjatë kësaj kohe detyra do të nisë
+Adresa:
+Lista e skedarëve për shkarkim po ndërtohet
+Lidhje tek serveri
+Orvatje për të përdorur përdoruesin dhe fjalëkalimin e ruajtur në Menaxherin e Sitit
+Rigjetje e listës së skedarëve nga serveri
+Lidhja me serverin humbi. Orvatje për ta kthyer
+Lista po ndërtohet
+Merr përmasën dhe datën e modifikimit të skedarëve
+Ky parametër mund ta ulë në mënyrë dramatike shpejtësinë
+Zgjidheni këtë kuti nëse doni që FDM të dyshojë mbi përmasën dhe datën e skedarëve në serverat HTTP
+Emri i sitit
+Lidhje
+Login
+Grupi
+Lista e siteve s'mund të hapet. Ka mundësi të jetë dëmtuar ose po përdoret nga një tjetër aplikim
+Lista e siteve s'mund të ruhet
+Lidhje maksimale të njëkohshme:
+Grupi tipik për një shkarkesë të re nga ky sit
+Përdor mënyrën pasive FTP
+Ju lutemi shkruani emrin e sitit
+Tashmë siti me të njëjtin emër ekziston. Ju lutemi shkruani një emër tjetër
+Numri i lidhjeve maksimale duhet të jetë më i madh se 0
+Ju lutemi zgjidhni grupin
+Përcaktoni emrin e sitit
+Zgjidheni këtë kuti për të kufizuar numrin maksimal të lidhjeve të njëkohshme tek ky server
+Zgjidheni këtë kuti për të shtuar automatikisht shkarkesa nga ky server tek grupi i zgjedhur
+Pyet përdoruesin
+Mos më pyet më
+Gabim shkrimi në disk
+Skedari "%s" tashmë ekziston në disk. Çfarë do bëni?
+Nuk ju pyet më rreth kësaj. Zgjedhja juaj do të pranohet si tipike
+Mbishkruaje skedarin ekzistues
+Riemërtoje këtë skedar
+Rimerre shkarkimin. (Shkarkimi do të nisë në pozicionin baras me përmasën e skedarit ekzistues)
+Ndale këtë shkarkesë
+Po
+Jo
+Shkarkesa
+u fshi. A doni ta fshini edhe skedarin në disk?
+Ju lutemi shkruani përdoruesin dhe fjalëkalimin
+Login në "%s"
+Dërgo përdoruesin dhe fjalëkalimin e përcaktuar në server
+Mos u lidh tek ky server
+Përmasa e "%s" u ndryshua nga serveri. Çfarë do bëni?
+Rinise shkarkesën nga fillimi
+Rregulloje shkarkesën për përmasën e skedarit të ri. Nuk rekomandohet
+Ju lutemi prisni
+Ridato
+Përshkrim
+Ridatim duke përdorur:
+Kërkesë për ridatim
+Tashmë ju po përdorni versionin më të ri
+Në shkarkim
+Versioni %s build %s është i vlefshëm
+Shpërndarës i plotë i versionit %s (%s)
+Ngjitje në versionin %s
+Ngjitje në versionin %s (%s)
+FDM duhet të rinisë. A doni të riniset tani?
+Ridatimi u krye
+Ridatuesi s'mund të gjendet
+Përcaktoni llojin e ridatimit
+Ridatoje FDM-në duke përdorur shpërndarës të plotë
+Ridatoje FDM-në duke përdorur shpërndarës në ngjitje
+Shih më tepër informacion rreth procesit të ridatimit
+Çka të re në këtë version?
+Filloje tani ridatimin e FDM-së
+Hiqe ridatimin dhe mbylle këtë tabelë
+Krijo shkarkesa
+Zgjidh përmbajtjen
+Lëshoje përmbajtjen
+Lista e shkarkesave për t'u shtuar
+Zgjidhini njësitë e këmishës së përzgjedhur për t'i shtuar në listën e shkarkesave
+Lëshojini njësitë e këmishës së përzgjedhur për të mos i shtuar në listën e shkarkesave
+Rreth FDM-së
+Copyright (c)
+Gjithë të drejtat të rezervuara
+Regjistruar tek:
+Tashmë i ridatuar. Kërkohet rinisje
+Përdoruesi ose fjalëkalimi janë invalidë
+Skedari i historisë s'mund të hapet
+Skedari i historisë s'mund të ruhet
+Kuadro tipikë të Merimangës HTML
+Merimangë HTML
+Pema e faqeve të rrjetit
+Shkarko një uebsit
+Kuadro të shkarkimit të faqes së rrjetit
+Nise shkarkimin
+Ndale shkarkimin
+Programoje shkarkimin
+Fshije
+Hape faqen e rrjetit në shfletues
+Automatikisht nise shkarkimin
+URLi i sitit (faqes) të Rrjetit
+Skedari
+Doni t'i fshini edhe shkarkesat?
+Lista e faqeve të rrjetit s'mund të hapet
+Lista e faqeve të rrjetit s'mund të ruhet
+URLi i faqes së rrjetit ose serveri HTTP nga i cili doni të shkarkoni
+URLi i faqes së rrjetit ose serveri HTTP nga i cili u nis shkarkimi
+Emri i këmishës ku do të ruhen shkarkesat
+Këmisha dalëse:
+Faqe rrjeti
+Faqe
+Shtojca e skedarëve 'faqe rrjeti' me kod HTML:
+Shkarkoji stilet për faqen e rrjetit
+Shkarkoji faqet e rrjetit nga sitet e tjera
+Figura
+Shkarko figura
+Shkarko figura që lidhen me site të tjera
+Thellësia e shkarkimit:
+Shtojca e skedarëve 'faqe rrjeti' me kod HTML. Faqet e rrjetit do të skanohen për linke figurash dhe faqe të tjera për shkarkim
+Nëse zgjidhet, stili i faqeve të rrjetit, (CSS), gjithashtu do të shkarkohet. Rekomandohet
+Nëse nuk zgjidhet, faqet e rrjetit të siteve të tjera nuk do të shkarkohen. Për shembull, nëse kjo kuti nuk zgjidhet dhe ju nisët të shkarkoni nga http://example.com/, aherë http://othersite.com/some.html nuk do të shkarkohet, por http://example.com/some.html do të shkarkohet
+Nëse zgjidhet, figurat e faqeve të rrjetit gjithashtu do të shkarkohen
+Nëse nuk zgjidhet, figurat e faqeve të rrjetit që lidhen me site të tjera nuk do të shkarkohen
+Thellësia e shkarkimit. Për shembull, ju nisët të shkarkoni nga http://ex.com/index.html. Ka një link në http://ex.com/some.html nga http://ex.com/index.html. Aherë thellësia e http://ex.com/some.html do të jetë 1. Vënia e thellësisë 0 do të rezultojë vetëm në shkarkimin e përmbajtjes së faqes nisëse.
+Shkarko skedarë nga faqe rrjeti
+Shkarko skedarë nga uebsite të tjera
+Fshiji skedarët me shtojcë
+Ndize
+Shkarko
+Mos shkarko
+skedarë me shtojcë:
+Zgjidheni këtë kuti për të shkarkuar skedarë nga faqe rrjeti
+Zgjidheni këtë kuti për të shkarkuar skedarë nga site të tjera
+Zgjidheni këtë kuti për të përbuzur skedarë me shtojcë të përcaktuar
+Nëse zgjidhet, skedarët me shtojcë të përcaktuar si më poshtë do të shkarkohen
+Nëse zgjidhet, skedarët me shtojcë të përcaktuar si më poshtë NUK do të shkarkohen
+Eksporto kuadro
+Importo kuadro
+Lëshimi i Regedit.exe dështoi
+Ndodhi një gabim gjatë orvatjes për eksportim kuadrosh
+Ndodhi një gabim gjatë orvatjes për importim kuadrosh
+Skedarë-regjistri FDM
+Eliminim i figurave sipas shtojcave
+figura me shtojcë:
+Zgjidheni këtë kuti për të përbuzur figura me shtojcë të përcaktuar
+Nëse zgjidhet, figurat me shtojcë të përcaktuar si më poshtë do të shkarkohen
+Nëse zgjidhet, figurat me shtojcë të përcaktuar si më poshtë NUK do të shkarkohen
+Mos e shkarko këtë dhe fshije
+Serveri nuk e përkrah rimarrjen e shkarkimit. Rinisje nga fillimi
+Hapja e URLit dështoi
+Na falni, ndodhi një gabim i papritur gjatë orvatjes për të shkruar në regjistër
+Ju faleminderit për regjistrimin! Ju lutemi riniseni FDM-në
+Shkarkoje me Free Download Manager
+Shkarkoje faqen me Free Download Manager
+FDM në menynë e kontekstit të Internet Explorer
+Zgjidheni këtë kuti për të shtuar njësitë "Shkarkoje me Free Download Manager" dhe "Shkarkoje faqen me Free Download Manager" në menynë e kontekstit të Internet Explorer (menyja shfaqe kur klikon me të djathtë)
+Ule përdorimin e trafikut gjatë aktivitetit të shfletuesit
+Ule me një nivel
+Vendos mënyrën e Lehtë
+Zgjidheni këtë kuti për të ulur automatikisht përdorimin e trafikut kur Interneti shfletohet. Kjo ju lejon të shfletoni shumë më shpejt kur FDM po shkarkon diçka
+Mënyra përdoruese e trafikut do të ulet me një nivel. E Rëndë->e Mesme, e Mesme->e Lehtë
+Mënyra përdoruese e trafikut do të ndërrohet tek e Lehta
+I vlefshëm për
+I vlefshëm për 'sub domains'
+Zgjidheni këtë kuti për ta përdorur këtë rekord për shkarkim me HTTP
+Zgjidheni këtë kuti për ta përdorur këtë rekord për shkarkim me HTTPS
+Zgjidheni këtë kuti për ta përdorur këtë rekord për shkarkim me FTP
+Zgjidheni këtë kuti për ta përdorur këtë rekord për shkarkesa nga servera 'sub domains'. Për shembull, për sitin http://site.com do të jetë http://some.site.com
+Ju lutemi zgjidhni të paktën një protokoll
+Numri maksimal i shkarkesave vepruese
+Zgjidheni këtë kuti nëse doni të kufizoni numrin maksimal të shkarkesave që veprojnë në të njëjtën kohë
+Rinise shkarkesën
+Krijo një sektor
+Ndale sektorin
+; kontekst: [sektori x] - Ndaloi
+Ndaloi
+; menyja tabaka
+Kosh
+;
+Direktoria e 'Opera Plugin' s'mund të gjendet. A doni ta përcaktoni me dorë?
+Direktoria e 'Netscape Plugin' s'mund të gjendet. A doni ta përcaktoni me dorë?
+Monitorimi në Opera s'mund të instalohet
+Monitorimi në Opera s'mund të çinstalohet
+Monitorimi në Netscape s'mund të instalohet
+Monitorimi në Netscape s'mund të çinstalohet
+Zgjidheni këtë kuti nëse doni që FDM të kapë klikimet në Opera
+Zgjidheni këtë kuti nëse doni që FDM të kapë klikimet në Netscape
+; krijo 'dlg' shkarkese
+Përmasa në dyshim
+; kërko përmasën e një shkarkese
+Në kërkim...
+Përmasa që dyshohet për shkarkesën nga serveri
+Po, të gjithë
+Jo, fare
+Ditar i detajuar
+Nëse zgjidhet, FDM do të shfaqë reagime nga serveri
+Ndryshimet do të kryhen kur shfletuesi të rinisë
+Lista e detyrave
+Lista e skedarëve
+Lista e siteve
+Lista e faqeve
+Fshirje e shkarkesave
+Lista e shkarkesave po ndërtohet
+Krijo një tufë shkarkimi
+Nga:
+tek:
+Hap:
+Bajte për karta:
+Rezultate
+Shembull:
+Numri fillues i sekuencës
+Numri mbarues i sekuencës
+Hapi i sekuencës. Për shembull, nëse është 10, aherë sekuenca do të jetë 0, 10, 20 ...
+Numërimi i bajteve të kartave. Për shembull, nëse është 1, aherë sekuenca do të jetë 1, 2, 3. Nëse është 2, aherë sekuenca do të jetë 01, 02, 03.
+Klikoni për të parë sekuencën e gjeneruar
+Lejoje Internet Explorer të shkarkojë nëse ju shtypni Anulo
+Zgjidheni këtë nëse doni që Internet Explorer ta shkarkojë skedarin kur të shtypni Anulo në tabelën "Shto një shkarkesë"
+Numri final i sekuencës duhet të jetë më i madh sesa ai i fillimit
+Ju lutemi përdorni (*) në URL për të përcaktuar rigën e URLit
+Krijo një shtojcë nëse skedari nuk e ka një të tillë
+Zgjidheni këtë kuti për të krijuar një shtojcë të caktuar për skedarë që nuk e kanë atë. Për shembull, nëse emri i skedarit është "skedar" dhe ju caktuat "txt", rezultati do të jetë "skedar.txt"
+Përmasat shfaqi vetëm në bajt
+Zgjidheni këtë kuti për t'i shfaqur gjithë përmasat në bajt, në vend të kilobajt ose megabajt
+Kryej verifikim virusi
+Argumente:
+Shtojca:
+Zgjidheni këtë kuti për t'i verifikuar automatikisht me antivirus skedarët e shkarkuar
+Përcaktoni emrin e programit antivirus
+Përcaktoni argumentet për antivirusin
+Përcaktoni shtojcat e skedarëve të shkarkuar për verifikim
+Ju lutemi shkruani emrin e antivirusit
+Emri është invalid. Ju lutemi verifikojeni
+Antivirusi u ngarkua
+Gjymtoje detyrën pas ekzekutimit
+Fshije detyrën pas ekzekutimit
+Zgjidheni këtë kuti për ta gjymtuar automatikisht detyrën pas ekzekutimit
+Zgjidheni këtë kuti për ta fshirë automatikisht detyrën pas ekzekutimit
+Shko
+Pas
+Automatikisht krijo një emër
+Zgjidheni këtë kuti për të krijuar automatikisht një emër shkarkese 
+Ruaje me shtojcën "htm"
+Zgjidheni këtë kuti për t'i ruajtur gjithë faqet e rrjetit me shtojcën "htm"
+Klikoni tek ky buton për të llogaritur përmasën përmbledhëse të gjithë shkarkesave
+Ruaje strukturën e këmishave në server
+Zgjidheni këtë kuti për të mbajtur strukturën origjinale të këmishave në server. Përndryshe gjithë skedarët e serverit do të ruhen në një këmishë
+Ju zgjodhët një tjetër këmishë. A doni që kjo këmishë të jetë tipike për këtë grup? Gjithsesi, këmisha tipike mund të ndryshohet në vetitë e grupit.
+; === RRESHTA TË SHTUAR ===
+Tashmë shkarkesa me një URL të tillë ekziston. Çfarë do bëni?
+Ngarko
+Ngarkoje skedarin e shkarkuar
+Versioni
+Klikoni për të kontaktuar me ne
+Klikoni për të shkarkuar versionin më të fundit
+Kujdes:   Ky program mbrohet me të drejta autori dhe traktate ndërkombëtare. Riprodhimi i paautorizuar apo shpërndarja e këtij programi, ose e çdo porcioni të tij, mund të rezultojë në penalitete të rënda civile dhe kriminale, të cilat do të ndiqen në shtrirjen më të madhe të mundshme sipas ligjit.
+; === version i ri ===
+Shkarko gjithçka me Free Download Manager
+Shto listën e shkarkesave
+Fshije zgjedhjen
+Kjo është lista e URLeve për t'u shtuar
+Klikoni tek ky buton për t'i fshirë gjithë URLet e zgjedhur nga lista
+Direktoria e 'Firefox Plugin' s'mund të gjendet. A doni ta përcaktoni me dorë?
+Monitorimi në Firefox s'mund të instalohet
+Monitorimi në Firefox s'mund të çinstalohet
+Zgjidheni këtë kuti nëse doni që FDM të kapë klikimet në Mozilla Firefox
+Shkarkoje zgjedhjen me Free Download Manager
+Nisje
+Uebsite
+Shkarkesa aktive
+Aktualisht nuk ka shkarkesa aktive
+Lajmërime
+Përdor "tullumbace" në tabaka
+Jashtëkoha
+Zgjidheni këtë kuti për të lejuar lajmërime "tullumbacesh" në tabaka kur një shkarkesë ndalohet ose mbaron. Shënim: kjo veçori vlen vetëm në Windows 2000/XP dhe më sipër
+Automatikisht mbylle "tullumbacen" pas skadimit të kohës
+Pasqyra
+Automatikisht kërko URLe pasqyrë
+Numri maksimal i pasqyrave
+Llogarite shpejtësinë e pasqyrave
+Rillogarite shpejtësinë çdo
+Zgjidheni këtë kuti që FDM automatikisht të kërkojë URLe pasqyrë për secilën shkarkesë
+Kufizoje numrin e URLeve-pasqyrë për shkarkesë. Kjo lejon ulje të shpejtësisë për kohën e llogaritjes së pasqyrave
+Zgjidheni këtë kuti që FDM të llogarisë shpejtësinë e secilit server pasqyrë
+Automatikisht rillogarit shpejtësinë e pasqyrave përmes intervalit të caktuar të kohës
+Mos kërko kur skedari është më pak se
+FDM nuk do të kërkojë për pasqyra nëse përmasa e skedarit është më pak sesa përmasa e caktuar
+Mos kërko kur përmasa e skedarit nuk njihet (Rekomandohet)
+Shto një pasqyrë
+Kërko pasqyra
+Shto me dorë një URL-pasqyrë për këtë shkarkesë
+Kërko për URLe pasqyrë mbi këtë shkarkesë me FileSearching.COM
+Lista e URLeve-pasqyrë
+Shpejtësia e serverit
+Në përdorim
+Mat shpejtësinë
+Mat shpejtësinë e serverave të pasqyrave
+Info mbi shkarkimet
+Në pritje...
+URL pasqyrë për shkarkesë
+Përmasa e skedarit i kalon 2GB. Shkarkesa të tilla përkrahen vetëm me FTP
+;
+;
+; #RRESHTA TË RINJ (NDËRTIMI MË I RI SESA 195)#
+;
+;
+; FILLO: Faqe Shkarkimi e Re
+Shkarkesë e Re
+Automatikisht përcakto grupin për shkarkim
+Vendose grupin në:
+Ruaje shkarkesën në këmishën e grupit të saj
+Zgjidheni këtë kuti nëse doni që grupi i shkarkesës të përcaktohet nga shtojca e skedarit ose nga kuadrot e Menaxherit të Sitit
+Vendose me dorë grupin tipik
+Zgjidheni këtë kuti nëse doni që shkarkesa të ruhet tek këmisha tipike e grupit (shih vetitë e Grupit)
+Vendose me dorë këmishën dalëse tipike
+; FUND
+; FILLO: Faqe monitoruese
+Monitorim i heshtur
+Nëse zgjidhet, nuk shfaq tabelën "Shto një shkarkesë", kur nga shfletuesi shtohet një shkarkesë
+Porosite
+Zgjidh njësitë e menysë për t'u shfaqur në kontekstin e menysë së Internet Explorer
+; FUND
+Zgjidhni njësitë bazë që do të shfaqen në meny
+Duhet zgjedhur të paktën një njësi menyje
+Përdor tinguj
+Zgjidheni këtë kuti nëse doni që FDM të luajë tinguj në disa ngjarje (p.sh. kur shkarkimi përfundon)
+Zgjidh tingullin për çdo ngjarje
+; FILLO : Porositje e tabelës së tingujve
+Porositi tingujt
+Shtoje
+Fshije
+Provoje
+Lista e ngjarjeve dhe tingujve të duhur të FDM. Këtu ju mund ta rregulloni FDM të luajë një tingull kur ndodh ndonjë ngjarje
+Shkarkesa u shtua - luaj tingull kur një a më shumë shkarkesa shtohen në listën e shkarkesave
+Shkarkimi u krye - luaj tingull kur shkarkimi përfundon me sukses.
+Shkarkimi dështoi - luaj tingull kur ndodh një gabim gjatë orvatjes për të shkarkuar një skedar.
+Telefonimi pati sukses - luaj tingull kur detyra e Programuesit "Themelo lidhje dial-up" ekzekutohet me sukses.
+Telefonimi dështoi - luaj tingull kur detyra e Programuesit "Themelo lidhje dial-up" dështon për ndonjë arsye.
+Vendos tingull për ngjarjen e zgjedhur
+Mos e luaj tingullin kur ngjarja e zgjedhur të ndodhë
+Provoje tingullin e zgjedhur
+Ngjarja
+Skedarë zanorë
+Asnjë tingull
+Shkarkesa u shtua
+Shkarkimi përfundoi
+Shkarkimi dështoi
+Telefonimi pati sukses
+Telefonimi dështoi
+Skedarë zanorë
+; FUND
+Pasqyrat po kërkohen...
+Shpejtësia e pasqyrave po matet...
+Tashmë u krye kërkimi për pasqyra
+Lidhje tek serveri kërkues...
+Marrje e rezultateve...
+U gjetën %d pasqyra
+Kërkimi për pasqyra u krye
+Orvatje për një tjetër pasqyrë...
+Nuk u gjet asnjë pasqyrë!
+Dështim
+Shpejtësia e pasqyrave u mat
+; FILLO: faqja Histori
+Histori
+Ruaje historinë e linkeve dhe të këmishave
+Ruaj vetëm historinë e këmishave
+Ruaji rekordet deri në
+Numri maksimal i rekordeve
+Pastroje historinë
+FDM do të ruajë historinë e linkeve dhe të këmishave që ju shkruat
+FDM do të ruajë vetëm historinë e këmishave
+FDM do të fshijë rekorde që ekzistojnë në histori më tepër sesa periudha e përcaktuar e kohës
+Numri maksimal i rekordeve në histori. Kur numri i rekordeve ta kalojë këtë vlerë, FDM do të fshijë rekordet më të vona
+Fshiji gjithë rekordet nga historia
+; FUND
+Importo
+Eksporto
+Importo listën e URLeve
+Eksporto listën e shkarkesave
+Skedarë tekst
+Skedari s'mund të hapet
+Eksporto gjithë shkarkesat
+Eksporto gjithë shkarkesat në listë
+Eksporto vetëm shkarkesat e zgjedhura
+Mos i eksporto shkarkesat e përfunduara
+Bashkangjiti ato nëse skedari ekziston
+Emër grupi invalid. Ju lutemi mos përdorni simbolet / ose \.
+Dil në përfundim
+; FILLO : dritarja Historia e Shkarkesave
+e Shtuar
+i Ruajtur në
+; FUND
+Recycle Bin
+; FILLO: Recycle Bin
+Veti
+Pastroje Recycle Bin
+;FUND
+;FILLO: vetitë e Recycle Bin
+Mos i vendos shkarkesat e fshira në Recycle Bin
+Mbaj maksimumin e
+shkarkesave
+Mos mbaj shkarkesa të përfunduara
+Më pyet për miratim kur të fshij shkarkesa
+Vetitë e Recycle Bin
+Zgjidheni këtë kuti nëse nuk doni t'i depozitoni shkarkesat e fshira në Recycle Bin
+Zgjidheni këtë kuti nëse doni të kufizoni numrin e shkarkesave të fshira të depozituara në Recycle Bin
+Numri maksimal i shkarkesave për t'u depozituar në Recycle Bin
+Zgjidheni këtë kuti nëse doni që shkarkesat e përfunduara të mos depozitohen në Recycle Bin pas fshirjes
+Zgjidheni këtë kuti nëse doni që FDM t'ju pyesë për miratim kur orvateni të fshini një shkarkesë
+;FUND
+Ktheje
+Shkarkesat po kthehen...
+; Nënnjësite e Historisë
+Sot
+Dje
+Një javë
+Një muaj
+Me porosi...
+; fund
+Pastroje Historinë
+Ruaje historinë e shkarkesave
+Ruaj vetëm historinë e shkarkesave të përfunduara
+Zgjidheni këtë kuti nëse doni të ruani historinë e shkarkesave tuaja
+Zgjidheni këtë kuti nëse doni ta ruani vetëm historinë e shkarkesave të përfunduara
+Kuadro për Historinë e Shkarkesave
+Lista për rekordet e Historisë po ndërtohet...
+; Shkarkesa U Fshi
+U Fshi
+Zgjidh kufirin e kohës
+Gjej
+Gjeje prapë
+Çfarë të gjej
+; FILLO : tabela Gjej
+Kërko në
+Emri i skedarit lokal
+Përcaktoni se ç'doni të gjeni
+Kërko në pjesën e URLit të skedarit
+Kërko në tërë URLin
+Kërko në komentin e shkarkesës
+Kërko në emrin dhe në shtegun e skedarit për shkarkim në diskun lokal
+Kryej kuadro të avancuar kërkimi
+; kuadro të AVANCUAR
+Ku të kërkoj
+Kërko në listën e shkarkesave
+Kërko në Historinë e Shkarkesave
+Kërko me kohë të përcaktuar
+Vendose
+Kërko në Recycle Bin
+Kërko skedarë me përmasë të përcaktuar
+Minimale
+Maksimale
+Kërko në Listën e Shkarkesave
+Kërko në Historinë e Shkarkesave
+Kërko vetëm shkarkesa që kënaqin kufirin e kohës së përcaktuar
+Vendos kufirin e kohës
+Kërko në Recycle Bin
+Kërko vetëm skedarë që e kënaqin kufirin e përcaktuar të përmasës
+Përmasa minimale e kërkuar
+Përmasa maksimale e kërkuar
+Kërko në grup
+Zgjidhni grupin ku do të kryhet kërkimi
+; FUND
+Shkarkesat po kërkohen...
+Nuk u gjet asnjë njësi
+Nuk u gjet më asnjë njësi
+Gjetja u krye
+URL në fushëkapje
+Parashikim ZIP
+Duhet zgjedhur të paktën një skedar.
+Ka mundësi që skedari që ju po shkarkoni të jetë arkiv ZIP. A doni ta parashikoni atë?
+Parashikimi Audio/Video
+Hapja e skedarit dështoi!
+Lloj i medias nuk njihet.
+Ju lutemi instaloni DirectX 8.0 ose më mirë për të përdorur këtë veçori. Ju mund ta shkarkoni DirectX më të fundit nga microsoft.com.
+Info për Media
+Përmasa:
+Me vlerë:
+ Kohëzgjatja:
+Pa zë
+Luaj
+Pusho
+Filtro
+Shtojcat [ndarë me hapësira, p.sh. zip rar arj]:
+Fshiji skedarët me shtojcë të tillë
+Lër vetëm skedarët me shtojcë të tillë
+Fija e argumenteve nuk përmban %file% 'macro'. Ky 'macro' është i nevojshëm për t'i treguar programit tuaj antivirus se çfarë skedari të verifikojë.
+Doni të vazhdoni gjithsesi?
+Kujdes
+Përdor atribute të fshehura për shkarkesën e papërfunduar
+Kur skedari të përfundojë, shto edhe komentin tek emri i tij
+Mos i depozito faqet e serverit
+Zgjidheni këtë kuti nëse nuk doni të depozitoni faqe serveri në kompjuterin tuaj, por vetëm skedarë dhe figura
+Përdor parashikimin ZIP
+Zgjidheni këtë kuti nëse doni të parashikoni përmbajtjen e arkivit ZIP në fillim të shkarkimit, që të shkarkoni vetëm një pjesë të arkivit.
+Vëllimi:
+Automatikisht nise shkarkimin
+Zgjidheni këtë kuti nëse doni që FDM automatikisht të fillojë çdo shkarkesë të re
+Ju lutemi zgjidhni skedarët për shkarkim
+Vendosni pozicionet alternative(URLet) për këtë shkarkesë
+Në të ardhmen mos parashiko
+Ju e fikët parashikimin ZIP. Nëse doni që ta ndizni, ju lutemi shkoni tek Mundësi -> Mundësitë e shkarkimit (Ctrl+O) -> faqja Shkarkesë e Re, dhe zgjidhni kutinë "Përdor parashikimin ZIP".
+Listë përbuzëse
+Lista e faqeve të rrjetit që duhen përbuzur gjatë shkarkimit të një siti.
+Nënkëmisha
+Shto
+Përbuzi edhe gjithë nënkëmishat
+; Kuadro të rinj të tabelës Proxy
+Në lidhjet e këputura përdor rrokullisje 
+Përmasa e rrokullisjes
+bajte
+Zgjidheni këtë mundësi nëse doni të ndizni veçorinë rrokullisje. Kjo mundësi ju ndihmon t'i mbroni shkarkesat tuaja nga dëmtimet.
+Përmasa e rrokullisjes. Përmasë më e madhe do ta lejojë rrokullisjen të punojë pa rrezik. Përmasa e rekomanduar është 3000 bajt. Këtë vlerë mund ta rrisni nëse shkarkesat tuaja ende mbeten të dëmtuara.
+; mundësitë e shkarkimit -> tabela monitorim
+Mos monitoro skedarë më të vegjël se
+Përdoreni këtë mundësi nëse doni që FDM t'i lërë mënjanë skedarët që janë më të vogla sesa përmasa e përcaktuar
+KBajt
+Kujdes! Recycle Bin është tepër i madh. Kjo mund ta ulë në mënyrë dramatike rendimentin. Rekomandohet që Recycle Bin të pastrohet. A do të donit ta bënit këtë?
+Mos e zgjidh më këtë
+Kujdes! Historia e Shkarkesave është tepër e madhe. Kjo mund ta ulë në mënyrë dramatike rendimentin. Rekomandohet që Historia të pastrohet. A do të donit ta bënit këtë?
+Serveri nuk mund t'i garantojë mundësitë e tij rimarrëse. Reagimi është invalid.
+Kopjoje në fushëkapje
+; kuadro të përgjithshëm | faqja lëvore
+Lëvore
+Lëvore
+Lejoje lëvoren të përdorë ikonat e veta
+Lejoje lëvoren të përdorë hartat e veta
+; lëvore tipike
+<tipike>
+SHËNIM: Çdo ndryshim do të ndikojë vetëm kur                       Free Download Manager të rinisë.
+Gjatë progresit shfaq info mbi shkarkesat
+Kapërceji skedarët me shtojcë:
+Lista e shtojcave për t'u kapërcyer
+Asnjë shkarkesë aktive
+Luaj një tingull kur gjithë shkarkesat të përfundojnë
+Importo listën e URLeve nga fushëkapja
+Fjalëkalime
+Mundësitë e Menaxherit të Sitit
+; Tabela e ruajtjes së fjalëkalimit
+Doni ta ruani fjalëkalimin?
+Free Download Manager mund të ruajë fjalëkalim për këtë server që ta shmangë nevojën për ta shkruar atë çdo herë që ju shkarkoni nga ky server.
+Doni ta ruani këtë fjalëkalim?
+Mos më sugjero që të ruaj ndonjë fjalëkalim
+; Mundësitë e Menaxherit të Sitit | tabela e Fjalëkalimeve
+Përdore Menaxherin e Sitit për depozitimin e fjalëkalimeve
+Më pyet nëse dua ta ruaj apo jo fjalëkalimin
+Mos më sugjero që t'i ruaj fjalëkalimet
+Fshiji gjithë fjalëkalimet përpara daljes
+Fshiji gjithë fjalëkalimet
+; krijo një detyrë të re HTML Spider
+Automatikisht fshiji shkarkesat e përfunduara (rekomandohet)
+Zgjidheni këtë kuti nëse doni që automatikisht shkarkesat e HTML Spider të fshihen. Kjo e shpejton shkarkimin e siteve të mëdhaja.
+Ndryshimet do të ndikojnë vetëm kur Free Download Manager të rinisë.
+Stil i Ri
+Stil i Vjetër
+Emri i direktorisë është invalid
+Fshehi dritaret pluskuese kur ekrani është i plotë
+Zgjidheni këtë kuti nëse doni që automatikisht dritaret pluskuese të fshehen kur ekrani të jetë i plotë.
+u programua për të nisur.
+A doni ta nisni atë?
+Ngarkoje shkarkesën kur të përfundojë
+Ju lutemi, në URL përdorni (*), (*A) ose (*a) për të përcaktuar tempujkën e URLit
+Serveri i kërkimit për pasqyra:
+Hibernacion
+Në qëndrim
+Mbaje mend zgjedhjen time
+Më sugjero për ta ndryshuar këmishën tipike të grupit
+Ruaje këmishën
+Hape këmishën
+Ruaje këmishën dhe hape atë
+Lloji i shkarkesës:
+Link për tek FDM
+Link për tek Free Download Manager
+I dashur përdorues!
+Programi Free Download Manager ju ofrohet falas. Ju mund ta përdorni atë sa të doni.
+Gjithsesi, nëse Free Download Manager ju duket i dobishëm, ju kërkojmë që ta përhapni atë duke e vendosur linkun e tij në uebsitin tuaj. Në këtë mënyrë Free Download Manager do të njihet nga më tepër njerëz.
+Ju faleminderit për përkrahjen tuaj,\nskuadra e zhvillimit Free Download Manager.
+Më kujto për 3 ditë
+Më kujto kur Free Download Manager të nisë herën tjetër
+Mos e shfaq më këtë dritare
+Shfaq kodin e linkut HTML
+Kodi për linkun HTML
+Më shumë shembuj
+Kopjoje në fushëkapje
+Fshehe
+; dritarja "Mënyra përdoruese e trafikut ndryshoi"
+Mënyra përdoruese e trafikut ndryshoi
+Ju e ndërruat mënyrën përdoruese të trafikut.\nFree Download Manager ka tre mënyra:
+Në këtë mënyrë Free Download Manager do të shkarkojë me shpejtësinë maksimale të mundshme. Kjo është mënyra më agresive.
+Në këtë mënyrë Free Download Manager do të shkarkojë me shpejtësi mesatare. Kjo mënyrë ju lejon që të shfletoni Internetin dhe në të njëjtën kohë të keni shpejtësi të lartë shkarkimi.
+Në këtë mënyrë Free Download Manager do të shkarkojë me shpejtësi të ulët. Kjo mënyrë ju lejon të shkarkoni pa e ulur në mënyrë dramatike rrjetin.
+;
+Riemërtoje dhe gjithashtu Rinise

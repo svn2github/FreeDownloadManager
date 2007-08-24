@@ -1,0 +1,39 @@
+
+Free Upload Manager
+Version 1.0
+
+SOFTWARE LICENSE AGREEMENT
+LICENSE:
+   
+* Free Upload Manager ("SOFTWARE PRODUCT") is freeware. 
+  You can use it as long as you wish for free.
+
+* You are hereby allowed to make any number of backup copies of 
+  the SOFTWARE PRODUCT and its documentation. You can give a copy of 
+  the SOFTWARE PRODUCT to anyone providing that no
+  fee is charged and the package files are not modified in any way.
+
+Common Provisions
+
+* You may not alter the SOFTWARE PRODUCT in any way, 
+  including its help and text files. 
+
+* The SOFTWARE PRODUCT IS DISTRIBUTED "AS IS". 
+  NO WARRANTY OF ANY KIND IS EXPRESSED OR IMPLIED. 
+  YOU USE IT AT YOUR OWN RISK. FREEDOWNLOADMANAGER.ORG SOFTWARE WILL NOT BE 
+  LIABLE FOR ANY DATA LOSS, DAMAGES, LOSS OF PROFITS OR 
+  ANY OTHER KIND OF LOSS WHILE USING OR MISUSING THIS
+  SOFTWARE.
+
+* All copyrights to the SOFTWARE PRODUCT are exclusively 
+  owned by FreeDownloadManager.ORG.
+
+* By installing and using the SOFTWARE PRODUCT, you accept all 
+  terms and conditions herein. If you do not agree with anything 
+  in this License, you must immediately remove the SOFTWARE
+  PRODUCT from your storage devices and cease to use it.
+
+  Copyright (c) FreeDownloadManager.ORG, All rights reserved.
+
+  Website: http://www.freedownloadmanager.org
+  Support: http://www.freedownloadmanager.org/support.htm

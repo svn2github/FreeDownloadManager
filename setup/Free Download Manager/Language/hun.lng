@@ -1,0 +1,1133 @@
+; This is language file
+; You can translate it to your native language
+; To do this, follow instructions:
+; - make sure FDM haven't already translated to your language 
+;   You may go to FDM web site  (http://freedownloadmanager.org) or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng to your language
+; - send translated file to support@freedownloadmanager.org 
+;
+;
+;
+; Translator - gLes - http://www.gles.hu - 2005.04.09. - Fabio http://fz.szily.hu
+;
+
+; Your language name. Please keep it in English
+;
+Hungarian
+;
+;
+; Below are the strings to translate:
+;
+Az összes mentése
+Kivágás
+Másolás
+Beillesztés
+Alacsony
+Közepes
+Magas
+Letöltési beállítások
+Telefonos kapcsolat
+Névjegy
+Kilépés
+Fájl
+Szerkesztés
+Nézet
+Beállítások
+Eszközök
+Súgó
+Eszköztár
+Állapotsor
+Optimalizáló varázsló
+Alapértelmezett letöltési beállítások 
+Általános beállítások
+Telefonos kapcsolat
+Kapcsolat bontása, amikor kész
+Számítógép kikapcsolása, amikor kész
+Súgó tartalomjegyzék megnyitása
+FDM honlap
+Írd meg egy barátodnak
+Terméktámogatás
+Frissítések automatikus keresése
+Frissítés keresése most
+Hogyan regisztráljon
+Regisztráció
+Váltás
+Sávszélesség-használat
+Regisztráció
+Letöltések
+Ütemezõ
+Hely böngészõ
+HTTP//FTP böngészõ
+Hely kezelõ
+Letöltés felvétele
+Letöltés indítása
+Letöltés leállítása
+Letöltés ütemezése
+Feladat felvétele
+Feladat tulajdonságai
+Kijelölt fájlok letöltése
+Leállítás
+Frissítés
+Hely felvétele
+Hely tulajdonságai
+Letöltése csoportja
+Letöltési infó
+Ütemezési napló
+Helyböngészõ napló
+Oldalsáv
+Új letöltés létrehozása
+Letöltés törlése
+Fájl futtatása
+Könyvtár megnyitása
+Letöltés automatikus indítása
+Letöltés tulajdonságai
+Feladat engedélyezése
+Feladat letiltása
+Feladat törlése
+Szülõkönyvtár megnyitása
+Kapcsolat bontása
+Letöltés
+Hely böngészõ beállításai
+Hely törlése
+Ideiglenes bejegyzés
+Helyek
+Fõablak megjelenítése
+Böngészõ figyelése
+Vágólap figyelése
+Az összes letöltés indítása
+Az összes letöltés leállítása
+Nem regisztrált
+Folytatás
+Regisztráció
+OLD-LICENSEENTER
+OLD-LICENSEKEY
+OLD-COPYKEY
+OLD-GETAKEY
+Mégse
+OLD-SPECIFYKEY
+OLD-AFTERKEY
+OLD-DONTREGISTER
+Az összes csoport
+Szûrõk
+Kész
+Folyamatban
+Ütemezve
+Leállítva
+Egyéb
+Új csoport létrehozása
+Csoport törlése
+Az összes letöltés törlése
+Az összes befejezett letöltés törlése
+Csoportkönyvtár megnyitása
+Csoport tulajdonságai
+Csoportnév:
+Alapértelmezett könyvtár:
+Fájlkiterjesztések [szóközzel elválasztva]:
+Alapértelmezett letöltési prioritás
+Nagyon alacsony
+Alacsony
+Közepes
+Magas
+Nagyon magas
+Kérem, adja meg a csoport nevét
+Bemeneti hiba
+Már létezik ilyen nevû csoport. Kérem, adjon meg egy másik nevet
+Kérem, adja meg a könyvtár nevét
+Válasszon alapértelmezett csoportkönyvtárat
+Adja meg a csoport nevét
+Ezen csoport letöltéseinek alapértelmezett könyvtára
+Tallózás
+A csoport által kezelt fájlkiterjesztések. Ennek alapján kerülnek be a letöltendõ fájlok a csoportba
+A csoportba kerülõ letöltések alapértelmezett prioritása
+Az ablak bezárása a módosítások alkalmazása nélkül
+Az ablak bezárása a módosítások alkalmazásával
+Hiba a letöltési csoportokban
+Kérem, telepítse újra a FDM-t
+Hiba
+Nem sikerült betölteni a letöltések listáját. Valószínûleg megsérült vagy használatban van egy másik program által
+Hiba az Internet Explorer integráció inicializációjakor
+Biztos benne?
+Ezzel törli a csoport összes letöltését
+Megerõsítés
+Fájlnév
+Méret
+Letöltve
+Hátralevõ idõ
+Szeletek
+Sebesség
+Megjegyzés
+Napló
+Folyamat
+Idõ
+Dátum
+Információ
+Ürítés
+Automatikus görgetés
+Ismeretlen hálózati hiba
+Hozzáférés megtagadva. Érvénytelen felhasználói név vagy jelszó
+Hozzáférés megtagadva. Érvénytelen felhasználói név
+Sikeres
+Nem sikerült kapcsolódni a kiszolgálóra
+A fájl nem található a kiszolgálón
+A kapcsolat megszakadt a kiszolgálóval
+A kiszolgáló nem válaszol
+Nem sikerült feloldani a kiszolgáló nevét
+Ez a kiszolgáló nem támogatja a letöltések folytatását. Ne állítsa meg ezt a letöltést, máskülönben elölrõl kell újrakezdenie
+Proxy felhasználói név és jelszó szükséges
+Kiterjedt hiba
+Hibás kérés. Valószínûleg hibás az URL
+Ismeretlen kiszolgálói hiba
+Kapcsolat megszakítva
+Hibás URL
+Nincs Internet-kapcsolat
+A kiválasztott HTTP verziót nem támogatja a kiszolgáló
+Ismeretlen hiba
+A fájlt nem lehet törölni a lemezrõl
+A kapcsolatok száma elérte a megengedett értéket ezen a kiszolgálón
+A kapcsolatok száma elérte a megengedett értéket
+Szünetel %d sec.
+Szelet
+Elindult
+Kész
+Letöltés kész
+Kapcsolódás...
+Kapcsolódás sikeres
+Átirányítás...
+Átirányítás sikeres. Új URL megnyitása
+Letöltés indítása...
+Leállítva
+Új szelet létrehozása...
+Megszakítva
+Letöltés újraindítása...
+Fájl megnyitása a lemezen...
+A fájl neve túl hosszú
+A fájl már létezik. Átnevezés
+Átnevezés
+A kimeneti fájl le lett törölve. A folytatás nem lehetséges
+A fájl már létezik. Fölülírás
+A fájl már létezik. Letöltés folytatása
+A fájl már létezik
+Hiba a fájl lemezrõl való megnyitásakor
+A fájl mérete megváltozott a kiszolgálón!
+Helyreigazítás az új fájlmérethez...
+Nem sikerült fölülírni a fájlt
+A fájl át lesz nevezve
+A fájlt nem lehet visszanevezni eredeti nevére
+Nem sikerült elmenteni a csoportokat
+Nem sikerült elmenteni a letöltéseket
+Telefonos kapcsolat
+Kapcsolódás ehhez:
+Automatikus tárcsázás 
+Kapcsolódás
+Válassza ki a tárcsázandó bejegyzést
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a tárcsázás automatikusan végbemenjen a következõ alkalommal
+Tárcsázás most
+Az ablak bezárása tárcsázás nélkül
+Nem található telefonos bejegyzés a számítógépen
+A vonal foglalt
+Hardverhiba
+Nincs tárcsahang
+Tárcsázás
+Kísérlet
+Port megnyitása...
+Szolgáltató tárcsázása...
+Csatlakozva a távoli számítógéphez
+Felhasználói név és jelszó ellenõrzése...
+A kapcsolat sebessége %d BPS
+Kapcsolat bontása
+Ismét
+Felhasználói név és jelszó megadása szükséges
+Felhasználó:
+Jelszó:
+Csoport:
+Mentés ide:
+Mentés másként:
+Indítás
+Automatikusan
+Manuálisan
+Ütemezés
+Letöltés prioritása
+Haladó
+A letöltendõ fájl címe
+Itt adja meg a felhasználói nevét
+Itt adja meg a jelszavát
+Pipálja ki ezt a dobozt, ha a kiszolgálón hitelesítés szükséges
+A csoport neve, amelybe a letöltés kerül. A csoportok segítségével rendszerezheti letöltéseit
+A könyvtár, amelybe menti a letöltött fájlokat
+A letöltött fájl új neve. Hagyja üresen, ha meg szeretné hagyni a fájl eredeti nevét
+Rövid leírása a letöltésnek
+Ez a letöltés a lehetõ leghamarabb elindul
+Ez a letöltés nem indul el automatikusan
+Letöltés ütemezése
+Ütemezés beállítása
+Letöltési prioritás. A magasabb prioritású letöltések elõbb indulnak el. Az alacsonyabb prioritásúaknak várakozniuk kell
+Haladó beállítások megtekintése ehhez a letöltéshez
+A megadott URL helytelen. Kérem, ellenõrizze
+Kérem, adja meg felhasználói nevét
+Válasszon célkönyvtárat
+Általános
+Általános információk
+A letöltés jelenleg ebbe a fájlba mentõdik:
+A letöltött fájl neve
+A letöltés URL-jét nem lehet megváltoztatni
+Ez a letöltés folyamatban van. Nem lehet megváltoztatni a fájlnevét
+Nem sikerült átnevezni a fájlt
+A fájl nem található
+Az útvonal nem található
+Érvénytelen EXE formátum
+A fájlt egy másik program használja
+Hozzáférés megtagadva
+Az eszköz nem áll készen
+A lemez megtelt
+A fájlnév érvénytelen
+Bejelentkezés szükséges
+Kapcsolat
+Hálózat
+Hibák
+Szünet a kapcsolódási kísérletek között [mp-ben]:
+Kísérletek maximális száma
+Idõtúllépés [másodpercben]:
+Minimális méret:
+Maximális szám:
+Sávszélesség-korlátozás ennél a letöltésnél
+Sávszélesség korlátozása
+Az összes korlátozás figyelmen kívül hagyása
+b
+KB
+MB
+s
+Adjon meg egy ennél nagyobb értéket: %d
+Kérem, válasszon méretet
+Várakozási idõ a kiszolgálóval való újrakapcsolódás elõtt hiba esetén
+Pipálja ki ezt a dobozt, ha korlátozni szeretné a sikertelen kapcsolódási kísérletek számát
+Várakozási idõ a kiszolgáló válaszára
+A szeletek minimális mérete. Az ennél kisebb letöltés nem lesznek szeletekre osztva
+A szeletek maximális száma. A letöltés nem lesz ennél több szeletre osztva
+Állítsa be, hogy mennyi sávszélességet használhat ehhez a letöltéshez a FDM
+A sávszélesség és a kapcsolatok számának korlátozásának figyelmen kívül hagyása ehhez a letöltéshez
+Ebben a mezõben megadhat értéket bájtban (b), kilobájtban (KB) vagy megabájtban (MB)
+Protokoll
+Azonosítás a kiszolgálón, mint:
+Hivatkozó (Referrer):
+HTTP 1.1 használata
+Cookie-k használata
+Passzív mód használata
+Átviteli mód
+Bináris
+ASCII a következõ kiterjesztésû fájlokhoz:
+Adja meg, hogy a FDM hogyan azonosítsa magát a kiszolgálón
+Ez a karakterlánc kerül a Hivatkozó (Referrer) HTTP mezõbe a kiszolgálón. Általában nem szükséges kitölteni
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM a HTTP 1.1-es protokollt használja
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM használjon cookie-kat
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM passzív módot használjon FTP kiszolgálókon. Néha elengedhetetlen tûzfalak megkerülésére
+Bináris átviteli mód használata FTP kiszolgálókon. Válassza ezt a módot, ha nem szöveges fájlt tölt le
+ASCII átviteli mód használata FTP kiszolgálókon. Válassza ezt a módot szöveges fájlok letöltéséhez
+FDM ASCII átviteli módot fog alkalmazni a következõ kiterjesztésû fájloknál. Egyéb fájlokhoz a FDM bináris módot fog alkalmazni
+Proxy
+Proxy beállítások
+Microsoft Internet Explorer alapján
+Kézi megadás
+Ne használjon proxy-t
+Beállítások
+Cím:
+Port:
+Kérem, adja meg a proxy címét
+Kérem, adja meg a proxy portját
+A FDM átveszi az Internet Explorer proxy beállításait
+Saját kezûleg adhatja meg a proxy beállításokat
+A FDM nem használ proxy-t
+Válassza ki a kiszolgálótípusokat, amelyekhez meg szeretné adni a proxy beállításokat
+Adja meg a használandó proxy címét
+Adja meg a proxy portját. Általában 3128, 1080 vagy 8080
+Pipálja ki ezt a dobozt, ha a proxy kiszolgálón bejelentkezés szükséges
+Egyéb
+Helyi fájl
+Ha a fájl már létezik:
+Lemezterület lefoglalása az egész letöltött fájlhoz
+Kiegészítõ fájlkiterjesztés a be nem fejezett letöltésekhez:
+Internetes kiszolgáló
+Ne induljon újra a letöltés, ha a kiszolgálóról nem lehet folytatni
+Ha a fájlméret megváltozott a kiszolgálón:
+Leállás hibák esetén
+Rákérdezés
+Fölülírás
+Átnevezés
+Folytatás
+Újraindítás
+Helyreigazítás
+Kérem, adja meg a fájlkiterjesztést
+Itt megadhatja, hogy mit tegyen a FDM, ha már létezik a letöltendõ fájl a lemezen
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a letöltés kezdetekor legyen lefoglalva a lemezterület az egész fájl számára (ezzel csökkentheti a lemez töredezettségét)
+Ha ez ki van pipálva, akkor a FDM hozzáfûzi a megadott kiterjesztést a fájl nevéhez letöltés közben. Amikor befejezõdik a letöltés, a FDM visszanevezi a fájlt az eredeti nevére
+A FDM nem indítja újra a letöltést, ha a kiszolgáló nem támogatja annak folytatását
+Itt megadhatja, hogy mit tegyen a FDM, ha a kiszolgálón megváltozott a fájl mérete
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy leálljon a letöltés, ha a fájl nem található a kiszolgálón
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy leálljon a letöltés, ha a felhasználói név vagy jelszó érvénytelen
+Sávszélesség használatának módjai
+Válassza ki a beállítandó módot:
+Kapcsolatok maximális száma:
+Kapcsolatok maximális száma kiszolgálónként:
+Sávszélesség-korlátozás:
+korlátlan
+Válassza ki a sávszélesség-használati módot, melyet be szeretne állítani
+Pipálja ki ezt a dobozt, ha korlátozni szeretné a kapcsolatok maximális számát
+Pipálja ki ezt a dobozt, ha kiszolgálónként korlátozni szeretné a kapcsolatok maximális számát
+Adja meg a maximális sávszélességet, amit a FDM fájlok letöltéséhez használhat
+Letöltések
+Letöltések listája
+Automatikus mentés minden
+percben
+Befejezetlen letöltések törlésekor
+Befejezett letöltések automatikus törlése
+Ne törölje a fájlt
+Törölje a fájlt
+A FDM elmenti a letöltések listáját a megadott idõnként. Ezzel megvédheti a listát a számítógép várható lefagyásától, vagy áramkimaradástól
+Adja meg, hogy mit tegyen a FDM a lemezen lévõ fájllal befejezetlen letöltés törlésekor
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a befejezett letöltések automatikusan törlõdjenek a listáról
+Figyelés
+Figyelés
+Vágólap
+Az alábbi kiterjesztésû fájlok figyelése
+Az alábbi kiterjesztésû fájlok figyelmen kívül hagyása
+Az ALT-nak nem szabad lenyomva lennie
+Az ALT-nak lenyomva kell lennie
+Kérem, adja meg a kiterjesztéseket
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM figyelje a kattintásokat Internet Explorerben
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM figyelje a vágólapot
+A figyelés csak a megadott kiterjesztésû fájlokat vegye figyelembe
+A figyelés ne vegye figyelembe a megadott kiterjesztésû
+Figyelés csak abban az esetben, ha az ALT nincs lenyomva
+Figyelés csak abban az esetben, ha az ALT le van nyomva
+Indítás
+Betöltés a számítógép indításakor
+Indítás kis méretben
+Rendszer
+Kis méretben elrejtés a tálcára
+A Bezárás gomb kis méretbe helyezi az ablakot
+A FDM automatikusan elindul a Windows indításakor
+A FDM kis méretben lesz indításkor
+Amikor a Kis méret gombra kattint a FDM eltûnik a tálcára
+Ha ki van pipálva, akkor a Bezárás gombra kattintva ugyanazt éri el, mintha a Kis méret gombra kattintott volna
+Frissítés
+Frissítési kiszolgáló címe
+A FDM automatikusan utánanéz újabb verzióknak
+Hálózat-használatot optimalizáló varázsló
+Üdvözli a hálózat-használatot optimalizáló varázsló!
+Ez a varázsló segít Önnek beállítani a programot az Ön kapcsolatához viszonyítva. Beállítja a Letöltési tulajdonságokat és a letöltések alapértelmezett tulajdonságait.
+Kérem, válassza ki a kapcsolata típusát
+Befejezés
+Adja meg az Internet-kapcsolatának típusát
+Állítsa be a FDM-t a kapcsolatával való optimális mûködéshez
+Feladat
+Kezdési idõ
+Következõ kezdési idõ
+Legutóbbi kezdési idõ
+Nem sikerült betölteni az ütemezések listáját. Valószínûleg megsérült vagy használatban van egy másik program által
+Nem sikerült betölteni az Ütemezési naplót
+Nem sikerült elmenti az ütemezések listáját
+A(z) "%s" feladat mostanra volt ütemezve. Elindítja?
+Sávszélesség-használat váltása: "%s"
+Kapcsolat bontása
+Az összes kapcsolat
+Sávszélesség-használat váltása
+Kikapcsolás
+Újraindítás
+Kijelentkezés
+Egyszer
+Vas
+Hét
+Ked
+Sze
+Csü
+Pén
+Szo
+Ezeken a napokon:
+Minden
+napban
+órában
+A FDM indításakor
+Sikeres kapcsolódás esetén
+Sikertelen kapcsolódás esetén
+Amikor nincs aktív letöltés
+Amikor a sebesség kisebb vagy egyenlõ, mint %d BPS %d percen keresztül
+Amikor minden letöltés hibás állapotba kerül ennyi idõn keresztül:
+Soha
+Nem tudni
+Sikeres kapcsolódás "%s"
+Sikertelen kapcsolódás "%s"
+Ütemezés indítása sikeres
+Nincs elég memória
+Nem sikerült az ütemezést elindítani
+Az ütemezés hatására ki kellene lépni a programból induláskor. Az ütemezés figyelmen kívül lesz hagyva
+Tárcsázási kísérletek maximális száma
+Szünet a kísérletek között
+Kapcsolat bontása, ha a sebesség ennyi alá esik:
+Ismét
+Nem több mint
+Használandó kapcsolat
+Ha sikeres
+alkalommal
+Az összes aktív kapcsolat bontása
+Bontandó kapcsolat
+Program név:
+Paraméterek:
+Kikapcsolás módja:
+Programok kikapcsolásának kényszerítése
+Program indítása
+Kapcsolat tárcsázása
+Kapcsolat bontása
+Sávszélesség-használat váltása
+Kilépés a FDM-bõl
+Számítógép kikapcsolása
+Letöltések indítása
+Letöltések leállítása
+Programok
+Minden fájl
+Sajnálom, ez a funkció csak Windows 2000, XP vagy afölötti operációs rendszeren elérhetõ
+Kérem, adja meg a program nevét
+Kérem, válassza ki a letöltéseket
+Válassza ki a sávszélesség-használati módot, amit a feladat indításakor be szeretne állítani
+Pipálja ki ezt a dobozt, ha korlátozni szeretné a sikertelen tárcsázási kísérletek számát 
+A sikertelen kísérletek közötti várakozás ideje
+Pipálja ki ezt a dobozt, ha a megadottnál nem kisebb sebességû kapcsolatot szeretne elindítani
+Adja meg a legkisebb szükséges sebességet a kapcsolathoz
+A FDM újrapróbálkozik a kapcsolat elindításával, ha kipipálja ezt a dobozt
+Pipálja ki ezt a dobozt, ha korlátozni szeretné a sikertelen tárcsázási kísérletek számát 
+Adja meg a szükséges letöltés(eke)t
+Az összes elérhetõ letöltés listája
+Kijelölt letöltés felvétele a feladat letöltéseinek listájához
+Kijelölt letöltés eltávolítása a feladat letöltéseinek listájáról
+Adja meg az elindítandó programot
+Keresse meg a programot a számítógépen
+Adja meg a program paramétereit
+Adja meg a kikapcsolás módját
+Pipálja ki ezt a dobozt a kikapcsolás erõltetéséhez. Hasznos, ha vannak lefagyott programok a rendszerben. De ebben az esetben minden el nem mentett információ elvész
+Adja meg az ütemezendõ feladatot
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM minden aktív kapcsolatot bontson
+Adja meg a bontandó kapcsolatot
+Bizonyos napokon
+vasárnap
+hétfõn
+kedden
+szerdán
+csütörtökön
+pénteken
+szombaton
+Eseménykor
+Ennyi ideig
+Alacsony seb.:
+percben
+percben
+órában
+napban
+Amikor a letöltési sebesség túl alacsony
+Amikor minden letöltés hibás állapotba kerül
+Kérem, adja meg a napokat
+A feladat indítása a megadott idõben
+Adja meg a feladat indításának idõpontját
+A feladat indítása a megadott dátumkor
+Adja meg a feladat indításának dátumát
+A feladat indítása a hét megadott napjain
+A feladat indítása minden vasárnap
+A feladat indítása minden hétfõn
+A feladat indítása minden kedden
+A feladat indítása minden szerdán
+A feladat indítása minden csütörtökön
+A feladat indítása minden pénteken
+A feladat indítása minden szombaton
+A feladat indítása idõszakosan
+Ebben a mezõben megadhatja az idõközt percben, órában, vagy napban
+A feladat indítása valamilyen esemény bekövetkeztekor
+Adja meg az esemény típusát
+Adja meg az idõközt
+Adja meg a legkisebb szükséges sebességet
+Megerõsítés szükséges a feladat elindításához
+Várakozás megerõsítésre
+mp-ig
+Ha ez ki van pipálva, akkor a FDM megerõsítést kér a feladat indítása elõtt a felhasználótól
+Ha ez ki van pipálva, akkor a FDM a megadott ideig vár a megerõsítésre. Ha a felhasználó a megadott idõn belül nem reagál, a feladat elindul
+Cím
+A letöltendõ fájlok listájának összeállítása
+Kapcsolódás a kiszolgálóra
+Próbálkozás a Hely kezelõben tárolt névvel és jelszóval
+Fájlok listájának lekérdezése a kiszolgálóról
+A kiszolgálóval való kapcsolat megszakadt. Visszaállítás folyamatban
+Lista összeállítása
+A fájlok méretének és módosításának lekérdezése
+Ez a funkció nagyon lelassíthatja a letöltést
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM kérdezze le a fájlok méretét és idejét HTTP kiszolgálókról
+Hely neve
+Kapcsolatok
+Bejelentkezés
+Csoport
+Nem sikerült betölteni a helyek listáját. Valószínûleg megsérült vagy használatban van egy másik program által
+Nem sikerült elmenteni a helyek listáját
+Egyidejû kapcsolatok maximális száma:
+Alapértelmezett csoport az errõl az innen való letöltésekhez
+Passzív FTP mód használata
+Kérem, adja meg a hely nevét
+Már létezik hely ilyen néven. Kérem, adjon meg egy másik nevet
+A kapcsolatok maximális számának többnek kell lennie, mint 0
+Kérem, válasszon csoportot
+Adja meg a hely nevét
+Pipálja ki ezt a dobozt, ha korlátozni szeretné a kiszolgálóval való egyidejû kapcsolatok számát
+Pipálja ki ezt a dobozt, ha az errõl a helyrõl való letöltéseket automatikusan a megadott csoportba szeretné sorolni 
+Rákérdezés
+Ne tegye föl többet ezt a kérdést
+Lemez írási hiba
+A(z) "%s" nevû fájl már létezik. Mi legyen?
+Ne tegye föl többet ezt a kérdést. A választása lesz ezentúl az alapértelmezés
+Létezõ fájl fölülírása
+Fájl átnevezése
+Letöltés folytatása. (A letöltés a meglévõ fájl pontos méretétõl folytatódik)
+Letöltés leállítása
+Igen
+Nem
+A(z)
+letöltés törlésre került. Törli a fájlt a lemezrõl is?
+Kérem, adjon meg egy felhasználói nevet és jelszót
+Bejelentkezés ide: "%s"
+A megadott felhasználói név és jelszó küldése a kiszolgálónak
+Ne kapcsolódjon erre a kiszolgálóra
+A(z) "%s" mérete megváltozott a kiszolgálón. Mi legyen?
+Letöltés újrakezdése az elejétõl
+Letöltés helyreigazítása az új fájlmérethez. Nem ajánlott
+Kérem várjon
+Frissítés
+Leírás
+Frissítés innen:
+Frissítés keresése
+Ön a legújabb verziót használja
+Letöltés
+Új verzió elérhetõ: %s build %s
+Teljes elosztó a(z) %s verzióhoz (%s)
+Frissítés a(z) %s verzióra
+Frissítés a(z) %s verzióra (%s)
+A FDM-t újra kell indítani. Újraindítja most?
+Frissítés kész
+A frissítõ kiszolgáló nem található
+Adja meg a frissítés típusát
+FDM frissítése a teljes elosztóval
+FDM frissítése a javító elosztóval
+További információk a frissítéssel kapcsolatban
+Újdonságok ebben a verzióban
+FDM frissítése most
+Frissítés megszakítása és az ablak bezárása
+Letöltések létrehozása
+Tartalom kiválasztása
+Kiválasztás törlése
+A felveendõ letöltések listája
+Pipálja ki a kijelölt könyvtár elemeket a letöltésként való felvételhez
+Törölje a pipát a kijelölt könyvtár elemek mellõl, hogy ne legyenek felvéve letöltésként
+A FDM névjegye
+Copyright (c)
+Minden jog fenntartva
+Regisztrált felhasználó:
+Már megtörtént a frissítés. Újraindítás szükséges
+Érvénytelen felhasználói név vagy jelszó
+Nem sikerült betölteni az elõzményfájlt
+Nem sikerült menteni az elõzményfájlt
+HTML-turkáló alapértelmezett beállítások
+HTML-turkáló
+Weboldal szerkezet
+Weboldal letöltése
+Weboldal letöltés beállításai
+Letöltés indítása
+Letöltés leállítása
+Letöltés ütemezése
+Törlés
+Weboldal megnyitása böngészõbe
+Letöltés automatikus indítása
+Weboldal URL
+Fájlok
+Törli a letöltéseket is?
+Nem sikerült betölteni a weboldalak listáját
+Nem sikerült menteni a weboldalak listáját
+A weboldal URL-je vagy a HTTP kiszolgáló, ahonnan le szeretne tölteni
+A weboldal URL-je vagy a HTTP kiszolgáló, ahonnan a letöltés elindult
+A könyvtár neve, ahova a letöltések mentésre kerülnek
+Célkönyvtár:
+Weboldalak
+Oldalak
+HTML kódú weboldalak kiterjesztései:
+Weboldal stíluslapok letöltése
+Weboldalak letöltése más 
+Képek
+Képek letöltése
+Képek letöltése, melyek más helyre mutatnak
+Letöltés mélysége:
+HTML kódú weboldalak kiterjesztései. Ezek a fájlok át lesznek kutatva további címek és képek után
+Ha ki van pipálva, akkor a weboldalak stíluslapjai (CSS) is le lesznek töltve. Ajánlott
+Ha nincs kipipálva, akkor más helyrõl nem lesznek letöltve oldalak. Például, ha ez a doboz nincs kipipálva és elkezd letölteni a http://példa.hu/ címrõl, akkor a http://másikoldal.hu/akármi.html nem lesz letöltve, de a http://példa.hu/akármi.html igen
+Ha ki van pipálva, akkor az oldalon szereplõ képek is le lesznek töltve
+Ha nincs kipipálva, akkor a más helyre mutató képek nem lesznek letöltve
+Letöltés mélysége. Például elkezdi letölteni a http://pl.com/index.html oldalt. Van egy hivatkozás a http://pl.com/akármi.html címre http://pl.com/index.html címrõl. Ekkor a http://pl.com/akármi.html mélysége 1. Ha 0-ra állítja a mélységet, akkor csak a kezdõlap tartalma kerül letöltésre.
+Fájlok letöltése
+Fájlok letöltése, melyek más helyre mutatnak
+Az alábbi kiterjesztésû fájlok törlése
+Bekapcsolás
+Töltse le
+Ne töltse le
+az alábbi kiterjesztésû fájlokat:
+Pipálja ki ezt a dobozt, ha le szeretné tölteni a fájlokat a weboldalakról
+Pipálja ki ezt a dobozt, ha le szeretné tölteni a fájlokat más helyre mutató oldalakról
+Pipálja ki ezt a dobozt, ha figyelmen kívül szeretné hagyni a megadott kiterjesztésû fájlokat
+Ha ki van pipálva, akkor az alábbi kiterjesztésû fájlok le lesznek töltve
+Ha ki van pipálva, akkor az alábbi kiterjesztésû fájlok NEM lesznek letöltve
+Beállítások exportálása
+Beállítások importálása
+Nem sikerült elindítani a Regedit.exe-t
+Hiba történt a beállítások exportálása közben
+Hiba történt a beállítások importálása közben
+FDM regisztrációs adatbázis fájlok
+Képek kizárása az alábbi kiterjesztéssel
+az alábbi kiterjesztésû képeket:
+Pipálja ki ezt a dobozt az alábbi kiterjesztésû képek figyelmen kívül hagyásához
+Ha ki van pipálva, akkor az alábbi kiterjesztésû képek le lesznek töltve
+Ha ki van pipálva, akkor az alábbi kiterjesztésû képek NEM lesznek letöltve
+Ne töltse le és törölje
+A kiszolgáló nem támogatja a letöltések folytatását. Folytatás az elejétõl
+Hiba az URL megnyitásakor
+Sajnálom, váratlan hiba történt a regisztrációs adatbázisba való íráskor
+Köszönjük, hogy regisztrált! Kérem, indítsa újra az FDM-t!
+Letöltés Free Download Managerrel
+Weboldal letöltése Free Download Managerrel
+A FDM felvétele az IE környezeti menüibe
+Pipálja ki ezt a dobozt, ha szeretné felvenni az Internet Explorer környezeti menüibe a "Letöltés Free Download Managerrel" és a "Weboldal letöltése Free Download Managerrel" elemeket (akkor jelenik meg, amikor valahová jobb egérgombbal kattint egy weboldalon)
+Sávszélesség-használat mérséklése böngészõhasználat közben
+Mérséklés egy szinttel
+Mérséklés Alacsony módba
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a sávszélesség-használat automatikusan mérséklõdjön, amikor böngészik az Interneten. Ez által gyorsabban böngészhet, miközben a FDM letölt valamit
+A sávszélesség-használat egy szinttel fog mérséklõdni. Magas->Közepes, Közepes->Alacsony
+A sávszélesség-használat az Alacsony szintre ugrik
+Érvényes
+Érvényes aldomainekre
+Pipálja ki ezt a dobozt, ha ezt a bejegyzést HTTP-n keresztül való letöltéshez szeretné alkalmazni
+Pipálja ki ezt a dobozt, ha ezt a bejegyzést HTTPS-en keresztül való letöltéshez szeretné alkalmazni
+Pipálja ki ezt a dobozt, ha ezt a bejegyzést FTP-n keresztül való letöltéshez szeretné alkalmazni
+Pipálja ki ezt a dobozt, ha ezt a bejegyzést aldomainekre is szeretné alkalmazni. Például a http://példa.hu címhez hozzátartozik majd az http://akármi.példa.hu is
+Kérem, pipáljon ki legalább egy protokollt
+Egyidejû letöltések maximális száma
+Pipálja ki ezt a dobozt, ha korlátozni szeretné az egyidejû letöltések maximális számát
+Letöltés újraindítása
+Újabb szelet létrehozása
+Egy szelet leállítása
+; context: [section x] - Stopped
+leállítva
+; tray menu
+Bedobó
+;
+Nem találom az Opera bõvítmény-könyvtárát. Megkeresi manuálisan?
+Nem találom a Netscape bõvítmény-könyvtárát. Megkeresi manuálisan?
+Nem sikerült telepíteni az Opera figyelését
+Nem sikerült eltávolítani az Opera figyelését
+Nem sikerült telepíteni a Netscape figyelését
+Nem sikerült eltávolítani a Netscape figyelését
+Pipálja ki ezt a dobozt, ha szeretné figyelni a kattintásokat Opera-ban
+Pipálja ki ezt a dobozt, ha szeretné figyelni a kattintásokat Netscape-ben
+; create download dlg
+Méret lekérdezése
+; request a size of a download
+Lekérdezés...
+Letöltés méretének lekérdezése a kiszolgálótól
+Igen mindet
+Egyiket sem
+Részletes napló
+Ha ki van pipálva, akkor a FDM megmutatja a kiszolgáló válaszait
+A változásuk azután lépnek életbe, miután újraindította böngészõjét
+Feladatok listája
+Fájlok listája
+Helyek listája
+Oldalak listája
+Letöltések törlése
+Letöltések listájának
+Kötegelt letöltések létrehozása
+Ettõl:
+Eddig:
+Lépés:
+Tizedes helyek:
+Eredmények
+Minta:
+Sorozat kezdete
+Sorozat vége
+Sorozat lépése. Például, ha ez 10, akkor a sorozat 0, 10, 20, ...
+Tizedes helyek száma. Például, ha ez 1, akkor a sorozat 1, 2, 3. Ha 2, akkor 01, 02, 03.
+Kattintson ide a létrejött sorozat megtekintéséhez
+Engedélyezze az IE-nek a letöltést, ha a Mégse gombra kattint
+Pipálja ki ezt, ha azt szeretné, hogy az Internet Explorer töltse le a fájlt, amikor a Mégse gombra kattint a "Letöltés létrehozása" ablakban
+A sorozat végének meg kell haladnia a sorozat elejét
+Kérem, használja a (*) jelet a megadott URL sablonban
+Kiterjesztés használata, amikor a fájlnak nincs
+Pipálja ki ezt a dobozt, ha a megadott kiterjesztést szeretné használni a kiterjesztéssel nem rendelkezõ fájloknál. Például, ha a fájl neve "fájl" és megadja a "txt"-t, akkor az eredmény "fájl.txt" lesz
+Méretek megjelenítése csak bájtban
+Pipálja ki ezt a dobozt, ha csak bájtban szeretné látni a méreteket, kilobájt és megabájt helyett
+Vírusellenõrzés végrehajtása
+Paraméterek:
+Kiterjesztések:
+Pipálja ki ezt a dobozt, ha szeretne automatikusan vírusellenõrzést végrehajtani a letöltött fájlokon
+Adja meg a vírusellenõrzõ program nevét
+Adja meg a vírusellenõrzõ program paramétereit
+Adja meg az ellenõrizendõ fájltípusok kiterjesztéseit
+Kérem, adja meg a vírusellenõrzõ nevét
+A név érvénytelen. Kérem, ellenõrizze
+Vírusellenõrzõ futtatása
+Feladat letiltása futás után
+Feladat törlése futás után
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a feladat le legyen tiltva futás után
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a feladat törlõdjön futás után
+Mehet
+Vissza
+Fájlnév automatikus generálása
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a letöltés fájlneve automatikusan generálódjon 
+Mentés "htm" kiterjesztéssel
+Pipálja ki ezt a dobozt, ha az összes weboldalt "htm" kiterjesztéssel szeretné menteni
+Kattintson erre a gombra, hogy kiszámítsa az összesített méretét az összes letöltésnek
+A kiszolgáló könyvtárszerkezetének megtartása
+Pipálja ki ezt a dobozt, ha meg szeretné tartani a kiszolgáló eredeti könyvtárszerkezetét. Máskülönben a kiszolgálóról az összes fájl ugyanabba a könyvtárba kerül mentésre
+Kiválasztott egy másik célkönyvtárat. Beállítja ezt a könyvtárat a csoport alapértelmezettjeként? Az alapértelmezett könyvtárat beállíthatja a csoportok tulajdonságlapjain is.
+; === ADDED LINES ===
+Már létezik letöltés errõl az URL-rõl. Mi legyen?
+Elindítás
+A letöltött fájl elindítása
+Verzió
+Vegye fel velünk a kapcsolatot!
+Töltse le a legújabb verziót!
+Figyelmeztetés:  ez a számítógépes program a szerzõi jog és nemzetközi egyezmények védelme alatt áll. A program, vagy bármely részének engedély nélküli másolása vagy terjesztése polgári- és büntetõjogi következményekkel járhat, és a jog által meghatározott legsúlyosabb büntetéssel sújtható.
+; === new version ===
+Az összes letöltése Free Download Managerrel
+Letöltési lista felvétele
+Kijelölés eltávolítása
+Ez a felveendõ URL-ek listája
+Kattintson erre a gombra az összes kijelölt URL törléséhez a listáról
+Nem találom a Firefox bõvítmény-könyvtárát. Megkeresi manuálisan?
+Nem sikerült telepíteni a Firefox figyelését
+Nem sikerült eltávolítani a Firefox figyelését
+Pipálja ki ezt a dobozt, ha szeretné figyelni a kattintásokat a Mozilla Firefox-ban
+Kijelölés letöltése Free Download Managerrel
+Indítás
+Weblapok
+Aktív letöltések
+Jelenleg nincsenek aktív letöltések
+Értesítések
+Tálca "buborék" használata
+Megjelenítés
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy minden letöltés indulásakor és befejezésekor megjelenjen egy kis értesítõ "buborék" a tálcán. Megjegyzés: ez a funkció csak Windows 2000/XP alatt mûködik
+Buborék automikus bezárása ennyi idõ letelte után
+Alternatív
+Alternatív URL-ek automatikus keresése
+Alternatív források maximális száma
+Alternatív források sebességének mérése
+Sebességek újramérése egyenként
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM minden egyes letöltéshez keressen alternatív URL-eket
+Itt korlátozhatja az alternatív URL-ek számát letöltésenként. Ezzel csökkentheti az alternatív források sebességmérésének idejét
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM megmérje mindegyik alternatív forrás sebességét
+Az alternatív források sebességének automatikus újramérése, a megadott idõtartamon belül
+Ne keressen, ha a fájlméret kisebb, mint
+A FDM ne keressen alternatív forrásokat, ha a fájl mérete kisebb a megadottnál
+Ne keressen, ha a fájlméret ismeretlen (ajánlott)
+Új forrás felvétele
+Források keresése
+Alternatív URL felvétele manuálisan
+Alternatív URL-ek keresése ehhez a letöltéshez a FileMirrors.COM segítségével
+Alternatív URL-ek listája
+Sebesség
+Használatban van
+Sebességmérés
+Sebességmérés
+Letöltési infóablak
+Várakozás...
+Letöltendõ alternatív URL
+A fájlméret meghaladja a 2 GB-ot. Ekkora fájlt csak FTP-n keresztül lehet letölteni
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Új letöltés
+Csoport automatikus meghatározása letöltéshez
+Csoport beállítása:
+Letöltés mentése a megfelelõ csoport könyvtárába
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a letöltés csoportja automatikusan legyen megállapítva a fájl kiterjesztésébõl, vagy a Hely kezelõ beállításai alapján
+Alapértelmezett csoport megadása
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a letöltés a megfelelõ csoport alapkönyvtárába kerüljön mentésre (lásd a Csoport tulajdonságokat)
+Alapértelmezett letöltési könyvtár megadása
+; END
+; BEGIN: Monitoring page
+Csendes figyelés
+Ne jelenjen meg a "Letöltés létrehozása" ablak, amikor új letöltés jön létre a böngészõben való kattintás folytán, ha ez be van kapcsolva
+Testreszabás
+Válassza ki az Internet Explorer menüjében megjelenítendõ elemeket
+; END
+Válassza ki a megjelenítendõ elemeket
+Legalább egy elemnek kijelölve kell lennie
+Hangok bekapcsolása
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM hangokat játsszon le bizonyos események bekövetkeztekor (pl. ha befejezõdik egy letöltés)
+Hangok kiválasztása az eseményekhez
+; BEGIN : Customize sounds dialog
+Hangok testreszabása
+Hang beállítása
+Eltávolítás
+Teszt
+FDM események és a megfelelõ hangok listája. Itt megadhatja, hogy az FDM lejátsszon bizonyos hangokat az események bekövetkeztekor
+Új letöltés felvétele - hang lejátszása, amikor egy vagy több új letöltés kerül a letöltési listára.
+Letöltés befejezõdése - hang lejátszása, amikor sikeresen befejezõdik egy letöltés.
+Letöltési hiba bekövetkezése - hang lejátszása, amikor hiba történik egy fájl letöltése közben.
+Sikeres kapcsolódás - hang lejátszása, amikor a "Kapcsolat tárcsázása" ütemezett feladat sikeresen végrehajtódik.
+Sikertelen kapcsolódás - hang lejátszása, amikor a "Kapcsolat tárcsázása" ütemezett feladat sikertelenül hajtódik végre.
+Hang beállítása a kijelölt eseményhez
+Ne legyen hanglejátszás a kijelölt esemény bekövetkeztekor
+Kijelölt hang tesztelése
+Esemény
+Hangfájl
+Nincs hang
+Új letöltés felvétele
+Letöltés befejezõdése 
+Letöltési hiba bekövetkezése
+Sikeres kapcsolódás
+Sikertelen kapcsolódás
+Hangfájlok
+; END
+Alternatív források keresése...
+Alternatív források sebességének mérése...
+Alternatív források keresése már egyszer megtörtént
+Kapcsolódás a keresõ kiszolgálóhoz...
+Eredmények fogadása...
+%d alternatív forrás található
+Alternatív források keresése befejezve
+Másik alternatív forrás kipróbálása...
+Nem található alternatív forrás
+Sikertelen
+Az alternatív források sebessége megmérve
+; BEGIN: History page
+Elõzmények
+URL-ek és könyvtárak elõzményeinek mentése
+Csak könyvtárak elõzményeinek mentése
+Törlés ennyi idõ elteltével
+Bejegyzések maximális száma
+Elõzmények törlése
+A FDM el fogja menteni a beírt URL-ek és könyvtárak elõzményeit
+A FDM csak a könyvtárak elõzményeit fogja elmenteni
+A FDM le fogja törölni azokat a bejegyzéseket, melyek már a megadott idõn túl keletkeztek
+A bejegyzések maximális száma. Ha a bejegyzések száma túllépi ezt az értéket, akkor a FDM letörli a legrégebbi bejegyzéseket
+Az összes bejegyzés törlése az elõzményekbõl
+; END
+Importálás
+Exportálás
+URL-lista behozatala
+Letöltési lista exportálása
+Szövegfájlok
+A fájlt nem lehet megnyitni
+Az összes letöltés exportálása
+Az összes letöltés exportálása a listáról
+Kijelölt letöltések exportálás
+A befejezett letöltések ne kerüljenek exportálásra
+Hozzáfûzés, ha a fájl már létezik
+Érvénytelen csoportnév. Kérem ne használja a / vagy a \ jeleket.
+Kilépés, amikor kész
+; BEGIN : Downloads History window
+Felvéve
+Mentés helye
+; END
+Lomtár
+; BEGIN: Recycle Bin
+Tulajdonságok
+Lomtár ürítése
+;END
+;BEGIN: Recycle Bin properties
+A törölt letöltések ne kerüljenek a lomtárba
+Max ennyi letöltés
+megõrzése
+Befejezett letöltések végleges törlése
+Megerõsítés kérése letöltés törlésekor
+Lomtár tulajdonságai
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy ha a törölt letöltések ne kerüljenek a lomtárba
+Pipálja ki ezt a dobozt, ha korlátozni szeretné a lomtárban tárolható letöltések számát
+A lomtárban tárolandó letöltések maximális száma
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a befejezett letöltések ne kerüljenek a lomtárba törlés esetén
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM megerõsítést kérjen a letöltések törlése elõtt
+;END
+Visszaállítás
+Letöltések visszaállítás...
+; History subitems
+Ma
+Tegnap
+E hét
+E hónap
+Egyéni...
+; end
+Elõzmények törlése
+Letöltések elõzményeinek mentése
+Csak befejezett letöltések elõzményeinek mentése
+Pipálja ki ezt a dobozt, ha el szeretné menteni letöltéseinek elõzményeit
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy csak a befejezett letöltések kerüljenek mentésre az elõzmények közé
+Letöltések elõzményeinek beállítása
+Elõzmény bejegyzések listájának készítése...
+; Download Was deleted
+Törölve
+Válasszon idõszakot
+Keresés...
+Következõ
+Keresendõ
+; BEGIN : Find dialog
+Keresés helye
+Helyi fájlnév
+Itt adja meg mit szeretne keresni
+Keresés az URL-ek fájlrészeiben
+Keresés az URL-ek egészében
+Keresés a letöltések megjegyzésében
+Keresés a letöltési fájlok nevében és útvonalában a helyi lemezen
+Haladó keresési beállítások testreszabása
+; ADVANCED settings
+Keresés helye
+Keresés a letöltési listában
+Keresés a letöltések elõzményeiben
+Keresés megadott idõvel
+Beállítás
+Keresés a lomtárban
+Keresés megadott mérettel
+Legalább
+Legfeljebb
+Keresés a letöltési listában
+Keresés a letöltések elõzményeiben
+Keresés azon letöltések közt, melyek megfelelnek a megadott idõ intervallumnak
+Idõ intervallum megadása
+Keresés a lomtárban
+Keresés azon letöltések közt, melyek megfelelnek a megadott fájlméret határoknak
+Keresendõ legkisebb fájlméret
+Keresendõ legnagyobb fájlméret
+Keresés csoportban
+Válassza ki a csoportot, amelyben keresni kell a letöltéseket
+; END
+Letöltés keresése...
+A letöltés nem található
+Nem található több ilyen letöltés
+Keresés befejezve
+URL másolása a vágólapra
+Betekintés ZIP-be
+Legalább egy fájlnak kijelölve kell lennie.
+Lehetséges, hogy a fájl, amit letölt ZIP archívum. Szeretne beletekinteni?
+Audio/videó betekintés
+Hiba a fájl megnyitásakor.
+Ismeretlen formátum.
+Kérem telepítse a DirectX 8.0-ás vagy újabb verzióját ehhez a funkcióhoz. Letöltheti a legújabb verziót a microsoft.com honlapról.
+Média infó
+Méret:
+Elérhetõ:
+Hossz:
+Némít
+Lejátszás
+Szünet
+Szûrõ
+Kiterjesztések [szóközzel elválasztva, pl. zip rar arj]:
+Ilyen kiterjesztésû fájlok eltávolítása
+Csak ilyen kiterjesztésû fájlok meghagyása
+A megadott paraméter nem tartalmazza a %file% makrót. Ez a makró szükséges ahhoz, hogy értesítse a vírusírtó alkalmazást az ellenõrízendõ fájl hollétérõl.
+Mindenképp folytatja?
+Figyelmeztetés
+A befejezetlen letöltések legyenek rejtett fájlba mentve
+Megjegyzés hozzáfûzése a fájlnévhez, ha kész
+Ne legyenek letárolva a kiszolgáló oldalai
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a kiszolgáló oldalai ne legyenek lementve csak a fájlok és a képek
+Betekintés ZIP-be
+Pipálja ki ezt a dobozt, ha be szeretne tekinteni a ZIP archívumok tartalmába a letöltés kezdetekor, hogy csak egy részét töltse le az archívumnak.
+Hangerõ:
+Letöltés indítása automatikusan
+Pipálja ki ezt a dobozt, ha azt szeretné, hogy a FDM elindítson mindent új letöltést automatikusan
+Kérem pipálja ki a letöltendõ fájlokat
+Állítsa be az alternatív URL-eket ehhez a letöltéshez
+Ne legyen betekintés a jövõben
+Kikapcsolta a betekintést ZIP-be funkciót. Ha be szeretné kapcsolni, akkor menjen a Beállítások -> Letöltési beállítások (Ctrl+O) -> Új letöltés fülre, és pipálja ki a "Betekintés ZIP-be" dobozt.
+Tiltólista
+Azon webhelyek listája, melyeket figyelmen kívül kell hagyni egy weboldal letöltésekor.
+Alkönyvtárak
+Hozzáadás
+Az összes alkönytvár figyelmen kívül hagyása
+; Proxy tab new settings
+Visszapörgetés alkalmazása megszakadt letöltéseknél
+Visszapörgetés
+bájt
+Pipálja ki ezt a dobozt, ha be szeretné kapcsolni a visszapörgetést. Ez a funkció megvédi a letöltéseit a sérülésektõl.
+Visszapörgetés mérete. Nagyobb mérettel nagyobb biztonsággal mûködik a visszapörgetés. Az ajánlott méret 3000 bájt. Növelheti ezt a méretet, ha a letöltései így is megsérülnek.
+; downloader options -> monitor tab
+Ne figyeljen ennél kisebb méretû fájlokat
+Használja ezt a beállítást arra, hogy a FDM átugorja a megadottnál kisebb méretû fájlokat
+kB
+Figyelmeztetés! A Lomtár túl nagy. Ez nagyon lelassíthatja a program teljesítményét. Ajánlott kiüríteni a Lomtárat. Szeretné most üríteni?
+Ne ellenõrízze többször
+Figyelmeztetés! Az Elõzményekben túl sok bejegyzés van. Ez nagyon lelassíthatja a program teljesítményét. Ajánlott kiüríteni az Elõzményeket. Szeretné most üríteni?
+Server can not guarantee its resuming capabilites. Response is invalid.
+Másolás a vágólapra
+; general settings | skins page
+Skins
+Skin
+A skin használhatja a saját ikonokat
+A skin használhatja a saját bittérképeket
+; default skin
+<alapértelmezett>
+MEGJEGYZÉS: Minden változtatás a Free Download Manager újraindítása után lépé életbe
+Mutassa a letöltési információkat letöltés közben
+Ugorja át az alábbi kiterjesztésû fájlokat:
+Az átlépendõ kiterjesztésû fájlok listája
+Nincs aktív letöltés
+Play sound file when all downloads will be completed
+URL-ek listájának importja a vágólapról
+Jelszavak
+Site Manager opciók
+; Save password dialog
+Mentsem a jelszót?
+A Free Download Manager el tudja menteni a szerverhez tartozó jelszót, hogy letöltéskor ne kelljen mindig beírni
+Mentsem ezt a jelszót??
+Ne ajánlja fel a jelszó mentését
+; Site Manager options | Passwords tab
+Használja a Site Manager-t a jelszavak tárolására
+Kérdezze meg, hogy mentse-e a jelszót vagy ne
+Ne ajánlja, hogy mentse a jelszavakat
+Kilépés elõtt törli az összes jelszót
+Az összes jelszó törlése
+; create new HTML Spider task
+Törölje a teljes letöltéseket automatikusan(ajánlott)
+Jelöld be ezt a dobozt, hogy a HTML Spider letöltései automatikusan törlõdjenek. Ez a nagy site-ok letöltését gyorsítja.
+A változtatások a Free Download Manager újraindítása után lépé életbe
+Új stílus
+Régi Stílus
+A könyvtár neve érvénytelen
+Tüntesse el a lebegõ ablakot teljes képernyõs módban
+Check this box if you want floating windows to be hidden automatically in full screen mode.
+was scheduled to be launched.
+El akarod indítani?
+Indítsa el a letöltést, ha készen van
+Használd a (*), (*A) vagy a (*a) kifejezést az URL-ben, hogy URL sablont határozz meg.
+Tükörkeresõ szerverek:
+Hibernálás
+Készenlét
+Emlékezzen a választásomra
+Javaslom, hogy változtasd a csoport default letöltési folderét.
+Fájl mentése
+Fájl megnyitása
+Mentse a fájlt és nyissa meg
+Letöltés típusa:
+Link az FDM-hez
+Link a Free Download Manager-hez
+Kedves felhasználó!
+Free Download Manager is a program provided to you free of charge. You can use it as long as you like for free.
+However, if you find Free Download Manager useful, we ask you to help us spread it by placing the link to it on your web site. This will let more people know about Free Download Manager.
+Thanks for your help in advance,\nFree Download Manager development team.
+Figyelmeztessen 3 nap múlva
+Figyelmeztessen, amikor újra elindítom a Free Download Manager-t
+Ne mutassa újra ezt az ablakot
+Mutassa a link HTML kódját
+A link HTML kódja
+További példák
+Másolás a vágólapra
+Eltüntetés
+; "Traffic usage mode has beed changed" window
+A forgalom használati módja változott
+Megváltoztattad a forgalom használati módját.\nA Free Download Manager három móddal rendelkezik:
+Ebben az üzemmódban a Free Download Manager maximális sebességgel tölt. Ez a legagresszívem üzemmód.
+Ebben az üzemmódban a Free Download Manager átlagos sebességgel tölt. A mód használata esetén tudod böngészni az INternetet és a töltés is gyors.
+Ebben az üzemmódban a Free Download Manager lassan. Ekkor a böngészés csak kicsit lassul le.
+;
+Átnevezés az újraindításnál

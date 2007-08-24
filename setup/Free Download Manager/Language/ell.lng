@@ -1,0 +1,1261 @@
+; This is a language file
+; You can translate it into your native language
+; To do this, follow instructions:
+; - PLEASE make sure FDM hasn't already been translated into your language 
+;   You should go to FDM web site (http://freedownloadmanager.org) and 
+;   check the list of available languages
+;   or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng into your language
+; - send the translated file to support@freedownloadmanager.org 
+;
+;
+;
+; Translator  Tasos 
+;
+
+; Your language name. Please keep it in English
+;
+Greek
+;
+;
+; Below are the strings to translate:
+;
+Αποθήκευση όλων
+Αποκοπή
+Αντιγραφή
+Επικόλληση
+Ελαφριά χρήση
+Μεσαία χρήση
+Βαριά χρήση
+Επιλογές μεταφόρτωσης
+Σύνδεση Dial-up
+Περί του FDM
+Έξοδος
+Αρχείο
+Επεξεργασία
+Εμφάνιση
+Επιλογές
+Εργαλεία
+Βοήθεια
+Ράβδος εργαλείων
+Ράβδος κατάστασηςr
+Οδηγός βελτιστοποίησης
+Προεπιλογή ρυθμίσεων μεταφόρτωσης 
+Γενικές ρυθμίσεις
+Σύνδεση Dial-up
+Κλείσιμο σύνδεσης όταν τελειώσει
+Κλείσιμο υπολογιστή όταν τελειώσει
+’νοιγμα αναφορών βοήθειας
+Αρχική σελίδα του FDM
+Σύστησέ το σε ένα φίλο
+Στείλε e-mail στην ομάδα υποστήριξης
+Έλεγξε αυτόματα για αναβαθμίσεις
+Έλεγξε για αναβάθμιση τώρα
+-
+-
+Επιλογή σε
+Κατάσταση επικρατούσας χρήσης
+Εγγραφή
+Μεταφορτώσεις
+Χρονοπρογραμματιστής
+Εξερευνητής site
+Εξερευνητής HTTP//FTP
+Διαχειριστής  site
+Πρόσθεση μεταφόρτωσης
+Ξεκίνημα μεταφόρτωσης
+Σταμάτημα μεταφόρτωσης
+Προγραμματισμός μεταφόρτωσης
+Πρόσθεση αποστολής
+Ιδιότητες αποστολής
+Μεταφόρτωση επιλεγμένων αρχείων
+Σταμάτημα
+Ανανέωση
+Πρόσθεση site
+Ιδιότητες  site
+Ομάδες μεταφόρτωσης
+Πληροφορίες μεταφόρτωσης
+Αναφορά (log) χρονοπρογραμματιστή
+Αναφορά (log) εξερευνητή site
+Side bar
+Δημιουργία νέας μεταφόρτωσης
+Διαγραφή μεταφόρτωσης
+Εκκίνηση αρχείου
+’νοιγμα φακέλου
+Εκκίνηση μεταφόρτωσης αυτόματα
+Ιδιότητες μεταφόρτωσης
+Ενεργοποίηση αποστολής
+Απενεργοποίηση αποστολής
+Διαγραφή αποστολής
+’νοιγμα γονεικού φακέλου
+Αποσύνδεση
+Μεταφόρτωσε
+Ρυθμίσεις εξερευνητή site
+Διαγραφή site
+Προσωρινή είσοδος
+Sites
+Παρουσίαση σε κύριο παράθυρο
+Έλεγχος διαφυλλιστή
+Έλεγχος προχείρου
+Εκκίνηση όλων των μεταφορτώσεων
+Σταμάτημα όλων των μεταφορτώσεων
+-
+Συνέχισε
+-
+-
+-
+-
+-
+Ακύρωση
+-
+-
+-
+Όλες οι ομάδες
+Φίλτρα
+Πλήρης
+Υπό εξέλιξη
+Προγραμματισμένο
+Σταματημένο
+’λλο
+Δημιουργία νέας ομάδας
+Διαγραφή ομάδας
+Διαγραφή όλων των μεταφορτώσεων
+Διαγραφή όλων των ολοκληρωμένων μεταφορτώσεων
+’νοιγμα φακέλου αποθήκευσης ομάδας
+Ιδιότητες ομάδας
+Όνομα ομάδας:
+Φάκελος προεπιλογής:
+Επεκτάσεις αρχείων [με κενό ενδιάμεσα]:
+Προεπιλεγμένη προτεραιότητα μεταφόρτωσης
+Πολύ χαμηλά
+Χαμηλά
+Μέσος όρος
+Υψηλά
+Πολύ υψηλά
+Παρακαλώ εισήγαγε ένα όνομα ομάδας
+Λάθος εισαγωγής
+Μία ομάδα με το ίδιο όνομα υπάρχει ήδη. Παρακαλώ εισήγαγε ένα άλλο όνομα
+Παρακαλώ εισήγαγε ένα όνομα φακέλου
+Επιλέξτε τον προεπιλεγμένο φάκελο ομάδας
+Εισήγαγε ένα όνομα ομάδας εδώ
+Προεπιλεγμένος φάκελος για αποθήκευση μεταφορτώσεων αυτής της ομάδας σε
+Ξεφύλλισε
+Επέκταση αρχείων για αυτήν την ομάδα . Χρησιμοποιείται για να ανιχνεύσει την ομάδα μεταφόρτωσης αυτόματα
+Προεπιλεγμένη προτεραιότητα μεταφόρτωσης για αυτήν την ομάδα
+Ακύρωσε τις αλλαγές και κλείσε το διάλογο
+Εφάρμοσε τις αλλαγές και κλείσε το διάλογο
+Σφάλμα στην ομάδα μεταφόρτωσης
+Παρακαλώ επανεγκατέστησε το FDM
+Σφάλμα
+Αδύνατη η φόρτωση της λίστας μεταφορτώσεων . Ενδεχομένως είναι κατεστραμμένη ή χρησιμοποιείται από μια άλλη εφαρμογή
+Failed to initialize Internet Explorer integration
+Είσαι βέβαιος ;
+Αυτό θα διαγράψει όλες τις ομάδες μεταφόρτωσης
+Επιβεβαίωση
+Όνομα αρχείου
+Μέγεθος
+Μεταφορτώθηκε
+Χρόνος που απομένει
+Τμήματα
+Ταχύτητα
+Σχόλιο
+Αναφορά (Log)
+Πρόοδος
+Ώρα
+Ημερομηνία
+Πληροφορίες
+Καθάρισμα
+Αυτόματο ξετύλιγμα λίστας
+’γνωστο σφάλμα δικτύου
+’ρνηση πρόσβασης . ’κυρο όνομα ή κωδικός πρόσβασης χρήστη
+’ρνηση πρόσβασης . ’κυρος κωδικός πρόσβασης
+Πετυχημένος
+Δεν είναι δυνατή η σύνδεση με τον server
+Το αρχείο δεν βρέθηκε στον server
+Η σύνδεση με τον server χάθηκε
+Ο server δεν αποκρίνεται
+Αδύνατη η ανάλυση του ονόματος του server
+Ο Server δεν υποστηρίζει την συνέχιση μεταφόρτωσης. Μην σταματήσεις αυτή την  μεταφόρτωση , διαφορετικά θα πρέπει να αρχίσεις από την αρχή
+Απαιτείται το όνομα και ο κωδικός πρόσβασης χρήστη του Proxy
+Εκτεταμένο σφάλμα
+Κακό αίτημα . Ενδεχομένως αυτό είναι ένα κακό URL
+’γνωστο σφάλμα του server
+Η σύνδεση αναστέλλεται
+Κακός URL
+Καμία σύνδεση με το Διαδίκτυο
+Η επιλεγμένη έκδοση HTTP δεν υποστηρίζεται από αυτόν τον server
+’γνωστο λάθος
+Αδύνατη η διαγραφή του αρχείου από το δίσκο
+Το όριο των συνδέσεων σε αυτόν τον server έχει επιτευχθεί
+Το όριο των συνδέσεων έχει επιτευχθεί
+Μικρή διακοπή %d δευτ .
+Τμήμα
+’ρχισε
+Έγινε
+Η μεταφόρτωση ολοκληρώθηκε
+Σύνδεση...
+Σύνδεση επιτεύχθηκε
+Επαναπροσανατολισμός...
+Επαναπροσανατολισμός επιτεύχθηκε . ’νοιγμα νέου URL
+Έναρξη μεταφόρτωσης...
+Σταματημένο
+Δημιουργία νέου τμήματος...
+Ακυρωμένο
+Επανεκκίνηση μεταφόρτωσης...
+’νοιγμα αρχείου στο δίσκο...
+Το όνομα του αρχείου είναι πολύ μεγάλο
+Το αρχείο υπάρχει ήδη. Μετονόμασε σε
+Μετονόμασε σε
+Το αρχείο εξαγωγής διαγράφηκε. Αδύνατη η συνέχιση
+Το αρχείο υπάρχει ήδη. Ξαναγράψε
+Το αρχείο υπάρχει ήδη. Συνέχισε την μεταφόρτωση
+Το αρχείο υπάρχει ήδη
+Απέτυχε να ανοίξει το αρχείο στο δίσκο
+Το μέγεθος αρχείου έχει  αλλάξει στον server!
+Ρύθμιση για το νέο μέγεθος...
+Αδύνατη η επικάλυψη (overwrite ) του αρχείου
+Το αρχείο θα μετονομαστεί
+Αδύνατη η μετονομασία του αρχείου με το αρχικό όνομά του
+Αδύνατη η αποθήκευση ομάδας
+Αδύνατη η αποθήκευση της μεταφόρτωσης
+Σύνδεση Dial-up
+Σύνδεση με:
+Αυτόματη διεπιλογή (dial-up) 
+Σύνδεση
+Επέλεξε είσοδο dial-up εδώ
+Τσεκάρισε αυτό το κουτί εάν θέλεις η dial-up σύνδεση να αρχίσει αυτόματα την επόμενη φορά
+Σύνδεση dial-up τώρα
+Μην κάνεις σύνδεση dial-up και κλείσε αυτόν τον διάλογο
+Καμία καταχώρηση dial-up δεν βρέθηκε σε αυτόν τον υπολογιστή
+Η γραμμή είναι απασχολημένη
+Αποτυχία υλικού (hardware)
+Κανένας τηλ.τόνος
+Τηλεφωνική κλήση
+Προσπάθεια
+’νοιγμα θύρας ...
+Τηλεφωνική κλήση στον provider...
+Συνδεμένος με τον απομακρυσμένο υπολογιστή
+Επαλήθευση του ονόματος και του κωδικού πρόσβασης χρήστη...
+Η ταχύτητα σύνδεσης είναι %d BPS
+Αποσύνδεση
+Επανάληψη
+Απαιτούνται το όνομα και ο κωδικός πρόσβασης χρήστη
+Χρήστης:
+Κωδικός πρόσβασης:
+Ομάδα:
+Αποθήκευση στον φάκελο:
+Αποθήκευση ως:
+Έναρξη
+Αυτόματα
+Με το χέρι
+Προγραμματισμός
+Προτεραιότητα μεταφόρτωσης
+Προηγμένο
+Η διεύθυνση του αρχείου που θέλετε να μεταφορτώσετε
+Εισήγαγε το όνομα χρήστη εδώ
+Πληκτρολόγησε τον προσωπικό κωδικό εδώ
+Τσεκάρισε αυτό το κουτί εάν ο server απαιτεί έγκριση
+Όνομα της ομάδας που τοποθετείς για μεταφόρτωση. Οι ομάδες σε βοηθούν να διαχειριστείς τις μεταφορτώσεις
+Φάκελος αποθήκευσης μεταφορτώσεων
+Νέο όνομα για το μεταφορτωμένο αρχείο. ’φησε αυτόν τον τομέα κενό εάν θέλεις να σώσεις το αρχείο με το αρχικό όνομά του
+Σύντομη περιγραφή της μεταφόρτωσης
+Αυτή η μεταφόρτωση θα αρχίσει αυτόματα το συντομότερο δυνατόν
+Το FDM ΔΕΝ θα προσπαθήσει να αρχίσει αυτή την  μεταφόρτωση αυτόματα
+Προγραμμάτισε αυτή την μεταφόρτωση
+Διαμόρφωσε τον προγραμματισμό της  μεταφόρτωσης
+Προτεραιότητα μεταφόρτωσης . Η μεταφόρτωση με την πιο υψηλή προτεραιότητα θα αρχίσει πρώτα.Η μεταφόρτωση με την χαμηλότερη προτεραιότητα θα αναβληθεί
+Εξέταση προηγμένων ρυθμίσεων για αυτή τη μεταφόρτωση
+Το εισηγμένο URL είναι ανακριβές. Παρακαλώ έλεγξέ το
+Παρακαλώ εισήγαγε το όνομα χρήστη
+Επέλεξε φάκελο εξαγωγής
+Γενικά
+Γενικές πληροφορίες
+Download currently saved to the file:
+Όνομα του μεταφορτωμένου αρχείου
+Το URL αυτής της μεταφόρτωσης δεν μπορεί να αλλάξει
+Αυτή η μεταφόρτωση είναι σε πρόοδο. Δεν μπορεί να αλλάξει το όνομα του αρχείου
+Αδύνατη η μετονομασία του αρχείου
+Το αρχείο δεν βρέθηκε
+Δεν βρέθηκε η διαδρομή
+’κυρο .exe format
+Το αρχείο χρησιμοποιείται από άλλη εφαρμογή
+Αδύνατη η πρόσβαση
+Η συσκευή δεν είναι έτοιμη
+Ο δίσκος είναι πλήρης
+Το όνομα αρχείου είναι άκυρο
+Απαιτείται login
+Σύνδεση
+Δίκτυο
+Λάθη
+Διακοπή μεταξύ των προσπαθειών σύνδεσης [σε δευτερόλεπτα]:
+Μέγιστος αριθμός προσπαθειών
+Διάλειμμα [σε δευτερόλεπτα]:
+Ελάχιστο μέγεθος:
+Μέγιστος αριθμός:
+Περιορισμός της κυκλοφορίας για αυτή τη μεταφόρτωση
+Όριο κυκλοφορίας
+Αγνόησε όλους τους περιορισμούς
+B
+KB
+MB
+s
+Εισήγαγε αξία μεγαλύτερη από %d
+Παρακαλώ επέλεξε διάσταση
+Χρόνος αναμονής της επανασύνδεσης του server σε περίπτωση σφάλματος
+Τσέκαρε αυτό το κουτί εάν θέλεις να περιορίσεις το μέγιστο αριθμό ανεπιτυχών προσπαθειών μεταφόρτωσης
+Χρόνος αναμονής για την ανταπόκριση του server
+Ελάχιστο μέγεθος τμήματος . Η μεταφόρτωση δεν θα χωριστεί σε τμήματα με μικρότερος  μέγεθος
+Μέγιστος αριθμός τμημάτων . Η μεταφόρτωση  δεν θα χωριστεί σε περισσότερα τμήματα    
+Διευκρίνισε την κυκλοφορία (μέγιστη) FDM θα έχει η μεταφόρτωση
+Αγνόησε τους περιορισμούς κυκλοφορίας και τον περιορισμό στο μέγιστο αριθμό συνδέσεων για αυτή τη μεταφόρτωση
+Μπορείς να ορίσεις την αξία σε bytes (B), kilobytes (KB) ή megabytes (MB) σε αυτό τον τομέα
+Πρωτόκολλο
+Προσδιόρισε στον server σαν:
+Αναφερόμενος:
+Χρήση HTTP 1.1
+Χρήση cookies
+Παθητικός τρόπος χρήσης
+Τρόπος μεταφοράς
+Δυαδικός
+ASCII για τα αρχεία με επεκτάσεις:
+Διευκρίνισε πώς το FDM θα προσδιοριστεί στον HTTP server
+This string will be sent as Referrer field to HTTP server. Καταρχήν, δεν απαιτείται
+Τσεκάρισε αυτό το κουτί εάν θέλεις το FDM να κάνει χρήση του HTTP version 1.1
+Τσεκάρισε αυτό το κουτί εάν θέλεις το  FDM να κάνει χρήση cookies
+Τσεκάρισε αυτό το κουτί  εάν θέλεις το FDM νακάνει χρήση παθητικής μεθόδου σε FTP servers. Μερικές φορές είναι απαραίτητο κατά την εργασία με firewalls
+Use the binary mode for FTP transfers. Set this mode if the file you download is not a text one
+Use the ASCII mode for FTP transfers. Set this mode if the file you download is a text one
+FDM will use the ASCII mode for the files with specified extensions. For other files FDM will use the binary mode
+Μεσολαβητής (Proxy)
+Ρυθμίσεις μεσολαβητή (proxy)
+Από τον Microsoft Internet Explorer
+Θέσε χειροκίνητα
+Μην χρησιμοποιήσεις οποιον δήποτε proxy
+Ρυθμίσεις
+Διεύθυνση:
+Θύρα:
+Παρακαλώ εισήγαγε τη διεύθυνση του πληρεξούσιου (proxy)
+Παρακαλώ εισήγαγε τη θύρα για τον πληρεξούσιο (proxy)
+Το FDM θα πάρει τις ρυθμίσεις του πληρεξούσιου (proxy) από τον Internet Explorer
+You specify proxy settings yourself
+FDM will not use proxy
+Choose type of servers for which you want to specify the proxy
+Enter address of the proxy you want to use
+Enter proxy port here. As a rule, it is 3128, 1080 or 8080
+Τσεκάρισε αυτό το κουτί εάν ο πληρεξούσιος server απαιτεί έγκριση
+Διάφορα
+Τοπικό αρχείο
+Εάν το αρχείο υπάρχει ήδη:
+Φύλαξε χώρο στο δίσκο για τα μεταφορτωμένα αρχεία
+Πρόσθετες επεκτάσεις αρχείων για ασυμπλήρωτες μεταφορτώσεις:
+Internet server
+Μην ξαναξεκινήσεις την μεταφόρτωση εάν η συνέχιση δεν υποστηρίζεται από τον server
+Εάν το μέγεθος αρχείου άλλαξε στον server:
+Σταμάτημα σε σφάλματα
+Ρώτα
+Ξαναγράψε
+Μετονόμασε
+Συνέχισε
+Ξεκίνα ξανά
+Ρύθμισε
+Παρακαλώ διευκρίνισε την επέκταση του αρχείου
+Here you may specify what FDM should do if the file already exists on the disk
+Check this box if you want disk space to be reserved for download when one is started
+If it is checked FDM will append specified extension to a file name while downloading. When downloading is finished FDM renames file back to its original name
+FDM will not restart downloading if the remote server does not support resuming
+You may specify here what FDM should do if the file size was changed on server
+Check this box to stop download when the file was not found on server
+Check this box to stop download when user name or password is invalid
+Επικρατούσα κατάσταση
+Επέλεξε κατάσταση διαμόρφωσης:
+Μέγιστος αριθμός συνδέσεων:
+Μέγιστος αριθμός συνδέσεων ανά έναν server:
+Περιορισμός της κυκλοφορίας:
+απεριόριστη
+Select traffic usage mode which you wish to configure here
+Check this box to limit the maximum number of connections
+Check this box to limit the maximum number of connections per one server
+Specify here FDM traffic (maximum) for downloading files
+Όλες οι μεταφορτώσεις
+Κατάλογος μεταφορτώσεων
+Αυτόματη αποθήκευση κάθε 
+λεπτά
+Για διαγραφή ελλιπών μεταφορτώσεων
+Αυτόματη διαγραφή ολοκληρωμένων μεταφορτώσεων
+Μη διαγραφή αρχείου
+Διαγραφή αρχείου
+FDM saves the list of downloads automatically at the specified time interval. It protects the list from possible hang-up of computer or power failure
+Specify here what FDM should do with the file on the disk when deleting an incomplete download
+Check this box if you want to delete download automatically from the list when finished
+Παρακολούθηση
+Έλεγχος
+Πρόχειρο
+Παρακολούθηση αρχείων με επεκτάσεις
+Αγνόησε αρχεία με επεκτάσεις
+Το ALT δεν πρέπει να πιεστεί
+Το ALT πρέπει να πιεστεί
+Παρακαλώ διευκρίνισε τις επεκτάσεις
+Check this box if you want FDM to catch clicks in the Internet Explorer
+Check this box if you want FDM to monitor your clipboard
+Monitor for files with specified extensions only
+Don't monitor for files with the specified extensions 
+Monitor only if ALT is not pressed
+Monitor only if ALT is pressed
+Ξεκίνημα
+Φόρτωμα στο ξεκίνημα
+Έναρξη ελαχιστοποιημένο
+Σύστημα
+Ελαχιστοποίηση στην κάτω γραμμή
+Κλείσιμο κουμπιού ελαχιστοποίησης
+FDM will be started automatically when Windows starts
+FDM will be minimized after start
+When you click the Minimize button FDM will be minimized to tray
+If checked, clicking on the Close button will be similar to clicking on the Minimize button
+Αναβάθμιση
+Address of update server
+FDM will check for a new version automatically
+Οδηγός βελτιστοποίησης χρήσης δικτύου
+Καλώς ήλθες στον οδηγό βελτιστοποίησης χρήσης δικτύου !
+Αυτός ο οδηγός θα σε βοηθήσει να επιλέξεις τις βέλτιστες ρυθμίσεις για την σύνδεσή σου. Θα θέσει τις ιδιότητες των μεταφορτώσεων καθώς και του Μεταφορτωτή .
+Παρακαλώ επέλεξε τύπο σύνδεσης
+Τέλος
+Specify type of your Internet connection here
+Configure FDM for optimal working with your connection
+Αποστολή
+Ώρα έναρξης
+Επόμενη ώρα έναρξης
+Τελευταία ώρα έναρξης
+Can't load the list of schedules. Possibly it was damaged or is being used by another application
+Can't load the Scheduler log
+Can't save the list of schedules
+Η αποστολή "%s" προγραμματίστηκε . Να ξεκινήσει ;
+Αλλαγή κατάστασης κυκλοφορίας σε "%s"
+Κλείσιμο τηλεφώνου ,
+Όλες οι συνδέσεις
+Αλλαγή κατάστασης κυκλοφορίας σε
+Κλείσιμο
+Επανεκκίνηση
+Αποσύνδεση
+Μία φορά
+Κυριακή
+Δευτέρα
+Τρίτη
+Τετάρτη
+Πέμπτη
+Παρασκευή
+Σάββατο
+Τις ημέρες:
+Κάθε
+ημέρες
+ώρες
+Κατά την εκκίνηση του FDM
+Όταν η τηλ κλήση πετύχει
+Όταν η τηλ. κλήση αποτύχει
+Όταν δεν υπάρχει ενεργή μεταφόρτωση
+Όταν ταχύτητα λιγότερη ή ίση από %d BPS με διάρκεια %d
+Όταν όλες οι μεταφορτώσεις είναι σε σφάλμα με διάρκεια
+Ποτέ
+’γνωστο
+Επιτυχώς συνδεμένος με "%s"
+Απέτυχε να συνδεθεί με "%s"
+Ξεκίνησε επιτυχώς
+Εκτός μνήμης
+Αδύνατη η εκκίνηση
+Η εκτέλεση της αποστολής θα προκαλέσει την έξοδο του προγράμματος στο ξεκίνημα. Το σχέδιο θα αγνοηθεί
+Μέγιστες προσπάθειες κλήσεων
+Διακοπή μεταξύ προσπαθειών
+Τέλος κλήσης εάν η ταχύτητα σύνδεσης είναι λιγότερο από:
+Προσπάθησε πάλι
+Λιγότερο από
+Χρήση της σύνδεσης :
+Εάν επιτυχώς
+φορές
+Τέλος κλήσης όλων των ενεργών συνδέσεων
+Κλείσιμο της σύνδεσης:
+Όνομα εφαρμογής:
+Ορίσματα
+Τύπος κλεισίματος:
+Εξαναγκασμένο κλείσιμο εφαρμογής
+Έναρξη εφαρμογής
+Πραγματοποίηση σύνδεσης dial-up
+Κλείσιμο σύνδεσης
+Αλλαγή κατάστασης κυκλοφορίας σε
+Έξοδος από το FDM
+Κλείσιμο υπολογιστή
+Μεταφορτώσεις για ξεκίνημα
+Μεταφορτώσεις για σταμάτημα
+Εφαρμογές
+Όλα τα αρχεία
+Sorry, this feature is available only in Windows 2000, XP and above
+Εισήγαγε όνομα εφαρμογής
+Please select downloads
+Select traffic usage mode you want to be set at the task start
+Check this box if you want to limit the maximum number of unsuccessful dialing attempts 
+Time between the unsuccessful attempts
+Check this box to establish connection with the speed not less than the value you specified
+Specify the value of minimum required connection speed here
+FDM will attempt again to establish required connection if you check this box
+Check this box to limit the maximum number of unsuccessful attempts to establish connection
+Specify required download(s) here
+List of all available downloads
+Add selected download to the task list of downloads
+Remove selected download from the task list of downloads
+Specify program you want to launch here
+Find program on your computer
+Specify program arguments here
+Specify type of your session termination here
+Check this box to force terminating your session. It is useful if hung applications are in the system. But in this case, all unsaved data will be lost
+Specify scheduled action here
+Check this box if you want FDM to hang up all active connections
+Specify connection to hang up here
+Ορισμός  ημέρας
+Κυριακή
+Δευτέρα
+Τρίτη
+Τετάρτη
+Πέμπτη
+Παρασκευή
+Σάββατο
+Στο γεγονός
+Διάρκεια
+Χαμηλή ταχύτητα:
+λεπτά.
+Λεπτά
+Ώρες
+Ημέρες
+Όταν η ταχύτητα μετ/σης είναι χαμηλή
+Όταν όλες οι μετ/σης έχουν σφάλματα
+Διευκρινίστε τις ημέρες
+Έναρξη αποστολής στον καθορισμένο χρόνο
+Θέσε το χρόνο έναρξης της αποστολής εδώ
+Έναρξη αποστολής την καθορισμένη ημερομηνία
+Θέσε την ημερομηνία έναρξης αποστολής εδώ
+Έναρξη αποστολής τις καθορισμένες ημέρες της εβδομάδας
+Έναρξη αποστολής κάθε Κυριακή
+Έναρξη αποστολής κάθε Δευτέρα
+Έναρξη αποστολής κάθε Τρίτη
+Έναρξη αποστολής κάθε Τετάρτη
+Έναρξη αποστολής κάθε Πέμπτη
+Έναρξη αποστολής κάθε Παρασκευή
+Έναρξη αποστολής κάθε Σάββατο
+Έναρξη αποστολής περιοδικά
+This field allows you to specify the time interval in minutes, hours or days
+Start the task when some event happens
+Specify the event type here
+Enter time interval here
+Enter minimum required speed here
+Απαιτείται επιβεβαίωση για να εκτελεστεί η αποστολή
+Αναμονή επιβεβαίωσης
+δευτερόλεπτα.
+If checked, FDM will ask you to confirm execution of this task
+If checked, FDM will wait for your confirmation during the specified time interval. If you will not react during this time the task will be started
+Διεύθυνση:
+Building the list of files to download
+Σύνδεση με τον server
+Trying to use user name and password stored in the Site Manager
+Ανάκτηση του καταλόγου αρχείων από τον server
+Η σύνδεση με τον server χάθηκε. Προσπάθεια να αποκατασταθεί
+Building list
+Ανακτήση μεγέθους και ημερομηνίας τελευταίας τροποποίησης αρχείων
+Χρήση αυτών των παραμέτρων προκαλεί μείωση  ταχύτητας
+Check this box if you want FDM to query size and date of files on HTTP servers
+Όνομα site
+Συνδέσεις
+Σύνδεση
+Ομάδα
+Can't load the list of sites. Possibly it was damaged or is being used by another application
+Can't save the list of sites
+Μέγιστες ταυτόχρονες συνδέσεις:
+Προεπιλεγμένη ομάδα για νέα μεταφόρτωση από αυτό το site
+Χρήση παθητικού τρόπου FTP
+Παρακαλώ εισήγαγε το όνομα site
+Site with the same name already exists. Please enter another site name
+Maximum number of connections must be greater than 0
+Please select group
+Specify site name here
+Check this box to limit the maximum number of simultaneous connections to this server
+Check this box to add downloads from this server to selected group automatically 
+Ask user
+Μην ρωτήσεις πάλι
+Disk write error
+Το αρχείο "%s" υπάρχει ήδη στο δίσκο. Τι να κάνω ;
+Don't ask you about this again. Your choice will be accepted by default
+Overwrite existing file
+Rename this file
+Resume downloading. (Downloading will be started at position equal to the size of existing file)
+Σταμάτημα αυτής της μεταφόρτωσης
+Ναι
+Όχι
+Η μεταφόρτωση
+έχει διαγραφεί. Διαγραφή του αρχείου και από τον δίσκο ;
+Εισήγαγε ένα όνομα χρήστη και έναν προσωπικό κωδικό
+Σύνδεση με "%s"
+Στείλε το όνομα χρήστη και τον κωδικό πρόσβασης (που όρισες) στον server
+Μην συνδεθείς σε αυτόν τον server
+Το μέγεθος του "%s" έχει αλλάξει στον server. Τι να κάνω ;
+Ξανάρχισε την μεταφόρτωση από την αρχή
+Adjust download for the new file size. Not recommended
+Παρακαλώ περίμενε
+Αναβάθμιση
+Περιγραφή
+Αναβάθμιση με χρήση:
+Έλεγχος για αναβάθμιση
+Χρησιμοποιείς την νεότερη έκδοση
+Μεταφόρτωση
+Η έκδοση %s build %s είναι διαθέσιμη
+Full distributive of version %s (%s)
+Upgrade to version %s
+Upgrade to version %s (%s)
+Το FDM πρέπει να επανεκινηθεί . Να γίνει αυτό τώρα ;
+Η αναβάθμιση έγινε
+Can't find updater
+Specify the updates type here
+Update FDM using full distributive
+Update FDM using upgrade distributive
+Look for more information about update process
+Τι καινούργιο σε αυτήν την έκδοση ;
+Έναρξη ενημέρωσης του FDM τώρα
+Ακύρωσε την ενημέρωση και κλείσε αυτόν τον διάλογο
+Δημιουργία μεταφόρτωσης
+Επέλεξε το περιεχόμενο
+Unselect content
+List of downloads to add
+Check the selected folder items to add them to download list
+Uncheck selected folder items not to add them to download list
+Περί του FDM
+Copyright (c)
+All rights reserved
+Registered to:
+Η αναβάθμιση έγινε. Απαιτείται επανεκκίνηση
+’κυρο όνομα ή κωδικός πρόσβασης
+Αδύνατη η φόρτωση αρχείου Ιστορικού
+Αδύνατη η αποθήκευση αρχείου Ιστορικού
+Προεπιλεγμένες ρυθμίσεις ιστού HTML
+HTML Spider
+Web pages tree
+Μεταφόρτωση web site
+Ρυθμίσεις μεταφόρτωσης της σελίδας Web
+Ξεκίνημα μεταφόρτωσης
+Σταμάτημα μεταφόρτωσης
+Προγραμματισμός μεταφόρτωσης
+Διαγραφή
+’νοιγμα σελίδας web στον διαφυλλιστή
+Έναρξη μεταφόρτωσης αυτόματα
+Ιστοχώρος (Web site) (σελίδα) URL
+Αρχεία
+Delete downloads also?
+Can't load the list of web pages
+Can't save the list of web pages
+URL of web page or HTTP server you want to download from
+URL of web page or HTTP server from which downloading was started
+Name of the folder to save downloads in
+Output folder:
+Σελίδες Web
+Σελίδες
+Επεκτάσεις αρχείων σελίδων web με κώδικα HTML :
+Μεταφόρτωση της μορφής της ιστοσελίδας
+Μεταφόρτωση ιστοσελίδας από άλλα sites
+Εικόνες
+Μεταφόρτωση εικόνων
+Μεταφόρτωση εικόνων που συνδέονται με άλλα site
+Βάθος μεταφόρτωσης:
+Extensions of web pages' files with HTML code. Web pages will be scanned for links of images and other pages to download
+If checked, CSS files will be downloaded also. Recommended
+If unchecked, web pages of other sites will not be downloaded. For example, if this box is unchecked and you started downloading from http://example.com/, then http://othersite.com/some.html will not be downloaded, but http://example.com/some.html will be downloaded
+If checked, web pages' images will be downloaded also
+If unchecked, web pages' images that link to other sites will not be downloaded
+Depth of downloading. For example, you started downloading from http://ex.com/index.html. There is a link to http://ex.com/some.html from http://ex.com/index.html. Then depth of http://ex.com/some.html will be 1. Setting depth to 0 will result in downloading start page content only.
+Μεταφόρτωση  αρχείων από σελίδες web
+Μεταφόρτωση  αρχείων από άλλα sites
+Αποβολή αρχείων βάση επέκτασης
+Ενεργοποίηση
+Μεταφόρτωσε
+Μην μεταφορτώσεις
+αρχεία με τις επεκτάσεις:
+Check this box to download files from web pages
+Check this box to download files from other sites
+Check this box to ignore files with the specified extensions
+Files with the extensions specified below will be downloaded if checked
+Files with the extensions specified below will NOT be downloaded if checked
+Εξαγωγή ρυθμίσεων
+Εισαγωγή ρυθμίσεων
+Failed to launch Regedit.exe
+An error occurred while trying to export settings
+An error occurred while trying to import settings
+Αρχείο μητρώου του  FDM
+Αποβολή εικόνων βάση επέκτασης
+εικόνες με τις επεκτάσεις:
+Check this box to ignore images with the specified extensions
+Images with the extensions specified below will be downloaded if checked
+Images with the extensions specified below will NOT be downloaded if checked
+Don't download this and delete
+Server doesn't support download resuming. Restart from the beginning
+Failed to open URL
+Sorry, unexpected error occurred while trying to write to the registry
+Thank you for registration! Please restart FDM
+Μεταφόρτωση με το Free Download Manager
+Μεταφόρτωση του web site με το Free Download Manager
+Εμφάνιση FDM στο μενού του Internet Explorer
+Check this box to add items "Download with Free Download Manager" and "Download web site with Free Download Manager" to the Internet Explorer context menu (menu appears when you right click)
+Μείωση επικρατούσας κυκλοφορίας στη δραστηριότητα του browser
+Μείωση ανά ένα επίπεδο
+Θέσε την ελαφριά χρήση
+Check this box to decrease the traffic usage automatically when you are browsing the Internet. This allows you to browse much faster when FDM is downloading something
+Traffic usage mode will be decreased by one level. Heavy->Medium, Medium->Light
+Η κατάστασης κυκλοφορίας θα αλλάξει σε Ελαφριά χρήση
+Έγκυρο για
+Έγκυρο για υπο-domains
+Check this box to use this record for downloading via HTTP
+Check this box to use this record for downloading via HTTPS
+Check this box to use this record for downloading via FTP
+Check this box to use this record for downloads from sub domain servers. For example, for the site http://site.com it will be http://some.site.com
+Please select one protocol at least
+Μέγιστος αριθμός τρεχούμενων μεταφορτώσεων
+Check this box if you want to limit the maximum number of downloads running at the same time
+Επανεκκίνηση μεταφόρτωσης
+Δημιούργησε ένα τμήμα παραπάνω
+Σταμάτημα ενός τμήματος
+; context: [section x] - Stopped
+Σταματημένο
+; tray menu
+Κουτί κλεισίματος
+;
+Can't find Opera Plugin directory. Do you wish to specify it manually?
+Can't find Netscape Plugin directory. Do you wish to specify it manually?
+Can't install Opera monitoring
+Can't uninstall Opera monitoring
+Can't install Netscape monitoring
+Can't uninstall Netscape monitoring
+Check this box if you want FDM to catch clicks in Opera
+Check this box if you want FDM to catch clicks in Netscape
+; create download dlg
+Εξέταση μεγέθους
+; request the size of a download
+Αίτημα...
+Ρώτησε τον server το μέγεθος μεταφόρτωσης
+Ναι σε όλα
+Όχι σε όλα
+Λεπτομερής αναφορά (log)
+If checked, FDM will show responses from the server
+Οι αλλαγές θα ενεργοποιηθούν στο επόμενο ξεκίνημα του διαφυλλιστή
+Κατάλογος αποστολών
+Κατάλογος αρχείων
+Κατάλογος sites
+Κατάλογος σελίδων
+Deleting downloads
+Building the list of downloads
+Δημιουργία ομαδικής μεταφόρτωσης
+Από:
+Σε:
+Βήμα:
+Wildcard bytes:
+Αποτελέσματα
+Δείγμα:
+Sequence start number
+Sequence finish number
+Sequence step. For example, if it is 10, then sequence will be 0, 10, 20, ...
+Count of wildcard bytes. For example, if it is 1, then sequence will be 1, 2, 3. If it is 2, then sequence will be 01, 02, 03.
+Click here to look at the generated sequence
+Μεταφόρτωση στον Internet Explorer εάν πιέσεις Cancel
+Check this box if you want Internet Explorer to download file when you press Cancel in the "Create download" dialog
+The final sequence number must be greater than the start one
+Please use (*) in the URL to specify template for URL
+Δημιούργησε μια επέκταση εάν το αρχείο δεν έχει
+Check this box to create a specified extension for a file which doesnt have it. For example if the file name is "file" and you specify "txt", the result will be "file.txt"
+Παρουσίασε το μέγεθος σε bytes μόνο
+Τσεκάρισε αυτό το κουτί για να παρουσιάσεις τα μεγέθη σε Bytes αντί των KB ή των MB
+Εκτέλεση ελέγχου ιών
+Ορισμός:
+Επεκτάσεις:
+Τσεκάρισε αυτό το κουτί για να ελεγχθούν τα μεταφορτωμένα αρχεία από τον αντιιό αυτόματα
+Διευκρίνισε εδώ το όνομα του προγράμματος αντιιών
+Διευκρίνισε εδώ τους ορισμούς για τον αντιιό
+Διευκρίνισε εδώ τις επεκτάσεις των μεταφορτωμένων αρχείων που θα ελέγχονται
+Παρακαλώ εισήγαγε το όνομα αντιιών
+Το όνομα είναι άκυρο. Παρακαλώ έλεγξέ το
+Launching antivirus
+Απενεργοποίηση αποστολής αφού εκτελεστεί
+Διαγραφή αποστολής αφού εκτελεστεί
+Check this box to disable task automatically after execution
+Check this box to delete task automatically after execution
+Μετάβαση
+Πίσω
+Αυτόματη δημιουργία ονόματος αρχείου
+Check this box to generate a file name of download automatically 
+Αποθήκευση με επέκταση "htm"
+Check this box to save all web pages with "htm" extension
+Click this button to calculate summary size of all downloads
+Κράτησε τη δομή φακέλου του server
+Check this button to keep the original server folders structure. Otherwise all files of the server will be saved in one folder
+Επιλέχθηκε άλλος φάκελος . Επιλέγεις αυτό το φάκελο ως προεπιλογή γι αυτή την ομάδα; Μπορείς να αλλάξεις φάκελο από τις ιδιότητες ομάδων.
+; === ADDED LINES ===
+Μια μεταφόρτωση με ίδιο URL ήδη υπάρχει. Τι να κάνω;
+Έναρξη
+Launch the downloaded file
+Έκδοση
+Κάνε κλικ εδώ για επικοινωνία μαζί μας
+Κάνε κλίκ εδώ για πιο πρόσφατη έκδοση
+Προειδοποίηση: αυτό το πρόγραμμα υπολογιστή προστατεύεται από το νόμο περί πνευματικών δικαιωμάτων και από άλλες διεθνής συνθήκες. Μη εξουσιοδοτημένη αναπαραγωγή ή διανομή αυτού του προγράμματος, ή οποιουδήποτε μέρους του , μπορεί να οδηγήσει σε ενεργοποίηση της αστικής και ποινικής ρήτρας , με αποτέλεσμα να διωχθείς λόγω παράβασης του νόμου.
+; === new version ===
+Μεταφόρτωση όλων με το Free Download Manager
+Add list of downloads
+Remove selected
+This is the list of URLs to be added
+Click this button to remove all selected URLs from the list
+Can't find Firefox Plugin directory. Do you wish to specify it manually?
+Can't install Firefox monitoring
+Can't uninstall Firefox monitoring
+Check this box if you want FDM to catch clicks in Mozilla browser (Firefox or Suite)
+Μεταφόρτωση επιλεγμένου με το Free Download Manager
+Έναρξη
+Websites
+Ενεργές μεταφορτώσεις
+Δεν υπάρχουν ενεργές μεταφορτώσεις αυτή τη στιγμή
+Ανακοινώσεις
+Χρήση " μπαλονιών "
+Διάλειμμα
+Check this box to enable tray "balloon" notifications when a download has stopped or finished. Note: this feature works only on Windows 2000/XP and above
+A "balloon" will be closed automatically after the expiration of this time
+Mirrors
+Αυτόματη αναζήτηση για  mirror URL
+Μέγιστος αριθμός mirrors
+Υπολόγισε την ταχύτητα του mirror
+Επανυπολογισμός ταχύτητας κάθε
+Check this box to get FDM to search for mirror URLs for each download automatically
+Limit the number of mirror URLs per download. This allows you to reduce the mirrors' speed calculation time
+Check this box to get FDM to calculate the speed of each mirror server
+The mirrors' speed will be recalculated automatically at the specified time interval
+Μην ψάξεις εάν μέγεθος μικρότερο από
+FDM will not search for mirrors if the file size is less than the specified size
+Μην ψάξεις εάν το μέγεθος αρχείου είναι άγνωστο (Συστήνεται)
+Πρόσθεση mirror
+Αναζήτηση για mirrors
+Add mirror URL for this download manually
+Search for mirror URLs for this download with FileSearching.COM
+Κατάλογος με URLs mirror
+Ταχύτητα server
+Σε χρήση
+Μέτρηση ταχύτητας mirrors
+Μέτρηση ταχύτητας του server του mirror
+Πληροφορίες μεταφόρτωσης
+Αναμονή..
+Mirror URL for download
+Το μέγεθος αρχείου υπερβαίνει τα 2GB. Τέτοια μεταφορτώση υποστηρίζεται μέσω  FTP  μόνο
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Νέα μεταφόρτωση
+Καθόρισε ομάδα για αυτόματη μεταφόρτωση
+Θέσε την ομάδα σε:
+Αποθήκευσε την μεταφόρτωση στον κατάλληλο φάκελο της ομάδας
+Check this box if you want the download group to be determined by extension of file or settings of Site Manager
+Set default group manually
+Check this box if you want download to be saved to its group's default folder (see Group's properties)
+Set default output folder manually
+; END
+; BEGIN: Monitoring page
+Σιωπηλή παρακολούθηση
+If checked, the "Create download" dialog will not be shown when adding download from browser
+Προσαρμογή
+Select menu items to display in Internet Explorer context menu
+; END
+Επιλογή μενού που θα εμφανίζεται
+At least one menu item must be chosen
+Χρήση ήχων
+Check this box if you want FDM to play sounds on some events (e.g. when download is completed)
+Choose sound for each event
+; BEGIN : Customize sounds dialog
+Προσαρμογή ήχων
+Καθορισμός ήχου
+Αφαίρεση
+Δοκιμή
+List of FDM's events and appropriate sounds. Here you can adjust FDM to play a sound when some event has occurred
+Download added - play sound when one or more downloads have been added to the list of downloads
+Download completed - play sound when download has been completed successfully.
+Download failed - play sound when an error has occurred while trying to download a file.
+Dialing succeeded - play sound when Scheduler's task "Establish dial-up connection" has been executed successfully.
+Dialing failed - play sound when Scheduler's task "Establish dial-up connection" has failed due to some reason.
+Καθόρισε ήχο για το επιλεγμένο γεγονός
+Μην παίξεις τον ήχο όταν εμφανιστεί το επιλεγμένο γεγονός
+Δοκιμή επιλεγμένου ήχου
+Γεγονός
+Αρχείο ήχου
+Κανένας ήχος
+Προστέθηκε μεταφόρτωση
+Η μεταφόρτωση ολοκληρώθηκε
+Η μεταφόρτωση απέτυχε
+Πετυχημένη τηλεφ. κλήση
+Αποτυχημένη τηλεφ. κλήση
+Αρχεία ήχου
+; END
+Searching for mirrors...
+Measuring mirrors' speed...
+Searching for mirrors has already been performed 
+Connecting search server...
+Getting results...
+There are %d mirrors found
+Mirror searching done
+Trying another mirror...
+There are no mirrors found
+Failed
+Mirrors' speed was measured
+; BEGIN: History page
+Ιστορικό
+Αποθήκευση του ιστορικού των συνδέσεων και των φακέλων
+Αποθήκευση του ιστορικού των φακέλων μόνο
+Διατήρηση των εγγραφών για
+Μέγιστος αριθμός αρχείων
+Καθάρισμα Ιστορικού
+FDM will save history of links and typed folder names
+FDM will save history of folders only
+FDM will delete records that have existed in the history more than the specified period of time
+Maximum number of records in the history. When the number of records exceeds this value, FDM will delete oldest records
+Delete all records from the history
+; END
+Εισαγωγή
+Εξαγωγή
+Εισαγωγή καταλόγου μεταφορτώσεων
+Εξαγωγή καταλόγου μεταφορτώσεων
+Αρχεία κειμένου
+Αδύνατο το άνοιγμα του αρχείου
+Εξαγωγή όλων των μεταφορτώσεων
+Εξαγωγή όλων όσων είναι στον κατάλογο
+Εξαγωγή των επιλεγμένων μεταφορτώσεων
+Μη εξαγωγή ολοκληρωμένων
+Επισύναψε εάν το αρχείο υπάρχει ήδη
+’κυρο όνομα ομάδας. Παρακαλώ μην χρησιμοποιείς τα σύμβολα / ή \
+Έξοδος όταν γίνει
+; BEGIN : Downloads History window
+Προστέθηκε
+Αποθηκεύτηκε σε
+; END
+Κάδος ανακύκλωσης
+; BEGIN: Recycle Bin
+Ιδιότητες
+Καθάρισε τον κάδο ανακύκλωσης
+;END
+;BEGIN: Recycle Bin properties
+Μην τοποθετείς τις διαγραμμένες στον κάδο
+Κράτα το μέγιστο
+μεταφορτώσεις
+Μην κρατάς τις ολοκληρωμένες μεταφορτώσεις
+Επιβεβαίωση για διαγραφή μεταφόρτωσης
+Ιδιότητες Κάδου Ανακύκλωσης
+Check this box if you do not want to store deleted downloads in Recycle Bin
+Check this box if you want to limit the number of deleted downloads stored in Recycle Bin
+Maximum number of downloads to store in Recycle Bin
+Check this box if you do not want completed downloads to be stored in Recycle Bin after deletion
+Check this box if you want FDM to ask for your confirmation when you try to delete a download
+;END
+Επαναφορά
+Επαναφορά μεταφόρτωσης...
+; History subitems
+Σήμερα
+Χθές
+Μια εβδομάδα
+Ένας μήνας
+Προσωπικό...
+; end
+Καθάρισμα Ιστορικού
+Αποθήκευση Ιστορικού μεταφορτώσεων
+Αποθήκευση Ιστορικού ολοκληρωμένων μεταφορτώσεων μόνο
+Check this box if you want to save history of your downloads
+Check this box if you want to store history of completed downloads only
+Ρυθμίσεις Ιστορικού μεταφορτώσεων
+Building list of History's records...
+; Download was deleted
+Was deleted
+Επιλογή χρονικής έκτασης
+Εύρεση
+Εύρεση επομένου
+Ψάχνω για ...
+; BEGIN : Find dialog
+Αναζήτηση ως
+Τοπικό όνομα αρχείου
+Διευκρίνισε τι θέλεις να βρεις εδώ
+Search in file part of URL
+Search in whole URL
+Search in comment of download
+Search in the name and path of download's file on the local disk
+Setup advanced search settings
+; ADVANCED settings
+Αναζήτηση σε
+Αναζήτηση στον κατάλογο μεταφορτώσεων
+Αναζήτηση στο Ιστορικό των μεταφορτώσεων
+Αναζήτηση χρονικά
+Θέσε
+Αναζήτηση στον κάδο ανακύκλωσης
+Αναζήτηση με διευκρινισμένο το μέγεθος αρχείου
+Ελάχιστο
+Μέγιστο
+Αναζήτηση στον κατάλογο μεταφορτώσεων
+Αναζήτηση στο Ιστορικό των  μεταφορτώσεων
+Αναζήτηση μόνο μεταφορτώσεων που ικανοποιούν τη διευκρινισμένη χρονική σειρά
+Θέσε το χρονικό εύρος
+Αναζήτηση στον κάδο ανακύκλωσης
+Search only for files that satisfy the specified file size range
+Minimal size required
+Maximal size required
+Αναζήτηση σε ομάδα
+Choose the group where the search will be performed
+; END
+Αναζήτηση μεταφορτώσεων...
+Δεν βρέθηκε κανένα στοιχείο
+Δεν βρέθηκαν άλλα στοιχεία
+Βρέθηκε
+URL to clipboard
+Προεπισκόπηση ZIP
+At least one file should be selected.
+Το αρχείο που μεταφορτώνεις ίσως είναι σε ZIP μορφή . Θέλεις να το προεπισκοπήσεις ;
+Προεπισκόπηση Ηχου/Video
+Αποτυχία ανοίγματος αρχείου.
+’γνωστος τύπος μέσου.
+Παρακαλώ εγκατέστησε το  DirectX 8.0 ή νεότερο  για να χρησιμοποιήσεις αυτό το χαρακτηριστικό. Μπορείς να μεταφορτώσεις το πιο πρόσφατο DirectX από το microsoft.com.
+Πληροφορίες μέσου
+Μέγεθος:
+Διαθέσιμο:
+Διάρκεια:
+Χωρίς ήχο
+Παίξιμο
+Μικρή διακοπή
+Φίλτρο
+Επεκτάσεις [με κενά ανάμεσα , π.χ. zip rar arj]:
+Αφαίρεση αρχείων με τέτοιες επεκτάσεις
+’φησε αρχεία με τέτοιες επεκτάσεις μόνο
+Η σειρά επιχειρημάτων δεν περιέχει %αρχείο% μακροεντολή. Αυτή η μακροεντολή είναι απαραίτητη για να δώσει μια ένδειξη για το ποιο αρχείο θα ελέγξει το πρόγραμμα αντιιών σας.
+Να συνεχίσει οπωσδήποτε ;
+Προειδοποίηση
+Xρήση κρυμμένων ιδιοτήτων για ασυμπλήρωτες μεταφορτώσεις
+Επισύναψε σχόλιο στο όνομα αρχείου όταν γίνει
+Μην αποθηκεύσεις σελίδες του server
+Check this box if you do not want to store server pages on your computer, but only files and images
+Χρήση προεπισκόπησης ZIP
+Check this box if you want to preview the content of ZIP archive at the beginning of downloading to download only a part of archive.
+Ένταση:
+Έναρξη μεταφόρτωσης αυτόματα
+Check this box if you want FDM to start each new download automatically
+Παρακαλώ έλεγξε τα αρχεία που μεταφορτώνουν
+Θέσε εναλλακτικές θέσεις (URLs) για τη μεταφόρτωση
+Όχι προεπισκόπηση στο μέλλον
+Έχεις κλείσει την προεπισκόπηση ZIP. Εάν θέλεις να την επαναφέρεις, παρακαλώ πήγαινε Επιλογές -> Επιλογές μεταφόρτωσης (Ctrl+O) -> Νέα μεταφόρτωση, και τσεκάρισε το κουτί "Χρήση προεπισκόπησης ZIP". 
+Αγνόηση λίστας
+List of web pages that should be ignored while downloading a site.
+Subfolders
+Πρόσθεση
+Ignore all subfolders also
+; Proxy tab new settings
+Υποχώρηση σε κομμένες συνδέσεις
+Μέγεθος υποχώρησης
+bytes
+Check this option if you want to turn on rollback feature. This option helps you to protect your downloads from being damaged.
+Size of rollback. Greater size will allow rollback to work more safely. Recommended size is 3000 bytes. You may increase this value if your download still remains damaged.
+; downloader options -> monitor tab
+Μην ελέγξεις για αρχεία μικρότερα από
+Χρησιμοποίησε αυτή την επιλογή εάν θέλεις το FDM να παραλείψει αρχεία μικρότερα από το ορισμένο μέγεθος
+KBytes
+Προειδοποίηση! Τα περιεχόμενα του κάδου ανακύκλωσης είναι πάρα πολλά. Αυτό μπορεί να επιβραδύνει την απόδοση . Συστήνεται να καθαριστεί ο κάδος ανακύκλωσης. Επιθυμείς να το κάνεις αυτό;
+Don't check this again
+Προειδοποίηση! Τα περιεχόμενα του Ιστορικού μεταφορτώσεων είναι πάρα πολλά. Αυτό μπορεί να επιβραδύνει την απόδοση . Συστήνεται να καθαριστεί το Ιστορικό . Επιθυμείς να το κάνεις αυτό ;
+Server can not guarantee its resuming capabilities. Response is invalid.
+Αντιγραφή στο πρόχειρο
+; general settings | skins page
+Κέλυφος
+Κέλυφος
+Το κέλυφος να χρησιμοποιεί τα δικά του icons
+Το κέλυφος να χρησιμοποιεί τα δικά του bitmaps
+; default skin
+<default>
+ΣΗΜΕΙΩΣΗ: Οποιεσδήποτε αλλαγές θα ενεργοποιηθούν μόνο αφού επανεκκινηθεί το Free Download Manager.
+Παρουσίασε πληροφορίες των υπό εξέλιξη μεταφορτώσεων
+Παράληψη αρχείων με επεκτάσεις:
+Κατάλογος επεκτάσεων αρχείων για παράληψη
+Δεν υπάρχουν ενεργές μεταφορτώσεις
+Play sound file when all downloads are completed
+Εισαγωγή λίστας URL από το πρόχειρο
+Κωδικοί πρόσβασης
+Επιλογές διαχειριστή site
+; Save password dialog
+Αποθήκευση κωδικού ;
+Free Download Manager can save password for this server to avoid the necessity to enter it every time you download from this server.
+Αποθήκευση αυτού του κωδικού ;
+Μην μου προτείνεις να αποθηκεύσεις οποιοδήποτε κωδικό πρόσβασης
+; Site Manager options | Passwords tab
+Χρήση Διαχειριστή Site για αποθήκευση του κωδικού μου
+Ρώτα με για να αποθηκεύσεις τον κωδικό ή όχι
+Μην μου προτείνεις να αποθηκεύσεις κωδικούς
+Διαγραφή όλων των κωδικών πριν την έξοδο
+Διαγραφή όλων των κωδικών
+; create new HTML Spider task
+Αφαίρεση ολοκληρωμένων μεταφορτώσεων από την λίστα (συστήνεται)
+Check this box if you want HTML Spider's downloads to be deleted automatically. This speeds up downloading of large sites.
+Οι αλλαγές θα ενεργοποιηθούν μετά το επόμενο ξεκίνημα του FDM
+Νέο στυλ
+Παλιό στυλ
+Η διεύθυνση είναι άκυρη
+Εξαφάνιση επιπλέοντος παραθύρου στην πλήρη οθόνη
+Check this box if you want floating windows to be hidden automatically in full screen mode.
+was scheduled to be launched.
+Do you want to launch it?
+Έναρξη μεταφόρτωσης όταν θα ολοκληρωθεί
+Please use (*), (*A) or (*a) in the URL to specify template for URL
+Αναζήτηση mirrors server:
+Αδρανοποίηση
+Σε ετοιμότητα
+Θυμήσου  την επιλογή μου
+Πρόταση για αλλαγή του προεπιλεγμένου φακέλου της ομάδας
+Αποθήκευση αρχείου
+’νοιγμα αρχείου
+Αποθήκευση και άνοιγμα αρχείου
+Τύπος μεταφόρτωσης:
+Σύνδεση με FDM
+Σύνδεση με Free Download Manager
+Αγαπητέ χρήστη!
+Το Free Download Manager είναι ένα πρόγραμμα που σου παρέχεται δωρεάν. Μπορείς να το χρησιμοποιείς όσο καιρό θέλεις δωρεάν.
+Εντούτοις, εάν το βρεις χρήσιμο, σου ζητάμε να μας βοηθήσεις να το εξαπλώσουμε τοποθετώντας ένα link γι αυτό στο web site σου. Αυτό θα ενημερώσει πολλούς ανθρώπους για το Free Download Manager.
+Ευχαριστούμε εκ των προτέρων για τη βοήθειά σου ,\nΗ ομάδα ανάπτυξης του Free Download Manager .
+Υπενθύμιση πάλι σε 3 ημέρες
+Υπενθύμιση την επόμενη φορά που θα ανοίξει το Free Download Manager
+Μην παρουσιάσεις αυτό το παράθυρο πάλι
+Κώδικας HTML για link
+Κώδικας HTML για κατασκευή σύνδεσης (link)
+Κι άλλα παραδείγματα
+Αντιγραφή στο πρόχειρο
+Εξαφάνιση
+; "Traffic usage mode has been changed" window
+Η κατάσταση κυκλοφορίας έχει αλλάξει
+Έχεις αλλάξει την κατάσταση κυκλοφορίας.\nΤο Free Download Manager έχει τρεις καταστάσεις για επιλογή:
+Με αυτή την επιλογή το Free Download Manager θα μεταφορτώσει στην μέγιστη δυνατή ταχύτητα . Αυτή είναι η πιο επιθετική επιλογή .
+Με αυτή την επιλογή το Free Download Manager θα μεταφορτώσει σε μέση ταχύτητα . Αυτή η επιλογή σου επιτρέπει να περιηγηθείς στο Internet και ταυτόχρονα διατηρεί υψηλή την ταχύτητα μεταφόρτωσης .
+Με αυτή την επιλογή το Free Download Manager θα μεταφορτώσει σε χαμηλή ταχύτητα . Αυτή η επιλογή σου επιτρέπει να μεταφορτώσεις χωρίς δραματική επιβράδυνση στο δίκτυο.
+;
+Μετονόμασε στο καινούριο ξεκίνημα επίσης
+Εισήγαγε αξία μικρότερη από %d
+; export/import downloads
+URL List Files
+Downloads Information List Files
+;
+Επιλογές εξαγωγής
+;
+Θέσε ημερ/νία σε ένα αρχείο ίδια με την καθορισμένη από server
+Set the same date of a downloaded file as the one on a server
+Παραγωγή αρχείου περιγραφής
+Generate a file with the name "*.dsc.txt" (* - name of a downloaded file) that will contain a small description of a downloaded file (comments + url + date). This file will be generated only for a download that has comments.
+This file has been downloaded from
+Μην ανακτάς την ημερομηνία αρχείων από τον server
+This option allows you to increase the speed of starting an FTP download. Free Download Manager will use SIZE command instead of LIST.
+Μην σώνεις logs των μεταφορτώσεων
+Enabling this option will make Free Download Manager start and shut down faster and will decrease the memory usage.
+;
+Εξαγωγή ιστορικού μεταφορτώσεων
+Εξαγωγή όλων των καταχωρήσεων
+Εξαγωγή όλων των καταχωρήσεων σε λίστα
+Εξαγωγή επιλεγμένων καταχωρήσεων
+Εξαγωγή καταχωρήσεων ολοκληρωμένων μεταφορτώσεων μόνο
+;
+HTML Files
+;
+Ιστορικό μεταφορτώσεων Free Download Manager
+URL of download
+Downloaded to file
+Μέγεθος του αρχείου
+Η μεταφόρτωση ολοκληρώθηκε
+Η μεταφόρτωση διαγράφηκε
+;
+Αποθηκεύτηκε σε
+Μέγεθος του αρχείου
+Resume support
+Κλείσε αυτόν τον διάλογο όταν η μεταφόρτωση ολοκληρωθεί ή σταματήσει
+’νοιγμα
+Θέλεις να δεις αυτό το παράθυρο πάλι ;
+Ναι, θέλω να βλέπω αυτό το παράθυρο για κάθε μια μεταφόρτωση
+Όχι, μην παρουσιάσεις αυτό το παράθυρο ξανά
+Ναι, αλλά όχι για αυτή τη μεταφόρτωση
+Using the SHIFT key means that this download will be deleted from disk and you will not be able to restore it.\nAre you sure?
+Επέλεξε  ομάδα
+Θέσε φάκελο ρίζας για την ομάδα
+Επέλεξε φάκελο ρίζας για την ομάδα.\nΟι αλλαγές θα εφαρμοστούν στις νέες μεταφορτώσεις μόνο.
+Τελευταία μεταφορτωμένα αρχεία
+(Kενό)
+Κράτημα όλων των μεταφορτώσεων
+Εμφάνιση παραθύρου προόδου μεταφόρτωσης 
+If checked, FDM will create a special window with information about downloading for each running download
+; general settings | misc page
+Διαλείμματα για επιβεβαιώσεις
+Έναρξη μεταφόρτωσης
+Ρώτα για τον τύπο κλεισίματος
+Confirmation timeout for "Tools | Hang-up when done" command.
+Confirmation timeout for "Tools | Exit when done" command.
+Confirmation timeout for "Tools | Shutdown computer when done" command.
+Confirmation timeout for launch downloaded file when download is completed.
+If checked, FDM will ask you for the type of shutdown for "Tools | Shutdown computer when done" command.
+Μην ζητήσεις επιβεβαίωση
+; 5 δευτερόλεπτα, 10 δευτερόλεπτα, ...
+%d δευτερόλεπτα
+Περίμενε την επιβεβαίωσή μου
+Ignore pages from this folder
+Download pages from this folder only
+Including subfolders
+Ignore all web pages located in this folder.
+Download pages located in this folder only and ignore other web pages.
+Check this option if you want HTML Spider to ignore (or download only) pages located in all subfolders of the specified folder.
+Here you should specify URL of the folder.\nExample: "http://site.com/docs/".
+Τύπος
+Αγνόησε
+Μόνο
+Σύνολο αριθμών
+Όρισε
+Here you should specify the set of numbers for batch list.\nEx. 1-100, or 1-100s2w3.
+Click this button to assign the set of numbers using the dialog window.
+Single number
+Number
+Assign set of numbers
+Syntax error
+Εξήγαγε το αρχείο
+Extract
+Εξαγωγή
+Φάκελος προορισμού
+Αποτυχία εξαγωγής .’γνωστο format αρχείου.
+Traffic downloaded in this month\n(%s has been downloaded in the previous month)
+Total speed of downloading
+Απενεργοποίηση εργαλείου | "when done" task after execution
+When enabled, any Tools | "when done" task will be automatically disabled after execution. So it will be launched only once.
+; %s
+; 1st - name of a file
+; 2nd, 3rd - file info (size + date).
+"%s" file already exists.\n\nDo you want to replace it\n(%s)\n\nwith the new one\n(%s)?
+Ναι για όλα
+Παράλειψη
+Παράλειψη όλων
+Το format του αρχείου είναι άγνωστο
+Visit web site
+Install pack
+By default, FDM supports ZIP, RAR and ARJ archives only.\nYou can extend the list of supported archives by installing additional archive support pack for Free Download Manager (Internet connection is required).
+FDM archive support pack
+Μετακίνηση επάνω
+Μετακίνηση κάτω
+Μετακίνηση επιλεγμένης μεταφόρτωσης επάνω
+Μετακίνηση επιλεγμένης μεταφόρτωσης κάτω
+Έλεγχος ακεραιότητας αρχείων
+Some web sites provide special checksums for files available to download in order to allow users to make sure that the downloaded file is not damaged. You can enter this checksum here and FDM will check the file integrity.
+Algorithm
+Checksum
+Επικόλληση από Πρόχειρο
+Έλεγχος
+Calculating downloaded file's checksum...
+Ο έλεγχος ακεραιότητας αρχείων πέτυχε
+Ο έλεγχος ακεραιότητας αρχείων απέτυχε
+Ο έλεγχος ακεραιότητας αρχείων έχει ολοκληρωθεί επιτυχώς.\nΔεν βρέθηκαν σφάλματα στο μεταφορτωμένο αρχείο.
+Ο έλεγχος ακεραιότητας αρχείων έχει ολοκληρωθεί.\nΒρέθηκαν σφάλματα: το αρχείο ήταν  χαλασμένος κατά τη διαδικασία μεταφόρτωσης . Απαιτείται να επαναληφθεί η μεταφόρτωση από την αρχή.
+Μην παρουσιάσεις αυτό το παράθυρο πάλι εάν ο έλεγχος πετύχει
+Unable to find the executable file of the antivirus program you've chosen.\nPlease specify it yourself.
+Τα μεγέθη των αρχείων δεν είναι ίσα
+Αποθήκευση ως:\n(Δείγμα: αρχείο(*)(*A)(*a).txt)
+Invalid save as template specified.\nMake sure it corresponds to the template of URL.
+Όταν γίνει
+Όταν γίνει (ολοκλήρωση όλων ή σε λάθος)
+Εφαρμογές
+Τι είναι αυτό ;
