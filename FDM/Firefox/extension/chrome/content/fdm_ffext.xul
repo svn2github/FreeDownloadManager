@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<overlay id="fdm_ffext-Overlay"
+         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+<script type="application/x-javascript"
+        src="chrome://fdm_ffext/content/fdm_ffext.js" />
+
+<script type="application/x-javascript"
+        src="chrome://fdm_ffext/content/fdm_ffpxy.js" />
+
+
+<popup id="contentAreaContextMenu">
+  <menuseparator id="fdm-context-item-separator"/>
+  <menuitem id="fdm-context-item-dllink" label="Download by FDM" 
+  	oncommand="fdm_dllink();"/>
+  <menuitem id="fdm-context-item-dlall" label="Download all by FDM" 
+  	oncommand="fdm_dlall();"/>
+  <menuitem id="fdm-context-item-dlselected" label="Download selected by FDM" 
+  	oncommand="fdm_dlselected();"/>
+  <menuitem id="fdm-context-item-dlvideo" label="Download video by FDM" 
+  	oncommand="fdm_dlvideo();"/>
+</popup>
+
+</overlay>
