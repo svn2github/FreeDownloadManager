@@ -2,8 +2,6 @@
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
 */
 
-    
-
 #include "libtorrent/hasher.hpp"
 #include <boost/lexical_cast.hpp>
 

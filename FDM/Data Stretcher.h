@@ -80,7 +80,7 @@ protected:
 	
 	static LONG WINAPI _UEF (_EXCEPTION_POINTERS*);
 	
-	BOOL Check3wGetStartedAlready(BOOL bSetForIfEx = TRUE);
+	BOOL CheckFdmStartedAlready(BOOL bSetForIfEx = TRUE);
 	BOOL m_bEmbedding;		
 	BOOL InitLanguage();	
 	BOOL m_bSaveAllOnExit;	

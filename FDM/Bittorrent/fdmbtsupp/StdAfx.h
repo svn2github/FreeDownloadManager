@@ -1,8 +1,6 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
-
-          
+*/          
 
 #if !defined(AFX_STDAFX_H__64B3F58D_839E_423C_9CFB_B81785CB258C__INCLUDED_)
 #define AFX_STDAFX_H__64B3F58D_839E_423C_9CFB_B81785CB258C__INCLUDED_
@@ -20,6 +18,6 @@
 #include "libtorrent/session.hpp"
 using namespace libtorrent;
 
-//{{AFX_INSERT_LOCATION}//}//}//}}  
+//{{AFX_INSERT_LOCATION}//}}  
 
 #endif 

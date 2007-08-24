@@ -791,12 +791,12 @@ SOURCE=.\HFEWnd.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\ie3wget\ie3wget_i.c
+SOURCE=.\iefdm\iefdm_i.c
 # SUBTRACT CPP /YX /Yc /Yu
 # End Source File
 # Begin Source File
 
-SOURCE=.\ie3wget\ie3wgetdm\ie3wgetdm_i.c
+SOURCE=.\iefdm\iefdmdm\iefdmdm_i.c
 # SUBTRACT CPP /YX /Yc /Yu
 # End Source File
 # Begin Source File
@@ -2470,7 +2470,7 @@ SOURCE=.\ZipPreviewDlg.h
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=.\res\3wGet.ico
+SOURCE=.\res\Fdm.ico
 # End Source File
 # Begin Source File
 

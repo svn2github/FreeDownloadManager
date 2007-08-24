@@ -2,8 +2,6 @@
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
 */    
 
-    
-
 #ifndef __gen_ivmsfdmff_h__
 #define __gen_ivmsfdmff_h__  
 

@@ -673,7 +673,7 @@ BOOL CDataStretcherApp::InitATL()
 		if (lstrcmpi(lpszToken, _T("UnregServer"))==0)
 		{
 			BOOL bWaitShutdown = FALSE;
-			if (Check3wGetStartedAlready (FALSE))
+			if (CheckFdmStartedAlready (FALSE))
 			{
 				UINT nMsg = RegisterWindowMessage ("FDM - shutdown");
 				if (nMsg)
@@ -699,7 +699,7 @@ BOOL CDataStretcherApp::InitATL()
 
 			if (bWaitShutdown)
 			{
-				while (Check3wGetStartedAlready (FALSE))
+				while (CheckFdmStartedAlready (FALSE))
 				{
 					Sleep (400);
 				}
@@ -719,7 +719,7 @@ BOOL CDataStretcherApp::InitATL()
 		lpszToken = _Module.FindOneOf(lpszToken, szTokens);
 	}
 
-	if (bRun && Check3wGetStartedAlready (m_bForceSilentSpecified == FALSE))
+	if (bRun && CheckFdmStartedAlready (m_bForceSilentSpecified == FALSE))
 		bRun = FALSE;
 
 	if (!bRun)
@@ -776,7 +776,7 @@ BOOL CDataStretcherApp::InitLanguage()
 	return TRUE;
 }
 
-BOOL CDataStretcherApp::Check3wGetStartedAlready(BOOL bSetForIfEx)
+BOOL CDataStretcherApp::CheckFdmStartedAlready(BOOL bSetForIfEx)
 {
 	LPCSTR pszMainWnd = "Free Download Manager Main Window";
 

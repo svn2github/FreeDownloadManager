@@ -1,8 +1,6 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
-
-        
+*/        
 
 #if !defined(AFX_VMSFILEUTIL_H__A3E2F9DA_BF0E_43B9_AF5C_84C1AB7A72A6__INCLUDED_)
 #define AFX_VMSFILEUTIL_H__A3E2F9DA_BF0E_43B9_AF5C_84C1AB7A72A6__INCLUDED_

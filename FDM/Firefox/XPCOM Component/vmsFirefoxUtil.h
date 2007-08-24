@@ -1,8 +1,6 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
-
-        
+*/        
 
 #if !defined(AFX_VMSFIREFOXUTIL_H__510F0D32_5282_41CB_8282_4F76D2D32FAF__INCLUDED_)
 #define AFX_VMSFIREFOXUTIL_H__510F0D32_5282_41CB_8282_4F76D2D32FAF__INCLUDED_

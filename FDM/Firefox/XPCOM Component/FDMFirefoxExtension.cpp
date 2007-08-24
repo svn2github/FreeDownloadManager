@@ -2,8 +2,6 @@
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
 */
 
-    
-
 #include "FDMFirefoxExtension.h"
 
 NS_IMPL_ISUPPORTS1(CFDMFirefoxExtension, IFDMFirefoxExtension)

@@ -1,9 +1,6 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
 */
-
-  
-
  
 
 local const ct_data static_ltree[L_CODES+2] = {

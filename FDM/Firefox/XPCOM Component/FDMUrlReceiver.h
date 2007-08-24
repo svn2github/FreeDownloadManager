@@ -2,8 +2,6 @@
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
 */    
 
-    
-
 #ifndef __FDMUrlReceiver_H_
 #define __FDMUrlReceiver_H_
 
