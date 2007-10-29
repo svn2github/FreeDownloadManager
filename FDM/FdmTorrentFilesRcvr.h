@@ -10,7 +10,7 @@
 class ATL_NO_VTABLE CFdmTorrentFilesRcvr : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CFdmTorrentFilesRcvr, &CLSID_FdmTorrentFilesRcvr>,
-	public IDispatchImpl<IFdmTorrentFilesRcvr, &IID_IFdmTorrentFilesRcvr, &LIBID_DataStretcherLib>
+	public IDispatchImpl<IFdmTorrentFilesRcvr, &IID_IFdmTorrentFilesRcvr, &LIBID_FdmLib>
 {
 public:
 	CFdmTorrentFilesRcvr()

@@ -10,8 +10,8 @@
 ;
 ;
 ;
-; Translator - gLes - http://www.gles.hu - 2005.04.09. - Fabio http://fz.szily.hu
-;
+; Eredeti fordítás: gLes - http://www.gles.hu - 2005.04.09. - Fabio http://fz.szily.hu
+; 2007.07.14-tõl Toldy Zoltán (Application Translator Team, http://apptransteam.extra.hu)
 
 ; Your language name. Please keep it in English
 ;
@@ -26,7 +26,7 @@ Másolás
 Beillesztés
 Alacsony
 Közepes
-Magas
+Korlátlan
 Letöltési beállítások
 Telefonos kapcsolat
 Névjegy
@@ -72,7 +72,7 @@ Leállítás
 Frissítés
 Hely felvétele
 Hely tulajdonságai
-Letöltése csoportja
+Letöltési csoportok
 Letöltési infó
 Ütemezési napló
 Helyböngészõ napló
@@ -238,7 +238,7 @@ Felhasználói név és jelszó ellenõrzése...
 A kapcsolat sebessége %d BPS
 Kapcsolat bontása
 Ismét
-Felhasználói név és jelszó megadása szükséges
+Azonosítás szükséges
 Felhasználó:
 Jelszó:
 Csoport:
@@ -717,7 +717,7 @@ Egy szelet leállítása
 ; context: [section x] - Stopped
 leállítva
 ; tray menu
-Bedobó
+Gyûjtõkosár
 ;
 Nem találom az Opera bõvítmény-könyvtárát. Megkeresi manuálisan?
 Nem találom a Netscape bõvítmény-könyvtárát. Megkeresi manuálisan?
@@ -789,8 +789,8 @@ Pipálja ki ezt a dobozt, ha meg szeretné tartani a kiszolgáló eredeti könyvtársz
 Kiválasztott egy másik célkönyvtárat. Beállítja ezt a könyvtárat a csoport alapértelmezettjeként? Az alapértelmezett könyvtárat beállíthatja a csoportok tulajdonságlapjain is.
 ; === ADDED LINES ===
 Már létezik letöltés errõl az URL-rõl. Mi legyen?
-Elindítás
-A letöltött fájl elindítása
+Indítás
+A letöltött fájl indítása
 Verzió
 Vegye fel velünk a kapcsolatot!
 Töltse le a legújabb verziót!
@@ -1006,7 +1006,7 @@ A letöltés nem található
 Nem található több ilyen letöltés
 Keresés befejezve
 URL másolása a vágólapra
-Betekintés ZIP-be
+Betekintés a ZIP fájlokba
 Legalább egy fájlnak kijelölve kell lennie.
 Lehetséges, hogy a fájl, amit letölt ZIP archívum. Szeretne beletekinteni?
 Audio/videó betekintés
@@ -1031,7 +1031,7 @@ A befejezetlen letöltések legyenek rejtett fájlba mentve
 Megjegyzés hozzáfûzése a fájlnévhez, ha kész
 Ne legyenek letárolva a kiszolgáló oldalai
 Pipálja ki ezt a dobozt, ha azt szeretné, hogy a kiszolgáló oldalai ne legyenek lementve csak a fájlok és a képek
-Betekintés ZIP-be
+Betekintés a ZIP fájlokba
 Pipálja ki ezt a dobozt, ha be szeretne tekinteni a ZIP archívumok tartalmába a letöltés kezdetekor, hogy csak egy részét töltse le az archívumnak.
 Hangerõ:
 Letöltés indítása automatikusan
@@ -1061,10 +1061,10 @@ Figyelmeztetés! Az Elõzményekben túl sok bejegyzés van. Ez nagyon lelassíthatja 
 Server can not guarantee its resuming capabilites. Response is invalid.
 Másolás a vágólapra
 ; general settings | skins page
-Skins
-Skin
-A skin használhatja a saját ikonokat
-A skin használhatja a saját bittérképeket
+Felszínek
+Felszín
+A felszín használhatja a saját ikonokat
+A felszín használhatja a saját bittérképeket
 ; default skin
 <alapértelmezett>
 MEGJEGYZÉS: Minden változtatás a Free Download Manager újraindítása után lépé életbe
@@ -1075,14 +1075,14 @@ Nincs aktív letöltés
 Play sound file when all downloads will be completed
 URL-ek listájának importja a vágólapról
 Jelszavak
-Site Manager opciók
+Weblapkezelõ beállításai
 ; Save password dialog
 Mentsem a jelszót?
 A Free Download Manager el tudja menteni a szerverhez tartozó jelszót, hogy letöltéskor ne kelljen mindig beírni
 Mentsem ezt a jelszót??
 Ne ajánlja fel a jelszó mentését
 ; Site Manager options | Passwords tab
-Használja a Site Manager-t a jelszavak tárolására
+Használja a weblapkezelõt a jelszavak tárolására
 Kérdezze meg, hogy mentse-e a jelszót vagy ne
 Ne ajánlja, hogy mentse a jelszavakat
 Kilépés elõtt törli az összes jelszót
@@ -1090,7 +1090,7 @@ Az összes jelszó törlése
 ; create new HTML Spider task
 Törölje a teljes letöltéseket automatikusan(ajánlott)
 Jelöld be ezt a dobozt, hogy a HTML Spider letöltései automatikusan törlõdjenek. Ez a nagy site-ok letöltését gyorsítja.
-A változtatások a Free Download Manager újraindítása után lépé életbe
+A változtatások a FDM újraindítása után lépnek életbe
 Új stílus
 Régi Stílus
 A könyvtár neve érvénytelen
@@ -1122,7 +1122,7 @@ Mutassa a link HTML kódját
 A link HTML kódja
 További példák
 Másolás a vágólapra
-Eltüntetés
+Elrejtés
 ; "Traffic usage mode has beed changed" window
 A forgalom használati módja változott
 Megváltoztattad a forgalom használati módját.\nA Free Download Manager három móddal rendelkezik:
@@ -1131,3 +1131,453 @@ Ebben az üzemmódban a Free Download Manager átlagos sebességgel tölt. A mód hasz
 Ebben az üzemmódban a Free Download Manager lassan. Ekkor a böngészés csak kicsit lassul le.
 ;
 Átnevezés az újraindításnál
+Kisebb számot adjon meg, mint %d
+; letöltések exportálása/importálása
+URL listafájlok
+Downloads Information List Files
+;
+Beállítások	exportálása
+;
+Szerver által megadott dátum használata a letöltött fájlokhoz
+A letöltött fájlok és a szerver ideje egyezzen meg
+Leírás létrehozása a letöltésekhez
+Generate a file with the name "*.dsc.txt" (* - name of a downloaded file) that will contain a small description of a downloaded file (comments + url + date). This file will be generated only for a download that has comments.
+This file has been downloaded from
+Ne használja a szerveren lévõ fájl dátumát
+This option allows you to increase the speed of starting an FTP download. Free Download Manager will use SIZE command instead of LIST.
+Ne mentse el a letöltések naplófájlját
+Enabling this option will make Free Download Manager start and shut down faster and will decrease the memory usage.
+;
+Letöltési elõzmények exportálása
+Összes bejegyzés exportálása
+Összes bejegyzés exportálása a listáról
+Kiválasztott bejegyzések exportálása
+Csak a befejezett letöltések bejegyzéseinek exportálása
+;
+HTML fájlok
+;
+Free Download Manager letöltési elõzmények
+Letöltés URL-je
+Downloaded to file
+Fájlméret
+Letöltés befejezve
+Letöltés törölve
+;
+Mentés helye
+Fájlméret
+Folytatható
+Ablak bezárása, ha a letöltés befejezõdött vagy megállt.
+Megnyitás
+Akarja újra látni ezt az ablakot?
+Igen, de ideiglenesen rejtse el a folyamatablakot ennél a letöltésnél
+Nem, ne mutassa a folyamatablakot egyik letöltésnél sem
+Igen, de ne mutassa a folyamatablakot ennél a letöltésnél
+Ha a SHIFT gombot lenyomva tartja törlés közben, akkor a késöbbiekben nem lehet visszaállítani a letörölt adatokat.\nBiztosan folytatja?
+Csoport kiválasztása
+Csoportok fõkönyvtárának kiválasztása
+Csoportok fõkönyvtárának kiválasztása.\nA változtatás csak az új letöltéseket érinti.
+Futó letöltések
+(üres)
+Letöltések szüneteltetése
+Letöltési folyamatablak megjelenítése
+Ha kiválasztja, akkor az FDM minden letöltésnél megjeleníti a letöltések részletes információit.
+; általános beállítások | egyéb oldal
+Idõtullépés a kapcsolatoknál
+Letöltés megnyitása
+Kérdezzen rá a leállítás típusára
+Confirmation timeout for "Tools | Hang-up when done" command.
+Confirmation timeout for "Tools | Exit when done" command.
+Confirmation timeout for "Tools | Shutdown computer when done" command.
+Confirmation timeout for launch downloaded file when download is completed.
+If checked, FDM will ask you for the type of shutdown for "Tools | Shutdown computer when done" command.
+Don't ask for confirmation
+; 5 seconds, 10 seconds, ...
+%d seconds
+Várjon a megerõsítésemre
+Ignore pages from this folder
+Download pages from this folder only
+Including subfolders
+Ignore all web pages located in this folder.
+Download pages located in this folder only and ignore other web pages.
+Check this option if you want HTML Spider to ignore (or download only) pages located in all subfolders of the specified folder.
+Here you should specify URL of the folder.\nExample: "http://site.com/docs/".
+Típus
+Kihagyás
+Only
+Set of numbers
+Assign
+Here you should specify the set of numbers for batch list.\nEx. 1-100, or 1-100s2w3.
+Click this button to assign the set of numbers using the dialog window.
+Single number
+Number
+Assign set of numbers
+Syntax error
+Archívum kicsomagolása
+Kicsomagolás
+Extraction
+Destination folder
+Failed to extract. File format is unknown.
+Traffic downloaded in this month\n(%s has been downloaded in the previous month)
+Total speed of downloading
+"Kapcsolat bontása, amikor kész" feladat letiltása
+When enabled, any Tools | "when done" task will be automatically disabled after execution. So it will be launched only once.
+; %s
+; 1st - fájl neve
+; 2nd, 3rd - fájl infók (méret + dátum).
+"%s" fájl már létezik.\n\nFelülírja a meglévõ fájlt\n(%s)\n\naz újjal\n(%s)?
+Igen, mindet
+Kihagyás
+Összes kihagyása
+Ismeretlen archívum
+Weboldal meglátogatása
+Csomagok telepítése
+Az FDM csak a ZIP, RAR és ARJ archívumokat támogatja.\nA támogatott archívumok listáját bõvítheti a kiegészítõ csomagok telepítésével (internetkapcsolat szükséges).
+FDM archive support pack
+Mozgatás fel
+Mozgatás le
+Kiválasztott letöltések mozgatása feljebb
+Kiválasztott letöltések mozgatása lejebb
+Fájl integritás ellenõrzése
+Some web sites provide special checksums for files available to download in order to allow users to make sure that the downloaded file is not damaged. You can enter this checksum here and FDM will check the file integrity.
+Algorithm
+Ellenõrzõösszeg
+Beillesztés vágólapról
+Ellenõrzés
+Calculating downloaded file's checksum...
+File integrity check succeeded
+File integrity check failed
+File integrity check has been completed successfully.\nThere are no errors found in the downloaded file.
+File integrity check has been completed.\nThere are errors found: the file was damaged during the downloading process. It is required to restart the downloading from the beginning.
+Don't show this window again if check succeeds
+Unable to find the executable file of the antivirus program you've chosen.\nPlease specify it yourself.
+Files' sizes are not equal
+Mentés mint:\n(Példa: fájl(*)(*A)(*a).txt)
+Invalid save as template specified.\nMake sure it corresponds to the template of URL.
+When done
+When done (all completed or in error)
+Programok
+Mi ez?
+Vélemények
+;
+Dear folk!
+Free Download Manager (FDM) is one of the most popular downloading applications in the world, having millions of active users, but now after it became social we want more!
+If you find it as useful and a must-have program as we do, we kindly ask you to help us spread the word by posting a link to it in your blog, website or personal space, such as Myspace/MSN.
+; %s will be replaced with "FDM buzz" 
+Official %s has been started on August 16, 2006. Our  goal is to make FDM the fastest-spreading Internet utility after FireFox!
+FDM buzz
+; %s will be replaced with "blog" 
+You can track FDM's progress in our %s.
+blog
+Thanks for your help in advance,\nthe Free Download Manager development team
+Don't show me this window again, I have a good memory.
+Join the buzz
+No, Thank you
+FDM Közösség
+Váltás a "Véleményekre" a letöltés után
+Ha engedélyezi, akkor a "Vélemények" fül automatikusan megjelnik a letöltés befejezése után.
+Internet Explorer hálózati azonosításának módosítása
+If enabled this will instruct web sites you browse that the Free Download Manager is installed on your program. However using this option may result in blocking of some sites.
+Veszélyes?
+Check if somebody of Free Download Manager's users reported about this download that it contains virus/adware/spyware/etc.
+Rendben, a FDM felhasználói közül senki sem jelentette, hogy ez a fájl kártékony lenne.\n\nEz nem garantálja a fájl vírusmentességét, ezért ajánlott letöltés után leellenõrizni a fájlt.
+; keep all %xxx, \n as is.
+There are %d of %d of Free Download Manager's users reported that this download is malicious.\nAverage rating for this download is %.*g.\n\nShow opinions about this download?
+Fájlok ellenõrzése letöltés elõtt, nehogy kártékony programok legyenek
+Use this option to get FDM check automatically, before the downloading, if somebody of users reported about this download that it is malicious.
+Vélemények megjelenítése letöltés közben
+If enabled, FDM will activate "Opinions" tab automatically and show opinions about download at the downloading.
+Checking if download is malicious (see options to disable this)
+OK, nobody reported that it is malicious
+Warning! Somebody reported that this download is malicious
+Close
+Loading
+Don't download this
+Letöltések átmeneti tárazása (kevesebb lemezmûvelet)
+If enabled, FDM will use internal cache buffer with the size you specified for operations of writing the downloaded data. This will reduce the number of using times of your HDD. This may increase the speed of downloading for high-speed connections.\nHowever because of downloaded data is not written to HDD immediately it will required to re-download this data again on some computer failure (at worst of size you specified).\nRecommended for the high-speed connections.
+Can't install SeaMonkey (Mozilla Suite) monitoring
+Can't uninstall SeaMonkey (Mozilla Suite) monitoring
+Check this box if you want FDM to catch clicks in Mozilla Firefox browser
+Check this box if you want FDM to catch clicks in SeaMonkey (Mozilla Suite) browser
+Letöltés indítása a böngszõvel, ha az FDM-el nem engedélyezem
+Check this box if you want your browser to download file when you press Cancel in the "Create download" dialog
+FDM hozzáadása a böngészõ környezeti menüjéhez
+Check this box to add items "Download with Free Download Manager" and "Download web site with Free Download Manager" to the browser context menu (menu appears when you right click)
+Select menu items to display in the browser context menu
+Can't install Firefox monitoring
+Fájlok áthelyezése
+Speed is too low. Restarting section...
+Újraindítás, ha a sebesség túl lassú (X percen keresztül):
+Restart section at the dramatic decrease of the speed of downloading.
+Would you like to see such download progress windows again?
+Sorry, this service is currently unavailable. Please try again later.
+Mozgatás a lista tetejére
+Mozgatás a lista aljára
+Elhelyezés a várósor tetején
+Check this option if you would like download to be placed at the top of the list of downloads.
+Monitoring in Firefox browser can't be enabled due to FlashGot extension is installed.\nYou should uninstall FlashGot first.
+Enable
+Disable
+Switch
+If the Pause all downloads mode is enabled it will be disabled, else it will be enabled.
+Official %s will be started on August 16, 2006. Our  goal is to make FDM the fastest-spreading Internet utility after FireFox!
+Frissítések automatikus letöltése és telepítése
+Csak értesítést kérek az elérhetõ frissítésekrõl
+Automatikus frissítések kikapcsolása
+Now monitoring is enabled in %s.
+Bejegyzés törlése
+Biztosan törli?
+There is no write access to Free Download Manager's folder.\nYou should grant write access in order to allow Free Download Manager to save its data files, othewise all data will be losed after the restart of Free Download Manager.
+This small box allows you to drag&&drop links from your browser into Free Download Manager.\nIt allows quickly show or hide Free Download Manager's window using mouse left button double-click.\n\nIn order to hide it right click on it and uncheck "Drop box" menu item.
+Free Download Manager's Drop box
+Figyelmeztetések tiltása a kötegelt letöltéseknél
+Check this options in order to disable all (balloon, sounds) notifications for downloads created by "%s" command.
+Kihagyottak listája
+Specify list of extensions of files and the list of sites that should not be monitored.
+Ne fogadjon letöltést a következõ oldalakról (elválasztás szóközzel):
+Free Download Manager will not monitor downloads from the sites specified in this list. Specify domain names here (e.g. "site.com"). You may use '*' symbols.
+Warning!\nThere was an error occured while trying to perform virus check.\nWould you like to launch downloaded file anyway?
+Integritás
+Integritás ellenõrzése, ha egy fájl letöltõdött
+In order to perform the integrity check Free Download Manager should know the valid checksum of the file. In most cases you should provide it for the each download.
+Ha az ellenõzés meghíusul
+Valid checksum of this file
+Ne tegyen semmit
+Specify here what FDM should do when the integrity check failed.\nAsk - FDM will ask you what to do.\nRestart - FDM will restart this download from the beginning.\nDo nothing - FDM will add the record about fail check to the log of downloading and will not do anything more.
+Performing integrity check...
+Integrity check succeeded.
+Integrity check failed!
+Specify integrity check algorithm.
+Valid checksum
+Result checksum
+; zip preview window
+Check/uncheck all
+; group's properties dialog
+Macroses
+szerver neve (pl.: "freedownloadmanager.org")
+path to the downloading file on a server
+current year
+current month (number from 1 to 12)
+current day
+; don't translate "%year%-%month%-%day%" here
+equivalent to "%year%-%month%-%day%"
+;
+Mozilla Firefox alapján
+FDM will take proxy settings from the Firefox
+; new download settings
+Use this group
+; Downloads -> Schedule ->
+Indítás
+Leállítás
+Ütemezett letöltések indítása
+Ütemezett letöltések leállítása
+;
+; downloads that not completed or were completed recently
+Not completed+Recent
+Parent group
+;
+; create new download dialog -> set output folder as default dialog
+ez legyen az összes letöltés könyvtára is
+; %s - place of name of the group. don't change this
+Szeretné, hogy ez legyen az állandó mentési könyvtára a(z) "%s" csoportnak?
+;
+;
+Rub out the list of the downloads
+Feltöltések
+Fájlok feltöltése
+Feltöltés indítása
+Feltöltés leállítása
+Feltöltés ütemezése
+Kiválasztott feltöltések mozgatása fel
+Kiválasztott feltöltések mozgatása le
+Feltöltve
+Feltöltések listája
+Retieving destination upload URL from the base server...
+Megszakítás
+; outlook express: view | insert file | ...
+As attachment
+As link (upload)
+Folder
+;
+Fájlok hozzáadása
+Könyvtár hozzáadása
+Bittorrent
+Bittorrent protokol engedélyezése
+Feltöltési forgalom korlátozása
+Feltöltési kapcsolatok korlátozása
+Engedélyezett porttartomány
+to
+DHT engedélyezése
+Enable/disable Bittorrent protocol support. However if there are any Bittorrent downloads in the list on in the Recycle Bin of FDM, Bittorrent protocol will not be disabled completely.
+Limit the maximum total speed of upload connections. This is not recommended for Bittorrent protocol and may reduce your download speed.
+Limit the maximum number of total upload connections. Setting the too low number may result in decreasing of your downloading speed.
+Specify here the range of ports that FDM will use for upload connections.
+Enable DHT extension
+Fájlnév
+Login is required for the tracker
+Add Bittorrent download
+An error occured while trying to process this torrent file.
+Torrent file
+It seems that you would like to download a .torrent file. It's required to enable Bittorrent support in Free Download Manager to do this.\n\nWould you like to enable Bittorrent?
+Retype your passwords: passwords you've typed does not match.
+Specify the files you would like to upload.
+Upload properties
+Metalink info file has been detected. Continue downloading.
+Bittorrent info file has been detected. Continue downloading.
+Failed to access the files on the disk.
+Connecting tracker...
+Failed to receive the valid response from the tracker.
+Response has been received from the tracker successfully.
+Hash check of the part of download has failed. Redownloading it...
+Teljes sávszélességfoglalás engedélyezése ennek a letöltésnek
+Disable Free Download Manager automatic loading at Windows startup?
+Sorry, FDM Community service is currently unavailable. Please try again later.
+Name of the file should not contain any of \ / : * ? " < > | symbols. Please enter another name.
+Name of the folder should not contain any of : * ? " < > | symbols. Please enter another name.
+Gyûjtõkosár testreszabása...
+Átlátszóság
+Adatok
+Összes adatfájl tárolása a jelenlegi felhasználó könyvtárában
+Fájlok tárolássa ebben a könyvtárban
+Changes will be applied after the restart of Free Download Manager.
+Letöltési folyamatablak megjelenítése
+Portable verzió létrehozása
+A Portable Free Download Manager létrehozásával nem lesz többé szüksége a program telepítésére és beállítására minden egyes számítógépen.\n\nA portable verziót hordozható eszközökre is ráteheti, így bármely számítógépen használni tudja.\n\nHa elindítja a portable változatot, akkor az FDM automatikusan végrehajtja a szükséges beállításokat, hogy együttmûködjön a böngészõkkel és a rendszerrel, majd kikapcsoláskor minden beállítást töröl, mintha nem is használta volna a programot.\n\nVálassza ki a portable verzió létrehozásának helyét (ez lehet egy pendrive is).
+Integration
+Free Download Manager társítása a .torrent fájlokkal
+Az új letöltésekhez ezt a csoportot használja
+Mindig használja ezt a csoportot, valamint emlékezzen az utoljára használt mappára
+Flash video letöltése
+Video letöltése a Free Download Manager-rel
+Ez az oldal nem támogatott. Tekintse meg a támogatott oldalak listáját.
+View in Downloads window
+This is the page with flash video. Downloading flash video...
+Konvertálás...
+Konvertálás
+Konvertálási beállítások
+Fájlformátum
+Video méret
+; video quality
+Minõség
+Nagyon gyenge
+Gyenge
+Normál
+Átlagos
+Jó
+Nagyon jó
+;
+AVI using MPEG-4 (*.avi)
+AVI using XVID (*.avi)
+Nincs változtatás
+Video bitráta
+Audio bitráta
+Emlékezzen a beállításokra
+;
+Flash video letöltése
+Automatikus konvertálja át a letöltött videot a megadott formátumba
+Haladó beállítások
+Támogatott oldalak listája
+; used in "create flash video download" window
+Pl.:
+Next attempt to connect to tracker in %d seconds
+Preparing files on the disk... This may take several minutes
+State
+Preparing files on the disk...
+MP4 for iPod/PSP (MPEG4 + AAC, *.mp4)
+Média elõnézet/konvertálás
+Fájl konvertálása
+Automatikus váltás erre a fülre
+;keep "\n\n%s\n" as is
+Media file has been converted successfully and stored in\n\n%s\n.
+Failed to convert media file\n\n%s.
+Új letöltések csoportosítása
+Info hash
+Peers
+Client
+Pieces
+Tracker
+Tracker status
+Upload speed
+Bytes uploaded
+Share rating
+Wasted byte count
+Torrent file URL
+Are you sure?\nThis will restart the download from the beginning.
+Traffic used ("downloaded"; "uploaded") in this month\n(%s has been used in the previous month)
+Total speed ("download"; "upload")
+Feltöltendõ fájlok
+Csomag neve
+Tömörítés
+Jelszó beállítása a letöltéshez
+Újra
+Fájlok megtartása
+Feltételezett letöltések száma
+Linkek létrehozása a saját katalógusban is
+Bõvebb információk megadása (opcionális)
+Leírás
+Címkék
+Saját név
+Saját e-mail cím
+Fogadó e-mail címe
+Kevesebb, mint 10
+10 és 100 között
+Több, mint 100
+2 napig
+7 napig
+1 hónapig
+;compression methods
+Nincs
+Gyors
+Átlagos
+Legjobb
+Uploader settings
+Integrálás...
+Környezeti menübe
+"Küldés..." menübe
+Use simple upload menu
+Feltölthetõ legkisebb fájlméret
+HTTP proxy settings
+Upload activation
+Upload requires activation. This is required in order to protect our server from automatic uploads. Enter activation code.
+Connecting to upload server
+Successfully connected to upload server
+File has been uploaded to server successfully
+File upload was stopped
+Creating zip archive of uploading files...
+Failed to create zip archive
+Zip archive has been created successfully
+Sending the request to server
+Sending information about this upload to server
+Information has been sent
+Failed to send information about this upload to server
+Activating upload...
+Upload has been activated successfully
+Failed to activate upload
+Upload file was changed on a disk
+Unexpected error
+Calculating checksum...
+; "I agree to terms" string in two lines
+Elfogadom a
+felhasználási feltételeket
+You should agree to terms.
+Nem sikerült a frissítések ellenõrzése
+Új verzió érhetõ el. Ez egy szükséges frissítés.\nSzeretné most frissítéseni a programot?
+Frissítse a Free Download Manager-t
+Indítsa újra a Free Download Manager-t
+Kérjen megerõsítést a mellékletek feltöltésére
+Attach to the letter (slow)...
+Upload and insert link (lightning fast)...
+An error occurred while trying to start uploading. Check your connection or try again later.
+You have attached large file(s).\nDue to many reasons it's recommended not to send large files as attachments, but upload files and send links to them.\n\nWould you like to upload?
+Upload is recommended
+Integráció beállításai
+A(z) %s feltöltése befejezõdött.\nA letöltési link a következõ:
+Méret
+Megnyitás a böngészõben
+A FDM jelenlegi verziója nem használható fájlok feltöltésére. A program frissítése szükséges.
+A Free Upload Manager régen nem volt használva. A program frissítése szükséges. Látogassa meg a freedownloadmanager.org weboldalt.
+Túl hosszú bemenet.
+Feltöltési segéd integritásának beállításai
+Free Upload Manager integration settings
+Feltöltés
+Frissítés letöltése...
+Seed engedélyezése

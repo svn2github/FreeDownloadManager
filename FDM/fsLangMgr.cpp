@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "fsLangMgr.h"
 
 #ifdef _DEBUG
@@ -32,7 +32,7 @@ BOOL fsLangMgr::Initialize()
 
 	WIN32_FIND_DATA wfd;
 
-	m_strLngFolder = ((CDataStretcherApp*)AfxGetApp ())->m_strAppPath;
+	m_strLngFolder = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
 	m_strLngFolder += "Language\\";
 
 	CString strMask = m_strLngFolder;

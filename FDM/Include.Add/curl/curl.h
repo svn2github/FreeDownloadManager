@@ -31,7 +31,13 @@ extern "C" {
 #define CURL_EXTERN  __declspec(dllimport)
 #endif
 #else
+
+#ifdef CURL_HIDDEN_SYMBOLS
+
+#define CURL_EXTERN CURL_EXTERN_SYMBOL
+#else
 #define CURL_EXTERN
+#endif
 #endif  
 
 #if (defined(_MSC_VER) && !defined(__POCC__)) || (defined(__LCC__) && defined(WIN32))
@@ -81,6 +87,44 @@ extern "C" {
 #undef FILESIZEBITS
 #endif
 
+#if defined(_WIN32) && !defined(WIN32)
+
+#define WIN32 1
+#endif
+
+#if defined(WIN32) && !defined(_WIN32_WCE) && !defined(__GNUC__) && \
+  !defined(__CYGWIN__) || defined(__MINGW32__)
+#if !(defined(_WINSOCKAPI_) || defined(_WINSOCK_H))
+
+#include <winsock2.h>
+#endif
+#else 
+
+#if defined(_AIX) || defined(__NOVELL_LIBC__) || defined(__NetBSD__) || defined(__minix)
+#include <sys/select.h>
+#endif
+
+#ifndef _WIN32_WCE
+#include <sys/socket.h>
+#endif
+#ifndef __WATCOMC__
+#include <sys/time.h>
+#endif
+#include <sys/types.h>
+#endif
+
+#ifndef curl_socket_typedef
+
+#ifdef WIN32
+typedef SOCKET curl_socket_t;
+#define CURL_SOCKET_BAD INVALID_SOCKET
+#else
+typedef int curl_socket_t;
+#define CURL_SOCKET_BAD -1
+#endif
+#define curl_socket_typedef
+#endif 
+
 struct curl_httppost {
   struct curl_httppost *next;       
   char *name;                       
@@ -109,8 +153,10 @@ typedef int (*curl_progress_callback)(void *clientp,
                                       double ultotal,
                                       double ulnow);
 
+#ifndef CURL_MAX_WRITE_SIZE
   
 #define CURL_MAX_WRITE_SIZE 16384
+#endif
 
 typedef size_t (*curl_write_callback)(char *buffer,
                                       size_t size,
@@ -121,7 +167,16 @@ typedef size_t (*curl_write_callback)(char *buffer,
 typedef size_t (*curl_read_callback)(char *buffer,
                                       size_t size,
                                       size_t nitems,
-                                      void *instream); 
+                                      void *instream);
+
+typedef enum  {
+  CURLSOCKTYPE_IPCXN, 
+  CURLSOCKTYPE_LAST   
+} curlsocktype;
+
+typedef int (*curl_sockopt_callback)(void *clientp,
+                                     curl_socket_t curlfd,
+                                     curlsocktype purpose);
 
 #ifndef CURL_NO_OLDIES
   
@@ -198,9 +253,10 @@ typedef enum {
   CURLE_HTTP_RETURNED_ERROR,     
   CURLE_WRITE_ERROR,             
   CURLE_MALFORMAT_USER,          
-  CURLE_FTP_COULDNT_STOR_FILE,   
+  CURLE_UPLOAD_FAILED,           
   CURLE_READ_ERROR,              
   CURLE_OUT_OF_MEMORY,           
+  
   CURLE_OPERATION_TIMEOUTED,     
   CURLE_FTP_COULDNT_SET_ASCII,   
   CURLE_FTP_PORT_FAILED,         
@@ -248,8 +304,17 @@ typedef enum {
   CURLE_TFTP_UNKNOWNID,          
   CURLE_TFTP_EXISTS,             
   CURLE_TFTP_NOSUCHUSER,         
+  CURLE_CONV_FAILED,             
+  CURLE_CONV_REQD,               
+  CURLE_SSL_CACERT_BADFILE,      
+  CURLE_REMOTE_FILE_NOT_FOUND,   
+  CURLE_SSH,                     
+
+  CURLE_SSL_SHUTDOWN_FAILED,     
   CURL_LAST 
-} CURLcode;
+} CURLcode; 
+
+typedef CURLcode (*curl_conv_callback)(char *buffer, size_t length);
 
 typedef CURLcode (*curl_ssl_ctx_callback)(CURL *curl,    
                                           void *ssl_ctx, 
@@ -261,6 +326,7 @@ typedef CURLcode (*curl_ssl_ctx_callback)(CURL *curl,
 
 #define CURLE_HTTP_NOT_FOUND CURLE_HTTP_RETURNED_ERROR
 #define CURLE_HTTP_PORT_FAILED CURLE_INTERFACE_FAILED
+#define CURLE_FTP_COULDNT_STOR_FILE CURLE_UPLOAD_FAILED
 #endif
 
 typedef enum {
@@ -276,6 +342,14 @@ typedef enum {
 #define CURLAUTH_NTLM         (1<<3)  
 #define CURLAUTH_ANY ~0               
 #define CURLAUTH_ANYSAFE (~CURLAUTH_BASIC)
+
+#define CURLSSH_AUTH_ANY       ~0     
+#define CURLSSH_AUTH_NONE      0      
+#define CURLSSH_AUTH_PUBLICKEY (1<<0) 
+#define CURLSSH_AUTH_PASSWORD  (1<<1) 
+#define CURLSSH_AUTH_HOST      (1<<2) 
+#define CURLSSH_AUTH_KEYBOARD  (1<<3) 
+#define CURLSSH_AUTH_DEFAULT CURLSSH_AUTH_ANY
 
 #ifndef CURL_NO_OLDIES 
 
@@ -294,6 +368,13 @@ typedef enum {
   CURLFTPSSL_ALL,     
   CURLFTPSSL_LAST     
 } curl_ftpssl; 
+
+typedef enum {
+  CURLFTPSSL_CCC_NONE,    
+  CURLFTPSSL_CCC_PASSIVE, 
+  CURLFTPSSL_CCC_ACTIVE,  
+  CURLFTPSSL_CCC_LAST     
+} curl_ftpccc; 
 
 typedef enum {
   CURLFTPAUTH_DEFAULT, 
@@ -321,7 +402,7 @@ typedef enum {
 
 #if defined(__STDC__) || defined(_MSC_VER) || defined(__cplusplus) || \
   defined(__HP_aCC) || defined(__BORLANDC__) || defined(__LCC__) || \
-  defined(__POCC__)
+  defined(__POCC__) || defined(__SALFORDC__) || defined(__HIGHC__)
   
 #define CURL_ISOCPP
 #else
@@ -502,7 +583,9 @@ typedef enum {
   CINIT(INTERFACE, OBJECTPOINT, 62),
 
   
-  CINIT(KRB4LEVEL, OBJECTPOINT, 63),
+  CINIT(KRBLEVEL, OBJECTPOINT, 63),
+  
+#define CURLOPT_KRB4LEVEL CURLOPT_KRBLEVEL
 
   
   CINIT(SSL_VERIFYPEER, LONG, 64),
@@ -675,19 +758,12 @@ typedef enum {
   CINIT(TCP_NODELAY, LONG, 121),
 
   
-
-  
-  CINIT(SOURCE_USERPWD, OBJECTPOINT, 123),
-
   
   
   
-
   
-  CINIT(SOURCE_PREQUOTE, OBJECTPOINT, 127),
-
   
-  CINIT(SOURCE_POSTQUOTE, OBJECTPOINT, 128),
+  
 
   
   CINIT(FTPSSLAUTH, LONG, 129),
@@ -696,10 +772,7 @@ typedef enum {
   CINIT(IOCTLDATA, OBJECTPOINT, 131),
 
   
-  CINIT(SOURCE_URL, OBJECTPOINT, 132),
-
   
-  CINIT(SOURCE_QUOTE, OBJECTPOINT, 133),
 
   
   CINIT(FTP_ACCOUNT, OBJECTPOINT, 134),
@@ -725,6 +798,52 @@ typedef enum {
   
   CINIT(CONNECT_ONLY, LONG, 141),
 
+  
+  CINIT(CONV_FROM_NETWORK_FUNCTION, FUNCTIONPOINT, 142),
+
+  
+  CINIT(CONV_TO_NETWORK_FUNCTION, FUNCTIONPOINT, 143),
+
+  
+  CINIT(CONV_FROM_UTF8_FUNCTION, FUNCTIONPOINT, 144),
+
+  
+  
+  CINIT(MAX_SEND_SPEED_LARGE, OFF_T, 145),
+  CINIT(MAX_RECV_SPEED_LARGE, OFF_T, 146),
+
+  
+  CINIT(FTP_ALTERNATIVE_TO_USER, OBJECTPOINT, 147),
+
+  
+  CINIT(SOCKOPTFUNCTION, FUNCTIONPOINT, 148),
+  CINIT(SOCKOPTDATA, OBJECTPOINT, 149),
+
+  
+  CINIT(SSL_SESSIONID_CACHE, LONG, 150),
+
+  
+  CINIT(SSH_AUTH_TYPES, LONG, 151),
+
+  
+  CINIT(SSH_PUBLIC_KEYFILE, OBJECTPOINT, 152),
+  CINIT(SSH_PRIVATE_KEYFILE, OBJECTPOINT, 153),
+
+  
+  CINIT(FTP_SSL_CCC, LONG, 154),
+
+  
+  CINIT(TIMEOUT_MS, LONG, 155),
+  CINIT(CONNECTTIMEOUT_MS, LONG, 156),
+
+  
+  CINIT(HTTP_TRANSFER_DECODING, LONG, 157),
+  CINIT(HTTP_CONTENT_DECODING, LONG, 158),
+
+  
+  CINIT(NEW_FILE_PERMS, LONG, 159),
+  CINIT(NEW_DIRECTORY_PERMS, LONG, 160),
+
   CURLOPT_LASTENTRY 
 } CURLoption;
 
@@ -739,18 +858,6 @@ typedef enum {
 #define CURLOPT_HEADERDATA CURLOPT_WRITEHEADER
 
 #ifndef CURL_NO_OLDIES 
-#define CURLOPT_HTTPREQUEST    -1
-#define CURLOPT_FTPASCII       CURLOPT_TRANSFERTEXT
-#define CURLOPT_MUTE           -2
-#define CURLOPT_PASSWDFUNCTION -3
-#define CURLOPT_PASSWDDATA     -4
-#define CURLOPT_CLOSEFUNCTION  -5
-
-#define CURLOPT_SOURCE_HOST    -6
-#define CURLOPT_SOURCE_PATH    -7
-#define CURLOPT_SOURCE_PORT    -8
-#define CURLOPT_PASV_HOST      -9
-
 #else
 
 #undef CURLOPT_DNS_USE_GLOBAL_CACHE 
@@ -863,15 +970,31 @@ CURL_EXTERN CURLFORMcode curl_formadd(struct curl_httppost **httppost,
                                       struct curl_httppost **last_post,
                                       ...); 
 
+typedef size_t (*curl_formget_callback)(void *arg, const char *buf, size_t len); 
+
+CURL_EXTERN int curl_formget(struct curl_httppost *form, void *arg,
+                             curl_formget_callback append);
+
 CURL_EXTERN void curl_formfree(struct curl_httppost *form); 
 
 CURL_EXTERN char *curl_getenv(const char *variable); 
 
 CURL_EXTERN char *curl_version(void); 
 
-CURL_EXTERN char *curl_escape(const char *string, int length); 
+CURL_EXTERN char *curl_easy_escape(CURL *handle,
+                                   const char *string,
+                                   int length); 
 
-CURL_EXTERN char *curl_unescape(const char *string, int length); 
+CURL_EXTERN char *curl_escape(const char *string,
+                              int length);  
+
+CURL_EXTERN char *curl_easy_unescape(CURL *handle,
+                                     const char *string,
+                                     int length,
+                                     int *outlength); 
+
+CURL_EXTERN char *curl_unescape(const char *string,
+                                int length); 
 
 CURL_EXTERN void curl_free(void *p); 
 
@@ -936,9 +1059,10 @@ typedef enum {
   CURLINFO_SSL_ENGINES      = CURLINFO_SLIST  + 27,
   CURLINFO_COOKIELIST       = CURLINFO_SLIST  + 28,
   CURLINFO_LASTSOCKET       = CURLINFO_LONG   + 29,
+  CURLINFO_FTP_ENTRY_PATH   = CURLINFO_STRING + 30,
   
 
-  CURLINFO_LASTONE          = 29
+  CURLINFO_LASTONE          = 30
 } CURLINFO; 
 
 #define CURLINFO_HTTP_CODE CURLINFO_RESPONSE_CODE
@@ -1016,10 +1140,11 @@ typedef enum {
   CURLVERSION_FIRST,
   CURLVERSION_SECOND,
   CURLVERSION_THIRD,
+  CURLVERSION_FOURTH,
   CURLVERSION_LAST 
 } CURLversion; 
 
-#define CURLVERSION_NOW CURLVERSION_THIRD
+#define CURLVERSION_NOW CURLVERSION_FOURTH
 
 typedef struct {
   CURLversion age;          
@@ -1039,6 +1164,14 @@ typedef struct {
 
   
   const char *libidn;
+
+  
+
+  
+  int iconv_ver_num;
+
+  const char *libssh_version; 
+
 } curl_version_info_data;
 
 #define CURL_VERSION_IPV6      (1<<0)  
@@ -1052,7 +1185,8 @@ typedef struct {
 #define CURL_VERSION_SPNEGO    (1<<8)  
 #define CURL_VERSION_LARGEFILE (1<<9)  
 #define CURL_VERSION_IDN       (1<<10) 
-#define CURL_VERSION_SSPI      (1<<11)  
+#define CURL_VERSION_SSPI      (1<<11) 
+#define CURL_VERSION_CONV      (1<<12)  
 
 CURL_EXTERN curl_version_info_data *curl_version_info(CURLversion); 
 

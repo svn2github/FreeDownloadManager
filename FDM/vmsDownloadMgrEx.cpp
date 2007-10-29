@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "vmsDownloadMgrEx.h"
 
 #ifdef _DEBUG
@@ -170,12 +170,12 @@ UINT64 vmsDownloadMgrEx::GetSSFileSize()
 		return m_pBtMgr->GetTotalFilesSize ();
 }
 
-void vmsDownloadMgrEx::GetSectionInfo(int nIndex, vmsSectionInfo *sect)
+void vmsDownloadMgrEx::GetSectionInfo(int nIndex, vmsSectionInfo *sect, BOOL bNoCacheAccounting)
 {
 	if (m_pMgr)
 	{
 		fsSection s;
-		m_pMgr->GetDownloader ()->GetSectionInfo (nIndex, &s);
+		m_pMgr->GetDownloader ()->GetSectionInfo (nIndex, &s, bNoCacheAccounting);
 		sect->uDStart = s.uDStart;
 		sect->uDCurrent = s.uDCurrent;
 		sect->uDEnd = s.uDEnd;
@@ -404,15 +404,6 @@ BOOL vmsDownloadMgrEx::LoadState(LPBYTE lpBuffer, LPDWORD lpdwSize, WORD wVer)
 	return TRUE;
 }
 
-BOOL vmsDownloadMgrEx::IsFileNotInitOrIsMultiFile()
-{
-	if (m_pMgr)
-		return m_pMgr->IsFileInit () == FALSE;
-	else
-		return m_pBtMgr->get_FileCount () > 1;
-
-}
-
 BOOL vmsDownloadMgrEx::IsBittorrent()
 {
 	return m_pBtMgr != NULL;
@@ -422,28 +413,37 @@ void vmsDownloadMgrEx::GetSplittedSectionsList(std::vector <vmsSectionInfo> &v)
 {
 	try{
 
-	v.clear ();
-	size_t num = GetNumberOfSections ();
-	vmsSectionInfo *sectLast = NULL;
-
-	for (size_t i = 0; i < num; i++)
-	{
-		vmsSectionInfo sect;
-		GetSectionInfo (i, &sect);
-		if (sectLast != NULL && 
+		std::vector <vmsSectionInfo> vBtSects;
+		if (m_pBtMgr)
+			m_pBtMgr->GetSectionsInfo (vBtSects);
+		
+		v.clear ();
+		size_t num = GetNumberOfSections ();
+		vmsSectionInfo *sectLast = NULL;
+		
+		for (size_t i = 0; i < num; i++)
+		{
+			vmsSectionInfo sect;
+			if (m_pBtMgr)
+				sect = vBtSects [i];
+			else
+				GetSectionInfo (i, &sect);
+			if (sectLast != NULL && 
 				(sectLast->uDCurrent == sect.uDStart || sectLast->uDCurrent+1 == sect.uDStart))
-		{
-			sectLast->uDEnd = sect.uDEnd;
-			sectLast->uDCurrent = sect.uDCurrent;
+			{
+				sectLast->uDEnd = sect.uDEnd;
+				sectLast->uDCurrent = sect.uDCurrent;
+			}
+			else
+			{
+				v.push_back (sect);
+				sectLast = v.end () - 1;
+			}
 		}
-		else
-		{
-			v.push_back (sect);
-			sectLast = v.end () - 1;
-		}
-	}
-
-	}catch (...) {v.clear ();}
+		
+	}catch (...) {v.clear ();}	
+	
+	
 }
 
 BOOL vmsDownloadMgrEx::IsReservingDiskSpace()
@@ -451,7 +451,7 @@ BOOL vmsDownloadMgrEx::IsReservingDiskSpace()
 	if (m_pMgr)
 		return (m_pMgr->get_State () & DS_RESERVINGSPACE) != 0;
 	else
-		return (m_pBtMgr->get_State () & BTDSE_ALLOCATING) != 0 && m_pBtMgr->IsRunning ();
+		return m_pBtMgr->get_State () == BTDSE_ALLOCATING;
 }
 
 int vmsDownloadMgrEx::get_ReservingDiskSpaceProgress()
@@ -459,5 +459,34 @@ int vmsDownloadMgrEx::get_ReservingDiskSpaceProgress()
 	if (m_pMgr)
 		return m_pMgr->get_ReservingDiskSpaceProgress ();
 	else
-		return -1;
+		return m_pBtMgr->get_CurrentTaskProgress ();
+}
+
+void vmsDownloadMgrEx::Do_OpenFolder()
+{
+	if (m_pMgr && m_pMgr->IsFileInit () == FALSE)
+	{
+		ShellExecute (NULL, "explore", get_OutputFilePathName (), NULL, NULL, SW_SHOW);
+	}
+	else
+	{
+		CString strFileName = get_OutputFilePathName ();
+
+		if (m_pBtMgr && m_pBtMgr->get_FileCount () > 1)
+			strFileName += m_pBtMgr->get_RootFolderName ();
+
+		if (GetFileAttributes (strFileName) == DWORD (-1))
+		{
+			char szPath [MY_MAX_PATH];
+			
+			fsGetPath (strFileName, szPath);
+			ShellExecute (NULL, "explore", szPath, NULL, NULL, SW_SHOW);
+		}
+		else
+		{
+			CString strCmd;
+			strCmd.Format ("/select,\"%s\"", strFileName);
+				ShellExecute (NULL, "open", "explorer.exe", strCmd, NULL, SW_SHOW);
+		}
+	}
 }

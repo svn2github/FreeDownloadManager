@@ -29,6 +29,17 @@
 
 #ifdef ENABLE_CURLX_PRINTF
 
+# undef printf
+# undef fprintf
+# undef sprintf
+# undef snprintf
+# undef vprintf
+# undef vfprintf
+# undef vsprintf
+# undef vsnprintf
+# undef aprintf
+# undef vaprintf
+
 # define printf curlx_mprintf
 # define fprintf curlx_mfprintf
 # define sprintf curlx_msprintf

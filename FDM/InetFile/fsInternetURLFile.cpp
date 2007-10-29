@@ -27,6 +27,14 @@ fsInternetURLFile::fsInternetURLFile()
 	m_bUseFile2 = false;
 
 	InitializeCriticalSection (&m_cs);
+
+	m_ftpConnection.SetDialogFunc (_InetFileDialogFunc, this, NULL);
+	m_httpConnection.SetDialogFunc (_InetFileDialogFunc, this, NULL);
+	m_ftpFile.SetDialogFunc (_InetFileDialogFunc, this, NULL);
+	m_httpFile.SetDialogFunc (_InetFileDialogFunc, this, NULL);
+	m_ifile2.SetDialogFunc (_InetFileDialogFunc, this, NULL);
+
+	m_bCatchFromServerResponse = FALSE;
 }
 
 fsInternetURLFile::~fsInternetURLFile()
@@ -177,55 +185,53 @@ fsInternetResult fsInternetURLFile::QuerySize(INTERNET_SCHEME scheme, LPCSTR psz
 
 	fsInternetResult ir;
 
-	switch (scheme)
+	if (scheme == INTERNET_SCHEME_HTTP || scheme == INTERNET_SCHEME_HTTPS)
 	{
-		case INTERNET_SCHEME_HTTP:
-		case INTERNET_SCHEME_HTTPS:
-			m_pServer = &m_httpConnection;
-			m_pFile = &m_httpFile;
-			if (bSendHTTPBasicAuthImmediately)
-				FormHttpBasicAuthHdr (pszUser, pszPassword);
-			break;
-
-		case INTERNET_SCHEME_FTP:
-			m_pServer = &m_ftpConnection;
-			m_pFile = &m_ftpFile;
-			break;
-
-		case INTERNET_SCHEME_FILE:
-			m_pServer = NULL;
-			m_pFile = &m_localFile;
-			break;
-
-		default:
-			return IR_BADURL;
-	}
-
-	m_httpFile.UseSecure (scheme == INTERNET_SCHEME_HTTPS);
-
-	if (m_pServer)
-	{
-		ir = m_pServer->Initialize (m_pSession);
-		if (ir != IR_SUCCESS)
-			return ir;
-
-		ir = m_pServer->Connect (pszHostName, pszUser, pszPassword, port);
-		if (ir != IR_SUCCESS)
-		{
-			m_pszLastError = m_pServer->GetLastError ();
-			return ir;
-		}
-
-		ir = m_pFile->Initialize (m_pServer);
-		if (ir != IR_SUCCESS)
-			return ir;
+		ir = Open (scheme, pszHostName, pszUser, pszPassword, port, pszPath, 0, bSendHTTPBasicAuthImmediately);
 	}
 	else
 	{
-		m_localFile.Initialize (pszHostName);
+		switch (scheme)
+		{
+			case INTERNET_SCHEME_FTP:
+				m_pServer = &m_ftpConnection;
+				m_pFile = &m_ftpFile;
+				break;
+
+			case INTERNET_SCHEME_FILE:
+				m_pServer = NULL;
+				m_pFile = &m_localFile;
+				break;
+
+			default:
+				return IR_BADURL;
+		}
+
+		if (m_pServer)
+		{
+			ir = m_pServer->Initialize (m_pSession);
+			if (ir != IR_SUCCESS)
+				return ir;
+
+			ir = m_pServer->Connect (pszHostName, pszUser, pszPassword, port);
+			if (ir != IR_SUCCESS)
+			{
+				m_pszLastError = m_pServer->GetLastError ();
+				return ir;
+			}
+
+			ir = m_pFile->Initialize (m_pServer);
+			if (ir != IR_SUCCESS)
+				return ir;
+		}
+		else
+		{
+			m_localFile.Initialize (pszHostName);
+		}
+
+		ir = m_pFile->QuerySize (pszPath);
 	}
 
-	ir = m_pFile->QuerySize (pszPath);
 	if (ir != IR_SUCCESS)
 	{
 		m_pszLastError = m_pFile->GetLastError ();
@@ -235,15 +241,6 @@ fsInternetResult fsInternetURLFile::QuerySize(INTERNET_SCHEME scheme, LPCSTR psz
 	CloseHandle ();
 
 	return IR_SUCCESS;
-}
-
-void fsInternetURLFile::SetDialogFunc(fntInetFileDialogFunc pfn, LPVOID lp1, LPVOID lp2)
-{
-	m_ftpConnection.SetDialogFunc (pfn, lp1, lp2);
-	m_httpConnection.SetDialogFunc (pfn, lp1, lp2);
-	m_ftpFile.SetDialogFunc (pfn, lp1, lp2);
-	m_httpFile.SetDialogFunc (pfn, lp1, lp2);
-	m_ifile2.SetDialogFunc (pfn, lp1, lp2);
 }
 
 void fsInternetURLFile::FtpSetDontUseLIST(BOOL b)
@@ -360,11 +357,13 @@ fsInternetResult fsInternetURLFile::OpenEx(INTERNET_SCHEME scheme, LPCSTR pszHos
 		m_localFile.Initialize (pszHostName);
 	}
 
+	m_bCatchFromServerResponse = TRUE;
+
 	
 	ir = m_pFile->OpenEx (pszPath, uStartPosition, uUploadPartSize, uUploadTotalSize);
 	
 	bool bUseFile2 = false;
-	m_ifile2.Mute (TRUE);
+	m_ifile2.Mute (FALSE);
 
 	if (ir == IR_E_WININET_UNSUPP_RESOURCE)
 	{
@@ -382,6 +381,12 @@ fsInternetResult fsInternetURLFile::OpenEx(INTERNET_SCHEME scheme, LPCSTR pszHos
 
 	if (ir != IR_SUCCESS) 
 	{
+		if (m_strRespFromServer.IsEmpty () == FALSE)
+		{
+			Dialog (IFDD_FROMSERVER, m_strRespFromServer);
+			m_strRespFromServer = "";
+		}
+		m_bCatchFromServerResponse = FALSE;
 		m_pszLastError = m_pFile->GetLastError ();
 		return ir;
 	}
@@ -440,10 +445,17 @@ fsInternetResult fsInternetURLFile::OpenEx(INTERNET_SCHEME scheme, LPCSTR pszHos
 
 		SetupProxyForFile2 ();
 
-		return m_ifile2.StartDownloading ();
+		ir = m_ifile2.StartDownloading ();
 	}
+
+	if (m_strRespFromServer.IsEmpty () == FALSE)
+	{
+		Dialog (IFDD_FROMSERVER, m_strRespFromServer);
+		m_strRespFromServer = "";
+	}
+	m_bCatchFromServerResponse = FALSE;
 		
-	return IR_SUCCESS;
+	return ir;
 }
 
 fsInternetResult fsInternetURLFile::Write(LPBYTE pBuffer, DWORD dwToWrite, DWORD *pdwWritten)
@@ -535,4 +547,18 @@ void fsInternetURLFile::set_EnableAutoRedirect(BOOL b)
 void fsInternetURLFile::set_Charset(LPCSTR psz)
 {
 	m_httpFile.set_Charset (psz);
+}
+
+void fsInternetURLFile::_InetFileDialogFunc(fsInetFileDialogDirection enDir, LPCSTR pszMsg, LPVOID lp1, LPVOID )
+{
+	fsInternetURLFile *pthis = (fsInternetURLFile*) lp1;
+
+	if (pthis->m_bCatchFromServerResponse && enDir == IFDD_FROMSERVER)
+	{
+		pthis->m_strRespFromServer = pszMsg;
+	}
+	else
+	{
+		pthis->Dialog (enDir, pszMsg);
+	}
 }

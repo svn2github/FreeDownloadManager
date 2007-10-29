@@ -11,7 +11,7 @@
 class ATL_NO_VTABLE CFDMUploader : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CFDMUploader, &CLSID_FDMUploader>,
-	public IDispatchImpl<IUploader, &IID_IUploader, &LIBID_DataStretcherLib>
+	public IDispatchImpl<IUploader, &IID_IUploader, &LIBID_FdmLib>
 {
 public:
 	CFDMUploader()

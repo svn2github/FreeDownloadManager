@@ -277,7 +277,7 @@ void vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, LPCSTR &pszV
 void vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, LPBYTE &pbValue, UINT &nValueSize)
 {
 	LPDATAFILETREE item = FindItem (pszSection, pszValueName);
-	if (item)
+	if (item && item->GetData ().vt.type () != VVT_EMPTY)
 	{
 		pbValue = item->GetData ().vt;
 		nValueSize = item->GetData ().vt.bytebuffersize ();

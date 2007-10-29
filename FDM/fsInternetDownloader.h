@@ -378,6 +378,8 @@ public:
 	
 	void StopSection();
 	
+	void LockWriteFile (BOOL bLock);
+	
 	void DeleteAllSections();
 	
 	int GetCreatingNowSectionCount(UINT nMirror);
@@ -454,7 +456,7 @@ public:
 	BOOL SetSection_TrafficLimit (int iSection, UINT uLimit);
 	
 	
-	BOOL GetSectionInfo (int iSection, fsSection* pSection);
+	BOOL GetSectionInfo (int iSection, fsSection* pSection, BOOL bNoCacheAccounting = FALSE);
 	
 	void SetRetryTime (DWORD dwMilliseconds);
 	

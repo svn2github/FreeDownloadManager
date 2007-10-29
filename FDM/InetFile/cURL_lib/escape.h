@@ -3,9 +3,6 @@
 */
 
 #ifndef __ESCAPE_H
-#define __ESCAPE_H   
-
-char *curl_escape(const char *string, int length);
-char *curl_unescape(const char *string, int length);
+#define __ESCAPE_H    
 
 #endif

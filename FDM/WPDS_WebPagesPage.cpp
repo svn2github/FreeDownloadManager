@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "WPDS_WebPagesPage.h"
 #include "Dlg_WPD_IgnoreList.h"
 

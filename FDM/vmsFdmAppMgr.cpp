@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "vmsFdmAppMgr.h"
-#include "Data Stretcher.h"        
+#include "FdmApp.h"        
 
 vmsFdmAppMgr::vmsFdmAppMgr()
 {
@@ -18,12 +18,12 @@ vmsFdmAppMgr::~vmsFdmAppMgr()
 
 BOOL vmsFdmAppMgr::IsBtInstalled()
 {
-	return GetFileAttributes (((CDataStretcherApp*)AfxGetApp ())->m_strAppPath + "fdmbtsupp.dll") != DWORD (-1);
+	return GetFileAttributes (((CFdmApp*)AfxGetApp ())->m_strAppPath + "fdmbtsupp.dll") != DWORD (-1);
 }
 
 BOOL vmsFdmAppMgr::IsMediaFeaturesInstalled()
 {
-	return GetFileAttributes (((CDataStretcherApp*)AfxGetApp ())->m_strAppPath + "mediaconverter.dll") != DWORD (-1);
+	return GetFileAttributes (((CFdmApp*)AfxGetApp ())->m_strAppPath + "mediaconverter.dll") != DWORD (-1);
 }
 
 void vmsFdmAppMgr::ShowInstallMediaFeaturesMessage()

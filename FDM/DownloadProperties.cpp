@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "DownloadProperties.h"
-#include "Hash\vmsHash.h"            
+#include "Hash\vmsHash.h"              
 
 BOOL fsFillBuffer (LPSTR *ppszBuffer, UINT* pnSize, LPCSTR pszFrom, BOOL bAllocate)
 {

@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Schedule_WTSPage.h"
 #include "fsScheduleMgr.h"
 #include "DownloadsWnd.h"

@@ -69,6 +69,7 @@ protected:
 	afx_msg void OnSettolight();
 	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
 	afx_msg void OnChangeMaxdldsval();
+	afx_msg void OnUsemaxdlds();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

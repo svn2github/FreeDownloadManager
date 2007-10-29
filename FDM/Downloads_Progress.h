@@ -38,19 +38,20 @@ public:
 
 	
 protected:
+	CBitmap m_bmpProgress;
+	int m_iLastProgress;
+	HANDLE m_hthDrawProgress, m_hevShutdown, m_hevDraw;
+	static DWORD WINAPI _threadDrawProgress (LPVOID lp);
 	CPen m_penQ;	
 	
 	CBrush m_brDone, m_brProgress;
-	
-	
-	std::vector <DWORD> m_vAlreadyDraw;
 	
 	
 	void DrawSectionProgress (CDC *dc, struct vmsSectionInfo* sect, int iSect, UINT64 uFileSize, bool bDontUseAlreadyDraw);
 	CSize m_size;	
 	vmsDownloadSmartPtr m_pActiveDownload;	
 	
-	void DrawProgress (CDC* dc);
+	void DrawProgress (CDC* dc, vmsDownloadSmartPtr dld);
 	//{{AFX_MSG(CDownloads_Progress)
 	afx_msg void OnPaint();
 	afx_msg void OnSize(UINT nType, int cx, int cy);

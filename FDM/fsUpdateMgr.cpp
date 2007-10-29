@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "fsUpdateMgr.h"
 #include "MainFrm.h"
 #include "mfchelp.h"
@@ -51,7 +51,7 @@ BOOL fsUpdateMgr::StartUpdater()
 	CString strCmdLine;
 	strCmdLine.Format ("\"%s\" \"%s\" \"%s\" \"%s\" \"/silent\" \"0\"",
 		vmsGetAppFolder () + "updater.exe", 
-		((CDataStretcherApp*)AfxGetApp ())->m_strAppPath + "fdm.exe", 
+		((CFdmApp*)AfxGetApp ())->m_strAppPath + "fdm.exe", 
 		_pszAppMutex, 
 		m_strUpdateFile);
 

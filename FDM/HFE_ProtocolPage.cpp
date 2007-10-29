@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "HFE_ProtocolPage.h"
 #include "HFEWnd.h"
 

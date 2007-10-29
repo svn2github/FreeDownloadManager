@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="Data Stretcher" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="FDM" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
-CFG=Data Stretcher - Win32 Release
+CFG=FDM - Win32 Release
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "Data Stretcher.mak".
+!MESSAGE NMAKE /f "FDM.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Data Stretcher.mak" CFG="Data Stretcher - Win32 Release"
+!MESSAGE NMAKE /f "FDM.mak" CFG="FDM - Win32 Release"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "Data Stretcher - Win32 Release" (based on "Win32 (x86) Application")
-!MESSAGE "Data Stretcher - Win32 Debug" (based on "Win32 (x86) Application")
+!MESSAGE "FDM - Win32 Release" (based on "Win32 (x86) Application")
+!MESSAGE "FDM - Win32 Debug" (based on "Win32 (x86) Application")
 !MESSAGE 
 
 # Begin Project
@@ -29,7 +29,7 @@ CPP=cl.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "Data Stretcher - Win32 Release"
+!IF  "$(CFG)" == "FDM - Win32 Release"
 
 # PROP BASE Use_MFC 6
 # PROP BASE Use_Debug_Libraries 0
@@ -54,10 +54,10 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 PartMediaPreview/Release/PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Release/FDMCustomized_lib.lib inetfile.lib alsfolderbrowser.lib Mswsock.lib Hash\Release\hash.lib inetfile/curl_lib/release/curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib /nologo /subsystem:windows /debug /machine:I386 /out:"Release/fdm.exe" /libpath:"Lib.add" /OPT:REF /MAPINFO:LINES /MAPINFO:EXPORTS
+# ADD LINK32 PartMediaPreview/Release/PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Release/FDMCustomized_lib.lib inetfile.lib alsfolderbrowser.lib Mswsock.lib Hash\Release\hash.lib inetfile/curl_lib/release/curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"Lib.add" /OPT:REF /MAPINFO:LINES /MAPINFO:EXPORTS
 # SUBTRACT LINK32 /pdb:none
 
-!ELSEIF  "$(CFG)" == "Data Stretcher - Win32 Debug"
+!ELSEIF  "$(CFG)" == "FDM - Win32 Debug"
 
 # PROP BASE Use_MFC 6
 # PROP BASE Use_Debug_Libraries 1
@@ -87,8 +87,8 @@ LINK32=link.exe
 
 # Begin Target
 
-# Name "Data Stretcher - Win32 Release"
-# Name "Data Stretcher - Win32 Debug"
+# Name "FDM - Win32 Release"
+# Name "FDM - Win32 Debug"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -115,6 +115,10 @@ SOURCE=.\BtDldSheet.cpp
 # Begin Source File
 
 SOURCE=.\CBD_SeeResultsDlg.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CFDM.cpp
 # End Source File
 # Begin Source File
 
@@ -151,18 +155,6 @@ SOURCE=.\CreateDownloadListDlg.cpp
 # Begin Source File
 
 SOURCE=.\CreateDownloadsDlg.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=".\Data Stretcher.cpp"
-# End Source File
-# Begin Source File
-
-SOURCE=".\Data Stretcher.rc"
-# End Source File
-# Begin Source File
-
-SOURCE=.\DataStretcher.idl
 # End Source File
 # Begin Source File
 
@@ -482,7 +474,15 @@ SOURCE=.\FDCButton.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\FDM.cpp
+SOURCE=.\Fdm.idl
+# End Source File
+# Begin Source File
+
+SOURCE=".\fdm.rc"
+# End Source File
+# Begin Source File
+
+SOURCE=".\FdmApp.cpp"
 # End Source File
 # Begin Source File
 
@@ -1310,6 +1310,10 @@ SOURCE=.\CBD_SeeResultsDlg.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CFDM.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\ChildView.h
 # End Source File
 # Begin Source File
@@ -1347,10 +1351,6 @@ SOURCE=.\CreateDownloadListDlg.h
 # Begin Source File
 
 SOURCE=.\CreateDownloadsDlg.h
-# End Source File
-# Begin Source File
-
-SOURCE=".\Data Stretcher.h"
 # End Source File
 # Begin Source File
 
@@ -1670,7 +1670,7 @@ SOURCE=.\FDCButton.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\FDM.h
+SOURCE=".\FdmApp.h"
 # End Source File
 # Begin Source File
 
@@ -2470,10 +2470,6 @@ SOURCE=.\ZipPreviewDlg.h
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=.\res\Fdm.ico
-# End Source File
-# Begin Source File
-
 SOURCE=.\res\back.bmp
 # End Source File
 # Begin Source File
@@ -2502,18 +2498,6 @@ SOURCE=.\res\creategr.ico
 # End Source File
 # Begin Source File
 
-SOURCE=".\res\Data Stretcher.ico"
-# End Source File
-# Begin Source File
-
-SOURCE=".\res\Data Stretcher.rc2"
-# End Source File
-# Begin Source File
-
-SOURCE=".\Data Stretcher.rgs"
-# End Source File
-# Begin Source File
-
 SOURCE=.\res\dldsinfo.bmp
 # End Source File
 # Begin Source File
@@ -2534,11 +2518,23 @@ SOURCE=.\res\downloadstasks.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=".\res\dropbox.ico"
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\eng_lngs.bin
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\Fdm.ico
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\fdm.ico
+# End Source File
+# Begin Source File
+
+SOURCE=".\res\fdm.rc2"
 # End Source File
 # Begin Source File
 
@@ -2547,6 +2543,10 @@ SOURCE=.\FDM.rgs
 # Begin Source File
 
 SOURCE=.\res\fdm_getcver_btn.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=".\FdmApp.rgs"
 # End Source File
 # Begin Source File
 
@@ -2835,24 +2835,24 @@ SOURCE=.\res\phrases.txt
 # End Source File
 # End Target
 # End Project
-# Section Data Stretcher : {D27CDB6E-AE6D-11CF-96B8-444553540000}
+# Section Fdm : {D27CDB6E-AE6D-11CF-96B8-444553540000}
 # 	2:21:DefaultSinkHeaderFile:shockwaveflash.h
 # 	2:16:DefaultSinkClass:CShockwaveFlash
 # End Section
-# Section Data Stretcher : {D30C1661-CDAF-11D0-8A3E-00C04FC9E26E}
+# Section Fdm : {D30C1661-CDAF-11D0-8A3E-00C04FC9E26E}
 # 	2:5:Class:CWebBrowser2
 # 	2:10:HeaderFile:webbrowser2.h
 # 	2:8:ImplFile:webbrowser2.cpp
 # End Section
-# Section Data Stretcher : {D27CDB6C-AE6D-11CF-96B8-444553540000}
+# Section Fdm : {D27CDB6C-AE6D-11CF-96B8-444553540000}
 # 	2:5:Class:CShockwaveFlash
 # 	2:10:HeaderFile:shockwaveflash.h
 # 	2:8:ImplFile:shockwaveflash.cpp
 # End Section
-# Section Data Stretcher : {8856F961-340A-11D0-A96B-00C04FD705A2}
+# Section Fdm : {8856F961-340A-11D0-A96B-00C04FD705A2}
 # 	2:21:DefaultSinkHeaderFile:webbrowser2.h
 # 	2:16:DefaultSinkClass:CWebBrowser2
 # End Section
-# Section Data Stretcher : {00B19758-C708-00B0-106C-B400F0835601}
-# 	1:17:IDR_DATASTRETCHER:102
+# Section Fdm : {00B19758-C708-00B0-106C-B400F0835601}
+# 	1:10:IDR_FDMAPP:102
 # End Section

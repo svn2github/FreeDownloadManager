@@ -41,6 +41,9 @@ public:
 	virtual ~fsInternetFile2();
 
 protected:
+	fsResumeSupportType m_enRST;
+	UINT64 m_uStartPos;
+	BOOL m_bDoPause;
 	UINT64 m_uFileSize;
 	fsString m_strSuggestedFileName;
 	fsString m_strHttpHeader;

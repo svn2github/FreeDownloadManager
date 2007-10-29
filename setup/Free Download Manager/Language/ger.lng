@@ -1,4 +1,4 @@
-; This is the German language file by User_99 (user_99@gmx.at) v2.3.8 for 2.3.682
+; This is the German language file by User_99 (user_99@gmx.at) v2.5.1 for 2.5.704
 ; You can translate it into your native language
 ; To do this, follow instructions:
 ; - PLEASE make sure FDM hasn't already been translated into your language 
@@ -660,7 +660,7 @@ Lade Webseiten von anderen Seiten herunter
 Bilder
 Bilder herunterladen
 Lade Bilder herunter, die auf andere Webseiten zeigen
-Downloadtiefe:
+Downloadtiefe (Ebenen):
 Erweiterungen der Dateien der Webseite mit HTML-Code. Webseiten werden auf Links von Bildern und andere Webseiten überprüft
 Wenn ausgewählt, werden auch CSS Dateien heruntergeladen. Wird empfohlen
 Wenn nicht ausgewählt, dann werden Webseiten anderer Seiten nicht heruntergeladen. Als Beispiel, Sie wollen die Seite http://example.com/ herunterladen, dann wird http://othersite.com/some.html nicht, aber http://example.com/some.html sehr wohl heruntergeladen
@@ -1179,7 +1179,7 @@ Verwendung der UMSCHALT-Taste löscht die heruntergeladene Datei im Ordner, ohne 
 Gruppe auswählen
 Gruppenstammverzeichnis auswählen
 Gruppenstammverzeichnis auswählen. Die Änderungen sind erst bei neuen Downloads wirksam.
-Neueste Downloads
+Letzten Downloads
 (leer)
 Alle Downloads anhalten
 Zeige Download-Fortschrittsanzeige
@@ -1252,7 +1252,7 @@ Prüfung der Dateiintegrität fehlerhaft
 Die Prüfung der Dateien wurde erfolgreich abgeschlossen. Es wurden keine fehlerhaften Dateien heruntergeladen.
 Die Prüfung der Dateien wurde abgeschlossen. Es wurden Fehler gefunden und Dateien wurden fehlerhaft herunter- geladen. Der Download muss nochmals neu gestartet werden.
 Nicht mehr zeigen, wenn die Prüfung erfolgreich ist.
-Programmdatei des Antivirus-Programm konnte nicht gefunden werden.\nBitte nochmals durchsuchen.
+Programmdatei des Antivirusprogramm konnte nicht gefunden werden.\nBitte nochmals durchsuchen.
 Dateigrößen sind nicht gleich!
 Speichern als:\n(Beispiel: Datei(*)(*A)(*a).txt)
 Ungültige Vorlage abgespeichert.\nStellen Sie sicher, dass die Vorlage der URL übereinstimmt.
@@ -1282,7 +1282,7 @@ Internet Explorer's Identifikation (UserAgent) bearbeiten
 Wenn aktiviert, dann können Webseiten erkennen, dass Sie FDM installiert haben. Das kann dazu führen, dass manche Webseiten blockiert werden.
 Verdächtiges?
 Prüfe, ob ein FDM-Benutzer einen Virus/Adware/ Spyware/usw. in diesem Download festgestellt hat
-Kein FDM-Benutzer hat in diesem Download verdächtiges festgestellt.\n\nPrüfen Sie trotzdem mit einem aktuellen Antivirus-Programm diesen Download.
+Kein FDM-Benutzer hat in diesem Download verdächtiges festgestellt.\n\nPrüfen Sie trotzdem mit einem aktuellen Antivirusprogramm diesen Download.
 ; keep all %xxx, \n as is.
 %d von %d FDM-Benutzern haben diesen Download bemängelt.\nDie durchschnittliche Bewertung dieses Downloads ist %.*g.\n\nZeige Meinungen über diesen Download?
 Prüfe vor dem Herunterladen jeden neuen Download nach verdächtigen Inhalt
@@ -1321,7 +1321,7 @@ Eine Überwachung im Firefox Browser ist mit aktiver Flashgot Erweiterung nicht m
 Aktivieren
 Ausschalten
 Umschalten
-Falls der Modus aktivert ist, wird er ausgeschaltet, ansonsten wird er aktiviert.
+Falls der Modus aktivert ist, wird er ausgeschaltet, ansonsten wird er eingeschaltet.
 Offiziell startet %s am 16. August 2006. Unser Ziel ist es aus FDM eines der weitverbreitesten Browser-Hilfsmittel nach FireFox zu machen!
 Updates automatisch herunterladen und installieren
 Nur benachrichtigen, wenn ein Update verfügbar ist
@@ -1444,7 +1444,7 @@ Alle Dateien in diesem Ordner speichern
 Änderungen werde erst nach einem Neustart von FDM übernommen.
 Fortschrittsanzeige anzeigen
 Erstelle portable Version
-Die portable Version von Free Download Manager ist für die Nutzung auf verschiedenen Rechnern gedacht ohne die benötigte Installation oder Einrichtung.\n\nSie können diese Version zB. von einem USB-Stick nutzen.\n\nBeim Start registriert und integriert sich FDM dann selbstständig in das System sowie Browser. Nach Beendigung de-registriert sich FDM wieder automatisch.\n\nGeben Sie hier nun den Pfad ein, wo portable FDM erstellt werden soll. Der Pfad sollte sich auf einem tragbarem Medium befinden.\n\nBeispiel: "I:\Meine portablen Programme\"
+Die portable Version von Free Download Manager ist für die Nutzung auf verschiedenen Rechnern gedacht ohne die benötigte Installation oder Einrichtung.\n\nSie können diese Version z.B.: von einem USB-Stick nutzen.\n\nBeim Start registriert und integriert sich FDM dann selbstständig in das System sowie Browser. Nach Beendigung de-registriert sich FDM wieder automatisch.\n\nGeben Sie hier nun den Pfad ein, wo portable FDM erstellt werden soll. Der Pfad sollte sich auf einem tragbarem Medium befinden.\n\nBeispiel: "I:\Meine portablen Programme\"
 Integration
 Torrent-Dateityp mit FDM registrieren
 Diese Gruppe für alle neuen Downloads verwenden
@@ -1585,3 +1585,10 @@ Hochladen
 Aktualisierung wird heruntergeladen...
 Seeding aktivieren
 Seeding standardmäßig nicht aktivieren
+Download für bösartig halten, wenn mindestens
+% der Benutzer es derartig angeben.
+OK, die FDM-Gemeinschaft meldet bisher keine Probleme über diesen Download.\n\nAllerdings ist das keine Garantie, dass dieser Download keine Gefährdung verursachen kann. Eine weitere Überprüfung mit einem Antivirusprogramm wird empfohlen.
+OK, die FDM-Gemeinschaft meldet keine Probleme über diesen Download.
+FDM wurde von folgendem Laufwerksbuchstaben gestartet. Bsp.: "C:". Nützlich für die portable Version.
+Sie sollten das Videokonvertierungs-Plugin installieren, um diese Funktion zu verwenden.
+Sie sollten das Bittorrent-Plugin installieren, um über das Bittorrent-Protokoll Dateien herunterladen zu können.

@@ -3,7 +3,7 @@
 */  
 
 #include "stdafx.h"
-#include "Data Stretcher.h"
+#include "FdmApp.h"
 #include "FdmTorrentFilesRcvr.h"
 #include "DownloadsWnd.h"
 #include "UIThread.h"        

@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "WPDS_ImagesPages.h"
 
 #ifdef _DEBUG

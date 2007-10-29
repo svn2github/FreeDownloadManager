@@ -4,18 +4,18 @@
 
 #include "stdafx.h"
 
-#include "Data Stretcher.h"
+#include "FdmApp.h"
 #include "dbghelp.h"
 
 #include "MainFrm.h"
 #include "UrlWnd.h"
 #include <initguid.h>
 #include "WGUrlReceiver.h"
-#include "DataStretcher_i.c"
+#include "Fdm_i.c"
 #include "UEDlg.h"
 #include "fsIEUserAgent.h"
 #include "WgUrlListReceiver.h"
-#include "FDM.h"
+#include "CFDM.h"
 #include "fsFDMCmdLineParser.h"
 #include "mfchelp.h"
 #include "vmsFilesToDelete.h"
@@ -38,13 +38,13 @@
 static char THIS_FILE[] = __FILE__;
 #endif      
 
-BEGIN_MESSAGE_MAP(CDataStretcherApp, CWinApp)
-	//{{AFX_MSG_MAP(CDataStretcherApp)
+BEGIN_MESSAGE_MAP(CFdmApp, CWinApp)
+	//{{AFX_MSG_MAP(CFdmApp)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()      
 
-CDataStretcherApp::CDataStretcherApp()
+CFdmApp::CFdmApp()
 {
 	m_bCOMInited = m_bATLInited = m_bATLInited2 = FALSE;
 	m_bSaveAllOnExit = FALSE;
@@ -55,11 +55,13 @@ CDataStretcherApp::CDataStretcherApp()
 	SYSTEMTIME time;
 	GetLocalTime (&time);
 	SystemTimeToFileTime (&time, &_timeAppHasStarted);
+
+	m_pModuleState;
 }      
 
-CDataStretcherApp theApp;    
+CFdmApp theApp;    
 
-BOOL CDataStretcherApp::InitInstance()
+BOOL CFdmApp::InitInstance()
 {
 	SetUnhandledExceptionFilter (_UEF);
 
@@ -399,7 +401,7 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()  
 
-void CDataStretcherApp::OnAppAbout()
+void CFdmApp::OnAppAbout()
 {
 	CAboutDlg aboutDlg;
    	_DlgMgr.OnDoModal (&aboutDlg);
@@ -407,7 +409,7 @@ void CDataStretcherApp::OnAppAbout()
     _DlgMgr.OnEndDialog (&aboutDlg);
 }        
 
-int CDataStretcherApp::ExitInstance() 
+int CFdmApp::ExitInstance() 
 {
 	LOG ("shutting down..." << nl);
 
@@ -512,7 +514,7 @@ HBRUSH CAboutDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 	return hbr;
 }
 
-void CDataStretcherApp::LoadHistory()
+void CFdmApp::LoadHistory()
 {
 	LOG ("loading history file...");
 
@@ -566,7 +568,7 @@ _lErr:
 	
 }
 
-void CDataStretcherApp::SaveHistory()
+void CFdmApp::SaveHistory()
 {
 	HANDLE hFile = CreateFile (fsGetDataFilePath ("history.sav"), GENERIC_WRITE, 0, NULL, 
 		CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
@@ -612,7 +614,7 @@ _lErr:
 }  
 
 	
-CDataStretcherModule _Module;
+CFdmModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
 OBJECT_ENTRY(CLSID_WGUrlReceiver, CWGUrlReceiver)
@@ -626,18 +628,18 @@ OBJECT_ENTRY(CLSID_FdmTorrentFilesRcvr, CFdmTorrentFilesRcvr)
 OBJECT_ENTRY(CLSID_FDMFlashVideoDownloads, CFDMFlashVideoDownloads)
 END_OBJECT_MAP()
 
-LONG CDataStretcherModule::Unlock()
+LONG CFdmModule::Unlock()
 {
 	AfxOleUnlockApp();
 	return 0;
 }
 
-LONG CDataStretcherModule::Lock()
+LONG CFdmModule::Lock()
 {
 	AfxOleLockApp();
 	return 1;
 }
-LPCTSTR CDataStretcherModule::FindOneOf(LPCTSTR p1, LPCTSTR p2)
+LPCTSTR CFdmModule::FindOneOf(LPCTSTR p1, LPCTSTR p2)
 {
 	while (*p1 != NULL)
 	{
@@ -653,7 +655,7 @@ LPCTSTR CDataStretcherModule::FindOneOf(LPCTSTR p1, LPCTSTR p2)
 	return NULL;
 }
 
-BOOL CDataStretcherApp::InitATL()
+BOOL CFdmApp::InitATL()
 {
 	m_bEmbedding = FALSE;
 
@@ -735,7 +737,7 @@ BOOL CDataStretcherApp::InitATL()
 	return TRUE;
 }
 
-BOOL CDataStretcherApp::InitLanguage()
+BOOL CFdmApp::InitLanguage()
 {
 	LOG ("initializing language..." << nl);
 
@@ -776,7 +778,7 @@ BOOL CDataStretcherApp::InitLanguage()
 	return TRUE;
 }
 
-BOOL CDataStretcherApp::CheckFdmStartedAlready(BOOL bSetForIfEx)
+BOOL CFdmApp::CheckFdmStartedAlready(BOOL bSetForIfEx)
 {
 	LPCSTR pszMainWnd = "Free Download Manager Main Window";
 
@@ -830,13 +832,13 @@ BOOL CDataStretcherApp::CheckFdmStartedAlready(BOOL bSetForIfEx)
 	return FALSE;
 }  
 
-CDataStretcherApp::~CDataStretcherApp()
+CFdmApp::~CFdmApp()
 {
 	if (m_bCOMInited)
 		CoUninitialize();
 }
 
-LONG CDataStretcherApp::_UEF(_EXCEPTION_POINTERS *info)
+LONG CFdmApp::_UEF(_EXCEPTION_POINTERS *info)
 {
 	static BOOL _b = FALSE;
 
@@ -898,12 +900,12 @@ LONG CDataStretcherApp::_UEF(_EXCEPTION_POINTERS *info)
 #include "FDMUploader.h"
 #include "FDMUploadPackage.h"
 
-BOOL CDataStretcherApp::Is_Starting()
+BOOL CFdmApp::Is_Starting()
 {
 	return m_bStarting;
 }
 
-void CDataStretcherApp::CheckLocked()
+void CFdmApp::CheckLocked()
 {
 	DWORD dwRes;
 
@@ -919,7 +921,7 @@ void CDataStretcherApp::CheckLocked()
 	while (dwRes == ERROR_ALREADY_EXISTS);
 }
 
-void CDataStretcherApp::UninstallCustomizations()
+void CFdmApp::UninstallCustomizations()
 {
 	CRegKey key;
 	key.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Download Manager");
@@ -964,7 +966,7 @@ void CDataStretcherApp::UninstallCustomizations()
 	}
 }
 
-BOOL CDataStretcherApp::RegisterServer(BOOL bGlobal)
+BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 {
 	if (_App.ModifyIEUserAgent ())
 	{
@@ -983,7 +985,7 @@ BOOL CDataStretcherApp::RegisterServer(BOOL bGlobal)
 			vmsSHCopyKey (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Download Manager", key);
 
 		
-		_Module.UpdateRegistryFromResource(IDR_DATASTRETCHER, TRUE);
+		_Module.UpdateRegistryFromResource(IDR_FDM, TRUE);
 		_Module.RegisterServer(TRUE);
 		
 		
@@ -1045,7 +1047,7 @@ BOOL CDataStretcherApp::RegisterServer(BOOL bGlobal)
 	return TRUE;
 }
 
-void CDataStretcherApp::Install_RegisterServer()
+void CFdmApp::Install_RegisterServer()
 {
 	if (m_bATLInited == FALSE)
 	{
@@ -1056,7 +1058,7 @@ void CDataStretcherApp::Install_RegisterServer()
 	RegisterServer (TRUE);
 }
 
-void CDataStretcherApp::Install_UnregisterServer()
+void CFdmApp::Install_UnregisterServer()
 {
 	if (m_bATLInited == FALSE)
 	{
@@ -1066,9 +1068,9 @@ void CDataStretcherApp::Install_UnregisterServer()
 	}
 			
 	
-	_Module.UpdateRegistryFromResource(IDR_DATASTRETCHER, FALSE);
+	_Module.UpdateRegistryFromResource(IDR_FDM, FALSE);
 	_Module.UnregisterServer(TRUE); 
-	UnRegisterTypeLib (LIBID_DataStretcherLib, 0, 0, LOCALE_SYSTEM_DEFAULT, SYS_WIN32);
+	UnRegisterTypeLib (LIBID_FdmLib, 0, 0, LOCALE_SYSTEM_DEFAULT, SYS_WIN32);
 	
 	
 	
@@ -1091,7 +1093,7 @@ void CDataStretcherApp::Install_UnregisterServer()
 		vmsTorrentExtension::AssociateWith (_App.Bittorrent_OldTorrentAssociation ());
 }
 
-void CDataStretcherApp::SaveSettings()
+void CFdmApp::SaveSettings()
 {
 	if (IS_PORTABLE_MODE)
 	{
@@ -1102,7 +1104,7 @@ void CDataStretcherApp::SaveSettings()
 	}
 }  
 
-void CDataStretcherApp::IntegrationSettings()
+void CFdmApp::IntegrationSettings()
 {
 	vmsUploadsDllCaller udc;
 	HMODULE hUploadsDll;
@@ -1141,7 +1143,7 @@ void CDataStretcherApp::IntegrationSettings()
 	FreeLibrary (hUploadsDll);
 }
 
-DWORD WINAPI CDataStretcherApp::_threadExitProcess(LPVOID lp)
+DWORD WINAPI CFdmApp::_threadExitProcess(LPVOID lp)
 {
 	LOG ("DSA::tEP:sleep " << (DWORD)lp << " seconds" << nl);
 	Sleep (((DWORD)lp) * 1000);
@@ -1153,14 +1155,14 @@ DWORD WINAPI CDataStretcherApp::_threadExitProcess(LPVOID lp)
 	return 0;
 }
 
-void CDataStretcherApp::ScheduleExitProcess(DWORD dwSeconds)
+void CFdmApp::ScheduleExitProcess(DWORD dwSeconds)
 {
 	DWORD dw;
 	CloseHandle (
 		::CreateThread (NULL, 0, _threadExitProcess, (LPVOID)dwSeconds, 0, &dw));
 }
 
-void CDataStretcherApp::CheckRegistry()
+void CFdmApp::CheckRegistry()
 {
 	fsString str = "%56%69%63%4D%61%6E%20%53%6F%66%74%77%61%72%65";
 	fsDecodeHtmlUrl (str);
@@ -1202,4 +1204,9 @@ void CDataStretcherApp::CheckRegistry()
 			LOG ("importing of old key cancelled." << nl);
 		}
 	}
+}
+
+AFX_MODULE_STATE* CFdmApp::GetModuleState()
+{
+	return m_pModuleState;
 }

@@ -1,0 +1,1324 @@
+; This is the Norvegian language file by Terje Nauf v1.0.0 for 2.1.494
+; You can translate it into your native language
+; To do this, follow instructions:
+; - PLEASE make sure FDM hasn't already been translated into your language 
+;   You should go to FDM web side (http://freedownloadmanager.org) and 
+;   Merk the list of available languages
+;   or e-mail to support@freedownloadmanager.org
+; - copy this language fil to xxx.lng, where xxx is the reduced name
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng into your language
+; - send the translated file to support@freedownloadmanager.org 
+;
+;
+;
+; Translator - FreeDownloadManager.ORG, 2004
+;
+
+; Your language name. Please keep it in English
+;
+Norwegian
+;
+;
+; Below are the strings to translate:
+;
+Lagre alt
+Klipp
+Kopier
+Sett inn
+Lett nettbruk
+Middels nettbruk
+Tung nettbruk
+Nedlasting innstillinger
+oppringning kobling
+Om FDM
+Avslutt
+Fil
+Rediger
+Vis
+Innstillinger
+Verktøy
+Hjelp
+Verktøylinje
+Statuslinje
+Optimeringsmal
+Standard nedlastingsinnstillinger 
+gjenerelle innstillinger
+oppringning kobling
+Avbryt når ferdig
+Slå av pc-en når ferdig
+Åpne hjelpereferanse vinduet
+FDM hjemmeside
+Tips en venn
+Send e-mail til supportgruppe
+Automatisk sjekk for oppdateringer
+Sjekk for opdateringer nå
+-
+-
+Skift til
+Nettverksbruk
+Registrering
+nedlastinger
+Tidsplaner
+Sidesøker
+HTTP//FTP søker
+Sidemanager
+Legg til nedlasting
+Start nedlasting
+Stopp nedlasting
+Tidsplan nedlasting
+Legg til oppgave
+Oppgaveegjenskaper
+Last ned valgte filer
+Stopp
+Oppdater
+Legg til side
+Sideegjenskaper
+Grupper av nedlastinger
+Nedlasting info
+Tidsplaner logg
+Sidesøkerlogg
+Sidestolpe
+Opprett ny nedlasting
+Slett nedlasting
+Kjør fil
+Åpne mappe
+Start nedlasting automatisk
+nedlastegenskaper
+Aktiver oppgave
+Deaktiver oppgave
+Slett oppgave
+Åpne aktuell mappe
+Avbryt
+Nedlasting
+Sidesøker innstillinger
+Slett side
+Midlertidig adgang
+Sider
+Vis hovedvindu
+Browser overvåkning
+Utklippsholder overvåkning
+Start alle nedlastinger
+Stop alle nedlastinger
+-
+Fortsett
+-
+-
+-
+-
+-
+Slett
+-
+-
+-
+Alle grupper
+Filtere
+Fullført
+I gang
+Tidsplan
+Stoppet
+Annet
+Opprettt ny gruppe
+Slett gruppe
+Slett alle nedlastinger
+Slett alle fullførte nedlastinger
+Åpne gruppe mappe
+Gruppegjenskaper
+Gruppenavn:
+Standardmappe:
+Filtyper (mellomrom separat):
+Standard nedlasting prioritet
+Meget lav
+Lav
+Middels
+Høy
+Meget høy
+Vennligst skriv inn gruppenavn
+Tastefeil
+Gruppe med samme navn eksisterer allederede. Venligst skriv et annet navn
+vennligst skriv mappenavn
+Velg standard gruppemappe
+Skriv gruppenavn her
+Standardmappe til å lagre nedlastinger av denne gruppe til
+Browse
+Filtype for denne gruppe. Brukes til å finne gruppe av nedlastinger automatisk
+Standard nedlasting prioritet for denne gruppen
+Angre endringer og lukk dialogjen
+Bruk endringer og lukk dialogjen
+Feil i nedlastinggrupper
+Vennligst reinstaller Free Nedlasting Manager
+Feil
+Kan ikke hente liste av nedlastinger. Kanskje den er skadet eller blir brukt av et annet program
+Mislyktes med å initialisere Internet Explorer integrering
+Er du sikker?
+Dette vil slette alle gruppenedlastinger
+Bekreftelse
+Filnavn
+Størrelse
+Nedlastet
+Tid igjen
+Seksjoner
+Hastighet
+Kommentar
+Logg
+Fremdrift
+Tid
+Dato
+Informasjon
+Rydd
+Autoscroll
+Ukjent nettverksfeil
+Tilgang nektet. Feil brukernavn eller passord
+Tilgang nektet. Feil passord
+Lyktes
+Kan ikke koble til serveren
+Fil ikke funnet på serveren
+kobling til serveren ble avbrutt
+Server svarer ikke
+Kunne ikke finne servernavnet
+Server støtter ikke nedlastingsgjenopptakelse. Stopp ikke nedlastingjen; ellers må du starte nedlastingjen fra begyndelsen igjen 
+Proxy brukernavn og passord kreves
+Utvidet feil
+Dårlig anmodning. Mulig dette er en dårlig URL
+Ukjent serverfeil
+kobling annullert
+Dårlig URL
+Ingjen internettilkobling
+valgt HTTP versjon er ikke støttet av denne server
+Ukjent feil
+Kan ikke slette filen fra disken
+Grensen for koblinger for denne server er nådd 
+Grensekoblingjen ble nådd
+Pause %d sek.
+Seksjon
+Startede
+Ferdig
+Nedlasting fullført
+kobler til...
+tilkobling lyktes
+Omdirigerer...
+Omdirigering lyktes. Åpning av ny URL
+Starter nedlasting...
+Stoppet
+Opprettter ny seksjon...
+Annullert
+Omstarter nedlasting...
+Åpner filen på disken...
+Filnavn er for langt
+Filen eksisterer allerede. Omdøp til
+Omdøp til
+målfilen ble slettet. Umuligt å fortsettte
+Filen eksisterer allerede. Skriv om
+Filen eksisterer allerede. Fortsett nedlasting
+Filen eksisterer allerede
+Kunne ikke åpne filen på disken
+Filstørrelse ble endret på serveren!
+Justerer for ny størrelse...
+Kan ikke overskrive filen
+Filen vil bli omdøpt
+Kan ikke døpe om filen tilbage til dens opprindelige navn
+Kan ikke lagre grupper
+Kan ikke lagre nedlastinger
+oppringning kobling
+Koble til:
+oppringning automatisk 
+Koble til
+Velg oppringning tilgang her
+Merk av denne boksen hvis du vil ha oppringning til å starte automatisk neste gang
+oppringning nå
+Ring ikke opp og lukk denne dialogjen
+Ingjen oppringningsenheter ble funnet på denne maskin
+Linjen er optatt
+Hardwarefeil
+Ingjen summetone
+Ringer
+Forsøk
+Åpner port...
+Ringer til tilbyder...
+kobler til fjerncomputer
+Godkjenn brukernavn og passord...
+koblingshastighet er %d BPS
+avbryt
+Gjenta
+Brukernavn og passord er påkrevd
+Bruker:
+passord:
+Gruppe:
+Lagre til mappe:
+Lagre som:
+Start
+Automatisk
+Manuell
+Tidsplan
+Prioritet på nedlasting
+Avansert
+Adresse på filen du vil nedlaste
+skriv inn brukernavn her
+Skriv inn passord her
+Merk denne boksen hvis serveren krever godkjenning
+Navn på gruppe å lagre nedlasting i. Grupper hjelper deg med å sortere dine nedlastinger
+Mappe til å lagre nedlastinger i
+Nytt navn på den Nedlastete filen. la feltet være tomt hvis du vil lagre filen under dets opprindelige navn
+Kort beskrivelse av nedlastingjen
+Denne nedlastingjen startes automatisk så raskt som mulig
+FDM vil ikke forsøke å starte denne nedlastingjen automatisk
+Tidsplanlegge denne nedlastingjen
+still innl nedlastingjens tidsplan
+Nedlasting prioritet. nedlastinger med høy prioritet vil bli startet først. nedlastinger med lavere prioritet vil bli utsatt
+Vis avanserte innstillinger for denne nedlastingjen
+Tastet URL er feil. Vennligst Sjekk denne
+Vennligst skriv inn brukernavn
+Velg målmappe
+gjenerelt
+gjenerell informasjon
+Nedlasting aktuelle Lagrede til filen:
+Navn på den Nedlastete filen
+URL på denne nedlasting kan ikke endres
+Denne nedlasting er igang. Kan ikke endre filnavn
+Kan ikke døpe om fil
+Fil ikke funnet
+Sti ikke funnet
+Ugyldig .exe format
+Filen blir brukt av et annet program
+Tilgang nektet
+Apparatet er ikke klart
+Disken er full
+Filnavnet er ugyldig
+pålogging er påkrevd
+tilkobling
+Nettverk
+feil
+Pause mellom tilkoblingforsøk (i sek):
+maksimum antall forsøk
+Timeout (i sek):
+Minimum størrelse:
+Maksimum antall:
+Restriksjoner for trafikk for denne nedlasting
+Trafikkgrense
+Ignorer alle restriksjoner
+B
+KB
+MB
+s
+-skriv inn verdi høyere en %d
+Vennligst Velg dimensjon
+Ventetid på server gjenoppkobling i tilfelle feil
+Merk denne boksen hvis du vil sette maksimum forsøk av feilaktige nedlastingforsøk
+Ventetid for serversvar
+Minimum størrelse av seksjon. Nedlasting vil ikke splitte Seksjoner i mindre størrelser
+Maksimum antall Seksjoner. Nedlasting vil ikke splitte et større antall av Seksjoner
+Angi hvor mye trafikk (maksimum) FDM vil ta for nedlasting
+Ignorer trafikkrestriksjoner og restriksjon på maksimum antall tilkoblinger for denne nedlasting
+Du kan angi verdi i bytes (B), kilobytes (KB) eller megabytes (MB) i dette felt
+Protokoll
+Identifiser på server som:
+Referrerer:
+Bruk HTTP 1.1
+Bruk cookies
+Bruk passiv metode
+Overføringsmetode
+Binær
+ASCII for filer av typen:
+spesifiser hvordan FDM vil bli identifisert med HTTP server
+Denne streng vil bli sent som referansefelt til HTTP server. Som hovedregel, er dette ikke påkrevd.
+Merk denne boks hvis du vil hav FDM til å bruke HTTP version 1.1
+Merk denne boks hvis du vil hav FDM til å bruke cookies
+Merk denne boks hvis du vil hav FDM til å bruke passiv metode for FTP servere. Noen ganger er dette nødvendig når det arbeides med brannmurer
+Bruk binær metode for FTP overføringer. Bruk denne metode hvis filen du nedlastinger ikke er en tekst
+Bruk ASCII metode for FTP overføringer. Bruk denne metode hvis filen du nedlastinger er en tekst
+FDM vil bruke ASCII metode for filer med spesifikke utvidelser. For andre filer FDM vil Bruke binær metode
+Proxy
+Hent proxyinnstillinger
+Fra Microsoft Internet Explorer
+spesifiser manuelt
+Bruk ingjen proxy
+Innstillinger
+Tillegg:
+Port:
+venligst tast inn proxytillegg
+venligst tast inn proxyport
+FDM vil bruke proxyinnstillingerne fra Internet Explorer
+Du kan stille inn proxyinnstillingerne selv
+FDM vil ikke bruke proxy
+Velg type servere  hvor du vil spesifisere proxyen
+Skriv inn tillegg for proxyen du vil bruke
+Skriv inn proxyporten her. Som regel, er det port 3128, 1080 eller 8080
+Merk denne boksen hvis proxyserveren krever godkjenning
+Forskellig
+Lokal fil
+Hvis filen eksisterer allerede:
+Reserver diskplass for nedlasting av fil
+Tilleggets filutvidelser for ikke-fullførte nedlastinger:
+Internetserver
+Restart ikke nedlasting hvis gjenoptak ikke støttes av serveren
+Hvis filstørrelsen ble endret på serveren:
+Stopp ved feil
+Spørr
+Gjenskriv
+Omdøp
+Gjenopta
+Restart
+Juster
+vennligst spesifiser filutvidelse
+Her kan du spesifisere hva FDM skal gjøre hvis filen allerede eksisterer på disken
+Merk denne boksen hvis du vil ha diskplass reservert for nedlasting når den startes
+Hvis denne er sjekket FDM vil tilføye spesifisert utvidelse til et filnavn under nedlasting. Når nedlasting er ferdig, FDM døpe om filen tilbage til dets originale navn
+FDM vil ikke restarte nedlasting hvis remoteserveren ikke støtter gjenoptak
+Du kan spesifiser her hva FDM skal gjøre hvis filstørrelsen blir endret på server
+Merk denne boksen for å stoppe nedlasting når fil ikke blir funnet på server
+Merk denne boksen for å stoppe nedlasting når brukernavn eller passord er ugyldig
+Nettverksbruk metode
+Velg metode å konfigurere:
+Maksimum antall koblinger:
+Maksimum antall koblinger pr. enkelt server:
+Restriksjoner på trafikk:
+Ubegrenset
+Velg Nettverksbruks metode du ønsker å konfigurere her
+Merk denne boksen for å sette maksimum antall koblinger
+Merk denne boksen for å sette maksimum antall koblinger pr. enkelt server
+spesifiser her FDM trafikk (maksimum) for nedlasting av filer
+Alle nedlastinger
+Liste over nedlastinger
+Autolagre hver
+min.
+Når sletting av en ikke-fullført nedlasting
+Automatisk slett fullførte nedlastinger
+Slett ikke fil
+Slett fil
+FDM lagrer listen av nedlastinger automatisk på det spesifiserte tidsintervall. Dette beskytter listen fra mulige hang-ups av pc-en eller strømfeil
+spesifiser her hva FDM skal gjøre med fil på disk når sletter ikke-fullført nedlasting
+Merk denne boks hvis du vil slette nedlasting automatisk fra listen når ferdig
+Overvåkning
+Monitor
+Utklippsholder
+Overvåk filer med utvidelsen
+Ignorer filer med utvidelsen
+ALT må ikke tastes
+ALT må tastes
+vennligst angi utvidelser
+Merk denne boksen hvis du vil ha FDM til å registrere klikk i Internet Explorer
+Merk denne boksen hvis du vil ha FDM til å overvåke utklippsholder
+Overvåkning for filer kun med spesifisert utvidelse
+Overvåk ikke for filer med spesifisert utvidelse
+Overvåk kun hvis ALT ikke er tastet
+Overvåk kun hvis ALT er tastet
+Oppstart
+Kjør på oppstart
+Start minimert
+System
+Minimer til statusfeltet
+Lukk knappen minimer vinduet
+FDM startes automatisk når Windows startes
+FDM startes minimert etter start
+Når det klikkes på minimerknappen, vil FDM bli minimert til statusfeltet
+Hvis sjekket, klikking på lukkenappen vil gjøre det samme som med minimerknappen
+Oppdatering
+Addresse til oppdateringserver
+FDM vil Sjekkke etter en ny version automatisk
+Nettverksbruk optimeringsveiviser
+Velkommen til nettverksbruk optimeringveiviser!
+Denne veiviseren vil hjelpe deg å sette opp de optimale innstillinger for din tilkobling. Den vil sette opp nedlasting- og standardegjenskaper for nedlastinger.
+vennligst Velg tilkoblingsmåte
+ferdig
+spesifiser din Internettilkobling her
+Konfigurer FDM for optimal utnyttelse av din tilkobling
+Oppgave
+Starttid
+Neste starttid
+Siste starttid
+Kan ikke hente listen med tidsplaner. Den er kanskje skadet eller blir brukt av et annet program
+Kan ikke hente tidsplaner logg
+Kan ikke hente listen med tidsplaner
+Oppgave "%s" var tidsplanlagt. Start denne?
+Endre trafikkbruk metode til "%s"
+Legg på
+Alle tilkoblinger
+Endre trafikkbruk metode to
+Lukk
+Restart
+Logg av
+En gang
+Søn
+Man
+Tir
+Ons
+Tor
+Fre
+Lør
+På dager:
+Hver
+dager
+time
+På FDM oppstart
+Når oppring lykktes
+Når oppringning mislykktes
+Når ingjen aktive nedlastinger
+Når hastighet er mindre en eller lik %d BPS under %d
+Når alle nedlastinger er i feilmetode under
+Aldri
+Ukjent
+Suksessfult Koblet til "%s"
+Mislykket å Koble tilte til "%s"
+Oppstart lyktes
+Ikke mer minne
+Kan ikke starte
+Tidsplan avbrudd vil resultere i avsluttning av programmet under opstart. Tidsplan vil bli ignoreret
+Maksimum oppringnings førsøk
+Pause mellom forsøk
+avbryt hvis koblingshastighet er mindre en:
+Prøv ijgjen
+Ikke mer en
+Bruk koblingjen
+Hvis suksessfull
+ganger
+avbryt alle aktive koblinger
+koble til avbryt
+Programnavn:
+Argumenter:
+Type lukking:
+Tving programmer til å avslutte
+Kjør program
+Etabler oppringnings kobling
+Legg-på kobling
+Endre trafikkbruk metode
+avslutt FDM
+Slå av PC
+nedlastinger å starte
+nedlastinger å stoppe
+Programmer
+alle filer
+Beklager, denne funksjon er kun tilgjengelig på Windows 2000, XP og høyere
+vennligst skriv inn programnavn
+vennligst Velg nedlastinger
+Velg trafikkbruks metode du vil sette til denne oppgavestart
+Merk denne boks hvis du vil sette en grense for maksimum antall mislykkedede oppringningsforsøk 
+Tid mellom mislykkede forsøk
+Merk denne boksen for å etablere kobling med hastighet ikke mindre en verdien du angir
+Angi verdien for minimum påkrevet koblingshastighet her
+FDM vil forsøke igjen å etablere den påkrevde kobling hvis du merker denne boksen
+Merk denne boksen for å begrense maksimum antall av mislykkede forsøk på å etablere kobling
+Angi ønskede nedlasting(er) her
+Liste over alle tilgjengelige nedlastinger
+Tilføy valgte nedlasting til oppgavelisten over nedlastinger
+Fjern valgte nedlasting fra oppgavelisten over nedlastinger
+Angi program du vil ha til å Kjøre her
+Finn program på din PC
+Angi programargumenter her
+Angi din type av sessjonavbrudd her
+Merk denne boksen for å tvinge avbrudd av din sessjon. Dette er praktisk hvis programmer fryser i systemet. I dette tilfelle, alle ikke-Lagrete data vil gå tapt
+Angi tidsplanshandling her
+Merk denne boksen hvis du vil ha FDM til å avbryte alle aktive koblinger
+Angi kobling å avbryte her
+På bestemte dager
+Søndag
+Mandag
+Tirsdag
+Onsdag
+Torsdag
+Fredag
+Lørdag
+På begivenhet
+I mens
+Lav hastighet:
+min.
+Minuter
+Timer
+Dager
+Når nedlastinghastighet er for lav
+Når alle nedlastinger er i feilmodus
+Vennligst angi dager
+Start oppgaven på angitt tidspunkt
+Innstill tidspunktet til å starte oppgaven her
+Start oppgaven på angitt dato
+Innstill datoen for å starte oppgaven her
+Start oppgaven på bestemte ukedager
+Start oppgaven hver Søndag
+Start oppgaven hver Mandag
+Start oppgaven hver Tirsdag
+Start oppgaven hver Onsdag
+Start oppgaven hver Torsdag
+Start oppgaven hver Fredag
+Start oppgaven hver Lørdag
+Start oppgaven periodisk
+Dette felt gir deg mulighet til å angi tidsinterval i minutter, timer eller dager
+Start oppgaven når en hendelse skjer
+Angi hendelsestype her
+Skriv tidsinterval her
+Skriv minimum påkrevd hastighet her
+Godkjenning kreves for å starte oppgaven
+Vent for godkjenning mens
+sek.
+Hvis sjekket, FDM vil spørre om å godkenne start av denne oppgave
+Hvis sjekket, FDM vil vente på godkjendelse under det angitte tidsinterval. Hvis det ikke svarer innen denne tid, vil oppgaven startes
+Addresser:
+Bygger opp listen av filer til nedlasting
+Koble til serveren
+Prøver å Bruke brukernavn og passord Lagret i sidemanageren
+Mottar liste over filer fra server
+kobling til serveren forsvant. Prøver at gjenetablere
+Bygger opp liste
+Modtar størrelse og siste endringsdato på filer
+Bruk av denne parameter kan nedsette hastigheten vesentlig
+Merk denne boksen hvis du vil ha FDM til å forespørre etter størrelse og dato på filer på HTTP servere
+Sidenavn
+koblinger
+Login
+Gruppe
+Kan ikke Kjøre listen på sider. Muligvis er den skadet eller blir brukt av et annet program
+Kan ikke lagre listen på sider
+Maksimum antall av samtidige koblinger:
+Standardgruppe for en ny nedlasting fra denne side
+bruk FTP passiv metode
+Vennligst tast sidenavn
+Side med samme navn eksisterer allerede. Venligst tast et annet sidenavn
+Maksimum antall koblinger må være høyere end 0
+vennligst Velg gruppe
+Angi sidenavn her
+Merk denne boksen for å begrense maksimum antall av samtidige koblinger til denne server
+Merk denne boksen for å tilføye nedlastinger fra denne server automatisk til valgte gruppe 
+Spør bruker
+Spør meg ikke igjen
+Disk skrivefeil
+Filen "%s" eksisterer allerede på disken. Hvad skal gjøres?
+Spør deg ikke om dette igjen. Ditt valg vil bli akseptert som standardvalg
+Overskriv eksisterende fil
+Omdøp denne fil
+Gjenoppta nedlasting. (Nedlasting vil starte i position lig med størrelse av eksisterende fil)
+Stopp denne nedlasting
+Ja
+Nei
+Nedlasting
+ble slettet. Slett fil på disken også?
+Vennligst tast brukernavn og passord
+Login til "%s"
+Send brukernavn og passord du angir til serveren
+Forbind ikke til denne server
+Størrelse av "%s" ble endret på serveren. Hvad skal gjøres?
+gjenstart nedlasting fra begynnelsen
+still inn nedlasting for den nye filstørrelsen. Ikke anbefalt
+Vent vennligst
+Opdatering
+Beskrivelse
+Opdatering bruker:
+Sjekker for opdatering
+Du bruker allerde den nyeste versjon
+Nedlasting
+Versjon %s build %s er tilgjengelig
+full distribuert av version %s (%s)
+Oppgrader til versjon %s
+Oppgrader til version %s (%s)
+Free Nedlasting Manager skal gjenstartes. gjenstart nå?
+Oppdatering ferdig
+Kan ikke finne oppdateringer
+Angi oppdateringstype her
+oppdatering FDM bruker full distributiv
+oppdatering FDM bruker oppgradering distributiv
+Finn mer information om oppdateringsprosess
+Hva er nytt i denne versjon?
+Start oppdatering av FDM nå
+Avbryt oppdatering og lukk dette vinduet
+Opprett nedlastinger
+Velg innhold
+Velg bort innhold
+Liste over nedlastinger å tilføye
+Merk valgt mappeinnhold og tilføy dette til nedlastingliste
+Avmerk valgt mappeinnhold ikke å tilføye til nedlastingliste
+Om FDM
+Copyright (c)
+All rights reserved
+Registrert til:
+Allerede oppdateret. gjenstart er påkrevet
+Ugyldig brukernavn eller passord
+Kan ikke hente historikk filen
+Kan ikke lagre historikk filen
+HTML Spider standardinnstillinger
+HTML Spider
+Websider tre
+Nedlasting webside
+Webside nedlasting innstillinger
+Start nedlasting
+Stop nedlasting
+Tidsplanlegg nedlasting
+Slett
+Åpne webside i browser
+Start nedlasting automatisk
+Webside (page) URL
+Filer
+Slett nedlastinger også?
+Kan ikke hente listen over websider
+Kan ikke lagre listen over websider
+URL på webside eller HTTP server du vil nedlaste fra
+URL på webside eller HTTP server fra hvor nedlasting ble startet
+Navn på mappe at lagre nedlastinger i
+målmappe:
+Websider
+Sider
+Utvidelser av websider’ filer med HTML kode:
+Nedlasting CSS filer
+Nedlasting websider fra andre sider
+Bilder
+Nedlasting bilder
+Nedlasting bilder som linker til andre sider
+Dybde av nedlasting:
+Utvidelser av websider' filer med HTML kode. Websider vil bli skannet for linker av bilder og andre sider til nedlasting
+Hvis sjekket, vil CSS filer også bli Nedlastet. Anbefalt
+Hvis usjekket, vil websider fra andre sider ikke bli Nedlastet. F.eks. hvis denne boks er usjekket og du starter nedlasting fra http://example.com/, så vil http://otherside.com/some.html ikke bli Nedlastet, men http://example.com/some.html vil bli Nedlastet
+Hvis sjekket, vil websiders bilder også bli Nedlastet
+Hvis usjekket, vil websiders bilder som linker til andre sider ikke bli Nedlastet
+Dybde av nedlasting. F.eks hvis du starter nedlasting fra http://ex.com/index.html. hvor der er en link til http://ex.com/some.html fra http://ex.com/index.html. så vil dybden http://ex.com/some.html være 1. innstillingensdybde til 0 hvilket resulterer kun nedlasting av startsidens innhold.
+Nedlasting filer fra websider
+Nedlasting filer fra andre sider
+Elimination av filer etter filtype
+Start
+Nedlasting
+Nedlasting ikke
+Filer med utvidelser:
+Merk denne boksen for å nedlaste filer fra websider
+Merk denne boksen for å nedlaste filer fra andre sider
+Merk denne boksen for å ignorer filer med den angitte utvidelse
+Filer med de utvidelser angitt nedenfor vil bli Nedlastet hvis sjekket
+Filer med de utvidelser angitt nedenfor vil IKKE bli Nedlastet hvis sjekket
+Eksporter innstillinger
+Importer innstillinger
+Kunne ikke Kjøre Regrediger.exe
+En feil opstod under forsøk av eksporter innstillinger
+En feil opstod under forSøk av importer innstillinger
+FDM registreringsfiler
+Elimination av bilder med utvidelse
+bilder med utvidelser:
+Merk denne boks for å ignorere bilder med angitt utvidelser
+bilder med de utvidelser angitt nedenfor vil bli Nedlastet hvis sjekket
+bilder med de utvidelser angitt nedenfor vil IKKE bli Nedlastet hvis sjekket
+Nedlasting ikke dette og slet
+Server støtter ikke nedlasting gjenopptagelse. gjenstart fra begynnelsen
+Kunne ikke åpne URL
+Beklager, uventet feil opstod under forsøket på at skrive til registreringen
+Takk for registreringen! vennligst restart FDM
+Nedlasting med Free Nedlasting Manager
+Legg til Nedlasting webside med Free Nedlasting Manager
+Legg til FDM til browsers høyreklikk meny
+Merk denne boksen for å tilføye elementene "Nedlasting med Free Nedlasting Manager" og "Nedlasting webside med Free Nedlasting Manager" til browsers høyreklikk meny
+Reduser trafikkbruk på browseraktivitet
+Reduser med et nivå
+Angi Light metode
+Merk denne boksen for å redusere trafikkbruket automatisk når der surfes på internet. Dette gir mulighet for å surfe hurtigere imens FDM nedlastinger
+trafikkbruk metode vil bli redusert med et nivå. Heavy->Medium, Medium->Light
+trafikkbruk metode vil bli endret til Light-metode
+Gyldig for
+Gyldig for sub-domener
+Merk denne boksen for å bruke denne post til nedlasting via HTTP
+Merk denne boksen for å bruke denne post til nedlasting via HTTPS
+Merk denne boksen for å bruke denne post til nedlasting via FTP
+Merk denne boksen for å bruke denne post til nedlasting fra sub-domene servere. F.eks. for siden http://side.com vil dette bli til http://some.side.com
+Venligst Velg mindst en protokol
+Maksimum antall kjørende nedlastinger
+Merk denne boksen hvis du vil sette et maksimum antall nedlastinger Kjørende på samme tid
+gjenstart nedlasting
+Opprett en seksjon til
+Stop en seksjon
+; innhold: [section x] - Stoppet
+Stoppet
+; meddelesesområdet
+Dropboks
+;
+Kan ikke finne Opera Plugin-mappe. Vil du angi dette manuelt?
+Kan ikke finne Netscape Plugin-mappe. Vil du angi dette manuelt?
+Kan ikke installere Opera overvåkning
+Kan ikke avinstallere Opera overvåkning
+Kan ikke installere Netscape overvåkning
+Kan ikke avinstallere Netscape overvåkning
+Merk denne boks hvis du vil ha FDM til å registrere klikk i Opera browser
+Merk denne boks hvis du vil ha FDM til å registrere klikk i Netscape browser
+; opprett nedlasting dlg
+Forespør størrelse
+; spør om størrelsen på en nedlasting
+Spør...
+Forespør om størrelsen på en nedlasting fra serveren
+Ja til alle
+Nei til alle
+Detaljert logg
+Hvis sjekket, FDM vil vise respons fra serveren
+Endringerne vil tre i kraft etter gjenstart av browseren
+Liste over oppgaver
+Liste over filer
+Liste over steder
+Liste over sider
+Sletter nedlastinger
+Bygger opp listen over nedlastinger
+Opprett batch nedlasting
+Fra:
+Til:
+Steps:
+Wildcard bytes:
+Resultater
+Sample:
+Sekvens startnummer
+Sekvens slutnummer
+Sekvenssteps. F.eks. hvis den er 10, vil sekvensen bli 0, 10, 20, ...
+Antall wildcard bytes. F.eks. hvis denne er 1, vil sekvensen bli 1, 2, 3. hvis denne er 2, blir sekvensen 01, 02, 03.
+Klikk her for å kikke på de gjenererede sekvenser
+Gi browser lov til at nedlaste, hvis du Velger avbryt
+Merk denne boksen hvis du vil ha din browser til å nedlaste fil når du klikker avbryt i "Opprett nedlasting" dialogen
+Det endelige sekvensnummer skal være høyere end startnummeret
+Vennligst bruk (*) i URL'en for å spesifisere mal for URL
+Opprett en utvidelse hvis en fil ikke har en
+Merk denne boksen for å Opprettte en spesifisert utvidelse for en fil som ikke har en. F.eks. hvis filnavnet er "fil" og du spesifiser "txt", vil resultatet bli "fil.txt"
+Vis størrelser i bytes kun
+Merk denne boks for å vise alle størrelser i bytes istedet for kilobytes eller megabytes
+Utfør virusSjekk
+Argumenter:
+utvidelser:
+Merk denne boks for å Sjekkke Nedlastet filer med antivirus automatisk
+spesifiser navn for antivirusprogram her
+spesifiser argumenter for antivirus her
+spesifiser utvidelser for Nedlastet filer der skal Sjekkket her
+Vennligst tast antivirusnavn
+Navn er ugyldig. vennligst Sjekk igjen
+Kjører antivirus
+Deaktiver oppgave etter avbrudd
+Slett oppgave etter avbrudd
+Merk denne boksen for å deaktivere oppgave automatisk etter avbrudd
+Merk denne boksen for å slette oppgave automatisk etter avbrudd
+Gå
+Tilbake
+generer et filnavn automatisk
+Merk denne boksen for å generere et filnavn på nedlasting automatisk 
+Lagre med "htm" utvidelse
+Merk denne boksen for å lagre alle websider med "htm" utvidelse
+Klik denne knappen for å kalkulere totalstørrelse over alle nedlastinger
+Behold servermappers struktur
+Merk denne knappen for å beholde den originale servermappes struktur. Ellers vil alle filer på server kun bli Lagret i en mappe
+Du har valgt en annen mappe. Angi denne mappe som standard for denne gruppe? Du kan også endre standardmappen i gruppens egenskaper.
+; === ADDED LINES ===
+Nedlasting med denne URL eksisterer allerede. Hva skal gjøres?
+Kjør
+Kjør den Nedlastete fil
+Versjon
+Klikk her for å kontakte os
+Klikk her for å laste ned den nyeste versjon
+Advarsel: Dette program er beskyttet med copyright. Uautoriseret reproduktion eller distribution av dette program, vil bli retsforfulgt.
+; === new version ===
+Nedlasting alle med Free Nedlasting Manager
+Tilføy liste med nedlastinger
+Fjern valgte
+Dette er listen over URLs der skal tilføyes
+Klikk denne knappen for å fjerne alle valgte URLs fra listen
+Kan ikke finne Firefox plugin-mappen. Vil du angi denne manuelt?
+Kan ikke installere Firefox overvåkning
+Kan ikke avinstallere Firefox overvåkning
+Merk denne boks hvis du vil ha FDM til å registrere klikk i Mozilla Firefox browser
+Nedlasting valgte med Free Nedlasting Manager
+Starter
+Websider
+Aktive nedlastinger
+Der er ingen aktive nedlastinger på nåværende tidspunkt
+Beskjeder
+bruk "pop-ups" i statusfeltet 
+Timeout
+Merk denne boksen for å Bruke "pop-up" beskjeder i statusfeltet når en nedlasting er stoppet eller er ferdig. Note: Denne funksjon virker kun på Windows 2000/XP eller højere
+En "pop-up" vil bli lukket automatisk etter denne tids utløp
+Mirrors
+Automatisk Søk etter mirror URLs
+Maksimum antall av mirrors
+Kalkuler mirrors hastighet
+Rekalkuler hastighet hver
+Merk denne boksen for å få FDM til å Søke etter mirror URLs automatisk for hver nedlasting
+Begrense antallet av mirror URLs pr. nedlasting. Dette gir dig mulighet for å redusere mirrors hastighetskalkulationstid
+Merk denne boksen for å få FDM til å kalkulere hastigheten på hver mirror server
+Mirrors hastighet vil bli rekalkuleret automatisk på det angitt tidsinterval
+Søk ikke hvis filstørrelsen er mindre end
+FDM vil ikke Søke etter mirrors hvis filstørrelsen er mindre en den angitte størrelse
+Søk ikke hvis filstørrelsen er ukjent (Anbefalt)
+Tilføy mirror
+Søk etter mirrors
+Tilføy mirror URL for denne nedlasting manuelt
+Søk etter mirror URLs for denne nedlasting med filsearching.com
+Liste over mirror URLs
+Serverhastighet
+I bruk
+Målsett mirrors hastighet
+Målsett mirror servers hastighet
+nedlastinger Info
+Venter...
+Mirror URL for nedlasting
+filstørrelse overskrider 2GB. Slike nedlastinger støttes kun via FTP
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGYNN: Ny Nedlasting side
+Ny Nedlasting
+avgjør gruppe for nedlasting automatisk
+Gruppe:
+Lagre nedlasting til dets gruppes tilegnede mappe
+Merk denne boks hvis du vil ha nedlastinggruppen til at avgjøre utfra utvidelse av fil eller innstillinger fra sidemanager
+Angi standardgruppe manuelt
+Merk denne boks hvis du vil ha nedlasting Lagret til dets gruppes standardmappe (se gruppens egenskaper)
+Angi standard målmappe manuelt
+; SLUTT
+; BEGYNN: Overvåkningsside
+Stille overvåkning
+Hvis sjekket, vil "Opprett nedlasting" dialogen ikke bli vist når det tilføyes nedlasting fra browser
+Tilpass
+Velg menyinnhold å vise i browserens høyreklikkmeny
+; SLUTT
+Velg menyinnhold at vise
+Minst et menyinnhold skal Velges
+bruk lyde
+Merk denne boksen hvis du vil ha FDM til at avspille lyd til noen hendelser (f.eks. når nedlasting er fullført)
+Velg lyd for hver hendelse
+; BEGYNN : Tilpass lyddialog
+Tilpass lyd
+Angi lyd
+Fjern
+Test
+Liste over FDM's hendelser og tilegnede lyder. Her kan du stille FDM til at spille en lyd når noen hendelser har oppstått
+Nedlasting tilføyd - avspill lyd når en eller flere nedlastingeringer ble tilføyet til listen over nedlastinger
+Nedlasting fullført - avspill lyd når nedlasting er fullført.
+Nedlasting mislyktes - avspill lyd når en feil har oppstått under et forSøk på å nedlaste en fil.
+Oppringning lyktes - avspill lyd når tidsplanens oppgave "Etabler oppringnings kobling" har blitt fullført.
+Oppringning mislykkedes - avspill lyd når tidsplanens oppgave "Etabler oppringnings kobling" mislyktes av en eller annen grunn.
+Angi lyd for valgte hendelse
+avspill ikke en lyd når valgte hendelse har oppstått
+Test valgte lyd
+Hendelse
+Lydfil
+Ingen lyd
+Nedlasting tilføyd
+Nedlasting fullført
+Nedlasting mislykkedes
+Oppringning lykkedes
+Oppringning mislykkedes
+Lydfiler
+; SLUTT
+Søker etter mirrors...
+Målsetter mirrors hastighet...
+Søkning etter mirrors er allerede blitt fullført 
+Koble til Søk server...
+Modtar resultater...
+Der er funnet %d mirrors
+Mirror Søkning ferdig
+Prøver en annen mirror...
+Der er ingen mirrors funnet
+mislykdes
+Mirrors hastighet ble målsatt
+; BEGYNN: Historie side
+Historie
+Lagre historikk over linker og mapper
+Lagre historikk over mapper kun
+Behold poster innenfor
+Maksimum antall poster
+Rydd historikk
+FDM vil lagre historikk over linker og Skriv innede mappenavne
+FDM vil lagre historikk over mapper kun
+FDM vil slette poster som har eksistert i historikken lengere en den angitte tidsperiode
+Maksimum antall poster i historikken. Når antall poster overskrider denne verdi, FDM vil slette de eldste poster
+Slett alle poster fra historikken
+; SLUTT
+Importer
+Eksporter
+Importer liste over nedlastinger
+Exporter liste over nedlastinger
+Tekstfiler
+Kan ikke åpne en fil
+Eksporter alle nedlastinger
+Eksporter alle nedlastinger på listen
+Eksporter valgte nedlastinger
+Eksporter ikke fullførte nedlastinger
+Tilføy hvis fil eksisterer allerede
+Ugyldig gruppenavn. bruk venligst ikke  / eller \ symboler.
+Avslutt når ferdig
+; BEGYNN : nedlastinger historikk vinduet
+Lagt til
+Lagret til
+; SLUTT
+Papirkurv
+; BEGYNN: Papirkurv
+egenskaper
+Rydd papirkurv
+;SLUTT
+;BEGYNN: Papirkurv egenskaper
+Plasser ikke slettet nedlastinger i papirkurv
+Behold maksimum
+nedlastinger
+Behold ikke fullførte nedlastinger
+Spør etter Bekreftelse når sletter nedlastinger
+Papirkurv egenskaper
+Merk denne boksen hvis du ikke vil lagre slettede nedlastinger i papirkurv
+Merk denne boksen hvis du vil begrense antallet av slettede nedlastinger Lagret i papirkurven
+Maksimum antall nedlastinger å lagre i papirkurv
+Merk denne boksen hvis du ikke vil ha fullførte nedlastinger Lagret i papirkurv etter sletning
+Merk denne boksen hvis du vil ha FDM til å Spørre om en Bekreftelse når der forSøkes at slette en nedlasting
+;SLUTT
+gjenskap
+gjenskaper nedlastinger...
+; Historie hovedelementer
+I dag
+I går
+En uke
+En måned
+Tilpass...
+; slutt
+Rydd historikk
+Lagre historikk over nedlastinger
+Lagre historikk over fullførte nedlastinger kun
+Merk denne boksen hvis du vil lagre historikk over dine nedlastinger
+Merk denne boksen hvis du vil lagre historikk over fullførte nedlastinger kun
+nedlastinger historikkinnstillinger
+Bygger liste over historikk poster...
+; Nedlasting ble slettet
+Ble slettet
+Angi tidsområde
+Finn
+Finn neste
+Finn hva
+; BEGYNN : Finn dialog
+Søk i
+Lokal filnavn
+Angi hva du vil finne her
+Søk i filpart av URL
+Søk i hele URL
+Søk i kommentar av nedlasting
+Søk i navn og sti av Nedlastet fil på lokal disk
+Opsett avansert Søkeinnstillinger
+; AVANSERT innstillinger
+Søk hvor
+Søk i listen over nedlastinger
+Søk i historikk over nedlastinger
+Søk med angitt time
+still inn
+Søk i papirkurv
+Søk med angitt filstørrelse
+Minimal
+Maksimal
+Søk i listen over nedlastinger
+Søk i historikk over nedlastinger
+Søk kun etter nedlastinger som oppfyller det angitt tidsområde
+Angi tidsområdet
+Søk i papirkurv
+Søk kun etter filer som opfyller det angitte filstørrelsesområde
+Minimal størrelse krevet
+Maksimal størrelse krevet
+Søk i gruppe
+Velg gruppen hvor Søkningen vil bli utført
+; SLUTT
+Søker nedlasting...
+Ingen elementer funnet
+Ingen flere elementer funnet
+Søk utført
+URL til utklippsholder
+ZIP forhåndsvisning
+Minst en fil skal Velges.
+Det er mulig at denne filen som er nedlastet er et ZIP-arkiv. Vil du forhåndsvise den?
+Audio/Video forhåndsvisning
+Mislykkedes å åpne filen.
+Ukjent medietype.
+Venligst installer DirectX 8.0 eller høyere for å bruke denne funksjon. Du kan nedlaste den seneste DirectX fra microsoft.com.
+Medie Info
+Størrelse:
+Tilgjengelig:
+Lengde:
+Mute
+avspill
+Pause
+Filter
+utvidelser (adskilt av mellomrom, f.eks. zip rar arj):
+Fjern filer med slike utvidelser
+Behold filer med slike utvidelser kun
+Argumentstreng inneholder ikke %fil% makro. Denne makro er nødvendig for å gi en indikasjon over hvilken fil som skal Sjekkkes med ditt antivirus program.
+Fortsett allikevel?
+Advarsel
+bruk skjulte attributter for ikke-fullførte nedlastinger
+Tilknytt kommentar til filnavnet når ferdig
+Lagre ikke servers sider
+Merk denne boksen hvis du ikke vil lagre serversider på din PC, men kun filer og bilder
+bruk ZIP-forhåndsvisning
+Merk denne boksen hvis du vil forhåndsvise innholdet av ZIP-arkiv i begynnelsen av nedlasting til nedlasting av kun enkelte dele av arkivet.
+Volum:
+Start nedlasting automatisk
+Merk denne boksen hvis du vil ha FDM til at starte hver ny nedlasting automatisk
+Vennligst Sjekk filene til nedlasting
+Angi alternativ lokasjon (URL) for denne nedlasting
+Preview ikke i fremtiden
+Du har deaktiveret ZIP-forhåndsvisning. Hvis du vil slå det på, gå til innstillinger -> Nedlastinginnstillinger (Ctrl+O) -> Ny nedlastingeride, og Merk "bruk ZIP-forhåndsvisning" boksen. 
+Ignorer liste
+Liste over websider som skal ignoreres under nedlasting av en side.
+Undermapper
+Tilføy
+Ignorer også alle undermapper
+; Proxy tab nye innstillinger
+bruk rollback på avbrutte koblinger
+Størrelse på rollback
+bytes
+Merk denne innstilling hvis du vil aktivere rollback. Denne innstilling hjelper med å beskytte dine nedlastinger fra at bli skadet.
+størrelse på rollback. Større størrelse vil gi rollback mulighet for å arbeide mer sikkert. Anbefalet størrelse er 3000 bytes. Du kan øke denne verdi hvis dine nedlastinger stadig forblir skadet.
+; nedlastingerinnstillinger -> overvåknings tab
+Overvåk ikke for filer mindre en
+bruk denne innstillingen hvis du vil ha FDM til å Hoppe over filer som er mindre end den angitte størrelse
+KBytes
+Advarsel! Papirkurven er for stor. Dette kan nedsette yteevnen dramatisk. Det er anbefalt å rydde papirkurven. Vil du gjøre dette?
+Merk ikke denne igjen
+Advarsel! Nedlastinghistorikken er for stor. Dette kan nedsette yteevnen dramatisk. Det er anbefalt å rydde nedlastingshistorikken. Vil du gjøre dette?
+Server kan ikke garantere dets gjenoptagelseskapabiliteter. Svar er ugyldig.
+Kopier til utklippsholder
+; gjenerelle innstillinger | temaside
+Temaer
+Tema
+Aksepter at temaer bruker egne ikoner
+Aksepter at temaer bruker egne bitmaps
+; standardtema
+<standard>
+NOTE: Alle endringer vil kun tre i kraft etter gjenstart av Free Nedlasting Manager.
+Vis nedlastinger info mens i fremdrift
+Annuller filer med utvidelser:
+Liste over utvidelser av filer å annullere
+Ingen aktive nedlastinger
+avspill lydfil når alle nedlastinger er fullførte
+Importer liste over URLs fra utklippsholder
+passord
+Sidemanager innstillinger
+; Lagre passord dialog
+Lagre passord?
+Free Nedlasting Manager kan lagre passord for denne server for å unngå Skriving hver gang det nedlastes fra denne server.
+Lagre denne passord?
+Forslå ikke Lagring av passord
+; sidemanager innstillinger | passord tab
+bruk sidemanager til Lagring av mine passord
+Spør mig om Lagring av passord eller ikke
+Forslå ikke Lagring av passord
+Slett alle passord ved avsluttning
+Slett alle passord
+; Opprett ny HTML Spider oppgave
+Fjern fullførte nedlastinger fra listen (anbefalet)
+Merk denne boksen hvis du vil ha HTML Spiders nedlastinger til å bli slettet automatisk. Dette øker hastigheten ved nedlasting av store sider.
+Endringer vil tre i kraft etter gjenstart av Free Nedlasting Manager
+Ny stil
+Gammel stil
+Biblioteksnavnet er ugyldig
+Skjul flytende vinduer i fullskjermsmodus
+Merk denne boksen hvis du vil at flytende vinduer skal skjules automatisk i fullskkjrmsmodus.
+var tidsplaneret til at bli Kjørt.
+Vil du Kjøre denne?
+Kjør nedlasting når den er fullført
+Venligst bruk (*), (*A) eller (*a) i URL'en for å angi mal for URL
+Mirrors Søkeserver:
+Dvale
+Standby
+Husk mitt valg
+Forslå endring av gruppes standardmappe
+Lagre fil
+Åpne fil
+Lagre fil og åbne den
+Nedlastingtype:
+Link til FDM
+Link til Free Nedlasting Manager
+Kjære bruker!
+Free Nedlasting Manager er et program tilegnet til dig fritt. Du kan Bruke det så lenge du vil fritt.
+Hvis du finner Free Nedlasting Manager brukbart, ber deg om å hjelpe oss med å udbrede det ved å linke til det på din webside. Dette vil hjelpe andre med å kjenne til Free Nedlasting Manager.
+På forhånd takk for din hjelp \nFree Nedlasting Manager development teamet.
+Påminn meg igjen om 3 dager
+Påminn meg neste gang jeg Kjører Free Nedlasting Manager
+Vis mig ikke dette vinduet igjen
+Vis link HTML kode
+Link HTML kode
+Flere eksempler
+Kopier til utklippsholder
+Skjul
+; "trafikkbruk metode er blitt endret" vinduet
+trafikkbruk metode er blitt endret
+Du har skiftet netverk trafikkbruk metode.\nFree Nedlasting Manager har 3 metoder:
+I denne metode vil Free Nedlasting Manager nedlaste med maksimum hastighet. Dette er den mest aggressive metode.
+I denne metode vil Free Nedlasting Manager nedlaste med middel hastighet. Denne metode gir mulighet til å være på internett samtidig som det nedlastes filer med god hastighet.
+I denne metode vil Free Nedlasting Manager nedlaste med lav hastighet. Denne metode nedlastinger med henblikk på ikke å overbelaste netverkskoblingen.
+;
+Omdøb ved gjenstart
+Skriv inn en verdi mindre end %d
+; eksporter/importer nedlastinger
+URL listefiler
+nedlastinger information listfiler
+;
+Eksporter innstillinger
+;
+Inntil datoen på en fil identisk med datoen angitt av en server
+still inn samme dato på en Nedlastet fil som den på server
+gjenerer beskrivelsesfil
+gjenerer en fil med navnet "*.dsc.txt" (* - navn på en Nedlastet fil) som vil innholde en kort beskrivelse over en Nedlastet fil (kommentar + url + dato). Denne fil vil kun bli gjenereret for en nedlasting der har kommentarer.
+Denne fil er blevet Nedlastet fra
+Motta ikke fildato fra en server
+Denne innstillingen gir deg mulighet for å øke hastigheten ved start av en FTP nedlasting. Free Nedlasting Manager vil bruke størrelse kommando istedet for LIST.
+Lagre ikke logger over nedlastinger
+Aktivering av denne innstillingen vil gjøre Free Nedlasting Manager start og avsluttning hurtigere og vil redusere minnebruk.
+;
+Eksporter historikk over nedlastinger
+Eksporter alle poster
+Eksporter alle poster på listen
+Eksporter valgte poster
+Eksporter poster over fullførte nedlastinger kun
+;
+HTML filer
+;
+Free Nedlasting Manager nedlastinghistorikk
+URL over nedlasting
+Nedlastet til fil
+Størrelse på fil
+Nedlasting ble fullført
+Nedlasting ble slettet
+;
+Lagret i
+filstørrelse
+gjennoppta understøtning
+Lukk denne dialogen når nedlasting er fullført eller stoppet
+Åpne
+Vil du se dette vinduet igjen?
+Ja, jeg vil se dette vinduet for hver nedlasting
+Nei, vis meg ikke dette vinduet mer
+Ja, men nei for denne nedlasting
+bruk av SHIFT-tasten betyr at denne nedlasting vil bli slettet fra disken og du vil ikke være i stand til at gjenskape den.\nEr du sikker?
+Velg gruppe
+Angi gruppers rotmappe
+Velg gruppers rotmappe.\nEndringer vil kun bli tildelt til nye nedlastinger.
+Siste Nedlastet filer
+(tom)
+Tilbagehold alle nedlastinger
+Vis nedlasting fremdriftsvindu
+Hvis merket av, vil FDM Opprettte et spesialvindu med informasjon om nedlasting for hver Kjørende nedlasting
+; generelle innstillinger | forskjellige sider
+Timeouter for Bekreftelser
+Kjør nedlasting
+Spørr om type lukking
+Bekreftelsestimeout for "verktøy | Legg-på når ferdig" kommando.
+Bekreftelsestimeout for "verktøy | avslutt når ferdig" kommando.
+Bekreftelsestimeout for "verktøy | Slå av datamaskinen når ferdig" kommando.
+Bekreftelsestimeout for Kjør Nedlastet fil når nedlasting er fullført.
+Hvis merket, vil FDM Spørre etter type av avsluttning for "verktøyer | Slå av datamaskin når ferdig" kommando.
+Spør ikke etter Bekreftelse
+; 5 sekunder, 10 sekunder, ...
+%d sekunder
+Vent på min Bekreftelse
+Ignorer sider fra denne mappe
+Nedlasting sider fra denne mappe kun
+Inkluder undermapper
+Ignorer alle websider som er i denne mappe.
+Nedlasting websider som er i denne mappe kun og ignorer andre websider.
+Merk denne innstilling hvis du vil ha HTML Spider til ignorere (eller nedlasting kun) sider som er i alle undermapper i den angitte mappe.
+Her skal du angi URL for mappen.\nEksempel: "http://side.com/docs/".
+Type
+Ignorer
+Kun
+Angi antall
+Tildel
+Her skal du angi antallet for batchlisten.\nEks. 1-100, eller 1-100s2w3.
+Klikk denne knappen for å tildele antallet som bruker dialogvinduet.
+Enkelt antall
+Antall
+Tildel antall
+Syntaxfeil
+Pakk ut arkiv
+Pakk ut
+Utpakking
+Målmappe
+Utpakking mislykkedes. Filformatet er ukjent.
+Totalt Nedlastet denne måned\n(%s blev Nedlastet sidst måned)
+Totalhastighet på nedlasting
+Deaktiver verktøy | "når ferdig" oppgave etter kjøring
+Når Brukt, alle verktøy | "når ferdig" oppgave vil bli automatisk deaktivert etter kjøring. Så det vil kun bli Kjørt en gang.
+; %s
+; første - navn på en fil
+; anden, tredie - fil info (størrelse + dato).
+"%s" fil eksisterer allerede.\n\nVil du erstatte den\n(%s)\n\nmed denne\n(%s)?
+Ja til alle
+Hopp over
+Hopp over alle
+Format på arkiv er ukendt
+Besøk webside
+Installer pakke
+Som standard, understøtter FDM kun ZIP, RAR og ARJ arkiver.\nDu kan tilføye flere understøttet arkiver ved at installere arkiv-supportpakken for Free Nedlasting Manager (Internetkobling er påkrævet).
+FDM arkiv-supportpakke
+Flytt opp
+Flytt ned
+Flytt valgte nedlasting(er) opp
+Flytt valgte nedlasting(er) ned
+Merk filintegritet
+Noen websider tilbyr spesielle Checksummer for filer som er tilgjengelige til nedlasting, for å sikre brukerne at den nedlastede fil ikke er skadet. Du kan Skrive inn denne Checksum her og FDM vil Sjekke filintegriteten.
+Algoritme
+Checksum
+Sett inn fra utklippsholder
+Sjekk
+Kalkulerer Nedlastet fils Checksum...
+Filintegritet Sjekk lykkedes
+Filintegritet Sjekk mislykkedes
+Filintegritet Sjekk blev fullført.\nDer blev ikke funnet noen feil i den Nedlastede fil.
+Filintegritet Sjekk blev fullført.\nDer blev funnet feil: Filen blev skadet under nedlasting prosessen. Det er påkrevet å gjenstarte nedlasting fra begynnelsen igjen.
+Vis ikke dette vindue igjen hvis Sjekk fullførtes
+Kunne ikke finne programfilen på det antivirusprogram du har valgt.\nvenligst angi dette selv.
+Filers størrelse er ikke ens
+Lagre som:\n(Eks.: fil(*)(*A)(*a).txt)
+Ugyldig Lagring som angitt mal.\nVær sikker på at denne stemmer overens med malen på URL.
+Når ferdig
+Når ferdig (alle fullførte eller ved feil)
+Programmer
+Hva er dette?
+Meninger
+;
+Kjære folkens!
+Free Nedlasting Manager (FDM) er en av det meste populære nedlastingsprogrammer i verden, vi har millioner av aktive brukere, nu etter dette er blevet et selskab, vil vi ha mere!
+Hvis du finner programmet brukbart og et must-ha program som vi gjør, ber vi vennligst deg om og hjelpe oss å sprede det rundt i verden ved at linke til det i din blog, webside eller personlige space, som eks. Myspace/MSN.
+; %s vil bli erstattet med "FDM buzz" 
+Offisielt ble %s startet August 16, 2006. Vårt mål er at få FDM til at være den hurtigst-spredende internetutility etter FireFox!
+FDM buzz
+; %s vil bli erstattet med "blogg" 
+Du kan følge FDM's fremdrift i Vårt %s.
+blogg
+Takk for din hjelp på forhånd,\nFree Nedlasting Manager development teamet
+Vis mig ikke dette vinduet igjen, Jeg har en god hukommelse.
+Meld dig på buzz'en
+Nei, ellers takk
+FDM fellesskap
+Skift til "meninger" etter nedlasting
+Hvis sjekket, "meninger" tab vil bli automatisk aktiveret når nedlasting er ferdig.
+Endre Internet Explorer's netverksidentifikasjon
+Hvis sjekket, vil dette instruere de websider du browser at Free Nedlasting Manager er installeret på ditt system. Bruk av denne innstilling kan resultere i blokering av nogle sider.
+Trussel?
+Sjekk om nogle av Free Nedlasting Manager's brukere har reporteret om denne nedlasting skulle indeholde virus/adware/spyware/m.m.
+OK, ingjen av Free Nedlasting Manager's brukere har reporteret at denne nedlasting skulle udgjøre en trussel.\n\nDog, dette er ingjen garanti at denne nedlasting ikke udgjør en trussel og det er anbefalet at Sjekkke den med et antivirusprogram.
+; behold alle %xxx, \n som er.
+Der er %d av %d av Free Nedlasting Manager's brukere som har rapportert at denne nedlasting udgjør en trussel.\nMiddel bedømmelse for denne nedlasting er %.*g.\n\nvis meninger om denne nedlasting?
+Sjekk alle nye nedlastinger før nedlasting om de udgjør en trussel
+Bruk denne innstilling for å få FDM til at sjekke automatisk, før nedlasting, om noen brukere har rapportert om denne nedlastingjen skulle udgjøre en trussel.
+Vis meninger når nedlastinger
+Hvis sjekket, FDM vil aktivere "meninger" tab automatisk og vise meninger om nedlasting under nedlastingjen.
+Sjekker om nedlasting er en trussel (se innstillinger for å deaktiver dette)
+OK, ingjen rapporteringer at dette skulle udgjøre en trussel
+Advarsel! Noen har rapportert at denne nedlasting udgjør en trussel
+Lukk
+Laster
+Nedlast ikke dette
+Cache skriveoperationer for Nedlastet data til disk
+Hvis sjekket, FDM vil bruke et internt cachebuffer med den størrelse du angir for skriveoperasjoner for Nedlastet data. Dette vil redusere forbrukstid på din harddisk. Dette kan Øke hastigheten under nedlasting på høyhastighetskoblinger.\nDog da Nedlastet data ikke skrives til harddisken med det samme vil dette kunne resultere i en re-nedlasting av data ved en computerfeil (ved værste tilfelle, størrelsen du angir).\nAnbefalet for høyhastighetskoblinger.
+Kan ikke installere SeaMonkey (Mozilla Suite) overvåkning
+Kan ikke avinstallere SeaMonkey (Mozilla Suite) overvåkning
+Merk denne boks hvis du vil ha FDM til å registrere klikk i Mozilla Firefox browser
+Merk denne boks hvis du vil ha FDM til å registrere klikk i SeaMonkey (Mozilla Suite) browser
+Gir browser lov til å nedlaste hvis du Velger avbryt
+Merk denne boksen hvis du vil ha browser til å nedlaste fil når du Velger avbryt i "Opprettt nedlasting" dialogjen
+Legg til FDM til browsers høyreklikk meny
+Merk denne boks for å tilføye elementene "Nedlasting med Free Nedlasting Manager" og "Nedlasting webside med Free Nedlasting Manager" til browserens højreklik meny (meny vises når du højreklikker)
+Velg menyelementer å vise i browsers høyreklikk meny
+Kan ikke installe Firefox overvåkning
+Flytt filer til mappe
+Hastighet er for lav. Restarter seksjon...
+Restart hvis hastigheten er for lav (i min.):
+Restart seksjon ved dramatisk redusering av hastigheten under nedlasting.
+Vil du se nedlastingsfremdrifts vinduet igjen?
+Beklager, denne tjenesten er imidlertidig ikke tilgjengelig. venligst prøv igjen senere.
+Flytt topp
+Flytt bunn
+Plasser nedlasting på toppen av listen
+Merk denne instilling hvis du vil ha nedlasting placeet i toppen av listen over nedlastinger.
+Overvåkning i Firefox browser kan ikke Brukes da en FlashGot utvidelse er installeret.\nDu skal avinstallere FlashGot først.
+Bruk
+Deaktiver
+Skift
+Hvis tilbagehold alle nedlastinger metode er aktiveret vil den bli deaktiveret, ellers vil den bli Brukt.
+Offisielt vil %s bli startet August 16, 2006. Vårt mål er å få FDM til at være den hurtigst-spredende internetutility etter FireFox!

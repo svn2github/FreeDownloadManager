@@ -136,6 +136,9 @@ fsInternetResult fsHttpFile::ProcessRangesResponse()
 	int pos = 0;
 	while (sz [pos++] != ' '); 
 
+	if (isdigit (sz [pos]) == false)
+		return IR_RANGESNOTAVAIL;
+	
 	UINT64 first = (UINT64) _atoi64 (sz + pos);	
 
 	while (sz [pos] >= '0' && sz [pos] <= '9')	
@@ -178,7 +181,15 @@ void fsHttpFile::RetreiveSuggFileName()
 		return;
 
 	psz += 8;	
-	while (*psz == ' ') psz++;
+	while (*psz == ' ') 
+		psz++;
+	bool bCharset = false;
+	if (*psz == '*') 
+	{
+		bCharset = true;
+		psz++;
+	}
+
 	if (*psz++ != '=')
 		return;
 	while (*psz == ' ') psz++;
@@ -199,6 +210,24 @@ void fsHttpFile::RetreiveSuggFileName()
 		*(pszFile-1) = 0;	
 	else
 		*pszFile = 0;
+
+	if (bCharset)
+	{
+		LPCSTR psz = strstr (szFile, "''");
+		if (psz != NULL)
+		{
+			if (strnicmp (szFile, "utf-8", 5) == 0)
+			{
+				wchar_t wsz [MAX_PATH];
+				MultiByteToWideChar (CP_UTF8, 0, psz+2, -1, wsz, MAX_PATH);
+				WideCharToMultiByte (CP_ACP, 0, wsz, -1, szFile, MAX_PATH, "_", NULL);
+			}
+			else
+			{
+				lstrcpy (szFile, psz+2);
+			}			
+		}
+	}
 
 	m_strSuggFileName = szFile;
 }

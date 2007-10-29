@@ -1,6 +1,9 @@
-; Translate for: Free Download Manager 2.3 BETA 6 build 678
+; Translate for: Free Download Manager 2.5 build 718
 ; Translator   : Geralt, 2007 
 ; Source       : Ondøej Josefus, June 2005
+;
+; Translator - Geralt, 2007
+;
 
 ; Your language name. Please keep it in English
 ;
@@ -783,14 +786,14 @@ Spustit
 Spustit stažený soubor
 Verze
 Kontaktovat autory
-Stáhnout poslední verzi
+Stáhnout aktuální verzi
 Upozornìní:  tento program je chránìn autorským zákonem a mezinárodními smlouvami. Neautorizované kopírování nebo distribuce programu, nebo jeho èásti, mùže pøinést výsledky v podání obèanských a kriminálních trestù, a budou stíhány v maximálním rozsahu možném podle práva.
 ; === new version ===
 Stáhnout vše Free Download Managerem
 Pøidat seznam stahování
-Odebrat vybrané
+Odebrat oznaèené
 Toto je seznam URL pro pøidání
-Kliknìte na tlaèítko pro odebrání vybraných URL ze seznamu
+Kliknìte na tlaèítko pro odebrání oznaèených URL ze seznamu
 Nemohu nalézt adresáø Firefox Plugin. Chcete ho specifikovat ruènì?
 Nemohu nainstalovat monitorování Firefoxu
 Nemohu odinstalovat monitorování Firefoxu
@@ -1059,8 +1062,8 @@ Povolit vzhledu používat vlastní obrázky
 <výchozí>
 Poznámka: Jakékoliv zmìny se projeví až po restartu Free Download Manageru.
 Zobrazovat informace bìhem stahování 
-Pøeskoèit soubory s pøíponou:
-Seznam pøípon souborù k pøeskoèení
+Nestahovat soubory s pøíponou:
+Seznam výjimek pøípon souborù
 Žádné aktivní stahování
 Pøehrát zvukový soubor po dokonèení všech stahování
 Pøenést seznam URL ze schránky
@@ -1313,7 +1316,7 @@ Oficiálnì byl %s vydán August 16, 2006. naším cílem je vytvoøit z FDM nejvíce vy
 Automaticky stáhnout a nainstalovat aktualizace
 Pouze upozornit na dostupnost aktualizací
 Vypnout automatické aktualizace
-Sledování je zapnuto v %s.
+Sledování je zapnuto v programu %s.
 Odstrani záznam
 OK pro odstranìní?
 Není možné získat pøístup pro zápis do složky programu Free Download Manager's folder.\nPovolte prosím zápis programu Free Download Manager do této složky pro uložení datových souborù, pokud tak neuèiníte, budou všechna data po restartu programu ztracena.
@@ -1321,7 +1324,7 @@ Toto malé okno umožnòuje použít funkci drag&&drop pro pøenos odkazù z Vašeho pro
 Free Download Manager - Box pro zachycení
 Vypnout všechna upozornìní pro dávková stahování
 Zvolte tuto možnost pro vypnutí všech (bublinových a zvukových) upozornìní pro stahování vytvoøené pøíkazem "%s".
-Pøeskoèit seznam
+Seznam výjimek
 Zadejte seznam pøípon souborù a seznam serverù, které nebudou sledovány.
 Nestahovat z následujích serverù (oddìlte mezerou):
 Free Download Manager nebude sledovat stahování ze serverù zadaných v tomto seznamu. Zde zadejte názvy domén (napø. "site.com"). Lze použít i nahrazovaích znakù '*'.
@@ -1469,7 +1472,7 @@ Zobrazit seznam podporovaných webù
 ; used in "create flash video download" window
 napø.
 Další pokus o pøipojení k trackeru za %d sekund
-Pøipravuji soubory na disku... To mùže trvat nìkolik minut
+Pøipravuji soubory na disku... To mùže trvat i nìkolik minut
 Stav
 Pøipravuji soubory na disku...
 MP4 pro iPod/PSP (MPEG4 + AAC, *.mp4)
@@ -1572,3 +1575,10 @@ Upload
 Stahuji aktualizaci...
 Povolit fragmentaci
 Zakázat fragmentaci jako výchozí
+Považovat soubor za nebezpeèný, pokud nejménì
+% uživatelù oznaèilo soubor jako nebezpeèný
+OK, uživatelé Free Download Manageu nehlásili o tomto stahování žádné nebezpeèné informace.\n\nTo ale neznamená, že soubor nemusí být nebezpeèný a proto Vám doporuèujeme stahování ovìøit antivirovým programem.
+OK, uživatelé programu FDM nehlásili o tomto souboru ždádné nebezpeèné informace
+písmeno jednotky ze ketré bude FDM spuštìn. Napø.: "C:". Vhodné nastavení pro pøenosnou verzi.
+Pro použití této funkce je nutné nejprve nainstalovat plugin Video Conversion.
+Pro stahování pomocí Bittorrent protokolu je nutné nejprve nainstalovat Bittorrent plugin.

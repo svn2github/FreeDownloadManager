@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "fdmapp.h"
 #include "AERDlg.h"
 
 #ifdef _DEBUG

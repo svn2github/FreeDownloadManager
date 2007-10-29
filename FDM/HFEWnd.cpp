@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "HFEWnd.h"
 #include "plugins.h"
 #include "inetutil.h"

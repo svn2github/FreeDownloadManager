@@ -3,9 +3,9 @@
  *  Project         ___| | | |  _ \| |
  *                 / __| | | | |_) | |
  *                | (__| |_| |  _ <| |___
- *                \___|\___/|_| \_\_____|
+ *                 \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2005, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2007, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: ldap.c,v 1.52 2005/12/18 15:36:14 yangtse Exp $
+ * $Id: ldap.c,v 1.69 2007-03-12 05:09:25 yangtse Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -30,16 +30,12 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <ctype.h>
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_STAT_H
-#include <sys/stat.h>
+#ifdef NEED_MALLOC_H
+#include <malloc.h>
 #endif
 #include <errno.h>
 
 #if defined(WIN32)
-# include <malloc.h>
 # include <winldap.h>
 #endif
 
@@ -112,6 +108,13 @@
 #undef HAVE_DLOPEN
 #undef HAVE_LIBDL
 #endif
+
+/*
+ * We use this ZERO_NULL to avoid picky compiler warnings,
+ * when assigning a NULL pointer to a function pointer var.
+ */
+
+#define ZERO_NULL 0
 
 typedef void * (*dynafunc)(void *input);
 
@@ -187,7 +190,7 @@ static void DynaClose(void)
 
 static dynafunc DynaGetFunction(const char *name)
 {
-  dynafunc func = (dynafunc)NULL;
+  dynafunc func = (dynafunc)ZERO_NULL;
 
 #if defined(HAVE_DLOPEN) || defined(HAVE_LIBDL)
   if (libldap) {
@@ -197,6 +200,11 @@ static dynafunc DynaGetFunction(const char *name)
      * compilers! */
     *(void**) (&func) = dlsym(libldap, name);
   }
+#ifdef DL_LBER_FILE
+  if (!func && liblber) {
+    *(void**) (&func) = dlsym(liblber, name);
+  }
+#endif
 #elif defined(WIN32)
   if (libldap) {
     func = (dynafunc)GetProcAddress((HINSTANCE)libldap, name);
@@ -370,9 +378,9 @@ CURLcode Curl_ldap(struct connectdata *conn, bool *done)
     char  *dn = (*ldap_get_dn)(server, entryIterator);
     int i;
 
-    Curl_client_write(data, CLIENTWRITE_BODY, (char *)"DN: ", 4);
-    Curl_client_write(data, CLIENTWRITE_BODY, (char *)dn, 0);
-    Curl_client_write(data, CLIENTWRITE_BODY, (char *)"\n", 1);
+    Curl_client_write(conn, CLIENTWRITE_BODY, (char *)"DN: ", 4);
+    Curl_client_write(conn, CLIENTWRITE_BODY, (char *)dn, 0);
+    Curl_client_write(conn, CLIENTWRITE_BODY, (char *)"\n", 1);
 
     for (attribute = (*ldap_first_attribute)(server, entryIterator, &ber);
          attribute;
@@ -385,30 +393,32 @@ CURLcode Curl_ldap(struct connectdata *conn, bool *done)
       {
         for (i = 0; (vals[i] != NULL); i++)
         {
-          Curl_client_write(data, CLIENTWRITE_BODY, (char *)"\t", 1);
-          Curl_client_write(data, CLIENTWRITE_BODY, (char *) attribute, 0);
-          Curl_client_write(data, CLIENTWRITE_BODY, (char *)": ", 2);
+          Curl_client_write(conn, CLIENTWRITE_BODY, (char *)"\t", 1);
+          Curl_client_write(conn, CLIENTWRITE_BODY, (char *) attribute, 0);
+          Curl_client_write(conn, CLIENTWRITE_BODY, (char *)": ", 2);
           if ((strlen(attribute) > 7) &&
               (strcmp(";binary",
                       (char *)attribute +
                       (strlen((char *)attribute) - 7)) == 0)) {
             /* Binary attribute, encode to base64. */
-            val_b64_sz = Curl_base64_encode(vals[i]->bv_val, vals[i]->bv_len,
+            val_b64_sz = Curl_base64_encode(conn->data,
+                                            vals[i]->bv_val,
+                                            vals[i]->bv_len,
                                             &val_b64);
             if (val_b64_sz > 0) {
-              Curl_client_write(data, CLIENTWRITE_BODY, val_b64, val_b64_sz);
+              Curl_client_write(conn, CLIENTWRITE_BODY, val_b64, val_b64_sz);
               free(val_b64);
             }
           } else
-            Curl_client_write(data, CLIENTWRITE_BODY, vals[i]->bv_val,
+            Curl_client_write(conn, CLIENTWRITE_BODY, vals[i]->bv_val,
                               vals[i]->bv_len);
-          Curl_client_write(data, CLIENTWRITE_BODY, (char *)"\n", 0);
+          Curl_client_write(conn, CLIENTWRITE_BODY, (char *)"\n", 0);
         }
 
         /* Free memory used to store values */
         (*ldap_value_free_len)((void **)vals);
       }
-      Curl_client_write(data, CLIENTWRITE_BODY, (char *)"\n", 1);
+      Curl_client_write(conn, CLIENTWRITE_BODY, (char *)"\n", 1);
 
       (*ldap_memfree)(attribute);
     }
@@ -429,7 +439,7 @@ quit:
   DynaClose();
 
   /* no data to transfer */
-  Curl_Transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
+  Curl_setup_transfer(conn, -1, -1, FALSE, NULL, -1, NULL);
   conn->bits.close = TRUE;
 
   return status;
@@ -498,31 +508,31 @@ static char **split_str (char *str)
 /*
  * Unescape the LDAP-URL components
  */
-static bool unescape_elements (LDAPURLDesc *ludp)
+static bool unescape_elements (void *data, LDAPURLDesc *ludp)
 {
   int i;
 
   if (ludp->lud_filter) {
-    ludp->lud_filter = curl_unescape(ludp->lud_filter, 0);
+    ludp->lud_filter = curl_easy_unescape(data, ludp->lud_filter, 0, NULL);
     if (!ludp->lud_filter)
        return (FALSE);
   }
 
   for (i = 0; ludp->lud_attrs && ludp->lud_attrs[i]; i++) {
-    ludp->lud_attrs[i] = curl_unescape(ludp->lud_attrs[i], 0);
+    ludp->lud_attrs[i] = curl_easy_unescape(data, ludp->lud_attrs[i], 0, NULL);
     if (!ludp->lud_attrs[i])
        return (FALSE);
   }
 
   for (i = 0; ludp->lud_exts && ludp->lud_exts[i]; i++) {
-    ludp->lud_exts[i] = curl_unescape(ludp->lud_exts[i], 0);
+    ludp->lud_exts[i] = curl_easy_unescape(data, ludp->lud_exts[i], 0, NULL);
     if (!ludp->lud_exts[i])
        return (FALSE);
   }
 
   if (ludp->lud_dn) {
     char *dn = ludp->lud_dn;
-    char *new_dn = curl_unescape(dn, 0);
+    char *new_dn = curl_easy_unescape(data, dn, 0, NULL);
 
     free(dn);
     ludp->lud_dn = new_dn;
@@ -539,8 +549,10 @@ static bool unescape_elements (LDAPURLDesc *ludp)
  *
  * <hostname> already known from 'conn->host.name'.
  * <port>     already known from 'conn->remote_port'.
- * extract the rest from 'conn->path+1'. All fields are optional. e.g.
- *   ldap://<hostname>:<port>/?<attributes>?<scope>?<filter> yields ludp->lud_dn = "".
+ * extract the rest from 'conn->data->reqdata.path+1'. All fields are optional.
+ * e.g.
+ *   ldap://<hostname>:<port>/?<attributes>?<scope>?<filter>
+ * yields ludp->lud_dn = "".
  *
  * Ref. http://developer.netscape.com/docs/manuals/dirsdk/csdk30/url.htm#2831915
  */
@@ -549,7 +561,9 @@ static int _ldap_url_parse2 (const struct connectdata *conn, LDAPURLDesc *ludp)
   char *p, *q;
   int i;
 
-  if (!conn->path || conn->path[0] != '/' ||
+  if (!conn->data ||
+      !conn->data->reqdata.path ||
+       conn->data->reqdata.path[0] != '/' ||
       !checkprefix(conn->protostr, conn->data->change.url))
      return LDAP_INVALID_SYNTAX;
 
@@ -559,7 +573,7 @@ static int _ldap_url_parse2 (const struct connectdata *conn, LDAPURLDesc *ludp)
 
   /* parse DN (Distinguished Name).
    */
-  ludp->lud_dn = strdup(conn->path+1);
+  ludp->lud_dn = strdup(conn->data->reqdata.path+1);
   if (!ludp->lud_dn)
      return LDAP_NO_MEMORY;
 
@@ -633,7 +647,7 @@ static int _ldap_url_parse2 (const struct connectdata *conn, LDAPURLDesc *ludp)
       LDAP_TRACE (("exts[%d] '%s'\n", i, ludp->lud_exts[i]));
 
 success:
-  if (!unescape_elements(ludp))
+  if (!unescape_elements(conn->data, ludp))
      return LDAP_NO_MEMORY;
   return LDAP_SUCCESS;
 }

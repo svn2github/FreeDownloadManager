@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Downloads_Opinions.h"
 #include "vmsMaliciousDownloadChecker.h"
 #include <mshtml.h>
@@ -129,7 +129,7 @@ try{
 			
 			
 			m_enCS = DOCS_OPINION;
-			m_wb.Navigate ("http://www.freedownloadmanager.org/fromfdm/opinion.html", NULL, NULL, NULL, NULL);
+			m_wb.Navigate ("http://fdm.freedownloadmanager.org/fromfdm/opinion.html", NULL, NULL, NULL, NULL);
 		}
 		else
 		{
@@ -145,7 +145,7 @@ try{
 					strUrl = m_dld->pMgr->GetBtDownloadMgr ()->get_InfoHash ();
 				else
 					strUrl = vmsMaliciousDownloadChecker::EncodeUrl (m_dld->pMgr->get_URL ());
-				str.Format ("http://www.freedownloadmanager.org/fromfdm/showopinions.html?url=%s", strUrl);
+				str.Format ("http://fdm.freedownloadmanager.org/fromfdm/showopinions.html?url=%s", strUrl);
 				m_wb.Navigate (str, NULL, NULL, NULL, NULL);
 			}
 		}

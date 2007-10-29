@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 
-#include "..\DataStretcher.h"
+#include "..\FDM.h"
 #include <comdef.h>
 #include <inetfile/inetfile.h>
 

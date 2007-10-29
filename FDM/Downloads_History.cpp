@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Downloads_History.h"
 #include "DownloadsWnd.h"
 #include "WaitDlg.h"

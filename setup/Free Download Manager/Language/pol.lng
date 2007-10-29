@@ -329,8 +329,8 @@ U¿yj trybu ASCII dla transferów FTP. W³¹cz ten tryb gdy plik, który pobierasz je
 FDM bêdzie u¿ywa³ trybu ASCII dla plików z okreœlonym rozszerzeniem. Dla pozosta³ych u¿yje trybu binarnego
 Proxy
 Ustawienia proxy
-Z Microsoft Internet Explorer'a
-Okreœl rêcznie
+Z przel¹darki MS Internet Explorer
+Rêczne ustawienia
 Nie u¿ywaj proxy
 Ustawienia
 Adres:
@@ -349,7 +349,7 @@ Plik lokalny
 Jeœli plik ju¿ istnieje to:
 Rezerwuj miejsce na dysku na pobierane pliki
 Dodatkowe rozszerzenie dla nieukoñczonych pobierañ:
-Serwer Internetowy
+Serwer internetowy
 Nie ponawiaj pobierania jeœli serwer nie obs³uguje wznawiania
 Jeœli rozmiar pliku na serwerze zosta³ zmieniony:
 Zatrzymaj przy b³êdach
@@ -1322,3 +1322,271 @@ Wy³¹cz
 Prze³¹cz
 Jeœli spowolnienie wszystkich pobierañ jest w³¹czone to zostanie wy³¹czone, inaczej zostanie w³¹czone.
 Oficjalny %s wystartuje 16 sierpnia 2006 roku. Naszym celem jest sprawienie, aby FDM by³ najszybciej rozprzestrzeniaj¹cym siê narzêdziem internetowym po Firefoxie!
+Automatycznie pobieraj i instaluj aktualizacje
+Tylko powiadamiaj o aktualizacjach
+Wy³¹cz aktualizacje automatyczne
+Monitorowanie w³¹czone w %s.
+Usuñ wpis
+Usun¹æ?
+Brak mo¿liwoœci zapisu do folderu Free Download Manager.\nNale¿y umo¿liwiæ zapis aby Free Download Manager móg³ zapisywaæ dane, inaczej wszystkie dane zostan¹ utracone po ka¿dym restarcie Free Download Manager.
+To ma³e pole umo¿liwia pobieranie linków przy u¿yciu metody przeci¹gnij i upuœæ z przegl¹darki do Free Download Managera.\nMo¿na szybko zminimalizowaæ i przywróciæ okno Free Download Managera za pomoc¹ dwukrotnego klikniêcia lewym przyciskiem myszy.\n\nAby ukryæ strefê zrzutu nale¿y klikn¹æ na niej prawym przyciskiem myszy i odznaczyæ element menu "Strefa zrzutu".
+Strefa zrzutu Free Download Managera
+Wy³¹cz wszystkie powiadomienia dla pobierañ seryjnych
+Zaznacz t¹ opcjê, aby wy³¹czyæ wszystkie powiadomienia (dŸwiêkowe i baloników) dla pobierañ wywo³anych poleceniem "%s".
+Lista wyj¹tków
+Okreœl listê rozszerzeñ plików i listê stron, które nie bêd¹ monitorowane.
+Nie wykrywaj pobierañ z nastêpuj¹cych stron (oddzielone spacjami):
+Free Download Manager nie bêdzie przechwytywa³ pobierañ z serwerów okreœlonych na tej liœcie. Proszê tutaj podaæ domeny (np. "strona.pl"). Mo¿na u¿ywaæ symbolu '*'.
+Uwaga!\nWyst¹pi³ b³¹d podczas próby przeprowadzenia kontroli antywirusowej.\nCzy chcesz uruchomiæ pobrany plik mimo to?
+Integralnoœæ
+Sprawdzaj integralnoœæ pliku po zakoñczeniu pobierania
+Aby Free Download Manager móg³ sprawdziæ integralnoœæ pliku potrzebna bêdzie suma kontrolna oryginalnego pliku. W wiêkszoœci wypadków nale¿y j¹ podawaæ dla ka¿dego pobierania.
+Jeœli sprawdzenie siê nie powiod³o
+SprawdŸ sumê kontroln¹ tego pliku
+Nic nie rób
+Okreœla co FDM powinien robiæ kiedy sprawdzanie integralnoœci nie powiod³o siê.\nZapytaj - FDM wyœwietli pytanie co zrobiæ.\nPonów - FDM rozpocznie pobieranie pliku od pocz¹tku.\nNie nie rób - FDM tylko doda wpis do dziennika o braku powodzenia procedury sprawdzania integralnoœci.
+Sprawdzanie integralnoœci...
+Integralnoœæ pliku potwierdzona.
+Integralnoœæ pliku nie zosta³a potwierdzona!
+Okreœl algorytm sprawdzania integralnoœci.
+Wzorcowa suma kontrolna
+Otrzymana suma kontrolna
+; zip preview window
+Zaznacz/odznacz wszystko
+; group's properties dialog
+Makra
+nazwa serwera (np. "freedownloadmanager.org")
+scie¿ka pobieranego pliku na serwerze
+bie¿¹cy rok
+bie¿¹cy miesi¹c (liczba od 1 do 12)
+bie¿¹cy dzieñ
+; don't translate "%year%-%month%-%day%" here
+ekwiwalent "%year%-%month%-%day%"
+;
+Z przegl¹darki Mozilla Firefox
+FDM pobierze ustawienia proxy z Firefoksa
+; new download settings
+U¿yj tej grupy
+; Downloads -> Schedule ->
+Start
+Zatrzymaj
+Zaplanuj rozpoczêcie pobierania
+Zaplanuj zatrzymanie pobierania
+;
+; downloads that not completed or were completed recently
+Niezakoñczone+niedawne
+Grupa g³ówna
+;
+; create new download dialog -> set output folder as default dialog
+Ustaw jako domyœlny dla wszystkich grup pobierañ
+; %s - place of name of the group. don't change this
+Czy ustawiæ ten folder jako domyœlny dla grupy "%s"?
+;
+;
+Rub out the list of the downloads
+Wysy³anie plików
+Wyœlij pliki
+Rozpocznij wysy³anie
+Zatrzymaj wysy³anie
+Zaplanuj wysy³anie
+Przenieœ zaznaczone pliki w górê
+Przenieœ zaznaczone pliki w dó³
+Wys³ane
+Lista wysy³anych plików
+Otrzymywanie docelowego adresu URL wys³anego pliku z serwera g³ównego...
+Przerwij
+; outlook express: view | insert file | ...
+Jako za³¹cznik
+Jako odnoœnik (upload)
+Folder
+;
+Dodaj pliki
+Dodaj folder
+Bittorrent
+W³¹cz obs³ugê protoko³u Bittorrent
+Ogranicz transfer wychodz¹cy
+Ogranicz liczbê po³¹czeñ wychodz¹cych
+U¿ywaj portów w zakresie od
+do
+W³¹cz DHT
+W³¹cza/wy³¹cza obs³ugê protoko³u Bittorrent. Jednak¿e jeœli pozosta³y jakieœ pobierania Bittorrent na liœcie w koszu FDM, to protokó³ Bittorrent nie zostanie ca³kowicie wy³¹czony.
+Ogranicza maksymaln¹ prêdkoœæ po³¹czeñ wychodz¹cych. Jest to niezalecane dla protoko³u Bittorrent i mo¿e ograniczyæ prêdkoœæ pobierania
+Ogranicza maksymaln¹ liczbê po³¹czeñ wychodz¹cych. Ustawienie tego zbyt nisko mo¿e spowodowaæ zmiejszenie prêdkoœci pobierania.
+Okreœla zakres portów u¿ywanych przez FDM dla po³¹czeñ wychodz¹cych.
+W³¹cza rozszrzenie DHT
+Nazwa
+Login jest wymagany dla trackera
+Dodaj pobieranie Bittorrent
+Wyst¹pi³ b³¹d podczas próby przetworzenia tego pliku torrent.
+Plik torrent
+Pobieranie pliku .torrent wymaga w³¹czenia obs³ugi Bittorrent w Free Download Managerze.\n\nCzy w³¹czyæ obs³ugê Bittorrent?
+Wpisz has³o ponownie: podane has³a nie s¹ identyczne.
+Wybierz pliki, które bêd¹ wysy³ane.
+W³aœciwoœci wysy³ania
+Plik informacji Metalink zosta³ wykryty. Kontynuowanie pobierania.
+Plik informacji Bittorrent zosta³ wykryty. Kontynuowanie pobierania.
+B³¹d dostêpu do plików na dysku.
+£¹czenie z trackerem...
+Nie otrzymano w³aœciwej odpowiedzi od trackera.
+Otrzymano odpowiedŸ od trackera.
+Sprawdzenie hasha czêœci pliku da³o wynik negatywny. Ponowne pobieranie czêœci...
+Udostêpnij ca³y transfer dla tego pobierania
+Wy³¹czyæ automatyczne uruchamianie Free Download Managera po starcie systemu Windows?
+Przepraszamy, ale us³uga spo³ecznoœci FDM jest aktualnie niedostêpna. Prosimy spróbowaæ póŸniej.
+Nazwa pliku nie mo¿e zawieraæ ¿adnego z tych \ / : * ? " < > | symboli. Proszê podaæ inn¹ nazwê.
+Nazwa folderu nie mo¿e zawieraæ ¿adnego z tych  : * ? " < > | symboli. Proszê podaæ inn¹ nazwê.
+Dostosuj wyskakuj¹ce okna...
+Przezroczystoœæ
+Dane
+Przechowuj wszystkie pliki danych w folderze bie¿¹cego u¿ytkownika
+Przechowuj pliki w tym folderze
+Zmiany zostan¹ wprowadzone po ponownym uruchomieniu Free Download Manager.
+Pokazuj okno postêpu pobieraniaShow download progress window
+Utwórz wersjê przenoœn¹
+Wersja przenoœna Free Download Manager umo¿liwia u¿ytkowanie programu na ró¿nych komputerach bez potrzeby instalowania i konfigurowania za ka¿dym razem.\n\nMo¿na np. umieœciæ j¹ na dysku flash.\n\nRaz uruchomiony integruje siê z systemem komputera i przegl¹dark¹. Przy zamykaniu wyrejestruje siê automatycznie.\n\nProszê wskazaæ w tym miejscu gdzie nale¿y utworzyæ wersjê przenoœn¹. Powinien to byæ folder na jakimœ wyjmowalnym noœniku danych.\n\nNp. "I:\Moje przenoœne programy\".
+Integracja
+Skojarz pliki .torrent z programem Free Download Manager
+Zawsze u¿ywaj tej grupy dla nowych pobierañ
+Zawsze u¿ywaj tej grupy i zapamiêtuj ostatnio wybrany folder
+Pobierania plików wideo Flash
+Pobierz plik wideo we Free Download Manager
+Ta stron nie jest obs³ugiwana. Zobacz listê obs³ugiwanych stron.
+Poka¿ okno pobierañ
+Ta strona zawiera wideo flash. Pobieranie pliku wideo...
+Konwertowanie...
+Konwertuj
+Opcje konwersji
+Format pliku
+Rozmiar wideo
+; video quality
+Jakoœæ
+Bardzo niska
+Niska
+Normalna
+Przeciêtna
+Wysoka
+Bardzo wysoka;
+AVI MPEG-4 (*.avi)
+AVI XVID (*.avi)
+Nie zmieniaj
+Wideo bitrate
+Audio bitrate
+Zapamiêtaj ustawienia jako domyœlne
+;
+Utwórz pobieranie pliku wideo flash
+Automatycznie konwertuj pobrane wideo do okreœlonego formatu
+Opcje zaawansowane
+Poka¿ listê obs³ugiwanych stron
+; used in "create flash video download" window
+np.
+Nastêpna próba pod³¹czenia do trackera za %d sekund
+Przygotowywanie plików na dysku... Mo¿e to zaj¹æ kilka minut
+Stan
+Przygotowywanie plików na dysku...
+MP4 dla iPod/PSP (MPEG4 + AAC, *.mp4)
+Podgl¹d multimediów/konwertowanie
+Konwertuj plik multimedialny
+Prze³¹cz do tej zak³adki automatycznie
+;keep "\n\n%s\n" as is
+Zakoñczono konwersjê pliku multimedialnego i zapisano w\n\n%s\n.
+B³¹d konwersji pliku\n\n%s.
+Grupa dla nowego pobierania
+Hash informacji
+Peery
+Klient
+Czêœci
+Tracker
+Stan trackera
+Prêdkoœæ wysy³ania
+Wys³ano bajtów
+Wspó³czynnik wymiany
+Liczba zmarnowanych bajtów
+Adres URL pliku torrent
+Czy jesteœ pewien?\nSpowoduje to rozpoczêcie pobierania od pocz¹tku.
+Wykorzystany transfer ("przychodz¹cy"; "wychodz¹cy") w tym miesi¹cu\n(W poprzednim miesi¹cu u¿yto %s)
+Ca³kowita prêdkoœæ ("pobieranie"; "wysy³anie")
+Pliki do wys³ania
+Nazwa paczki
+Kompresja
+Utwórz has³o dla tego pobierania
+Podaj ponownie
+Zachowaj te pliki
+Przewidywana liczba pobrañ
+Dodaj odnoœnik do tych plików w katalogu
+Do³¹cz zaawansowan¹ informacjê (wszystkie pola s¹ opcjonalne)
+Opis
+Znaczniki
+Twoje imiê
+Twój email
+Email odbiorcy
+Mniej ni¿ 10
+Od 10 do 100
+Wiêcej ni¿ 100
+2 dni
+7 dni
+1 miesi¹c
+;compression methods
+Brak
+Szybka
+Œrednia
+Najlepsza
+Ustawienia wysy³ania
+Integruj FUM z
+Menu kontekstowym Eksploratora
+Menu "Wyœlij do..." Eksploratora
+U¿ywaj prostego menu wysy³ania
+Minimalny rozmiar pliku do wysy³ania
+Ustawienia proxy HTTP
+Aktywacja wysy³ania
+Wysy³anie wymaga aktywacji. Spowodowane jest to koniecznoœci¹ ochrony naszego serwera przed automatycznym wysy³aniem na niego plików. WprowadŸ kod aktywacyjny.
+£¹czenie z serwerem
+£¹czenie zakoñczone sukcesem
+Plik zosta³ wys³any na serwer
+Wysy³anie pliku zosta³o zatrzymane
+Tworzenie archiwum zip wysy³anych plików...
+B³¹d tworzenia archiwum zip
+Utworzono archiwum Zip
+Wysy³anie ¿¹dania do serwera
+Przesy³anie inforamcji o wysy³anych plikach do serwera
+Informacja wys³ana
+Przesy³anie informacji o wysy³anych plikach nie powiod³o siê
+Aktywowanie wysy³ania...
+Wysy³anie zosta³o aktywowane
+Wysy³anie nie zosta³o aktywowane
+Wys³any plik uleg³ zmianie na dysku
+Niespodziewany b³¹d
+Obliczanie sumy kontrolnej...
+; "I agree to terms" string in two lines
+Zgadzam siê na
+warunki
+Musisz zgodziæ siê na warunki.
+B³¹d sprawdzania dostêpnoœci aktualizacji
+Nowa wersja jest dostêpna. Aktualizacja jest wymagana.\nCzy zaktualizowaæ teraz?
+Aktualizacja programu Free Download Manager jest wymagana
+Ponowne uruchomienie programu Free Download Manager jest wymagane
+Sugeruj, aby wysy³aæ za³¹czniki
+Do³¹cz do listu (wolne)...
+Wyœlij pliki i do³¹cz tylko odnoœnik (bardzo szybkie)...
+Wyst¹pi³ b³¹d podczas próby rozpoczêcia wysy³ania. Proszê sprawdziæ swoje po³¹czenie lub spróbowaæ ponownie póŸniej.
+Do³¹czono du¿y plik(i).\nW zwi¹zku z wieloma powodami za³¹czanie du¿ych plików jest niezalecane. Lepiej wys³aæ pliki na serwer i do³¹czyæ tylko odnoœniki prowadz¹ce do nich.\n\nCzy chcesz wys³aæ pliki na serwer?
+Wys³anie pliku na serwer jest zalecane
+Ustawienia integracji
+Wysy³anie %s plików zosta³o zakoñczone.\nAby pobraæ pliki nale¿y u¿yæ nastêpuj¹cego adresu URL:
+Rozmiar ca³kowity
+Otwórz w przegl¹darce
+Bie¿¹ca wersja Free Download Manager nie mo¿e byæ d³u¿ej u¿ywana do wysy³ania plików. Aktualizacja jest wymagana.
+Bie¿¹ca wersja Free Upload Manager nie mo¿e byæ d³u¿ej u¿ywana. Aktualizacja jest wymagana. Proszê odwiedziæ stronê freedownloadmanager.org
+Za d³ugie wejœcie.
+Ustawienia integracji mened¿era wysy³ania
+Ustawienia integracji Free Upload Manager
+Wysy³anie
+Pobieranie aktualizacji...
+Zarejestruj siebie jako seed
+Wy³¹cz funkcje seed domyœlnie
+Uznaj pobieranie za podejrzane, gdy minimum
+% u¿ytkowników uzna³o je za takowe
+OK, u¿ytkownicy Free Download Manager nie zg³osili tego pobierania jako podejrzanego.\n\nJednak¿e nie gwarantuje to tego, ¿e jest ono ca³kowicie bezpieczne. Zaleca siê przeskanowanie programem antywirusowym.
+OK, u¿ytkownicy FDM nie zg³osili tego pobierania jako podejrzanego
+litera napêdu, z jakiej FDM zosa³ uruchomiony. Np. "C:". Przydatne dla wersji przenoœnej.
+W celu u¿ycia tej funkcji nale¿y zainstalowaæ wtyczkê konwersji wideo.
+W celu pobierania przez protokó³ Bittorrent nale¿y zainstalowaæ wtyczkê Bittorrent.

@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "Data Stretcher.h"
+#include "FdmApp.h"
 #include "fsAppSettings.h"
 #include "fsFindDownloadMgr.h"
 #include "MainFrm.h"

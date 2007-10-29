@@ -766,15 +766,15 @@ CString fsGetGrpOTHEROutFolder ()
 
 void vmsUtf8ToAscii (LPSTR psz)
 {
-	wchar_t wsz [10000] = L"";
+	wchar_t wsz [100000] = L"";
 	int len = lstrlen (psz);
-	MultiByteToWideChar (CP_UTF8, 0, psz, len, wsz, 10000);
+	MultiByteToWideChar (CP_UTF8, 0, psz, len, wsz, 99999);
 	WideCharToMultiByte (CP_ACP, 0, wsz, -1, psz, len+1, NULL, NULL);
 }
 
 std::wstring vmsUtf8Unicode (LPCSTR psz)
 {
-	wchar_t wsz [10000] = L"";
-	MultiByteToWideChar (CP_UTF8, 0, psz, -1, wsz, 10000);
+	wchar_t wsz [100000] = L"";
+	MultiByteToWideChar (CP_UTF8, 0, psz, -1, wsz, 99999);
 	return wsz;
 }

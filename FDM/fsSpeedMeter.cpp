@@ -13,6 +13,11 @@ static char THIS_FILE[]=__FILE__;
 
 fsSpeedMeter::fsSpeedMeter()
 {
+	m_dwSpeed = 0;
+	m_iCurPrevSpeed = 0;
+	m_iMaxPrevSpeed = 0;
+	m_cMeasures = 0;
+	m_done = 0;
 	SetInertness (5);
 }
 

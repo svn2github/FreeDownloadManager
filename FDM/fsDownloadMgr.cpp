@@ -65,13 +65,15 @@ fsDownloadMgr::fsDownloadMgr(struct fsDownload* dld)
 	#endif
 
 	m_bRSsupportDone = false;
+
+	m_bDontCreateNewSections = FALSE;
 }
 
 fsDownloadMgr::~fsDownloadMgr()
 {
 	StopDownloading ();
 	MSG msg;
-	while (m_iThread && m_dldr.IsCompletelyStopped ())
+	while (m_iThread )
 	{
 		while (PeekMessage (&msg, 0, 0, 0, PM_REMOVE))
 			DispatchMessage (&msg);
@@ -105,7 +107,7 @@ fsInternetResult fsDownloadMgr::StartDownloading()
 
 	DWORD dwThread;
 	m_bThreadRunning = TRUE;
-	m_iThread ++;
+	InterlockedIncrement (&m_iThread);
 	CloseHandle (CreateThread (NULL, 0, _threadDownloadMgr, this, 0, &dwThread));
 	
 	return IR_SUCCESS;
@@ -180,7 +182,6 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 		
 		if (pThis->m_state & DS_NEEDSTART)
 		{
-			tick0SpeedStart.Now ();
 			pThis->m_state &= ~ DS_NEEDSTART; 
 			bAddSection = TRUE;	
 
@@ -188,6 +189,7 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 			for (UINT i = 0; i < pThis->m_dp.uMaxAttempts; i++)
 			{
 				pThis->m_lastError = pThis->StartDownload ();
+				tick0SpeedStart.Now ();
 
  				if (pThis->m_state & DS_NEEDSTOP || 
 						pThis->m_lastError == IR_S_FALSE ||
@@ -198,6 +200,8 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 				if (pThis->m_lastError == IR_SUCCESS)
 				{
 					pThis->m_state |= DS_DOWNLOADING;	
+					if (pThis->m_dldr.IsResumeSupported () == RST_NONE)
+						pThis->Event (LS (L_NORESUME), EDT_WARNING);
 					break;
 				}
 				else
@@ -262,10 +266,11 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 			
 			
 			if (pThis->m_dldr.GetSpeed () == 0 && 
-					pThis->m_dldr.GetDownloadingSectionCount () != 0)
+					pThis->m_dldr.GetDownloadingSectionCount () != 0 &&
+					(pThis->m_dldr.IsResumeSupported () == RST_PRESENT || pThis->m_dldr.GetNumberOfSections () > 1))
 			{
 				fsTicksMgr tickNow; tickNow.Now ();
-				if (tickNow - tick0SpeedStart > 2*60*1000)
+				if (tickNow - tick0SpeedStart > 30*1000)
 				{
 					pThis->m_bNeedStartAgain = TRUE;
 					pThis->StopDownload ();
@@ -328,7 +333,7 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 	pThis->m_bThreadRunning = FALSE; 
 	pThis->Event (DE_EXTERROR, DMEE_STOPPEDORDONE);
 
-	pThis->m_iThread--;	
+	InterlockedDecrement (&pThis->m_iThread);	
 
 	return 0;
 }
@@ -742,7 +747,7 @@ void fsDownloadMgr::AddSection(BOOL bCheckAdm)
 {
 	LOG ("Entering DLM::AddSection..." << nl);
 
-	if (m_dldr.IsSectionCreatingNow ())
+	if (m_bDontCreateNewSections || m_dldr.IsSectionCreatingNow ())
 	{
 		LOG ("Exit DLM::AddSection" << nl);
 		return;
@@ -1569,49 +1574,22 @@ BOOL fsDownloadMgr::ReserveDiskSpace()
 	
 	
 
-	DWORD dw1, dw2;
-	dw1 = GetFileSize (m_hOutFile, &dw2);
-
-	if (m_dldr.GetLDFileSize () == ((UINT64 (dw2) << 32) | UINT64 (dw1)))
+	if (FALSE == m_dp.bReserveDiskSpace || m_dldr.GetLDFileSize () == _UI64_MAX)
 		return TRUE;
 
-	if (m_dp.bReserveDiskSpace && m_dldr.GetLDFileSize () != _UI64_MAX)
+	if (FALSE == fsSetFilePointer (m_hOutFile, m_dldr.GetLDFileSize (), FILE_BEGIN))
+		return FALSE;
+	
+	if (FALSE == SetEndOfFile (m_hOutFile))
+		return FALSE;
+
+	if (m_dldr.GetNumberOfSections () == 1 && m_dldr.GetLDFileSize () > 100 * 1024 * 1024)
 	{
-		if (m_dldr.GetLDFileSize ())
-		{
-			m_iReservingDiskSpaceProgress = 0;
-			m_state |= DS_RESERVINGSPACE;
-
-			Event (LS (L_PREP_FILES_ONDISK));
-
-			fsSetFilePointer (m_hOutFile, 0, FILE_BEGIN);
-
-			UINT64 u = m_dldr.GetLDFileSize () / 100;
-			for (int i = 0; i < 99; i++)
-			{
-				m_iReservingDiskSpaceProgress = i;
-
-				fsSetFilePointer (m_hOutFile, u, FILE_CURRENT);
-				BYTE b = 1; DWORD dw;
-				if (FALSE == WriteFile (m_hOutFile, &b, sizeof (b), &dw, NULL))
-					return FALSE;
-
-				if (m_state & DS_NEEDSTOP)
-					return FALSE;
-			}
-			
-			fsSetFilePointer (m_hOutFile, m_dldr.GetLDFileSize ()-1, FILE_BEGIN);
-			BYTE b = 1; DWORD dw;
-			if (FALSE == WriteFile (m_hOutFile, &b, sizeof (b), &dw, NULL))
-				return FALSE;
-
-			m_iReservingDiskSpaceProgress = 100;
-
-			m_state &= ~DS_RESERVINGSPACE;
-		}
-
-		if (!SetEndOfFile (m_hOutFile))
-			return FALSE;
+		m_bDontCreateNewSections = TRUE;
+		InterlockedIncrement (&m_iThread);
+		DWORD dw;
+		CloseHandle (
+			CreateThread (NULL, 0, _threadReserveDiskSpace, this, 0, &dw));
 	}
 
 	return TRUE;
@@ -1962,12 +1940,14 @@ void fsDownloadMgr::QuerySize2()
 	m_state |= DS_QUERINGSIZE;
 
 	DWORD dw;
+	InterlockedIncrement (&m_iThread);
 	CloseHandle (CreateThread (NULL, 0, _threadQSize, this, 0, &dw));
 }
 
 DWORD WINAPI fsDownloadMgr::_threadQSize(LPVOID lp)
 {
 	fsDownloadMgr *pThis = (fsDownloadMgr*) lp;
+try{
 	pThis->Event (LS (L_QUERINGSIZE));
 	fsInternetResult ir = pThis->QuerySize (FALSE);
 	if (ir != IR_SUCCESS)
@@ -1979,6 +1959,8 @@ DWORD WINAPI fsDownloadMgr::_threadQSize(LPVOID lp)
 	else
 		pThis->Event (LS (L_DONE), EDT_DONE);
 	pThis->Event (DE_EXTERROR, DMEE_FILEUPDATED);	
+}catch (...){}
+	InterlockedDecrement (&pThis->m_iThread);
 	return 0;
 }
 
@@ -2111,6 +2093,7 @@ void fsDownloadMgr::CheckMirrSpeedRecalcRequired()
 	{
 		m_tikLastMirrMeasureTime.Now ();
 		DWORD dwThread;
+		InterlockedIncrement (&m_iThread);
 		CloseHandle (CreateThread (NULL, 0, _threadCalcMirrSpeed, this, 0, &dwThread));
 	}
 }
@@ -2119,7 +2102,13 @@ DWORD WINAPI fsDownloadMgr::_threadCalcMirrSpeed(LPVOID lp)
 {
 	fsDownloadMgr* pThis = (fsDownloadMgr*) lp;
 
+try {
+
 	pThis->MeasureMirrorsSpeed ();
+
+} catch (...) {}
+
+	InterlockedDecrement (&pThis->m_iThread);
 
 	return 0;
 }
@@ -2549,10 +2538,66 @@ void fsDownloadMgr::DoRapidshareSupport()
 
 int fsDownloadMgr::get_ReservingDiskSpaceProgress()
 {
-	return m_iReservingDiskSpaceProgress;
+	return 0;
 }
 
 fsDownloadState fsDownloadMgr::get_State()
 {
 	return m_state;
+}
+
+BOOL fsDownloadMgr::HasActivity()
+{
+	return m_iThread != 0;
+}
+
+DWORD WINAPI fsDownloadMgr::_threadReserveDiskSpace(LPVOID lp)
+{
+	fsDownloadMgr *pthis = (fsDownloadMgr*)lp;
+	
+	
+	
+	
+
+	ASSERT (pthis->m_dldr.GetNumberOfSections () == 1);
+	ASSERT (pthis->m_dldr.GetLDFileSize () != _UI64_MAX);
+
+	UINT64 uStartPos = pthis->m_dldr.GetDownloadedBytesCount () + 100 * 1024 * 1024;
+	
+	UINT64 uHundredthPart = pthis->m_dldr.GetLDFileSize () / 100;
+
+	for (UINT64 uCurPos = uStartPos; uCurPos < pthis->m_dldr.GetLDFileSize (); uCurPos += uHundredthPart)
+	{
+		UINT64 uSectLastDownloadPos = pthis->m_dldr.GetDownloadedBytesCount ();
+
+		pthis->m_dldr.LockWriteFile (TRUE);
+
+		fsSetFilePointer (pthis->m_hOutFile, uCurPos, FILE_BEGIN);
+
+		BYTE b = 1; DWORD dw;
+		if (FALSE == WriteFile (pthis->m_hOutFile, &b, sizeof (b), &dw, NULL))
+		{
+			pthis->m_dldr.LockWriteFile (FALSE);
+			break;
+		}
+
+		pthis->m_dldr.LockWriteFile (FALSE);
+
+		if (pthis->m_dldr.GetDownloadedBytesCount () == uSectLastDownloadPos)
+		{
+			
+			Sleep (50);
+		}
+		
+		if (pthis->m_dldr.IsRunning () == FALSE)
+			break;
+	}
+	
+	
+	
+	pthis->m_bDontCreateNewSections = FALSE;
+	pthis->m_state |= DS_NEEDADDSECTION;
+
+	InterlockedDecrement (&pthis->m_iThread);
+	return 0;
 }

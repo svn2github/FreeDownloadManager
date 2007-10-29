@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "DownloaderProperties_NetworkPage.h"
 #include "vmsDialogHelper.h"
 
@@ -51,6 +51,7 @@ BEGIN_MESSAGE_MAP(CDownloaderProperties_NetworkPage, CPropertyPage)
 	ON_BN_CLICKED(IDC_SETTOLIGHT, OnSettolight)
 	ON_WM_HELPINFO()
 	ON_EN_CHANGE(IDC_MAXDLDSVAL, OnChangeMaxdldsval)
+	ON_BN_CLICKED(IDC_USEMAXDLDS, OnUsemaxdlds)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()      
 
@@ -222,6 +223,10 @@ void CDownloaderProperties_NetworkPage::UpdateEnabled()
 	GetDlgItem (IDC_MAXCONNSPERSERVER)->EnableWindow (b);
 	GetDlgItem (IDC_MAXCONNSPERSERVERSPIN)->EnableWindow (b);
 
+	b = IsDlgButtonChecked (IDC_USEMAXDLDS) == BST_CHECKED;
+	GetDlgItem (IDC_MAXDLDSVAL)->EnableWindow (b);
+	GetDlgItem (IDC_MAXDLDSSPIN)->EnableWindow (b);
+
 	b = m_iCurMode != TUM_HEAVY;
 	GetDlgItem (IDC__TUR)->EnableWindow (b);
 	GetDlgItem (IDC_TRAFFICLIMITVAL)->EnableWindow (b);
@@ -385,4 +390,10 @@ void CDownloaderProperties_NetworkPage::OnChangeMaxdldsval()
 {
 	if (m_bIModifing == FALSE)
 		SetModified ();	
+}
+
+void CDownloaderProperties_NetworkPage::OnUsemaxdlds() 
+{
+	UpdateEnabled ();
+	if (m_bIModifing == FALSE) SetModified ();
 }

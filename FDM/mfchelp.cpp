@@ -3,7 +3,7 @@
 */
 
 #include "stdafx.h"
-#include "Data Stretcher.h"
+#include "FdmApp.h"
 
 union BmpColor
 {
@@ -122,7 +122,7 @@ LPCSTR fsGetAppDataFolder ()
 
 	if (IS_PORTABLE_MODE)
 	{
-		lstrcpy (_szAppDataFolder, ((CDataStretcherApp*)AfxGetApp ())->m_strAppPath);
+		lstrcpy (_szAppDataFolder, ((CFdmApp*)AfxGetApp ())->m_strAppPath);
 		lstrcat (_szAppDataFolder, "Data\\");
 		return _szAppDataFolder;
 	}
@@ -151,7 +151,7 @@ CString fsGetDataFilePath (LPCSTR pszFile)
 	return strPath;
 }
 
-extern CDataStretcherApp theApp;
+extern CFdmApp theApp;
 
 LPCSTR fsGetFumProgramFilesFolder ()
 {
@@ -178,9 +178,9 @@ LPCSTR fsGetFumProgramFilesFolder ()
 		}
 	}
 	return _szPath;
-}    
+}
 
-extern CDataStretcherApp theApp;
+extern CFdmApp theApp;
 CString vmsGetAppFolder ()
 {
 	return theApp.m_strAppPath;

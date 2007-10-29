@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "SpiderTasks.h"
 #include "SpiderWnd.h"
 #include "MainFrm.h"

@@ -7,7 +7,7 @@
 #include "npapi.h"
 #include "npupp.h"
 #include <objbase.h>
-#include "..\DataStretcher.h"
+#include "..\Fdm.h"
 #include <comdef.h>
 #include "resource.h"
 

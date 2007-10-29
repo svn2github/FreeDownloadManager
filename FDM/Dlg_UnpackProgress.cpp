@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Dlg_UnpackProgress.h"
 #include "vmsArchiveMgr.h"
 #include "Dlg_Unpack_AskOverwrite.h"

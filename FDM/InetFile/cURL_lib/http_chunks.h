@@ -29,6 +29,9 @@ typedef enum {
   CHUNK_POSTLF,
 
   
+  CHUNK_STOPCR,
+
+  
   CHUNK_STOP,
 
   

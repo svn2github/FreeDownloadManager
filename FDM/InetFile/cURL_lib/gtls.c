@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2005, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2007, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: gtls.c,v 1.11 2005/11/13 23:04:28 bagder Exp $
+ * $Id: gtls.c,v 1.27 2007-04-28 21:01:30 bagder Exp $
  ***************************************************************************/
 
 /*
@@ -37,9 +37,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
 #endif
@@ -66,22 +63,55 @@ static void tls_log_func(int level, const char *str)
     fprintf(stderr, "|<%d>| %s", level, str);
 }
 #endif
+static bool gtls_inited = FALSE;
+/*
+ * Custom push and pull callback functions used by GNU TLS to read and write
+ * to the socket.  These functions are simple wrappers to send() and recv()
+ * (although here using the sread/swrite macros as defined by setup_once.h).
+ * We use custom functions rather than the GNU TLS defaults because it allows
+ * us to get specific about the fourth "flags" argument, and to use arbitrary
+ * private data with gnutls_transport_set_ptr if we wish.
+ */
+static ssize_t Curl_gtls_push(void *s, const void *buf, size_t len)
+{
+  return swrite(s, buf, len);
+}
 
+static ssize_t Curl_gtls_pull(void *s, void *buf, size_t len)
+{
+  return sread(s, buf, len);
+}
 
 /* Global GnuTLS init, called from Curl_ssl_init() */
 int Curl_gtls_init(void)
 {
-  gnutls_global_init();
-#ifdef GTLSDEBUG
-  gnutls_global_set_log_function(tls_log_func);
-  gnutls_global_set_log_level(2);
-#endif
+/* Unfortunately we can not init here, things like curl --version will
+ * fail to work if there is no egd socket available because libgcrypt
+ * will EXIT the application!!
+ * By doing the actual init later (before actually trying to use GnuTLS),
+ * we can at least provide basic info etc.
+ */
   return 1;
+}
+
+static int _Curl_gtls_init(void)
+{
+  int ret = 1;
+  if (!gtls_inited) {
+    ret = gnutls_global_init()?0:1;
+#ifdef GTLSDEBUG
+    gnutls_global_set_log_function(tls_log_func);
+    gnutls_global_set_log_level(2);
+#endif
+    gtls_inited = TRUE;
+  }
+  return ret;
 }
 
 int Curl_gtls_cleanup(void)
 {
-  gnutls_global_deinit();
+  if (gtls_inited)
+    gnutls_global_deinit();
   return 1;
 }
 
@@ -118,7 +148,8 @@ static CURLcode handshake(struct connectdata *conn,
 {
   struct SessionHandle *data = conn->data;
   int rc;
-
+  if (!gtls_inited)
+    _Curl_gtls_init();
   do {
     rc = gnutls_handshake(session);
 
@@ -127,12 +158,12 @@ static CURLcode handshake(struct connectdata *conn,
       long has_passed;
 
       if(duringconnect && data->set.connecttimeout)
-        timeout_ms = data->set.connecttimeout*1000;
+        timeout_ms = data->set.connecttimeout;
 
       if(data->set.timeout) {
         /* get the strictest timeout of the ones converted to milliseconds */
-        if((data->set.timeout*1000) < timeout_ms)
-          timeout_ms = data->set.timeout*1000;
+        if(data->set.timeout < timeout_ms)
+          timeout_ms = data->set.timeout;
       }
 
       /* Evaluate in milliseconds how much time that has passed */
@@ -147,7 +178,7 @@ static CURLcode handshake(struct connectdata *conn,
         return CURLE_OPERATION_TIMEOUTED;
       }
 
-      rc = Curl_select(conn->sock[sockindex],
+      rc = Curl_socket_ready(conn->sock[sockindex],
                        conn->sock[sockindex], (int)timeout_ms);
       if(rc > 0)
         /* reabable or writable, go loop*/
@@ -159,7 +190,7 @@ static CURLcode handshake(struct connectdata *conn,
       }
       else {
         /* anything that gets here is fatally bad */
-        failf(data, "select on SSL socket, errno: %d", Curl_ourerrno());
+        failf(data, "select/poll on SSL socket, errno: %d", SOCKERRNO);
         return CURLE_SSL_CONNECT_ERROR;
       }
     }
@@ -168,8 +199,7 @@ static CURLcode handshake(struct connectdata *conn,
   } while(1);
 
   if (rc < 0) {
-    failf(data, "gnutls_handshake() failed: %d", rc);
-    /* gnutls_perror(ret); */
+    failf(data, "gnutls_handshake() failed: %s", gnutls_strerror(rc));
     return CURLE_SSL_CONNECT_ERROR;
   }
 
@@ -214,6 +244,7 @@ Curl_gtls_connect(struct connectdata *conn,
   void *ssl_sessionid;
   size_t ssl_idsize;
 
+  if (!gtls_inited) _Curl_gtls_init();
   /* GnuTLS only supports TLSv1 (and SSLv3?) */
   if(data->set.ssl.version == CURL_SSLVERSION_SSLv2) {
     failf(data, "GnuTLS does not support SSLv2");
@@ -235,9 +266,12 @@ Curl_gtls_connect(struct connectdata *conn,
     rc = gnutls_certificate_set_x509_trust_file(conn->ssl[sockindex].cred,
                                                 data->set.ssl.CAfile,
                                                 GNUTLS_X509_FMT_PEM);
-    if(rc < 0)
+    if(rc < 0) {
       infof(data, "error reading ca cert file %s (%s)\n",
             data->set.ssl.CAfile, gnutls_strerror(rc));
+      if (data->set.ssl.verifypeer)
+        return CURLE_SSL_CACERT_BADFILE;
+    }
     else
       infof(data, "found %d certificates in %s\n",
             rc, data->set.ssl.CAfile);
@@ -282,6 +316,13 @@ Curl_gtls_connect(struct connectdata *conn,
   /* set the connection handle (file descriptor for the socket) */
   gnutls_transport_set_ptr(session,
                            (gnutls_transport_ptr)conn->sock[sockindex]);
+
+  /* register callback functions to send and receive data. */
+  gnutls_transport_set_push_function(session, Curl_gtls_push);
+  gnutls_transport_set_pull_function(session, Curl_gtls_pull);
+
+  /* lowat must be set to zero when using custom push and pull functions. */
+  gnutls_transport_set_lowat(session, 0);
 
   /* This might be a reconnect, so we check for a session ID in the cache
      to speed up things */
@@ -379,6 +420,43 @@ Curl_gtls_connect(struct connectdata *conn,
   else
     infof(data, "\t common name: %s (matched)\n", certbuf);
 
+  /* Check for time-based validity */
+  clock = gnutls_x509_crt_get_expiration_time(x509_cert);
+
+  if(clock == (time_t)-1) {
+    failf(data, "server cert expiration date verify failed");
+    return CURLE_SSL_CONNECT_ERROR;
+  }
+
+  if(clock < time(NULL)) {
+    if (data->set.ssl.verifypeer) {
+      failf(data, "server certificate expiration date has passed.");
+      return CURLE_SSL_PEER_CERTIFICATE;
+    }
+    else
+      infof(data, "\t server certificate expiration date FAILED\n");
+  }
+  else
+    infof(data, "\t server certificate expiration date OK\n");
+
+  clock = gnutls_x509_crt_get_activation_time(x509_cert);
+
+  if(clock == (time_t)-1) {
+    failf(data, "server cert activation date verify failed");
+    return CURLE_SSL_CONNECT_ERROR;
+  }
+
+  if(clock > time(NULL)) {
+    if (data->set.ssl.verifypeer) {
+      failf(data, "server certificate not activated yet.");
+      return CURLE_SSL_PEER_CERTIFICATE;
+    }
+    else
+      infof(data, "\t server certificate activation date FAILED\n");
+  }
+  else
+    infof(data, "\t server certificate activation date OK\n");
+
   /* Show:
 
   - ciphers used
@@ -450,13 +528,18 @@ Curl_gtls_connect(struct connectdata *conn,
 
 
 /* return number of sent (non-SSL) bytes */
-int Curl_gtls_send(struct connectdata *conn,
+ssize_t Curl_gtls_send(struct connectdata *conn,
                    int sockindex,
                    void *mem,
                    size_t len)
 {
-  int rc;
-  rc = gnutls_record_send(conn->ssl[sockindex].session, mem, len);
+  ssize_t rc = gnutls_record_send(conn->ssl[sockindex].session, mem, len);
+
+  if(rc < 0 ) {
+    if(rc == GNUTLS_E_AGAIN)
+      return 0; /* EWOULDBLOCK equivalent */
+    rc = -1; /* generic error code for send failure */
+  }
 
   return rc;
 }
@@ -474,7 +557,8 @@ static void close_one(struct connectdata *conn,
     gnutls_bye(conn->ssl[index].session, GNUTLS_SHUT_RDWR);
     gnutls_deinit(conn->ssl[index].session);
   }
-  gnutls_certificate_free_credentials(conn->ssl[index].cred);
+  if(conn->ssl[index].cred)
+    gnutls_certificate_free_credentials(conn->ssl[index].cred);
 }
 
 void Curl_gtls_close(struct connectdata *conn)
@@ -483,6 +567,74 @@ void Curl_gtls_close(struct connectdata *conn)
     close_one(conn, 0);
   if(conn->ssl[1].use)
     close_one(conn, 1);
+}
+
+/*
+ * This function is called to shut down the SSL layer but keep the
+ * socket open (CCC - Clear Command Channel)
+ */
+int Curl_gtls_shutdown(struct connectdata *conn, int sockindex)
+{
+  int result;
+  int retval = 0;
+  struct SessionHandle *data = conn->data;
+  int done = 0;
+  char buf[120];
+
+  /* This has only been tested on the proftpd server, and the mod_tls code
+     sends a close notify alert without waiting for a close notify alert in
+     response. Thus we wait for a close notify alert from the server, but
+     we do not send one. Let's hope other servers do the same... */
+
+  if(data->set.ftp_ccc == CURLFTPSSL_CCC_ACTIVE)
+      gnutls_bye(conn->ssl[sockindex].session, GNUTLS_SHUT_WR);
+
+  if(conn->ssl[sockindex].session) {
+    while(!done) {
+      int what = Curl_socket_ready(conn->sock[sockindex],
+                             CURL_SOCKET_BAD, SSL_SHUTDOWN_TIMEOUT);
+      if(what > 0) {
+        /* Something to read, let's do it and hope that it is the close
+           notify alert from the server */
+        result = gnutls_record_recv(conn->ssl[sockindex].session,
+                                    buf, sizeof(buf));
+        switch(result) {
+        case 0:
+          /* This is the expected response. There was no data but only
+             the close notify alert */
+          done = 1;
+          break;
+        case GNUTLS_E_AGAIN:
+        case GNUTLS_E_INTERRUPTED:
+          infof(data, "GNUTLS_E_AGAIN || GNUTLS_E_INTERRUPTED\n");
+          break;
+        default:
+          retval = -1;
+          done = 1;
+          break;
+        }
+      }
+      else if(0 == what) {
+        /* timeout */
+        failf(data, "SSL shutdown timeout");
+        done = 1;
+        break;
+      }
+      else {
+        /* anything that gets here is fatally bad */
+        failf(data, "select/poll on SSL socket, errno: %d", SOCKERRNO);
+        retval = -1;
+        done = 1;
+      }
+    }
+    gnutls_deinit(conn->ssl[sockindex].session);
+  }
+  gnutls_certificate_free_credentials(conn->ssl[sockindex].cred);
+
+  conn->ssl[sockindex].session = NULL;
+  conn->ssl[sockindex].use = FALSE;
+
+  return retval;
 }
 
 /*

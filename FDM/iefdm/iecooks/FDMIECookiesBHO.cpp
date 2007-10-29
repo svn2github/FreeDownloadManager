@@ -540,3 +540,15 @@ void CFDMIECookiesBHO::DeleteFile()
 	RemoveDirectory (szTmpPath);
 	ReleaseMutex (m_mxFile);
 }
+
+#include "vmsFlashHelper.h"
+#include <mflash.h>
+
+_COM_SMARTPTR_TYPEDEF(IShockwaveFlash, __uuidof(IShockwaveFlash));
+
+STDMETHODIMP CFDMIECookiesBHO::DocumentComplete(IDispatch *pDisp, VARIANT *URL)
+{
+	
+
+	return S_OK;
+}

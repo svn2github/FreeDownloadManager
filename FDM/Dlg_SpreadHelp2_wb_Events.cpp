@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Dlg_SpreadHelp2_wb_Events.h"
 
 #ifdef _DEBUG

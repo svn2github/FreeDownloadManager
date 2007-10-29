@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2005, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2007, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: strtoofft.c,v 1.9 2006/01/09 13:17:14 bagder Exp $
+ * $Id: strtoofft.c,v 1.11 2007-02-16 18:19:36 yangtse Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -55,7 +55,7 @@ curlx_strtoll(const char *nptr, char **endptr, int base)
 
   /* Skip leading whitespace. */
   end = (char *)nptr;
-  while (isspace((int)end[0])) {
+  while (ISSPACE(end[0])) {
     end++;
   }
 
@@ -124,7 +124,7 @@ curlx_strtoll(const char *nptr, char **endptr, int base)
     else
       value = CURL_LLONG_MAX;
 
-    errno = ERANGE;
+    SET_ERRNO(ERANGE);
   }
 
   if (endptr)

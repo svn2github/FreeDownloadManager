@@ -59,6 +59,7 @@ typedef void (*fntEventDescFunc)(fsDownloadMgr *pMgr, fsDownloadMgr_EventDescTyp
 class fsDownloadMgr
 {
 public:
+	BOOL HasActivity();
 	fsDownloadState get_State();
 	int get_ReservingDiskSpaceProgress();
 	void DoRapidshareSupport();
@@ -157,7 +158,8 @@ public:
 	virtual ~fsDownloadMgr();
 
 protected:
-	int m_iReservingDiskSpaceProgress;
+	static DWORD WINAPI _threadReserveDiskSpace (LPVOID lp);
+	BOOL m_bDontCreateNewSections;
 	DWORD m_dwDownloadFileFlags;
 	bool m_bRSsupportDone;
 	
@@ -201,7 +203,7 @@ protected:
 	BOOL m_bCantStart;	
 	static DWORD WINAPI _threadQSize (LPVOID lp);
 	BOOL m_bFatalError;	
-	int m_iThread;	
+	LONG m_iThread;	
 	CString m_strExtError;	
 	
 	void OnDone();

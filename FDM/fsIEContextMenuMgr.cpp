@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "fsIEContextMenuMgr.h"
 
 #ifdef _DEBUG
@@ -86,7 +86,7 @@ BOOL fsIEContextMenuMgr::AddIEMenus()
 	CString strUrl = "file://";
 	
 	
-	CString strPath = ((CDataStretcherApp*)AfxGetApp ())->m_strAppPath;
+	CString strPath = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
 	if (strPath == "")
 		return FALSE;
 	if (strPath [strPath.GetLength () - 1] != '/' && strPath [strPath.GetLength () - 1] != '\\')

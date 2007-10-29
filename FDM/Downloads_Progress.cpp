@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Downloads_Progress.h"
 #include "DownloadsWnd.h"
 #include "fsDownloadMgr.h"
@@ -18,10 +18,23 @@ static char THIS_FILE[] = __FILE__;
 CDownloads_Progress::CDownloads_Progress()
 {
 	m_pActiveDownload = NULL;
+
+	m_hevShutdown = CreateEvent (NULL, TRUE, FALSE, NULL);
+	m_hevDraw = CreateEvent (NULL, TRUE, FALSE, NULL);
+	
+	DWORD dw;
+	m_hthDrawProgress = CreateThread (NULL, 0, _threadDrawProgress, this, 0, &dw);
+
+	m_iLastProgress = -1;
 }
 
 CDownloads_Progress::~CDownloads_Progress()
 {
+	SetEvent (m_hevShutdown);
+	WaitForSingleObject (m_hthDrawProgress, INFINITE);
+	CloseHandle (m_hthDrawProgress);
+	CloseHandle (m_hevDraw);
+	CloseHandle (m_hevShutdown);
 }  
 
 BEGIN_MESSAGE_MAP(CDownloads_Progress, CWnd)
@@ -50,35 +63,63 @@ void CDownloads_Progress::OnPaint()
 {
 	CPaintDC dc(this); 
 
-	m_vAlreadyDraw.clear ();	
-	DrawProgress (&dc);
+	m_iLastProgress = -1;
+	SetEvent (m_hevDraw);
 }
 
-void CDownloads_Progress::DrawProgress(CDC *dc)
+void CDownloads_Progress::DrawProgress(CDC *dc, vmsDownloadSmartPtr dld)
 {
-	if (m_pActiveDownload == NULL) 
+	if (dld == NULL) 
 		return;
 
-	if (IsWindowVisible () == FALSE)
+	if (IsWindowVisible () == FALSE || (int)dld->pMgr->GetPercentDone () == m_iLastProgress)
 		return;
 
-	UINT64 uFileSize = m_pActiveDownload->pMgr->GetLDFileSize ();
-
+	UINT64 uFileSize = dld->pMgr->GetLDFileSize ();
+	
 	if (uFileSize == 0 || uFileSize == _UI64_MAX)
 		return;
 
-	bool bDontUseAlreadyDraw = m_pActiveDownload->pMgr->IsBittorrent () != FALSE;
+	CDC dcDraw;
+	dcDraw.CreateCompatibleDC (dc);
+	CBitmap *pbmdOld;
 
-	
-	std::vector <vmsSectionInfo> v;
-	m_pActiveDownload->pMgr->GetSplittedSectionsList (v);
-	for (size_t i = 0; i < v.size (); i++)
-		DrawSectionProgress (dc, &v[i], i, uFileSize, bDontUseAlreadyDraw);
+	if (m_iLastProgress != -1 || m_bmpProgress.m_hObject == NULL)
+	{
+		if (m_bmpProgress.m_hObject)
+			m_bmpProgress.DeleteObject ();
+
+		bool bDontUseAlreadyDraw = dld->pMgr->IsBittorrent () != FALSE;
+
+		
+		std::vector <vmsSectionInfo> v;
+		dld->pMgr->GetSplittedSectionsList (v);
+
+		m_bmpProgress.CreateCompatibleBitmap (dc, m_size.cx, m_size.cy);
+		pbmdOld = dcDraw.SelectObject (&m_bmpProgress);
+
+		dcDraw.FillSolidRect (0, 0, m_size.cx, m_size.cy, GetSysColor (COLOR_WINDOW));
+
+		for (size_t i = 0; i < v.size (); i++)
+			DrawSectionProgress (&dcDraw, &v[i], i, uFileSize, bDontUseAlreadyDraw);
+	}
+	else
+	{
+		pbmdOld = dcDraw.SelectObject (&m_bmpProgress);		
+	}
+
+	m_iLastProgress = (int)dld->pMgr->GetPercentDone ();
+
+	dc->BitBlt (0, 0, m_size.cx, m_size.cy, &dcDraw, 0, 0, SRCCOPY);
+
+	dcDraw.SelectObject (pbmdOld);
+	dcDraw.DeleteDC ();
 }
 
 void CDownloads_Progress::SetActiveDownload(vmsDownloadSmartPtr dld)
 {
 	m_pActiveDownload = dld;
+	set_FullRedraw ();
 	Invalidate ();
 }
 
@@ -86,7 +127,7 @@ void CDownloads_Progress::OnSize(UINT , int cx, int cy)
 {
 	m_size.cx = cx;
 	m_size.cy = cy;
-	m_vAlreadyDraw.clear ();
+	set_FullRedraw ();
 	Invalidate (TRUE);
 }
 
@@ -110,10 +151,6 @@ void CDownloads_Progress::DrawSectionProgress(CDC *dc, vmsSectionInfo *sect, int
 	CBrush* brold = dc->SelectObject (&m_brDone);
 	CPen *penold = dc->SelectObject (&m_penQ);
 
-	
-	if (m_vAlreadyDraw.size () > (size_t)iSect)
-		nsqs = (double) m_vAlreadyDraw [iSect]; 
-
 	for (int i = 0; i < nsqe; i++)
 	{
 		if (i >= nsqs)	
@@ -134,15 +171,6 @@ void CDownloads_Progress::DrawSectionProgress(CDC *dc, vmsSectionInfo *sect, int
 		}
 	}
 
-	
-	if (bDontUseAlreadyDraw == false)
-	{
-		if (m_vAlreadyDraw.size () > (size_t)iSect)
-			m_vAlreadyDraw [iSect] = (UINT) nsqc;	
-		else
-			m_vAlreadyDraw.push_back ((UINT) nsqc);	
-	}
-
 	dc->SelectObject (brold);
 	dc->SelectObject (penold);
 }
@@ -154,13 +182,34 @@ vmsDownloadSmartPtr CDownloads_Progress::GetActiveDownload()
 
 void CDownloads_Progress::UpdateDownload()
 {
-	CDC *dc = GetDC ();
-	DrawProgress (dc);
-	ReleaseDC (dc);
+	SetEvent (m_hevDraw);
 }
 
 void CDownloads_Progress::set_FullRedraw()
 {
-	m_vAlreadyDraw.clear ();
-}  
+	m_iLastProgress = -1;
+	m_bmpProgress.DeleteObject ();
+}
 
+DWORD WINAPI CDownloads_Progress::_threadDrawProgress(LPVOID lp)
+{
+	CDownloads_Progress *pthis = (CDownloads_Progress*) lp;
+
+	SetThreadPriority (GetCurrentThread (), THREAD_PRIORITY_IDLE);
+
+	HANDLE phEvs [] = {pthis->m_hevDraw, pthis->m_hevShutdown};
+
+	while (WAIT_OBJECT_0 == WaitForMultipleObjects (2, phEvs, FALSE, INFINITE))
+	{
+		ResetEvent (pthis->m_hevDraw);
+		vmsDownloadSmartPtr dld = pthis->m_pActiveDownload;
+		if (dld != NULL)
+		{
+			CDC *dc = pthis->GetDC ();
+			pthis->DrawProgress (dc, dld);
+			pthis->ReleaseDC (dc);
+		}
+	}
+
+	return 0;
+}

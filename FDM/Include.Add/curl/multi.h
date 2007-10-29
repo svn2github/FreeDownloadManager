@@ -3,31 +3,7 @@
 */
 
 #ifndef __CURL_MULTI_H
-#define __CURL_MULTI_H 
-
-#if defined(_WIN32) && !defined(WIN32)
-
-#define WIN32 1
-#endif
-
-#if defined(WIN32) && !defined(_WIN32_WCE) && !defined(__GNUC__) || \
-  defined(__MINGW32__)
-#if !(defined(_WINSOCKAPI_) || defined(_WINSOCK_H))
-
-#include <winsock2.h>
-#endif
-#else 
-
-#if defined(_AIX) || defined(NETWARE) || defined(__NetBSD__)
-#include <sys/select.h>
-#endif
-
-#ifndef _WIN32_WCE
-#include <sys/socket.h>
-#endif
-#include <sys/time.h>
-#include <sys/types.h>
-#endif 
+#define __CURL_MULTI_H   
 
 #include "curl.h"
 
@@ -37,22 +13,6 @@ extern "C" {
 
 typedef void CURLM;
 
-#ifdef HAVE_CURL_MULTI_SOCKET 
-
-#ifndef curl_socket_typedef
-
-#ifdef WIN32
-typedef SOCKET curl_socket_t;
-#define CURL_SOCKET_BAD INVALID_SOCKET
-#else
-typedef int curl_socket_t;
-#define CURL_SOCKET_BAD -1
-#endif
-#define curl_socket_typedef
-#endif 
-
-#endif 
-
 typedef enum {
   CURLM_CALL_MULTI_PERFORM = -1, 
   CURLM_OK,
@@ -60,8 +20,12 @@ typedef enum {
   CURLM_BAD_EASY_HANDLE, 
   CURLM_OUT_OF_MEMORY,   
   CURLM_INTERNAL_ERROR,  
+  CURLM_BAD_SOCKET,      
+  CURLM_UNKNOWN_OPTION,  
   CURLM_LAST
-} CURLMcode;
+} CURLMcode; 
+
+#define CURLM_CALL_MULTI_SOCKET CURLM_CALL_MULTI_PERFORM
 
 typedef enum {
   CURLMSG_NONE, 
@@ -105,9 +69,7 @@ CURL_EXTERN CURLMcode curl_multi_cleanup(CURLM *multi_handle);
 CURL_EXTERN CURLMsg *curl_multi_info_read(CURLM *multi_handle,
                                           int *msgs_in_queue); 
 
-CURL_EXTERN const char *curl_multi_strerror(CURLMcode);
-
-#ifdef HAVE_CURL_MULTI_SOCKET
+CURL_EXTERN const char *curl_multi_strerror(CURLMcode); 
 
 #define CURL_POLL_NONE   0
 #define CURL_POLL_IN     1
@@ -115,28 +77,81 @@ CURL_EXTERN const char *curl_multi_strerror(CURLMcode);
 #define CURL_POLL_INOUT  3
 #define CURL_POLL_REMOVE 4
 
-#define CURL_EASY_NONE (CURL *)0
-#define CURL_EASY_TIMEOUT (CURL *)0
 #define CURL_SOCKET_TIMEOUT CURL_SOCKET_BAD
+
+#define CURL_CSELECT_IN   0x01
+#define CURL_CSELECT_OUT  0x02
+#define CURL_CSELECT_ERR  0x04
 
 typedef int (*curl_socket_callback)(CURL *easy,      
                                     curl_socket_t s, 
                                     int what,        
-                                    void *userp);    
+                                    void *userp,     
+                                    void *socketp);  
 
-CURLMcode curl_multi_socket(CURLM *multi_handle,
-                            curl_socket_t s,
-                            CURL *easy,
-                            curl_socket_callback callback,
-                            void *userp); 
+typedef int (*curl_multi_timer_callback)(CURLM *multi,    
+                                         long timeout_ms, 
+                                         void *userp);    
 
-CURLMcode curl_multi_socket_all(CURLM *multi_handle,
-                                curl_socket_callback callback,
-                                void *userp);  
+CURL_EXTERN CURLMcode curl_multi_socket(CURLM *multi_handle, curl_socket_t s,
+                                        int *running_handles);
 
-CURLMcode curl_multi_timeout(CURLM *multi_handle, long *milliseconds);
+CURL_EXTERN CURLMcode curl_multi_socket_action(CURLM *multi_handle,
+                                               curl_socket_t s,
+                                               int ev_bitmask,
+                                               int *running_handles);
 
+CURL_EXTERN CURLMcode curl_multi_socket_all(CURLM *multi_handle,
+                                            int *running_handles);
+
+#ifndef CURL_ALLOW_OLD_MULTI_SOCKET
+
+#define curl_multi_socket(x,y,z) curl_multi_socket_action(x,y,0,z)
 #endif 
+
+CURL_EXTERN CURLMcode curl_multi_timeout(CURLM *multi_handle,
+                                         long *milliseconds);
+
+#undef CINIT 
+
+#ifdef CURL_ISOCPP
+#define CINIT(name,type,number) CURLMOPT_ ## name = CURLOPTTYPE_ ## type + number
+#else
+
+#define LONG          CURLOPTTYPE_LONG
+#define OBJECTPOINT   CURLOPTTYPE_OBJECTPOINT
+#define FUNCTIONPOINT CURLOPTTYPE_FUNCTIONPOINT
+#define OFF_T         CURLOPTTYPE_OFF_T
+#define CINIT(name,type,number) CURLMOPT_name = type + number
+#endif
+
+typedef enum {
+  
+  CINIT(SOCKETFUNCTION, FUNCTIONPOINT, 1),
+
+  
+  CINIT(SOCKETDATA, OBJECTPOINT, 2),
+
+    
+  CINIT(PIPELINING, LONG, 3),
+
+   
+  CINIT(TIMERFUNCTION, FUNCTIONPOINT, 4),
+
+  
+  CINIT(TIMERDATA, OBJECTPOINT, 5),
+
+  
+  CINIT(MAXCONNECTS, LONG, 6),
+
+  CURLMOPT_LASTENTRY 
+} CURLMoption;  
+
+CURL_EXTERN CURLMcode curl_multi_setopt(CURLM *multi_handle,
+                                        CURLMoption option, ...);  
+
+CURL_EXTERN CURLMcode curl_multi_assign(CURLM *multi_handle,
+                                        curl_socket_t sockfd, void *sockp);
 
 #ifdef __cplusplus
 } 

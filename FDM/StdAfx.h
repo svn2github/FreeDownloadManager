@@ -15,7 +15,7 @@
 #define _WIN32_IE 0x501
 #define _WIN32_WINNT 0x400  
 
-const int PRG_BUILD_NUMBER = 705;
+const int PRG_BUILD_NUMBER = 724;
 
 const char* const PRG_AGENT_NAME = "FDM 2.x";
 
@@ -58,7 +58,7 @@ _COM_SMARTPTR_TYPEDEF(IXMLDOMNodeList, __uuidof(IXMLDOMNodeList));
 #define _ATL_APARTMENT_THREADED
 #include <atlbase.h>  
 
-class CDataStretcherModule : public CComModule
+class CFdmModule : public CComModule
 {
 public:
 	LONG Unlock();
@@ -66,7 +66,7 @@ public:
 	LPCTSTR FindOneOf(LPCTSTR p1, LPCTSTR p2);
 	DWORD dwThreadID;
 };
-extern CDataStretcherModule _Module;
+extern CFdmModule _Module;
 #include <atlcom.h>
 
 #ifndef LONG_PTR
@@ -163,8 +163,8 @@ extern DWORD _dwAppState;
 #ifndef _DEBUG
 #define IS_PORTABLE_MODE	((_dwAppState & APPSTATE_PORTABLE_MODE) != 0)
 #else
+#define IS_PORTABLE_MODE	((_dwAppState & APPSTATE_PORTABLE_MODE) != 0)
 
-#define IS_PORTABLE_MODE	FALSE	
 #endif
 
 #include "lngphrases.h"  

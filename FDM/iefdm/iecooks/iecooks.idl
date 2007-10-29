@@ -20,6 +20,7 @@ import "ocidl.idl";
 		[id(DISPID_BEFORENAVIGATE2), helpstring("method BeforeNavigate2")] HRESULT BeforeNavigate2(IDispatch*, VARIANT* url, VARIANT* flags, VARIANT* tfn, VARIANT* pd, VARIANT* headers, VARIANT_BOOL* bCancel);
 		[id(DISPID_DOWNLOADBEGIN), helpstring("method DownloadBegin")] HRESULT DownloadBegin();
 		[id(DISPID_DOWNLOADCOMPLETE), helpstring("method DownloadComplete")] HRESULT DownloadComplete();
+		[id(DISPID_DOCUMENTCOMPLETE), helpstring("method DocumentComplete")] HRESULT DocumentComplete([in] IDispatch *pDisp, [in] VARIANT *URL);
 	};
 	[
 		object,

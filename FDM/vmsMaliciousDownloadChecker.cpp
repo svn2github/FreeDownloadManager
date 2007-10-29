@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "vmsMaliciousDownloadChecker.h"
 #include "vmsSimpleFileDownloader.h"
 
@@ -36,7 +36,7 @@ fsInternetResult vmsMaliciousDownloadChecker::Check(LPCSTR pszUrl)
 
 	
 	CString strUrl;
-	strUrl.Format ("http://freedownloadmanager.org/fromfdm/url.php?url=%s", EncodeUrl (pszUrl));
+	strUrl.Format ("http://fdm.freedownloadmanager.org/fromfdm/url.php?url=%s", EncodeUrl (pszUrl));  
 
 	
 	vmsSimpleFileDownloader dldr;

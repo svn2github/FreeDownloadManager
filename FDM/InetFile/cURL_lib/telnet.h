@@ -7,6 +7,6 @@
 
 #ifndef CURL_DISABLE_TELNET
 CURLcode Curl_telnet(struct connectdata *conn, bool *done);
-CURLcode Curl_telnet_done(struct connectdata *conn, CURLcode);
+CURLcode Curl_telnet_done(struct connectdata *conn, CURLcode, bool premature);
 #endif
 #endif

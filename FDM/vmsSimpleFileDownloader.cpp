@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "vmsSimpleFileDownloader.h"
 
 #ifdef _DEBUG
@@ -15,7 +15,6 @@ static char THIS_FILE[]=__FILE__;
 vmsSimpleFileDownloader::vmsSimpleFileDownloader()
 {
 	m_dldr = NULL;
-	m_bRunning = false;
 }
 
 vmsSimpleFileDownloader::~vmsSimpleFileDownloader()
@@ -25,20 +24,14 @@ vmsSimpleFileDownloader::~vmsSimpleFileDownloader()
 
 fsInternetResult vmsSimpleFileDownloader::Download(LPCSTR pszUrl, LPCSTR pszFileName)
 {
-	ASSERT (m_bRunning == false);
-	if (m_bRunning)
+	if (IsRunning ())
 		return IR_S_FALSE;
-
-	m_bRunning = true;
 
 	CreateDownloader ();
 
 	fsInternetResult ir = m_dldr->CreateByUrl (pszUrl);
 	if (ir != IR_SUCCESS)
-	{
-		m_bRunning = false;
 		return ir;
-	}
 
 	fsDownload_Properties *dp = m_dldr->GetDP ();
 
@@ -54,10 +47,7 @@ fsInternetResult vmsSimpleFileDownloader::Download(LPCSTR pszUrl, LPCSTR pszFile
 
 	ir = m_dldr->StartDownloading ();
 	if (ir != IR_SUCCESS)
-	{
-		m_bRunning = false;
 		return ir;
-	}
 
 	return IR_SUCCESS;
 }
@@ -78,7 +68,6 @@ DWORD vmsSimpleFileDownloader::_DownloadMgrEvents(fsDownloadMgr *pMgr, fsDownloa
 			{
 				if (pthis->m_dldr->IsDone () == FALSE)
 					pthis->m_dldr->DeleteFile ();
-				pthis->m_bRunning = false;
 			}
 		break;
 	}
@@ -96,7 +85,7 @@ void vmsSimpleFileDownloader::CreateDownloader()
 
 bool vmsSimpleFileDownloader::IsRunning()
 {
-	return m_bRunning;
+	return m_dldr ? m_dldr->HasActivity () != 0 : FALSE;
 }
 
 fsInternetResult vmsSimpleFileDownloader::GetLastError()

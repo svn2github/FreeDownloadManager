@@ -76,7 +76,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\libtorrent-0.12\debug\libtorrent-0.12.lib wsock32.lib"
+				AdditionalDependencies="..\libtorrent-0.12\release\libtorrent-0.12.lib wsock32.lib"
 				OutputFile="e:\program files\free download manager\fdmbtsupp.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
@@ -183,6 +183,7 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories="..\boost_1_33_1\stage\lib"
 				ModuleDefinitionFile="fdmbtsupp.def"
+				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Release/fdmbtsupp.pdb"
 				ImportLibrary=".\Release/fdmbtsupp.lib"
 				TargetMachine="1"

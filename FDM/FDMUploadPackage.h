@@ -11,7 +11,7 @@
 class ATL_NO_VTABLE CFDMUploadPackage : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CFDMUploadPackage, &CLSID_FDMUploadPackage>,
-	public IDispatchImpl<IUploadPackage, &IID_IUploadPackage, &LIBID_DataStretcherLib>
+	public IDispatchImpl<IUploadPackage, &IID_IUploadPackage, &LIBID_FdmLib>
 {
 public:
 	CFDMUploadPackage()

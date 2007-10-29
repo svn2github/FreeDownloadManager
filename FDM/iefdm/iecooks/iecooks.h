@@ -95,6 +95,10 @@ EXTERN_C const IID IID_IFDMIECookiesBHO;
         
         virtual  HRESULT STDMETHODCALLTYPE DownloadComplete( void) = 0;
         
+        virtual  HRESULT STDMETHODCALLTYPE DocumentComplete( 
+             IDispatch __RPC_FAR *pDisp,
+             VARIANT __RPC_FAR *URL) = 0;
+        
     };
     
 #else 	
@@ -164,6 +168,11 @@ EXTERN_C const IID IID_IFDMIECookiesBHO;
          HRESULT ( STDMETHODCALLTYPE __RPC_FAR *DownloadComplete )( 
             IFDMIECookiesBHO __RPC_FAR * This);
         
+         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *DocumentComplete )( 
+            IFDMIECookiesBHO __RPC_FAR * This,
+             IDispatch __RPC_FAR *pDisp,
+             VARIANT __RPC_FAR *URL);
+        
         END_INTERFACE
     } IFDMIECookiesBHOVtbl;
 
@@ -209,6 +218,9 @@ EXTERN_C const IID IID_IFDMIECookiesBHO;
 #define IFDMIECookiesBHO_DownloadComplete(This)	\
     (This)->lpVtbl -> DownloadComplete(This)
 
+#define IFDMIECookiesBHO_DocumentComplete(This,pDisp,URL)	\
+    (This)->lpVtbl -> DocumentComplete(This,pDisp,URL)
+
 #endif   
 
 #endif 	    
@@ -253,6 +265,17 @@ void __RPC_STUB IFDMIECookiesBHO_DownloadBegin_Stub(
     IFDMIECookiesBHO __RPC_FAR * This);  
 
 void __RPC_STUB IFDMIECookiesBHO_DownloadComplete_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);  
+
+ HRESULT STDMETHODCALLTYPE IFDMIECookiesBHO_DocumentComplete_Proxy( 
+    IFDMIECookiesBHO __RPC_FAR * This,
+     IDispatch __RPC_FAR *pDisp,
+     VARIANT __RPC_FAR *URL);  
+
+void __RPC_STUB IFDMIECookiesBHO_DocumentComplete_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,

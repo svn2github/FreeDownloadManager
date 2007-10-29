@@ -79,7 +79,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libavcodec.a libavformat.a libavutil.a libswscale.a libz.a libdts.a libfaac.a libfaad.a libgsm.a libmp3lame.a libnut.a libogg.a libtheora.a libvorbis.a libvorbisenc.a libx264.a libxvidcore.a libpthreadGC2.a libgcc.a libmingwex.a wsock32.lib vfw32.lib /nologo /dll /debug /machine:I386 /out:"d:/program files/free download manager/MediaConverter.dll" /pdbtype:sept /libpath:"../lib.add/" /libpath:"../lib.add/ffmpeg/"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib libavcodec.a libavformat.a libavutil.a libswscale.a libz.a libdts.a libfaac.a libfaad.a libgsm.a libmp3lame.a libnut.a libogg.a libtheora.a libvorbis.a libvorbisenc.a libx264.a libxvidcore.a libpthreadGC2.a libgcc.a libmingwex.a wsock32.lib vfw32.lib /nologo /dll /debug /machine:I386 /out:"e:/program files/free download manager/MediaConverter.dll" /pdbtype:sept /libpath:"../lib.add/" /libpath:"../lib.add/ffmpeg/"
 
 !ENDIF 
 

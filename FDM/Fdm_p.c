@@ -2,9 +2,9 @@
 
 
 /* File created by MIDL compiler version 5.01.0164 */
-/* at Tue Aug 21 12:02:53 2007
+/* at Sun Oct 28 21:44:25 2007
  */
-/* Compiler settings for D:\VCW\FDM\FDM\DataStretcher.idl:
+/* Compiler settings for D:\VCW\FDM\FDM\Fdm.idl:
     Os (OptLev=s), W1, Zp8, env=Win32, ms_ext, c_ext
     error checks: allocation ref bounds_check enum stub_data 
 */
@@ -23,7 +23,7 @@
 #endif // __RPCPROXY_H_VERSION__
 
 
-#include "DataStretcher.h"
+#include "Fdm.h"
 
 #define TYPE_FORMAT_STRING_SIZE   99                                
 #define PROC_FORMAT_STRING_SIZE   63                                
@@ -7148,7 +7148,7 @@ static const MIDL_TYPE_FORMAT_STRING __MIDL_TypeFormatString =
         }
     };
 
-const CInterfaceProxyVtbl * _DataStretcher_ProxyVtblList[] = 
+const CInterfaceProxyVtbl * _Fdm_ProxyVtblList[] = 
 {
     ( CInterfaceProxyVtbl *) &_IFDMDownloadProxyVtbl,
     ( CInterfaceProxyVtbl *) &_IWGUrlReceiverProxyVtbl,
@@ -7160,7 +7160,7 @@ const CInterfaceProxyVtbl * _DataStretcher_ProxyVtblList[] =
     0
 };
 
-const CInterfaceStubVtbl * _DataStretcher_StubVtblList[] = 
+const CInterfaceStubVtbl * _Fdm_StubVtblList[] = 
 {
     ( CInterfaceStubVtbl *) &_IFDMDownloadStubVtbl,
     ( CInterfaceStubVtbl *) &_IWGUrlReceiverStubVtbl,
@@ -7172,7 +7172,7 @@ const CInterfaceStubVtbl * _DataStretcher_StubVtblList[] =
     0
 };
 
-PCInterfaceName const _DataStretcher_InterfaceNamesList[] = 
+PCInterfaceName const _Fdm_InterfaceNamesList[] = 
 {
     "IFDMDownload",
     "IWGUrlReceiver",
@@ -7184,7 +7184,7 @@ PCInterfaceName const _DataStretcher_InterfaceNamesList[] =
     0
 };
 
-const IID *  _DataStretcher_BaseIIDList[] = 
+const IID *  _Fdm_BaseIIDList[] = 
 {
     &IID_IDispatch,
     &IID_IDispatch,
@@ -7197,26 +7197,26 @@ const IID *  _DataStretcher_BaseIIDList[] =
 };
 
 
-#define _DataStretcher_CHECK_IID(n)	IID_GENERIC_CHECK_IID( _DataStretcher, pIID, n)
+#define _Fdm_CHECK_IID(n)	IID_GENERIC_CHECK_IID( _Fdm, pIID, n)
 
-int __stdcall _DataStretcher_IID_Lookup( const IID * pIID, int * pIndex )
+int __stdcall _Fdm_IID_Lookup( const IID * pIID, int * pIndex )
 {
     IID_BS_LOOKUP_SETUP
 
-    IID_BS_LOOKUP_INITIAL_TEST( _DataStretcher, 7, 4 )
-    IID_BS_LOOKUP_NEXT_TEST( _DataStretcher, 2 )
-    IID_BS_LOOKUP_NEXT_TEST( _DataStretcher, 1 )
-    IID_BS_LOOKUP_RETURN_RESULT( _DataStretcher, 7, *pIndex )
+    IID_BS_LOOKUP_INITIAL_TEST( _Fdm, 7, 4 )
+    IID_BS_LOOKUP_NEXT_TEST( _Fdm, 2 )
+    IID_BS_LOOKUP_NEXT_TEST( _Fdm, 1 )
+    IID_BS_LOOKUP_RETURN_RESULT( _Fdm, 7, *pIndex )
     
 }
 
-const ExtendedProxyFileInfo DataStretcher_ProxyFileInfo = 
+const ExtendedProxyFileInfo Fdm_ProxyFileInfo = 
 {
-    (PCInterfaceProxyVtblList *) & _DataStretcher_ProxyVtblList,
-    (PCInterfaceStubVtblList *) & _DataStretcher_StubVtblList,
-    (const PCInterfaceName * ) & _DataStretcher_InterfaceNamesList,
-    (const IID ** ) & _DataStretcher_BaseIIDList,
-    & _DataStretcher_IID_Lookup, 
+    (PCInterfaceProxyVtblList *) & _Fdm_ProxyVtblList,
+    (PCInterfaceStubVtblList *) & _Fdm_StubVtblList,
+    (const PCInterfaceName * ) & _Fdm_InterfaceNamesList,
+    (const IID ** ) & _Fdm_BaseIIDList,
+    & _Fdm_IID_Lookup, 
     7,
     1,
     0, /* table of [async_uuid] interfaces */

@@ -446,8 +446,6 @@ BOOL fsInternetDownloader::__threadDownload_flushdata (fsSectionEx* sect,
 			bWriteOk = bWriteOk && (dwRead == dwWrite);
 		}
 
-		ASSERT (bWriteOk);
-
 		LeaveCriticalSection (&sect->pThis->m_csWriteToFile);
 
 		if (!bWriteOk)
@@ -497,6 +495,7 @@ BOOL fsInternetDownloader::__threadDownload_flushdata (fsSectionEx* sect,
 
 	EnterCriticalSection (&sect->pThis->m_csSections);
 
+	
 	__int64 i = sect->pThis->m_dwDataLenInCache;
 	i += iLenCorrection;
 	
@@ -535,7 +534,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 	LOG ("fsID::_thrDL [" << sect->iSection << "] current = " << sect->uCurrent << nl);
 	LOG ("fsID::_thrDL [" << sect->iSection << "] end = " << sect->uEnd << nl);
 
-	DWORD dwBufSize = 1000;				
+	DWORD dwBufSize = 2000;				
 	BYTE *pBuffer = new BYTE [dwBufSize];	
 	ZeroMemory (pBuffer, dwBufSize);
 	DWORD dwMaxRead = is_PauseMode () ? 1 : dwBufSize;		
@@ -876,7 +875,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 			
 			UINT64 uZIPStart = 0;
 			
-			for (UINT i = 0; i < dwRead; i++)
+			for (int i = 0; i <= (int)dwRead - (int)sizeof (UINT32); i++)
 			{
 				UINT32* p = (UINT32*)(pBuf++);
 				if (*p == ZIP_BEGIN_SIG)
@@ -1469,7 +1468,7 @@ void fsInternetDownloader::SetRetryTime(DWORD dwMilliseconds)
 	m_uRetryTime = dwMilliseconds;
 }
 
-BOOL fsInternetDownloader::GetSectionInfo(int iSection, fsSection* pSection)
+BOOL fsInternetDownloader::GetSectionInfo(int iSection, fsSection* pSection, BOOL bNoCacheAccounting)
 {
 	if (iSection >= m_vSections.size ())
 		return FALSE;
@@ -1477,8 +1476,11 @@ BOOL fsInternetDownloader::GetSectionInfo(int iSection, fsSection* pSection)
 	fsSectionEx *sect = &m_vSections [iSection];
 	*pSection = *sect;
 	
-	pSection->uCurrent += sect->dwCacheLen;
-	pSection->uDCurrent += sect->dwCacheLen;
+	if (!bNoCacheAccounting)
+	{
+		pSection->uCurrent += sect->dwCacheLen;
+		pSection->uDCurrent += sect->dwCacheLen;
+	}
 
 	pSection->file = NULL;
 	
@@ -2219,8 +2221,9 @@ int fsInternetDownloader::GetDoneSectionCount()
 UINT64 fsInternetDownloader::GetBytesLeft()
 {
 	UINT64 uLeft = 0;
+	int cSections = m_vSections.size ();
 
-	for (int i = m_vSections.size () - 1; i >= 0; i--)
+	for (int i = cSections - 1; i >= 0; i--)
 	{
 		fsSection *sect = &m_vSections [i];
 
@@ -3313,4 +3316,12 @@ DWORD WINAPI fsInternetDownloader::_threadOpenUrl(LPVOID lp)
 	delete p;
 
 	return dw;
+}
+
+void fsInternetDownloader::LockWriteFile(BOOL bLock)
+{
+	if (bLock)
+		EnterCriticalSection (&m_csWriteToFile);
+	else
+		LeaveCriticalSection (&m_csWriteToFile);
 }

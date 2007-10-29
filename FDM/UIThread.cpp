@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "UIThread.h"
 
 #ifdef _DEBUG
@@ -46,8 +46,11 @@ void UIThread::set_Thread(LPTHREAD_START_ROUTINE pfn, LPVOID lpParam)
 	m_lpParam = lpParam;
 }
 
+extern CFdmApp theApp;
+
 void UIThread::OnDoWork() 
 {
+	AFX_MANAGE_STATE (theApp.GetModuleState ());
 	AfxEndThread (m_pfnThread (m_lpParam));
 }
 

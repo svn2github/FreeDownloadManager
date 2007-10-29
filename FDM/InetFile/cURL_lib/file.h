@@ -7,7 +7,7 @@
 
 #ifndef CURL_DISABLE_FILE
 CURLcode Curl_file(struct connectdata *, bool *done);
-CURLcode Curl_file_done(struct connectdata *, CURLcode);
+CURLcode Curl_file_done(struct connectdata *, CURLcode, bool premature);
 CURLcode Curl_file_connect(struct connectdata *);
 #endif
 #endif

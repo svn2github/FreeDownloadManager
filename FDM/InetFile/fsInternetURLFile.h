@@ -16,8 +16,9 @@
 #include "fsFtpConnection.h"
 #include "fsLocalFile.h"
 #include "fsInternetFile2.h"	
+#include "fsSpeaking.h"
 
-class fsInternetURLFile  
+class fsInternetURLFile : public fsSpeaking  
 {
 public:
 	void set_Charset (LPCSTR psz);
@@ -75,11 +76,13 @@ public:
 	void Close();
 	
 	
-	void SetDialogFunc (fntInetFileDialogFunc pfn, LPVOID lp1, LPVOID lp2);
 	fsInternetURLFile();
 	virtual ~fsInternetURLFile();
 
 protected:
+	fsString m_strRespFromServer;
+	BOOL m_bCatchFromServerResponse;
+	static void _InetFileDialogFunc (fsInetFileDialogDirection enDir, LPCSTR pszMsg, LPVOID lp1, LPVOID lp2);
 	void FormHttpBasicAuthHdr (LPCSTR pszUser, LPCSTR pszPassword);
 	void SetupProxyForFile2();
 	bool m_bUseFile2;

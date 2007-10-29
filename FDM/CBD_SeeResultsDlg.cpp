@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "CBD_SeeResultsDlg.h"
 #include "vmsBatchList.h"
 

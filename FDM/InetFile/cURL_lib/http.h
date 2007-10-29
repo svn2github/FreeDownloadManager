@@ -15,8 +15,12 @@ CURLcode Curl_proxyCONNECT(struct connectdata *conn,
                            char *hostname, int remote_port); 
 
 CURLcode Curl_http(struct connectdata *conn, bool *done);
-CURLcode Curl_http_done(struct connectdata *, CURLcode);
-CURLcode Curl_http_connect(struct connectdata *conn, bool *done); 
+CURLcode Curl_http_done(struct connectdata *, CURLcode, bool premature);
+CURLcode Curl_http_connect(struct connectdata *conn, bool *done);
+CURLcode Curl_https_connecting(struct connectdata *conn, bool *done);
+int Curl_https_getsock(struct connectdata *conn,
+                       curl_socket_t *socks,
+                       int numsocks); 
 
 void Curl_httpchunk_init(struct connectdata *conn);
 CHUNKcode Curl_httpchunk_read(struct connectdata *conn, char *datap,
@@ -32,7 +36,11 @@ int Curl_http_should_fail(struct connectdata *conn);
 #define CURLAUTH_PICKNONE (1<<30)  
 
 #ifndef MAX_INITIAL_POST_SIZE
-#define MAX_INITIAL_POST_SIZE 1024
+#define MAX_INITIAL_POST_SIZE (64*1024)
+#endif
+
+#ifndef TINY_INITIAL_POST_SIZE
+#define TINY_INITIAL_POST_SIZE 1024
 #endif
 
 #endif

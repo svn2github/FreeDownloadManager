@@ -16,6 +16,12 @@ fsInternetFile2::fsInternetFile2()
 
 	m_fileTime = -1;
 	m_uFileSize = _UI64_MAX;
+
+	m_bDoPause = FALSE;
+
+	m_uStartPos = 0;
+
+	m_enRST = RST_UNKNOWN;
 }
 
 fsInternetFile2::~fsInternetFile2()
@@ -53,7 +59,6 @@ fsInternetResult fsInternetFile2::Initialize()
 			curl_easy_setopt (m_curl, CURLOPT_HEADERFUNCTION, _WriteHeader);
 			curl_easy_setopt (m_curl, CURLOPT_HEADERDATA, this);
 
-			
 			curl_easy_setopt (m_curl, CURLOPT_FOLLOWLOCATION, TRUE);
 		}
 	}
@@ -70,6 +75,9 @@ size_t fsInternetFile2::_WriteData(void *ptr, size_t size, size_t nmemb, void *s
 void fsInternetFile2::set_URL(LPCSTR pszURL)
 {
 	curl_easy_setopt (m_curl, CURLOPT_URL, pszURL);
+
+	if (strstr (pszURL, ".megashares.com/") != NULL)
+		m_bDoPause = TRUE;
 }
 
 fsInternetResult fsInternetFile2::StartDownloading()
@@ -81,6 +89,7 @@ fsInternetResult fsInternetFile2::StartDownloading()
 		m_bAnswrFromServRcvd = false;
 		m_irLastError = IR_SUCCESS;
 		m_strHttpHeader = "";
+		m_enRST = RST_UNKNOWN;
 
 		
 		ResetEvent (m_hevReadDataReq);
@@ -113,7 +122,10 @@ DWORD WINAPI fsInternetFile2::_threadDownload(LPVOID lp)
 	fsInternetFile2* pthis = (fsInternetFile2*)lp;
 
 	try{
-	
+
+	if (pthis->m_bDoPause)
+		Sleep (1500);
+
 	
 	
 	
@@ -129,12 +141,19 @@ DWORD WINAPI fsInternetFile2::_threadDownload(LPVOID lp)
 	
 	pthis->m_irLastError = CURLcodeToIR (res);
 
-	
-	pthis->m_bAnswrFromServRcvd = true;
-	
+	if (pthis->m_irLastError == IR_SUCCESS)
+	{
+		long nRespCode = 200;
+		curl_easy_getinfo (pthis->m_curl, CURLINFO_RESPONSE_CODE, &nRespCode);
+		pthis->m_irLastError = fsHttpStatusCodeToIR (nRespCode);
+	}
+
 	
 	curl_easy_cleanup (pthis->m_curl);
 	pthis->m_curl = NULL;
+
+	
+	pthis->m_bAnswrFromServRcvd = true;
 
 	pthis->m_bDownloading = false;
 
@@ -276,6 +295,7 @@ void fsInternetFile2::StopDownloading()
 void fsInternetFile2::set_ResumeFrom (UINT64 uStart)
 {
 	curl_easy_setopt (m_curl, CURLOPT_RESUME_FROM_LARGE, (curl_off_t)uStart);
+	m_uStartPos = uStart;
 }
 
 void fsInternetFile2::set_UserAgent(LPCSTR psz)
@@ -331,15 +351,25 @@ void fsInternetFile2::set_PostData(LPCSTR psz)
 
 void fsInternetFile2::ExtractFileInfoFromResponse()
 {
-	LPSTR psz = NULL;
-	curl_easy_getinfo (m_curl, CURLINFO_CONTENT_TYPE, &psz);
-	m_strContentType = psz ? psz : "";
+	if (m_curl != NULL)
+	{
+		LPSTR psz = NULL;
+		curl_easy_getinfo (m_curl, CURLINFO_CONTENT_TYPE, &psz);
+		m_strContentType = psz ? psz : "";
 
-	curl_easy_getinfo (m_curl, CURLINFO_FILETIME, &m_fileTime);
+		curl_easy_getinfo (m_curl, CURLINFO_FILETIME, &m_fileTime);
 
-	double f;
-	curl_easy_getinfo (m_curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &f);
-	m_uFileSize = (UINT64)f;
+		double f;
+		curl_easy_getinfo (m_curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &f);
+		m_uFileSize = (UINT64)f + m_uStartPos;
+
+		if (m_uStartPos != 0)
+			m_enRST = RST_PRESENT;
+	}
+	else
+	{
+		m_uFileSize = 0;
+	}
 }
 
 LPCSTR fsInternetFile2::get_ContentType()
@@ -369,8 +399,7 @@ BOOL fsInternetFile2::GetLastModifiedDate(FILETIME *pTime)
 
 fsResumeSupportType fsInternetFile2::IsResumeSupported()
 {
-	
-	return RST_UNKNOWN;
+	return m_enRST;
 }
 
 size_t fsInternetFile2::_WriteHeader(void *ptr, size_t size, size_t nmemb, void *stream)

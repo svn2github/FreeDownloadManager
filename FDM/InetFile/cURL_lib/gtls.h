@@ -12,8 +12,8 @@ CURLcode Curl_gtls_connect(struct connectdata *conn, int sockindex);
 void Curl_gtls_close_all(struct SessionHandle *data);
 void Curl_gtls_close(struct connectdata *conn);  
 
-int Curl_gtls_send(struct connectdata *conn, int sockindex,
-                   void *mem, size_t len);
+ssize_t Curl_gtls_send(struct connectdata *conn, int sockindex,
+                       void *mem, size_t len);
 ssize_t Curl_gtls_recv(struct connectdata *conn, 
                        int num,                  
                        char *buf,                
@@ -21,5 +21,6 @@ ssize_t Curl_gtls_recv(struct connectdata *conn,
                        bool *wouldblock);
 void Curl_gtls_session_free(void *ptr);
 size_t Curl_gtls_version(char *buffer, size_t size);
+int Curl_gtls_shutdown(struct connectdata *conn, int sockindex);
 
 #endif

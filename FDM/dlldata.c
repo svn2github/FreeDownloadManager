@@ -19,12 +19,14 @@
 extern "C"   {
 #endif
 
-EXTERN_PROXY_FILE( DataStretcher )
+EXTERN_PROXY_FILE( Fdm )
+EXTERN_PROXY_FILE( FdmApp )
 
 
 PROXYFILE_LIST_START
 /* Start of list */
-  REFERENCE_PROXY_FILE( DataStretcher ),
+  REFERENCE_PROXY_FILE( Fdm ),
+  REFERENCE_PROXY_FILE( FdmApp ),
 /* End of list */
 PROXYFILE_LIST_END
 

@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "FloatingWndsThread.h"
 
 #ifdef _DEBUG

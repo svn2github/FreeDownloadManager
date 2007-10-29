@@ -32,7 +32,7 @@
 class CMainFrame : public CFrameWnd
 {
 	friend class CFloatingWnd;
-	friend class CDataStretcherApp;
+	friend class CFdmApp;
 	friend class CFloatingInfo_ListCtrlWnd;
 public:
 	CMainFrame();

@@ -1,8 +1,4 @@
-;
-;  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-;
-
-; FDM installer 
+; FDM installer for freedownloadmanager.org site
 
 [Setup]
 AppName=Free Download Manager
@@ -113,6 +109,8 @@ Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Download Manager"; Fl
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Download Manager"; Valuetype: string; Valuename: "Path"; Valuedata: "{app}"
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; Valuetype: string; Valuename: "Free Download Manager"; Valuedata: """{app}\fdm.exe"" -autorun"; Flags: uninsdeletevalue; tasks: autorun
 Root: HKLM; Subkey: "Software\FreeDownloadManager.ORG\Free Download Manager"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "Software\VicMan Software\Free Download Manager"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\VicMan Software\Free Download Manager"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Upload Manager"; Valuetype: string; Valuename: "Path_old"; Valuedata: "{reg:HKCU\Software\FreeDownloadManager.ORG\Free Upload Manager,Path}"; Check: DoesNeedSaveOldFumPath;
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Upload Manager"; Valuetype: string; Valuename: "Path"; Valuedata: "{app}\FUM";
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Upload Manager"; Valuetype: string; Valuename: "lngsroot"; Valuedata: "{app}"; Flags: uninsdeletevalue;
@@ -151,7 +149,6 @@ fum_cbAutostart: TCheckBox;
 bFumIntegration : Boolean;
 bFumAutostart : Boolean;
 bWasFumNotInstalled : Boolean;
-////////////////////
 lngLabel1: TLabel;
 lngLabel2: TLabel;
 lngList: TComboBox;
@@ -179,39 +176,45 @@ function GetSystemDefaultLanguageId () : Cardinal;
 external 'GetSystemDefaultLanguageId@files:fdminno.dll stdcall';
 
 procedure InitLngArrays ();
+var
+  iLng : Integer;
 begin
-  vLngNames [1] := 'Albanian'; vLngIds [1] := $1C; vLngFiles [1] := 'alb.lng';
-  vLngNames [2] := 'Arabic';  vLngIds [2] := $01; vLngFiles [2] := 'arb.lng';
-  vLngNames [3] := 'Portuguese'; vLngIds [3] := $16; vLngFiles [3] := 'ptbr.lng';
-  vLngNames [4] := 'Bulgarian'; vLngIds [4] := $02; vLngFiles [4] := 'bul.lng';
-  vLngNames [5] := 'Chinese'; vLngIds [5] := $04; vLngFiles [5] := 'cht.lng';
-  vLngNames [6] := 'Croatian';  vLngIds [6] := $1A; {only:(041A, 101A)} vLngFiles [6] := 'cro.lng';
-  vLngNames [7] := 'Czech';  vLngIds [7] := $05; vLngFiles [7] := 'czk.lng';
-  vLngNames [8] := 'Danish'; vLngIds [8] := $06; vLngFiles [8] := 'dan.lng';
-  vLngNames [9] := 'Dutch'; vLngIds [9] := $13; vLngFiles [9] := 'dut.lng';
-  vLngNames [10] := 'English'; vLngIds [10] := $09; vLngFiles [10] := 'eng.lng'; nEngIndex := 10;
-  vLngNames [11] := 'Finnish'; vLngIds [11] := $0B; vLngFiles [11] := 'fin.lng';
-  vLngNames [12] := 'French';  vLngIds [12] := $0C; vLngFiles [12] := 'fre.lng';
-  vLngNames [13] := 'German'; vLngIds [13] := $07; vLngFiles [13] := 'ger.lng';
-  vLngNames [14] := 'Greek'; vLngIds [14] := $08; vLngFiles [14] := 'ell.lng';
-  vLngNames [15] := 'Hebrew'; vLngIds [15] := $0D; vLngFiles [15] := 'heb.lng';
-  vLngNames [16] := 'Hungarian'; vLngIds [16] := $0E; vLngFiles [16] := 'hun.lng';
-  vLngNames [17] := 'Italian'; vLngIds [17] := $10; vLngFiles [17] := 'ita.lng';
-  vLngNames [18] := 'Korean';  vLngIds [18] := $12; vLngFiles [18] := 'kor.lng';
-  vLngNames [19] := 'Macedonian'; vLngIds [19] := $2F;  vLngFiles [19] := 'mac.lng'; //(http://www.microsoft.com/globaldev/reference/winxp/xp-lcid.mspx)
-  vLngNames [20] := 'Polish';  vLngIds [20] := $15; vLngFiles [20] := 'pol.lng';
-  vLngNames [21] := 'Romanian'; vLngIds [21] := $18; vLngFiles [21] := 'rom.lng';
-  vLngNames [22] := 'Russian'; vLngIds [22] := $19; vLngFiles [22] := 'rus.lng';
-  vLngNames [23] := 'Serbian'; vLngIds [23] := $1A; {(except: Croatian)} vLngFiles [23] := 'srb.lng';
-  vLngNames [24] := 'Slovak'; vLngIds [24] := $1B; vLngFiles [24] := 'svk.lng';
-  vLngNames [25] := 'Slovenian'; vLngIds [25] := $24; vLngFiles [25] := 'slo.lng';
-  vLngNames [26] := 'Spanish'; vLngIds [26] := $0A; vLngFiles [26] := 'spn.lng';
-  vLngNames [27] := 'Swedish'; vLngIds [27] := $1D; vLngFiles [27] := 'swe.lng';
-  vLngNames [28] := 'Turkish'; vLngIds [28] := $1F; vLngFiles [28] := 'tur.lng';
-  vLngNames [29] := 'Ukrainian'; vLngIds [29] := $22; vLngFiles [29] := 'ukr.lng';
-  vLngNames [30] := 'Uzbek'; vLngIds [30] := $43; vLngFiles [30] := 'uzb.lng';
-  vLngNames [31] := 'Vietnamese'; vLngIds [31] := $2A; vLngFiles [31] := 'vie.lng';
-  vLngNames [32] := '';
+  //http://www.microsoft.com/globaldev/reference/winxp/xp-lcid.mspx
+  iLng := 1;
+  vLngNames [iLng] := 'Albanian'; vLngIds [iLng] := $1C; vLngFiles [iLng] := 'alb.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Arabic';  vLngIds [iLng] := $01; vLngFiles [iLng] := 'arb.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Portuguese'; vLngIds [iLng] := $16; vLngFiles [iLng] := 'ptbr.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Bulgarian'; vLngIds [iLng] := $02; vLngFiles [iLng] := 'bul.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Chinese'; vLngIds [iLng] := $04; vLngFiles [iLng] := 'cht.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Croatian';  vLngIds [iLng] := $1A; {only:(041A, 101A)} vLngFiles [iLng] := 'cro.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Czech';  vLngIds [iLng] := $05; vLngFiles [iLng] := 'czk.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Danish'; vLngIds [iLng] := $06; vLngFiles [iLng] := 'dan.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Dutch'; vLngIds [iLng] := $13; vLngFiles [iLng] := 'dut.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'English'; vLngIds [iLng] := $09; vLngFiles [iLng] := 'eng.lng'; nEngIndex := iLng; iLng := iLng + 1;
+  vLngNames [iLng] := 'Finnish'; vLngIds [iLng] := $0B; vLngFiles [iLng] := 'fin.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'French';  vLngIds [iLng] := $0C; vLngFiles [iLng] := 'fre.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'German'; vLngIds [iLng] := $07; vLngFiles [iLng] := 'ger.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Greek'; vLngIds [iLng] := $08; vLngFiles [iLng] := 'ell.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Hebrew'; vLngIds [iLng] := $0D; vLngFiles [iLng] := 'heb.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Hungarian'; vLngIds [iLng] := $0E; vLngFiles [iLng] := 'hun.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Italian'; vLngIds [iLng] := $10; vLngFiles [iLng] := 'ita.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Japanese'; vLngIds [iLng] := $11; vLngFiles [iLng] := 'jpn.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Korean';  vLngIds [iLng] := $12; vLngFiles [iLng] := 'kor.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Macedonian'; vLngIds [iLng] := $2F;  vLngFiles [iLng] := 'mac.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Norwegian'; vLngIds [iLng] := $14; vLngFiles [iLng] := 'nor.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Polish';  vLngIds [iLng] := $15; vLngFiles [iLng] := 'pol.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Romanian'; vLngIds [iLng] := $18; vLngFiles [iLng] := 'rom.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Russian'; vLngIds [iLng] := $19; vLngFiles [iLng] := 'rus.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Serbian'; vLngIds [iLng] := $1A; {(except: Croatian)} vLngFiles [iLng] := 'srb.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Slovak'; vLngIds [iLng] := $1B; vLngFiles [iLng] := 'svk.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Slovenian'; vLngIds [iLng] := $24; vLngFiles [iLng] := 'slo.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Spanish'; vLngIds [iLng] := $0A; vLngFiles [iLng] := 'spn.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Swedish'; vLngIds [iLng] := $1D; vLngFiles [iLng] := 'swe.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Turkish'; vLngIds [iLng] := $1F; vLngFiles [iLng] := 'tur.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Ukrainian'; vLngIds [iLng] := $22; vLngFiles [iLng] := 'ukr.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Uzbek'; vLngIds [iLng] := $43; vLngFiles [iLng] := 'uzb.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Vietnamese'; vLngIds [iLng] := $2A; vLngFiles [iLng] := 'vie.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := '';
   
   nSelectedLanguage := -1;
 end;
@@ -697,7 +700,7 @@ begin
     Height := ScaleY(21);
     AutoSize := False;
     WordWrap := True;
-    Caption := 'Choose the language of interface:';
+    Caption := 'Choose the interface language:';
   end;
 
   // lngLabel2
@@ -711,7 +714,7 @@ begin
     Height := ScaleY(45);
     AutoSize := False;
     WordWrap := True;
-    Caption := 'If you do not  see your language here you may translate Free Dow''nload Manager by translating eng.lng file in Language subfolder ''and sending translated file to us.';
+    Caption := 'If you do not  see your language here you may translate Free Download Manager by translating eng.lng file in Language subfolder and sending translated file to us.';
   end;
 
   // lngList
@@ -939,7 +942,7 @@ end;
 
 procedure CurStepChanged(CurStep : TSetupStep);
 begin
-  if CurStep = ssPostInstall then begin
+  if CurStep = ssInstall then begin
     ApplyEnableFDMCommunity ();
     ApplyEnableBittorrent ();
     ApplySelectedLanguage ();
@@ -1014,7 +1017,7 @@ Filename: "{app}\FUM\fum.exe"; Parameters: "-stui"; Check: IsFumIntegrationEnabl
 Filename: "{app}\fdm.exe"; Description: "{cm:LaunchProgram,Free Download Manager}"; Flags: nowait postinstall skipifsilent
 
 [UninstallRun]
-Filename: "{app}\fum\fum.exe"; Parameters: "-duis"; Check: not DoesNeedSaveOldFumPath;
+Filename: "{app}\fum\fum.exe"; Parameters: "-duis";
 Filename: "{app}\fdm.exe"; Parameters: "-unregserver";
 
 [UninstallDelete]

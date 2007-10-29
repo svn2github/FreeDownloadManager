@@ -11,7 +11,7 @@
 class ATL_NO_VTABLE CWgUrlListReceiver : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CWgUrlListReceiver, &CLSID_WGUrlListReceiver>,
-	public IDispatchImpl<IWGUrlListReceiver, &IID_IWGUrlListReceiver, &LIBID_DataStretcherLib>
+	public IDispatchImpl<IWGUrlListReceiver, &IID_IWGUrlListReceiver, &LIBID_FdmLib>
 {
 public:
 	CWgUrlListReceiver()

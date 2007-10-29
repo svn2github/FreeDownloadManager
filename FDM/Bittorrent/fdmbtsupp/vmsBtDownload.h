@@ -81,4 +81,5 @@ public:
 	
 	virtual void get_FileProgress (float *p) = NULL;
 	virtual BOOL is_HandleValid () = NULL;
+	virtual int get_CurrentTaskProgress () = NULL;
 };

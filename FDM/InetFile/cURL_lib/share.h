@@ -9,9 +9,15 @@
 #include <curl/curl.h>
 #include "cookie.h" 
 
+#ifdef __SALFORDC__
+#define CURL_VOLATILE
+#else
+#define CURL_VOLATILE volatile
+#endif 
+
 struct Curl_share {
   unsigned int specifier;
-  volatile unsigned int dirty;
+  CURL_VOLATILE unsigned int dirty;
 
   curl_lock_function lockfunc;
   curl_unlock_function unlockfunc;

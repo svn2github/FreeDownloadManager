@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "FVDownloads_Tasks.h"
 #include "Downloads_Tasks.h"
 #include "MainFrm.h"
@@ -390,28 +390,8 @@ void CFVDownloads_Tasks::OnFvdldOpenfolder()
 		if (i != -1)
 			continue; 
 
-		if (dld->pMgr->IsFileNotInitOrIsMultiFile ())
-		{
-			
-			ShellExecute (m_hWnd, "explore", strFileName, NULL, NULL, SW_SHOW);
-			vOpened.add (strFileName);
-		}
-		else
-		{
-			if (GetFileAttributes (strFileName) == DWORD (-1))
-			{
-				char szPath [MY_MAX_PATH];
-				
-				fsGetPath (strFileName, szPath);
-				ShellExecute (m_hWnd, "explore", szPath, NULL, NULL, SW_SHOW);
-				vOpened.add (strFileName);
-				continue;
-			}
-
-			CString strCmd;
-			strCmd.Format ("/select,\"%s\"", strFileName);
-			ShellExecute (m_hWnd, "open", "explorer.exe", strCmd, NULL, SW_SHOW);
-		}
+		dld->pMgr->Do_OpenFolder ();
+		vOpened.add (strFileName);
 	}	
 }
 

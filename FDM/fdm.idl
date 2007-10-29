@@ -1,7 +1,7 @@
-// Data Stretcher.idl : IDL source for Data Stretcher.exe
+// fdm.idl : IDL source for FDM.exe
 //
 // This file will be processed by the MIDL tool to
-// produce the type library (Data Stretcher.tlb) and marshalling code.
+// produce the type library (FDM.tlb) and marshalling code.
 import "oaidl.idl";
 import "ocidl.idl";
 
@@ -138,7 +138,7 @@ import "ocidl.idl";
 	version(1.0),
 	helpstring("FDM 1.0 Type Library")
 ]
-library DataStretcherLib
+library FdmLib
 {
 	importlib("stdole32.tlb");
 	importlib("stdole2.tlb");

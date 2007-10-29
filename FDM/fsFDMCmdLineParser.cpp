@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "fsFDMCmdLineParser.h"
 
 #ifdef _DEBUG
@@ -38,7 +38,7 @@ void fsFDMCmdLineParser::Parse()
 
 	m_bForceSilent = FALSE;
 
-	CDataStretcherApp* app = (CDataStretcherApp*) AfxGetApp ();
+	CFdmApp* app = (CFdmApp*) AfxGetApp ();
 
 	for (int i = 0; i < m_parser.Get_ParameterCount (); i++)
 	{
@@ -98,7 +98,7 @@ void fsFDMCmdLineParser::Parse()
 			}
 			else
 			{
-				CDataStretcherApp::_inc_UrlToAdd url;
+				CFdmApp::_inc_UrlToAdd url;
 				url.strUrl = pszValue;
 				url.bForceSilent = m_bForceSilent;
 				app->m_vUrlsToAdd.add (url);
@@ -130,9 +130,9 @@ void fsFDMCmdLineParser::AddTorrentFile(LPCSTR pszFile)
 	}
 	else
 	{
-		CDataStretcherApp::_inc_UrlToAdd url;
+		CFdmApp::_inc_UrlToAdd url;
 		url.strUrl = pszFile;
 		url.bForceSilent = m_bForceSilent;
-		((CDataStretcherApp*) AfxGetApp ())->m_vTorrentFilesToAdd.add (url);
+		((CFdmApp*) AfxGetApp ())->m_vTorrentFilesToAdd.add (url);
 	}
 }

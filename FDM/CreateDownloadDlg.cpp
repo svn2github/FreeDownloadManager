@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "CreateDownloadDlg.h"
 #include "DownloadsWnd.h"
 #include "inetutil.h"
@@ -840,6 +840,8 @@ DWORD WINAPI CCreateDownloadDlg::_threadQSize(LPVOID lp)
 {
 	CCreateDownloadDlg *pThis = (CCreateDownloadDlg*) lp;
 
+try{
+
 	if (pThis->m_pszCookies)
 	{
 		SAFE_DELETE_ARRAY (pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies);
@@ -896,6 +898,9 @@ DWORD WINAPI CCreateDownloadDlg::_threadQSize(LPVOID lp)
 	}
 
 	pThis->m_bThread = FALSE;
+
+}catch (...) {} 
+
 	return 0;
 }
 
@@ -1169,6 +1174,15 @@ BOOL CCreateDownloadDlg::_SetDownloadOutputFolderAsDefault(CWnd *pwndParent, LPC
 		return FALSE;
 
 	_App.View_SetOutputFolderAsDefForAllGrpsChecked (dlg.m_bChecked);
+
+	CString strFolder;
+	if (pszFolder [lstrlen (pszFolder) - 1] != '\\' &&
+			pszFolder [lstrlen (pszFolder) - 1] != '/')
+	{
+		strFolder = pszFolder;
+		strFolder += '\\';
+		pszFolder = strFolder;
+	}
 
 	if (dlg.m_bChecked)
 	{

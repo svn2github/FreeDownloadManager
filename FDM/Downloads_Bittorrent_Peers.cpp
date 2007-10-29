@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Downloads_Bittorrent_Peers.h"
 
 #ifdef _DEBUG

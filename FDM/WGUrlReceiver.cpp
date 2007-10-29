@@ -3,7 +3,7 @@
 */  
 
 #include "stdafx.h"
-#include "Data Stretcher.h"
+#include "FdmApp.h"
 #include "WGUrlReceiver.h"
 #include "CreateDownloadDlg.h"
 #include "MainFrm.h"
@@ -80,7 +80,7 @@ DWORD WINAPI CWGUrlReceiver::_threadAddPage(LPVOID lp)
 {
 	_ic_DownloadInfo* dlinfo = (_ic_DownloadInfo*) lp;
 
-	while (((CDataStretcherApp*)AfxGetApp ())->Is_Starting ())
+	while (((CFdmApp*)AfxGetApp ())->Is_Starting ())
 		Sleep (100);
 
 	USES_CONVERSION;
@@ -96,7 +96,7 @@ HRESULT CWGUrlReceiver::AddDownload_imp(_ic_DownloadInfo* dlinfo)
 	LOG ("monitor: adddownload_imp" << nl);
 	LOG ("monitor: waiting for frame initializated" << nl);
 
-	while (((CDataStretcherApp*)AfxGetApp ())->Is_Starting ())
+	while (((CFdmApp*)AfxGetApp ())->Is_Starting ())
 		Sleep (100); 
 
 	LOG ("monitor: initialized ok." << nl);

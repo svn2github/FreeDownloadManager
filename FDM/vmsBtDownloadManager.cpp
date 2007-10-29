@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "vmsBtDownloadManager.h"
 
 #ifdef _DEBUG
@@ -195,7 +195,7 @@ void vmsBtDownloadManager::SetEventsHandler(fntBtDownloadManagerEventHandler pfn
 fsString vmsBtDownloadManager::get_InfoHash()
 {
 	ASSERT (m_pTorrent != NULL);
-	char sz [100] = "";
+	char sz [1000] = "";
 	m_pTorrent->get_InfoHash (sz);
 	return sz;
 }
@@ -244,7 +244,7 @@ void vmsBtDownloadManager::set_TrackerLogin(LPCSTR pszUser, LPCSTR pszPassword)
 fsString vmsBtDownloadManager::get_TorrentComment()
 {
 	ASSERT (m_pTorrent != NULL);
-	char sz [10000] = "";
+	char sz [100000] = "";
 	m_pTorrent->get_TorrentComment (sz);
 	vmsUtf8ToAscii (sz);
 	return sz;
@@ -306,7 +306,7 @@ fsString vmsBtDownloadManager::get_CurrentTracker()
 		InterlockedDecrement (&m_nUsingBtDownload);
 		return m_info.strCurrentTracker;
 	}
-	char sz [1000] = "";
+	char sz [100000] = "";
 	m_pDownload->get_CurrentTracker (sz);
 	InterlockedDecrement (&m_nUsingBtDownload);
 	return sz;
@@ -458,7 +458,7 @@ BOOL vmsBtDownloadManager::IsDownloading()
 void vmsBtDownloadManager::GetSectionInfo(int nIndex, vmsSectionInfo *sect)
 {
 	InterlockedIncrement (&m_nUsingBtDownload);
-
+	
 	UINT64 uTotal = GetTotalFilesSize ();
 	int ns = GetNumberOfSections ();
 	UINT64 uPerPiece = uTotal / ns;
@@ -467,8 +467,10 @@ void vmsBtDownloadManager::GetSectionInfo(int nIndex, vmsSectionInfo *sect)
 	sect->uDEnd = nIndex == ns-1 ? uTotal : sect->uDStart + uPerPiece - 1;
 	bool bPC = IsDownloadStatCanBeRead () ? m_pDownload->is_PieceCompleted (nIndex) : m_info.vPieces [nIndex];
 	sect->uDCurrent = bPC ? sect->uDEnd : sect->uDStart;
-
+	
 	InterlockedDecrement (&m_nUsingBtDownload);
+	
+		
 }
 
 int vmsBtDownloadManager::GetDownloadingSectionCount()
@@ -1001,6 +1003,7 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 	
 	bool bDownloading = false;
 	bool bMayFilesEvent = true;
+	fsTicksMgr time0Speed;
 
 	while (pthis->IsBtDownloadRunning () && pthis->m_bThreadNeedStop == false)
 	{
@@ -1041,12 +1044,39 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 				pthis->RaiseEvent (BTDME_DOWNLOADING);
 			}
 		}
+		else
+		{
+			if (pthis->GetSpeed () == 0)
+			{
+				fsTicksMgr now;
+				
+				if (now - time0Speed > 120 * 1000)
+				{
+					
+					pthis->m_pDownload->Pause ();
+					pthis->SaveBtDownloadState ();
+					pthis->DeleteBtDownload ();
+					pthis->CreateBtDownload ();
+					
+					time0Speed.Now ();
+					bDownloading = false;
+					enPrevState = BTDSE_QUEUED;
+					while (pthis->get_State () == BTDSE_QUEUED && pthis->m_bThreadNeedStop == false)
+						Sleep (100);
+				}
+			}
+			else
+			{
+				time0Speed.Now (); 
+			}
+		}
 	}
 
 	LOG_local ("2");
 
 	if (pthis->m_pDownload != NULL &&
-			(pthis->get_State () != BTDSE_SEEDING || (pthis->m_info.dwFlags & BTDF_DISABLE_SEEDING) != 0 ||
+			(pthis->m_bThreadNeedStop || pthis->get_State () != BTDSE_SEEDING || 
+				(pthis->m_info.dwFlags & BTDF_DISABLE_SEEDING) != 0 ||
 				_DldsMgr.AllowStartNewDownloads () == FALSE))
 	{
 		LOG_local ("need delete bt download");
@@ -1111,10 +1141,7 @@ void vmsBtDownloadManager::SaveBtDownloadState()
 	m_info.fPercentDone = GetPercentDone ();
 	m_info.bDone = IsDone ();
 
-	m_info.vPieces.clear ();
-	int ns = GetNumberOfSections ();
-	for (int i = 0; i < ns; i++)
-		m_info.vPieces.push_back (m_pDownload->is_PieceCompleted (i));
+	SaveBtDownloadState_Pieces ();
 
 	m_info.nDownloadedBytes = GetDownloadedBytesCount ();
 
@@ -1290,4 +1317,108 @@ std::wstring vmsBtDownloadManager::get_FileNameW(int nIndex)
 		pwsz++;
 	}
 	return wstr;
+}
+
+int vmsBtDownloadManager::get_CurrentTaskProgress()
+{
+	if (m_pDownload == NULL)
+		return -1;
+	return m_pDownload->get_CurrentTaskProgress ();
+}
+
+void vmsBtDownloadManager::SaveBtDownloadState_Pieces()
+{
+	m_info.vPieces.clear ();
+	int ns = GetNumberOfSections ();
+	for (int i = 0; i < ns; i++)
+		m_info.vPieces.push_back (m_pDownload->is_PieceCompleted (i));
+}
+
+void vmsBtDownloadManager::GetSectionsInfo(std::vector <vmsSectionInfo> &v)
+{
+	InterlockedIncrement (&m_nUsingBtDownload);
+
+	v.clear ();
+
+	vmsSectionInfo sect;
+	
+	UINT64 uTotal = GetTotalFilesSize ();
+	int ns = GetNumberOfSections ();
+	UINT64 uPerPiece = uTotal / ns;
+	BOOL bDSCBR = IsDownloadStatCanBeRead ();
+
+	for (int i = 0; i < ns; i++)
+	{
+		sect.uDStart = i * uPerPiece;
+		sect.uDEnd = i == ns-1 ? uTotal : sect.uDStart + uPerPiece - 1;
+		bool bPC = bDSCBR ? m_pDownload->is_PieceCompleted (i) : m_info.vPieces [i];
+		sect.uDCurrent = bPC ? sect.uDEnd : sect.uDStart;
+		v.push_back (sect);
+	}
+	
+	InterlockedDecrement (&m_nUsingBtDownload);
+}
+
+UINT64 vmsBtDownloadManager::get_SplittedByteCountAtBeginningOfFile()
+{
+	InterlockedIncrement (&m_nUsingBtDownload);
+	
+	UINT64 uTotal = GetTotalFilesSize ();
+	int ns = GetNumberOfSections ();
+	UINT64 uPerPiece = uTotal / ns;
+	
+	UINT64 uRes = 0;
+	bool bIDSCBR = IsDownloadStatCanBeRead () != 0;
+
+	for (int i = 0; i < ns; i++)
+	{
+		if (false == (bIDSCBR ? m_pDownload->is_PieceCompleted (i) : m_info.vPieces [i]))
+			break;
+
+		uRes += uPerPiece;
+	}
+	
+	InterlockedDecrement (&m_nUsingBtDownload);
+
+	return uRes;
+}
+
+fsString vmsBtDownloadManager::get_RootFolderName()
+{
+	if (get_FileCount () == 1)
+		return "";
+
+	int nOffset = 0;
+	
+	for (int i = 0; i < get_FileCount (); i++)
+	{
+		fsString str = get_FileName (i);
+		if (nOffset == 0)
+		{
+			LPCSTR psz = strchr (str, '\\');
+			if (psz)
+				nOffset = psz - str + 1;
+			else
+				break;
+		}
+		else
+		{
+			LPCSTR psz = strchr (str, '\\');
+			int nOffset2 = 0;
+			if (psz)
+				nOffset2 = psz - str + 1;
+			if (nOffset2 != nOffset || strnicmp (str, get_FileName (i-1), nOffset))
+			{
+				nOffset = 0;
+				break;
+			}
+		}
+	}
+
+	if (nOffset == 0)
+		return "";
+
+	char sz [MY_MAX_PATH];
+	lstrcpyn (sz, get_FileName (0), nOffset);
+	return sz;	
 }

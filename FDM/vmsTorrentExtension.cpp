@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "vmsTorrentExtension.h"
 #include "vmsFileExtensionInOs.h"
 
@@ -31,7 +31,7 @@ BOOL vmsTorrentExtension::Associate()
 fsString vmsTorrentExtension::get_ShellOpenCommandLine()
 {
 	fsString str = "\"";
-	str += ((CDataStretcherApp*)AfxGetApp ())->m_strAppPath;
+	str += ((CFdmApp*)AfxGetApp ())->m_strAppPath;
 	if (str [str.GetLength () - 1] != '\\')
 		str += '\\';
 	str += "fdm.exe\" \"%1\"";

@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "vms7zipArchive.h"
 
 #pragma warning (disable: 4005 310 244)

@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Wnd_FDMGetCustVer_Btn.h"
 
 #ifdef _DEBUG

@@ -10,7 +10,8 @@
 #endif 
 
 #include "Bittorrent\fdmbtsupp\vmsBtDownload.h"
-#include "fsTicksMgr.h"  
+#include "fsTicksMgr.h"
+#include "vmsDownloadMgrEx.h"  
 
 #define	BTDF_LAUNCH_WHEN_DONE					1
 #define BTDF_LAUNCH_WHEN_DONE_NO_CONFIRM		(1 << 1)
@@ -47,6 +48,10 @@ enum vmsBtDownloadStateEx
 class vmsBtDownloadManager  
 {
 public:
+	fsString get_RootFolderName();
+	UINT64 get_SplittedByteCountAtBeginningOfFile();
+	void GetSectionsInfo (std::vector <vmsSectionInfo> &v);
+	int get_CurrentTaskProgress();
 	std::wstring get_FileNameW(int nIndex);
 	void StopSeeding();
 	void EnableSeeding(BOOL bEnable);
@@ -67,7 +72,7 @@ public:
 	BOOL MoveToFolder(LPCSTR pszPath);
 	UINT GetSpeed();
 	int GetDownloadingSectionCount();
-	void GetSectionInfo(int nIndex, struct vmsSectionInfo *sect);
+	void GetSectionInfo(int nIndex, vmsSectionInfo *sect);
 	BOOL IsDownloading();
 	UINT64 GetDownloadedBytesCount();
 	UINT64 GetTotalFilesSize();
@@ -113,6 +118,7 @@ public:
 	virtual ~vmsBtDownloadManager();
 
 protected:
+	void SaveBtDownloadState_Pieces();
 	LONG m_nUsingBtDownload;
 	static DWORD WINAPI _threadCheckStartSeeding (LPVOID lp);
 	void RemoveBtDownloadDirectory();

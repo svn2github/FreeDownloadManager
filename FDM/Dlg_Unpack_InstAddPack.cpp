@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Dlg_Unpack_InstAddPack.h"
 #include "DownloadsWnd.h"
 

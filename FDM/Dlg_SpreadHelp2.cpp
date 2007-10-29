@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Dlg_SpreadHelp2.h"
 #include "MainFrm.h"
 
@@ -75,11 +75,11 @@ margin-bottom: 0px; } \n-->\n</style><body bgcolor='#%s'>\
 		CMainFrame* pFrm = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
 
 		CString str3;
-		str3.Format ("<a href='http://www.freedownloadmanager.org/fromfdm/buzz.php3?from=%d_%d'>%s</a>", 
+		str3.Format ("<a href='http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%d_%d'>%s</a>", 
 			PRG_BUILD_NUMBER, pFrm->m_Customizations.get_AffiliateID (), LS (L_FDMBUZZ));
 
 		CString str4;
-		str4.Format ("<a href='http://www.freedownloadmanager.org/fromfdm/blog.php3?from=%d_%d'>%s</a>",
+		str4.Format ("<a href='http://fdm.freedownloadmanager.org/fromfdm/blog.php3?from=%d_%d'>%s</a>",
 			PRG_BUILD_NUMBER, pFrm->m_Customizations.get_AffiliateID (), LS (L_BLOG));
 
 		strHTML.Format (str, str3, str4);
@@ -104,11 +104,11 @@ margin-bottom: 0px; } \n-->\n</style><body bgcolor='#%s'>\
 		CMainFrame* pFrm = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
 
 		CString str3;
-		str3.Format ("http://www.freedownloadmanager.org/fromfdm/buzz.php3?from=%d_%d", 
+		str3.Format ("http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%d_%d", 
 			PRG_BUILD_NUMBER, pFrm->m_Customizations.get_AffiliateID ());
 
 		CString str4;
-		str4.Format ("http://www.freedownloadmanager.org/fromfdm/blog.php3?from=%d_%d",
+		str4.Format ("http://fdm.freedownloadmanager.org/fromfdm/blog.php3?from=%d_%d",
 			PRG_BUILD_NUMBER, pFrm->m_Customizations.get_AffiliateID ());
 
 		strHTML.Format (str, str3, str4);
@@ -173,7 +173,7 @@ void CDlg_SpreadHelp2::OnOK()
 	CString str;
 	CMainFrame* pFrm = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
 
-	str.Format ("http://www.freedownloadmanager.org/fromfdm/buzz.php3?from=%d_%d",
+	str.Format ("http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%d_%d",
 		PRG_BUILD_NUMBER, pFrm->m_Customizations.get_AffiliateID ());
 
 	fsOpenUrlInBrowser (str);

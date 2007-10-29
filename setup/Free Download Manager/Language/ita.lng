@@ -1,18 +1,18 @@
-; This is language file
-; You can translate it to your native language
+; This is a language file
+; You can translate it into your native language
 ; To do this, follow instructions:
-; - make sure FDM haven't already translated to your language
-;   You may go to FDM web site  (http://freedownloadmanager.org) or e-mail to support@freedownloadmanager.org
+; - PLEASE make sure FDM haven't already translated to your language
+;   You should go to FDM web site  (http://freedownloadmanager.org) or e-mail to support@freedownloadmanager.org and check the list of available languages
 ; - copy this language file to xxx.lng, where xxx is the reduced name
 ;   of your language. For English it is eng
-; - translate all strings of xxx.lng to your language
-; - send translated file to support@freedownloadmanager.org
+; - translate all strings of xxx.lng into your language
+; - send the translated file to support@freedownloadmanager.org
 ;
 ;
 ;
 ; Translator - Giuseppe Bogetti, 2004 - revised by Mattepiu'.
-; Simple revision by DanieleNA at the end of November 2005. He also translates "BUILDS NEWER THAN 195" and 
-; after.
+; Simple revision by DanieleNA at the end of November 2005. He also translates "builds never than 195" and 
+; after.                                                                                                                                                                                    VERSION 2.5 (BUILD 713)
 ;
 ; Your language name. Please keep it in English
 ;
@@ -29,7 +29,7 @@ Modalità leggera
 Modalità media
 Modalità pesante
 Opzioni download
-Connessione
+Connessione dial-up
 Informazioni su FDM
 Uscita
 File
@@ -43,11 +43,11 @@ Barra di Stato
 Aiuto Ottimizzazione
 Impostazioni predefinite download
 Impostazioni generali
-Connessione
+Connessione dial-up
 Riaggancia quando finito
 Spegni computer quando finito
 Apri Finestra di Aiuto
-FDM homepage
+Home page FDM
 Dillo ad un amico
 Invia e-mail al gruppo di supporto
 Controlla automaticamente aggiornamenti
@@ -59,8 +59,8 @@ Modalità utilizzo traffico
 Registrazione
 Downloads
 Pianificazione
-Visualizzatore Siti
-HTTP//FTP Explorer
+Esplora Siti
+Esplora HTTP//FTP
 Gestore Siti
 Nuovo download
 Avvia download
@@ -69,14 +69,14 @@ Pianifica download
 Nuovo Compito
 Proprietà del Compito
 Scarica i file selezionati
-Stop
+Ferma
 Aggiorna
 Nuovo sito
 Proprietà sito
 Gruppi di download
 Informazioni su download
-Log pianificatore
-Log visualizzatore siti
+Resoconto pianificatore
+Resoconto visualizzatore siti
 Barra laterale
 Crea nuovo download
 Elimina download
@@ -95,8 +95,8 @@ Elimina sito
 Voce temporanea
 Siti
 Visualizza finestra principale
-Monitorizza browser
-Monitorizza memoria
+Controlla browser
+Controlla memoria
 Avvia tutti i downloads
 Arresta tutti i downloads
 -
@@ -106,7 +106,7 @@ Continua
 -
 -
 -
-Abbandona
+Annulla
 -
 -
 -
@@ -125,7 +125,7 @@ Apri cartella del gruppo
 Proprietà gruppo
 Nome gruppo:
 Cartella predefinita:
-Estensioni [separate da spazi]:
+Estensioni files [separate da spazi]:
 Priorità di download predefinita
 Molto lenta
 Lenta
@@ -140,7 +140,7 @@ Seleziona la cartella di default del gruppo
 Digita il nome del gruppo qui
 Cartella predefinita per il salvataggio dei downloads di questo gruppo
 Elenca
-Estensioni del gruppo. Usata per riconoscere il gruppo di download automaticamente
+Estensione file per questo gruppo. Usata per riconoscere il gruppo di download automaticamente
 Priorità di download predefinita per il gruppo
 Abbandona modifiche e chiudi la finestra
 Applica modifiche e chiudi la finestra
@@ -298,11 +298,12 @@ Ignora tutte le restrizioni
 B
 KB
 MB
+; second. e.g. KB/s
 s
 Digita un valore maggiore di %d
 Per cortesia seleziona la dimensione
 Tempo di attesa per riconnessione in caso di errore
-Spunta questa riquadro per limitare il numero massimo di connessioni fallite
+Spunta questa casella per limitare il numero massimo di connessioni fallite
 Tempo di attesa per la risposta del server
 Dimensioni minima di una sezione. Il download non verrà suddiviso in sezioni di dimensione inferiore
 Numero massimo di sessioni. Il download non verrà suddivisa in un numero superiore di sezioni
@@ -337,7 +338,7 @@ Porta:
 Per cortesia digita l'indirizzo del proxy
 Per cortesia digita la porta del proxy
 FDM utilizzerà le impostazioni proxy di Internet Explorer
-Tu specifichi le impostazioni proxy
+Specifica tu le impostazioni del proxy
 FDM non userà alcun proxy
 Scegli il tipo di server per cui vuoi impostare il proxy
 Digita l'indirizzo del proxy che vuoi utilizzare qui
@@ -475,7 +476,7 @@ Connessione da chiudere
 Nome programma:
 Argomenti:
 Tipo di arresto:
-Forca uscita dell'applicazione
+Forza chiusura dell'applicazione
 Avvia programma
 Stabilisci connessione telefonica
 Riaggancia connessione
@@ -579,7 +580,7 @@ Chiedi utente
 Non chiedermelo di nuovo
 Errore scrittura su disco
 File "%s" esiste già sul disco. Cosa faccio?
-Non ti richiederà più cosa fare di nuovo. La tua scelta verrà sempre utilizzata
+Non ti chiederà più cosa fare. La tua scelta verrà sempre utilizzata
 Sovrascrivi file esistente
 Rinomina questo file
 Riprendi download. (Il download sarà riavviato dalla posizione uguale alla dimensione del file esistente)
@@ -630,7 +631,7 @@ Già aggiornato. Necessario il riavvio
 Nome utente o password non validi
 Non posso caricare il file di cronologia
 Non posso salvare il file di cronologia
-Impostazioni predefinite HTML Spider
+Impostazioni predefinite Spider HTML
 HTML Spider
 Albero pagine Web
 Scarica sito web
@@ -646,8 +647,8 @@ Files
 Elimina anche i downloads?
 Non posso caricare la lista delle pagine web
 Non posso salvare la lista delle pagine web
-URL della pagina web o HTTP server da dove scaricare
-URL della pagina web o HTTP server da cui il download è stato avviato
+URL della pagina web o server HTTP da dove scaricare
+URL della pagina web o server HTTP da cui il download è stato avviato
 Nome della cartella in cui salvare i downloads
 Cartella di destinazione:
 Pagine web
@@ -659,7 +660,7 @@ Immagini
 Scarica immagini
 Scarica immagini che collegano ad altri siti
 Profondità di livello:
-Estensioni dei files di pagine web che contengono HTML code. Le pagine web verrano processate alla ricerca di collegamenti ad immagini ed altre pagine da scaricare
+Estensioni dei files di pagine web che contengono codice HTML. Le pagine web verrano processate alla ricerca di collegamenti ad immagini ed altre pagine da scaricare
 Se spuntato, verranno scaricati anche i file di stile della pagine web (CSS). Consigliato
 Se non spuntato, non verranno scaricare le pagine web appartenenti ad altri siti. Per esempio, se il riquadro non è spuntato e incominci a scaricare da http://example.com/, allora http://othersite.com/some.html non verrà scaricato, ma http://example.com/some.html verrà scaricato
 Se spuntato, verrano scaricate anche le immagini delle pagine web
@@ -748,18 +749,18 @@ Creazione sequenza download
 Da:
 A:
 Incremento:
-Bytes metacaratteri:
+Bytes caratteri jolly:
 Risultato
 Esempio:
 Primo numero della sequenza
 Ultimo numero della sequenza
 Incremento della sequenza. Per esempio, se è 10, allora la sequenza sarà 0, 10, 20, ...
-Numero di bytes da considerare come metacaratteri. Per esempio, se è 1, allora la sequenza sarà 1, 2, 3. Se è 2, allora la sequenza sarà 01, 02, 03.
+Numero di bytes da considerare come caratteri jolly. Per esempio, se è 1, allora la sequenza sarà 1, 2, 3. Se è 2, allora la sequenza sarà 01, 02, 03.
 Clicca qui per vedere la sequenza generata
-Permetti ad IE di scaricare se viene premuto Abbandona
-Spunta questo riquadro se vuoi permettere a Internet Explorer di scaricare il file quando premi Abbandona nella finestra "Crea download"
+Permetti ad IE di scaricare se viene premuto Annulla
+Spunta questo riquadro se vuoi permettere a Internet Explorer di scaricare il file quando premi Annulla nella finestra "Crea download"
 Numero finale della sequenza deve essere maggiore del numero iniziale
-Per cortesia usa un(*) nell'URL per indicare un  formato di URL
+Per cortesia usa (*) nell'URL per indicare un  formato di URL
 Crea un estensione se il file non ne possiede una
 Spunta questo riquadro per creare l'estensione per un file che non ne possiede una. Per esempio se il file si chiama "file" e specifichi "txt", il risultato sarà "file.txt"
 Visualizza la dimensione solo in bytes
@@ -784,7 +785,7 @@ Genera nome file automaticamente
 Spunta questo riquadro per generare automaticamente il nome del file di download
 Salva con estensione "htm"
 Spunta questo riquadro per salvare tutte le pagine web con l'estensione "htm"
-Premi questo bottone per calcolare il riepilogo di tutte i download
+Premi questo bottone per calcolare il riepilogo di tutti i download
 Mantieni la struttura delle cartelle del server
 Spunta questo bottone per mantenere la struttura originale delle cartelle. Altrimenti tutti i files verranno salvati in una sola cartella
 Hai selezionato un altra cartella. Imposto questa cartella come predefinita per questo gruppo? Puoi cambiare la cartella predefinita anche delle proprietà del gruppo.
@@ -1133,7 +1134,7 @@ In questa modalità Free Download Manager userà la velocità più bassa. Questa mod
 ;
 Rinomina al riavvio
 ;
-; [2.1 build 494] may I add this three lines?
+; [2.1 build 494]
 ;
 Scrivi un valore inferiore a %d
 ; export/import downloads
@@ -1173,9 +1174,9 @@ Riprendi il supporto
 Chiudi questo dialogo quando il download è completato o fermato
 Apri
 Vuoi vedere questa finestra in futuro?
-Si, voglio vedere questa finestra per ogni download
-No, non mostrare più questa finestra
-Si, ma NoN per questo download
+Si, ma nascondi temporaneamente la finestra di progresso per questo download
+No, non mostrare alcuna finestra di progresso per qualsiasi download
+Si, ma non mostrare la finestra di progresso di questo download
 Usare il tasto SHIFT significa che questo download sarà cancellato dal disco e non potrete più recuperarlo.\nSei sicuro?
 Scegli un gruppo
 Stabilisci la cartella principale per i gruppi
@@ -1324,3 +1325,273 @@ Disabilita
 Cambia
 Se la modalità Trattieni tutti i downloads è abilitata, sarà disabilitata, altrimenti sarà abilitata.
 In via ufficiale %s sarà avviata il 16 agosto 2006. Il nostro obiettivo è fare di FDM la più veloce utility di diffusione in Internet dopo FireFox!
+;
+Scarica ed installa gli aggiornamenti automaticamente
+Quando sono disponibili aggiornamenti, avvertimi solo 
+Disabilita gli aggiornamenti in automatico
+Il controllo è ora abilitato in %s.
+Cancella record
+Posso cancellare?
+Non c'è alcun accesso in scrittura alla cartella di Free Download Manager.\nDevi concedere l'accesso in scrittura per consentire a Free Download Manager per salvare il suo file di dati, altrimenti tutti i dati saranno perduti dopo il riavvio di Free Download Manager.
+Questa piccola casella consente di trascinare ed incollare i links dal browser in Free Download Manager.\nConsente di mostrare o nascondere facilmente la finestra di Free Download Manager con un doppio click del pulsante sinistro del mouse.\n\nPer nasconderla, click  destro su essa e deseleziona "Casella Incolla".
+Casella Incolla di Free Download Manager
+Disattiva tutte le notifiche per i downloads batch
+Seleziona questa opzione per disattivare tutte (fumetti, suoni) le notifiche per i downloads creati con il comando "%s" .
+Salta l'elenco
+Specifa l'elenco di estensioni di files e l'elenco di siti che non devono essere controllati.
+Non prendere download da questi siti (separati con spazio):
+Free Download Manager non controllerà i downloads dai siti specificati in questa lista. Specifica i nomi di dominio qui (e.s. "site.com"). Puoi usare il simbolo '*'.
+Attenzione!\nSi è verificato un errore nell'eseguire la verifica per i virus.\nVuoi ugualmente eseguire il file scaricato?
+Integrità
+Esegui verifica integrità quando il file sarà stato scaricato
+Per eseguire il controllo dell'integrità, Free Download Manager deve conoscere un checksum valido del file. In molti casi devi fornirlo per ogni download.
+Se la verifica fallisce
+Checksum valido di questo file
+Non fare niente
+Specifica qui cosa FDM deve fare quando la verifica sull'integrità faillisce.\nChiede - FDM chiederà a te cosa fare.\nRiavvia - FDM riavvierà questo download dall'inizio.\nNon fare niente - FDM aggiungerà un rigo sulla verifica fallita nel resoconto del download e non farà niente altro.
+Verifica integrità in esecuzione ...
+Verifica integrità riuscita.
+Verifica integrità fallita!
+Specificare l'algoritmo di verifica integrità.
+Checksum valido
+Checksum risultato
+; zip preview window
+Verificare/non verificare tutto
+; group's properties dialog
+Comandi
+nome di un server (es. "freedownloadmanager.org")
+percorso al file in download su un server
+anno corrente
+mese corrente (numero da 1 a 12)
+giorno corrente
+; don't translate "%year%-%month%-%day%" here
+equivalente a "%anno%-%mese%-%giorno%"
+;
+Da Mozilla Firefox
+FDM prenderà le opzioni per il proxy da Firefox
+; new download settings
+Usa questo gruppo
+; Downloads -> Schedule ->
+Avvia
+Ferma
+Stabilire avvio download
+Stabilire fermo download
+;
+; downloads that not completed or were completed recently
+Non completati+Recenti
+Gruppi origine
+;
+; create new download dialog -> set output folder as default dialog
+Fissa come predefinito anche per tutti i gruppi di download
+; %s - place of name of the group. don't change this
+Stabilire questa cartella come la cartella di destinazione predefinita per il gruppo "%s" ?
+;
+;
+Cancella la lista dei downloads
+Uploads
+Invia files
+Avvio invio files
+Ferma invio files
+Invii programmati
+Muovi su invii selzionati
+Muovi giù invii selezionati
+Inviato
+Lista di invii
+Recupera l'URL di destinazione dell'invio dal server base...
+Interrompi
+; outlook express: view | insert file | ...
+Come allegato
+Come link (upload)
+Cartella
+;
+Nuovi files
+Nuova cartella
+Bittorrent
+Abilita supporto protocollo Bittorrent
+Limite traffico in invio
+Numero limite di connessioni in invio
+Usa le porte nell'ambito da
+a
+Abilita DHT
+Abilita/disattiva supporto protocollo Bittorrent. Tuttavia se vi sono dei downloads Bittorrent nel cestino di FDM, il protocollo Bittorrent non potrà essere disattivato completamente.
+Limita la velocità totale massima delle conessioni in invio. Ciò non è raccomandato per il protocollo Bittorrent e può far diminuire la velocità di download.
+Limita il numero massimo di connessioni totali in invio. Inserendo il numero più basso, può risultare in diminuzione della velocità di download.
+Specifica qui l'intervallo di porte che FDM userà per le connessioni in invio.
+Abilita estensione DHT
+Nome
+Login è richiesto per il tracker
+Nuovo download Bittorrent
+Si è verificato un errore nel tentare di lavorare con questo file torrent.
+File torrent
+Sembra che tu voglia scaricare un file .torrent. Ciò richiede di attivare il supporto a Bittorrent in Free Download Manager.\n\nVuoi abilitare Bittorrent?
+Riscrivi la passwords: la passwords inserita non corrisponde.
+Specifica i files che vuoi inviare.
+Proprietà di Upload
+E' stato individuato un file di info di Metalink. Il download continua.
+E' stato individuato un file di info di Bittorrent. Il download continua.
+Accesso ai files sul disco fallito.
+In connessione al tracker...
+Ricezione di una risposta valida dal tracker fallita.
+Risposta ricevuta dal tracker con successo.
+Verifica del hash della parte di download è fallita. Nuovo download...
+Assegna tutta la banda per questo download
+Disattiva il caricamento automatico di Free Download Manager all'avvio di Windows?
+Spiacente, il servizio Community di FDM è attualmente non disponibile. Per favore, prova più tardi.
+Il nome del file non deve contenere nessuno di questi simboli \ / : * ? " < > | . Per favore, scrivi un nuovo nome.
+Il nome della cartella non deve contenere nessuno di questi simboli : * ? " < > | . Per favore, scrivi un nuovo nome.
+Personalizza la finestra flottante...
+Trasparenza
+Dati
+Tieni tutti i files di dati nella attuale cartella utente
+Tieni i files in questa cartella
+I cambiamenti saranno applicati dopo il riavvio di Free Download Manager.
+Mostra la finestra di progressione del download
+Crea versione portabile
+La versione portatile di Free Download Manager serve per usarlo su computer differenti senza la necessità di installarlo e configurarlo su ogni computer.\n\nPuoi metterlo su un disco flash, per esempio.\n\nUna volta attivato, esso registra se stesso nel computer e si integra nel browser. E, all'uscita, si cancella automaticamente.\n\nScegli qui il percorso dove vuoi creare questa versione. Questo deve essere la cartella sul disco removibile.\n\nEs. "I:\Miei programmi portatili\".
+Integrazione
+Associa Free Download Manager a files .torrent
+Usa sempre questo gruppo per nuovi downloads
+Usa sempre questo gruppo e ricorda sempre l'ultima cartella di destinazione
+Download video Flash
+Scarica i video con Free Download Manager
+Questo sito non è supportato. Leggi l'elenco dei siti supportati.
+Guarda nella finestra di Downloads
+Questa è la pagina con video Flash. Scarica video Flash...
+Conversione...
+Conversione
+Opzioni di conversione
+Formato file
+Dimensione video
+; video quality
+Qualità
+Molto bassa
+Bassa
+Normale
+Media
+Alta
+Molto alta
+;
+AVI usando MPEG-4 (*.avi)
+AVI usando XVID (*.avi)
+Non cambiare
+Velocità trasmissione video
+Velocità trasmissione audio
+Ricorda le opzioni come predefinite
+;
+Crea download video Flash
+Converti automat. video scaricato nel formato specificato
+Definisci le opzioni avanzate
+Guarda la lista dei siti supportati
+; used in "create flash video download" window
+es.
+Prossimo tentativo di connessione al tracker in %d secondi
+Preparazione files sul disco... Ciò può richiedere diversi minuti
+Stato
+Preparazione files sul disco...
+MP4 per iPod/PSP (MPEG4 + AAC, *.mp4)
+Anteprima/conversione audio-video
+Conversione file audio-video
+Passa a questa etichetta automaticamente
+; keep "\n\n%s\n" as is
+Il file audio-video è stato convertito con successo, e salvato in\n\n%s\n.
+Conversione file audio video fallita\n\n%s.
+Gruppo per nuovo download
+Info hash
+Peers
+Client
+Pezzi
+Tracker
+Stato del tracker
+Velocità upload
+Bytes inviati
+Tasso condivisione
+Conto dei byte perso
+URL file torrent
+Sei sicuro?\nCiò farà ripartire il download dall'inizio.
+Traffico usato ("scaricato"; "inviato") in questo mese\n(%s è stato usato nel mese precedente)
+Velocità totale ("download"; "upload")
+Files da inviare
+Nome del pacchetto
+Comprimi
+Stabilisci una password per questo download
+Riscrivi
+Tieni questi files
+Numero immaginato di downloads
+Aggiungi link a questi files nel nostro catalogo
+Includi informazioni avanzate (tutti i campi sono facoltativi)
+Descrizione
+Etichette
+Il tuo nome
+La tua e-mail
+Email ricevente
+Meno di 10
+Da 10 a 100
+Più di 100
+2 giorni
+7 giorni
+1 mese
+;compression methods
+Nessuna
+Veloce
+Media
+Migliore
+Opzioni di invio
+Integra invio in
+Menù contestuale Explorer
+Menù "Invia a..." di Explorer
+Usa semplice menù di invio
+Dimensione minima file da inviare
+Opzioni proxy HTTP
+Attivazione invio
+L'invio richiede una attivazione. Ciò è richiesto per proteggere il nostro server da invii automatici. Scrivi codice attivazione.
+Connessione al server di invio
+Connesso con successo al server di invio
+Il file è stato inviato con successo al server
+L'invio del file è stato fermato
+Creazione file compresso zip per invio files...
+Creazione file compresso zip fallita
+Il file compresso zip è stato creato con successo
+Invio richiesta al server
+Trasmissione informazioni su questo invio al server
+Informazione inviata
+Trasmissione informazione al server su questo invio fallita
+Attivazione invio ...
+L'invio è stato attivato con successo
+Attivazione invio fallita
+Il file da inviare era cambiato sul disco
+Errore inaspettato
+Calco checksum...
+; "I agree to terms" string in two lines
+Aderisco ai
+termini
+Devi aderire ai termini.
+Ricerca aggiornamenti fallita
+E' disponibile una nuova  versione. Si chiede di aggiornare.\nVuoi aggiornare ora?
+E' richiesto di aggiornare Free Download Manager
+E' richiesto di riavviare Free Download Manager
+Proponimi di inviare allegati
+Allega alla lettera (lento)...
+Invia e inserisci link (vekìloce)...
+Si è verificato un errore nel tentativo di avviare un invio. Verifica la tua connessione o prova ancora dopo.
+Hai allegato un file grande.\nPer molte ragioni è preferibile non inviare grandi files come allegati, ma trasferire files e inviare link.\n\nVuoi trasferire?
+Si raccomanda il trasferimento
+Opzioni di integrazione
+Il trasferimento di %s è stato completato.\nDevi usare il seguente URL come link per il download:
+Dimensione totale
+Apri nel browser
+L'attuale versione di Free Download Manager non può essere usata più a lungo per trasmettere files. Si chiede di aggiornarla.
+L'attuale versione di Free Upload Manager non può essere usata più a lungo. Si chiede di aggiornarla. Per favore, visita il sito freedownloadmanager.org
+Input troppo lungo.
+Opzioni integrazione gestione trasmissione files
+Opzioni integrazione Free Upload Manager
+Trasmissione
+Scarico aggiornamento...
+Attiva seeding
+Disattiva seeding come predefinito
+Considera un download come malevolo se minimo
+% di utenti lo indicano come malevolo
+OK, gli utenti di Free Download Manager non indicano come malevolo questo download.\n\nTuttavia, ciò non garantisce che questo download non sia malevolo e si raccomanda di verificarlo usando un programma anti-virus.
+OK, gli utenti di FDM non indicano come malevolo questo download
+la lettera del drive di FDM era iniziata da. Es. "C:". E' utile per la versione portatile
+Bisogna installare un plugin di Conversione Video per usare questa opzione.
+Bisogna installare il plugin di Bittorrent per scaricare con il protocollo Bittorrent.

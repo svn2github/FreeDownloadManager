@@ -25,9 +25,6 @@
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
 #endif
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
 #endif
@@ -45,6 +42,10 @@
 
 #include "inet_ntop.h"
 
+#if (defined(NETWARE) && !defined(__NOVELL_LIBC__))
+NETINET_DEFINE_CONTEXT
+#endif
+
 #if defined(HAVE_INET_NTOA_R) && !defined(HAVE_INET_NTOA_R_DECL)
 /* this platform has a inet_ntoa_r() function, but no proto declared anywhere
    so we include our own proto to make compilers happy */
@@ -54,13 +55,6 @@
 #define IN6ADDRSZ       16
 #define INADDRSZ         4
 #define INT16SZ          2
-
-#ifdef WIN32
-#define EAFNOSUPPORT    WSAEAFNOSUPPORT
-#define SET_ERRNO(e)    WSASetLastError(errno = (e))
-#else
-#define SET_ERRNO(e)    errno = e
-#endif
 
 /*
  * Format an IPv4 address, more or less like inet_ntoa().
@@ -74,7 +68,7 @@ static char *inet_ntop4 (const unsigned char *src, char *dst, size_t size)
 {
 #if defined(HAVE_INET_NTOA_R_2_ARGS)
   const char *ptr;
-  curlassert(size >= 16);
+  DEBUGASSERT(size >= 16);
   ptr = inet_ntoa_r(*(struct in_addr*)src, dst);
   return (char *)memmove(dst, ptr, strlen(ptr)+1);
 
@@ -106,25 +100,28 @@ static char *inet_ntop6 (const unsigned char *src, char *dst, size_t size)
    * Keep this in mind if you think this function should have been coded
    * to use pointer overlays.  All the world's not a VAX.
    */
-  char  tmp [sizeof("ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255")];
+  char tmp[sizeof("ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255")];
   char *tp;
   struct {
     long base;
     long len;
   } best, cur;
-  u_long words [IN6ADDRSZ / INT16SZ];
-  int    i;
+  unsigned long words[IN6ADDRSZ / INT16SZ];
+  int i;
 
   /* Preprocess:
    *  Copy the input (bytewise) array into a wordwise array.
    *  Find the longest run of 0x00's in src[] for :: shorthanding.
    */
-  memset(words, 0, sizeof(words));
+  memset(words, '\0', sizeof(words));
   for (i = 0; i < IN6ADDRSZ; i++)
       words[i/2] |= (src[i] << ((1 - (i % 2)) << 3));
 
   best.base = -1;
   cur.base  = -1;
+  best.len = 0;
+  cur.len = 0;
+
   for (i = 0; i < (IN6ADDRSZ / INT16SZ); i++)
   {
     if (words[i] == 0)
@@ -201,8 +198,14 @@ static char *inet_ntop6 (const unsigned char *src, char *dst, size_t size)
 /*
  * Convert a network format address to presentation format.
  *
- * Returns pointer to presentation format address (`buf'),
- * Returns NULL on error (see errno).
+ * Returns pointer to presentation format address (`buf').
+ * Returns NULL on error and errno set with the specific
+ * error, EAFNOSUPPORT or ENOSPC.
+ *
+ * On Windows we store the error in the thread errno, not
+ * in the winsock error code. This is to avoid loosing the
+ * actual last winsock error. So use macro ERRNO to fetch the
+ * errno this funtion sets when returning NULL, not SOCKERRNO.
  */
 char *Curl_inet_ntop(int af, const void *src, char *buf, size_t size)
 {

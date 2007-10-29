@@ -1,0 +1,21 @@
+/*
+  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+*/
+
+#ifndef __SOCKS_H
+#define __SOCKS_H  
+
+CURLcode Curl_SOCKS4(const char *proxy_name,
+                     char *hostname,
+                     int remote_port,
+                     int sockindex,
+                     struct connectdata *conn); 
+
+CURLcode Curl_SOCKS5(const char *proxy_name,
+                     const char *proxy_password,
+                     char *hostname,
+                     int remote_port,
+                     int sockindex,
+                     struct connectdata *conn);
+
+#endif

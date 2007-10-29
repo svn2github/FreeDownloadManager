@@ -15,6 +15,7 @@
 #define PORT_DICT 2628
 #define PORT_LDAP 389
 #define PORT_TFTP 69
+#define PORT_SSH 22
 
 #define DICT_MATCH "/MATCH:"
 #define DICT_MATCH2 "/M:"
@@ -24,7 +25,7 @@
 #define DICT_DEFINE3 "/LOOKUP:"
 
 #define CURL_DEFAULT_USER "anonymous"
-#define CURL_DEFAULT_PASSWORD "curl_by_daniel@haxx.se"
+#define CURL_DEFAULT_PASSWORD "ftp@example.com"
 
 #include "cookie.h"
 #include "formdata.h"
@@ -57,6 +58,10 @@
 #include <gnutls/gnutls.h>
 #endif
 
+#ifdef USE_NSS
+#include <nspr.h>
+#endif
+
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #endif
@@ -76,6 +81,7 @@
 #include "http_chunks.h" 
 #include "hostip.h"
 #include "hash.h"
+#include "splay.h"
 
 #ifdef HAVE_GSSAPI
 # ifdef HAVE_GSSGNU
@@ -86,15 +92,23 @@
 # else
 #  include <gssapi.h>
 # endif
-#endif 
+#endif
 
+#ifdef HAVE_LIBSSH2_H
+#include <libssh2.h>
+#include <libssh2_sftp.h>
+#endif  
+
+#undef BUFSIZE
 #define BUFSIZE CURL_MAX_WRITE_SIZE 
 
-#define HEADERSIZE 256 
+#define HEADERSIZE 256
+
+#define CURLEASY_MAGIC_NUMBER 0xc0dedbad 
 
 #define CURLMAX(x,y) ((x)>(y)?(x):(y))
 
-#ifdef HAVE_KRB4
+#if defined(HAVE_KRB4) || defined(HAVE_GSSAPI)
 
 struct krb4buffer {
   void *data;
@@ -103,12 +117,22 @@ struct krb4buffer {
   int eof_flag;
 };
 enum protection_level {
-    prot_clear,
-    prot_safe,
-    prot_confidential,
-    prot_private
+  prot_clear,
+  prot_safe,
+  prot_confidential,
+  prot_private,
+  prot_cmd
 };
 #endif 
+
+typedef enum {
+  ssl_connect_1,
+  ssl_connect_2,
+  ssl_connect_2_reading,
+  ssl_connect_2_writing,
+  ssl_connect_3,
+  ssl_connect_done
+} ssl_connect_state; 
 
 struct ssl_connect_data {
   bool use;        
@@ -117,10 +141,14 @@ struct ssl_connect_data {
   SSL_CTX* ctx;
   SSL*     handle;
   X509*    server_cert;
+  ssl_connect_state connecting_state;
 #endif 
 #ifdef USE_GNUTLS
   gnutls_session session;
-  gnutls_anon_client_credentials cred;
+  gnutls_certificate_credentials cred;
+#endif 
+#ifdef USE_NSS
+  PRFileDesc *handle;
 #endif 
 };
 
@@ -135,8 +163,9 @@ struct ssl_config_data {
   char *egdsocket;       
   char *cipher_list;     
   long numsessions;      
-  curl_ssl_ctx_callback fsslctx;        
-  void *fsslctxp;       
+  curl_ssl_ctx_callback fsslctx; 
+  void *fsslctxp;        
+  bool sessionid;        
 }; 
 
 struct curl_ssl_session {
@@ -174,6 +203,10 @@ typedef enum {
 #include <security.h>
 #include <sspi.h>
 #include <rpc.h>
+#endif
+
+#if defined(CURL_DOES_CONVERSIONS) && defined(HAVE_ICONV)
+#include <iconv.h>
 #endif 
 
 struct ntlmdata {
@@ -187,6 +220,7 @@ struct ntlmdata {
   void *type_2;
   int n_type_2;
 #else
+  unsigned int flags;
   unsigned char nonce[8];
 #endif
 };
@@ -242,6 +276,7 @@ typedef enum {
   FTP_ACCT,
   FTP_PBSZ,
   FTP_PROT,
+  FTP_CCC,
   FTP_PWD,
   FTP_QUOTE, 
   FTP_RETR_PREQUOTE,
@@ -272,30 +307,32 @@ typedef enum {
   FTPFILE_MULTICWD  = 1, 
   FTPFILE_NOCWD     = 2, 
   FTPFILE_SINGLECWD = 3  
-} curl_ftpfile;
+} curl_ftpfile; 
 
 struct FTP {
   curl_off_t *bytecountp;
   char *user;    
   char *passwd;  
   char *urlpath; 
+  char *file;    
+  bool no_transfer; 
+  curl_off_t downloadsize;
+}; 
+
+struct ftp_conn {
+  char *entrypath; 
   char **dirs;   
   int dirdepth;  
   int diralloc;  
-  char *file;    
-
-  char *entrypath; 
-
   char *cache;       
   curl_off_t cache_size; 
   bool dont_check;  
-  bool no_transfer; 
   long response_time; 
   bool ctl_valid;   
   bool cwddone;     
   bool cwdfail;     
   char *prevpath;   
-
+  char transfertype; 
   size_t nread_resp; 
   char *linestart_resp; 
 
@@ -307,8 +344,54 @@ struct FTP {
   size_t sendsize; 
   struct timeval response; 
   ftpstate state; 
-  curl_off_t downloadsize;
 }; 
+
+typedef enum {
+  SSH_STOP,    
+  SSH_S_STARTUP,  
+  SSH_AUTHLIST,
+  SSH_AUTH_PKEY_INIT,
+  SSH_AUTH_PKEY,
+  SSH_AUTH_PASS_INIT,
+  SSH_AUTH_PASS,
+  SSH_AUTH_HOST_INIT,
+  SSH_AUTH_HOST,
+  SSH_AUTH_KEY_INIT,
+  SSH_AUTH_KEY,
+  SSH_AUTH_DONE,
+  SSH_SFTP_INIT,
+  SSH_SFTP_REALPATH,
+  SSH_GET_WORKINGPATH,
+  SSH_SFTP_SHUTDOWN,
+  SSH_SESSION_FREE,
+  SSH_QUIT,
+  SSH_LAST  
+} sshstate;
+
+struct SSHPROTO {
+  curl_off_t *bytecountp;
+  char *user;
+  char *passwd;
+  char *path;                   
+  char *homedir;
+  char *errorstr;
+#ifdef USE_LIBSSH2
+  LIBSSH2_SESSION       *ssh_session;  
+  LIBSSH2_CHANNEL       *ssh_channel;  
+  LIBSSH2_SFTP          *sftp_session; 
+  LIBSSH2_SFTP_HANDLE   *sftp_handle;
+#endif 
+}; 
+
+struct ssh_conn {
+  const char *authlist; 
+  const char *passphrase;
+  char *rsa_pub;
+  char *rsa;
+  bool authed;
+  sshstate state; 
+  CURLcode actualCode;  
+};  
 
 struct FILEPROTO {
   char *path; 
@@ -320,13 +403,12 @@ struct ConnectBits {
   bool close; 
   bool reuse; 
   bool chunk; 
+  bool proxy; 
   bool httpproxy;    
   bool user_passwd;    
   bool proxy_user_passwd; 
   bool ipv6_ip; 
   bool ipv6;    
-  bool use_range;
-  bool rangestringalloc; 
 
   bool do_more; 
 
@@ -341,6 +423,7 @@ struct ConnectBits {
   bool retry;         
   bool no_body;       
   bool tunnel_proxy;  
+  bool tunnel_connecting; 
   bool authneg;       
   bool rewindaftersend;
   bool ftp_use_epsv;  
@@ -350,6 +433,8 @@ struct ConnectBits {
 
   bool trailerHdrPresent; 
   bool done;          
+  bool stream_was_rewound; 
+  bool proxy_connect_closed; 
 };
 
 struct hostname {
@@ -359,9 +444,40 @@ struct hostname {
   char *dispname; 
 };  
 
+#define KEEP_NONE  0
+#define KEEP_READ  1      
+#define KEEP_WRITE 2      
+#define KEEP_READ_HOLD 4  
+#define KEEP_WRITE_HOLD 8 
+
+#ifdef HAVE_LIBZ
+typedef enum {
+  ZLIB_UNINIT,          
+  ZLIB_INIT,            
+  ZLIB_GZIP_HEADER,     
+  ZLIB_GZIP_INFLATING,  
+  ZLIB_INIT_GZIP        
+} zlibInitState;
+#endif  
+
 struct Curl_transfer_keeper {
+
+  
+
+  curl_off_t size;        
+  curl_off_t *bytecountp; 
+
+  curl_off_t maxdownload; 
+  curl_off_t *writebytecountp; 
+
+  
+
   curl_off_t bytecount;         
   curl_off_t writebytecount;    
+
+  long headerbytecount;  
+  long deductheadercount; 
+
   struct timeval start;         
   struct timeval now;           
   bool header;                  
@@ -392,7 +508,7 @@ struct Curl_transfer_keeper {
 #define COMPRESS 3              
 
 #ifdef HAVE_LIBZ
-  bool zlib_init;               
+  zlibInitState zlib_init;      
   z_stream z;                   
 #endif
 
@@ -426,11 +542,58 @@ struct Curl_async {
 #define FIRSTSOCKET     0
 #define SECONDARYSOCKET 1 
 
+typedef CURLcode (*Curl_do_more_func)(struct connectdata *);
+typedef CURLcode (*Curl_done_func)(struct connectdata *, CURLcode, bool);  
+
+struct HandleData {
+  char *pathbuffer;
+  char *path;      
+
+  char *newurl; 
+
+  
+  struct Curl_transfer_keeper keep;
+
+  
+  ssize_t upload_present;
+
+   
+  char *upload_fromhere;
+
+  curl_off_t size;        
+  curl_off_t *bytecountp; 
+
+  curl_off_t maxdownload; 
+  curl_off_t *writebytecountp; 
+
+  bool use_range;
+  bool rangestringalloc; 
+
+  char *range; 
+  curl_off_t resume_from; 
+
+  
+
+  union {
+    struct HTTP *http;
+    struct HTTP *https;  
+    struct FTP *ftp;
+    void *tftp;        
+    struct FILEPROTO *file;
+    void *telnet;        
+    void *generic;
+    struct SSHPROTO *ssh;
+  } proto;
+}; 
+
 struct connectdata {
   
-  struct SessionHandle *data; 
-  long connectindex; 
+  struct SessionHandle *data;
 
+  bool inuse; 
+
+  
+  long connectindex; 
   long protocol; 
 #define PROT_MISSING (1<<0)
 #define PROT_HTTP    (1<<2)
@@ -440,9 +603,13 @@ struct connectdata {
 #define PROT_DICT    (1<<6)
 #define PROT_LDAP    (1<<7)
 #define PROT_FILE    (1<<8)
-#define PROT_TFTP    (1<<11)
 #define PROT_FTPS    (1<<9)
 #define PROT_SSL     (1<<10) 
+#define PROT_TFTP    (1<<11)
+#define PROT_SCP     (1<<12)
+#define PROT_SFTP    (1<<13)
+
+#define PROT_CLOSEACTION PROT_FTP 
 
   
   struct Curl_dns_entry *dns_entry;
@@ -459,27 +626,19 @@ struct connectdata {
   struct hostname host;
   struct hostname proxy;
 
-  char *pathbuffer;
-  char *path;      
   long port;       
   unsigned short remote_port; 
-  curl_off_t bytecount;
-  long headerbytecount;  
-  long deductheadercount; 
-
-  char *range; 
-  curl_off_t resume_from; 
 
   char *user;    
   char *passwd;  
 
   char *proxyuser;    
   char *proxypasswd;  
+  curl_proxytype proxytype; 
 
   struct timeval now;     
   struct timeval created; 
   curl_socket_t sock[2]; 
-  curl_off_t maxdownload; 
 
   struct ssl_connect_data ssl[2]; 
   struct ssl_config_data ssl_config;
@@ -488,10 +647,10 @@ struct connectdata {
 
   
   CURLcode (*curl_do)(struct connectdata *, bool *done);
-  CURLcode (*curl_done)(struct connectdata *, CURLcode);
+  Curl_done_func curl_done;
 
   
-  CURLcode (*curl_do_more)(struct connectdata *);
+  Curl_do_more_func curl_do_more;
 
   
   CURLcode (*curl_connect)(struct connectdata *, bool *done);
@@ -501,16 +660,14 @@ struct connectdata {
   CURLcode (*curl_doing)(struct connectdata *, bool *done);
 
   
-  CURLcode (*curl_proto_fdset)(struct connectdata *conn,
-                               fd_set *read_fd_set,
-                               fd_set *write_fd_set,
-                               int *max_fdp);
+  int (*curl_proto_getsock)(struct connectdata *conn,
+                            curl_socket_t *socks,
+                            int numsocks);
 
   
-  CURLcode (*curl_doing_fdset)(struct connectdata *conn,
-                               fd_set *read_fd_set,
-                               fd_set *write_fd_set,
-                               int *max_fdp);
+  int (*curl_doing_getsock)(struct connectdata *conn,
+                            curl_socket_t *socks,
+                            int numsocks);
 
   
   CURLcode (*curl_disconnect)(struct connectdata *);
@@ -520,14 +677,8 @@ struct connectdata {
 
   
 
-  
   curl_socket_t sockfd;   
-  curl_off_t size;        
-  curl_off_t *bytecountp; 
-
-  
   curl_socket_t writesockfd; 
-  curl_off_t *writebytecountp; 
 
   
   
@@ -542,10 +693,8 @@ struct connectdata {
     char *cookiehost; 
   } allocptr;
 
-  char *newurl; 
-
   int sec_complete; 
-#ifdef HAVE_KRB4
+#if defined(HAVE_KRB4) || defined(HAVE_GSSAPI)
   enum protection_level command_prot;
   enum protection_level data_prot;
   enum protection_level request_data_prot;
@@ -556,27 +705,20 @@ struct connectdata {
   struct sockaddr_in local_addr;
 #endif
 
-  
-  
-  union {
-    struct HTTP *http;
-    struct HTTP *https;  
-    struct FTP *ftp;
-    void *tftp;        
-    struct FILEPROTO *file;
-    void *telnet;        
-    void *generic;
-  } proto;
+  bool readchannel_inuse;  
+  bool writechannel_inuse; 
+  bool is_in_pipeline;     
+
+  struct curl_llist *send_pipe; 
+  struct curl_llist *recv_pipe; 
+
+  char* master_buffer; 
+  size_t read_pos; 
+  size_t buf_len;  
 
   
-  struct Curl_transfer_keeper keep;
 
   
-  ssize_t upload_present;
-
-   
-  char *upload_fromhere;
-
   curl_read_callback fread; 
   void *fread_in;           
 
@@ -590,15 +732,18 @@ struct connectdata {
   
   struct Curl_async async;
 #endif
-  struct connectdata *sec_conn;   
-
-  enum { NORMAL, SOURCE3RD, TARGET3RD } xfertype;
 
   
   char *trailer; 
   int trlMax;    
   int trlPos;    
 
+  union {
+    struct ftp_conn ftpc;
+    struct ssh_conn sshc;
+  } proto;
+
+  int cselect_bits; 
 };   
 
 struct PureInfo {
@@ -675,6 +820,16 @@ struct auth {
 
 };
 
+struct conncache {
+  
+  struct connectdata **connects;
+  long num;           
+  enum {
+    CONNCACHE_PRIVATE, 
+    CONNCACHE_MULTI    
+  } type;
+}; 
+
 struct UrlState {
   enum {
     Curl_if_none,
@@ -682,13 +837,12 @@ struct UrlState {
     Curl_if_multi
   } used_interface;
 
+  struct conncache *connc; 
+
   
   struct timeval keeps_speed; 
 
-  
-  struct connectdata **connects;
-  long numconnects; 
-  int lastconnect;  
+  long lastconnect;  
 
   char *headerbuff; 
   size_t headersize;   
@@ -697,6 +851,8 @@ struct UrlState {
   char uploadbuffer[BUFSIZE+1]; 
   curl_off_t current_speed;  
   bool this_is_a_follow; 
+
+  bool is_in_pipeline; 
 
   char *first_host; 
 
@@ -723,6 +879,7 @@ struct UrlState {
   struct auth authproxy;
 
   bool authproblem; 
+
 #ifdef USE_ARES
   ares_channel areschannel; 
 #endif
@@ -730,18 +887,44 @@ struct UrlState {
 #if defined(USE_SSLEAY) && defined(HAVE_OPENSSL_ENGINE_H)
   ENGINE *engine;
 #endif 
+  struct timeval expiretime; 
+  struct Curl_tree timenode; 
+
+  
+  char *most_recent_ftp_entrypath;
+
+  
+  bool ftp_trying_alternative;
+
+  bool expect100header;  
+
+  bool pipe_broke; 
+  bool cancelled; 
+
+#ifndef WIN32
+
+#define CURL_DO_LINEEND_CONV
+  
+  bool prev_block_had_trailing_cr;
+  
+  curl_off_t crlf_conversions;
+#endif
+  
+  void *shared_conn;
+  bool closed; 
 };   
 
 struct DynamicStatic {
   char *url;        
   bool url_alloc;   
   bool url_changed; 
-  char *proxy;      
-  bool proxy_alloc; 
   char *referer;    
   bool referer_alloc; 
   struct curl_slist *cookielist; 
-};  
+}; 
+
+struct Curl_one_easy; 
+struct Curl_multi;    
 
 struct UserDefined {
   FILE *err;         
@@ -753,7 +936,7 @@ struct UserDefined {
   void *in;          
   void *writeheader; 
   char *set_url;     
-  char *set_proxy;   
+  char *proxy;       
   long use_port;     
   char *userpwd;     
   long httpauth;     
@@ -777,6 +960,17 @@ struct UserDefined {
   curl_progress_callback fprogress;  
   curl_debug_callback fdebug;      
   curl_ioctl_callback ioctl;       
+  curl_sockopt_callback fsockopt;  
+  void *sockopt_client; 
+
+  
+  
+  curl_conv_callback convfromnetwork;
+  
+  curl_conv_callback convtonetwork;
+  
+  curl_conv_callback convfromutf8;
+
   void *progress_client; 
   void *ioctl_client;   
   long timeout;         
@@ -785,6 +979,8 @@ struct UserDefined {
   curl_off_t infilesize;      
   long low_speed_limit; 
   long low_speed_time;  
+  curl_off_t max_send_speed; 
+  curl_off_t max_recv_speed; 
   curl_off_t set_resume_from;  
   char *cookie;         
   struct curl_slist *headers; 
@@ -798,6 +994,7 @@ struct UserDefined {
   bool cookiesession;   
   bool crlf;            
   char *ftp_account;    
+  char *ftp_alternative_to_user;   
   struct curl_slist *quote;     
   struct curl_slist *postquote; 
   struct curl_slist *prequote; 
@@ -807,12 +1004,11 @@ struct UserDefined {
   struct curl_slist *telnet_options; 
   curl_TimeCond timecondition; 
   time_t timevalue;       
-  curl_closepolicy closepolicy; 
   Curl_HttpReq httpreq;   
   char *customrequest;    
   long httpversion; 
   char *auth_host; 
-  char *krb4_level; 
+  char *krb_level;  
   struct ssl_config_data ssl;  
 
   curl_proxytype proxytype; 
@@ -821,6 +1017,8 @@ struct UserDefined {
   long buffer_size;      
 
   char *private_data; 
+
+  struct Curl_one_easy *one_easy; 
 
   struct curl_slist *http200aliases; 
 
@@ -836,8 +1034,8 @@ struct UserDefined {
   bool printhost;       
   bool get_filetime;
   bool tunnel_thru_httpproxy;
+  bool prefer_ascii;    
   bool ftp_append;
-  bool ftp_ascii;
   bool ftp_list_only;
   bool ftp_create_missing_dirs;
   bool ftp_use_port;
@@ -855,26 +1053,47 @@ struct UserDefined {
        use_netrc;        
   char *netrc_file;      
   bool verbose;
-  bool krb4;             
+  bool krb;              
   bool reuse_forbid;     
   bool reuse_fresh;      
-  bool expect100header;  
   bool ftp_use_epsv;     
   bool ftp_use_eprt;     
+
   curl_ftpssl ftp_ssl;   
   curl_ftpauth ftpsslauth; 
+  curl_ftpccc ftp_ccc;   
   bool no_signal;        
   bool global_dns_cache; 
   bool tcp_nodelay;      
   bool ignorecl;         
   bool ftp_skip_ip;      
   bool connect_only;     
+  long ssh_auth_types;   
+  char *ssh_public_key;   
+  char *ssh_private_key;  
+  bool http_te_skip;     
+  bool http_ce_skip;     
+  long new_file_perms;    
+  long new_directory_perms; 
+};
+
+struct Names {
+  struct curl_hash *hostcache;
+  enum {
+    HCACHE_NONE,    
+    HCACHE_PRIVATE, 
+    HCACHE_GLOBAL,  
+    HCACHE_MULTI,   
+    HCACHE_SHARED   
+  } hostcachetype;
 };  
 
 struct SessionHandle {
-  struct curl_hash *hostcache;
-  void *multi;                 
+  struct Names dns;
+  struct Curl_multi *multi;    
+  struct Curl_one_easy *multi_pos; 
   struct Curl_share *share;    
+  struct HandleData reqdata;   
   struct UserDefined set;      
   struct DynamicStatic change; 
 
@@ -882,6 +1101,12 @@ struct SessionHandle {
   struct Progress progress;    
   struct UrlState state;       
   struct PureInfo info;        
+#if defined(CURL_DOES_CONVERSIONS) && defined(HAVE_ICONV)
+  iconv_t outbound_cd;         
+  iconv_t inbound_cd;          
+  iconv_t utf8_cd;             
+#endif 
+  unsigned int magic;          
 };
 
 #define LIBCURL_NAME "libcurl"

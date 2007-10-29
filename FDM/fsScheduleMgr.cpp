@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "fsScheduleMgr.h"
 #include "DownloadsWnd.h"
 #include "fsPluginMgr.h"
@@ -993,7 +993,7 @@ DWORD WINAPI fsScheduleMgr::_threadDial(LPVOID lp)
 
 	fsDialInfo dial = task->wts.dial;
 
-	fsnew (dial.pszConnection, char, strlen (dial.pszConnection) + 1);
+	fsnew (dial.pszConnection, char, strlen (task->wts.dial.pszConnection) + 1);
 	strcpy (dial.pszConnection, task->wts.dial.pszConnection);
 
 	CDialDlg dlg (NULL);
@@ -1227,8 +1227,8 @@ DWORD WINAPI fsScheduleMgr::_threadShutdown(LPVOID uFlags)
 
 	LOG ("saving history..." << nl);
 
-	((CDataStretcherApp*)AfxGetApp ())->SaveSettings ();
-	((CDataStretcherApp*)AfxGetApp ())->SaveHistory ();
+	((CFdmApp*)AfxGetApp ())->SaveSettings ();
+	((CFdmApp*)AfxGetApp ())->SaveHistory ();
 
 	LOG ("saving state..." << nl);
 

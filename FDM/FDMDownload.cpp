@@ -3,7 +3,7 @@
 */  
 
 #include "stdafx.h"
-#include "Data Stretcher.h"
+#include "FdmApp.h"
 #include "FDMDownload.h"        
 
 STDMETHODIMP CFDMDownload::get_Url(BSTR *pVal)

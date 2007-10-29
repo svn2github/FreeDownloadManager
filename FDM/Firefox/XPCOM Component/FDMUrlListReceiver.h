@@ -13,7 +13,7 @@
 #define FDMURLLISTRECEIVER_CID { 0x2520b0c1, 0x4cd6, 0x4354, { 0xbf, 0xe7, 0xb6, 0xcd, 0xd3, 0xf1, 0x2f, 0xda } }
 
 #include <comdef.h>
-#include "../../DataStretcher.h"
+#include "../../Fdm.h"
 _COM_SMARTPTR_TYPEDEF(IWGUrlListReceiver, __uuidof(IWGUrlListReceiver));
 
 class CFDMUrlListReceiver : public IFDMUrlListReceiver

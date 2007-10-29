@@ -1,6 +1,6 @@
 /****************************************************************************
  *
- * $Id: mprintf.c,v 1.52 2005/07/13 18:06:40 bagder Exp $
+ * $Id: mprintf.c,v 1.58 2007-02-28 14:45:49 yangtse Exp $
  *
  *************************************************************************
  *
@@ -31,12 +31,15 @@
 
 
 #include "setup.h"
-#include <sys/types.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
 #include <string.h>
+
+#if defined(DJGPP) && (DJGPP_MINOR < 4)
+#undef _MPRINTF_REPLACE /* don't use x_was_used() here */
+#endif
 
 #include <curl/mprintf.h>
 
@@ -75,7 +78,7 @@
 # define BOOL char
 #endif
 
-#ifdef _AMIGASF
+#ifdef __AMIGA__
 # undef FORMAT_INT
 #endif
 
@@ -167,7 +170,7 @@ int curl_msprintf(char *buffer, const char *format, ...);
 static long dprintf_DollarString(char *input, char **end)
 {
   int number=0;
-  while(isdigit((int)*input)) {
+  while(ISDIGIT(*input)) {
     number *= 10;
     number += *input-'0';
     input++;
@@ -690,7 +693,7 @@ static int dprintf_formatf(
     else
       prec = -1;
 
-    alt = (p->flags & FLAGS_ALT)?TRUE:FALSE;
+    alt = (char)((p->flags & FLAGS_ALT)?TRUE:FALSE);
 
     switch (p->type) {
     case FORMAT_INT:
@@ -730,14 +733,14 @@ static int dprintf_formatf(
 #ifdef ENABLE_64BIT
       if(p->flags & FLAGS_LONGLONG) {
         /* long long */
-        is_neg = p->data.lnum < 0;
+        is_neg = (char)(p->data.lnum < 0);
         num = is_neg ? (- p->data.lnum) : p->data.lnum;
       }
       else
 #endif
       {
         signed_num = (long) num;
-        is_neg = signed_num < 0;
+        is_neg = (char)(signed_num < 0);
         num = is_neg ? (- signed_num) : signed_num;
       }
       goto number;
@@ -940,9 +943,9 @@ static int dprintf_formatf(
           *fptr++ = 'l';
 
         if (p->flags & FLAGS_FLOATE)
-          *fptr++ = p->flags&FLAGS_UPPER ? 'E':'e';
+          *fptr++ = (char)((p->flags & FLAGS_UPPER) ? 'E':'e');
         else if (p->flags & FLAGS_FLOATG)
-          *fptr++ = p->flags & FLAGS_UPPER ? 'G' : 'g';
+          *fptr++ = (char)((p->flags & FLAGS_UPPER) ? 'G' : 'g');
         else
           *fptr++ = 'f';
 

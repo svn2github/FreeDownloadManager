@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "PlugFrame2Tabs.h"
 #include "PluginFrame2.h"
 #include "DownloadsWnd.h"

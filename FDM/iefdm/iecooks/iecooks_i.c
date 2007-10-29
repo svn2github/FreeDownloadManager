@@ -5,7 +5,7 @@
 
 
 /* File created by MIDL compiler version 5.01.0164 */
-/* at Tue Aug 21 23:44:31 2007
+/* at Thu Sep 06 00:31:02 2007
  */
 /* Compiler settings for D:\VCW\FDM\FDM\iefdm\iecooks\iecooks.idl:
     Oicf (OptLev=i2), W1, Zp8, env=Win32, ms_ext, c_ext

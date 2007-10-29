@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2005, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2006, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: parsedate.c,v 1.21 2005/12/30 00:35:21 curlvms Exp $
+ * $Id: parsedate.c,v 1.23 2006-12-05 14:57:43 bagder Exp $
  ***************************************************************************/
 /*
   A brief summary of the date string formats this parser groks:
@@ -213,7 +213,7 @@ static int checktz(char *check)
 static void skip(const char **date)
 {
   /* skip everything that aren't letters or digits */
-  while(**date && !isalnum((int)**date))
+  while(**date && !ISALNUM(**date))
     (*date)++;
 }
 
@@ -239,24 +239,12 @@ static time_t Curl_parsedate(const char *date)
   const char *indate = date; /* save the original pointer */
   int part = 0; /* max 6 parts */
 
-#ifdef WIN32
-  /*
-   * On Windows, we need an odd work-around for the case when no TZ variable
-   * is set. If it isn't set and "automatic DST adjustment" is enabled, the
-   * time functions below will return values one hour off! As reported and
-   * investigated in bug report #1230118.
-  */
-  const char *env = getenv("TZ");
-  if(!env)
-    putenv("TZ=GMT");
-#endif
-
   while(*date && (part < 6)) {
     bool found=FALSE;
 
     skip(&date);
 
-    if(isalpha((int)*date)) {
+    if(ISALPHA(*date)) {
       /* a name coming up */
       char buf[32]="";
       size_t len;
@@ -286,7 +274,7 @@ static time_t Curl_parsedate(const char *date)
 
       date += len;
     }
-    else if(isdigit((int)*date)) {
+    else if(ISDIGIT(*date)) {
       /* a digit */
       int val;
       char *end;
@@ -400,13 +388,22 @@ static time_t Curl_parsedate(const char *date)
     /* thread-safe version */
     struct tm keeptime2;
     gmt = (struct tm *)gmtime_r(&t, &keeptime2);
-#else
-    gmt = gmtime(&t); /* use gmtime_r() if available */
-#endif
     if(!gmt)
       return -1; /* illegal date/time */
-
     t2 = mktime(gmt);
+#else
+    /* It seems that at least the MSVC version of mktime() doesn't work
+       properly if it gets the 'gmt' pointer passed in (which is a pointer
+       returned from gmtime() pointing to static memory), so instead we copy
+       the tm struct to a local struct and pass a pointer to that struct as
+       input to mktime(). */
+    struct tm gmt2;
+    gmt = gmtime(&t); /* use gmtime_r() if available */
+    if(!gmt)
+      return -1; /* illegal date/time */
+    gmt2 = *gmt;
+    t2 = mktime(&gmt2);
+#endif
 
     /* Add the time zone diff (between the given timezone and GMT) and the
        diff between the local time zone and GMT. */

@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Sites_AdvancedPage.h"
 
 #ifdef _DEBUG

@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Dlg_Download.h"
 #include "Downloads_Tasks.h"
 #include "DownloadsWnd.h"
@@ -307,28 +307,7 @@ void CDlg_Download::OnOpenfile()
 
 void CDlg_Download::OnOpenfolder() 
 {
-	if (m_dld->pMgr->IsFileNotInitOrIsMultiFile ())
-	{	
-		
-		ShellExecute (m_hWnd, "explore", m_dld->pMgr->get_OutputFilePathName (), NULL, NULL, SW_SHOW);
-	}
-	else
-	{
-		if (GetFileAttributes (m_dld->pMgr->get_OutputFilePathName ()) == DWORD (-1))
-		{
-			char szPath [MY_MAX_PATH];
-			
-			fsGetPath (m_dld->pMgr->get_OutputFilePathName (), szPath);
-			ShellExecute (m_hWnd, "explore", szPath, NULL, NULL, SW_SHOW);
-		}
-		else
-		{
-			CString strCmd;
-			strCmd.Format ("/select,\"%s\"", m_dld->pMgr->get_OutputFilePathName ());
-			ShellExecute (m_hWnd, "open", "explorer.exe", strCmd, NULL, SW_SHOW);
-		}
-	}	
-
+	m_dld->pMgr->Do_OpenFolder ();
 	if (m_dld->pMgr->IsDone ())
 		OnHide ();
 }

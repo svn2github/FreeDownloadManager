@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "Web Interface.h"
 #include "vmsFdmWebInterfaceServer.h"
-#include "..\DataStretcher.h"
+#include "..\Fdm.h"
 #include <comdef.h>
 #include <atlbase.h>
 

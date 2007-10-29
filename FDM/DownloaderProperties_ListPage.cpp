@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "DownloaderProperties_ListPage.h"
 #include "DownloadsWnd.h"
 #include "vmsRegisteredApp.h"

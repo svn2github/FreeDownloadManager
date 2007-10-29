@@ -39,7 +39,9 @@ void Curl_ntlm_cleanup(struct connectdata *conn);
 
 #define NTLMFLAG_NEGOTIATE_NETWARE               (1<<8) 
 
-#define NTLMFLAG_NEGOTIATE_NTLM_KEY              (1<<9)    
+#define NTLMFLAG_NEGOTIATE_NTLM_KEY              (1<<9)   
+
+#define NTLMFLAG_NEGOTIATE_ANONYMOUS             (1<<11) 
 
 #define NTLMFLAG_NEGOTIATE_DOMAIN_SUPPLIED       (1<<12) 
 

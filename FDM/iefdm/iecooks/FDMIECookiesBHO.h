@@ -34,6 +34,7 @@ BEGIN_COM_MAP(CFDMIECookiesBHO)
 END_COM_MAP()  
 
 public:
+	STDMETHOD(DocumentComplete)( IDispatch *pDisp,  VARIANT *URL);
 	static long get_IEDownloadsCount();
 	STDMETHOD(DownloadComplete)();
 	STDMETHOD(DownloadBegin)();

@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "UploadsWnd.h"
 #include "plugincmds.h"
 #include "uploader\coredll\cmds.h"

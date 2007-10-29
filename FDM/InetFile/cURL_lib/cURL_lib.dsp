@@ -257,7 +257,15 @@ SOURCE=.\share.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\socks.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\speedcheck.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\splay.c
 # End Source File
 # Begin Source File
 

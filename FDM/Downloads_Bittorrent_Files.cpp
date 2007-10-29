@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Downloads_Bittorrent_Files.h"
 
 #ifdef _DEBUG
@@ -69,37 +69,12 @@ void CDownloads_Bittorrent_Files::set_ActiveDownload(vmsDownloadSmartPtr dld)
 
 	vmsBtDownloadManager *mgr = dld->pMgr->GetBtDownloadMgr ();
 
-	int nOffset = 0;
-
-	for (int i = 0; i < mgr->get_FileCount (); i++)
-	{
-		fsString str = mgr->get_FileName (i);
-		if (nOffset == 0)
-		{
-			LPCSTR psz = strchr (str, '\\');
-			if (psz)
-				nOffset = psz - str + 1;
-			else
-				break;
-		}
-		else
-		{
-			LPCSTR psz = strchr (str, '\\');
-			int nOffset2 = 0;
-			if (psz)
-				nOffset2 = psz - str + 1;
-			if (nOffset2 != nOffset || strncmp (str, mgr->get_FileName (i-1), nOffset))
-			{
-				nOffset = 0;
-				break;
-			}
-		}
-	}
-
-	m_nFileNameOffset = nOffset;
+	m_nFileNameOffset = mgr->get_RootFolderName ().Length ();
+	if (m_nFileNameOffset)
+		m_nFileNameOffset++;
 
 	int w = 0;
-	for (i = 0; i < mgr->get_FileCount (); i++)
+	for (int i = 0; i < mgr->get_FileCount (); i++)
 		w = max (w, GetStringWidth (mgr->get_FileName (i) + m_nFileNameOffset));
 	SetColumnWidth (0, w+30);
 

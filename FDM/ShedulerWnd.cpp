@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "ShedulerWnd.h"
 #include "plugins.h"
 #include "ScheduleSheet.h"

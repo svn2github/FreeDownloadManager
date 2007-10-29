@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Dlg_CreateFVDownload.h"
 #include "vmsVideoSiteHtmlCodeParser.h"
 #include "mfchelp.h"
@@ -63,7 +63,6 @@ BOOL CDlg_CreateFVDownload::OnInitDialog()
 		"MySpace Videos", "http://vids.myspace.com/index.cfm?fuseaction=...",
 		"Blennus", "http://blennus.com/index.php?option=content&task=...",
 		"Dailymotion", "http://www.dailymotion.com/us/cluster/animals/...",
-		"Grouper", "http://grouper.com/video/MediaDetails.aspx?id=...",
 	};
 
 	CString str;

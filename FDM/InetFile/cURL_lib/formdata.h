@@ -6,8 +6,9 @@
 #define __FORMDATA_H  
 
 enum formtype {
-  FORM_DATA, 
-  FORM_FILE  
+  FORM_DATA,    
+  FORM_CONTENT, 
+  FORM_FILE     
 }; 
 
 struct FormData {
@@ -46,6 +47,7 @@ int Curl_FormInit(struct Form *form, struct FormData *formdata );
 CURLcode
 Curl_getFormData(struct FormData **,
                  struct curl_httppost *post,
+                 const char *custom_contenttype,
                  curl_off_t *size); 
 
 size_t Curl_FormReader(char *buffer,
@@ -57,7 +59,9 @@ char *Curl_formpostheader(void *formp, size_t *len);
 
 char *Curl_FormBoundary(void);
 
-void Curl_formclean(struct FormData *);
+void Curl_formclean(struct FormData **);
+
+CURLcode Curl_formconvert(struct SessionHandle *, struct FormData *);
 
 #endif
 

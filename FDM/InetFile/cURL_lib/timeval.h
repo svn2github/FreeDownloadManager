@@ -7,22 +7,6 @@
 
 #include "setup.h"
 
-#if defined(WIN32) && !defined(__GNUC__) || defined(__MINGW32__)
-#include <time.h>
-#else
-#include <sys/time.h>
-#endif
-
-#ifndef HAVE_GETTIMEOFDAY
-#if !defined(_WINSOCKAPI_) && !defined(__MINGW32__) && !defined(_AMIGASF) && \
-    !defined(__LCC__) && !defined(__WATCOMC__) && !defined(__POCC__)
-struct timeval {
- long tv_sec;
- long tv_usec;
-};
-#endif
-#endif
-
 struct timeval curlx_tvnow(void); 
 
 long curlx_tvdiff(struct timeval t1, struct timeval t2); 

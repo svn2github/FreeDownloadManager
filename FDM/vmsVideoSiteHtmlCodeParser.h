@@ -64,6 +64,7 @@ public:
 	virtual ~vmsVideoSiteHtmlCodeParser();
 
 protected:
+	static fsString ExtractValue (LPSTR &psz);
 	BOOL Parse_Grouper (LPCSTR pszHtml);
 	BOOL Parse_DailyMotion (LPCSTR pszHtml);
 	BOOL Parse_Blennus (LPCSTR pszHtml);

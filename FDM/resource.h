@@ -21,16 +21,16 @@
 #define IDC_ADD                         6
 #define IDC_BTN3                        6
 #define IDD_ABOUTBOX                    100
-#define IDR_DATASTRETCHER               102
+#define IDR_FDMAPP                      102
 #define IDR_WGURLRECEIVER               103
 #define IDR_WGURLLISTRECEIVER           104
-#define IDR_FDM                         105
 #define IDR_FDMDOWNLOADSSTAT            106
 #define IDR_FDMDOWNLOAD                 107
 #define IDR_FDMUPLOADER                 108
 #define IDR_FDMUPLOADPACKAGE            109
 #define IDR_FDMTORRENTFILESRCVR         110
 #define IDR_FDMFLASHVIDEODOWNLOADS      111
+#define IDR_FDM				112
 #define IDR_MAINFRAME                   128
 #define IDR_DATASTTYPE                  129
 #define IDD_ENTERURL                    130
@@ -919,6 +919,7 @@
 #define IDC_SWITCH_AUTO                 1318
 #define IDC__GRPFORNEWDLD               1319
 #define IDC_DISABLE_SEEDING             1320
+#define IDC__DATADESC                   1321
 #define IDC__COPYRIGHT                  1900
 #define IDC__REGTO                      1901
 #define IDC_USEMAXCONNS                 2034
@@ -957,7 +958,7 @@
 #define ID_SHOWMAINWINDOW               32829
 #define ID_STARTALL                     32830
 #define ID_STOPALL                      32831
-#define ID_HELP_FDMWEBSITE            32832
+#define ID_HELP_FDMWEBSITE              32832
 #define ID_HOMEPAGE                     32832
 #define ID_HELP_RECOMMENDTOFRIEND       32833
 #define ID_RECOMMEND                    32833
@@ -1044,7 +1045,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        349
 #define _APS_NEXT_COMMAND_VALUE         32998
-#define _APS_NEXT_CONTROL_VALUE         1321
+#define _APS_NEXT_CONTROL_VALUE         1322
 #define _APS_NEXT_SYMED_VALUE           112
 #endif
 #endif

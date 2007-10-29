@@ -668,20 +668,22 @@ IDD_PRG_DATA DIALOGEX 0, 0, 219, 108
 STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTEXTHELP
 CAPTION "Data"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Sans Serif"
 BEGIN
-    EDITTEXT        IDC_AUTOSAVE,157,70,29,13,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_AUTOSAVE,157,54,29,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_AUTOSAVESPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,181,70,11,13
-    LTEXT           "Min.",IDC__MIN,190,72,28,9
-    LTEXT           "Autosave each",IDC__AUTOSAVE,7,72,148,8
+                    UDS_ARROWKEYS,181,54,11,13
+    LTEXT           "Min.",IDC__MIN,190,56,28,9
+    LTEXT           "Autosave each",IDC__AUTOSAVE,7,56,148,8
     CONTROL         "Keep all data files in the current user's folder",
                     IDC_KEEP_1,"Button",BS_AUTORADIOBUTTON,7,7,205,10
     CONTROL         "Keep files in this folder:",IDC_KEEP_2,"Button",
                     BS_AUTORADIOBUTTON,7,19,205,10
     EDITTEXT        IDC_FOLDER,19,32,175,12,ES_AUTOHSCROLL
     PUSHBUTTON      "...",IDC_BROWSE,196,32,16,13,BS_CENTER | BS_VCENTER
+    LTEXT           "Note: these files are Free Download Manager's service files (not the files you download).",
+                    IDC__DATADESC,7,75,205,26
 END
 
 IDD_MAKE_PORTABLE_VER DIALOGEX 0, 0, 265, 157
@@ -1613,21 +1615,21 @@ BEGIN
     COMBOBOX        IDC_MODE,204,14,91,109,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     CONTROL         "Maximum count of connections",IDC_USEMAXCONNS,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,14,32,183,9
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,32,244,9
     EDITTEXT        IDC_MAXCONNS,266,30,29,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_MAXCONNSSPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
                     UDS_ARROWKEYS,291,30,9,13
     CONTROL         "Maximum count of connections per one server",
                     IDC_USEMAXCONNSPERSERVER,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,14,49,184,9
+                    WS_TABSTOP,14,49,248,9
     EDITTEXT        IDC_MAXCONNSPERSERVER,266,47,29,13,ES_AUTOHSCROLL | 
                     ES_NUMBER
     CONTROL         "Spin1",IDC_MAXCONNSPERSERVERSPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
                     UDS_ARROWKEYS,292,47,9,13
     CONTROL         "-",IDC_USEMAXDLDS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
-                    14,66,184,9
+                    14,66,246,9
     EDITTEXT        IDC_MAXDLDSVAL,266,63,29,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_MAXDLDSSPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
@@ -1642,7 +1644,7 @@ BEGIN
                     BS_AUTORADIOBUTTON,18,120,131,8
     CONTROL         "Set to light mode",IDC_SETTOLIGHT,"Button",
                     BS_AUTORADIOBUTTON,151,120,133,8
-    LTEXT           "-",IDC__TUR,14,81,144,10
+    LTEXT           "-",IDC__TUR,14,81,202,10
     GROUPBOX        "Traffic usage modes",IDC__TUMS,7,4,295,174
     LTEXT           "Select mode to adjust:",IDC__MODEADJUSTMENT,14,16,122,9
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,14,97,283,1
@@ -3106,7 +3108,7 @@ BEGIN
     "LANGUAGE 9, 1\r\n"
     "#pragma code_page(1252)\r\n"
     "#endif //_WIN32\r\n"
-    "#include ""res\\Data Stretcher.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""res\\FDM.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "#include ""afxres.rc""         // Standard components\r\n"
     "#endif\r\n"
     "\0"
@@ -3127,7 +3129,7 @@ IDC_HAND_               CURSOR  DISCARDABLE     "res\\hand.cur"
 // REGISTRY
 //
 
-IDR_DATASTRETCHER       REGISTRY DISCARDABLE    "Data Stretcher.rgs"
+IDR_FDMAPP	       	REGISTRY DISCARDABLE    "FdmApp.rgs"
 IDR_WGURLRECEIVER       REGISTRY DISCARDABLE    "WGUrlReceiver.rgs"
 IDR_WGURLLISTRECEIVER   REGISTRY DISCARDABLE    "WgUrlListReceiver.rgs"
 IDR_FDM                 REGISTRY DISCARDABLE    "FDM.rgs"
@@ -3145,8 +3147,8 @@ IDR_FDMFLASHVIDEODOWNLOADS REGISTRY DISCARDABLE    "FDMFlashVideoDownloads.rgs"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,3,0,1285
- PRODUCTVERSION 2,3,0,1285
+ FILEVERSION 2,5,0,1573
+ PRODUCTVERSION 2,5,0,1573
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -3157,6 +3159,28 @@ VS_VERSION_INFO VERSIONINFO
  FILETYPE 0x1L
  FILESUBTYPE 0x0L
 BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "FreeDownloadManager.ORG\0"
+            VALUE "FileDescription", "Free Download Manager\0"
+            VALUE "FileVersion", "2.5\0"
+            VALUE "InternalName", "FDM\0"
+            VALUE "LegalCopyright", "Copyright © 2003-2007\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "fdm.exe\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "Free Download Manager\0"
+            VALUE "ProductVersion", "2.5\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
 END
 
 #endif    // !_MAC
@@ -3589,7 +3613,7 @@ END
 LANGUAGE 9, 1
 #pragma code_page(1252)
 #endif //_WIN32
-#include "res\Data Stretcher.rc2"  // non-Microsoft Visual C++ edited resources
+#include "res\fdm.rc2"  // non-Microsoft Visual C++ edited resources
 #include "afxres.rc"         // Standard components
 #endif
 

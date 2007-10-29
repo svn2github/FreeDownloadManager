@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "NOWDlg.h"
 
 #ifdef _DEBUG
@@ -49,7 +49,7 @@ BOOL CNOWDlg::OnInitDialog()
 	m_wndCT.AddString ("300K DSL/Cable");
 	m_wndCT.AddString ("512K DSL/Cable");
 	m_wndCT.AddString ("1.5M T1");
-	m_wndCT.AddString ("10M LAN");
+	m_wndCT.AddString ("10/100M LAN");
 
 	m_wndCT.SetCurSel (_App.NOW ());
 

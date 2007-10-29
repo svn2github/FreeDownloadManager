@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2005, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2007, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: hostthre.c,v 1.33 2005/11/24 20:39:00 bagder Exp $
+ * $Id: hostthre.c,v 1.49 2007-06-11 04:33:21 giva Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -26,11 +26,8 @@
 #include <string.h>
 #include <errno.h>
 
-#if defined(WIN32) && !defined(__GNUC__) || defined(__MINGW32__)
+#ifdef NEED_MALLOC_H
 #include <malloc.h>
-#else
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
 #endif
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
@@ -55,14 +52,12 @@
 #include <inet.h>
 #include <stdlib.h>
 #endif
-#endif
 
 #ifdef HAVE_SETJMP_H
 #include <setjmp.h>
 #endif
 
-#ifdef WIN32
-#include <stdlib.h>
+#ifdef HAVE_PROCESS_H
 #include <process.h>
 #endif
 
@@ -78,6 +73,7 @@
 #include "share.h"
 #include "strerror.h"
 #include "url.h"
+#include "multiif.h"
 
 #define _MPRINTF_REPLACE /* use our functions only */
 #include <curl/mprintf.h>
@@ -148,7 +144,7 @@ static void dump_addrinfo (struct connectdata *conn, const struct addrinfo *ai)
     if (Curl_printable_address(ai, buf, sizeof(buf)))
       trace_it("%s\n", buf);
     else
-      trace_it("failed; %s\n", Curl_strerror(conn,WSAGetLastError()));
+      trace_it("failed; %s\n", Curl_strerror(conn, SOCKERRNO));
   }
 }
 #endif
@@ -158,7 +154,6 @@ struct thread_data {
   unsigned thread_id;
   DWORD  thread_status;
   curl_socket_t dummy_sock;   /* dummy for Curl_resolv_fdset() */
-  FILE *stderr_file;
   HANDLE mutex_waiting;  /* marks that we are still waiting for a resolve */
   HANDLE event_resolved; /* marks that the thread obtained the information */
   HANDLE event_thread_started; /* marks that the thread has initialized and
@@ -184,33 +179,26 @@ struct thread_sync_data {
 static
 void destroy_thread_sync_data(struct thread_sync_data * tsd)
 {
-  if (tsd->hostname) {
+  if (tsd->hostname)
     free(tsd->hostname);
-    tsd->hostname = NULL;
-  }
-  if (tsd->event_terminate) {
+  if (tsd->event_terminate)
     CloseHandle(tsd->event_terminate);
-    tsd->event_terminate = NULL;
-  }
-  if (tsd->mutex_terminate) {
+  if (tsd->mutex_terminate)
     CloseHandle(tsd->mutex_terminate);
-    tsd->mutex_terminate = NULL;
-  }
-  if (tsd->mutex_waiting) {
+  if (tsd->mutex_waiting)
     CloseHandle(tsd->mutex_waiting);
-    tsd->mutex_waiting = NULL;
-  }
+  memset(tsd,0,sizeof(*tsd));
 }
 
 /* Initialize resolver thread synchronization data */
 static
 BOOL init_thread_sync_data(struct thread_data * td,
-                           char * hostname,
+                           const char * hostname,
                            struct thread_sync_data * tsd)
 {
   HANDLE curr_proc = GetCurrentProcess();
 
-  memset(tsd, 0, sizeof(tsd));
+  memset(tsd, 0, sizeof(*tsd));
   if (!DuplicateHandle(curr_proc, td->mutex_waiting,
                        curr_proc, &tsd->mutex_waiting, 0, FALSE,
                        DUPLICATE_SAME_ACCESS)) {
@@ -298,20 +286,14 @@ static unsigned __stdcall gethostbyname_thread (void *arg)
    * due to a resolver timeout.
    */
   struct thread_sync_data tsd = { 0,0,0,NULL };
+
   if (!init_thread_sync_data(td, conn->async.hostname, &tsd)) {
     /* thread synchronization data initialization failed */
-    return -1;
+    return (unsigned)-1;
   }
 
-  /* Sharing the same _iob[] element with our parent thread should
-   * hopefully make printouts synchronised. I'm not sure it works
-   * with a static runtime lib (MSVC's libc.lib).
-   */
-#ifndef _WIN32_WCE
-  *stderr = *td->stderr_file;
-#endif
-
-  WSASetLastError (conn->async.status = NO_DATA); /* pending status */
+  conn->async.status = NO_DATA;  /* pending status */
+  SET_SOCKERRNO(conn->async.status);
 
   /* Signaling that we have initialized all copies of data and handles we
      need */
@@ -328,7 +310,7 @@ static unsigned __stdcall gethostbyname_thread (void *arg)
       rc = Curl_addrinfo4_callback(conn, CURL_ASYNC_SUCCESS, he);
     }
     else {
-      rc = Curl_addrinfo4_callback(conn, (int)WSAGetLastError(), NULL);
+      rc = Curl_addrinfo4_callback(conn, SOCKERRNO, NULL);
     }
     TRACE(("Winsock-error %d, addr %s\n", conn->async.status,
            he ? inet_ntoa(*(struct in_addr*)he->h_addr) : "unknown"));
@@ -365,18 +347,16 @@ static unsigned __stdcall getaddrinfo_thread (void *arg)
    * due to a resolver timeout.
    */
   struct thread_sync_data tsd = { 0,0,0,NULL };
+
   if (!init_thread_sync_data(td, conn->async.hostname, &tsd)) {
     /* thread synchronization data initialization failed */
     return -1;
   }
 
-#ifndef _WIN32_WCE
-  *stderr = *td->stderr_file;
-#endif
-
   itoa(conn->async.port, service, 10);
 
-  WSASetLastError(conn->async.status = NO_DATA); /* pending status */
+  conn->async.status = NO_DATA;  /* pending status */
+  SET_SOCKERRNO(conn->async.status);
 
   /* Signaling that we have initialized all copies of data and handles we
      need */
@@ -397,7 +377,7 @@ static unsigned __stdcall getaddrinfo_thread (void *arg)
       rc = Curl_addrinfo6_callback(conn, CURL_ASYNC_SUCCESS, res);
     }
     else {
-      rc = Curl_addrinfo6_callback(conn, (int)WSAGetLastError(), NULL);
+      rc = Curl_addrinfo6_callback(conn, SOCKERRNO, NULL);
       TRACE(("Winsock-error %d, no address\n", conn->async.status));
     }
     release_thread_sync(&tsd);
@@ -475,7 +455,7 @@ static bool init_resolve_thread (struct connectdata *conn,
   HANDLE thread_and_event[2] = {0};
 
   if (!td) {
-    SetLastError(ENOMEM);
+    SET_ERRNO(ENOMEM);
     return FALSE;
   }
 
@@ -483,7 +463,7 @@ static bool init_resolve_thread (struct connectdata *conn,
   conn->async.hostname = strdup(hostname);
   if (!conn->async.hostname) {
     free(td);
-    SetLastError(ENOMEM);
+    SET_ERRNO(ENOMEM);
     return FALSE;
   }
 
@@ -500,7 +480,7 @@ static bool init_resolve_thread (struct connectdata *conn,
   td->mutex_waiting = CreateMutex(NULL, TRUE, NULL);
   if (td->mutex_waiting == NULL) {
     Curl_destroy_thread_data(&conn->async);
-    SetLastError(EAGAIN);
+    SET_ERRNO(EAGAIN);
     return FALSE;
   }
 
@@ -510,7 +490,7 @@ static bool init_resolve_thread (struct connectdata *conn,
   td->event_resolved = CreateEvent(NULL, TRUE, FALSE, NULL);
   if (td->event_resolved == NULL) {
     Curl_destroy_thread_data(&conn->async);
-    SetLastError(EAGAIN);
+    SET_ERRNO(EAGAIN);
     return FALSE;
   }
   /* Create the mutex used to serialize access to event_terminated
@@ -519,7 +499,7 @@ static bool init_resolve_thread (struct connectdata *conn,
   td->mutex_terminate = CreateMutex(NULL, FALSE, NULL);
   if (td->mutex_terminate == NULL) {
     Curl_destroy_thread_data(&conn->async);
-    SetLastError(EAGAIN);
+    SET_ERRNO(EAGAIN);
     return FALSE;
   }
   /* Create the event used to signal thread that it should terminate.
@@ -527,7 +507,7 @@ static bool init_resolve_thread (struct connectdata *conn,
   td->event_terminate = CreateEvent(NULL, TRUE, FALSE, NULL);
   if (td->event_terminate == NULL) {
     Curl_destroy_thread_data(&conn->async);
-    SetLastError(EAGAIN);
+    SET_ERRNO(EAGAIN);
     return FALSE;
   }
   /* Create the event used by thread to inform it has initialized its own data.
@@ -535,11 +515,9 @@ static bool init_resolve_thread (struct connectdata *conn,
   td->event_thread_started = CreateEvent(NULL, TRUE, FALSE, NULL);
   if (td->event_thread_started == NULL) {
     Curl_destroy_thread_data(&conn->async);
-    SetLastError(EAGAIN);
+    SET_ERRNO(EAGAIN);
     return FALSE;
   }
-
-  td->stderr_file = stderr;
 
 #ifdef _WIN32_WCE
   td->thread_hnd = (HANDLE) CreateThread(NULL, 0,
@@ -551,15 +529,19 @@ static bool init_resolve_thread (struct connectdata *conn,
 #endif
 
 #ifdef CURLRES_IPV6
-  curlassert(hints);
+  DEBUGASSERT(hints);
   td->hints = *hints;
 #else
   (void) hints;
 #endif
 
   if (!td->thread_hnd) {
-     SetLastError(errno);
-     TRACE(("_beginthreadex() failed; %s\n", Curl_strerror(conn,errno)));
+#ifdef _WIN32_WCE
+     TRACE(("CreateThread() failed; %s\n", Curl_strerror(conn, ERRNO)));
+#else
+     SET_ERRNO(errno);
+     TRACE(("_beginthreadex() failed; %s\n", Curl_strerror(conn, ERRNO)));
+#endif
      Curl_destroy_thread_data(&conn->async);
      return FALSE;
   }
@@ -569,7 +551,7 @@ static bool init_resolve_thread (struct connectdata *conn,
   thread_and_event[1] = td->event_thread_started;
   if (WaitForMultipleObjects(sizeof(thread_and_event) /
                              sizeof(thread_and_event[0]),
-                             thread_and_event, FALSE,
+                             (const HANDLE*)thread_and_event, FALSE,
                              INFINITE) == WAIT_FAILED) {
     /* The resolver thread has been created,
      * most probably it works now - ignoring this "minor" error
@@ -601,18 +583,18 @@ CURLcode Curl_wait_for_resolv(struct connectdata *conn,
   DWORD  status, ticks;
   CURLcode rc;
 
-  curlassert (conn && td);
+  DEBUGASSERT(conn && td);
 
   /* now, see if there's a connect timeout or a regular timeout to
      use instead of the default one */
   timeout =
     conn->data->set.connecttimeout ? conn->data->set.connecttimeout :
     conn->data->set.timeout ? conn->data->set.timeout :
-    CURL_TIMEOUT_RESOLVE; /* default name resolve timeout */
+    CURL_TIMEOUT_RESOLVE * 1000; /* default name resolve timeout */
   ticks = GetTickCount();
 
   /* wait for the thread to resolve the name */
-  status = WaitForSingleObject(td->event_resolved, 1000UL*timeout);
+  status = WaitForSingleObject(td->event_resolved, timeout);
 
   /* mark that we are now done waiting */
   ReleaseMutex(td->mutex_waiting);
@@ -639,7 +621,7 @@ CURLcode Curl_wait_for_resolv(struct connectdata *conn,
        * thread.  'conn->async.done = TRUE' is set in
        * Curl_addrinfo4/6_callback().
        */
-      WSASetLastError(conn->async.status);
+      SET_SOCKERRNO(conn->async.status);
       GetExitCodeThread(td->thread_hnd, &td->thread_status);
       TRACE(("%s() status %lu, thread retval %lu, ",
              THREAD_NAME, status, td->thread_status));
@@ -715,20 +697,22 @@ CURLcode Curl_is_resolved(struct connectdata *conn,
   return CURLE_OK;
 }
 
-CURLcode Curl_resolv_fdset(struct connectdata *conn,
-                           fd_set *read_fd_set,
-                           fd_set *write_fd_set,
-                           int *max_fdp)
+int Curl_resolv_getsock(struct connectdata *conn,
+                        curl_socket_t *socks,
+                        int numsocks)
 {
   const struct thread_data *td =
     (const struct thread_data *) conn->async.os_specific;
 
   if (td && td->dummy_sock != CURL_SOCKET_BAD) {
-    FD_SET(td->dummy_sock,write_fd_set);
-    *max_fdp = (int)td->dummy_sock;
+    if(numsocks) {
+      /* return one socket waiting for writable, even though this is just
+         a dummy */
+      socks[0] = td->dummy_sock;
+      return GETSOCK_WRITESOCK(0);
+    }
   }
-  (void) read_fd_set;
-  return CURLE_OK;
+  return 0;
 }
 
 #ifdef CURLRES_IPV4
@@ -736,7 +720,7 @@ CURLcode Curl_resolv_fdset(struct connectdata *conn,
  * Curl_getaddrinfo() - for Windows threading without ENABLE_IPV6.
  */
 Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
-                                char *hostname,
+                                const char *hostname,
                                 int port,
                                 int *waitp)
 {
@@ -759,12 +743,12 @@ Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
 
   /* fall-back to blocking version */
   infof(data, "init_resolve_thread() failed for %s; %s\n",
-        hostname, Curl_strerror(conn,GetLastError()));
+        hostname, Curl_strerror(conn, ERRNO));
 
   h = gethostbyname(hostname);
   if (!h) {
     infof(data, "gethostbyname(2) failed for %s:%d; %s\n",
-          hostname, port, Curl_strerror(conn,WSAGetLastError()));
+          hostname, port, Curl_strerror(conn, SOCKERRNO));
     return NULL;
   }
   return Curl_he2ai(h, port);
@@ -776,7 +760,7 @@ Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
  * Curl_getaddrinfo() - for Windows threading IPv6 enabled
  */
 Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
-                                char *hostname,
+                                const char *hostname,
                                 int port,
                                 int *waitp)
 {
@@ -836,12 +820,12 @@ Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
 
   /* fall-back to blocking version */
   infof(data, "init_resolve_thread() failed for %s; %s\n",
-        hostname, Curl_strerror(conn,GetLastError()));
+        hostname, Curl_strerror(conn, ERRNO));
 
   error = getaddrinfo(hostname, sbuf, &hints, &res);
   if (error) {
     infof(data, "getaddrinfo() failed for %s:%d; %s\n",
-          hostname, port, Curl_strerror(conn,WSAGetLastError()));
+          hostname, port, Curl_strerror(conn, SOCKERRNO));
     return NULL;
   }
   return res;

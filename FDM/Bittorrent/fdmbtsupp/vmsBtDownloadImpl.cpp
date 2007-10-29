@@ -385,3 +385,8 @@ void vmsBtDownloadImpl::OnTrackerAlert (LPCSTR pszMsg)
 
 	
 }
+
+int vmsBtDownloadImpl::get_CurrentTaskProgress ()
+{
+	return m_handle.status ().progress * 100;
+}

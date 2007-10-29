@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Prg_GeneralPage.h"
 #include "MainFrm.h"
 #include "fsIEUserAgent.h"

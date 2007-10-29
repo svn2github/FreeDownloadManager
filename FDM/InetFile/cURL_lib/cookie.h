@@ -6,10 +6,12 @@
 #define __COOKIE_H 
 
 #include <stdio.h>
-#ifdef WIN32
+#if defined(WIN32)
 #include <time.h>
 #else
+#ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
+#endif
 #endif
 
 #include <curl/curl.h>
@@ -58,12 +60,14 @@ struct CookieInfo *Curl_cookie_init(struct SessionHandle *data,
                                     char *, struct CookieInfo *, bool);
 struct Cookie *Curl_cookie_getlist(struct CookieInfo *, char *, char *, bool);
 void Curl_cookie_freelist(struct Cookie *);
+void Curl_cookie_clearall(struct CookieInfo *cookies);
+void Curl_cookie_clearsess(struct CookieInfo *cookies);
 void Curl_cookie_cleanup(struct CookieInfo *);
 int Curl_cookie_output(struct CookieInfo *, char *);
 
 #if defined(CURL_DISABLE_HTTP) || defined(CURL_DISABLE_COOKIES)
 #define Curl_cookie_list(x) NULL
-#define Curl_cookie_loadfiles(x)
+#define Curl_cookie_loadfiles(x) do { } while (0)
 #else
 struct curl_slist *Curl_cookie_list(struct SessionHandle *data);
 void Curl_cookie_loadfiles(struct SessionHandle *data);

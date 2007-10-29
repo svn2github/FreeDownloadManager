@@ -701,7 +701,10 @@ DWORD WINAPI fsDownloadsMgr::_threadDeleteDownload(LPVOID lp)
 	}
 	catch (...) {}
 
-	delete pvDlds;	
+	try {
+		delete pvDlds;	
+	}catch (...) {}
+
 	return 0;
 }
 
@@ -1284,7 +1287,7 @@ void fsDownloadsMgr::ApplyConnectionType(fsConnectionType enCT)
 			m_aTUM [TUM_HEAVY].uMaxConnsPS = 6;
 			m_aTUM [TUM_HEAVY].uMaxDlds = 3;
 
-			_App.MaxSections (6);
+			_App.MaxSections (4);
 			_App.FileWriteCacheSize (0);
 			break;
 
@@ -1294,93 +1297,93 @@ void fsDownloadsMgr::ApplyConnectionType(fsConnectionType enCT)
 			m_aTUM [TUM_LIGHT].uTrafficLimit = 6000;
 			m_aTUM [TUM_LIGHT].uMaxDlds = 2;
 
-			m_aTUM [TUM_MEDIUM].uMaxConns = 10;
-			m_aTUM [TUM_MEDIUM].uMaxConnsPS = 5;
+			m_aTUM [TUM_MEDIUM].uMaxConns = 8;
+			m_aTUM [TUM_MEDIUM].uMaxConnsPS = 3;
 			m_aTUM [TUM_MEDIUM].uTrafficLimit = 20000;
 			m_aTUM [TUM_MEDIUM].uMaxDlds = 3;
 
-			m_aTUM [TUM_HEAVY].uMaxConns = 20;
-			m_aTUM [TUM_HEAVY].uMaxConnsPS = 6;
+			m_aTUM [TUM_HEAVY].uMaxConns = 10;
+			m_aTUM [TUM_HEAVY].uMaxConnsPS = 4;
 			m_aTUM [TUM_HEAVY].uMaxDlds = 4;
 
-			_App.MaxSections (6);
+			_App.MaxSections (5);
 			_App.FileWriteCacheSize (0);
 			break;
 
 		case CT_CABLE_DSL_300:
 			m_aTUM [TUM_LIGHT].uMaxConns = 6;
 			m_aTUM [TUM_LIGHT].uMaxConnsPS = 3;
-			m_aTUM [TUM_LIGHT].uTrafficLimit = 7000;
+			m_aTUM [TUM_LIGHT].uTrafficLimit = 8000;
 			m_aTUM [TUM_LIGHT].uMaxDlds = 2;
 
-			m_aTUM [TUM_MEDIUM].uMaxConns = 10;
-			m_aTUM [TUM_MEDIUM].uMaxConnsPS = 5;
-			m_aTUM [TUM_MEDIUM].uTrafficLimit = 22000;
+			m_aTUM [TUM_MEDIUM].uMaxConns = 8;
+			m_aTUM [TUM_MEDIUM].uMaxConnsPS = 3;
+			m_aTUM [TUM_MEDIUM].uTrafficLimit = 25000;
 			m_aTUM [TUM_MEDIUM].uMaxDlds = 3;
 
-			m_aTUM [TUM_HEAVY].uMaxConns = 20;
-			m_aTUM [TUM_HEAVY].uMaxConnsPS = 6;
+			m_aTUM [TUM_HEAVY].uMaxConns = 10;
+			m_aTUM [TUM_HEAVY].uMaxConnsPS = 4;
 			m_aTUM [TUM_HEAVY].uMaxDlds = 4;
 
-			_App.MaxSections (6);
+			_App.MaxSections (5);
 			_App.FileWriteCacheSize (0);
 			break;
 
 		case CT_CABLE_DSL_512:
 			m_aTUM [TUM_LIGHT].uMaxConns = 6;
 			m_aTUM [TUM_LIGHT].uMaxConnsPS = 3;
-			m_aTUM [TUM_LIGHT].uTrafficLimit = 8000;
-			m_aTUM [TUM_LIGHT].uMaxDlds = 3;
+			m_aTUM [TUM_LIGHT].uTrafficLimit = 20000;
+			m_aTUM [TUM_LIGHT].uMaxDlds = 2;
 
-			m_aTUM [TUM_MEDIUM].uMaxConns = 10;
-			m_aTUM [TUM_MEDIUM].uMaxConnsPS = 5;
-			m_aTUM [TUM_MEDIUM].uTrafficLimit = 23000;
-			m_aTUM [TUM_MEDIUM].uMaxDlds = 4;
+			m_aTUM [TUM_MEDIUM].uMaxConns = 8;
+			m_aTUM [TUM_MEDIUM].uMaxConnsPS = 3;
+			m_aTUM [TUM_MEDIUM].uTrafficLimit = 45000;
+			m_aTUM [TUM_MEDIUM].uMaxDlds = 3;
 
-			m_aTUM [TUM_HEAVY].uMaxConns = 25;
-			m_aTUM [TUM_HEAVY].uMaxConnsPS = 8;
-			m_aTUM [TUM_HEAVY].uMaxDlds = 5;
+			m_aTUM [TUM_HEAVY].uMaxConns = 12;
+			m_aTUM [TUM_HEAVY].uMaxConnsPS = 4;
+			m_aTUM [TUM_HEAVY].uMaxDlds = 4;
 
-			_App.MaxSections (8);
+			_App.MaxSections (5);
 			_App.FileWriteCacheSize (1024*1024);
 			break;
 
 		case CT_T1:
-			m_aTUM [TUM_LIGHT].uMaxConns = 8;
-			m_aTUM [TUM_LIGHT].uMaxConnsPS = 4;
-			m_aTUM [TUM_LIGHT].uTrafficLimit = 10000;
+			m_aTUM [TUM_LIGHT].uMaxConns = 6;
+			m_aTUM [TUM_LIGHT].uMaxConnsPS = 3;
+			m_aTUM [TUM_LIGHT].uTrafficLimit = 50000;
 			m_aTUM [TUM_LIGHT].uMaxDlds = 3;
 
-			m_aTUM [TUM_MEDIUM].uMaxConns = 12;
+			m_aTUM [TUM_MEDIUM].uMaxConns = 8;
+			m_aTUM [TUM_MEDIUM].uMaxConnsPS = 3;
+			m_aTUM [TUM_MEDIUM].uTrafficLimit = 150000;
+			m_aTUM [TUM_MEDIUM].uMaxDlds = 3;
+
+			m_aTUM [TUM_HEAVY].uMaxConns = 20;
+			m_aTUM [TUM_HEAVY].uMaxConnsPS = 10;
+			m_aTUM [TUM_HEAVY].uMaxDlds = 4;
+
+			_App.MaxSections (10);
+			_App.FileWriteCacheSize (3*1024*1024);
+			break;
+
+		case CT_LAN_10:
+			m_aTUM [TUM_LIGHT].uMaxConns = 12;
+			m_aTUM [TUM_LIGHT].uMaxConnsPS = 4;
+			m_aTUM [TUM_LIGHT].uTrafficLimit = 100000;
+			m_aTUM [TUM_LIGHT].uMaxDlds = 3;
+
+			m_aTUM [TUM_MEDIUM].uMaxConns = 20;
 			m_aTUM [TUM_MEDIUM].uMaxConnsPS = 5;
-			m_aTUM [TUM_MEDIUM].uTrafficLimit = 27000;
+			m_aTUM [TUM_MEDIUM].uTrafficLimit = 400000;
 			m_aTUM [TUM_MEDIUM].uMaxDlds = 4;
 
-			m_aTUM [TUM_HEAVY].uMaxConns = 30;
+			m_aTUM [TUM_HEAVY].uMaxConns = 60;
 			m_aTUM [TUM_HEAVY].uMaxConnsPS = 12;
 			m_aTUM [TUM_HEAVY].uMaxDlds = 5;
 
 			_App.MaxSections (12);
 			_App.FileWriteCacheSize (3*1024*1024);
-			break;
-
-		case CT_LAN_10:
-			m_aTUM [TUM_LIGHT].uMaxConns = 8;
-			m_aTUM [TUM_LIGHT].uMaxConnsPS = 4;
-			m_aTUM [TUM_LIGHT].uTrafficLimit = 20000;
-			m_aTUM [TUM_LIGHT].uMaxDlds = 3;
-
-			m_aTUM [TUM_MEDIUM].uMaxConns = 12;
-			m_aTUM [TUM_MEDIUM].uMaxConnsPS = 5;
-			m_aTUM [TUM_MEDIUM].uTrafficLimit = 37000;
-			m_aTUM [TUM_MEDIUM].uMaxDlds = 4;
-
-			m_aTUM [TUM_HEAVY].uMaxConns = 60;
-			m_aTUM [TUM_HEAVY].uMaxConnsPS = 20;
-			m_aTUM [TUM_HEAVY].uMaxDlds = 7;
-
-			_App.MaxSections (30);
-			_App.FileWriteCacheSize (5*1024*1024);
 			break;
 	}
 
@@ -1776,8 +1779,7 @@ BOOL fsDownloadsMgr::PerformVirusCheck(vmsDownloadSmartPtr dld, BOOL bCheckExtRe
 
 	fsString strFile;
 
-	int i;
-	for (i = 0; i < nFiles; i++)
+	for (int i = 0; i < nFiles; i++)
 	{
 		char szFile [MY_MAX_PATH];
 		
@@ -1796,6 +1798,8 @@ BOOL fsDownloadsMgr::PerformVirusCheck(vmsDownloadSmartPtr dld, BOOL bCheckExtRe
 			if (pszExt && IsExtInExtsStr (m_strVirExts, pszExt+1))
 				break;	
 		}
+		else
+			break;
 	}
 	if (i == nFiles)
 		return TRUE; 
@@ -2509,7 +2513,11 @@ void fsDownloadsMgr::LaunchDownload(vmsDownloadSmartPtr dld, UINT nWaitForConfir
 			return;
 	}
 
-	ShellExecute (::GetDesktopWindow (), "open", dld->pMgr->get_OutputFilePathName (), NULL, NULL, SW_SHOW);
+	CString strFileName = dld->pMgr->get_OutputFilePathName ();
+	if (dld->pMgr->IsBittorrent ())
+		strFileName += dld->pMgr->GetBtDownloadMgr ()->get_RootFolderName ();
+
+	ShellExecute (::GetDesktopWindow (), "open", strFileName, NULL, NULL, SW_SHOW);
 }
 
 void fsDownloadsMgr::Shutdown()
@@ -3427,6 +3435,10 @@ DWORD fsDownloadsMgr::_BtDownloadManagerEventHandler(vmsBtDownloadManager *pMgr,
 
 		case BTDME_DOWNLOADING:
 			pthis->Event (dld, LS (L_DOWNLOADING), EDT_RESPONSE_S);
+			break;
+
+		case BTDME_SEEDING:
+			pthis->ProcessDownloads ();
 			break;
 		}
 

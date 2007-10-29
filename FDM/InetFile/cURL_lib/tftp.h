@@ -8,6 +8,6 @@
 #ifndef CURL_DISABLE_TFTP
 CURLcode Curl_tftp_connect(struct connectdata *conn, bool *done);
 CURLcode Curl_tftp(struct connectdata *conn, bool *done);
-CURLcode Curl_tftp_done(struct connectdata *conn, CURLcode);
+CURLcode Curl_tftp_done(struct connectdata *conn, CURLcode, bool premature);
 #endif
 #endif

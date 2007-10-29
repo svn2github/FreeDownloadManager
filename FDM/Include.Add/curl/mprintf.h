@@ -10,6 +10,10 @@
 
 #include "curl.h"
 
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
 CURL_EXTERN int curl_mprintf(const char *format, ...);
 CURL_EXTERN int curl_mfprintf(FILE *fd, const char *format, ...);
 CURL_EXTERN int curl_msprintf(char *buffer, const char *format, ...);
@@ -24,14 +28,24 @@ CURL_EXTERN char *curl_mvaprintf(const char *format, va_list args);
 #ifdef _MPRINTF_REPLACE
 # define printf curl_mprintf
 # define fprintf curl_mfprintf
+#ifdef CURLDEBUG
+
+# define sprintf sprintf_was_used
+# define vsprintf vsprintf_was_used
+#else
 # define sprintf curl_msprintf
+# define vsprintf curl_mvsprintf
+#endif
 # define snprintf curl_msnprintf
 # define vprintf curl_mvprintf
 # define vfprintf curl_mvfprintf
-# define vsprintf curl_mvsprintf
 # define vsnprintf curl_mvsnprintf
 # define aprintf curl_maprintf
 # define vaprintf curl_mvaprintf
+#endif
+
+#ifdef  __cplusplus
+}
 #endif
 
 #endif 

@@ -2,8 +2,8 @@
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
 */    
 
-#if !defined(AFX_DATASTRETCHER_H__0DFAE8B5_1F34_4956_8DFA_5AE79C242CB7__INCLUDED_)
-#define AFX_DATASTRETCHER_H__0DFAE8B5_1F34_4956_8DFA_5AE79C242CB7__INCLUDED_
+#if !defined(AFX_FdmApp_H__0DFAE8B5_1F34_4956_8DFA_5AE79C242CB7__INCLUDED_)
+#define AFX_FdmApp_H__0DFAE8B5_1F34_4956_8DFA_5AE79C242CB7__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
@@ -14,23 +14,24 @@
 #endif
 
 #include "resource.h"       
-#include "DataStretcher.h"          
+#include "fdm.h"          
 
 const char* const _pszAppMutex = "Free Download Manager";
 
-class CDataStretcherApp : public CWinApp
+class CFdmApp : public CWinApp
 {
 public:
-	CDataStretcherApp();  
+	CFdmApp();  
 
 	
-	//{{AFX_VIRTUAL(CDataStretcherApp)
+	//{{AFX_VIRTUAL(CFdmApp)
 	public:
 	virtual BOOL InitInstance();
 	virtual int ExitInstance();
 	//}}AFX_VIRTUAL    
 
 public:
+	AFX_MODULE_STATE* GetModuleState();
 	static void ScheduleExitProcess (DWORD dwSeconds);
 	
 	void SaveSettings();
@@ -45,9 +46,9 @@ public:
 	};
 	
 	fs::list <_inc_UrlToAdd> m_vUrlsToAdd, m_vTorrentFilesToAdd;
-	~CDataStretcherApp ();
+	~CFdmApp ();
 	void SaveHistory();		
-	//{{AFX_MSG(CDataStretcherApp)
+	//{{AFX_MSG(CFdmApp)
 	afx_msg void OnAppAbout();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

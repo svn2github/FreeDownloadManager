@@ -11,11 +11,11 @@
 #define ALL_CONTENT_ENCODINGS "identity"
 #endif
 
-CURLcode Curl_unencode_deflate_write(struct SessionHandle *data,
+CURLcode Curl_unencode_deflate_write(struct connectdata *conn,
                                      struct Curl_transfer_keeper *k,
                                      ssize_t nread);
 
 CURLcode
-Curl_unencode_gzip_write(struct SessionHandle *data,
+Curl_unencode_gzip_write(struct connectdata *conn,
                          struct Curl_transfer_keeper *k,
                          ssize_t nread);

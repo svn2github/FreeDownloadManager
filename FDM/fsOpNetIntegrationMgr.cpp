@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "fsOpNetIntegrationMgr.h"
 #include "FolderBrowser.h"
 

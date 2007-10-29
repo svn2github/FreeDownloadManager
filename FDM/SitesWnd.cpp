@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "plugins.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "SitesWnd.h"
 #include "fsSitesMgr.h"
 #include "MainFrm.h"

@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Dlg_Convert.h"
 
 #ifdef _DEBUG
@@ -59,7 +59,7 @@ LPCSTR _apszFormats [] = {
 	NULL,						"avi", "avi",			"msmpeg4v2", "mp3",
 	NULL,						"avi", "avi",			"xvid", "mp3",
 	"FLV (*.flv)",				"flv", "flv",			"", "",
-	"WMV (*.wmv)" ,				"wmv", "wmv",			"wmv2", "mp3",
+	"WMV (*.wmv)" ,				"wmv", "asf",			"wmv2", "mp3",
 	"MPEG1 (*.mpg)",			"mpg", "mpegvideo",		"", "",
 	"MPEG2 (*.mpg)",			"mpg", "mpegts",		"", "",
 	NULL,						"mp4", "mp4",			"mpeg4", "aac",

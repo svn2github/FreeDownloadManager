@@ -24,7 +24,6 @@ public:
 	virtual ~vmsSimpleFileDownloader();
 
 protected:
-	bool m_bRunning;
 	void CreateDownloader();
 	static DWORD _DownloadMgrEvents(fsDownloadMgr* pMgr, fsDownloaderEvent ev, UINT uInfo, LPVOID lp);
 	static void _DownloadMgrDescEvents(fsDownloadMgr* , fsDownloadMgr_EventDescType , LPCSTR pszDesc, LPVOID lp);

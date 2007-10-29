@@ -13,7 +13,7 @@ _COM_SMARTPTR_TYPEDEF (IFDMDownload, __uuidof (IFDMDownload));
 class ATL_NO_VTABLE CFDMDownloadsStat : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CFDMDownloadsStat, &CLSID_FDMDownloadsStat>,
-	public IDispatchImpl<IFDMDownloadsStat, &IID_IFDMDownloadsStat, &LIBID_DataStretcherLib>
+	public IDispatchImpl<IFDMDownloadsStat, &IID_IFDMDownloadsStat, &LIBID_FdmLib>
 {
 public:
 	CFDMDownloadsStat()

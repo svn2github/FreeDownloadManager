@@ -10,7 +10,7 @@
 class ATL_NO_VTABLE CFDMFlashVideoDownloads : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CFDMFlashVideoDownloads, &CLSID_FDMFlashVideoDownloads>,
-	public IDispatchImpl<IFDMFlashVideoDownloads, &IID_IFDMFlashVideoDownloads, &LIBID_DataStretcherLib>
+	public IDispatchImpl<IFDMFlashVideoDownloads, &IID_IFDMFlashVideoDownloads, &LIBID_FdmLib>
 {
 public:
 	CFDMFlashVideoDownloads()

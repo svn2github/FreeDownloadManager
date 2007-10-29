@@ -42,6 +42,7 @@ public:
 	void get_FileProgress (float *p);
 	BOOL is_HandleValid ();
 	void OnTrackerAlert (LPCSTR pszMsg);
+	int get_CurrentTaskProgress ();
 
 	vmsBtDownloadImpl(void);
 public:

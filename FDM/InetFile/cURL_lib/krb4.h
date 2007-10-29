@@ -21,7 +21,12 @@ struct Curl_sec_client_mech {
 #define AUTH_CONTINUE   1
 #define AUTH_ERROR      2
 
+#ifdef HAVE_KRB4
 extern struct Curl_sec_client_mech Curl_krb4_client_mech;
+#endif
+#ifdef HAVE_GSSAPI
+extern struct Curl_sec_client_mech Curl_krb5_client_mech;
+#endif
 
 CURLcode Curl_krb_kauth(struct connectdata *conn);
 int Curl_sec_fflush_fd(struct connectdata *conn, int fd);
@@ -34,7 +39,8 @@ int Curl_sec_read_msg (struct connectdata *conn, char *, int);
 int Curl_sec_vfprintf(struct connectdata *, FILE *, const char *, va_list);
 int Curl_sec_fprintf2(struct connectdata *conn, FILE *f, const char *fmt, ...);
 int Curl_sec_vfprintf2(struct connectdata *conn, FILE *, const char *, va_list);
-int Curl_sec_write (struct connectdata *conn, int, char *, int);
+ssize_t Curl_sec_send(struct connectdata *conn, int, char *, int);
+int Curl_sec_write(struct connectdata *conn, int, char *, int);
 
 void Curl_sec_end (struct connectdata *);
 int Curl_sec_login (struct connectdata *);

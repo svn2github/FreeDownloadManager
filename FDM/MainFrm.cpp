@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "Data Stretcher.h"
+#include "FdmApp.h"
 #include "EnterKeyDlg.h"
 #include "fsUrlsToDownloadRegKeyMgr.h"
 #include "mfchelp.h"
@@ -524,7 +524,7 @@ void CMainFrame::OnClose()
 		
 		_PluginMgr.OnAppExit (FALSE);
 
-		CDataStretcherApp::ScheduleExitProcess (30);
+		CFdmApp::ScheduleExitProcess (30);
 
 		LOG ("CMF::OC: proceed to default handler..." << nl);
 		CFrameWnd::OnClose();
@@ -832,8 +832,8 @@ void CMainFrame::OnSaveall()
 	_pwndHFE->SaveAll ();
 	_pwndSites->SaveAll ();
 	_pwndSpider->SaveAll (TRUE);
-        ((CDataStretcherApp*)AfxGetApp ())->SaveSettings ();
-	((CDataStretcherApp*) AfxGetApp ())->SaveHistory ();
+        ((CFdmApp*)AfxGetApp ())->SaveSettings ();
+	((CFdmApp*) AfxGetApp ())->SaveHistory ();
 
 	SaveState ();
 }
@@ -1043,8 +1043,8 @@ void CMainFrame::StartUpdate(BOOL bShowDlg)
 void CMainFrame::OnEndSession(BOOL bEnding) 
 {
 	_PluginMgr.OnAppExit (FALSE);
-        ((CDataStretcherApp*)AfxGetApp ())->SaveSettings ();
-	((CDataStretcherApp*)AfxGetApp ())->SaveHistory ();
+        ((CFdmApp*)AfxGetApp ())->SaveSettings ();
+	((CFdmApp*)AfxGetApp ())->SaveHistory ();
 	CFrameWnd::OnEndSession(bEnding);
 }
 
@@ -2162,7 +2162,7 @@ void CMainFrame::OnProceedFurherInitialization()
 	_pwndDownloads->m_ClpbrdCatch.Create (_pwndDownloads);
 	_pwndDownloads->m_ClpbrdCatch.Enable (_App.Monitor_Clipboard ());
 	
-	CDataStretcherApp* app = (CDataStretcherApp*) AfxGetApp ();
+	CFdmApp* app = (CFdmApp*) AfxGetApp ();
 	for (int i = 0; i < app->m_vUrlsToAdd.size (); i++)
 	{
 		BOOL bSilent = app->m_vUrlsToAdd [i].bForceSilent ? TRUE : _App.Monitor_Silent ();
@@ -2218,7 +2218,7 @@ void CMainFrame::OnAppAbout()
 {
 	if (_DldsMgr.IsDeletingNow ())
 		return;
-	((CDataStretcherApp*) AfxGetApp ())->OnAppAbout ();
+	((CFdmApp*) AfxGetApp ())->OnAppAbout ();
 }
 
 void CMainFrame::OnExportlistofdownloads() 
@@ -2331,7 +2331,7 @@ LRESULT CMainFrame::OnShowTrayMenu(WPARAM, LPARAM)
 
 BOOL CMainFrame::ReadCusomizationInfo()
 {
-	CString str = ((CDataStretcherApp*)AfxGetApp ())->m_strAppPath;
+	CString str = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
 	str += "fdmcs.dat";
 
 	HANDLE hFile = CreateFile (str, GENERIC_READ, FILE_SHARE_READ,
@@ -2963,5 +2963,5 @@ void CMainFrame::OnUpdateLoadatstartup(CCmdUI* pCmdUI)
 
 int CMainFrame::GetTumMenuPosition()
 {
-	return _pwndUploads && _pwndUploads->m_pwndUploads ? 10 : 9;
+	return _pwndUploads && _pwndUploads->m_pwndUploads && (IS_PORTABLE_MODE == FALSE) ? 10 : 9;
 }

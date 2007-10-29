@@ -10,7 +10,7 @@
 class ATL_NO_VTABLE CFDMDownload : 
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CFDMDownload, &CLSID_FDMDownload>,
-	public IDispatchImpl<IFDMDownload, &IID_IFDMDownload, &LIBID_DataStretcherLib>
+	public IDispatchImpl<IFDMDownload, &IID_IFDMDownload, &LIBID_FdmLib>
 {
 public:
 	CFDMDownload()

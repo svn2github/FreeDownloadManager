@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "fsWebPageDownloader.h"
 #include "DownloadsWnd.h"
 #include "inetutil.h"
@@ -901,7 +901,11 @@ float fsWebPageDownloader::GetPercentDone()
 {
 	float fDone = 0;	
 
-	for (int i = m_vConfs.size () - 1; i >= 0; i--)
+	int cConfs = m_vConfs.size ();
+	if (cConfs == 0)
+		return 0;
+
+	for (int i = cConfs - 1; i >= 0; i--)
 	{
 		fsDLWebPage *wp = m_vConfs [i].wp;
 

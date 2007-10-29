@@ -3,7 +3,7 @@
 */  
 
 #include "stdafx.h"
-#include "Data Stretcher.h"
+#include "FdmApp.h"
 #include "FDMUploadPackage.h"        
 
 STDMETHODIMP CFDMUploadPackage::Add(BSTR bstrPathName)

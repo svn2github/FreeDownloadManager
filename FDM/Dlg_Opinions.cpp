@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Dlg_Opinions.h"
 #include "vmsMaliciousDownloadChecker.h"
 
@@ -47,7 +47,7 @@ BOOL CDlg_Opinions::OnInitDialog()
 	m_wbEvents.Attach ();
 
 	CString str;
-	str.Format ("http://www.freedownloadmanager.org/fromfdm/showopinions.html?url=%s",
+	str.Format ("http://fdm.freedownloadmanager.org/fromfdm/showopinions.html?url=%s",
 		vmsMaliciousDownloadChecker::EncodeUrl (m_pszUrl));
 	CString strLoading;
 	strLoading.Format ("about:%s...", LS (L_LOADING));

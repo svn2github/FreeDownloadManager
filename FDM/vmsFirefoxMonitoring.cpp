@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "vmsFirefoxMonitoring.h"
 #include "vmsFirefoxExtensionInstaller.h"
 
@@ -38,7 +38,7 @@ bool vmsFirefoxMonitoring::IsFlashGotInstalled()
 
 bool vmsFirefoxMonitoring::Install(bool bInstall)
 {
-	CString strPath = ((CDataStretcherApp*)AfxGetApp ())->m_strAppPath;
+	CString strPath = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
 	strPath += "Firefox\\Extension";
 	return vmsFirefoxExtensionInstaller::Do (FDM_CID, strPath, bInstall);
 }

@@ -3,7 +3,7 @@
 */  
 
 #include "stdafx.h"
-#include "Data Stretcher.h"
+#include "FdmApp.h"
 #include "WgUrlListReceiver.h"
 #include "CreateDownloadListDlg.h"
 #include "DownloadsWnd.h"
@@ -187,7 +187,7 @@ DWORD WINAPI CWgUrlListReceiver::_threadAddUrlListDialog(LPVOID lp)
 
 	CCreateDownloadListDlg dlg;
 
-	while (((CDataStretcherApp*)AfxGetApp ())->Is_Starting ())
+	while (((CFdmApp*)AfxGetApp ())->Is_Starting ())
 		Sleep (100);
 
 	dlg.m_pvUrls = &pthis->m_vUrls;

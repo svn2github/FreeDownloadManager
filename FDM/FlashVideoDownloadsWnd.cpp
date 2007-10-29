@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "FlashVideoDownloadsWnd.h"
 #include "plugincmds.h"
 #include "Dlg_CreateFVDownload.h"

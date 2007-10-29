@@ -23,6 +23,7 @@ vmsBtSessionImpl::vmsBtSessionImpl(void)
 	m_bDHTstarted = FALSE;
 	m_session.set_severity_level (alert::info);
 	m_session.add_extension (libtorrent::create_ut_pex_plugin);
+	m_session.set_max_half_open_connections (5);
 	m_bThreadRunning = true;
 	m_bNeedStop = false;
 	m_pfnEvHandler = NULL;
@@ -62,6 +63,7 @@ vmsBtDownload* vmsBtSessionImpl::CreateDownload (vmsBtFile *torrent, LPCSTR pszO
 		entry e2 = pbFastResumeData ? bdecode (pbFastResumeData, pbFastResumeData + dwFRDataSize) : entry ();
 
 		th = m_session.add_torrent (*torrentimpl->m_torrent, szPath, e2, bCompactMode != 0);
+		th.set_ratio (1);
 
 		vmsBtDownloadImpl *pDld = new vmsBtDownloadImpl;
 		pDld->m_handle = th;

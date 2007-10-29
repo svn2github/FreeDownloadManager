@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "vmsVideoSiteHtmlCodeParser.h"
 #include "inetutil.h"
 
@@ -64,7 +64,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube(LPCSTR pszHtml)
 {
 	fsString strTitle, strUrl; 
 
-	LPCSTR psz = strstr (pszHtml, "<h1 id=\"video_title\"");
+	LPSTR psz = strstr (pszHtml, "<h1 id=\"video_title\"");
 
 	if (psz)
 	{
@@ -82,17 +82,55 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube(LPCSTR pszHtml)
 		}
 	}
 
-	
-
-	psz = strstr (pszHtml, "/player2.swf");
+	psz = strstr (pszHtml, "swfArgs =");
 	if (psz == NULL)
-		return Parse_Youtube_RootPage (pszHtml);
+		return FALSE;
+	psz = strchr (psz, '{');
+	if (psz == NULL)
+		return FALSE;
+	psz++;
 
-	psz += 12; 
+	fsString strBase = "http://youtube.com/"; 
+	fsString strParams;
+	
+	while (*psz != '}')
+	{
+		while (*psz == ' ' || *psz == ',')
+			psz++;
 
-	strUrl = "http://youtube.com/get_video";
-	while (*psz && *psz != '"')
-		strUrl += *psz++;
+		fsString str;
+	
+		while (*psz != ':')
+		{
+			if (*psz == ' ')
+			{
+				str = "";
+				break;
+			}
+			str += *psz++;
+		}
+
+		if (str.IsEmpty ())
+			break;
+
+		if (lstrcmpi (str, "BASE_YT_URL") == 0)
+		{
+			strBase = ExtractValue (psz);
+		}
+		else
+		{
+			if (strParams.IsEmpty () == FALSE)
+				strParams += '&';
+
+			strParams += str; strParams += "="; strParams += ExtractValue (psz);
+		}
+	}
+
+	strUrl = strBase;
+	strUrl += "get_video?";
+	strUrl += strParams;
+
+	
 
 	fsDecodeHtmlText (strTitle);
 
@@ -547,10 +585,13 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_DailyMotion(LPCSTR pszHtml)
 	if (psz == NULL)
 		return FALSE;
 	
+_lSearchUrl:
 	psz = strstr (psz, "url=");
 	if (psz == NULL)
 		return FALSE;
 	psz += 4;
+	if (strncmp (psz, "rev=", 4) == 0)
+		goto _lSearchUrl;
 
 	fsString strUrl;
 	while (*psz && *psz != '&')
@@ -634,5 +675,20 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Grouper(LPCSTR pszHtml)
 	m_bDirectLink	= TRUE;	
 
 	return TRUE;
-}
+}  
 
+fsString vmsVideoSiteHtmlCodeParser::ExtractValue(LPSTR &psz)
+{
+	char c;
+	while (*psz && *psz != '"' && *psz != '\'')
+		psz++;
+	if (*psz == 0)
+		return "";
+	c = *psz++;
+	fsString strRes;
+	while (*psz && *psz != c)
+		strRes += *psz++;
+	if (*psz)
+		psz++;
+	return strRes;
+}

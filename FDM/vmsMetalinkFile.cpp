@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "vmsMetalinkFile.h"
 
 _COM_SMARTPTR_TYPEDEF (IXMLDOMNamedNodeMap, __uuidof (IXMLDOMNamedNodeMap));

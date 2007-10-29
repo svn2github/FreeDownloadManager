@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "SpiderTaskTree.h"
 #include "Downloads_Tasks.h"
 #include "DownloadsWnd.h"

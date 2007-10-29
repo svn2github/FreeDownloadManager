@@ -34,6 +34,8 @@ public:
 
 	
 protected:
+	static DWORD WINAPI _threadDraw (LPVOID lp);
+	HANDLE m_hthDraw, m_hevDraw, m_hevShutdown;
 	vmsRenderer m_renderer;
 	//{{AFX_MSG(CWnd_DownloadProgress)
 	afx_msg void OnPaint();

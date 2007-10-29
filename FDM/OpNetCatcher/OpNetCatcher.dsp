@@ -92,7 +92,7 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\DataStretcher_i.c
+SOURCE=..\Fdm_i.c
 # SUBTRACT CPP /YX /Yc /Yu
 # End Source File
 # Begin Source File

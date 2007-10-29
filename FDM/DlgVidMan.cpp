@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "DlgVidMan.h"
 #include "Downloads_VideoPreview.h"
 #include "plugincmds.h"
@@ -153,6 +153,10 @@ void CDlgVidMan::UpdateEnabled()
 
 void CDlgVidMan::Update()
 {try{
+
+	if (IsWindowVisible () == FALSE)
+		return;
+
 	BOOL bPlaying = m_parent->IsPlaying ();
 
 	UINT nIdNow, nStyle; int iImage;

@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "fsDirectXVersion.h"
 #include <basetsd.h>
 #include <ddraw.h>

@@ -19,6 +19,8 @@ fsPartMediaPlayer::fsPartMediaPlayer() :
 	m_reader.AddRef ();
 
 	m_state = VFPS_CLOSED;
+
+	m_fVideoRatio = 1;
 }
 
 fsPartMediaPlayer::~fsPartMediaPlayer()
@@ -60,6 +62,21 @@ HRESULT fsPartMediaPlayer::Open(HANDLE hFile, UINT64 uMaxAvail)
 	
 	m_pGB->QueryInterface (IID_IVideoWindow, (void**)&m_pVW);
 	m_pGB->QueryInterface (IID_IBasicAudio, (void**)&m_pBA);
+
+	IBasicVideo* pBV = NULL;
+	m_pGB->QueryInterface (IID_IBasicVideo, (void**) &pBV);
+	if (pBV != NULL)
+	{
+		long nW, nH;
+		pBV->get_VideoWidth (&nW);
+		pBV->get_VideoHeight (&nH);
+		m_fVideoRatio = (double)nW / nH;
+		pBV->Release ();
+	}
+	else
+	{
+		m_fVideoRatio = 1;
+	}
 
 	if (m_pVW)
 	{
@@ -183,8 +200,6 @@ void fsPartMediaPlayer::AutoSize()
 				w = rc.right;
 				h = (int) (w / m_fVideoRatio);
 			}
-
-			
 
 			m_pVW->SetWindowPosition ((rc.right - w) / 2, (rc.bottom - h) / 2, w, h);
 			UpdateWindow (m_hOutWnd);

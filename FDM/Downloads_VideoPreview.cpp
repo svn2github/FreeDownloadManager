@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Downloads_VideoPreview.h"
 #include "fsDownloadsMgr.h"
 #include "fsDirectXVersion.h"
@@ -195,7 +195,7 @@ void CDownloads_VideoPreview::Play()
 						ScreenToClient (&rc);
 						m_wndVideo2.Create (NULL, WS_CHILD, rc, this, 0x111a);
 						m_wndVideo2.SetBackgroundColor (0);
-						m_wndVideo2.LoadMovie (0, ((CDataStretcherApp*)AfxGetApp ())->m_strAppPath + "player.swf");
+						m_wndVideo2.LoadMovie (0, ((CFdmApp*)AfxGetApp ())->m_strAppPath + "player.swf");
 
 						m_wndVideo.ShowWindow (SW_HIDE);
 						m_wndVideo2.ShowWindow (SW_SHOW);
@@ -329,7 +329,7 @@ UINT64 CDownloads_VideoPreview::Get_AvailFileSize()
 	if (m_pActiveDownload->pMgr->GetNumberOfSections ())
  	{
 		UINT64 uRes = 0;
-		int num = m_pActiveDownload->pMgr->GetNumberOfSections ();
+		
 
 		if (m_pActiveDownload->pMgr->GetBtDownloadMgr () == FALSE)
 		{
@@ -342,7 +342,7 @@ UINT64 CDownloads_VideoPreview::Get_AvailFileSize()
 		 		for (int i = 0; i < m_pActiveDownload->pMgr->GetNumberOfSections (); i++)
 				{
 					vmsSectionInfo sect;
- 					m_pActiveDownload->pMgr->GetSectionInfo (i, &sect);
+ 					m_pActiveDownload->pMgr->GetSectionInfo (i, &sect, TRUE);
 
 					if (uRes == sect.uDStart)
 					{
@@ -356,18 +356,7 @@ UINT64 CDownloads_VideoPreview::Get_AvailFileSize()
 		}
 		else
 		{
-	 		for (int i = 0; i < num; i++)
-			{
-				vmsSectionInfo sect;
-				m_pActiveDownload->pMgr->GetSectionInfo (i, &sect);
-
-				if (uRes == sect.uDStart || uRes+1 == sect.uDStart)
-				{
-					uRes = sect.uDCurrent;
-					if (sect.uDCurrent != sect.uDEnd || sect.uDEnd == 0)
-						break;
-				}
-			}
+	 		uRes = m_pActiveDownload->pMgr->GetBtDownloadMgr ()->get_SplittedByteCountAtBeginningOfFile ();
 		}
 
 		return uRes;

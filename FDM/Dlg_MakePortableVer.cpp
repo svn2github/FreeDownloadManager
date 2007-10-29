@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Dlg_MakePortableVer.h"
 #include "FolderBrowser.h"
 #include "mfchelp.h"
@@ -118,11 +118,11 @@ DWORD WINAPI CDlg_MakePortableVer::_threadCreatePortableVer(LPVOID lp)
 
 	int nTotal = 0;
 	
-	pthis->CopyDirTree (((CDataStretcherApp*)AfxGetApp ())->m_strAppPath, str, nTotal, 0);
+	pthis->CopyDirTree (((CFdmApp*)AfxGetApp ())->m_strAppPath, str, nTotal, 0);
 	pthis->m_wndProgress.SetRange32 (0, nTotal);
 	
 	int i = 0;
-	pthis->CopyDirTree (((CDataStretcherApp*)AfxGetApp ())->m_strAppPath, str, i, nTotal);
+	pthis->CopyDirTree (((CFdmApp*)AfxGetApp ())->m_strAppPath, str, i, nTotal);
 
 	pthis->m_bThreadRunning = false;
 	pthis->PostMessage (WM_COMMAND, IDCANCEL);

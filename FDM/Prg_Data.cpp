@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "Prg_Data.h"
 #include "FolderBrowser.h"
 #include "mfchelp.h"
@@ -81,6 +81,7 @@ void CPrg_Data::ApplyLanguage()
 		fsDlgLngInfo (IDC_KEEP_2, L_KEEPINTHISFOLDER, TRUE),
 		fsDlgLngInfo (IDC__AUTOSAVE, L_AUTOSAVE),
 		fsDlgLngInfo (IDC__MIN, L_MIN),
+		fsDlgLngInfo (IDC__DATADESC, L_FDMDATAFILESDESC),
 	};
 
 	_LngMgr.ApplyLanguage (this, lnginfo, sizeof (lnginfo) / sizeof (fsDlgLngInfo), 0);

@@ -23,9 +23,6 @@
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
 #endif
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
 #ifdef HAVE_SYS_SOCKET_H
 #include <sys/socket.h>
 #endif
@@ -43,10 +40,6 @@
 #define IN6ADDRSZ       16
 #define INADDRSZ         4
 #define INT16SZ          2
-
-#ifdef WIN32
-#define EAFNOSUPPORT    WSAEAFNOSUPPORT
-#endif
 
 /*
  * WARNING: Don't even consider trying to compile this on a system where
@@ -66,6 +59,11 @@ static int      inet_pton6(const char *src, unsigned char *dst);
  *      1 if the address was valid for the specified address family
  *      0 if the address wasn't valid (`dst' is untouched in this case)
  *      -1 if some other error occurred (`dst' is untouched in this case, too)
+ * notice:
+ *      On Windows we store the error in the thread errno, not
+ *      in the winsock error code. This is to avoid loosing the
+ *      actual last winsock error. So use macro ERRNO to fetch the
+ *      errno this funtion sets when returning (-1), not SOCKERRNO.
  * author:
  *      Paul Vixie, 1996.
  */
@@ -83,7 +81,7 @@ Curl_inet_pton(int af, const char *src, void *dst)
     return (inet_pton6(src, (unsigned char *)dst));
 #endif
   default:
-    errno = EAFNOSUPPORT;
+    SET_ERRNO(EAFNOSUPPORT);
     return (-1);
   }
   /* NOTREACHED */
@@ -118,7 +116,7 @@ inet_pton4(const char *src, unsigned char *dst)
 
       if (val > 255)
         return (0);
-      *tp = val;
+      *tp = (unsigned char)val;
       if (! saw_digit) {
         if (++octets > 4)
           return (0);

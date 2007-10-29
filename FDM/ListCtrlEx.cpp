@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "ListCtrlEx.h"
 
 #ifdef _DEBUG
@@ -607,7 +607,7 @@ void CListCtrlEx::OnColumnclick(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 	else
 	{
-		m_iSortCol = pNMListView->iSubItem;
+		m_iSortCol = SubItemToSubItem(pNMListView->iSubItem);
 		if (m_sortMode == LCSM_NONE)
 			m_sortMode = m_sortModeSupport & LCSM_ASCENDING_NOTSUPPORTED ? LCSM_DESCENDING : LCSM_ASCENDING;
 	}

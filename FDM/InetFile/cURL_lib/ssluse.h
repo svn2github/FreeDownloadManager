@@ -7,6 +7,9 @@
 
 #include "urldata.h"
 CURLcode Curl_ossl_connect(struct connectdata *conn, int sockindex);
+CURLcode Curl_ossl_connect_nonblocking(struct connectdata *conn,
+                                       int sockindex,
+                                       bool *done);
 void Curl_ossl_close(struct connectdata *conn); 
 
 int Curl_ossl_close_all(struct SessionHandle *data);
@@ -22,10 +25,10 @@ struct curl_slist *Curl_ossl_engines_list(struct SessionHandle *data);
 int Curl_ossl_init(void);
 void Curl_ossl_cleanup(void);
 
-int Curl_ossl_send(struct connectdata *conn,
-                   int sockindex,
-                   void *mem,
-                   size_t len);
+ssize_t Curl_ossl_send(struct connectdata *conn,
+                       int sockindex,
+                       void *mem,
+                       size_t len);
 ssize_t Curl_ossl_recv(struct connectdata *conn, 
                        int num,                  
                        char *buf,                
@@ -33,5 +36,9 @@ ssize_t Curl_ossl_recv(struct connectdata *conn,
                        bool *wouldblock);
 
 size_t Curl_ossl_version(char *buffer, size_t size);
+int Curl_ossl_check_cxn(struct connectdata *cxn);
+int Curl_ossl_seed(struct SessionHandle *data);
+
+int Curl_ossl_shutdown(struct connectdata *conn, int sockindex);
 
 #endif

@@ -2,7 +2,7 @@
 
 
 /* File created by MIDL compiler version 5.01.0164 */
-/* at Tue Aug 21 23:44:31 2007
+/* at Thu Sep 06 00:31:02 2007
  */
 /* Compiler settings for D:\VCW\FDM\FDM\iefdm\iecooks\iecooks.idl:
     Oicf (OptLev=i2), W1, Zp8, env=Win32, ms_ext, c_ext
@@ -28,7 +28,7 @@
 #include "iecooks.h"
 
 #define TYPE_FORMAT_STRING_SIZE   1019                              
-#define PROC_FORMAT_STRING_SIZE   171                               
+#define PROC_FORMAT_STRING_SIZE   205                               
 
 typedef struct _MIDL_TYPE_FORMAT_STRING
     {
@@ -74,7 +74,8 @@ static const unsigned short IFDMIECookiesBHO_FormatStringOffsetTable[] =
     0,
     34,
     98,
-    120
+    120,
+    142
     };
 
 static const MIDL_SERVER_INFO IFDMIECookiesBHO_ServerInfo = 
@@ -99,7 +100,7 @@ static const MIDL_STUBLESS_PROXY_INFO IFDMIECookiesBHO_ProxyInfo =
     0
     };
 
-CINTERFACE_PROXY_VTABLE(11) _IFDMIECookiesBHOProxyVtbl = 
+CINTERFACE_PROXY_VTABLE(12) _IFDMIECookiesBHOProxyVtbl = 
 {
     &IFDMIECookiesBHO_ProxyInfo,
     &IID_IFDMIECookiesBHO,
@@ -113,7 +114,8 @@ CINTERFACE_PROXY_VTABLE(11) _IFDMIECookiesBHOProxyVtbl =
     (void *)-1 /* IFDMIECookiesBHO::ProgressChange */ ,
     (void *)-1 /* IFDMIECookiesBHO::BeforeNavigate2 */ ,
     (void *)-1 /* IFDMIECookiesBHO::DownloadBegin */ ,
-    (void *)-1 /* IFDMIECookiesBHO::DownloadComplete */
+    (void *)-1 /* IFDMIECookiesBHO::DownloadComplete */ ,
+    (void *)-1 /* IFDMIECookiesBHO::DocumentComplete */
 };
 
 
@@ -126,6 +128,7 @@ static const PRPC_STUB_FUNCTION IFDMIECookiesBHO_table[] =
     NdrStubCall2,
     NdrStubCall2,
     NdrStubCall2,
+    NdrStubCall2,
     NdrStubCall2
 };
 
@@ -133,7 +136,7 @@ CInterfaceStubVtbl _IFDMIECookiesBHOStubVtbl =
 {
     &IID_IFDMIECookiesBHO,
     &IFDMIECookiesBHO_ServerInfo,
-    11,
+    12,
     &IFDMIECookiesBHO_table[-3],
     CStdStubBuffer_DELEGATING_METHODS
 };
@@ -181,7 +184,7 @@ static const unsigned short IFDMIEStat_FormatStringOffsetTable[] =
     (unsigned short) -1,
     (unsigned short) -1,
     (unsigned short) -1,
-    142
+    176
     };
 
 static const MIDL_SERVER_INFO IFDMIEStat_ServerInfo = 
@@ -472,42 +475,89 @@ static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
 /* 140 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
-	/* Procedure get_DownloadCount */
+	/* Procedure DocumentComplete */
 
 /* 142 */	0x33,		/* FC_AUTO_HANDLE */
 			0x6c,		/* Old Flags:  object, Oi2 */
 /* 144 */	NdrFcLong( 0x0 ),	/* 0 */
-/* 148 */	NdrFcShort( 0x7 ),	/* 7 */
+/* 148 */	NdrFcShort( 0xb ),	/* 11 */
 #ifndef _ALPHA_
-/* 150 */	NdrFcShort( 0xc ),	/* x86, MIPS, PPC Stack size/offset = 12 */
+/* 150 */	NdrFcShort( 0x10 ),	/* x86, MIPS, PPC Stack size/offset = 16 */
 #else
-			NdrFcShort( 0x18 ),	/* Alpha Stack size/offset = 24 */
+			NdrFcShort( 0x20 ),	/* Alpha Stack size/offset = 32 */
 #endif
 /* 152 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 154 */	NdrFcShort( 0x10 ),	/* 16 */
-/* 156 */	0x4,		/* Oi2 Flags:  has return, */
-			0x2,		/* 2 */
+/* 154 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 156 */	0x6,		/* Oi2 Flags:  clt must size, has return, */
+			0x3,		/* 3 */
 
-	/* Parameter pVal */
+	/* Parameter pDisp */
 
-/* 158 */	NdrFcShort( 0x2150 ),	/* Flags:  out, base type, simple ref, srv alloc size=8 */
+/* 158 */	NdrFcShort( 0xb ),	/* Flags:  must size, must free, in, */
 #ifndef _ALPHA_
 /* 160 */	NdrFcShort( 0x4 ),	/* x86, MIPS, PPC Stack size/offset = 4 */
 #else
 			NdrFcShort( 0x8 ),	/* Alpha Stack size/offset = 8 */
 #endif
-/* 162 */	0x8,		/* FC_LONG */
-			0x0,		/* 0 */
+/* 162 */	NdrFcShort( 0x2 ),	/* Type Offset=2 */
 
-	/* Return value */
+	/* Parameter URL */
 
-/* 164 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 164 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
 #ifndef _ALPHA_
 /* 166 */	NdrFcShort( 0x8 ),	/* x86, MIPS, PPC Stack size/offset = 8 */
 #else
 			NdrFcShort( 0x10 ),	/* Alpha Stack size/offset = 16 */
 #endif
-/* 168 */	0x8,		/* FC_LONG */
+/* 168 */	NdrFcShort( 0x3e8 ),	/* Type Offset=1000 */
+
+	/* Return value */
+
+/* 170 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+#ifndef _ALPHA_
+/* 172 */	NdrFcShort( 0xc ),	/* x86, MIPS, PPC Stack size/offset = 12 */
+#else
+			NdrFcShort( 0x18 ),	/* Alpha Stack size/offset = 24 */
+#endif
+/* 174 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Procedure get_DownloadCount */
+
+/* 176 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 178 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 182 */	NdrFcShort( 0x7 ),	/* 7 */
+#ifndef _ALPHA_
+/* 184 */	NdrFcShort( 0xc ),	/* x86, MIPS, PPC Stack size/offset = 12 */
+#else
+			NdrFcShort( 0x18 ),	/* Alpha Stack size/offset = 24 */
+#endif
+/* 186 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 188 */	NdrFcShort( 0x10 ),	/* 16 */
+/* 190 */	0x4,		/* Oi2 Flags:  has return, */
+			0x2,		/* 2 */
+
+	/* Parameter pVal */
+
+/* 192 */	NdrFcShort( 0x2150 ),	/* Flags:  out, base type, simple ref, srv alloc size=8 */
+#ifndef _ALPHA_
+/* 194 */	NdrFcShort( 0x4 ),	/* x86, MIPS, PPC Stack size/offset = 4 */
+#else
+			NdrFcShort( 0x8 ),	/* Alpha Stack size/offset = 8 */
+#endif
+/* 196 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Return value */
+
+/* 198 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+#ifndef _ALPHA_
+/* 200 */	NdrFcShort( 0x8 ),	/* x86, MIPS, PPC Stack size/offset = 8 */
+#else
+			NdrFcShort( 0x10 ),	/* Alpha Stack size/offset = 16 */
+#endif
+/* 202 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
 			0x0

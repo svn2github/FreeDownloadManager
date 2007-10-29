@@ -3,7 +3,7 @@
 */        
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "vmsBtSupport.h"
 #include "mfchelp.h"
 
@@ -298,7 +298,7 @@ vmsBtFile* vmsBtSupport::CreateTorrentFileObject()
 
 bool vmsBtSupport::LoadBtDll(vmsDLL &dll)
 {
-	CString str = ((CDataStretcherApp*)AfxGetApp ())->m_strAppPath;
+	CString str = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
 	if (str [str.GetLength () - 1] != '\\')
 		str += '\\';
 	str += "fdmbtsupp.dll";

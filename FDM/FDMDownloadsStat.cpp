@@ -3,7 +3,7 @@
 */  
 
 #include "stdafx.h"
-#include "Data Stretcher.h"
+#include "FdmApp.h"
 #include "FDMDownloadsStat.h"        
 
 STDMETHODIMP CFDMDownloadsStat::get_DownloadCount(long *pVal)

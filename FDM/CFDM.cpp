@@ -3,8 +3,8 @@
 */  
 
 #include "stdafx.h"
-#include "Data Stretcher.h"
-#include "FDM.h"
+#include "FdmApp.h"
+#include "CFDM.h"
 #include "MainFrm.h"        
 
 STDMETHODIMP CFDM::Shutdown(BOOL bAskUser)

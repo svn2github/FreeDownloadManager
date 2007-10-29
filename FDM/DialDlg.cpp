@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "DialDlg.h"
 #include "fsScheduleMgr.h"
 #include "fsRASMgr.h"

@@ -26,4 +26,4 @@ In order to create installer without the FUM bundle do the following steps:
 
 10. Remove from [Run] and [UninstallRun] all FUM's entries. 
 
-I've got 'fdm-no_fum.iss' when did these steps.
+I've got 'fdm-no_fum.iss' when did these steps (it's outdated now however).

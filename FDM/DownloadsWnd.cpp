@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "DownloadsWnd.h"
 #include "CreateDownloadDlg.h"
 #include "fsDownloadMgr.h"
@@ -1865,6 +1865,8 @@ BOOL CDownloadsWnd::CreateDownloadWithDefSettings(vmsDownloadSmartPtr dld, LPCST
 
 	if (strFolder.GetLength () == 0)
 		strFolder = pGroup->strOutFolder;
+	if (strFolder.Right (1) != '\\' && strFolder.Right (1) != '/')
+		strFolder += '\\';
 
 	SAFE_DELETE (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
 	dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new char [strFolder.GetLength () + 1];
@@ -2154,7 +2156,7 @@ DWORD WINAPI CDownloadsWnd::_threadCheckDldHasOpinions(LPVOID lp)
 	if (dld == NULL)
 		goto _lExit;
 
-	strUrl.Format ("http://www.freedownloadmanager.org/fromfdm/checkurl.php?url=%s",
+	strUrl.Format ("http://fdm.freedownloadmanager.org/fromfdm/checkurl.php?url=%s",
 		vmsMaliciousDownloadChecker::EncodeUrl (dld->pMgr->get_URL ()));
 
 	char szTmpPath [MY_MAX_PATH];

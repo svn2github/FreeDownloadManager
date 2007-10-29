@@ -9,7 +9,6 @@
 #pragma once
 #endif 
 
-#include "vmsBtDownloadManager.h"
 #include "vmsObject.h"
 #include "vmsObjectSmartPtr.h"  
 
@@ -23,6 +22,7 @@ struct vmsSectionInfo
 class vmsDownloadMgrEx : public vmsObject
 {
 public:
+	void Do_OpenFolder();
 	int get_ReservingDiskSpaceProgress();
 	BOOL IsReservingDiskSpace();
 	void GetSplittedSectionsList (std::vector <vmsSectionInfo> &v);
@@ -30,7 +30,6 @@ public:
 	BOOL IsBittorrent();
 	
 	
-	BOOL IsFileNotInitOrIsMultiFile();
 	
 	
 	
@@ -56,7 +55,7 @@ public:
 	void StopSection();
 	void CreateOneMoreSection();
 	int GetDownloadingSectionCount();
-	void GetSectionInfo (int nIndex, vmsSectionInfo *sect);
+	void GetSectionInfo (int nIndex, vmsSectionInfo *sect, BOOL bNoCacheAccounting = FALSE);
 	UINT64 GetSSFileSize();
 	BOOL IsDownloading();
 	UINT64 GetDownloadedBytesCount();
@@ -71,7 +70,7 @@ public:
 	BOOL IsLaunchWhenDone();
 	float GetPercentDone();
 	fsString get_OutputFilePathName();
-	vmsBtDownloadManager* GetBtDownloadMgr();
+	class vmsBtDownloadManager* GetBtDownloadMgr();
 	class fsDownloadMgr* GetDownloadMgr();
 	
 	void Attach (vmsBtDownloadManager* pBtMgr);

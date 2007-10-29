@@ -40,8 +40,14 @@
 #include "config-mac.h"
 #endif
 
-#ifdef AMIGA
+#ifdef __AMIGA__
 #include "amigaos.h"
+#endif
+
+#ifdef TPF
+#include "config-tpf.h" 
+
+#define select(a,b,c,d,e) tpf_select_libcurl(a,b,c,d,e)
 #endif
 
 #endif   
@@ -61,19 +67,17 @@
 #      include <winsock.h>
 #    endif
 #  endif
+#endif  
+
+#undef USE_WINSOCK
+
+#ifdef HAVE_WINSOCK2_H
+#  define USE_WINSOCK 2
+#else
+#  ifdef HAVE_WINSOCK_H
+#    define USE_WINSOCK 1
+#  endif
 #endif 
-
-#ifndef TRUE
-#define TRUE 1
-#endif
-#ifndef FALSE
-#define FALSE 0
-#endif
-
-#if !defined(__cplusplus) && !defined(__BEOS__) && !defined(typedef_bool)
-typedef unsigned char bool;
-#define typedef_bool
-#endif
 
 #ifdef HAVE_LONGLONG
 #define LONG_LONG long long
@@ -122,21 +126,14 @@ typedef unsigned char bool;
   #define sys_nerr EILSEQ  
   #define EINTR    -1      
   #endif
-#endif
+#endif 
 
-#if defined(CURLDEBUG) && defined(HAVE_ASSERT_H)
-#define curlassert(x) assert(x)
-#else
-
-#define curlassert(x)
-#endif
-
-#ifdef MSG_NOSIGNAL
-
-#define SEND_4TH_ARG MSG_NOSIGNAL
-#define HAVE_MSG_NOSIGNAL 1 
-#else
-#define SEND_4TH_ARG 0
+#ifdef __SALFORDC__
+  #pragma suppress 353             
+  #pragma suppress 593             
+  #pragma suppress 61              
+  #pragma suppress 106             
+  #include <clib.h>
 #endif  
 
 #if defined(WIN32) && (SIZEOF_CURL_OFF_T > 4)
@@ -152,17 +149,13 @@ typedef unsigned char bool;
 
 #ifdef WIN32
 
-#if !defined(__GNUC__) || defined(__MINGW32__)
-#define sclose(x) closesocket(x) 
+#if !defined(__CYGWIN__)
+#define sclose(x) closesocket(x)
 
-#define sread(x,y,z) recv(x,y,(int)(z), SEND_4TH_ARG)
-#define swrite(x,y,z) (size_t)send(x,y, (int)(z), SEND_4TH_ARG)
 #undef HAVE_ALARM
 #else
      
 #define sclose(x) close(x)
-#define sread(x,y,z) recv(x,y,z, SEND_4TH_ARG)
-#define swrite(x,y,z) send(x,y,z, SEND_4TH_ARG)
 #define HAVE_ALARM
 #endif 
 
@@ -171,11 +164,9 @@ typedef unsigned char bool;
 
 #else 
 
-#ifdef DJGPP
+#ifdef MSDOS  
 #include <sys/ioctl.h>
 #define sclose(x)         close_s(x)
-#define sread(x,y,z)      read_s(x,y,z)
-#define swrite(x,y,z)     write_s(x,y,z)
 #define select(n,r,w,x,t) select_s(n,r,w,x,t)
 #define ioctl(x,y,z) ioctlsocket(x,y,(char *)(z))
 #define IOCTL_3_ARGS
@@ -188,12 +179,8 @@ typedef unsigned char bool;
 
 #ifdef __BEOS__
 #define sclose(x) closesocket(x)
-#define sread(x,y,z) (ssize_t)recv(x,y,z, SEND_4TH_ARG)
-#define swrite(x,y,z) (ssize_t)send(x,y,z, SEND_4TH_ARG)
 #else 
 #define sclose(x) close(x)
-#define sread(x,y,z) recv(x,y,z, SEND_4TH_ARG)
-#define swrite(x,y,z) send(x,y,z, SEND_4TH_ARG)
 #endif 
 
 #define HAVE_ALARM
@@ -206,12 +193,18 @@ typedef unsigned char bool;
 #define sclose(x) CloseSocket(x)
 #endif
 
+#ifdef __minix
+
+extern char * strtok_r(char *s, const char *delim, char **last);
+extern struct tm * gmtime_r(const time_t * const timep, struct tm *tmp);
+#endif
+
 #define DIR_CHAR      "/"
 #ifndef DOT_CHAR
 #define DOT_CHAR      "."
 #endif
 
-#ifdef DJGPP
+#ifdef MSDOS
 #undef DOT_CHAR
 #define DOT_CHAR      "_"
 #endif
@@ -220,19 +213,7 @@ typedef unsigned char bool;
 int fileno( FILE *stream);
 #endif
 
-#endif  
-
-#ifdef WIN32
-typedef SOCKET curl_socket_t;
-#define CURL_SOCKET_BAD INVALID_SOCKET
-#else
-typedef int curl_socket_t;
-#define CURL_SOCKET_BAD -1
-#endif
-
-#if defined(ENABLE_IPV6) && defined(USE_ARES)
-#error "ares does not yet support IPv6. Disable IPv6 or ares and rebuild"
-#endif
+#endif 
 
 #if defined(WIN32) && !defined(__CYGWIN__) && !defined(USE_ARES) && \
     !defined(__LCC__)  
@@ -260,6 +241,10 @@ typedef int curl_socket_t;
 #endif
 
 #ifdef NETWARE
+#ifndef __NOVELL_LIBC__
+#include <sys/bsdskt.h>
+#include <sys/timeval.h>
+#endif
 #undef HAVE_ALARM
 #endif
 
@@ -279,7 +264,7 @@ typedef int curl_socket_t;
 #define HAVE_INET_NTOA_R_2_ARGS 1
 #endif
 
-#if defined(USE_GNUTLS) || defined(USE_SSLEAY)
+#if defined(USE_GNUTLS) || defined(USE_SSLEAY) || defined(USE_NSS)
 #define USE_SSL    
 #endif
 
@@ -287,12 +272,14 @@ typedef int curl_socket_t;
 #if defined(USE_SSLEAY) || defined(USE_WINDOWS_SSPI)
 #define USE_NTLM
 #endif
-#endif
+#endif 
 
-#ifdef CURLDEBUG
-#define DEBUGF(x) x
-#else
-#define DEBUGF(x)
+#if defined(CURL_WANTS_CA_BUNDLE_ENV) && !defined(CURL_CA_BUNDLE)
+#define CURL_CA_BUNDLE getenv("CURL_CA_BUNDLE")
+#endif  
+
+#ifndef __SETUP_ONCE_H
+#include "setup_once.h"
 #endif
 
 #endif 

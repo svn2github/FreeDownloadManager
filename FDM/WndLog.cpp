@@ -3,7 +3,7 @@
 */      
 
 #include "stdafx.h"
-#include "data stretcher.h"
+#include "FdmApp.h"
 #include "WndLog.h"
 #include "fsEventsMgr.h"
 #include "misc.h"

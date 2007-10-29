@@ -1585,3 +1585,11 @@ Upload
 Downloading update...
 Enable seeding
 Disable seeding by default
+Consider download as malicious if minumum
+% of users marked it as malicious
+OK, Free Download Manager's users did not report about this download that it is malicious.\n\nHowever, this does not guarantee that this download is not malicious and it is recommended to check it using some antivirus program.
+OK, FDM's users did not report that this download is malicious
+drive letter FDM was started from. E.g. "C:". Is useful for portable version.
+You should install Video Conversion plugin in order to use this feature.
+You should install Bittorrent plugin in order to download via Bittorrent protocol.
+Note: these files are Free Download Manager's service files (not the files you download).

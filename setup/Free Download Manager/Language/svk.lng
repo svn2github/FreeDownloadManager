@@ -12,7 +12,7 @@
 ;
 ;
 ;
-; Translator - SlovakSoft; info@slovaksoft.com; http://www.slovaksoft.com; 24 Jun 2007
+; Translator - SlovakSoft; info@slovaksoft.com; http://www.slovaksoft.com; 15 Aug 2007
 ;
 
 ; Your language name. Please keep it in English
@@ -1577,6 +1577,11 @@ Odovzdávanie %s bolo dokonèené.\nAko prepojenie na prevzatie pouite nasledujúcu
 Celková ve¾kos
 Otvori v prehliadaèi
 Na odovzdávanie súborov nemono ïalej pouíva súèasnú verziu programu FDM. Je potrebné aktualizova ho.
-Nie je moné ïalej pouíva súèasnú verziu programu FDM. Je potrebné aktualizova ho. Navštívte stránku freedownloadmanager.org.
+Nie je moné ïalej pouíva súèasnú verziu programu Free Upload Manager. Je potrebné aktualizova ho. Navštívte stránku freedownloadmanager.org.
 Príliš dlhé zadanie.
 Nastavenie integrácie správcu odovzdávania
+Nastavenie integrácie programu Free Upload Manager
+Odovzda
+Preberá sa aktualizácia...
+Povoli seeding
+Predvolene zakáza seeding
