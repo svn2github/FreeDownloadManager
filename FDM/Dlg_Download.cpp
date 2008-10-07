@@ -23,7 +23,6 @@ CDlg_Download::CDlg_Download(CWnd* pParent )
 	//{{AFX_DATA_INIT(CDlg_Download)
 		
 	//}}AFX_DATA_INIT
-	m_iOldProgress = -1;
 }  
 
 void CDlg_Download::DoDataExchange(CDataExchange* pDX)
@@ -51,8 +50,6 @@ void CDlg_Download::Create(vmsDownloadSmartPtr dld)
 {
 	m_dld = dld;
 
-	m_wndProgress.m_dld = dld;
-
 	CWnd wnd;
 	wnd.m_hWnd = NULL;
 	CDialog::Create (IDD_DOWNLOAD, &wnd);
@@ -71,6 +68,7 @@ BOOL CDlg_Download::OnInitDialog()
 	GetDlgItem (IDC__PROGRESS)->GetWindowRect (&rc);
 	ScreenToClient (&rc);
 	m_wndProgress.MoveWindow (&rc);
+	m_wndProgress.m_dld = m_dld;
 
 	LOGFONT lf;
 	GetFont ()->GetLogFont (&lf);
@@ -87,6 +85,8 @@ BOOL CDlg_Download::OnInitDialog()
 	CheckDlgButton (IDC_AUTOLAUNCH, m_dld->pMgr->IsLaunchWhenDone () ? BST_CHECKED : BST_UNCHECKED);
 
 	NeedUpdate ();
+
+	SetTimer (2, 300, NULL);
 	
 	return TRUE;
 }
@@ -113,6 +113,13 @@ void CDlg_Download::ApplyLanguage()
 
 void CDlg_Download::OnTimer(UINT nIDEvent) 
 {
+	if (nIDEvent == 2)
+	{
+		KillTimer (2);
+		m_wndProgress.Invalidate (TRUE);
+		return;		
+	}
+
 	Update ();
 	
 	CDialog::OnTimer(nIDEvent);
@@ -181,10 +188,7 @@ void CDlg_Download::Update()
 		str.Format ("%s - %s", szName, LS (L_DONE));
 	SetWindowText (str);
 
-	if (m_iOldProgress != nProgress)
-		m_wndProgress.Invalidate (FALSE);
-
-	m_iOldProgress = nProgress;
+	m_wndProgress.Invalidate (FALSE);
 }
 
 void CDlg_Download::SetDlgItemText2(UINT nID, LPCSTR pszText)

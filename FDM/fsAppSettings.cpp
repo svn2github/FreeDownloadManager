@@ -18,6 +18,7 @@ static char THIS_FILE[]=__FILE__;
 fsAppSettings::fsAppSettings()
 {
 	m_dwWriteCacheSize = DWORD (-1);
+	m_bPreventStandbyWhileDownloading = BOOL (-1);
 }
 
 fsAppSettings::~fsAppSettings()
@@ -179,15 +180,15 @@ CString fsAppSettings::Agent()
 {
 	CString str = m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("Agent"), "");
 	if (str == "")
-		str = PRG_AGENT_NAME;
+		str = vmsFdmAppMgr::getAppAgentName ();
 	if (str == "FDM 1.x") 
-		str = PRG_AGENT_NAME;
+		str = vmsFdmAppMgr::getAppAgentName ();
 	return str;
 }
 
 void fsAppSettings::Agent(LPCSTR psz)
 {
-	if (lstrcmpi (psz, PRG_AGENT_NAME) == 0)
+	if (lstrcmpi (psz, vmsFdmAppMgr::getAppAgentName ()) == 0)
 		psz = "";
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("Agent"), psz);
 }
@@ -2555,7 +2556,8 @@ void fsAppSettings::Scheduler_LastTask_read(fsSchedule *task)
 
 		case WTS_STARTDOWNLOAD:
 		case WTS_STOPDOWNLOAD:
-			task->wts.pvIDs = NULL;
+			task->wts.dlds.pvIDs = NULL;
+			task->wts.dlds.dwFlags = 0;
 		break;
 
 		case WTS_DIAL:
@@ -2748,7 +2750,7 @@ void fsAppSettings::Bittorrent_UploadConnectionLimit(int mode, int limit)
 
 int fsAppSettings::Bittorrent_ListenPort_From()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "ListenPortFrom", 6881);
+	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "ListenPortFrom", 1500);
 }
 
 void fsAppSettings::Bittorrent_ListenPort_From(int i)
@@ -2758,7 +2760,7 @@ void fsAppSettings::Bittorrent_ListenPort_From(int i)
 
 int fsAppSettings::Bittorrent_ListenPort_To()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "ListenPortTo", 6889);
+	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "ListenPortTo", 1600);
 }
 
 void fsAppSettings::Bittorrent_ListenPort_To(int i)
@@ -3033,4 +3035,101 @@ int fsAppSettings::Community_MalReportsMinPerc()
 void fsAppSettings::Community_MalReportsMinPerc(int i)
 {
 	m_stgs.WriteProfileInt ("Settings\\Community", "MalReportsMinPerc", i);
+}
+
+BOOL fsAppSettings::PreventStandbyWhileDownloading()
+{
+	if (m_bPreventStandbyWhileDownloading == BOOL (-1))
+		m_bPreventStandbyWhileDownloading = m_stgs.GetProfileInt ("Settings", "PreventStandbyWhileDownloading", TRUE);
+	return m_bPreventStandbyWhileDownloading;
+}
+
+void fsAppSettings::PreventStandbyWhileDownloading(BOOL b)
+{
+	m_bPreventStandbyWhileDownloading = b;
+	m_stgs.WriteProfileInt ("Settings", "PreventStandbyWhileDownloading", b);
+}
+
+int fsAppSettings::Bittorrent_MaxHalfConnections(int mode)
+{
+	ASSERT (mode >= 0 && mode <= 2); 
+	CString str; str.Format ("MaxHalfConnections%d", mode);
+	int i = m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", str, 0);
+	if (i <= 0 || i > 200)
+	{
+		if (mode == 2)
+			i = 7;
+		else if (mode == 1)
+			i = 5;
+		else
+			i = 4;
+	}
+	return i;
+}
+
+void fsAppSettings::Bittorrent_MaxHalfConnections(int mode, int max)
+{
+	ASSERT (mode >= 0 && mode <= 2); 
+	CString str; str.Format ("MaxHalfConnections%d", mode);
+	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", str, max);
+}
+
+void fsAppSettings::View_DontShowPauseAlldldsEnabled(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\View"), _T ("DontShowPauseAlldldsEnabled"), b);
+}
+
+BOOL fsAppSettings::View_DontShowPauseAlldldsEnabled()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\View"), _T ("DontShowPauseAlldldsEnabled"), FALSE);
+}
+
+BOOL fsAppSettings::CheckIfDownloadWithSameUrlExists()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\General"), _T ("CheckIfDownloadWithSameUrlExists"), TRUE);
+}
+
+void fsAppSettings::CheckIfDownloadWithSameUrlExists(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\General"), _T ("CheckIfDownloadWithSameUrlExists"), b);	
+}
+
+int fsAppSettings::RecentDownloadsHistorySize()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\General"), _T ("RecentDownloadsHistorySize"), 10);
+}
+
+void fsAppSettings::RecentDownloadsHistorySize(int i)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\General"), _T ("RecentDownloadsHistorySize"), i);
+}
+
+float fsAppSettings::Bittorrent_RequiredRatio()
+{
+	LPBYTE pf;
+	UINT nSize;
+	float f = 0;
+	
+	if (m_stgs.GetProfileBinary (_T ("Settings\\Network\\Bittorrent"), "ReqiuredRatio", &pf, &nSize))
+	{
+		CopyMemory (&f, pf, sizeof (f));
+		delete [] pf;
+	}
+	
+	return f;	
+}
+
+void fsAppSettings::Bittorrent_RequiredRatio(float f)
+{
+	m_stgs.WriteProfileBinary (_T ("Settings\\Network\\Bittorrent"), "ReqiuredRatio", (LPBYTE)&f, sizeof (f));
+}
+
+CString fsAppSettings::Firefox_PortableVersionPath()
+{
+	return m_stgs.GetProfileString ("FirefoxSettings", "PortableVersionPath", "");
+}
+
+void fsAppSettings::Firefox_PortableVersionPath(LPCSTR psz)
+{
+	m_stgs.WriteProfileString ("FirefoxSettings", "PortableVersionPath", psz);
 }

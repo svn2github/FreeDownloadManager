@@ -13,6 +13,8 @@ vmsBtDownloadImpl::vmsBtDownloadImpl(void)
 	m_iDownloadSpeedLimit = -1;
 	m_pTorrent = NULL;
 	m_peerList.m_dld = this;
+	m_cRefs = 0;
+	m_dwDob_status = 0;
 }
 
 vmsBtDownloadImpl::~vmsBtDownloadImpl(void)
@@ -95,9 +97,9 @@ int vmsBtDownloadImpl::get_PiecesProgressMap (bool* pbPieces, int *pnCompletedPi
 	
 
 	if (pnCompletedPieces != NULL)
-		*pnCompletedPieces = m_handle.status ().num_pieces;
+		*pnCompletedPieces = status ().num_pieces;
 
-	const std::vector<bool>* pieces = m_handle.status ().pieces;
+	const std::vector<bool>* pieces = status ().pieces;
 
 	if (pieces && pbPieces)
 	{
@@ -135,15 +137,19 @@ UINT64 vmsBtDownloadImpl::get_TotalDownloadedBytesCount ()
 	if (m_handle.is_valid () == false)
 		return 0;
 	
-	return m_handle.status ().total_done;
-}
+	return status ().total_done;
+}    
 
 UINT vmsBtDownloadImpl::GetDownloadSpeed ()
 {
 	if (m_handle.is_valid () == false)
 		return 0;
+
 	
-	return (UINT)m_handle.status ().download_payload_rate;
+
+	
+
+	return (UINT)status ().download_payload_rate;
 }
 
 UINT vmsBtDownloadImpl::GetUploadSpeed ()
@@ -151,7 +157,7 @@ UINT vmsBtDownloadImpl::GetUploadSpeed ()
 	if (m_handle.is_valid () == false)
 		return 0;
 	
-	return (UINT)m_handle.status ().upload_payload_rate;
+	return (UINT)status ().upload_payload_rate;
 }
 
 void vmsBtDownloadImpl::Pause ()
@@ -193,7 +199,7 @@ int vmsBtDownloadImpl::get_ConnectionCount ()
 	if (m_handle.is_valid () == false)
 		return 0;
 	
-	return m_handle.status ().num_peers;
+	return status ().num_peers;
 }
 
 void vmsBtDownloadImpl::set_ConnectionLimit (int limit)
@@ -210,6 +216,8 @@ BOOL vmsBtDownloadImpl::get_FastResumeData (LPBYTE pbRes, DWORD dwSize, DWORD *p
 		return FALSE;
 
 	
+
+try{
 
 	entry e = m_handle.write_resume_data ();
 
@@ -228,6 +236,8 @@ BOOL vmsBtDownloadImpl::get_FastResumeData (LPBYTE pbRes, DWORD dwSize, DWORD *p
 		*pbRes++ = v [i];
 
 	return TRUE;
+
+}catch (...) {*pdwDataSize = 0; return FALSE;}
 }
 
 void vmsBtDownloadImpl::set_TrackerLogin (LPCSTR pszUser, LPCSTR pszPassword)
@@ -248,7 +258,9 @@ BOOL vmsBtDownloadImpl::MoveToFolder (LPCSTR pszNewFolder)
 	strcpy (sz, pszNewFolder);
 	LPSTR psz = sz;
 	while (*++psz) if (*psz == '\\') *psz = '/';
-	return m_handle.move_storage (sz);
+	m_handle.move_storage (sz);
+
+	return TRUE;
 }
 
 void vmsBtDownloadImpl::check_handle_is_valid ()
@@ -268,10 +280,9 @@ int vmsBtDownloadImpl::get_NextAnnounceInterval ()
 
 bool vmsBtDownloadImpl::is_PieceCompleted (int nIndex)
 {
-	if (m_handle.is_valid () == false)
-		return false;
-	
-	return m_handle.status ().pieces->at (nIndex);
+	if (m_handle.is_valid ())
+		return status ().pieces ? m_status.pieces->at (nIndex) : false;
+	return false;
 }
 
 void vmsBtDownloadImpl::get_CurrentTracker (LPSTR pszRes)
@@ -283,7 +294,7 @@ void vmsBtDownloadImpl::get_CurrentTracker (LPSTR pszRes)
 	
 	torrent_status s = m_handle.status ();
 	LPCSTR pszT = s.current_tracker.c_str ();
-	if (pszT == NULL || *pszT == 0)
+	if ((pszT == NULL || *pszT == 0) && m_handle.get_torrent_info ().trackers ().size ())
 		pszT = m_handle.get_torrent_info ().trackers () [0].url.c_str ();
 	if (pszT)
 		strcpy (pszRes, pszT);
@@ -296,7 +307,7 @@ UINT64 vmsBtDownloadImpl::get_TotalUploadedByteCount ()
 	if (m_handle.is_valid () == false)
 		return 0;
 	
-	return m_handle.status ().total_payload_upload;
+	return status ().total_payload_upload;
 }
 
 void vmsBtDownloadImpl::get_PeersStat (int *pnPeersConnected, int *pnSeedsTotal, int *pnLeechersTotal, int *pnSeedsConnected)
@@ -321,7 +332,7 @@ UINT64 vmsBtDownloadImpl::get_WastedByteCount ()
 	if (m_handle.is_valid () == false)
 		return 0;
 	
-	torrent_status s = m_handle.status ();
+	torrent_status s = status ();
 	return s.total_failed_bytes + s.total_redundant_bytes;
 }
 
@@ -330,7 +341,7 @@ double vmsBtDownloadImpl::get_ShareRating ()
 	if (m_handle.is_valid () == false)
 		return 0;
 	
-	torrent_status s = m_handle.status ();
+	torrent_status s = status ();
 	if (s.total_payload_download == 0)
 		return 0;
 	return (double)s.total_payload_upload / s.total_payload_download;
@@ -365,28 +376,94 @@ void vmsBtDownloadImpl::OnTrackerAlert (LPCSTR pszMsg)
 	if (m_handle.trackers ().size () == 1 && m_pTorrent->m_torrent->trackers ().size () == 1)
 		return;
 
+	std::vector<announce_entry> const& vAllTrackers = m_pTorrent->m_torrent->trackers ();
+
 	std::vector <announce_entry> v = m_handle.trackers ();
+	int nTracker0 = -1, nTracker1 = -1;
+
+	for (size_t i = 0; i < vAllTrackers.size (); i++)
+	{
+		if (strstr (pszMsg, vAllTrackers [i].url.c_str ()) != NULL)
+		{
+			nTracker0 = i;
+			break;
+		}
+	}
 
 	for (size_t i = 0; i < v.size (); i++)
 	{
 		if (strstr (pszMsg, v [i].url.c_str ()) != NULL)
 		{
-			v.erase (v.begin () + i);
-			if (v.size () != 0)
+			nTracker1 = i;
+			break;
+		}
+	}
+
+	if (nTracker1 == -1)
+		return;
+
+	if (m_vTicksTrackersConnected.size () == 0)
+	{
+		
+		for (size_t i = 0; i < vAllTrackers.size (); i++)
+			m_vTicksTrackersConnected.push_back (DWORD (-1));
+	}
+	
+	v.erase (v.begin () + nTracker1);
+
+	const DWORD RECONNECT_MIN_TIME_INTERVAL	= 10*60*1000;
+
+	
+	for (size_t i = 0; i < v.size (); i++)
+	{
+		for (size_t j = 0; j < vAllTrackers.size (); j++)
+		{
+			if (v [i].url == vAllTrackers [j].url)
 			{
-				m_handle.replace_trackers (v);
-				m_handle.force_reannounce ();
-				return;
+				if (m_vTicksTrackersConnected [j] != DWORD (-1) &&
+					(GetTickCount () - m_vTicksTrackersConnected [j] < RECONNECT_MIN_TIME_INTERVAL))
+				{
+					v.erase (v.begin () + i);
+					i--;
+					break;
+				}
 			}
 		}
 	}
 
-	m_handle.replace_trackers (m_pTorrent->m_torrent->trackers ());
+	if (v.size () != 0)
+	{
+		m_vTicksTrackersConnected [nTracker0] = GetTickCount ();
+		m_handle.replace_trackers (v);
+		m_handle.force_reannounce ();
+		return;
+	}
 
-	
+	if (m_handle.trackers ().size () != vAllTrackers.size ())
+		m_handle.replace_trackers (m_pTorrent->m_torrent->trackers ());
 }
 
 int vmsBtDownloadImpl::get_CurrentTaskProgress ()
 {
-	return m_handle.status ().progress * 100;
+	return (int)(m_handle.status ().progress * 100);
+}
+
+void vmsBtDownloadImpl::PrioritizeFiles (int* piPriorities)
+{
+	std::vector <int> v;
+	int n = m_pTorrent->get_FileCount ();
+	for (int i = 0; i < n; i++)
+		v.push_back (*piPriorities++);
+	m_handle.prioritize_files (v);
+}
+
+torrent_status& vmsBtDownloadImpl::status ()
+{
+	if (GetTickCount () - m_dwDob_status)
+	{
+		m_status = m_handle.status ();
+		m_dwDob_status = GetTickCount ();
+	}
+
+	return m_status;
 }

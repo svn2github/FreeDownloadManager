@@ -38,5 +38,7 @@ int Curl_llist_remove_next(struct curl_llist *, struct curl_llist_element *,
                            void *);
 size_t Curl_llist_count(struct curl_llist *);
 void Curl_llist_destroy(struct curl_llist *, void *);
+int Curl_llist_move(struct curl_llist *, struct curl_llist_element *,
+                    struct curl_llist *, struct curl_llist_element *);
 
 #endif

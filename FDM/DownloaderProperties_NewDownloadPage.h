@@ -54,6 +54,7 @@ protected:
 	afx_msg void OnNewgrp1();
 	afx_msg void OnNewgrp2();
 	afx_msg void OnCreategroup2();
+	afx_msg void OnSetgrpsfldr();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

@@ -80,6 +80,7 @@ public:
 	virtual ~fsInternetURLFile();
 
 protected:
+	bool isProxySpecified();
 	fsString m_strRespFromServer;
 	BOOL m_bCatchFromServerResponse;
 	static void _InetFileDialogFunc (fsInetFileDialogDirection enDir, LPCSTR pszMsg, LPVOID lp1, LPVOID lp2);

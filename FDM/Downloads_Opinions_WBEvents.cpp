@@ -92,7 +92,7 @@ void CDownloads_Opinions_WBEvents::OnDocumentComplete(LPDISPATCH pdWB, VARIANT *
 
 	CString strVersion;
 	CMainFrame* pFrm = (CMainFrame*)AfxGetApp ()->m_pMainWnd;
-	strVersion.Format ("%d_%d", PRG_BUILD_NUMBER, pFrm->m_Customizations.get_AffiliateID ());
+	strVersion.Format ("%s_%d", vmsFdmAppMgr::getBuildNumber (), pFrm->m_Customizations.get_AffiliateID ());
 
 	CString strState;
 	if (m_pwndOpinions->m_dld->pMgr->IsDone ())

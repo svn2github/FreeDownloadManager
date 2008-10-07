@@ -50,7 +50,7 @@ BOOL CUEDlg::OnInitDialog()
 	CString str;
 	GetDlgItemText (IDC__MSG7, str);
 	CString str2;
-	str2.Format (str, PRG_BUILD_NUMBER);
+	str2.Format (str, vmsFdmAppMgr::getVersion ()->m_appVersion [2].dwVal);
 	SetDlgItemText (IDC__MSG7, str2);
 	
 	return TRUE;  
@@ -60,12 +60,12 @@ BOOL CUEDlg::OnInitDialog()
 void CUEDlg::OnOK() 
 {
 	CString str;
-	str.Format ("mailto:support@freedownloadmanager.org?subject=Bug%%20in%%20Free%%20Download%%20Manager%%20build%%20%d%%20found!&body=Dear%%20user!%%20Please%%20don't%%20forget%%20to%%20attach%%20the%%20%%22fdm%d.dmp%%22%%20file%%20that%%20is%%20located%%20in%%20temp%%20folder%%20of%%20your%%20computer.%%20And%%20please%%20try%%20to%%20describe%%20in%%20detail%%20the%%20sequence%%20of%%20actions%%20resulting%%20in%%20a%%20bug.%%20Without%%20this%%20information%%20your%%20report%%20may%%20be%%20useless.%%20Thank%%20you.", PRG_BUILD_NUMBER, PRG_BUILD_NUMBER);
+	str.Format ("mailto:support@freedownloadmanager.org?subject=Bug%%20in%%20Free%%20Download%%20Manager%%20build%%20%d%%20found!&body=Dear%%20user!%%20Please%%20don't%%20forget%%20to%%20attach%%20the%%20%%22fdm%d.dmp%%22%%20file%%20that%%20is%%20located%%20in%%20temp%%20folder%%20of%%20your%%20computer.%%20And%%20please%%20try%%20to%%20describe%%20in%%20detail%%20the%%20sequence%%20of%%20actions%%20resulting%%20in%%20a%%20bug.%%20Without%%20this%%20information%%20your%%20report%%20may%%20be%%20useless.%%20Thank%%20you.", vmsFdmAppMgr::getVersion ()->m_appVersion [2].dwVal, vmsFdmAppMgr::getVersion ()->m_appVersion [2].dwVal);
 	ShellExecute (NULL, "open", str, NULL, NULL, SW_SHOWNORMAL);
 
 	char sz [MAX_PATH];
 	GetTempPath (MAX_PATH, sz);
-	str.Format ("/select,\"%sfdm%d.dmp\"", sz, PRG_BUILD_NUMBER);
+	str.Format ("/select,\"%sfdm%d.dmp\"", sz, vmsFdmAppMgr::getVersion ()->m_appVersion [2].dwVal);
 	ShellExecute (m_hWnd, "open", "explorer.exe", str, NULL, SW_SHOW);
 
 	CDialog::OnOK();

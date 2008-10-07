@@ -9,9 +9,16 @@
 #pragma once
 #endif 
 
+#include "vmsBinaryFileVersionInfo.h"
+
 class vmsFdmAppMgr  
 {
 public:
+	static LPCSTR getAppName();
+	static LPCSTR getAppAgentName();
+	static LPCSTR getAppVersionedName();
+	static const vmsBinaryFileVersionInfo* getVersion();
+	static LPCSTR getBuildNumber ();
 	void ShowInstallBtMessage();
 	void ShowInstallMediaFeaturesMessage();
 	BOOL IsMediaFeaturesInstalled();

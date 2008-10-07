@@ -76,4 +76,6 @@ extern BOOL vmsDeleteFileAtWinBoot (LPCSTR pszFile);
 
 extern char vmsGetExeDriveLetter ();
 
+extern void vmsCopyFiles (LPCSTR pszSrcFolder, LPCSTR pszDstFolder, LPCSTR pszFileMask);
+
 #endif

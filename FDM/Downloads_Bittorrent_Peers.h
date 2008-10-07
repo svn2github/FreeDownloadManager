@@ -35,6 +35,14 @@ public:
 protected:
 	bool m_bDldChanged;
 	vmsDownloadSmartPtr m_dld;
+	struct _inc_peer {
+		CString strIp;
+		CString strClient;
+		UINT64 uBytesDownloaded;
+		UINT64 uBytesUploaded;
+		UINT uDownloadSpeed, uUploadSpeed;
+	};
+	std::vector <_inc_peer> m_vPeers;
 	//{{AFX_MSG(CDownloads_Bittorrent_Peers)
 	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 	afx_msg void OnCmdUpdate();

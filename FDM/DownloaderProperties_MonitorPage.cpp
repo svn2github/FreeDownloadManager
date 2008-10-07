@@ -127,7 +127,7 @@ BOOL CDownloaderProperties_MonitorPage::OnApply()
 	}
 	if (bFF && vmsFirefoxMonitoring::IsFlashGotInstalled ())
 	{
-		MessageBox (LS (L_FLASHGOTDETECTED), PRG_NAME, MB_ICONWARNING);
+		MessageBox (LS (L_FLASHGOTDETECTED), vmsFdmAppMgr::getAppName (), MB_ICONWARNING);
 		CheckDlgButton (IDC_FIREFOX, BST_UNCHECKED);
 		bFF = FALSE;
 	}

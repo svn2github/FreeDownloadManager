@@ -10,7 +10,8 @@ CURLcode Curl_nss_connect(struct connectdata *conn, int sockindex);
 CURLcode Curl_nss_connect_nonblocking(struct connectdata *conn,
                                       int sockindex,
                                       bool *done);
-void Curl_nss_close(struct connectdata *conn); 
+
+void Curl_nss_close(struct connectdata *conn, int sockindex); 
 
 int Curl_nss_close_all(struct SessionHandle *data);
 

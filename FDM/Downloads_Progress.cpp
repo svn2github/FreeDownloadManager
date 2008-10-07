@@ -26,6 +26,7 @@ CDownloads_Progress::CDownloads_Progress()
 	m_hthDrawProgress = CreateThread (NULL, 0, _threadDrawProgress, this, 0, &dw);
 
 	m_iLastProgress = -1;
+	m_bRepaintBitmap = false;
 }
 
 CDownloads_Progress::~CDownloads_Progress()
@@ -63,7 +64,6 @@ void CDownloads_Progress::OnPaint()
 {
 	CPaintDC dc(this); 
 
-	m_iLastProgress = -1;
 	SetEvent (m_hevDraw);
 }
 
@@ -72,7 +72,7 @@ void CDownloads_Progress::DrawProgress(CDC *dc, vmsDownloadSmartPtr dld)
 	if (dld == NULL) 
 		return;
 
-	if (IsWindowVisible () == FALSE || (int)dld->pMgr->GetPercentDone () == m_iLastProgress)
+	if (IsWindowVisible () == FALSE)
 		return;
 
 	UINT64 uFileSize = dld->pMgr->GetLDFileSize ();
@@ -84,10 +84,12 @@ void CDownloads_Progress::DrawProgress(CDC *dc, vmsDownloadSmartPtr dld)
 	dcDraw.CreateCompatibleDC (dc);
 	CBitmap *pbmdOld;
 
-	if (m_iLastProgress != -1 || m_bmpProgress.m_hObject == NULL)
+	if (m_iLastProgress != (int)(dld->pMgr->GetPercentDone () * 10) || m_bmpProgress.m_hObject == NULL ||
+			m_bRepaintBitmap)
 	{
 		if (m_bmpProgress.m_hObject)
 			m_bmpProgress.DeleteObject ();
+		m_bRepaintBitmap = false;
 
 		bool bDontUseAlreadyDraw = dld->pMgr->IsBittorrent () != FALSE;
 
@@ -102,13 +104,13 @@ void CDownloads_Progress::DrawProgress(CDC *dc, vmsDownloadSmartPtr dld)
 
 		for (size_t i = 0; i < v.size (); i++)
 			DrawSectionProgress (&dcDraw, &v[i], i, uFileSize, bDontUseAlreadyDraw);
+
+		m_iLastProgress = (int)(dld->pMgr->GetPercentDone () * 10);
 	}
 	else
 	{
 		pbmdOld = dcDraw.SelectObject (&m_bmpProgress);		
 	}
-
-	m_iLastProgress = (int)dld->pMgr->GetPercentDone ();
 
 	dc->BitBlt (0, 0, m_size.cx, m_size.cy, &dcDraw, 0, 0, SRCCOPY);
 
@@ -187,8 +189,7 @@ void CDownloads_Progress::UpdateDownload()
 
 void CDownloads_Progress::set_FullRedraw()
 {
-	m_iLastProgress = -1;
-	m_bmpProgress.DeleteObject ();
+	m_bRepaintBitmap = true;
 }
 
 DWORD WINAPI CDownloads_Progress::_threadDrawProgress(LPVOID lp)

@@ -582,3 +582,23 @@ char vmsGetExeDriveLetter ()
 	return sz [0];
 }
 
+void vmsCopyFiles (LPCSTR pszSrcFolder, LPCSTR pszDstFolder, LPCSTR pszFileMask)
+{
+	CString str = pszSrcFolder;
+	if (str.Right (1) != '\\')
+		str += '\\';
+	str += pszFileMask;
+	
+	CString strDst = pszDstFolder;
+	if (strDst.Right (1) != '\\')
+		strDst += '\\';
+	
+	CFileFind ff;
+	
+	BOOL bResult = ff.FindFile (str);
+	while (bResult)
+	{
+		CopyFile (ff.GetFilePath (), strDst + ff.GetFileName (), FALSE);
+		bResult = ff.FindNextFile ();
+	}
+}

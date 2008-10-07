@@ -103,7 +103,7 @@ BOOL fsDldTasksFilter::IsSatisfies(vmsDownloadSmartPtr dld)
 		SYSTEMTIME st1, st2;
 		FileTimeToSystemTime (&_timeAppHasStarted, &st1);
 		FileTimeToSystemTime (&dld->dateAdded, &st2);
-		b = st1.wDay == st2.wDay;
+		b = (st1.wDay == st2.wDay) && (st1.wMonth == st2.wMonth) && (st1.wYear == st2.wYear);
 	}
 	return b;
 }                

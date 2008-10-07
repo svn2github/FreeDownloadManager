@@ -34,9 +34,21 @@ void vmsDownloadsGroupsMgr::CreateDefaultGroups()
 	grp.CreateInstance ();
 	grp->strName = LS (L_OTHER);
 	if (IS_PORTABLE_MODE)
+	{
 		grp->strOutFolder = "%sdrive%\\Downloads\\";
+	}
 	else
-		grp->strOutFolder = "C:\\Downloads\\";
+	{
+		DWORD dw = GetLogicalDrives ();
+		DWORD dw2 = 1 << 2;
+		for (BYTE i = 0; i < 24 && (dw & dw2) == 0; i++, dw2 <<= 1)
+			;
+		if (i == 26)
+			i = 0;
+		grp->strOutFolder = "A";
+		grp->strOutFolder [0] = (char) ('C' + i);
+		grp->strOutFolder += ":\\Downloads\\";
+	}
 	CString strRoot = grp->strOutFolder;
 	grp->strExts = "";
 	grp->nId = GRP_OTHER_ID;

@@ -12,7 +12,7 @@
 ;
 ;
 ;
-; Translator - SlovakSoft; info@slovaksoft.com; http://www.slovaksoft.com; 15 Aug 2007
+; Translator - SlovakSoft; info@slovaksoft.com; http://www.slovaksoft.com; 30 Oct 2007
 ;
 
 ; Your language name. Please keep it in English
@@ -43,7 +43,7 @@ Panel nástrojov
 Stavovı riadok
 Sprievodca optimalizáciou
 Predvolené monosti preberania
-Všeob. nastavenie
+Všeobecné nastavenie
 Telef. pripojenie
 Po dokonèení zavesi
 Po dokonèení vypnú poèítaè
@@ -125,7 +125,7 @@ Odstráni všetky dokonèené preberania
 Utvori prieèinok skupín
 Vlastnosti skupiny
 Názov skupiny:
-Predvol. prieèinok:
+Predvolenı prieèinok:
 Prípony súborov (oddelené medzerou):
 Predvol. priorita preberania
 Ve¾mi nízka
@@ -351,7 +351,7 @@ Ak u súbor existuje:
 Vyhradi miesto na disku pre preberanı súbor
 Doplnková prípona súboru pre nedokonèené preberanie:
 Internet server
-Nereštartova preberanie, ak nie je serverom podporované pokraèovanie
+Nereštartova, ak nie je pokraèovanie podporované
 Ak bola ve¾kos súboru na serveri zmenená:
 Zastavi pri chybách
 Opıta sa
@@ -407,13 +407,13 @@ Spúšanie
 Naèíta po spustení
 Spusti minimalizované
 Systém
-Minimalizova do systém. lišty
+Minimalizova do oznamovacej oblasti
 Tlaèidlo Zatvori minimalizuje okno
 FDM bude autom. spustenı pri štarte Windows
 FDM bude po štarte minimalizovanı
 Pri kliknutí na tlaèidlo Minimalizova bude FDM minimalizovanı do lišty
 Ak je oznaèené, kliknutie na tlaèidlo Zatvori bude rovnaké ako na tlaèidlo Minimalizova
-Aktualizova
+Aktualizácia
 Adresa aktualiz. servera
 FDM bude autom. kontrolova novú verziu
 Sprievodca optimalizáciou vyuitia siete
@@ -454,7 +454,7 @@ Pri spustení FDM
 Keï je vytáèanie úspešné
 Keï zlyhá vytáèanie
 Keï nie sú aktívne preberania
-Keï je rıchlos menšia alebo rovná %d b/sek. poèas %d
+Keï je rıchlos menšia alebo rovná %d b/s. po dobu %d
 Keï sú všetky preberania v stave chyby
 Nikdy
 Neznáme
@@ -522,8 +522,8 @@ Pri udalosti
 Poèas
 Nízka rıchlos:
 min.
-minúty
-hodiny
+min.
+hod.
 dni
 Keï je rıchlos preberania príliš nízka
 Keï sú všetky preberania v stave chyby
@@ -598,7 +598,7 @@ Ve¾kos "%s" bola na serveri zmenená. Èo urobi?
 Reštartova preberanie od zaèiatku
 Nastavi preberanie na novú ve¾kos súboru. Neodporúèa sa.
 Èakajte prosím
-Aktualizova
+Aktualizácia
 Popis
 Pouitie aktualizácie:
 Kontrola aktualizácie
@@ -720,7 +720,7 @@ Zastavi jednu èas
 ; context: [section x] - Stopped
 Zastavené
 ; tray menu
-Plávaj. okienko
+Plávajúce okienko
 ;
 Nemono nájs prieèinok Opera Plugin. Chcete ho urèi ruène?
 Nemono nájs prieèinok Netscape Plugin. Chcete ho urèi ruène?
@@ -733,7 +733,7 @@ Oznaète toto políèko, ak chcete aby FDM sledoval kliknutia v Netscape
 ; create download dlg
 Zistenie ve¾kosti
 ; request a size of a download
-Poiadavka...
+Poaduje sa...
 Zisti ve¾kos preberania zo servera
 Áno všetkım
 Nie všetkım
@@ -750,13 +750,13 @@ Vytvori hromadné preberanie
 Od:
 Do:
 Krok:
-Byty div. karty:
+Byty zást. znaku:
 Vısledky
 Vzorka:
 Èíslo zaè. èasti
 Èíslo koneè. èasti
 Krokovanie sekvencie. Ak je to napríklad 10, potom sekvencia bude 0, 10, 20, ...
-Poèet bytov div. karty. Ak je to napríklad 1, potom sekvencia bude 1, 2, 3. Ak je to 2, potom sekvencia bude 01, 02, 03.
+Poèet bytov zást. znaku. Ak je to napríklad 1, potom sekvencia bude 1, 2, 3. Ak je to 2, potom sekvencia bude 01, 02, 03.
 Kliknite sem, ak si chcete pozrie generovanú sekvenciu
 Povoli Internet Exploreru prebera, ak je stlaèené tlaèidlo Zruši
 Oznaète, ak chcete aby Internet Explorer prevzal súbor, keï stlaèíte Zruši v dialógu "Vytvori prevzatie"
@@ -906,12 +906,12 @@ Zlyhalo
 Rıchlos mirrorov bola zmeraná.
 ; BEGIN: History page
 História
-Uloi históriu odkazov a prieèinkov
+Uloi históriu prepojení a prieèinkov
 Uloi len históriu prieèinkov
-Uchova záznamov
+Uchova záznamy za
 Maxim. poèet záznamov
 Vyèisti históriu
-FDM uloí históriu vami zadanıch odkazov a prieèinkov
+FDM uloí históriu vami zadanıch prepojení a prieèinkov
 FDM uloí len históriu prieèinkov
 FDM vymae záznamy, ktoré sú v históriu dlhšie ne je urèená doba
 Maxim. poèet záznamov v histórii. Keï poèet záznamov prekroèí túto hodnotu, FDM vymae najstaršie záznamy.
@@ -1070,7 +1070,7 @@ Povoli skinu poui vlastné ikony
 Povoli skinu poui vlastné bitmapy
 ; default skin
 <predvolenı>
-POZNÁMKA: Všetky zmeny sa prejavia a po reštarte programu Free Download Manager.
+POZNÁMKA: všetky zmeny sa prejavia a po reštarte programu Free Download Manager.
 Zobrazi informácie o preberaní poèas priebehu
 Preskoèi súbory s príponou:
 Zoznam prípon súborov, ktoré preskoèi
@@ -1188,11 +1188,11 @@ Ak je oznaèené, FDM vytvorí vdy špeciálne okno s informáciami o preberaní
 Èasové limity na potvrdenie
 Spusti preberanie
 Opıta sa na typ vypnutia
-Èasovı limit potvrdenia príkazu "Nástroje | Zavesi po dokonèení".
-Èasovı limit potvrdenia príkazu "Nástroje | Ukonèi po dokonèení".
-Èasovı limit potvrdenia príkazu "Nástroje | Vypnú poèítaè po dokonèení".
+Èasovı limit potvrdenia príkazu "Nástroje > Zavesi po dokonèení".
+Èasovı limit potvrdenia príkazu "Nástroje > Ukonèi po dokonèení".
+Èasovı limit potvrdenia príkazu "Nástroje > Vypnú poèítaè po dokonèení".
 Èasovı limit potvrdenia na otvorenie prevzatého súboru po dokonèení.
-Ak je oznaèené, FDM sa opıta na typ vypnutia pri príkaze "Nástroje | Vypnú poèítaè po dokonèení".
+Ak je oznaèené, FDM sa opıta na typ vypnutia pri príkaze "Nástroje > Vypnú poèítaè po dokonèení".
 Nepıta sa na potvrdenie
 ; 5 seconds, 10 seconds, ...
 %d s.
@@ -1222,8 +1222,8 @@ Cie¾ovı prieèinok
 Rozbalenie zlyhalo. Formát súboru je neznámy.
 Prenos údajov prevzatıch tento mesiac\n(predchádzajúci mesiac bolo prevzatıch: %s)
 Celková rıchlos preberania
-Zakáza po vykonaní úlohu Nástroje | "po dokonèení"
-Ak je táto monos vybraná, všetky úlohy z Nástroje | "po dokonèení" budú po vykonaní automaticky zakázané. To znamená, e budú spustené iba raz.
+Zakáza po vykonaní úlohu Nástroje > ... po dokonèení
+Ak je táto monos vybraná, všetky úlohy z Nástroje > ... po dokonèení budú po vykonaní automaticky zakázané. To znamená, e budú spustené iba raz.
 ; %s
 ; 1st - name of a file
 ; 2nd, 3rd - file info (size + date).
@@ -1295,7 +1295,7 @@ Upozornenie! Niekto oznámil, e toto prevzatie je škodlivé.
 Zavrie
 Naèíta sa
 Neprebera to
-Zapisova operáciu do vyrovnávacej pamäte pri ukladaní preberanıch údajov na disk
+Zapisova do vyrov. pamäte pri ukladaní údajov na disk
 Ak je povolené, program FDM bude pouíva internı zásobník urèenej ve¾kosti na operácie ukladania preberanıch údajov. Tım zniuje poèet pouití pevného disku. Zvyšuje sa tak rıchlos preberania pri pripojení s vysokou rıchlosou.\nPretoe však preberané údaje nie sú ihneï ukladané na pevnı disk, pri nejakom zlyhaní poèítaèa bude potrebné tieto údaje prevzia znova (pod¾a urèenej ve¾kosti).\nOdporúèa sa pri pripojení s vysokou rıchlosou.
 Nie je moné nainštalova monitorovanie programu SeaMonkey (Mozilla Suite)
 Nie je moné odinštalova monitorovanie programu SeaMonkey (Mozilla Suite)
@@ -1309,13 +1309,13 @@ Vyberte poloky, ktoré sa majú objavi v kontext. ponuke prehliadaèa
 Nie je moné nainštalova monitorovanie programu Firefox
 Presunú súbory do prieèinka
 Rıchlos je príliš nízka. Reštartuje sa èas...
-Reštartova, ak je rıchlos príliš nízka poèas (minúty):
+Reštartova, ak je rıchlos príliš nízka po dobu (min.):
 Reštartova èas, ak sa vırazne zníi rıchlos preberania
 Chcete znova zobrazi okno priebehu preberania?
 Prepáète, táto sluba teraz nie je k dispozícii. Skúste znova neskôr.
 Navrch
 Na spodok
-Umiestni prevzatie navrch zoznamu
+Umiestni navrch zoznamu
 Oznaète túto monos, ak chcete umiestni prevzatie navrch zoznamu.
 Monitorovanie v prehliadaèi Firefox nie je moné povoli, pretoe je nainštalované rozšírenie FlashGot.\nNajprv je potrebné odinštalova FlashGot.
 Povoli
@@ -1330,7 +1330,7 @@ Monitorovanie je teraz povolené len v programe %s.
 Odstráni záznam
 Naozaj odstráni?
 Zápis do prieèinka programu Free Download Manager nie je monı.\nProgram Free Download Manager potrebuje povolenı zápis, aby mohol uklada súbory, inak budú všetky údaje po reštarte programu FDM stratené.
-Toto malé okno umoòuje presúva prepojenia z prehliadaèa do programu Free Download Manager.\nDvojitım kliknutím ¾avım tlaèidlom myši umoòuje aj rıchle zobrazenie alebo skrytie okna programu Free Download Manager.\n\nAk ho chcete skry, kliknite do okienka pravım tlaèidlom myši a zrušte oznaèenie poloky "Plávaj. okienko".
+Toto malé okno umoòuje presúva prepojenia z prehliadaèa do programu Free Download Manager.\nDvojitım kliknutím ¾avım tlaèidlom myši umoòuje aj rıchle zobrazenie alebo skrytie okna programu Free Download Manager.\n\nAk ho chcete skry, kliknite do okienka pravım tlaèidlom myši a zrušte oznaèenie poloky "Plávajúce okienko".
 Plávajúce okienko programu Free Download Manager
 Zakáza všetky oznámenia pri dávkovom preberaní
 Oznaèením tejto monosti zakáete všetky (bublinové aj zvukové) oznámenia pri preberaní vytvorenom príkazom "%s".
@@ -1436,10 +1436,10 @@ Zakáza automatické naèítanie programu Free Download Manager pri spustení systém
 Prepáète, komunitná sluba FDM je práve nedostupná. Skúste znova neskôr.
 Názov súboru nesmie obsahova symboly \ / : * ? " < > |. Zadajte inı názov.
 Názov prieèinka nesmie obsahova symboly : * ? " < > |. Zadajte inı názov.
-Prispôsobi plávaj. okná...
+Prispôsobi plávajúce okná
 Prieh¾adnos
 Údaje
-Uchováva všetky súbory údajov v aktuálnom pouívate¾skom prieèinku
+Uchováva všetky súbory v aktuál. pouív. prieèinku
 Uchováva všetky súbory v tomto prieèinku
 Zmeny sa prejavia po reštarte programu Free Download Manager.
 Zobrazi okno priebehu preberania
@@ -1585,3 +1585,11 @@ Odovzda
 Preberá sa aktualizácia...
 Povoli seeding
 Predvolene zakáza seeding
+Posúdi preberanie ako škodlivé, ak ho aspoò
+% pouívate¾ov takto oznaèí
+V poriadku, pouívatelia programu FDM nehlásili, e je tento preberanı súbor škodlivı.\n\nNezaruèuje to však, e súbor nie je v skutoènosti škodlivı a odporúèa sa skontrolova ho nejakım antivírusovım programom.
+V poriadku, pouívatelia programu FDM nehlásili, e je tento preberanı súbor škodlivı
+Písmeno jednotky, z ktorej sa FDM spúša, napríklad "C:". Vhodné pre prenosnú verziu.
+Túto funkciu mono poui po nainštalovaní zásuvného modulu na konverziu videa.
+Ak chcete prebera cez protokol BiTorrent, je potrebné nainštalova zásuvnı modul BitTorrent.
+Poznámka: ide o servisné súbory programu Free Download Manager (nie preberané súbory).

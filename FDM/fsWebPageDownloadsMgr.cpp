@@ -74,6 +74,8 @@ BOOL fsWebPageDownloadsMgr::Save()
 	if (hFile == INVALID_HANDLE_VALUE)
 		return FALSE;
 
+try{
+
 	int cWPD = m_vWPDs.size ();
 	DWORD dw;
 	fsSpiderFileHdr hdr;
@@ -101,6 +103,8 @@ BOOL fsWebPageDownloadsMgr::Save()
 
 	CloseHandle (hFile);
 	return TRUE;
+
+}catch (...) {CloseHandle (hFile); return FALSE;}
 }
 
 BOOL fsWebPageDownloadsMgr::Load()

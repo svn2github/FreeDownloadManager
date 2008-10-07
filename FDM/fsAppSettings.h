@@ -45,6 +45,20 @@ enum vmsNewGroupSelectWay
 class fsAppSettings  
 {
 public:
+	void Firefox_PortableVersionPath (LPCSTR psz);
+	CString Firefox_PortableVersionPath();
+	void Bittorrent_RequiredRatio (float f);
+	float Bittorrent_RequiredRatio();
+	void RecentDownloadsHistorySize (int i);
+	int RecentDownloadsHistorySize();
+	void CheckIfDownloadWithSameUrlExists (BOOL b);
+	BOOL CheckIfDownloadWithSameUrlExists();
+	BOOL View_DontShowPauseAlldldsEnabled();
+	void View_DontShowPauseAlldldsEnabled (BOOL b);
+	void Bittorrent_MaxHalfConnections (int mode, int max);
+	int Bittorrent_MaxHalfConnections (int nMode);
+	void PreventStandbyWhileDownloading (BOOL b);
+	BOOL PreventStandbyWhileDownloading();
 	void Community_MalReportsMinPerc (int);
 	int Community_MalReportsMinPerc();
 	void View_MoreTabs (BOOL b);
@@ -576,6 +590,7 @@ protected:
 	
 	
 	DWORD m_dwWriteCacheSize;
+	BOOL m_bPreventStandbyWhileDownloading;
 	BOOL LoadStringList(LPCSTR pszSubKey, LPCSTR pszValue, CStringList *v);
 	void SaveStringList(LPCSTR pszSubKey, LPCSTR pszValue, CStringList &v);
 };

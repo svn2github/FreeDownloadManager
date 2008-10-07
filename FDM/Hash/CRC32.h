@@ -1,6 +1,6 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+*/    
 
 #ifndef _CRC32STATIC_H_
 #define _CRC32STATIC_H_

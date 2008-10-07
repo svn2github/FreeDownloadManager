@@ -253,7 +253,7 @@ void fsInternetURLFile::SetupProxyForFile2()
 	LPCSTR psz1, psz2, psz3;
 	m_pSession->get_Proxy (psz1, psz2, psz3);
 
-	if (psz1 == NULL && *psz1 == 0)
+	if (psz1 == NULL || *psz1 == 0)
 		return;
 
 	char szProxy [1000];
@@ -300,6 +300,12 @@ fsFtpTransferType fsInternetURLFile::FtpGetTransferType()
 fsInternetResult fsInternetURLFile::OpenEx(INTERNET_SCHEME scheme, LPCSTR pszHostName, LPCSTR pszUser, LPCSTR pszPassword, INTERNET_PORT port, LPCSTR pszPath, UINT64 uStartPosition, BOOL bSendHTTPBasicAuthImmediately, UINT64 uUploadPartSize, UINT64 uUploadTotalSize)
 {
 	fsInternetResult ir;
+
+	if (scheme == INTERNET_SCHEME_FTP && isProxySpecified ())
+	{
+		m_bUseFile2 = true;
+		goto _lUseFile2;
+	}
 
 	m_bUseFile2 = false;
 	
@@ -362,7 +368,7 @@ fsInternetResult fsInternetURLFile::OpenEx(INTERNET_SCHEME scheme, LPCSTR pszHos
 	
 	ir = m_pFile->OpenEx (pszPath, uStartPosition, uUploadPartSize, uUploadTotalSize);
 	
-	bool bUseFile2 = false;
+	bool bUseFile2; bUseFile2 = false;
 	m_ifile2.Mute (FALSE);
 
 	if (ir == IR_E_WININET_UNSUPP_RESOURCE)
@@ -409,6 +415,7 @@ fsInternetResult fsInternetURLFile::OpenEx(INTERNET_SCHEME scheme, LPCSTR pszHos
 
 	if (bUseFile2)
 	{
+_lUseFile2:
 		CloseHandle ();
 		m_bUseFile2 = true;
 		fsURL url;
@@ -421,6 +428,7 @@ fsInternetResult fsInternetURLFile::OpenEx(INTERNET_SCHEME scheme, LPCSTR pszHos
 		m_ifile2.set_UserAgent (m_pSession->get_UserAgent ());
 		m_ifile2.set_UseHttp11 (m_httpFile.get_UseHttp11 ());
 		m_ifile2.set_Referer (m_httpFile.get_Referer ());
+		m_ifile2.setUseFtpAsciiMode (m_ftpFile.GetTransferType () == FTT_ASCII);
 		if (pszUser && *pszUser)
 			m_ifile2.set_Auth (pszUser, pszPassword);
 
@@ -561,4 +569,36 @@ void fsInternetURLFile::_InetFileDialogFunc(fsInetFileDialogDirection enDir, LPC
 	{
 		pthis->Dialog (enDir, pszMsg);
 	}
+}
+
+bool fsInternetURLFile::isProxySpecified()
+{
+	LPCSTR psz1, psz2, psz3;
+	m_pSession->get_Proxy (psz1, psz2, psz3);
+
+	if (psz1 && lstrcmpi (psz1, "Internet Explorer") == 0)
+	{
+		CRegKey key;
+		if (ERROR_SUCCESS != key.Open (HKEY_CURRENT_USER, 
+				"Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings", KEY_READ))
+			return false;
+		
+		DWORD dw;
+		if (ERROR_SUCCESS != key.QueryValue (dw, "ProxyEnable"))
+			return false;
+		if (dw == FALSE)
+			return false;
+
+		char szProxy [1000] = "";
+		dw = sizeof (szProxy);
+		if (ERROR_SUCCESS != key.QueryValue (szProxy, "ProxyServer", &dw))
+			return false;
+		
+		if (*szProxy == 0)
+			return false;
+
+		return true;
+	}
+
+	return psz1 != NULL && *psz1 != 0;
 }

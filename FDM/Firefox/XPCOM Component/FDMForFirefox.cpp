@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <atlbase.h>
 #include <fsString.h>
+#include <nsmemory.h>
 
 _COM_SMARTPTR_TYPEDEF(IFDMFlashVideoDownloads, __uuidof(IFDMFlashVideoDownloads));  
 
@@ -61,11 +62,13 @@ CFDMForFirefox::~CFDMForFirefox()
 {
   
 	CoUninitialize ();
-}  
+}
+
+#define M(x) MessageBox (0, #x, 0, 0)  
 
 NS_IMETHODIMP CFDMForFirefox::GetLngString(const char *strIDString, PRUnichar **_retval)
 {
-    *_retval = new wchar_t [1000];
+	*_retval = NULL;
 
 	LPCSTR psz = NULL;
 	
@@ -97,12 +100,11 @@ NS_IMETHODIMP CFDMForFirefox::GetLngString(const char *strIDString, PRUnichar **
 			psz = "Download video with Free Download Manager";
 	}
 
-	**_retval = 0;
-
+	USES_CONVERSION;
 	if (psz && *psz)
 	{
-		MultiByteToWideChar (CP_ACP, 0, psz, -1, *_retval, 1000);
-		(*_retval) [lstrlen (psz)] = 0;
+		*_retval = (PRUnichar*) nsMemory::Clone (A2W (psz), 
+			(lstrlen (psz)+1) * sizeof (wchar_t));
 	}
 
 	return NS_OK;
@@ -354,7 +356,7 @@ bool CFDMForFirefox::IsServerToSkip (IFDMUrl *url)
 	wchar_t *wsz;
 	url->GetUrl (&wsz);
 	fsString strDomain = DomainFromUrl (W2A (wsz));
-	delete [] wsz;
+	nsMemory::Free (wsz);
 
 	char szServers [10000] = ""; DWORD dw = sizeof (szServers);
 	m_keyFDMMonitor.QueryValue (szServers, "SkipServers", &dw);
@@ -454,7 +456,7 @@ NS_IMETHODIMP CFDMForFirefox::ProcessVideoDocument(const PRUnichar *wstrDomain, 
 	assert (spFVDownloads != NULL);
 	if (spFVDownloads == NULL)
 		return NS_OK;
-
+		          
 	BSTR bstrDomain = SysAllocString (wstrDomain);
 	BSTR bstrHtml = SysAllocString (wstrHTML);
 

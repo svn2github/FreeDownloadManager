@@ -424,9 +424,10 @@ void CSpiderTasks::OnSpiderSchedule()
 		 if (bCreate)
 		 {
 			pTask->wts.enType = WTS_STARTDOWNLOAD;
-			fsnew1 (pTask->wts.pvIDs, fs::list <UINT>);
+			pTask->wts.dlds.dwFlags = 0;
+			fsnew1 (pTask->wts.dlds.pvIDs, fs::list <UINT>);
 			for (size_t i = 0; i < vDlds.size (); i++)
-				pTask->wts.pvIDs->add (vDlds [i]->nID);
+				pTask->wts.dlds.pvIDs->add (vDlds [i]->nID);
 
 			_pwndScheduler->AddTask (pTask);
 		 }

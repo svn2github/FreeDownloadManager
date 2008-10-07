@@ -72,6 +72,21 @@ struct vmsBtSessionEvent
 	};
 };
 
+enum vmsBtStorageMode
+{
+	
+	
+	
+	BTSM_ALLOCATE	= 0,
+	
+	
+	
+	BTSM_COMPACT	= 1,
+	
+	
+	BTSM_SPARSE		= 2,
+};
+
 typedef void (*fntBtSessionEventsHandler)(class vmsBtSession*, vmsBtSessionEvent*, LPVOID);
 
 class vmsBtSession
@@ -85,7 +100,7 @@ public:
 	
 	virtual USHORT get_ListenPort () = NULL;
 	
-	virtual vmsBtDownload* CreateDownload (vmsBtFile *torrent, LPCSTR pszOutputPath, LPBYTE pbFastResumeData, DWORD dwFRDataSize, BOOL bCompactMode) = NULL;
+	virtual vmsBtDownload* CreateDownload (vmsBtFile *torrent, LPCSTR pszOutputPath, LPBYTE pbFastResumeData, DWORD dwFRDataSize, vmsBtStorageMode enStorageMode) = NULL;
 	
 	virtual void SetDownloadLimit (int limit) = NULL;
 	virtual void SetUploadLimit (int limit) = NULL;
@@ -99,6 +114,7 @@ public:
 	virtual BOOL DHT_getState (LPBYTE pbBuffer, DWORD dwBufferSize, LPDWORD pdwDataSize) = NULL;
 	virtual BOOL DHT_isStarted () = NULL;
 	
+	
 	virtual void set_EventsHandler (fntBtSessionEventsHandler pfn, LPVOID pData) = NULL;
 	virtual void SetProxySettings (LPCSTR pszIp, int nPort, LPCSTR pszUser, LPCSTR pszPwd) = NULL;
 	virtual int get_TotalDownloadConnectionCount () = NULL;
@@ -109,4 +125,5 @@ public:
 	virtual UINT64 get_TotalDownloadedByteCount () = NULL;
 	virtual UINT64 get_TotalUploadedByteCount () = NULL;
 	virtual void SetUserAgent (LPCSTR pszUA) = NULL;
+	virtual void SetMaxHalfOpenConnections (int limit) = NULL;
 };

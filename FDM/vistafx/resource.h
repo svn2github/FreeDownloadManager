@@ -1,8 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+*/    
 
-//{{NO_DEPENDENCIES}//}}          
+//{{NO_DEPENDENCIES}//}//}}          
 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS

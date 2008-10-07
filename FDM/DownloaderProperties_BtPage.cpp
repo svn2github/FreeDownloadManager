@@ -53,6 +53,7 @@ BEGIN_MESSAGE_MAP(CDownloaderProperties_BtPage, CPropertyPage)
 	ON_COMMAND(ID_WHATISTHIS, OnWhatisthis)
 	ON_BN_CLICKED(IDC_ASSOCWITHTORRENT, OnAssocwithtorrent)
 	ON_BN_CLICKED(IDC_DISABLE_SEEDING, OnDisableSeeding)
+	ON_EN_CHANGE(IDC_MAXHALFSVAL, OnChangeMaxhalfsval)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()      
 
@@ -72,7 +73,8 @@ BOOL CDownloaderProperties_BtPage::OnInitDialog()
 	m_wndLimitDim.SetCurSel (0);
 
 	UINT aSpinIds [] = {
-		IDC_UPLLIMITVALSPIN, IDC_PORT_FROM_SPIN, IDC_PORT_TO_SPIN
+		IDC_UPLLIMITVALSPIN, IDC_PORT_FROM_SPIN, IDC_PORT_TO_SPIN,
+		IDC_MAXHALFSSPIN
 	};
 	for (int i = 0; i < sizeof (aSpinIds) / sizeof (UINT); i++)
 	{
@@ -84,7 +86,8 @@ BOOL CDownloaderProperties_BtPage::OnInitDialog()
 	{
 		m_vModes.push_back (
 			_inc_ModeStgs (_App.Bittorrent_UploadTrafficLimit (i), 
-				_App.Bittorrent_UploadConnectionLimit (i)));
+				_App.Bittorrent_UploadConnectionLimit (i),
+				_App.Bittorrent_MaxHalfConnections (i)));
 	}
 	SetDlgItemInt (IDC_UPLLIMITVAL, 1);
 	ModeToDlg ();
@@ -107,6 +110,12 @@ BOOL CDownloaderProperties_BtPage::OnInitDialog()
 	ApplyLanguage ();
 
 	UpdateEnabled ();
+
+	if (vmsBtSupport::getBtDllVersion () < 751)
+	{
+		GetDlgItem (IDC_MAXHALFSVAL)->EnableWindow (FALSE);
+		GetDlgItem (IDC__MAXHALFS)->EnableWindow (FALSE);
+	}
 	
 	return TRUE;  
 	              
@@ -138,6 +147,7 @@ BOOL CDownloaderProperties_BtPage::OnApply()
 	{
 		_App.Bittorrent_UploadTrafficLimit (i, m_vModes [i].iUplTrafLim);
 		_App.Bittorrent_UploadConnectionLimit (i, m_vModes [i].iUplConnLim);
+		_App.Bittorrent_MaxHalfConnections (i, m_vModes [i].iMaxHalfConnections);
 	}
 
 	int portFrom = GetDlgItemInt (IDC_PORT_FROM);
@@ -195,6 +205,8 @@ void CDownloaderProperties_BtPage::ModeToDlg()
 		CheckDlgButton (IDC_LIMITUPLOADS, BST_UNCHECKED);
 	}
 
+	SetDlgItemInt (IDC_MAXHALFSVAL, m_vModes [mode].iMaxHalfConnections);
+
 	UpdateEnabled ();
 
 	m_bDontSetModif = false;
@@ -215,6 +227,8 @@ void CDownloaderProperties_BtPage::DlgToMode(int mode)
 		m_vModes [mode].iUplConnLim = GetDlgItemInt (IDC_UPLLIMITVAL);
 	else
 		m_vModes [mode].iUplConnLim = -1;
+
+	m_vModes [mode].iMaxHalfConnections = GetDlgItemInt (IDC_MAXHALFSVAL, NULL, FALSE);
 }
 
 void CDownloaderProperties_BtPage::UpdateEnabled()
@@ -307,6 +321,7 @@ void CDownloaderProperties_BtPage::ApplyLanguage()
 		fsDlgLngInfo (IDC_USE_DHT, L_ENABLE_DHT),
 		fsDlgLngInfo (IDC_ASSOCWITHTORRENT, L_ASSOCWITHTORRENT),
 		fsDlgLngInfo (IDC_DISABLE_SEEDING, L_DISABLE_SEEDING_BYDEF),
+		fsDlgLngInfo (IDC__MAXHALFS, L_MAXHALFCONNS, TRUE),
 	};
 
 	_LngMgr.ApplyLanguage (	this, lnginfo, sizeof (lnginfo) / sizeof (fsDlgLngInfo), 0);
@@ -368,6 +383,11 @@ void CDownloaderProperties_BtPage::OnAssocwithtorrent()
 }
 
 void CDownloaderProperties_BtPage::OnDisableSeeding() 
+{
+	SetModified ();	
+}
+
+void CDownloaderProperties_BtPage::OnChangeMaxhalfsval() 
 {
 	SetModified ();	
 }

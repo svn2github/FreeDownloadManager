@@ -30,6 +30,8 @@
 #include "MyMessageBox.h"
 #include "vmsVideoSiteHtmlCodeParser.h"
 #include "FlashVideoDownloadsWnd.h"
+#include "TorrentsWnd.h"
+#include <Iphlpapi.h>
 
 #ifndef FDM_DLDR__RAWCODEONLY
 extern CDownloadsWnd* _pwndDownloads;
@@ -71,6 +73,7 @@ fsDownloadsMgr::fsDownloadsMgr()
 
 fsDownloadsMgr::~fsDownloadsMgr()
 {
+	vmsBtDownloadManager::Shutdown ();
 }
 
 UINT fsDownloadsMgr::Add(vmsDownloadSmartPtr dld, BOOL bKeepIDAsIs, bool bPlaceToTop)
@@ -742,13 +745,12 @@ void fsDownloadsMgr::StartGroup(vmsDownloadsGroupSmartPtr pGroup)
 DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 {
 	fsDownloadsMgr *pThis = (fsDownloadsMgr*) lp;
-	fsTicksMgr past, now;	
+	fsTicksMgr now;
 	fsTicksMgr lastSpeedMeasure;	
 
 	pThis->m_bNeedExit = FALSE;
 
 	now.Now ();
-	past.Now ();
 	lastSpeedMeasure.Now ();
 
 	pThis->m_vSummSpeed.clear ();
@@ -781,13 +783,6 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 				pThis->m_vSummSpeed.add (summ);
 		}
 
-		if (now - past > pThis->m_uAutosaveInterval)
-		{
-			
-			AfxGetApp ()->m_pMainWnd->PostMessage (WM_COMMAND, ID_SAVEALL);
-			past.Now ();
-		}
-
 		if (pThis->m_bSkip1Cicle == FALSE)
 		{
 			pThis->ManageTraffic ();
@@ -802,11 +797,6 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 	InterlockedDecrement (&pThis->m_cThreadsRunning);
 
 	return 0;
-}
-
-void fsDownloadsMgr::SetAutosaveInterval(UINT uInterval)
-{
-	m_uAutosaveInterval = uInterval;
 }
 
 fsTrafficUsageMode* fsDownloadsMgr::GetTUMs()
@@ -1032,6 +1022,10 @@ void fsDownloadsMgr::ApplyTrafficLimit()
 {
 	LOG ("fsDsM::ATL: start" << nl);
 
+	
+	ASSERT (m_aTUM [TUM_HEAVY].uTrafficLimit == UINT_MAX);
+	m_aTUM [TUM_HEAVY].uTrafficLimit = UINT_MAX;
+
     try {
 
 	if (m_vDownloads.size () == 0)
@@ -1048,6 +1042,11 @@ void fsDownloadsMgr::ApplyTrafficLimit()
 			_App.Bittorrent_UploadTrafficLimit (m_enTUM));
 		_BT.get_Session ()->SetMaxUploads (
 			_App.Bittorrent_UploadConnectionLimit (m_enTUM));
+		if (vmsBtSupport::getBtDllVersion () >= 751)
+		{
+			_BT.get_Session ()->SetMaxHalfOpenConnections (
+				_App.Bittorrent_MaxHalfConnections (m_enTUM));
+		}
 	}
 
 	if (m_gabInfo.dld == NULL)
@@ -1183,7 +1182,6 @@ void fsDownloadsMgr::SaveSettings()
 	_App.CurrentTUM (m_enUserTUM);
 	_App.DDR (m_enDDR);
 	_App.AutoDelCompleted (m_bAutoDelCompleted);
-	_App.AutosaveInterval (m_uAutosaveInterval);
 	_App.DetLog (m_bDetLog);
 
 	_App.Avir_Perform (m_bVirCheck);
@@ -1310,26 +1308,8 @@ void fsDownloadsMgr::ApplyConnectionType(fsConnectionType enCT)
 			_App.FileWriteCacheSize (0);
 			break;
 
-		case CT_CABLE_DSL_300:
-			m_aTUM [TUM_LIGHT].uMaxConns = 6;
-			m_aTUM [TUM_LIGHT].uMaxConnsPS = 3;
-			m_aTUM [TUM_LIGHT].uTrafficLimit = 8000;
-			m_aTUM [TUM_LIGHT].uMaxDlds = 2;
-
-			m_aTUM [TUM_MEDIUM].uMaxConns = 8;
-			m_aTUM [TUM_MEDIUM].uMaxConnsPS = 3;
-			m_aTUM [TUM_MEDIUM].uTrafficLimit = 25000;
-			m_aTUM [TUM_MEDIUM].uMaxDlds = 3;
-
-			m_aTUM [TUM_HEAVY].uMaxConns = 10;
-			m_aTUM [TUM_HEAVY].uMaxConnsPS = 4;
-			m_aTUM [TUM_HEAVY].uMaxDlds = 4;
-
-			_App.MaxSections (5);
-			_App.FileWriteCacheSize (0);
-			break;
-
 		case CT_CABLE_DSL_512:
+		case CT_CABLE_DSL_768:
 			m_aTUM [TUM_LIGHT].uMaxConns = 6;
 			m_aTUM [TUM_LIGHT].uMaxConnsPS = 3;
 			m_aTUM [TUM_LIGHT].uTrafficLimit = 20000;
@@ -1348,7 +1328,9 @@ void fsDownloadsMgr::ApplyConnectionType(fsConnectionType enCT)
 			_App.FileWriteCacheSize (1024*1024);
 			break;
 
-		case CT_T1:
+		case CT_CABLE_DSL_1M:
+		case CT_CABLE_DSL_1_5M:
+		case CT_CABLE_DSL_2M:
 			m_aTUM [TUM_LIGHT].uMaxConns = 6;
 			m_aTUM [TUM_LIGHT].uMaxConnsPS = 3;
 			m_aTUM [TUM_LIGHT].uTrafficLimit = 50000;
@@ -1394,16 +1376,68 @@ void fsDownloadsMgr::ApplyConnectionType(fsConnectionType enCT)
 
 void fsDownloadsMgr::InitTUM()
 {
-	DWORD dwFlags;
+	PIP_ADAPTER_INFO pAdapterInfo;
+	PIP_ADAPTER_INFO pAdapter = NULL;
+	DWORD dwRetVal = 0;
+	
+	pAdapterInfo = (IP_ADAPTER_INFO *) malloc( sizeof(IP_ADAPTER_INFO) );
+	ULONG ulOutBufLen = sizeof(IP_ADAPTER_INFO);
+	
+	
+	
+	if (GetAdaptersInfo (pAdapterInfo, &ulOutBufLen) == ERROR_BUFFER_OVERFLOW) 
+	{
+		free (pAdapterInfo);
+		pAdapterInfo = (IP_ADAPTER_INFO *) malloc (ulOutBufLen); 
+	}
 
-	InternetGetConnectedState (&dwFlags, 0);
+	std::vector <fsConnectionType> venCT;
+	
+	if ((dwRetVal = GetAdaptersInfo (pAdapterInfo, &ulOutBufLen)) == NO_ERROR) 
+	{
+		pAdapter = pAdapterInfo;
 
-	if ( (dwFlags & INTERNET_CONNECTION_MODEM) || (dwFlags & INTERNET_RAS_INSTALLED) )
-		ApplyConnectionType (CT_MODEM_56_ISDN);
-	else if (dwFlags & INTERNET_CONNECTION_LAN)
-		ApplyConnectionType (CT_LAN_10);
-	else
-		ApplyConnectionType (CT_CABLE_DSL_256);
+		while (pAdapter) 
+		{
+			switch (pAdapter->Type)
+			{
+			case MIB_IF_TYPE_ETHERNET: 
+			case MIB_IF_TYPE_TOKENRING:
+			case MIB_IF_TYPE_FDDI:
+				venCT.push_back (CT_LAN_10);
+				break;
+
+			case MIB_IF_TYPE_LOOPBACK:
+				venCT.push_back (CT_CABLE_DSL_1M);
+				break;
+
+			case MIB_IF_TYPE_PPP:
+				venCT.push_back (CT_CABLE_DSL_1M);
+				break;
+
+			case MIB_IF_TYPE_OTHER:
+				venCT.push_back (CT_CABLE_DSL_1M);
+				break;				
+
+			case MIB_IF_TYPE_SLIP:
+				venCT.push_back (CT_MODEM_56_ISDN);
+				break;
+			}
+			
+			pAdapter = pAdapter->Next;
+		}
+	}
+
+	free (pAdapterInfo);
+
+	fsConnectionType enCT = venCT.size () ? CT_LAN_10 : CT_CABLE_DSL_1M;
+	for (int i = 0; i < (int)venCT.size (); i++)
+	{
+		if (venCT [i] < enCT)
+			enCT = venCT [i];
+	}
+
+	ApplyConnectionType (enCT);
 }
 
 BOOL fsDownloadsMgr::IsServerFilled(LPCSTR pszServer, DWORD dwReqProtocols)
@@ -1438,7 +1472,6 @@ void fsDownloadsMgr::ReadSettings()
 	m_enTUMManage = _App.TUMManage ();
 	m_enDDR = _App.DDR ();
 	m_bAutoDelCompleted = _App.AutoDelCompleted ();
-	m_uAutosaveInterval = _App.AutosaveInterval ();
 	m_bDetLog = _App.DetLog ();
 
 	m_bVirCheck = _App.Avir_Perform ();
@@ -1835,10 +1868,13 @@ BOOL fsDownloadsMgr::PerformVirusCheck(vmsDownloadSmartPtr dld, BOOL bCheckExtRe
 		if (strchr (str, '\\') == NULL && strchr (str, '/') == NULL)
 			str = vmsRegisteredApp::GetFullPath (str);
 
-		if (FALSE == CreateProcess (str, (LPSTR)(LPCSTR)strArgs, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
+		CString strCmdLine; 
+		strCmdLine.Format ("\"%s\" %s", (LPCSTR)str, (LPCSTR)strArgs);
+
+		if (FALSE == CreateProcess (NULL, (LPSTR)(LPCSTR)strCmdLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
 			goto _lErr;
 
-		WaitForSingleObject (pi.hProcess, 30*1000);
+		WaitForSingleObject (pi.hProcess, INFINITE);
 	}
 
 	Event (dld, LS (L_SUCCESS), EDT_RESPONSE_S);
@@ -2344,7 +2380,9 @@ int fsDownloadsMgr::RestoreDownloads2(DLDS_LIST* vDlds, BOOL *pbNeedStop, int *p
 
 		Add (dld, TRUE);
 		if (dld->dwFlags & DLD_FLASH_VIDEO)
-			_pwndFVDownloads->AddDownload (dld);
+			_pwndFVDownloads->AddDownload (dld, FALSE);
+		if (_pwndTorrents && dld->isTorrent ())
+			_pwndTorrents->AddDownload (dld, FALSE);
 
 		Event (dld, DME_DLDRESTORED);
 
@@ -2711,7 +2749,7 @@ UINT fsDownloadsMgr::GetNextDownloadID()
 	return m_nID;
 }
 
-const vmsFileRecentList* fsDownloadsMgr::get_LastFilesDownloaded() const
+vmsFileRecentList* fsDownloadsMgr::get_LastFilesDownloaded()
 {
 	return &m_LastFilesDownloaded;
 }
@@ -2902,7 +2940,12 @@ DWORD WINAPI fsDownloadsMgr::_threadIntegrityCheckAndVirCheckAndLaunch(LPVOID lp
 		_pwndFVDownloads->OnDownloadDone (dld);
 
 	if (bNeedLaunchDld)
-		_DldsMgr.LaunchDownload (dld, dld->pMgr->IsDontConfirmLaunchWhenDone () ? 0 : _App.ConfTimeout_LaunchDld ());
+	{
+		dld->AddRef (); 
+		_pwndDownloads->PostMessage (WM_DLD_LAUNCH, 
+			dld->pMgr->IsDontConfirmLaunchWhenDone () ? 0 : _App.ConfTimeout_LaunchDld (),
+			(LPARAM)(fsDownload*)dld);
+	}
 
 	_DldsMgr.OnDldDoneCheckIfNeedDel (dld);
 
@@ -2979,7 +3022,7 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsMetaLink(vmsDownloadSmartPtr dld)
 
 		if (bRecreated == FALSE)
 		{
-			if (IR_SUCCESS != dld->pMgr->GetDownloadMgr ()->CreateByUrl (url->strUrl))
+			if (IR_SUCCESS != dld->pMgr->GetDownloadMgr ()->CreateByUrl (url->strUrl, TRUE))
 				continue;
 			dld->pMgr->GetDownloadMgr ()->Reset ();
 			bRecreated = TRUE;
@@ -2996,7 +3039,7 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsMetaLink(vmsDownloadSmartPtr dld)
 			return FALSE;
 		
 		
-		if (IR_SUCCESS != dld->pMgr->GetDownloadMgr ()->CreateByUrl (strBtUrl))
+		if (IR_SUCCESS != dld->pMgr->GetDownloadMgr ()->CreateByUrl (strBtUrl, TRUE))
 			return FALSE;
 		dld->pMgr->GetDownloadMgr ()->Reset ();
 		bRecreated = TRUE;
@@ -3188,8 +3231,12 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsBittorrent(vmsDownloadSmartPtr dld
 		return FALSE;
 
 	fsString strFile = dld->pMgr->get_OutputFilePathName ();
-	if (lstrlen (strFile) > 10 && lstrcmpi (strFile + lstrlen (strFile) - 8, ".torrent") != 0)
-		return FALSE; 
+
+	if ((dld->dwFlags & DLD_TORRENT_DOWNLOAD) == 0)
+	{
+		if (lstrlen (strFile) > 10 && lstrcmpi (strFile + lstrlen (strFile) - 8, ".torrent") != 0)
+			return FALSE; 
+	}
 
 	if (_App.Bittorrent_Enable () == FALSE)
 	{
@@ -3267,13 +3314,21 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsBittorrent(vmsDownloadSmartPtr dld
 
 	vmsDownloadMgrEx *pMgr = dld->pMgr;
 	pMgr->AddRef ();
-	pMgr->DeleteFile ();
+	
 
 	dld->pMgr = pNewMgr;
 	dld->pMgr->GetBtDownloadMgr ()->SetEventsHandler (_BtDownloadManagerEventHandler, this);
 
+	Event (dld, DME_DLD_CHANGED_TO_BT_TYPE);
 	Event (dld, LS (L_BITTORRENT_DETECTED), EDT_INQUIRY);
 	Event (dld, DME_BTDLD_STAT_CHANGED);
+
+	if ((dld->dwFlags & DLD_TORRENT_DOWNLOAD) == 0)
+	{
+		dld->dwFlags |= DLD_TORRENT_DOWNLOAD;
+		if (_pwndTorrents)
+			_pwndTorrents->AddDownload (dld, FALSE);
+	}
 
 	dld->pMgr->StartDownloading ();
 
@@ -3312,17 +3367,17 @@ void fsDownloadsMgr::_BtSessionEventsHandler(vmsBtSession *, vmsBtSessionEvent *
 		break;
 
 	case BTSET_TRACKER_ANNOUNCE:
-		if (dld->pMgr->IsRunning () == FALSE)
+		if (dld->pMgr->IsRunning () == FALSE && dld->pMgr->GetBtDownloadMgr ()->isSeeding () == FALSE)
 			return;
 		pthis->Event (dld, LS (L_BT_TRACKER_ANNOUNCE), EDT_INQUIRY);
 		dld->pMgr->GetBtDownloadMgr ()->m_strTrackerStatus = LS (L_CONNECTING);
 		break;
 
 	case BTSET_TRACKER:
-		if (dld->pMgr->IsRunning () == FALSE)
+		if (dld->pMgr->IsRunning () == FALSE && dld->pMgr->GetBtDownloadMgr ()->isSeeding () == FALSE)
 			return;
 		pthis->Event (dld, LS (L_BT_TRACKER_ERROR), EDT_RESPONSE_E);
-		if (pthis->m_bDetLog && ev->pszMsg)
+		if (ev->pszMsg)
 		{
 			LPCSTR pszMsg = strchr (ev->pszMsg, '"');
 			if (pszMsg)
@@ -3346,14 +3401,14 @@ void fsDownloadsMgr::_BtSessionEventsHandler(vmsBtSession *, vmsBtSessionEvent *
 		break;
 
 	case BTSET_TRACKER_REPLY:
-		if (dld->pMgr->IsRunning () == FALSE)
+		if (dld->pMgr->IsRunning () == FALSE && dld->pMgr->GetBtDownloadMgr ()->isSeeding () == FALSE)
 			return;
 		dld->pMgr->GetBtDownloadMgr ()->m_strTrackerStatus = "OK"; 
 		pthis->Event (dld, LS (L_BT_TRACKER_OK_RESPONSE), EDT_RESPONSE_S);
 		break;
 
 	case BTSET_HASH_FAILED:
-		if (dld->pMgr->IsRunning () == FALSE)
+		if (dld->pMgr->IsRunning () == FALSE && dld->pMgr->GetBtDownloadMgr ()->isSeeding () == FALSE)
 			return;
 		pthis->Event (dld, LS (L_BT_HASH_FAILED), EDT_WARNING);
 		break;
@@ -3439,6 +3494,13 @@ DWORD fsDownloadsMgr::_BtDownloadManagerEventHandler(vmsBtDownloadManager *pMgr,
 
 		case BTDME_SEEDING:
 			pthis->ProcessDownloads ();
+			break;
+
+		case BTDME_FATAL_ERROR:
+			dld->bAutoStart = FALSE;
+			break;
+
+		case BTDME_STOP_SEEDING:
 			break;
 		}
 
@@ -3608,7 +3670,9 @@ void fsDownloadsMgr::ApplyTrafficLimit_NoHpDld()
 		return;
 	}
 
-	UINT tlpd = m_aTUM [m_enTUM].uTrafficLimit / vRunningDlds.size ();  
+	
+	UINT tlpd = m_enTUM == TUM_HEAVY ? UINT_MAX : 
+		m_aTUM [m_enTUM].uTrafficLimit / vRunningDlds.size ();
 
 	m_bSkip1Cicle = TRUE;
 
@@ -3871,7 +3935,7 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsHtmlPageWithVideo(vmsDownloadSmart
 	if (b == FALSE)
 		return FALSE;
 
-	if (IR_SUCCESS != dld->pMgr->GetDownloadMgr ()->CreateByUrl (vshcp.get_VideoUrl ()))
+	if (IR_SUCCESS != dld->pMgr->GetDownloadMgr ()->CreateByUrl (vshcp.get_VideoUrl (), TRUE))
 		return FALSE;
 	dld->pMgr->GetDownloadMgr ()->Reset ();
 
@@ -3880,7 +3944,7 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsHtmlPageWithVideo(vmsDownloadSmart
 		if ((dld->dwFlags & DLD_FLASH_VIDEO) == 0)
 		{
 			dld->dwFlags |= DLD_FLASH_VIDEO;
-			_pwndFVDownloads->AddDownload (dld);
+			_pwndFVDownloads->AddDownload (dld, FALSE);
 			Event (dld, LS (L_FVDLD_DETECTED), EDT_INQUIRY);
 		}
 	}

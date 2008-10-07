@@ -10,7 +10,9 @@ int Curl_gtls_cleanup(void);
 CURLcode Curl_gtls_connect(struct connectdata *conn, int sockindex); 
 
 void Curl_gtls_close_all(struct SessionHandle *data);
-void Curl_gtls_close(struct connectdata *conn);  
+
+ 
+void Curl_gtls_close(struct connectdata *conn, int sockindex); 
 
 ssize_t Curl_gtls_send(struct connectdata *conn, int sockindex,
                        void *mem, size_t len);

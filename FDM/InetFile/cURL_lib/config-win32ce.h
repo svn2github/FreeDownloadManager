@@ -3,7 +3,7 @@
 */
 
 #ifndef __LIB_CONFIG_WIN32CE_H
-#define __LIB_CONFIG_WIN32CE_H                        
+#define __LIB_CONFIG_WIN32CE_H                     
 
 #define HAVE_FCNTL_H 1    
 
@@ -116,10 +116,6 @@
 #define ssize_t __int64
 #else
 #define ssize_t int
-#endif 
-
-#ifndef HAVE_WS2TCPIP_H
-#define socklen_t int
 #endif     
 
 #define SIZEOF_LONG_DOUBLE 16    
@@ -130,10 +126,24 @@
 
 #define SIZEOF_CURL_OFF_T 4        
 
-#define HAVE_STRUCT_TIMEVAL 1                      
+#define HAVE_STRUCT_TIMEVAL 1        
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #define _CRT_SECURE_NO_DEPRECATE 1
-#define _CRT_NONSTDC_NO_DEPRECATE 1 
+#define _CRT_NONSTDC_NO_DEPRECATE 1
+#endif  
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+#  ifndef _USE_32BIT_TIME_T
+#    define SIZEOF_TIME_T 8
+#  else
+#    define SIZEOF_TIME_T 4
+#  endif
+#endif    
+
+#define CURL_LDAP_WIN 1
+#undef CURL_LDAP_HYBRID
+#undef HAVE_LDAP_URL_PARSE     
 
 #undef OS
 #define OS "i386-pc-win32ce" 
@@ -143,7 +153,6 @@
 #define CURL_DISABLE_FILE 1
 #define CURL_DISABLE_TELNET 1
 #define CURL_DISABLE_LDAP 1
-#define WITHOUT_MM_LIB 1
 
 #ifdef HAVE_WINDOWS_H
 #  ifndef WIN32_LEAN_AND_MEAN

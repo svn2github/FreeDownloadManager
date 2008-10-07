@@ -1,13 +1,13 @@
-; This is a language file
-; You can translate it into your native language
-; To do this, follow instructions:
-; - PLEASE make sure FDM hasn't already been translated into your language 
-;   You should go to FDM web site (http://freedownloadmanager.org) and 
-;   check the list of available languages
-;   or e-mail to support@freedownloadmanager.org
-; - copy this language file to xxx.lng, where xxx is the reduced name 
-;   of your language. For English it is eng
-; - translate all strings of xxx.lng into your language
+;FDM translation to polish
+;
+;fully compatibile with english language file for FDM 2.5 build 737
+;
+;
+;
+;
+;
+;
+;
 ; - send the translated file to support@freedownloadmanager.org 
 ;
 ;
@@ -299,6 +299,7 @@ Ignoruj wszystkie ograniczenia
 B
 KB
 MB
+; second. e.g. KB/s
 s
 Wpisz wartoœæ wiêksz¹ ni¿ %d
 Prosze wybierz wymiar
@@ -1171,9 +1172,9 @@ Obs³uga wznawiania
 Zamknij to okno, gdy pobieranie jest ukoñczone lub zatrzymane
 Otwórz
 Czy chcesz zobaczyæ to okno ponownie?
-Tak, chcê widzieæ to okno dla ka¿dego pobierania
-Nie, nie pokazuj wiêcej tego okna
-Tak, ale tylko dla tego pobierania
+Tak, ale teraz ukryj okno postêpu dla tego pobierania
+Nie, nie pokazuj okna postêpu dla ¿adnego pobierania
+Tak, ale nie pokazuj okna postêpu dla tego pobierania
 U¿ycie klawisza SHIFT oznacza, ¿e to pobieranie zostanie usuniête z dysku i nie bêdzie mo¿na ju¿ jego wznowiæ.\nJesteœ pewien?
 Wybierz grupê
 Ustaw folder g³ówny grup
@@ -1465,7 +1466,8 @@ Niska
 Normalna
 Przeciêtna
 Wysoka
-Bardzo wysoka;
+Bardzo wysoka
+;
 AVI MPEG-4 (*.avi)
 AVI XVID (*.avi)
 Nie zmieniaj
@@ -1590,3 +1592,9 @@ OK, u¿ytkownicy FDM nie zg³osili tego pobierania jako podejrzanego
 litera napêdu, z jakiej FDM zosa³ uruchomiony. Np. "C:". Przydatne dla wersji przenoœnej.
 W celu u¿ycia tej funkcji nale¿y zainstalowaæ wtyczkê konwersji wideo.
 W celu pobierania przez protokó³ Bittorrent nale¿y zainstalowaæ wtyczkê Bittorrent.
+Uwaga: pliki *.sav to pliki serwisowe FDM (nie s¹ to pobierane pliki).
+Czy skopiowaæ bie¿¹ce pliki ustawieñ do nowego folderu (istniej¹ce pliki zostan¹ nadpisane)?
+Domyœlne foldery pobierania wszystkich grup zostan¹ ustawione na ten folder.\nKontynuowaæ?
+Ustaw domyœlny folder pobierania
+Zapobiegaj przechodzeniu do stanu wstrzymania podczas pobierania
+Maksymalna liczba pó³otwartych po³¹czeñ

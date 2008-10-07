@@ -56,6 +56,7 @@ BEGIN_MESSAGE_MAP(CDownloaderProperties_ListPage, CPropertyPage)
 	ON_BN_CLICKED(IDC_DONTSAVELOGS, OnDontsavelogs)
 	ON_BN_CLICKED(IDC_USEWC, OnUsewc)
 	ON_EN_CHANGE(IDC_WC_SIZE, OnChangeWcSize)
+	ON_BN_CLICKED(IDC_PREVENT_STANDBY, OnPreventStandby)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()      
 
@@ -87,6 +88,8 @@ BOOL CDownloaderProperties_ListPage::OnInitDialog()
 	DWORD dw = _App.FileWriteCacheSize () / 1024 / 1024;
 	CheckDlgButton (IDC_USEWC, dw ? BST_CHECKED : BST_UNCHECKED);
 	SetDlgItemInt (IDC_WC_SIZE, dw ? dw : 1, FALSE);
+
+	CheckDlgButton (IDC_PREVENT_STANDBY, _App.PreventStandbyWhileDownloading () ? BST_CHECKED : BST_UNCHECKED);
 
 	ApplyLanguage ();
 
@@ -136,6 +139,8 @@ BOOL CDownloaderProperties_ListPage::OnApply()
 	if (IsDlgButtonChecked (IDC_USEWC) == BST_CHECKED)
 		dw = GetDlgItemInt (IDC_WC_SIZE, NULL, FALSE) * 1024 * 1024;
 	_App.FileWriteCacheSize (dw);
+
+	_App.PreventStandbyWhileDownloading (IsDlgButtonChecked (IDC_PREVENT_STANDBY) == BST_CHECKED);
 	
 	return CPropertyPage::OnApply();
 }
@@ -166,6 +171,7 @@ void CDownloaderProperties_ListPage::ApplyLanguage()
 		fsDlgLngInfo (IDC_SHOWDLDDLG, L_SHOWDLDDLG),
 		fsDlgLngInfo (IDC_USEWC, L_USEWRITECACHE),
 		fsDlgLngInfo (IDC__WC_MB, L_MB),
+		fsDlgLngInfo (IDC_PREVENT_STANDBY, L_PREVENT_STANDBY_WHILE_DLDING),
 	};
 
 	_LngMgr.ApplyLanguage (this, lnginfo, sizeof (lnginfo) / sizeof (fsDlgLngInfo), 0);
@@ -231,7 +237,7 @@ void CDownloaderProperties_ListPage::OnVircheck()
 	UpdateEnabled ();
 }  
 
-LPCSTR _ppszAvirs [] = {
+LPCSTR _ppszAvirs2 [] = {
 	
 	"avgw.exe",
 	"avscan.exe",
@@ -255,7 +261,7 @@ LPCSTR _ppszAvirs [] = {
 	"stop.exe",
 };  
 
-LPCSTR _ppszAvirArgs [] = {
+LPCSTR _ppszAvirArgs2 [] = {
 	"/SE %file%",
 	"/GUIMODE=1 /PATH=%file%",
 	"%file% /silent /wait /minimize",
@@ -278,7 +284,7 @@ LPCSTR _ppszAvirArgs [] = {
 	"/NOAUTO /UPDATE /QUITAFTERSCAN %file%",
 };  
 
-LPCSTR _ppszAvirNames [] = {
+LPCSTR _ppszAvirNames2 [] = {
 		"AVG Free Antivirus",
 		"Avira",
 		"AVP, Kapersky Antivirus (\"kav.exe\")",
@@ -299,11 +305,11 @@ LPCSTR _ppszAvirNames [] = {
 		"Norton Antivirus (\"n32scanw.exe\")",
 		"Norton Antivirus (\"navwnt.exe\")",
 		"Stop!",
-	};
+};
 
 void CDownloaderProperties_ListPage::OnSelchangeVirname() 
 {
-	SetDlgItemText (IDC_ARGS, _ppszAvirArgs [m_wndVirName.GetCurSel ()]);
+	SetDlgItemText (IDC_ARGS, _ppszAvirArgs2 [m_wndVirName.GetCurSel ()]);
 	SetModified ();	
 }
 
@@ -343,14 +349,14 @@ void CDownloaderProperties_ListPage::AvirToDlg()
 	CString strVirName = _DldsMgr.m_strVirName;
 
 	
-	for (int i = 0; i < sizeof (_ppszAvirNames) / sizeof (LPCSTR); i++)
-		m_wndVirName.AddString (_ppszAvirNames [i]);
+	for (int i = 0; i < sizeof (_ppszAvirNames2) / sizeof (LPCSTR); i++)
+		m_wndVirName.AddString (_ppszAvirNames2 [i]);
 
 	m_wndVirName.SetWindowText (_DldsMgr.m_strVirName);	
 	
-	for (i = 0; i < sizeof (_ppszAvirs) / sizeof (LPCSTR); i++)
+	for (i = 0; i < sizeof (_ppszAvirs2) / sizeof (LPCSTR); i++)
 	{
-		if (strVirName.CompareNoCase (_ppszAvirs [i]) == 0)
+		if (strVirName.CompareNoCase (_ppszAvirs2 [i]) == 0)
 		{
 			m_wndVirName.SetCurSel (i);	
 			break;
@@ -385,11 +391,11 @@ BOOL CDownloaderProperties_ListPage::DlgToVir()
 	BOOL bPredefined = FALSE;
 
 	
-	for (int i = 0; i < sizeof (_ppszAvirNames) / sizeof (LPCSTR); i++)
+	for (int i = 0; i < sizeof (_ppszAvirNames2) / sizeof (LPCSTR); i++)
 	{
-		if (strVir.CompareNoCase (_ppszAvirNames [i]) == 0)
+		if (strVir.CompareNoCase (_ppszAvirNames2 [i]) == 0)
 		{
-			strVir = _ppszAvirs [i];	
+			strVir = _ppszAvirs2 [i];	
 			bPredefined = TRUE;
 			break;
 		}
@@ -455,7 +461,8 @@ void CDownloaderProperties_ListPage::OnChoosevir()
         strFilter.Format ("%s (*.exe, *.com)|*.exe;*.com||", LS (L_APPLICATIONS));
 
 	CFileDialog dlg (TRUE, "exe", NULL, OFN_HIDEREADONLY|OFN_NOCHANGEDIR, strFilter, this);
-	dlg.DoModal ();
+	if (_DlgMgr.DoModal (&dlg) != IDOK)
+		return;
 	m_wndVirName.SetWindowText (dlg.GetPathName ());
 	SetModified ();
 }
@@ -479,4 +486,9 @@ void CDownloaderProperties_ListPage::OnUsewc()
 void CDownloaderProperties_ListPage::OnChangeWcSize() 
 {
 	SetModified ();
+}
+
+void CDownloaderProperties_ListPage::OnPreventStandby() 
+{
+	SetModified ();	
 }

@@ -29,7 +29,7 @@ Coller
 Mode d'utilisation suspendu de la bande passante
 Mode d'utilisation coopératif de la bande passante
 Mode d'utilisation illimité de la bande passante
-Options du téléchargeur
+Options de téléchargement
 Connexion à Internet
 À propos de FDM
 Quitter
@@ -229,7 +229,7 @@ Connexion maintenant
 Ne pas se connecter et fermer cette fenêtre de dialogue
 Pas de connexion trouvée sur cet ordinateur
 La ligne est occupée
-Échec de matériel
+Erreur matérielle
 Aucune tonalité
 Composer
 Tentative
@@ -290,7 +290,7 @@ Réseau
 Erreurs
 Pause entre les tentatives de connexion (en sec) :
 Nombre maximum de tentatives :
-Temps d'arrêt (en secondes) :
+Délai (en secondes) :
 Taille minimum :
 Nombre maximum :
 Restriction de bande passante pour ce téléchargement
@@ -303,9 +303,9 @@ Mo
 s
 Entrez la valeur supérieure à %d
 Veuillez choisir la dimension
-Temps d'attente de reconnexion au serveur en cas d'erreur
+Délai de reconnexion au serveur en cas d'erreur
 Cochez cette case si vous voulez limiter le nombre maximum de tentatives de téléchargement non réussies
-Temps d'attente pour la réponse du serveur
+Délai pour la réponse du serveur
 Taille minimum de la section. Le téléchargement ne sera pas découpé en sections d'une taille inférieure
 Nombre maximum de sections. Le téléchargement ne sera pas découpé en un nombre supérieur de sections
 Spécifie combien de bande passante (maximum) prendra FDM pour le téléchargement
@@ -588,7 +588,7 @@ Reprendre le téléchargement. (Le téléchargement démarrera à la position égale à 
 Arrêter ce téléchargement
 Oui
 Non
-Télécharge
+Le téléchargement
 a été effacé. Effacer le fichier du disque aussi ?
 Veuillez entrer un nom d'utilisateur et un mot de passe
 Ouvre une session sur "%s"
@@ -766,7 +766,7 @@ Créer l'extension si le fichier n'en a pas :
 Cochez cette case pour créer une extension spécifique pour les fichiers qui n'en ont pas. Par exemple, si le fichier s'appelle "fichier" et que vous avez spécifié "txt", le résultat sera "fichier.txt"
 Voir les tailles en octets seulement
 Cochez cette case pour afficher toutes les tailles en octets plutôt qu'en kilo octets ou mégaoctets
-Exécutez un contrôle des virus :
+Exécuter un contrôle des virus :
 Arguments :
 Extensions :
 Cochez cette case pour vérifier automatiquement les fichiers téléchargés avec votre antivirus
@@ -1169,7 +1169,7 @@ Téléchargement supprimé
 Sauvegardé dans
 Taille de fichier
 Supporte la reprise
-Fermé ce dialogue quand le téléchargement est effectué ou arrêté
+Fermer ce dialogue quand le téléchargement est effectué ou arrêté
 Ouvrir
 Voulez-vous revoir cette fenêtre ?
 Oui, je veux voir cette fenêtre pour chaque téléchargement
@@ -1178,20 +1178,20 @@ Oui, mais jamais pour ce téléchargement
 Employer la touche MAJ. signifie que ce téléchargement sera supprimé du disque et que vous ne pourrez pas le restaurer. \nEtes vous sûr ?
 Choisir le groupe
 Définir le dossier racine des groupes
-Choisir le dossier racine des groupes. \ nLes changements seront appliqués aux nouveaux téléchargements seulement.
+Choisissez le dossier racine des groupes. \nLes changements seront appliqués aux nouveaux téléchargements seulement.
 Derniers fichiers téléchargés
 (vide)
 Retenir tous les téléchargements
 Montrer la fenêtre de progression des téléchargements
 Si cette case est cochée, FDM créera une fenêtre spéciale avec des informations sur le téléchargement pour chaque téléchargement en cours
 ; general settings | misc page
-Temps maxi pour les confirmations
+Délai pour les confirmations
 Lancer le téléchargement :
 Demander le type d'arrêt
-Temps maxi de confirmation pour la commande « Outils | Se déconnecter une fois terminé » .
-Temps maxi de confirmation pour la commande « Outils | Quitter une fois terminé » .
-Temps maxi de confirmation pour la commande « Outils | Eteindrer une fois terminé » .
-Temps maxi de confirmation pour lancer le fichier quand le téléchargement est effectué.
+Délai de confirmation pour la commande « Outils | Se déconnecter une fois terminé » .
+Délai de confirmation pour la commande « Outils | Quitter une fois terminé » .
+Délai de confirmation pour la commande « Outils | Eteindrer une fois terminé » .
+Délai de confirmation pour lancer le fichier quand le téléchargement est effectué.
 Si cette case est cochée, FDM vous demandera le type d'arrêt pour la commande « Outils | Eteindrer une fois terminé » .
 Ne pas demander confirmation
 ; 5 seconds, 10 seconds, ...
@@ -1222,7 +1222,7 @@ Dossier de destination
 N'a pas pu extraire. Le format de fichier est inconnu.
 Trafic téléchargé ce mois\n (%s a été téléchargé le mois précédent)
 Vitesse totale de téléchargement
-Désactiver les tâches « Outils | ...une fois terminé » après l'exécution
+Désactiver les tâches « Outils | ...une fois terminé » après exécution
 Une fois activé, toutes les tâches « Outils | ...une fois terminé » seront automatiquement désactivées après exécution. Ainsi elles seront lancées seulement une fois.
 ; %s
 ; 1er - nom d'un fichier
@@ -1264,9 +1264,9 @@ Avis
 ;
 Chers amis !
 Free Download Manager (FDM) est l'une des applications de téléchargement les plus populaires au monde, avec des millions d'utilisateurs actifs ; mais maintenant qu'il est devenu social nous en voulons plus !
-Si vous le trouvez aussi utile et indispensable que nous, nous vous demandons aimablement de nous aider à le diffuser en plaçant un lien vers lui dans votre blog, site Web ou espace personnel, tel que Myspace/MSN.
+Si vous le trouvez aussi utile et indispensable que nous, nous vous demandons aimablement de nous aider à passer le mot en mettant un lien vers lui dans votre blog, site Web ou espace personnel, comme Myspace/MSN.
 ; %s will be replaced with "FDM buzz" 
-Le %s officiel commencera le 16 août 2006. Notre but est de faire de FDM l'utilitaire Internet le plus populaire après FireFox !
+Le %s officiel a commencé le 16 août 2006. Notre but est de faire de FDM l'utilitaire Internet le plus populaire après FireFox !
 FDM buzz
 ; %s sera remplacé avec "blog"
 Vous pouvez suivre les progrès de FDM dans notre %s.
@@ -1284,7 +1284,7 @@ Malveillant ?
 Vérifier si quelqu'un parmi les utilisateurs de Free Download Manager a signalé au sujet de ce téléchargement qu'il contient des virus/adware/spyware/etc.
 OK, personne parmi les utilisateurs de Free Download Manager n'a signalé que ce téléchargement est malveillant. \n\nToutefois, ceci ne garantit pas que ce téléchargement n'est pas malveillant et on recommande de le vérifier en employant un antivirus.
 ; keep all %xxx, \n as is.
-Il y a %d de %d des utilisateurs de Free Download Manager qui a signalé que ce téléchargement est malveillant. \nLa note moyenne pour ce téléchargement est %.*g.\n\nMontrer les avis pour ce téléchargement ?
+Il y a %d de %d des utilisateurs de Free Download Manager qui ont signalé que ce téléchargement est malveillant. \nLa note moyenne pour ce téléchargement est %.*g.\n\nMontrer les avis pour ce téléchargement ?
 Pour chaque nouveau téléchargement, vérifier avant de télécharger s'il est malveillant
 Utiliser cette option pour que FDM vérifie automatiquement, avant de télécharger, si des utilisateurs ont signalé que ce téléchargement était malveillant.
 Montrer les avis en téléchargeant
@@ -1340,7 +1340,7 @@ Ne pas télécharger depuis ces sites (séparés par un espace) :
 Free Download Manager ne surveillera pas les téléchargement depuis les sites spécifiés dans cette liste. Spécifiez ici des noms de domaines (ex. "site.com"). Vous pouvez utiliser le symbole "*"
 Attention !\nUne erreur est survenue en essayant de vérifier les virus.\nVoulez vous exécuter quand même le fichier téléchargé ?
 Intégrité
-Lance une vérification d'intégrité quand un fichier va être téléchargé
+Lance une vérification d'intégrité quand le fichier sera téléchargé
 Avant de lancer une vérification d'intégrité, Free Download Manager doit connaitre la somme de contrôle valide du fichier. Dans la plupart des cas vous devrez la fournir pour chaque téléchargement.
 Si la vérification a échoué
 Somme de contrôle valide de ce fichier
@@ -1436,10 +1436,10 @@ Désactiver le chargement automatique de FDM au démarrage de Windows ?
 Désolé, le service Communauté de FDM est actuellement indisponible. Réessayez plus tard.
 Le nom du fichier ne doit contenir aucun des symboles \ / : * ? " < > |. Entrez un autre nom SVP.
 Le nom du dossier ne doit contenir aucun des symboles \ / : * ? " < > |. Entrez un autre nom SVP.
-Personnaliser la fenêtre flottante...
+Personnaliser les fenêtres flottantes
 Transparence
 Données
-Conserver tous les fichiers de données dans le dossier courant de l'utilisateur
+Conserver les fichiers dans le dossier courant de l'utilisateur
 Conserver les fichiers dans ce dossier
 Les changements seront appliqués après le redémarrage de Free Download Manager.
 Montrer la fenêtre de progression des téléchargements
@@ -1592,3 +1592,9 @@ OK, les utilisateurs de FDM n'ont pas signalé que ce téléchargement est malveill
 lettre du disque depuis lequel FDM a été lancé. Ex. "C:". Utile pour la version portable.
 Vous devriez installer le plugin Video Conversion avant d'utiliser cette fonction.
 Vous devriez installer le plugin Bittorrent avant de télécharger avec le protocole Bittorent.
+Note: ces fichiers (*.sav) sont des fichiers de service de Free Download Manager (pas les fichiers que vous téléchargez).
+Voulez vous copier les fichiers de données courants dans le nouveau dossier (les fichiers existants seront écrasés) ?
+Les dossiers de téléchargement par défaut pour tous les groupes seront définis à ce dossier.\nOK pour continuer ?
+Définir le dossier de téléchargement par défaut
+Empêcher l'ordinateur d'entrer en veille lors du téléchargement
+Nombre maximum de connexions semi-ouvertes

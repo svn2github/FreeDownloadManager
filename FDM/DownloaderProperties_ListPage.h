@@ -61,6 +61,7 @@ protected:
 	afx_msg void OnDontsavelogs();
 	afx_msg void OnUsewc();
 	afx_msg void OnChangeWcSize();
+	afx_msg void OnPreventStandby();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

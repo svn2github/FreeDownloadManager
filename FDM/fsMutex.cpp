@@ -57,7 +57,7 @@ void fsMutex::Lock()
 	
 	if (i == WAIT_TIME/WAIT_INTERVAL)
 	{
-		ASSERT (FALSE);
+		
 		HANDLE h = m_mx;
 		m_mx = CreateMutex (NULL, FALSE, NULL);
 		CloseHandle (h);

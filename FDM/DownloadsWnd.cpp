@@ -28,6 +28,8 @@
 #include "CreateDownloadFromTorrentFileDlg.h"
 #include "FlashVideoDownloadsWnd.h"
 #include "vmsMaliciousDownloadChecker.h"
+#include "TorrentsWnd.h"
+#include "Dlg_CreateNewTorrent.h"
 
 extern CSpiderWnd* _pwndSpider;
 
@@ -125,6 +127,8 @@ BEGIN_MESSAGE_MAP(CDownloadsWnd, CWnd)
 	ON_MESSAGE (WM_DLD_SHOWOPINIONS, OnDldShowOpinions)
 
 	ON_MESSAGE (WM_DLD_CONVERT_MEDIA, OnDldConvertMedia)
+
+	ON_MESSAGE (WM_DLD_LAUNCH, OnWmDldLaunch)
 
 END_MESSAGE_MAP()        
 
@@ -245,12 +249,16 @@ void CDownloadsWnd::OnDownloadCreate()
 
 void CDownloadsWnd::OnTimer(UINT ) 
 {
+	if (m_bExiting)
+		return;
+
 	
 	
 
 	int cDownloads = _DldsMgr.GetCount ();
 	UINT uTotalSpeed = 0;
 	DLDS_LIST v;
+	BOOL bHasRunning = FALSE;
 
 	try {
 	for (int i = 0; i < cDownloads; i++)
@@ -268,18 +276,31 @@ void CDownloadsWnd::OnTimer(UINT )
 				m_wndDownloads.m_info.m_bt.m_files.UpdateProgress ();
 		}
 
+		if (_pwndTorrents && dld == _pwndTorrents->m_wndBtTab.getActiveDownload ())
+		{
+			_pwndTorrents->m_wndBtTab.m_general.UpdateUploadStat ();
+			_pwndTorrents->m_wndBtTab.UpdatePeersStat ();
+			_pwndTorrents->m_wndBtTab.m_general.UpdateWastedStat ();
+			if (dld->pMgr->IsDownloading ())
+				_pwndTorrents->m_wndBtTab.m_files.UpdateProgress ();
+		}
+
 		if (dld->pMgr->IsDownloading ()) 
 		{
 			uTotalSpeed += dld->pMgr->GetSpeed ();
 			m_wndDownloads.m_tasks.UpdateDownload (dld);
 			if (dld->dwFlags & DLD_FLASH_VIDEO)
 				_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
+			if (_pwndTorrents && dld->isTorrent ())
+				_pwndTorrents->m_wndTasks.UpdateDownload (dld);
 		}
 		else if (dld->pMgr->IsReservingDiskSpace ())
 		{
 			m_wndDownloads.m_tasks.UpdateDownload (dld);
 			if (dld->dwFlags & DLD_FLASH_VIDEO)
 				_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
+			if (_pwndTorrents && dld->isTorrent ())
+				_pwndTorrents->m_wndTasks.UpdateDownload (dld);
 		}
 
 		if (dld->pMgr->IsBittorrent () && 
@@ -287,12 +308,24 @@ void CDownloadsWnd::OnTimer(UINT )
 		{
 			v.push_back (dld);
 			if (dld->pMgr->IsDownloading () == FALSE)
+			{
 				m_wndDownloads.m_tasks.UpdateDownload (dld);
+				if (dld->dwFlags & DLD_FLASH_VIDEO)
+					_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
+				if (_pwndTorrents)
+					_pwndTorrents->m_wndTasks.UpdateDownload (dld);
+			}
 		}
+
+		if (dld->pMgr->IsRunning ())
+			bHasRunning = TRUE;
 	}
 	m_uTotalSpeed = uTotalSpeed;
 	}
 	catch (...) {}
+
+	if (bHasRunning && _App.PreventStandbyWhileDownloading ())
+		SetThreadExecutionState (ES_SYSTEM_REQUIRED);
 
 	if (v != m_vUploadDownloads)
 	{
@@ -405,7 +438,10 @@ LRESULT CDownloadsWnd::OnAppExit(WPARAM, LPARAM)
 		while (pMgr->IsRunning ())
 		{
 			while (PeekMessage (&msg, 0, 0, 0, PM_REMOVE))
-				DispatchMessage (&msg);
+			{
+				if (msg.message != WM_TIMER)
+					DispatchMessage (&msg);
+			}
 			
 			Sleep (10);
 		}
@@ -417,7 +453,10 @@ LRESULT CDownloadsWnd::OnAppExit(WPARAM, LPARAM)
 	
 	
 	while (PeekMessage (&msg, 0, 0, 0, PM_REMOVE)) 
-		DispatchMessage (&msg);
+	{
+		if (msg.message != WM_TIMER)
+			DispatchMessage (&msg);
+	}
 
 	LOG ("DLWnd::OnAppExit: saving" << nl);
 
@@ -488,6 +527,8 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDownloadsMgrEvent ev, LPVOID lp)
 				_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
 				_pwndFVDownloads->m_wndPreview.m_vidman.Update ();
 			}
+			if (_pwndTorrents && dld->isTorrent ())
+				_pwndTorrents->m_wndTasks.UpdateDownload (dld);
 			break;
 
 		case DME_EVENTDESCRIPRIONRECEIVED:
@@ -501,6 +542,8 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDownloadsMgrEvent ev, LPVOID lp)
 			pThis->m_wndDownloads.m_tasks.UpdateDownload (dld);
 			if (dld->dwFlags & DLD_FLASH_VIDEO)
 				_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
+			if (_pwndTorrents && dld->isTorrent ())
+				_pwndTorrents->m_wndTasks.UpdateDownload (dld);
 			break;
 
 		case DME_DOWNLOADWILLBEDELETED:
@@ -512,6 +555,8 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDownloadsMgrEvent ev, LPVOID lp)
 				pThis->m_wndDownloads.m_tasks.WillBeDeleted (dld);
 				if (dld->dwFlags & DLD_FLASH_VIDEO)
 					_pwndFVDownloads->m_wndTasks.WillBeDeleted (dld);
+				if (_pwndTorrents && dld->isTorrent ())
+					_pwndTorrents->m_wndTasks.WillBeDeleted (dld);
 			}
 			
 			LOG ("DLDSWND::WillbeDeleted processed" << nl);
@@ -544,6 +589,8 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDownloadsMgrEvent ev, LPVOID lp)
 			pThis->m_wndDownloads.m_tasks.UpdateDownload (dld);
 			if (dld->dwFlags & DLD_FLASH_VIDEO)
 				_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
+			if (_pwndTorrents && dld->isTorrent ())
+				_pwndTorrents->m_wndTasks.UpdateDownload (dld);
 			pThis->m_wndDownloads.m_info.m_video.m_vidman.Update ();
 			((CMainFrame*)AfxGetApp ()->m_pMainWnd)->RebuidDownloadsList ();
 			bUpdateTIPO = FALSE;
@@ -575,6 +622,8 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDownloadsMgrEvent ev, LPVOID lp)
 			pThis->m_wndDownloads.m_tasks.UpdateDownload (dld);
 			if (dld->dwFlags & DLD_FLASH_VIDEO)
 				_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
+			if (_pwndTorrents && dld->isTorrent ())
+				_pwndTorrents->m_wndTasks.UpdateDownload (dld);
 			pThis->m_wndDownloads.m_info.m_video.m_vidman.Update ();
 			((CMainFrame*)AfxGetApp ()->m_pMainWnd)->RebuidDownloadsList ();
 			bUpdateTIPO = FALSE;
@@ -583,6 +632,8 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDownloadsMgrEvent ev, LPVOID lp)
 		case DME_DLDSAUTOSTARTMDFD:
 			pThis->m_wndDownloads.m_tasks.Invalidate (FALSE);
 			_pwndFVDownloads->m_wndTasks.Invalidate (FALSE);
+			if (_pwndTorrents)
+				_pwndTorrents->m_wndTasks.Invalidate (FALSE);
 			break;
 
 		case DME_DOWNLOADSTOPPEDORDONE:
@@ -659,7 +710,7 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDownloadsMgrEvent ev, LPVOID lp)
 			{
 				CString str;
 				str.Format ("%s - %s", szFile, pszMsg);
-				CMainFrame::ShowTimeoutBalloon (str, PRG_NAME);
+				CMainFrame::ShowTimeoutBalloon (str, vmsFdmAppMgr::getAppName ());
 			}
 		}
 		break;
@@ -773,6 +824,14 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDownloadsMgrEvent ev, LPVOID lp)
 			ASSERT (dld != NULL);
 			if (dld == pThis->m_wndDownloads.m_info.Get_ActiveDownload ())
 				pThis->m_wndDownloads.m_info.UpdateBtStat ();
+			if (_pwndTorrents && dld == _pwndTorrents->m_wndBtTab.getActiveDownload ())
+				_pwndTorrents->m_wndBtTab.UpdateStat ();
+			break;
+
+		case DME_DLD_CHANGED_TO_BT_TYPE:
+			ASSERT (dld != NULL);
+			if (_pwndTorrents && dld == _pwndTorrents->m_wndTasks.getActiveDownload  ())
+				_pwndTorrents->SetActiveDownload (dld);
 			break;
 	}
 
@@ -1057,13 +1116,16 @@ BOOL CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 		}
 		else
 		{
-			int ret = CCreateDownloadDlg::_CheckDownloadAlrExists (dld, TRUE, bShowUI);
-			if (ret)
+			if (_App.CheckIfDownloadWithSameUrlExists ())
 			{
-				if (ret == 1)
-					res = ID_DLNOTADDED;
-				else
-					res = IDCANCEL;
+				int ret = CCreateDownloadDlg::_CheckDownloadAlrExists (dld, TRUE, bShowUI);
+				if (ret)
+				{
+					if (ret == 1)
+						res = ID_DLNOTADDED;
+					else
+						res = IDCANCEL;
+				}
 			}
 		}
 	}
@@ -1149,6 +1211,9 @@ BOOL CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 
 			if (pParams->dwFlags & DWDCDAP_F_FLASHVIDEODOWNLOAD)
 				dld->dwFlags |= DLD_FLASH_VIDEO;
+
+			if (pParams->dwFlags & DWDCDAP_F_TORRENTDOWNLOAD)
+				dld->dwFlags |= DLD_TORRENT_DOWNLOAD;
 		}
 
 		if (pParams->dwMask & DWCDAP_COOKIES)
@@ -1177,7 +1242,10 @@ BOOL CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 	CreateDownload (dld, bScheduled ? &task : NULL, FALSE, bPlaceToTop);
 
 	if (dld->dwFlags & DLD_FLASH_VIDEO)
-		_pwndFVDownloads->AddDownload (dld);
+		_pwndFVDownloads->AddDownload (dld, bPlaceToTop);
+
+	if (_pwndTorrents && (dld->dwFlags & DLD_TORRENT_DOWNLOAD))
+		_pwndTorrents->AddDownload (dld, bPlaceToTop);
 
 	return TRUE;
 }
@@ -1289,7 +1357,8 @@ void CDownloadsWnd::CreateDownloads(DLDS_LIST &vDlds, fsSchedule *task, BOOL bDo
 	if (task)
 	{
 		task->wts.enType = WTS_STARTDOWNLOAD;
-		fsnew1 (task->wts.pvIDs, fs::list <UINT>);
+		fsnew1 (task->wts.dlds.pvIDs, fs::list <UINT>);
+		task->wts.dlds.dwFlags = 0;
 	}
 
 	int sz = vDlds.size ();
@@ -1303,7 +1372,7 @@ void CDownloadsWnd::CreateDownloads(DLDS_LIST &vDlds, fsSchedule *task, BOOL bDo
 
 		
 		if (task)
-			task->wts.pvIDs->add (uID);
+			task->wts.dlds.pvIDs->add (uID);
 	}
 
 	if (task)
@@ -1895,6 +1964,11 @@ void CDownloadsWnd::ApplyDWWN(BOOL bRecalcSize)
 		case DWWN_DELETED:
 			m_splitter.SetWnd2 (m_wndDeleted.m_hWnd);
 			break;
+
+		default:
+			m_enDWWN = DWWN_LISTOFDOWNLOADS;
+			ApplyDWWN (bRecalcSize);
+			return;
 	}
 
 	if (bRecalcSize)
@@ -2097,7 +2171,7 @@ LRESULT  CDownloadsWnd::OnDWUpdateDldDialog(WPARAM, LPARAM lp)
 	dld->Release (); 
 	if (dld->pdlg)
 	{
-		if (dld->pdlg->IsDlgButtonChecked (IDC_AUTOCLOSE) == BST_CHECKED)
+		if (dld->pMgr->IsRunning () == FALSE && dld->pdlg->IsDlgButtonChecked (IDC_AUTOCLOSE) == BST_CHECKED)
 		{
 			dld->AddRef (); 
 			return OnDWCloseDldDialog (0, lp);
@@ -2290,10 +2364,19 @@ void CDownloadsWnd::OnBtDownloadProperties(DLDS_LIST &vDlds, CWnd *pwndParent)
     _DlgMgr.OnEndDialog (&sheet);
 }
 
-BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUrl, BOOL bSilent)
+BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUrl, BOOL bSilent, BOOL bSeedOnly, LPCSTR pszOutputOrSrcForSeedFolder)
 {
+	if (bSeedOnly)
+	{
+		ASSERT (bSilent);
+		bSilent = TRUE;
+	}
+
+	ASSERT (pszOutputOrSrcForSeedFolder == NULL || bSilent != FALSE);
+
 	vmsDownloadSmartPtr dld;
 	Download_CreateInstance (dld, true);
+	dld->dwFlags |= DLD_TORRENT_DOWNLOAD;
 
 	if (_App.ReserveDiskSpace ())
 		dld->pMgr->GetBtDownloadMgr ()->enable_Flags (BTDF_RESERVE_DISK_SPACE);
@@ -2301,6 +2384,8 @@ BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUr
 		dld->pMgr->GetBtDownloadMgr ()->enable_Flags (BTDF_GENERATE_DESC_FILE);
 	if (_App.DownloadFlags () & DPF_STARTWHENDONE)
 		dld->pMgr->GetBtDownloadMgr ()->enable_Flags (BTDF_LAUNCH_WHEN_DONE);
+
+	BOOL bPlaceToTop = FALSE;
 
 	if (bSilent == FALSE)
 	{
@@ -2310,6 +2395,7 @@ BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUr
 		if (IDOK != _DlgMgr.DoModal (&dlg))
 			return FALSE;
 
+		bPlaceToTop = dlg.m_bPlaceToTop;
 		CreateDownload (dld, dlg.m_bScheduled ? &dlg.m_task : NULL, FALSE, dlg.m_bPlaceToTop != 0);
 	}
 	else
@@ -2324,7 +2410,8 @@ BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUr
 
 		vmsBtDownloadManager *pMgr = dld->pMgr->GetBtDownloadMgr ();
 
-		if (FALSE == pMgr->CreateByTorrentFile (pszFile, dld->pGroup->strOutFolder, pszTorrentUrl))
+		if (FALSE == pMgr->CreateByTorrentFile (pszFile, pszOutputOrSrcForSeedFolder ?
+				pszOutputOrSrcForSeedFolder : dld->pGroup->strOutFolder, pszTorrentUrl, bSeedOnly))
 			return FALSE;
 
 		fsString strComment = pMgr->get_TorrentComment ();
@@ -2337,6 +2424,9 @@ BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUr
 
 		CreateDownload (dld, NULL, FALSE, false);
 	}
+
+	if (_pwndTorrents)
+		_pwndTorrents->AddDownload (dld, bPlaceToTop);
 	
 	return TRUE;
 }
@@ -2432,4 +2522,39 @@ HMENU CDownloadsWnd::Plugin_GetViewMenu()
 void CDownloadsWnd::OnDldenableseeding() 
 {
 	m_wndDownloads.m_tasks.OnDldenableseeding ();	
+}
+
+BOOL CDownloadsWnd::CreateNewTorrent()
+{
+	if (vmsBtSupport::getBtDllVersion () < 778)
+		return FALSE;
+	CDlg_CreateNewTorrent dlg; 
+	_DlgMgr.DoModal (&dlg);
+	return TRUE;
+}
+
+LRESULT CDownloadsWnd::OnWmDldLaunch(WPARAM wp, LPARAM lp)
+{
+	fsDownload *dld = (fsDownload*)lp;
+	_DldsMgr.LaunchDownload (dld, wp);
+	dld->Release ();
+	return 0;
+}
+
+void CDownloadsWnd::OnBtDownloadDefProperties()
+{
+	CBtDldSheet sheet (LS (L_ADVANCED), this);
+	DLDS_LIST v;
+	vmsDownloadSmartPtr dld;
+	Download_CreateInstance (dld, true);
+	dld->pMgr->GetBtDownloadMgr ()->setRequiredRatio (_App.Bittorrent_RequiredRatio ());
+
+	v.push_back (dld);
+	sheet.Init (&v, BTDS_SEEDING_PAGE);
+	if (IDCANCEL == _DlgMgr.DoModal (&sheet))
+		return;
+
+	_App.Bittorrent_RequiredRatio (dld->pMgr->GetBtDownloadMgr ()->getRequiredRatio ());
+	_App.Bittorrent_DisableSeedingByDef (
+		dld->pMgr->GetBtDownloadMgr ()->get_Flags () & BTDF_DISABLE_SEEDING);
 }

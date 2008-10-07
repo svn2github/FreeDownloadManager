@@ -44,9 +44,10 @@
 #define ID_DLLIST_6                     50105
 #define ID_DLLIST_7                     50106
 #define ID_DLLIST_8						50107
-#define ID_DLOG_1                       50108
-#define ID_DLOG_2                       50109
-#define ID_DLOG_3                       50110    
+#define ID_DLLIST_9						50108
+#define ID_DLOG_1                       50109
+#define ID_DLOG_2                       50110
+#define ID_DLOG_3                       50111    
 
 #define ID_FVDLD_CREATE					50001
 #define ID_FVDLD_START                  50002
@@ -57,7 +58,19 @@
 #define ID_FVDLD_DELETE                 50007
 #define ID_FVDLD_OPENFOLDER             50008
 #define ID_FVDLD_PROPERTIES             50009
-#define ID_FVDLD_CONVERT                50010      
+#define ID_FVDLD_CONVERT                50010    
+
+#define ID_BTDLD_ADDFROMURL             50001
+#define ID_BTDLD_ADDFROMFILE            50002
+#define ID_BTDLD_CREATENEWTORRENT       50003
+#define ID_BTDLD_START                  50004
+#define ID_BTDLD_STOP                   50005
+#define ID_BTDLD_AUTOSTART              50006
+#define ID_BTDLD_DELETE                 50007
+#define ID_BTDLD_LAUNCH                 50008
+#define ID_BTDLD_OPENFOLDER             50009
+#define ID_BTDLD_PASSTODLDS             50010
+#define ID_BTDLD_PROPERTIES             50011      
 
 #define ID_ULLIST_1                     50100
 #define ID_ULLIST_2                     50101

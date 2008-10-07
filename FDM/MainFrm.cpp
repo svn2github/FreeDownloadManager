@@ -32,6 +32,7 @@
 #include "Dlg_MakePortableVer.h"
 #include "FlashVideoDownloadsWnd.h"
 #include "UploadsWnd.h"
+#include "TorrentsWnd.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -75,7 +76,6 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	ON_COMMAND(ID_NEED_EXIT, OnNeedExit)
 	ON_WM_SIZE()
 	ON_WM_INITMENUPOPUP()
-	ON_COMMAND(ID_SAVEALL, OnSaveall)
 	ON_COMMAND(ID_APP_EXIT, OnAppExit)
 	ON_WM_MEASUREITEM()
 	ON_WM_DRAWITEM()
@@ -199,11 +199,20 @@ CMainFrame::CMainFrame()
 	m_nShutdownMsg = RegisterWindowMessage ("FDM - shutdown");
 
 	m_nUploadsMsg1 = RegisterWindowMessage (vmsUploadsDll::MSG_NAME_1);
+
+	m_bShuttingDown = false;
+	m_cThreadsRunning = 0;
+
+	InitializeCriticalSection (&m_csShutdown);
 }
 
 CMainFrame::~CMainFrame()
 {
+	m_bShuttingDown = true;
+	while (m_cThreadsRunning)
+		Sleep (10);
 	SAFE_DELETE (m_pUpdateDlg);
+	DeleteCriticalSection (&m_csShutdown);
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
@@ -382,7 +391,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	UINT pnIcons [] = {IDI_TRAY_NORMAL, IDI_TRAY_DOWNLOADING, IDI_TRAY_ERRORS, IDI_TRAY_UNKNOWN};
 	_TrayMgr.Create (m_hWnd, pnIcons, sizeof (pnIcons) / sizeof (UINT), 
-		GetShell32Version () >= 5 ? "" : PRG_NAME, WM_TRAYMSG);
+		GetShell32Version () >= 5 ? "" : vmsFdmAppMgr::getAppName (), WM_TRAYMSG);
 
 	m_pFloatWndsThread = (CFloatingWndsThread*) AfxBeginThread (RUNTIME_CLASS (CFloatingWndsThread));
 
@@ -510,6 +519,10 @@ void CMainFrame::OnClose()
 	
 	if (m_bQueryForExit == FALSE || _PluginMgr.QueryExit ())
 	{
+		m_bShuttingDown = true;
+
+		EnterCriticalSection (&m_csShutdown);
+
 		
 		_UpdateMgr.SetEventsFunc (NULL, 0);
 		_UpdateMgr.SetDescEventsFunc (NULL, 0);
@@ -523,6 +536,8 @@ void CMainFrame::OnClose()
 		ShowWindow (SW_HIDE);
 		
 		_PluginMgr.OnAppExit (FALSE);
+
+		LeaveCriticalSection (&m_csShutdown);
 
 		CFdmApp::ScheduleExitProcess (30);
 
@@ -538,9 +553,12 @@ void CMainFrame::OnDlddefoptions()
 	_pwndDownloads->OnDownloadDefProperties ();
 }
 
+#include "DlgProgramOptions.h"
 void CMainFrame::OnDldroptions() 
 {
-	_pwndDownloads->OnDownloaderProperties ();	
+	CDlgProgramOptions dlg;
+	dlg.DoModal ();
+	
 }
 
 void CMainFrame::OnTumHeavy() 
@@ -822,22 +840,6 @@ void CMainFrame::OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu)
 	}
 }
 
-void CMainFrame::OnSaveall() 
-{
-	_pwndDownloads->SaveAll ();
-	_pwndFVDownloads->SaveAll ();
-	if (_pwndUploads)
-		_pwndUploads->SaveAll ();
-	_pwndScheduler->SaveAll ();
-	_pwndHFE->SaveAll ();
-	_pwndSites->SaveAll ();
-	_pwndSpider->SaveAll (TRUE);
-        ((CFdmApp*)AfxGetApp ())->SaveSettings ();
-	((CFdmApp*) AfxGetApp ())->SaveHistory ();
-
-	SaveState ();
-}
-
 void CMainFrame::OnAppExit() 
 {
 	
@@ -865,22 +867,26 @@ void CMainFrame::LoadMenuImages()
 
 	UINT aImgs [] = {
 		IDB_TOOL0_16, IDB_TOOL_DLD_16, IDB_TOOL_DLD_16,
-		IDB_TOOL_DLD_16, 
+		IDB_TOOL_BT_16, IDB_TOOL_DLD_16, 
 		IDB_TOOL_SCH_16,
 		IDB_TOOL_HFE_16, IDB_TOOL_SITES_16, IDB_TOOL_SPIDER_16,
 	};
 
 	UINT adImgs [] = {
 		IDB_TOOL0_16_D, IDB_TOOL_DLD_16_D, IDB_TOOL_DLD_16_D,
-		IDB_TOOL_DLD_16_D, 
+		IDB_TOOL_BT_16_D, IDB_TOOL_DLD_16_D, 
 		IDB_TOOL_SCH_16_D,
 		IDB_TOOL_HFE_16_D, IDB_TOOL_SITES_16_D, IDB_TOOL_SPIDER_16_D,
 	};
 
-	const int _uplIndex = 3;
+	const int _torrentsIndex = 3, _uplIndex = 4;
+	ASSERT (sizeof (aImgs) == sizeof (adImgs));
+	ASSERT (aImgs [_torrentsIndex] == IDB_TOOL_BT_16);
 
 	for (int i = 0; i < sizeof (aImgs) / sizeof (UINT); i++)
 	{
+		if (i == _torrentsIndex && FALSE == _AppMgr.IsBtInstalled ())
+			continue;
 		if (i == _uplIndex && FALSE == CUploadsWnd::LoadFumCoreDll ())
 			continue;
 
@@ -1109,7 +1115,7 @@ void CMainFrame::OnEnterkey()
 
 void CMainFrame::UpdateTitle()
 {
-	CString strCaption = PRG_NAME;
+	CString strCaption = vmsFdmAppMgr::getAppName ();
 
 	LPCSTR pszCustomizer = m_Customizations.get_Customizer ();
 	if (pszCustomizer != NULL && lstrlen (pszCustomizer) != 0)
@@ -1376,6 +1382,7 @@ void CMainFrame::OnViewStatusbar()
 
 void CMainFrame::SaveState()
 {
+	SaveSettings ();
 	m_wndView.m_wndClient.SaveState ();
 	_App.View_SaveWndPlacement (this, "MainFrm");
 	if (m_pFloatWndsThread)
@@ -1450,7 +1457,7 @@ void CMainFrame::ApplyLanguage()
 	LPCSTR ppszToolTips [] = {
 		"", LS (L_LIGHT), LS (L_MEDIUM), 
 		LS (L_HEAVY), "", LS (L_STARTALLDLDS), LS (L_STOPALLDLDS), 
-		LS (L_PAUSEALLDOWNLOADS), "", LS (L_DLDR_OPTIONS), LS (L_DIALUP), 
+		LS (L_PAUSEALLDOWNLOADS), "", LS (L_SETTINGS), LS (L_DIALUP), 
 		LS (L_HELP), LS (L_ABOUT), "", "Make a donation",
 		LS (L_SAVEALL), "", LS (L_CUT), LS (L_COPY), LS (L_PASTE), "", 
 	};
@@ -1472,9 +1479,6 @@ void CMainFrame::ApplyLanguageToMenu()
 
 	SetMenu (CMenu::FromHandle (LoadMenu (AfxGetInstanceHandle (), MAKEINTRESOURCE (IDR_MAINFRAME))));
 
-	if (_pwndUploads == NULL || _pwndUploads->m_pwndUploads == NULL || IS_PORTABLE_MODE)
-		GetMenu ()->GetSubMenu (2)->RemoveMenu (ID_UPLDROPTIONS, MF_BYCOMMAND);
-
 	m_odmenu.Attach (GetMenu (), TRUE);
 
 	
@@ -1495,7 +1499,7 @@ void CMainFrame::ApplyLanguageToMenu()
 	m_odmenu.SetMenuItemsText (GetMenu (), aMenuBarTexts, sizeof (aMenuBarTexts) / sizeof (fsSetText), TRUE);
 
 	CString strCut = LS (L_CUT), strCopy = LS (L_COPY), strPaste = LS (L_PASTE), 
-		strDldOpt = LS (L_DLDR_OPTIONS), strDldDef = LS (L_DLDDEFOPT),
+		strDldOpt = LS (L_SETTINGS), strDldDef = LS (L_DLDDEFOPT),
 		strPrgGen = LS (L_PRGGENSET), strLight = LS (L_LIGHT), strMedium = LS (L_MEDIUM),
 		strHeavy = LS (L_HEAVY), strDial = LS (L_DIAL), strDoc = LS (L_DOCUMENTATION),
 		strSpiderDefs = LS (L_SPIDERDEFSETTINGS), strExit = LS (L_EXIT),
@@ -1532,7 +1536,6 @@ void CMainFrame::ApplyLanguageToMenu()
 		fsSetText (ID_DROPBOX, LS (L_DROPBOX)),
 		fsSetText (ID_SKIN_0, LS (L_NEWSTYLE)),
 		fsSetText (ID_DLDROPTIONS, strDldOpt),
-		fsSetText (ID_UPLDROPTIONS, LS (L_UPLMGRINTEGRSTGS)),
 		fsSetText (ID_OPTIONS_SM, LS (L_OPTIONS_SM)),
 		fsSetText (ID_OPTMASTER, LS (L_OPTMASTER)),
 		fsSetText (ID_DLDDEFOPTIONS, strDldDef),
@@ -2065,7 +2068,7 @@ void CMainFrame::Balloon_ShowDLInfo(BOOL bCheckSettings)
 		ShowBalloon (str, s, FALSE);
 	}
 	else
-		ShowBalloon (LS (L_THEREARENOACTDLDS), PRG_NAME, FALSE);
+		ShowBalloon (LS (L_THEREARENOACTDLDS), vmsFdmAppMgr::getAppName (), FALSE);
 }
 
 void CMainFrame::ShowTimeoutBalloon(LPCSTR pszInfo, LPCSTR pszTitle, DWORD dwIcon, BOOL bClear)
@@ -2212,6 +2215,11 @@ void CMainFrame::OnProceedFurherInitialization()
 	}
 
 	ShowSpreadHelpDialogIfRequired ();
+
+	InterlockedIncrement (&m_cThreadsRunning);
+	DWORD dw;
+	CloseHandle (
+		CreateThread (NULL, 0, _threadAutosave, this, 0, &dw));
 }
 
 void CMainFrame::OnAppAbout() 
@@ -2483,6 +2491,13 @@ void CMainFrame::OnFileImportImportlistofdownloadsfromclipboard()
 				continue;
 
 			dld->pGroup = pGrp;
+			if (dld->pMgr->GetDownloadMgr ())
+			{
+				fsDownload_Properties *dp = dld->pMgr->GetDownloadMgr ()->GetDP ();
+				SAFE_DELETE_ARRAY (dp->pszFileName);
+				dp->pszFileName = new char [pGrp->strOutFolder.Length () + 1];
+				lstrcpy (dp->pszFileName, pGrp->strOutFolder);
+			}
 
 			v.push_back (dld);
 		}
@@ -2840,6 +2855,14 @@ void CMainFrame::OnPausealldlds()
 {
 	fsInternetDownloader::set_PauseMode (!fsInternetDownloader::is_PauseMode ());
 	_BT.ApplyRestrainAllDownloadsMode ();
+
+	if (fsInternetDownloader::is_PauseMode () && _App.View_DontShowPauseAlldldsEnabled () == FALSE)
+	{
+		UINT nRet = MyMessageBox (this, LS (L_PAUSEALLDLDSMODE_ON_MSG), _AppMgr.getAppName (),
+			LS (L_DONTSHOWTHISWINDOWAGAIN), IDI_INFORMATION); 
+		if (nRet & 0x00010000)
+			_App.View_DontShowPauseAlldldsEnabled (TRUE);
+	}
 }
 
 void CMainFrame::OnUpdatePausealldlds(CCmdUI* pCmdUI)
@@ -2963,5 +2986,48 @@ void CMainFrame::OnUpdateLoadatstartup(CCmdUI* pCmdUI)
 
 int CMainFrame::GetTumMenuPosition()
 {
-	return _pwndUploads && _pwndUploads->m_pwndUploads && (IS_PORTABLE_MODE == FALSE) ? 10 : 9;
+	return 4;
+}
+
+DWORD WINAPI CMainFrame::_threadAutosave(LPVOID lp)
+{
+	CMainFrame *pthis = (CMainFrame*)lp;
+
+	SetThreadPriority (GetCurrentThread (), THREAD_PRIORITY_LOWEST);
+
+	for (;;)
+	{
+		int n = _App.AutosaveInterval ();
+		const int nStep = 100;
+		for (int i = 0; i < n && pthis->m_bShuttingDown == false; i += nStep)
+			Sleep (nStep);
+		if (pthis->m_bShuttingDown)
+			break;
+
+		EnterCriticalSection (&pthis->m_csShutdown);
+
+		try{
+
+		_pwndDownloads->SaveAll ();
+		_pwndFVDownloads->SaveAll ();
+		if (_pwndTorrents)
+			_pwndTorrents->SaveAll ();
+		if (_pwndUploads)
+			_pwndUploads->SaveAll ();
+		_pwndScheduler->SaveAll ();
+		_pwndHFE->SaveAll ();
+		_pwndSites->SaveAll ();
+		_pwndSpider->SaveAll (TRUE);
+		((CFdmApp*)AfxGetApp ())->SaveSettings ();
+		((CFdmApp*) AfxGetApp ())->SaveHistory ();
+		pthis->SaveState ();
+
+		}catch (...) {}
+
+		LeaveCriticalSection (&pthis->m_csShutdown);
+	}
+
+	InterlockedDecrement (&pthis->m_cThreadsRunning);
+
+	return 0;
 }

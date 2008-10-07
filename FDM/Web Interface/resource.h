@@ -1,8 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+*/    
 
-//{{NO_DEPENDENCIES}//}}    
+//{{NO_DEPENDENCIES}//}//}}    
 
 #define IDD_WEBINTERFACE_DIALOG         102
 #define IDR_MAINFRAME                   128

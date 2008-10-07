@@ -46,9 +46,11 @@ BOOL CNOWDlg::OnInitDialog()
 	m_wndCT.AddString ("56K Modem/ISDN");
 	m_wndCT.AddString ("112K Dual ISDN");
 	m_wndCT.AddString ("256K DSL/Cable");
-	m_wndCT.AddString ("300K DSL/Cable");
 	m_wndCT.AddString ("512K DSL/Cable");
-	m_wndCT.AddString ("1.5M T1");
+	m_wndCT.AddString ("768K DSL/Cable");
+	m_wndCT.AddString ("1M DSL/Cable");
+	m_wndCT.AddString ("1.5M DSL/Cable");
+	m_wndCT.AddString ("2M DSL/Cable");
 	m_wndCT.AddString ("10/100M LAN");
 
 	m_wndCT.SetCurSel (_App.NOW ());

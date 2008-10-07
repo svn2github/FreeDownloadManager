@@ -77,6 +77,9 @@ BOOL fsTrayIconMgr::ShowIcon(int iIndex)
 
 BOOL fsTrayIconMgr::InitializeTrayIcon()
 {
+	if (m_pIcons == NULL)
+		return FALSE;
+
 	NOTIFYICONDATA data;
 
 	data.cbSize = m_cbNIDSize;

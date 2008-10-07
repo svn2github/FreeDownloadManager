@@ -42,3 +42,8 @@ UINT64 vmsBtDownloadPeerInfoImpl::get_BytesUploaded ()
 {
 	return m_peer.total_upload;
 }
+
+UINT vmsBtDownloadPeerInfoImpl::get_Flags ()
+{
+	return m_peer.flags;
+}

@@ -13,6 +13,7 @@
 #include "SpiderWnd.h"
 #include "mfchelp.h"
 #include "FlashVideoDownloadsWnd.h"
+#include "TorrentsWnd.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -70,6 +71,7 @@ BOOL fsPluginMgr::LoadBuiltIn()
 	fntGetMainMenu afnGMM [] = {
 		CDownloadsWnd::Plugin_GetMainMenu,
 		CFlashVideoDownloadsWnd::Plugin_GetMainMenu,
+		CTorrentsWnd::Plugin_GetMainMenu,
 		CUploadsWnd::Plugin_GetMainMenu,
 		CShedulerWnd::Plugin_GetMainMenu,
 		CHFEWnd::Plugin_GetMainMenu,
@@ -79,6 +81,7 @@ BOOL fsPluginMgr::LoadBuiltIn()
 	fntGetViewMenu afnGVM [] = {
 		CDownloadsWnd::Plugin_GetViewMenu,
 		CFlashVideoDownloadsWnd::Plugin_GetViewMenu,
+		CTorrentsWnd::Plugin_GetViewMenu,
 		CUploadsWnd::Plugin_GetViewMenu,
 		CShedulerWnd::Plugin_GetViewMenu,
 		CHFEWnd::Plugin_GetViewMenu,
@@ -91,14 +94,18 @@ BOOL fsPluginMgr::LoadBuiltIn()
 	fntCreateMainWindow afnCMW [] = {
 		CDownloadsWnd::Plugin_CreateMainWindow,
 		CFlashVideoDownloadsWnd::Plugin_CreateMainWindow,
+		CTorrentsWnd::Plugin_CreateMainWindow,
 		CUploadsWnd::Plugin_CreateMainWindow,
-		CShedulerWnd::Plugin_CreateMainWindow, CHFEWnd::Plugin_CreateMainWindow,
-		CSitesWnd::Plugin_CreateMainWindow, CSpiderWnd::Plugin_CreateMainWindow
+		CShedulerWnd::Plugin_CreateMainWindow, 
+		CHFEWnd::Plugin_CreateMainWindow,
+		CSitesWnd::Plugin_CreateMainWindow, 
+		CSpiderWnd::Plugin_CreateMainWindow
 	};
 
 	fntGetPluginNames afnGPN [] = {
 		CDownloadsWnd::Plugin_GetPluginNames, 
 		CFlashVideoDownloadsWnd::Plugin_GetPluginNames, 
+		CTorrentsWnd::Plugin_GetPluginNames,
 		CUploadsWnd::Plugin_GetPluginNames, 
 		CShedulerWnd::Plugin_GetPluginNames,
 		CHFEWnd::Plugin_GetPluginNames, 
@@ -109,19 +116,21 @@ BOOL fsPluginMgr::LoadBuiltIn()
 	fntSetLanguage afnSL [] = {
 		CDownloadsWnd::Plugin_SetLanguage, 
 		CFlashVideoDownloadsWnd::Plugin_SetLanguage,
+		CTorrentsWnd::Plugin_SetLanguage,
 		CUploadsWnd::Plugin_SetLanguage,
 		CShedulerWnd::Plugin_SetLanguage,
-		CHFEWnd::Plugin_SetLanguage, CSitesWnd::Plugin_SetLanguage, 
+		CHFEWnd::Plugin_SetLanguage, 
+		CSitesWnd::Plugin_SetLanguage, 
 		CSpiderWnd::Plugin_SetLanguage
 	};
 
 	UINT aIDBmps [] = {
-		IDB_TOOL_DLDS, IDB_TOOL_DLDS, IDB_TOOL_DLDS, 
+		IDB_TOOL_DLDS, IDB_TOOL_DLDS, IDB_TOOL_BT, IDB_TOOL_DLDS, 
 		IDB_TOOL_SCHEDULE, IDB_TOOL_HFE, 
 		IDB_TOOL_SITES, IDB_TOOL_SPIDER
 	};
 	UINT aIDBmpsD [] = {
-		IDB_TOOL_DLDS_D, IDB_TOOL_DLDS_D, IDB_TOOL_DLDS_D, 
+		IDB_TOOL_DLDS_D, IDB_TOOL_DLDS_D, IDB_TOOL_BT_D, IDB_TOOL_DLDS_D,
 		IDB_TOOL_SCHEDULE_D, IDB_TOOL_HFE_D, 
 		IDB_TOOL_SITES_D, IDB_TOOL_SPIDER_D
 	};
@@ -129,25 +138,34 @@ BOOL fsPluginMgr::LoadBuiltIn()
 	fntGetMenuImages afnGMI [] = {
 		CDownloadsWnd::Plugin_GetMenuImages, 
 		CFlashVideoDownloadsWnd::Plugin_GetMenuImages,
+		CTorrentsWnd::Plugin_GetMenuImages,
 		CUploadsWnd::Plugin_GetMenuImages,
-		CShedulerWnd::Plugin_GetMenuImages, CHFEWnd::Plugin_GetMenuImages, 
-		CSitesWnd::Plugin_GetMenuImages, CSpiderWnd::Plugin_GetMenuImages
+		CShedulerWnd::Plugin_GetMenuImages, 
+		CHFEWnd::Plugin_GetMenuImages, 
+		CSitesWnd::Plugin_GetMenuImages, 
+		CSpiderWnd::Plugin_GetMenuImages
 	};
 
 	fntGetTBInfo afnGTBI [] = {
 		CDownloadsWnd::Plugin_GetToolBarInfo, 
 		CFlashVideoDownloadsWnd::Plugin_GetToolBarInfo, 
+		CTorrentsWnd::Plugin_GetToolBarInfo,
 		CUploadsWnd::Plugin_GetToolBarInfo, 
-		CShedulerWnd::Plugin_GetToolBarInfo, CHFEWnd::Plugin_GetToolBarInfo, 
-		CSitesWnd::Plugin_GetToolBarInfo, CSpiderWnd::Plugin_GetToolBarInfo
+		CShedulerWnd::Plugin_GetToolBarInfo, 
+		CHFEWnd::Plugin_GetToolBarInfo, 
+		CSitesWnd::Plugin_GetToolBarInfo, 
+		CSpiderWnd::Plugin_GetToolBarInfo
 	};
 
 	fntGetMenuViewItems afnGMVI [] = {
 		CDownloadsWnd::Plugin_GetMenuViewItems, 
 		CFlashVideoDownloadsWnd::Plugin_GetMenuViewItems, 
+		CTorrentsWnd::Plugin_GetMenuViewItems,
 		CUploadsWnd::Plugin_GetMenuViewItems, 
-		CShedulerWnd::Plugin_GetMenuViewItems, CHFEWnd::Plugin_GetMenuViewItems,
-		CSitesWnd::Plugin_GetMenuViewItems, CSpiderWnd::Plugin_GetMenuViewItems
+		CShedulerWnd::Plugin_GetMenuViewItems, 
+		CHFEWnd::Plugin_GetMenuViewItems,
+		CSitesWnd::Plugin_GetMenuViewItems, 
+		CSpiderWnd::Plugin_GetMenuViewItems
 	};
 	
 
@@ -165,7 +183,7 @@ BOOL fsPluginMgr::LoadBuiltIn()
 		
 		LOG ("creating plugin main window..." << nl);
 		
-		plug.hWnd  =  afnCMW [i] (m_pPluginsFrame->m_hWnd);
+		plug.hWnd = afnCMW [i] (m_pPluginsFrame->m_hWnd);
 		if (plug.hWnd == NULL)
 			continue;
 		

@@ -161,7 +161,7 @@ BEGIN
     CONTROL         "Allow skin to use its own bitmaps",IDC_ALLOWBITMAPS,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,39,194,8
     LTEXT           "NOTE: Any changes will be affected after restart of Free Download Manager only.",
-                    IDC__AFTERRESTART,7,54,205,44
+                    IDC__AFTERRESTART,7,54,205,20
 END
 
 IDD_SM_GENERAL DIALOG DISCARDABLE  0, 0, 260, 191
@@ -534,7 +534,7 @@ END
 IDD_MYMESSAGEBOX DIALOGEX 0, 0, 204, 94
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "-"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     CONTROL         "-",IDC_CHECK1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,32,
                     59,164,9
@@ -548,7 +548,7 @@ END
 IDD_OPINIONS DIALOG DISCARDABLE  0, 0, 251, 153
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "-"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Shell Dlg"
 BEGIN
     PUSHBUTTON      "Abort",IDC_ABORT,86,132,105,14
     DEFPUSHBUTTON   "Close",IDCANCEL,194,132,50,14
@@ -559,7 +559,7 @@ END
 IDD_DOWNLOAD_INTEGRITY DIALOG DISCARDABLE  0, 0, 258, 209
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Integrity"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Shell Dlg"
 BEGIN
     CONTROL         "Perform check when done",IDC_PERFORMCHECKWHENDONE,
                     "Button",BS_AUTO3STATE | WS_TABSTOP,7,7,244,9
@@ -577,7 +577,7 @@ END
 IDD_BTDLD_GENERAL DIALOGEX 0, 0, 258, 214
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "-"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     GROUPBOX        "General information",IDC__GENERAL,7,7,244,106
     LTEXT           "Torrent file URL:",IDC__TORRENTURL,17,18,223,8
@@ -605,7 +605,7 @@ IDD_DLDR_BT DIALOGEX 0, 0, 309, 186
 STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTEXTHELP
 CAPTION "-"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     CONTROL         "Enable Bittorrent protocol support",IDC_ENABLE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,7,7,295,10
@@ -615,36 +615,42 @@ BEGIN
     COMBOBOX        IDC_LIMITDIM,241,48,36,55,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
     CONTROL         "Limit uploads",IDC_LIMITUPLOADS,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,13,67,179,10
-    EDITTEXT        IDC_UPLLIMITVAL,195,65,29,13,ES_AUTOHSCROLL | ES_NUMBER
+                    BS_AUTOCHECKBOX | WS_TABSTOP,13,66,179,10
+    EDITTEXT        IDC_UPLLIMITVAL,195,64,29,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_UPLLIMITVALSPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,220,65,11,13
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,220,64,11,13
+    LTEXT           "Maximum nuber of half-open connections:",IDC__MAXHALFS,
+                    13,81,178,10
+    EDITTEXT        IDC_MAXHALFSVAL,195,80,29,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_MAXHALFSSPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,219,80,11,13
     CONTROL         "Tab1",IDC_TRAFFICMODESTAB,"SysTabControl32",0x0,7,28,
-                    277,58,WS_EX_TRANSPARENT
+                    277,72,WS_EX_TRANSPARENT
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,7,20,295,1
-    LTEXT           "Use ports in range from",IDC__USEPORTS,7,95,113,10
-    EDITTEXT        IDC_PORT_FROM,124,93,37,13,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Use ports in range from",IDC__USEPORTS,7,109,113,10
+    EDITTEXT        IDC_PORT_FROM,124,107,37,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_PORT_FROM_SPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,153,93,11,13
-    EDITTEXT        IDC_PORT_TO,195,93,37,13,ES_AUTOHSCROLL | ES_NUMBER
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,153,107,11,13
+    EDITTEXT        IDC_PORT_TO,195,107,37,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_PORT_TO_SPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,224,93,11,13
-    LTEXT           "to",IDC__TO,171,95,21,9
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,224,107,11,13
+    LTEXT           "to",IDC__TO,171,109,21,9
     CONTROL         "Enable DHT",IDC_USE_DHT,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,113,270,9
+                    WS_TABSTOP,7,127,270,9
     CONTROL         ".torrent",IDC_ASSOCWITHTORRENT,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,128,295,10
+                    WS_TABSTOP,7,142,295,10
     CONTROL         "dis seeding",IDC_DISABLE_SEEDING,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,7,144,295,9
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,158,295,9
 END
 
 IDD_PRG_GENERAL_FW DIALOG DISCARDABLE  0, 0, 246, 102
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "-"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Shell Dlg"
 BEGIN
     CONTROL         "Drop box",IDC_DROPBOX,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,7,7,232,9
@@ -668,13 +674,13 @@ IDD_PRG_DATA DIALOGEX 0, 0, 219, 108
 STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTEXTHELP
 CAPTION "Data"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     EDITTEXT        IDC_AUTOSAVE,157,54,29,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_AUTOSAVESPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,181,54,11,13
-    LTEXT           "Min.",IDC__MIN,190,56,28,9
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,181,54,11,13
+    LTEXT           "Min.",IDC__MIN,190,56,27,9
     LTEXT           "Autosave each",IDC__AUTOSAVE,7,56,148,8
     CONTROL         "Keep all data files in the current user's folder",
                     IDC_KEEP_1,"Button",BS_AUTORADIOBUTTON,7,7,205,10
@@ -689,7 +695,7 @@ END
 IDD_MAKE_PORTABLE_VER DIALOGEX 0, 0, 265, 157
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "-"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     EDITTEXT        IDC_OUTFOLDER,7,116,232,12,ES_AUTOHSCROLL
     PUSHBUTTON      "",IDC_CHOOSEFOLDER,241,116,17,14,BS_ICON,
@@ -704,7 +710,7 @@ END
 IDD_CREATEFVDOWNLOAD DIALOG DISCARDABLE  0, 0, 265, 114
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "-"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Shell Dlg"
 BEGIN
     COMBOBOX        IDC_URL,27,7,231,184,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
                     WS_VSCROLL | WS_TABSTOP
@@ -727,7 +733,7 @@ END
 IDD_CONVERT DIALOG DISCARDABLE  0, 0, 242, 114
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "-"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Shell Dlg"
 BEGIN
     COMBOBOX        IDC_FORMAT,7,20,157,102,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
@@ -742,6 +748,484 @@ BEGIN
     LTEXT           "File format:",IDC__FORMAT,7,8,151,9
     LTEXT           "Video size:",IDC__VIDEOSIZE,166,8,68,9
     LTEXT           "Quality:",IDC__QUALITY,7,38,80,9
+END
+
+IDD_CREATENEWTORRENT DIALOG DISCARDABLE  0, 0, 172, 225
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "-"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Source:",IDC__SOURCE,7,8,45,9
+    PUSHBUTTON      "File",IDC_FILE,57,7,53,13
+    PUSHBUTTON      "Folder",IDC_FOLDER,112,7,53,13
+    LTEXT           "Piece size:",IDC__PIECE_SIZE,7,45,111,8
+    EDITTEXT        IDC_SOURCE,7,24,158,12,ES_AUTOHSCROLL
+    COMBOBOX        IDC_PIECE_SIZE,7,55,158,103,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,7,41,158,1
+    LTEXT           "Trackers:",IDC__TRACKERS,7,75,116,8
+    EDITTEXT        IDC_TRACKERS,7,84,158,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "Save",IDC_SAVE_TRACKERS,7,113,51,13
+    PUSHBUTTON      "Restore",IDC_RESTORE_TRACKERS,60,113,52,13
+    PUSHBUTTON      "Clear",IDC_CLEAR_TRACKERS,114,113,51,13
+    LISTBOX         IDC_TRACKER_LIST,7,129,158,29,LBS_SORT | 
+                    LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | 
+                    WS_TABSTOP
+    PUSHBUTTON      "Add tracker",IDC_ADD_TRACKER,7,98,78,13
+    PUSHBUTTON      "Remove tracker",IDC_REMOVE_TRACKER,87,98,78,13
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,7,72,158,1
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,7,161,158,1
+    LTEXT           "Comment:",IDC__COMMENT,7,165,118,9
+    EDITTEXT        IDC_COMMENT,7,176,158,12,ES_AUTOHSCROLL
+    CONTROL         "Start seeding this torrent",IDC_SEED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,191,158,8
+    CONTROL         "Progress1",IDC_PROGRESS,"msctls_progress32",NOT 
+                    WS_VISIBLE | WS_BORDER,10,171,155,14
+    DEFPUSHBUTTON   "OK",IDOK,39,204,62,14
+    PUSHBUTTON      "Cancel",IDCANCEL,103,204,62,14
+END
+
+IDD_BTDLD_FILES DIALOGEX 0, 0, 258, 214
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "-"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_FILES,"Static",SS_BLACKFRAME,7,21,244,166,
+                    WS_EX_STATICEDGE
+    LTEXT           "Check the files you want to download:",IDC_STATIC,7,7,
+                    244,9
+    PUSHBUTTON      "Check/uncheck all",IDC_CHECK_UNCHECK_ALL,158,191,93,16
+END
+
+IDD_OPTIONS DIALOG DISCARDABLE  0, 0, 442, 287
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,333,266,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,385,266,50,14
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,7,259,428,1
+    CONTROL         "",IDC__DLGFRAME,"Static",SS_GRAYFRAME,119,24,314,228
+    CONTROL         "",IDC__DLGCAPTION,"Static",SS_GRAYFRAME,119,7,314,13
+    CONTROL         "Tree1",IDC_PAGELIST,"SysTreeView32",TVS_HASBUTTONS | 
+                    TVS_HASLINES | TVS_LINESATROOT | TVS_SHOWSELALWAYS | 
+                    TVS_TRACKSELECT | TVS_FULLROWSELECT | WS_TABSTOP,7,7,107,
+                    245
+END
+
+IDD_OPTIONS_GENERAL DIALOG DISCARDABLE  0, 0, 313, 229
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "Load on startup",IDC_AUTOSTART,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,9,10,243,8
+    CONTROL         "Start minimized",IDC_STARTMINIMIZED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,9,21,243,9
+    CONTROL         "Minimize to tray",IDC_MINTOTRAY,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,9,47,243,8
+    CONTROL         "Close button acts as minimize",IDC_CLOSEASMINIMIZE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,58,243,9
+    CONTROL         "Modify Internet Explorer user-agent string",
+                    IDC_MODIFYIEUSERAGENT,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,9,69,243,9
+    GROUPBOX        "System",IDC__SYSTEM,0,36,313,47
+    GROUPBOX        "Startup",IDC__STARTUP,0,0,313,34
+    CONTROL         "-",IDC_AUTOUPDATES_INSTALL,"Button",BS_AUTORADIOBUTTON,
+                    9,96,243,9
+    CONTROL         "-",IDC_AUTOUPDATES_NOTIFYONLY,"Button",
+                    BS_AUTORADIOBUTTON,9,109,243,9
+    CONTROL         "-",IDC_AUTOUPDATES_TURNOFF,"Button",BS_AUTORADIOBUTTON,
+                    9,122,243,9
+    GROUPBOX        "Update",IDC__UPDATE,0,85,313,51
+    GROUPBOX        "Skins",IDC__SKINS,0,138,313,90
+    LTEXT           "Skin:",IDC__SKIN,9,150,34,9
+    COMBOBOX        IDC_SKIN2,50,148,164,133,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    CONTROL         "Allow skin to use its own icons",IDC_ALLOWICONS2,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,9,169,228,8
+    CONTROL         "Allow skin to use its own bitmaps",IDC_ALLOWBITMAPS2,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,180,236,8
+    LTEXT           "NOTE: changes will be affected after restart of Free Download Manager only.",
+                    IDC__AFTERRESTART,14,196,240,20
+END
+
+IDD_OPTIONS_GENERAL_HISTORY DIALOG DISCARDABLE  0, 0, 310, 225
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "Save history of links and folders",IDC_USEHIST,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,2,0,307,8
+    CONTROL         "Save history of folders only",IDC_FOLDERSONLY,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,14,187,8
+    CONTROL         "Delete records that exists more than",
+                    IDC_DELRECTHATEXISTS,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,28,165,8
+    EDITTEXT        IDC_DAYS,175,25,26,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_DAYSSPIN,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,194,25,11,13
+    LTEXT           "days",IDC__DAYS,203,28,26,8
+    CONTROL         "Maximum number of records",IDC_MAXNUMBER,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,42,165,8
+    EDITTEXT        IDC_MAXNUMBERVAL,175,40,26,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_MAXNUMBERSPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,194,40,11,13
+    PUSHBUTTON      "Clear history",IDC_CLEARHISTORY,121,59,80,13
+    CONTROL         "Save history of downloads",IDC_USE2,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,2,91,291,8
+    CONTROL         "Delete records that exists more than",
+                    IDC_DELRECTHATEXISTS2,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,105,163,8
+    EDITTEXT        IDC_DAYS2,174,102,27,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_DAYSSPIN2,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,193,102,
+                    11,13
+    LTEXT           "days",IDC__DAYS2,203,105,26,8
+    CONTROL         "Store completed downloads only",IDC_COMPONLY2,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,119,205,8
+    PUSHBUTTON      "Clear history",IDC_CLEARHISTORY2,122,136,79,14
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,82,309,1
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,160,309,1
+    CONTROL         "List my most recently downloaded files",
+                    IDC_LISTRECENTDLDS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    1,168,309,10
+END
+
+IDD_OPTIONS_GENERAL_MISC DIALOG DISCARDABLE  0, 0, 310, 225
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    GROUPBOX        "Timeouts for confirmations",IDC__TOUTSFORCONFS,0,0,309,
+                    80
+    LTEXT           "Hang-up",IDC__HANGUP,7,14,86,10
+    COMBOBOX        IDC_HANGUP_TOUT,94,12,161,85,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Exit",IDC__EXIT,7,28,86,10
+    COMBOBOX        IDC_EXIT_TOUT,94,27,161,85,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Shutdown",IDC__SHUTDOWN,7,44,86,10
+    COMBOBOX        IDC_SHUTDOWN_TOUT,94,43,161,85,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Launch download",IDC__LAUNCHDLD,7,61,86,10
+    COMBOBOX        IDC_LAUNCHDLD_TOUT,94,59,161,85,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "ask for st",IDC_ASKFORST,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,87,298,8
+    CONTROL         "disable after exec",IDC_DISABLEWDTASKAFTEREXEC,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,0,99,300,8
+    GROUPBOX        "Floating windows",IDC__FLOATING_WINDOWS,0,114,309,86
+    CONTROL         "Drop box",IDC_DROPBOX,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,6,126,232,9
+    CONTROL         "Slider1",IDC_TRANCPARENCY1,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,107,137,105,11
+    CONTROL         "downloads info",IDC_DLINFO,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,6,153,232,9
+    CONTROL         "Slider1",IDC_TRANCPARENCY2,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,107,164,105,11
+    CONTROL         "Hide in fs mode",IDC_HIDEFWWFS,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,6,185,232,8
+    LTEXT           "Trancparency:",IDC__TRANCPARENCY1,25,137,80,10
+    LTEXT           "0%",IDC__TRANCPARENCY1_VAL,223,138,25,8
+    LTEXT           "Trancparency:",IDC__TRANCPARENCY2,25,164,80,10
+    LTEXT           "0%",IDC__TRANCPARENCY2_VAL,223,165,25,8
+END
+
+IDD_OPTIONS_GENERAL_MISC_ADV DIALOG DISCARDABLE  0, 0, 309, 224
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    EDITTEXT        IDC_AUTOSAVE,156,60,29,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_AUTOSAVESPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,180,60,11,13
+    LTEXT           "Min.",IDC__MIN,189,62,27,9
+    LTEXT           "Autosave each",IDC__AUTOSAVE,6,61,148,8
+    CONTROL         "Keep all data files in the current user's folder",
+                    IDC_KEEP_1,"Button",BS_AUTORADIOBUTTON,6,12,286,10
+    CONTROL         "Keep files in this folder:",IDC_KEEP_2,"Button",
+                    BS_AUTORADIOBUTTON,6,24,286,10
+    EDITTEXT        IDC_FOLDER,18,37,245,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE,266,37,16,13,BS_CENTER | BS_VCENTER
+    LTEXT           "Note: these files are Free Download Manager's service files (not the files you download).",
+                    IDC__DATADESC,6,80,295,17
+    GROUPBOX        "Service files (list of downloads, history, etc.)",
+                    IDC__SERVICE_FILES,0,0,308,100
+END
+
+IDD_OPTIONS_DOWNLOADS DIALOG DISCARDABLE  0, 0, 313, 229
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "-",IDC_DONTSAVELOGS,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,0,279,8
+    CONTROL         "Automatically delete completed downloads",IDC_AUTODEL,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,11,281,9
+    LTEXT           "When deleting uncompleted download",IDC__WHENDEL,0,24,
+                    179,8
+    COMBOBOX        IDC_WHENDEL,182,22,123,63,CBS_DROPDOWNLIST | 
+                    CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Show dld dlg",IDC_SHOWDLDDLG,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,38,280,8
+    CONTROL         "log",IDC_DETAILEDLOG,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,49,281,8
+    CONTROL         "-",IDC_SIZEINBYTES,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,60,281,8
+    CONTROL         "vir",IDC_VIRCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    0,74,281,8
+    COMBOBOX        IDC_VIRNAME,10,85,277,85,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "...",IDC_CHOOSEVIR,289,85,16,13,BS_CENTER | BS_VCENTER
+    LTEXT           "args",IDC__ARGS,10,102,62,8
+    EDITTEXT        IDC_ARGS,78,100,209,13,ES_AUTOHSCROLL
+    LTEXT           "args",IDC__EXTS,10,116,62,8
+    EDITTEXT        IDC_VIREXTS,78,114,209,13,ES_AUTOHSCROLL
+    CONTROL         "write cache",IDC_USEWC,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,134,256,9
+    EDITTEXT        IDC_WC_SIZE,258,133,29,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_WC_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,277,133,11,13
+    LTEXT           "MB",IDC__WC_MB,289,135,20,10
+    CONTROL         "prevent stand-by",IDC_PREVENT_STANDBY,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,0,148,265,9
+    GROUPBOX        "FDM Community",IDC__FDM_COMMUNITY,1,161,312,67
+    CONTROL         "Display opinions when downloading",IDC_DISPLAYOPINIONS2,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,173,295,10
+    CONTROL         "Switch to ""Opinions"" after download",
+                    IDC_SWITCHTOOPINIONS2,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,186,295,9
+    CONTROL         "Check each new download before the downloading if it is malicious",
+                    IDC_CHECKIFMAL2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,
+                    200,295,10
+    LTEXT           "Consider download as malicious if minumum",IDC__S0,14,
+                    213,151,10
+    EDITTEXT        IDC_MALREPSMINIMUM2,167,211,13,12,ES_RIGHT | ES_NUMBER
+    LTEXT           "% of users marked it as malicious",IDC__S1,184,213,127,
+                    10
+END
+
+IDD_OPTIONS_DOWNLOADS_NEWDLD DIALOGEX 0, 0, 313, 229
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Group for new download",IDC__GRPFORNEWDLD,0,0,295,103
+    CONTROL         "Determine group for download by file extension",
+                    IDC_NEWGRP_0,"Button",BS_AUTORADIOBUTTON,11,14,277,11
+    CONTROL         "Always use group",IDC_NEWGRP_1,"Button",
+                    BS_AUTORADIOBUTTON,11,30,277,11
+    COMBOBOX        IDC_GROUPS,51,46,185,75,CBS_DROPDOWNLIST | 
+                    CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "",IDC_CREATEGROUP,239,46,17,14,BS_ICON,WS_EX_CLIENTEDGE
+    CONTROL         "Always use group 2",IDC_NEWGRP_2,"Button",
+                    BS_AUTORADIOBUTTON,11,65,277,11
+    COMBOBOX        IDC_GROUPS2,51,81,185,75,CBS_DROPDOWNLIST | 
+                    CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "",IDC_CREATEGROUP2,239,81,17,14,BS_ICON,
+                    WS_EX_CLIENTEDGE
+    CONTROL         "check exists",IDC_CHECKEXISTS,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,109,295,9
+    CONTROL         "Start auto",IDC_AUTOSTART,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,124,295,9
+    CONTROL         "Use ZIP preview",IDC_USEZIP,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,140,295,8
+    PUSHBUTTON      "Set default download folder",IDC_SETGRPSFLDR,50,158,179,
+                    14
+    PUSHBUTTON      "Advanced",IDC_ADVANCED,231,158,64,14
+    PUSHBUTTON      "-",IDC_HTMLSPIDER_DEFDLDSTGS,49,179,246,14
+    PUSHBUTTON      "-",IDC_BT_DEFDLDSTGS,49,200,246,14
+END
+
+IDD_OPTIONS_DOWNLOADS_NETWORK DIALOG DISCARDABLE  0, 0, 313, 229
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    COMBOBOX        IDC_MODE,197,10,91,109,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    CONTROL         "Maximum count of connections",IDC_USEMAXCONNS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,28,244,9
+    EDITTEXT        IDC_MAXCONNS,259,26,29,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_MAXCONNSSPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,284,26,11,13
+    CONTROL         "Maximum count of connections per one server",
+                    IDC_USEMAXCONNSPERSERVER,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,45,248,9
+    EDITTEXT        IDC_MAXCONNSPERSERVER,259,42,29,13,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    CONTROL         "Spin1",IDC_MAXCONNSPERSERVERSPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,285,42,11,13
+    CONTROL         "-",IDC_USEMAXDLDS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    7,62,246,9
+    EDITTEXT        IDC_MAXDLDSVAL,259,58,29,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_MAXDLDSSPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,285,58,11,13
+    EDITTEXT        IDC_TRAFFICLIMITVAL,213,76,38,13,ES_AUTOHSCROLL
+    COMBOBOX        IDC_TRAFFICLIMITDIMENSION,255,76,33,55,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Decrease traffic usage on browser activity",
+                    IDC_DETECTACTIVITY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    0,104,281,9
+    CONTROL         "Decrease by one level",IDC_DECBYLEVEL,"Button",
+                    BS_AUTORADIOBUTTON,4,118,131,8
+    CONTROL         "Set to light mode",IDC_SETTOLIGHT,"Button",
+                    BS_AUTORADIOBUTTON,137,118,133,8
+    LTEXT           "-",IDC__TUR,7,77,202,10
+    GROUPBOX        "Traffic usage modes",IDC__TUMS,0,0,313,97
+    LTEXT           "Select mode to adjust:",IDC__MODEADJUSTMENT,7,12,122,9
+END
+
+IDD_OPTIONS_DOWNLOADS_BITTORRENT DIALOG DISCARDABLE  0, 0, 313, 228
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "Enable Bittorrent protocol support",IDC_ENABLE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,0,0,295,10
+    LTEXT           "",IDC_STATIC,2,36,307,55,NOT WS_GROUP
+    CONTROL         "Tab1",IDC_TRAFFICMODESTAB,"SysTabControl32",0x0,0,22,
+                    313,72
+    CONTROL         "Limit upload traffic",IDC_LIMIT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,6,42,212,10
+    EDITTEXT        IDC_LIMITVAL,218,41,43,13,ES_AUTOHSCROLL
+    COMBOBOX        IDC_LIMITDIM,264,41,36,55,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    CONTROL         "Limit uploads",IDC_LIMITUPLOADS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,6,59,203,10
+    EDITTEXT        IDC_UPLLIMITVAL,218,57,29,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_UPLLIMITVALSPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,243,57,11,13
+    LTEXT           "Maximum nuber of half-open connections:",IDC__MAXHALFS,
+                    6,74,201,10
+    EDITTEXT        IDC_MAXHALFSVAL,218,73,29,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_MAXHALFSSPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,242,73,11,13
+    LTEXT           "Use ports in range from",IDC__USEPORTS,0,102,113,10
+    EDITTEXT        IDC_PORT_FROM,117,100,37,13,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_PORT_TO,188,100,37,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Enable DHT",IDC_USE_DHT,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,120,270,9
+    CONTROL         ".torrent",IDC_ASSOCWITHTORRENT,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,135,295,10
+    CONTROL         "dis seeding",IDC_DISABLE_SEEDING,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,0,151,295,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,14,313,1
+    CONTROL         "Spin1",IDC_PORT_FROM_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,146,100,11,13
+    CONTROL         "Spin1",IDC_PORT_TO_SPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,217,100,11,13
+    LTEXT           "to",IDC__TO,164,102,21,9
+END
+
+IDD_OPTIONS_DOWNLOADS_MIRRORS DIALOG DISCARDABLE  0, 0, 313, 228
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "automatically search for mirror URLs",IDC_AUTO,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,0,0,295,8
+    EDITTEXT        IDC_FILEMINSIZE,213,11,38,13,ES_AUTOHSCROLL
+    COMBOBOX        IDC_FILEMINSIZEDIM,255,11,33,55,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "don't search if file size is unknown",IDC_DONTIFSIZEUNK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,27,277,8
+    CONTROL         "maximum number of mirrors:",IDC_MAXMIRRORS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,0,43,210,8
+    EDITTEXT        IDC_MAXMIRRORSVAL,213,40,29,13,ES_AUTOHSCROLL | 
+                    ES_NUMBER
+    CONTROL         "Spin1",IDC_MAXMIRRORSSPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS,238,40,11,13
+    CONTROL         "calculate mirrors speed",IDC_CALCSPEED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,0,59,295,8
+    CONTROL         "recalculate each",IDC_RECALCSPEED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,9,73,199,8
+    EDITTEXT        IDC_RECALCVAL,213,71,29,13,ES_AUTOHSCROLL | ES_NUMBER
+    CONTROL         "Spin1",IDC_RECALCSPIN,"msctls_updown32",UDS_SETBUDDYINT | 
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,239,71,11,
+                    13
+    LTEXT           "min.",IDC__MIN,248,72,19,8
+    LTEXT           "don't search if file size is less than",IDC__DONTSEARCH,
+                    11,14,199,8
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,94,291,1
+    LTEXT           "Mirrors search server:",IDC__MIRRSERVER,0,102,208,8
+    COMBOBOX        IDC_MIRRSERVERS,212,100,78,79,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_OPTIONS_DOWNLOADS_MONITORING DIALOGEX 0, 0, 313, 228
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    GROUPBOX        "Monitor for",IDC__MONITORFOR,0,0,313,157
+    CONTROL         "Clipboard",IDC_CLIPBOARD,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,12,240,9
+    GROUPBOX        "",IDC_STATIC,5,25,302,94
+    CONTROL         "Internet Explorer 4.x - 7.x",IDC_IE2,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,25,92,9,WS_EX_TRANSPARENT
+    CONTROL         "Firefox",IDC_FIREFOX,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,127,25,35,8,WS_EX_TRANSPARENT
+    CONTROL         "Alt",IDC_ALTPRESSED,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,41,267,8
+    CONTROL         "Allow",IDC_ALLOWIETODL,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,53,274,8
+    CONTROL         "don't monitor for files smaller than",IDC_DONTMONSMALL,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,64,216,8
+    EDITTEXT        IDC_SMALLSIZE,229,62,26,13,ES_NUMBER
+    LTEXT           "KBytes",IDC__KBYTES,260,64,41,9
+    PUSHBUTTON      "Skip list",IDC_SKIPLIST,229,79,73,14
+    CONTROL         "Add",IDC_ADDTOIEMENU,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,10,99,215,9
+    PUSHBUTTON      "Customize",IDC_CUSTOMIZE,229,97,73,14
+    CONTROL         "Opera 6.x - 9.x",IDC_OPERA,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,127,68,8
+    CONTROL         "Netscape 6.x - 9.x",IDC_NETSCAPE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,79,127,77,8
+    CONTROL         "SeaMonkey (Mozilla Suite)",IDC_MOZILLA,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,169,127,128,8
+    CONTROL         "Silent",IDC_SILENT,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,141,277,8
+    PUSHBUTTON      "I have Firefox portable",IDC_FFPORTVER,193,165,120,16,
+                    NOT WS_VISIBLE
+END
+
+IDD_OPTIONS_NOTIFICATIONS DIALOG DISCARDABLE  0, 0, 313, 229
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "Use tray ""balloons""",IDC_USEBALLOON,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,0,0,295,9
+    LTEXT           "Timeout",IDC__TIMEOUT,12,14,109,8
+    EDITTEXT        IDC_TIMEOUT,127,12,27,12,ES_AUTOHSCROLL
+    CONTROL         "Spin1",IDC_TIMEOUTSPIN,"msctls_updown32",
+                    UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,153,11,11,14
+    LTEXT           "sec.",IDC__SEC,163,14,19,8
+    CONTROL         "use sounds",IDC_USESOUNDS,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,32,122,9
+    PUSHBUTTON      "Customize",IDC_CUSTOMIZE,126,30,46,14
+    CONTROL         "Disable for batch downloads",IDC_DISABLEFORBATCHDLDS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,51,295,9
+END
+
+IDD_BTDLD_SEEDING DIALOG DISCARDABLE  0, 0, 258, 214
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "-"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "Enable seeding (highly recommended)",IDC_ENABLE_SEEDING,
+                    "Button",BS_AUTO3STATE | WS_TABSTOP,7,7,244,9
+    CONTROL         "Unlimited seeding",IDC_UNLIMITED_SEEDING,"Button",
+                    BS_AUTORADIOBUTTON,15,23,220,10
+    CONTROL         "Limit by ratio",IDC_LIMIT_BY_RATIO,"Button",
+                    BS_AUTORADIOBUTTON,15,38,220,10
+    LTEXT           "Seed until ratio will be",IDC_STATIC0,24,55,107,10
+    COMBOBOX        IDC_RATIO_LIST,134,52,76,80,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
 END
 
 
@@ -1056,6 +1540,38 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 107
     END
+
+    IDD_CREATENEWTORRENT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 165
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 218
+    END
+
+    IDD_BTDLD_FILES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 251
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 207
+    END
+
+    IDD_OPTIONS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 435
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 280
+    END
+
+    IDD_BTDLD_SEEDING, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 251
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 207
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -1106,6 +1622,56 @@ BEGIN
     END
 END
 
+IDM_TORRENTS MENU DISCARDABLE 
+BEGIN
+    POPUP "-"
+    BEGIN
+        MENUITEM "Add torrent download from web", ID_BTDLD_ADDFROMURL
+        MENUITEM "Add torrent download from file", ID_BTDLD_ADDFROMFILE
+        MENUITEM SEPARATOR
+        MENUITEM "Create new torrent",          ID_BTDLD_CREATENEWTORRENT
+        MENUITEM SEPARATOR
+        MENUITEM "start",                       ID_BTDLD_START
+        MENUITEM "stop",                        ID_BTDLD_STOP
+        MENUITEM "Start download &automatically\t", ID_BTDLD_AUTOSTART
+        MENUITEM SEPARATOR
+        MENUITEM "&Delete download\tDel",       ID_BTDLD_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "launch",                      ID_BTDLD_LAUNCH
+        MENUITEM "&Open folder",                ID_BTDLD_OPENFOLDER
+        MENUITEM SEPARATOR
+        MENUITEM "Pass to downloads",           ID_BTDLD_PASSTODLDS
+        MENUITEM "Download &properties\tEnter", ID_BTDLD_PROPERTIES
+    END
+END
+
+IDM_TORRENTS_VIEW MENU DISCARDABLE 
+BEGIN
+    POPUP "-"
+    BEGIN
+        MENUITEM "1",                           ID_DLLIST_1
+        MENUITEM "2",                           ID_DLLIST_2
+        MENUITEM "3",                           ID_DLLIST_3
+        MENUITEM "4",                           ID_DLLIST_4
+        MENUITEM "5",                           ID_DLLIST_5
+        MENUITEM "6",                           ID_DLLIST_6
+        MENUITEM "7",                           ID_DLLIST_7
+        MENUITEM "8",                           ID_DLLIST_8
+        MENUITEM "9",                           ID_DLLIST_9
+    END
+END
+
+IDM_BTFILES MENU DISCARDABLE 
+BEGIN
+    POPUP "-"
+    BEGIN
+        MENUITEM "Normal priority",             ID_BTFILES_NORMALPRIORITY
+        MENUITEM "High piority",                ID_BTFILES_HIGHPIORITY
+        MENUITEM SEPARATOR
+        MENUITEM "Don't download",              ID_BTFILES_DONTDOWNLOAD
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1128,6 +1694,10 @@ IDB_TOOL_SPIDER_16_D    BITMAP  DISCARDABLE     "res\\tool_spider_16_d.bmp"
 IDB_FDM_GETCVER_BTN     BITMAP  DISCARDABLE     "res\\fdm_getcver_btn.bmp"
 IDB_DLDSINFO            BITMAP  DISCARDABLE     "res\\dldsinfo.bmp"
 IDB_DLDSINFO_SEL        BITMAP  DISCARDABLE     "res\\dldsinfo_sel.bmp"
+IDB_TOOL_BT             BITMAP  DISCARDABLE     "res\\tool_bt.bmp"
+IDB_TOOL_BT_D           BITMAP  DISCARDABLE     "res\\tool_bt_d.bmp"
+IDB_TOOL_BT_16          BITMAP  DISCARDABLE     "res\\tool_bt_16.bmp"
+IDB_TOOL_BT_16_D        BITMAP  DISCARDABLE     "res\\tool_bt_16_d.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1324,7 +1894,7 @@ END
 IDD_BTDLD_MISC DIALOG DISCARDABLE  0, 0, 258, 214
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "-"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Shell Dlg"
 BEGIN
     CONTROL         "-",IDC_RESERVESPACE,"Button",BS_AUTO3STATE | 
                     WS_DISABLED | WS_TABSTOP,7,7,228,9
@@ -1337,7 +1907,7 @@ END
 IDD_CREATETORRENTDOWNLOAD DIALOGEX 0, 0, 265, 196
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "-"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     LTEXT           "File:",IDC__FILE,8,8,57,9
     EDITTEXT        IDC_TORRENTFILE,66,8,190,12,ES_AUTOHSCROLL | ES_READONLY | 
@@ -1619,7 +2189,7 @@ BEGIN
     EDITTEXT        IDC_MAXCONNS,266,30,29,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_MAXCONNSSPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,291,30,9,13
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,291,30,9,13
     CONTROL         "Maximum count of connections per one server",
                     IDC_USEMAXCONNSPERSERVER,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,14,49,248,9
@@ -1627,13 +2197,13 @@ BEGIN
                     ES_NUMBER
     CONTROL         "Spin1",IDC_MAXCONNSPERSERVERSPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,292,47,9,13
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,292,47,9,13
     CONTROL         "-",IDC_USEMAXDLDS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
                     14,66,246,9
     EDITTEXT        IDC_MAXDLDSVAL,266,63,29,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_MAXDLDSSPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,292,63,9,13
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,292,63,9,13
     EDITTEXT        IDC_TRAFFICLIMITVAL,220,80,38,13,ES_AUTOHSCROLL
     COMBOBOX        IDC_TRAFFICLIMITDIMENSION,262,80,33,55,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
@@ -1650,7 +2220,7 @@ BEGIN
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,14,97,283,1
 END
 
-IDD_DLDR_LIST DIALOGEX 0, 0, 309, 185
+IDD_DLDR_LIST DIALOGEX 0, 0, 309, 180
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTEXTHELP
 CAPTION "All downloads"
@@ -1671,22 +2241,24 @@ BEGIN
     CONTROL         "-",IDC_SIZEINBYTES,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,14,76,281,8
     CONTROL         "vir",IDC_VIRCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
-                    14,93,281,8
-    COMBOBOX        IDC_VIRNAME,24,104,254,85,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
+                    14,90,281,8
+    COMBOBOX        IDC_VIRNAME,24,101,254,85,CBS_DROPDOWN | CBS_AUTOHSCROLL | 
                     WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON      "...",IDC_CHOOSEVIR,280,104,16,13,BS_CENTER | BS_VCENTER
-    LTEXT           "args",IDC__ARGS,24,121,62,8
-    EDITTEXT        IDC_ARGS,91,119,186,13,ES_AUTOHSCROLL
-    LTEXT           "args",IDC__EXTS,24,135,62,8
-    EDITTEXT        IDC_VIREXTS,91,133,186,13,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_CHOOSEVIR,280,101,16,13,BS_CENTER | BS_VCENTER
+    LTEXT           "args",IDC__ARGS,24,118,62,8
+    EDITTEXT        IDC_ARGS,91,116,186,13,ES_AUTOHSCROLL
+    LTEXT           "args",IDC__EXTS,24,132,62,8
+    EDITTEXT        IDC_VIREXTS,91,130,186,13,ES_AUTOHSCROLL
     CONTROL         "write cache",IDC_USEWC,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,14,156,228,9
-    EDITTEXT        IDC_WC_SIZE,248,155,29,13,ES_AUTOHSCROLL | ES_NUMBER
+                    WS_TABSTOP,14,150,228,9
+    EDITTEXT        IDC_WC_SIZE,248,149,29,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_WC_SPIN,"msctls_updown32",UDS_SETBUDDYINT | 
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,268,155,
-                    11,13
-    LTEXT           "MB",IDC__WC_MB,280,157,20,10
-    GROUPBOX        "List of downloads",IDC__LISTOFDLDS,7,3,295,175
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,268,149,11,13
+    LTEXT           "MB",IDC__WC_MB,280,151,20,10
+    GROUPBOX        "List of downloads",IDC__LISTOFDLDS,7,3,295,174
+    CONTROL         "prevent stand-by",IDC_PREVENT_STANDBY,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,164,265,9
 END
 
 IDD_OPTMASTER DIALOGEX 0, 0, 222, 126
@@ -1713,7 +2285,7 @@ IDD_SCHEDULE_WHATTOSTART DIALOGEX 0, 0, 246, 218
 STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTEXTHELP
 CAPTION "What to schedule"
-FONT 8, "MS Shell Dlg", 0, 0, 0x1
+FONT 8, "MS Shell Dlg"
 BEGIN
     COMBOBOX        IDC_WTS,7,7,208,130,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
@@ -1724,7 +2296,7 @@ BEGIN
     PUSHBUTTON      "",IDC_TOUNSEL,115,78,18,17,BS_ICON,WS_EX_CLIENTEDGE
     CONTROL         "List1",IDC_UNSELDLDS,"SysListView32",LVS_REPORT | 
                     LVS_SHOWSELALWAYS | LVS_NOSORTHEADER | WS_BORDER | 
-                    WS_TABSTOP,7,98,208,108
+                    WS_TABSTOP,7,98,208,100
     LTEXT           "Change traffic usage mode to",IDC__TUM,7,29,188,9
     COMBOBOX        IDC_TUM,7,40,80,72,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
@@ -1779,6 +2351,8 @@ BEGIN
                     9
     CONTROL         "-",IDC_RAD_INVERT,"Button",BS_AUTORADIOBUTTON,7,55,128,
                     9
+    CONTROL         "-",IDC_RESTARTDLDIFDONE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,202,213,11
 END
 
 IDD_SCHEDULE_WHENTOSTART DIALOGEX 0, 0, 246, 218
@@ -2005,7 +2579,7 @@ BEGIN
     LTEXT           "Copyright (c)",IDC_STATIC,36,31,40,9
     LTEXT           "Version",IDC__VER,36,18,153,9
     LTEXT           "FreeDownloadManager.ORG",IDC__FIRM,78,31,92,9,SS_NOTIFY
-    LTEXT           ", 2003-2007",IDC_STATIC,173,31,39,8
+    LTEXT           ", 2003-2008",IDC_STATIC,173,31,39,8
     LTEXT           "-",IDC__WARN,7,80,266,31
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,6,73,266,1
     LTEXT           "Click here to contact us",IDC__SUPPORT,36,45,180,8,
@@ -2244,18 +2818,20 @@ BEGIN
                     IDC__MSG8,40,134,252,9
 END
 
-IDD_DLDALREXISTS DIALOGEX 0, 0, 294, 59
+IDD_DLDALREXISTS DIALOGEX 0, 0, 294, 70
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTEXTHELP
 CAPTION "-"
 FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    ICON            "",IDC_DLGICON,7,7,20,20
-    DEFPUSHBUTTON   "Resume",IDC_RESUME,40,38,60,14
-    PUSHBUTTON      "Restart",IDC_RESTART,103,38,60,14
-    PUSHBUTTON      "Launch",IDC_LAUNCH,166,38,60,14
+    ICON            "",IDC_DLGICON,7,7,21,20
+    DEFPUSHBUTTON   "Resume",IDC_RESUME,40,49,60,14
+    PUSHBUTTON      "Restart",IDC_RESTART,103,49,60,14
+    PUSHBUTTON      "Launch",IDC_LAUNCH,166,49,60,14
     LTEXT           "-",IDC__MSG,38,7,249,24
-    PUSHBUTTON      "Cancel",IDCANCEL,229,38,58,14
+    PUSHBUTTON      "Cancel",IDCANCEL,229,49,58,14
+    CONTROL         "Don't check again",IDC_DONTCHECKAGAIN,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,40,36,250,8
 END
 
 IDD_CREATEURLLIST DIALOGEX 0, 0, 264, 263
@@ -2311,7 +2887,7 @@ BEGIN
     EDITTEXT        IDC_TIMEOUT,134,19,27,12,ES_AUTOHSCROLL
     CONTROL         "Spin1",IDC_TIMEOUTSPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,160,18,11,14
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,160,18,11,14
     LTEXT           "sec.",IDC__SEC,170,20,19,8
     CONTROL         "use sounds",IDC_USESOUNDS,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,7,39,122,9
@@ -2411,10 +2987,12 @@ BEGIN
     PUSHBUTTON      "",IDC_CREATEGROUP2,246,84,17,14,BS_ICON,
                     WS_EX_CLIENTEDGE
     CONTROL         "Start auto",IDC_AUTOSTART,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,114,295,9
+                    WS_TABSTOP,7,112,295,9
     CONTROL         "Use ZIP preview",IDC_USEZIP,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,130,295,8
-    PUSHBUTTON      "Advanced",IDC_ADVANCED,238,148,64,14
+                    WS_TABSTOP,7,128,295,8
+    PUSHBUTTON      "Advanced",IDC_ADVANCED,238,146,64,14
+    PUSHBUTTON      "Set default download folder",IDC_SETGRPSFLDR,81,146,153,
+                    14
 END
 
 IDD_CUSTOMIZEIEMENU DIALOG DISCARDABLE  0, 0, 213, 98
@@ -2451,15 +3029,15 @@ BEGIN
                     WS_TABSTOP,12,35,143,8
     EDITTEXT        IDC_DAYS,161,32,26,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_DAYSSPIN,"msctls_updown32",UDS_SETBUDDYINT | 
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,180,32,9,
-                    13
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,180,32,9,13
     LTEXT           "days",IDC__DAYS,189,35,26,8
     CONTROL         "Maximum number of records",IDC_MAXNUMBER,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,12,49,146,8
     EDITTEXT        IDC_MAXNUMBERVAL,161,47,26,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_MAXNUMBERSPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
-                    UDS_ARROWKEYS,180,47,9,13
+                    UDS_ARROWKEYS | UDS_NOTHOUSANDS,180,47,9,13
     PUSHBUTTON      "Clear history",IDC_CLEARHISTORY,108,66,80,13
     PUSHBUTTON      "Switch to Downloads History settings",IDC_SWITCHDLHIST,
                     8,81,180,13
@@ -2866,15 +3444,8 @@ BEGIN
     POPUP "&Options"
     BEGIN
         MENUITEM "&Downloader options\tCtrl+O", ID_DLDROPTIONS
-        MENUITEM "Uploader options",            ID_UPLDROPTIONS
-        MENUITEM "Site Manager options",        ID_OPTIONS_SM
+        MENUITEM SEPARATOR
         MENUITEM "Optimization &Master",        ID_OPTMASTER
-        MENUITEM SEPARATOR
-        MENUITEM "D&efault settings for download\tCtrl+E", ID_DLDDEFOPTIONS
-        MENUITEM "HTML Spider default settings\tCtrl+Q", 
-                                                ID_SPIDERDEFSETTINGS
-        MENUITEM SEPARATOR
-        MENUITEM "&Program general settings\tCtrl+P", ID_PROGGENERALSETTINGS
         MENUITEM SEPARATOR
         POPUP "&Traffic usage mode"
         BEGIN
@@ -3129,7 +3700,7 @@ IDC_HAND_               CURSOR  DISCARDABLE     "res\\hand.cur"
 // REGISTRY
 //
 
-IDR_FDMAPP	       	REGISTRY DISCARDABLE    "FdmApp.rgs"
+IDR_FDMAPP              REGISTRY DISCARDABLE    "FdmApp.rgs"
 IDR_WGURLRECEIVER       REGISTRY DISCARDABLE    "WGUrlReceiver.rgs"
 IDR_WGURLLISTRECEIVER   REGISTRY DISCARDABLE    "WgUrlListReceiver.rgs"
 IDR_FDM                 REGISTRY DISCARDABLE    "FDM.rgs"
@@ -3147,8 +3718,8 @@ IDR_FDMFLASHVIDEODOWNLOADS REGISTRY DISCARDABLE    "FDMFlashVideoDownloads.rgs"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,5,0,1573
- PRODUCTVERSION 2,5,0,1573
+ FILEVERSION 2,6,808,0
+ PRODUCTVERSION 2,6,808,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -3166,14 +3737,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "FreeDownloadManager.ORG\0"
             VALUE "FileDescription", "Free Download Manager\0"
-            VALUE "FileVersion", "2.5\0"
-            VALUE "InternalName", "FDM\0"
-            VALUE "LegalCopyright", "Copyright © 2003-2007\0"
+            VALUE "FileVersion", "2, 6, 808, 0\0"
+            VALUE "InternalName", "\0"
+            VALUE "LegalCopyright", "Copyright © 2003-2008\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "fdm.exe\0"
+            VALUE "OriginalFilename", "\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "Free Download Manager\0"
-            VALUE "ProductVersion", "2.5\0"
+            VALUE "ProductVersion", "2.6 BETA\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -3186,6 +3757,40 @@ END
 #endif    // !_MAC
 
 #endif    // Neutral (Default) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Russian resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+#ifdef _WIN32
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_OPTIONS_SITEMGR DIALOG DISCARDABLE  0, 0, 313, 229
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "Use Site Manager to store my passwords",IDC_USE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,7,15,228,9
+    CONTROL         "Ask me whether to save password or not",IDC_ASK,"Button",
+                    BS_AUTORADIOBUTTON,13,29,222,8
+    CONTROL         "Don't ask me",IDC_DONTASK,"Button",BS_AUTORADIOBUTTON,
+                    13,42,222,8
+    CONTROL         "Delete all passwords before exit",IDC_AUTODEL,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,58,219,9
+    PUSHBUTTON      "Delete all passwords",IDC_DELALL,121,72,114,16
+    GROUPBOX        "Passwords",IDC__PASSWORDS,0,0,313,99
+END
+
+#endif    // Russian resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -3303,7 +3908,7 @@ BEGIN
     PUSHBUTTON      "Customize",IDC_CUSTOMIZE,220,99,71,14
     CONTROL         "Opera 6.x - 9.x",IDC_OPERA,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,13,131,68,8
-    CONTROL         "Netscape 6.x - 8.x",IDC_NETSCAPE,"Button",
+    CONTROL         "Netscape 6.x - 9.x",IDC_NETSCAPE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,86,131,77,8
     CONTROL         "SeaMonkey (Mozilla Suite)",IDC_MOZILLA,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,176,131,104,8
@@ -3382,8 +3987,8 @@ BEGIN
                     WS_TABSTOP,17,59,199,8
     EDITTEXT        IDC_DEPTH,120,96,24,13,ES_AUTOHSCROLL | ES_NUMBER
     CONTROL         "Spin1",IDC_DEPTHSPIN,"msctls_updown32",UDS_SETBUDDYINT | 
-                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS,140,96,9,
-                    13
+                    UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | 
+                    UDS_NOTHOUSANDS,140,96,9,13
     LTEXT           "-",IDC__HTMLEXTS,17,16,200,8
     LTEXT           "-",IDC__DEPTH,7,98,107,8
     GROUPBOX        "Pages",IDC__PAGES,6,3,218,89
@@ -3434,7 +4039,7 @@ IDD_DLDR_MONITOR_SKIPLIST DIALOGEX 0, 0, 278, 148
 STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTEXTHELP
 CAPTION "-"
-FONT 8, "MS Sans Serif", 0, 0, 0x1
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     EDITTEXT        IDC_EXTS,7,19,264,13,ES_AUTOHSCROLL
     EDITTEXT        IDC_SERVERS,7,49,264,72,ES_MULTILINE | ES_AUTOVSCROLL | 
@@ -3579,8 +4184,6 @@ BEGIN
     "L",            ID_SPIDERDLWEBPAGE,     VIRTKEY, CONTROL, NOINVERT
     "N",            ID_DLD_CREATE,          VIRTKEY, CONTROL, NOINVERT
     "O",            ID_DLDROPTIONS,         VIRTKEY, CONTROL, NOINVERT
-    "P",            ID_PROGGENERALSETTINGS, VIRTKEY, CONTROL, NOINVERT
-    "Q",            ID_SPIDERDEFSETTINGS,   VIRTKEY, CONTROL, NOINVERT
     "S",            ID_SAVEALL,             VIRTKEY, CONTROL, NOINVERT
     "T",            ID_TASK_CREATE_NEW,     VIRTKEY, CONTROL, NOINVERT
     "V",            ID_FILE_IMPORT_IMPORTLISTOFDOWNLOADSFROMCLIPBOARD, 
@@ -3613,7 +4216,7 @@ END
 LANGUAGE 9, 1
 #pragma code_page(1252)
 #endif //_WIN32
-#include "res\fdm.rc2"  // non-Microsoft Visual C++ edited resources
+#include "res\FDM.rc2"  // non-Microsoft Visual C++ edited resources
 #include "afxres.rc"         // Standard components
 #endif
 

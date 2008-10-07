@@ -12,15 +12,9 @@
 #define CURL_DISABLE_TELNET
 #define CURL_DISABLE_DICT
 #define CURL_DISABLE_FILE
-#endif 
+#endif   
 
-#if !defined(WIN32) && defined(__WIN32__)
-
-#define WIN32
-#endif
-
-#if !defined(WIN32) && defined(_WIN32)
-
+#if (defined(_WIN32) || defined(__WIN32__)) && !defined(WIN32) && !defined(__SYMBIAN32__)
 #define WIN32
 #endif  
 
@@ -42,6 +36,15 @@
 
 #ifdef __AMIGA__
 #include "amigaos.h"
+#endif
+
+#ifdef __SYMBIAN32__
+#include "config-symbian.h"
+#endif
+
+#ifdef __OS400__
+#include "config-os400.h"
+#include "setup-os400.h"
 #endif
 
 #ifdef TPF
@@ -199,6 +202,10 @@ extern char * strtok_r(char *s, const char *delim, char **last);
 extern struct tm * gmtime_r(const time_t * const timep, struct tm *tmp);
 #endif
 
+#ifdef __SYMBIAN32__
+#undef HAVE_ALARM
+#endif
+
 #define DIR_CHAR      "/"
 #ifndef DOT_CHAR
 #define DOT_CHAR      "."
@@ -241,6 +248,7 @@ int fileno( FILE *stream);
 #endif
 
 #ifdef NETWARE
+int netware_init(void);
 #ifndef __NOVELL_LIBC__
 #include <sys/bsdskt.h>
 #include <sys/timeval.h>
@@ -264,7 +272,7 @@ int fileno( FILE *stream);
 #define HAVE_INET_NTOA_R_2_ARGS 1
 #endif
 
-#if defined(USE_GNUTLS) || defined(USE_SSLEAY) || defined(USE_NSS)
+#if defined(USE_GNUTLS) || defined(USE_SSLEAY) || defined(USE_NSS) || defined(USE_QSOSSL)
 #define USE_SSL    
 #endif
 

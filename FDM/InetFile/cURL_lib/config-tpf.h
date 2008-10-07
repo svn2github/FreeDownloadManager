@@ -15,11 +15,7 @@
 
 #define HAVE_CRYPTO_H 1  
 
-#define HAVE_DES_H 1    
-
-#define HAVE_DLFCN_H 1 
-
-#define HAVE_DLOPEN 1  
+#define HAVE_DES_H 1     
 
 #define HAVE_ENGINE_LOAD_BUILTIN_ENGINES 1 
 
@@ -55,9 +51,7 @@
 
 #define HAVE_INET_NTOA 1          
 
-#define HAVE_INTTYPES_H 1                   
-
-#define HAVE_LIBDL 1                 
+#define HAVE_INTTYPES_H 1                                   
 
 #define HAVE_LIBSSL 1    
 

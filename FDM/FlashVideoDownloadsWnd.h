@@ -29,6 +29,8 @@ public:
 	static void Plugin_GetMenuImages(fsSetImage **ppImages, int *pcImages);
 	static void Plugin_GetToolBarInfo (wgTButtonInfo **ppButtons, int *pcButtons);
 	static HWND Plugin_CreateMainWindow (HWND hWndParent);
+	static HMENU Plugin_GetViewMenu();
+	static HMENU Plugin_GetMainMenu();
 	  
 
 	
@@ -37,12 +39,10 @@ public:
 
 public:
 	BOOL CreateDownload (LPCSTR pszUrl = NULL);
-	static HMENU Plugin_GetViewMenu();
-	static HMENU Plugin_GetMainMenu();
 	void SetActiveDownload (vmsDownloadSmartPtr dld);
 	void SaveAll();
 	void OnDownloadDone (vmsDownloadSmartPtr dld);
-	void AddDownload (vmsDownloadSmartPtr dld);
+	void AddDownload (vmsDownloadSmartPtr dld, BOOL bPlaceToTop);
 	CDownloads_VideoPreview m_wndPreview;
 	CFVDownloads_Tasks m_wndTasks;
 	BOOL Create (CWnd *pwndParent);

@@ -331,7 +331,7 @@ BOOL CCreateDownloadListDlg::ReadAuth()
 
 BOOL CCreateDownloadListDlg::AddDownloads()
 {
-	DLDS_LIST* pvpDlds = GenerateDownloads ();
+	DLDS_LIST* pvpDlds = GenerateDownloads (_App.CheckIfDownloadWithSameUrlExists ());
 
 	if (pvpDlds == NULL)
 		return FALSE;

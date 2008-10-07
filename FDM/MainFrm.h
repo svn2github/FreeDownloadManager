@@ -108,6 +108,10 @@ protected:
 	BOOL m_bQueryForExit;	  
 
 protected:
+	CRITICAL_SECTION m_csShutdown;
+	LONG m_cThreadsRunning;
+	bool m_bShuttingDown;
+	static DWORD WINAPI _threadAutosave (LPVOID);
 	int GetTumMenuPosition();
 	UINT m_nUploadsMsg1;
 	UINT m_nShutdownMsg;
@@ -263,7 +267,6 @@ protected:
 	afx_msg void OnNeedExit();
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnInitMenuPopup(CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu);
-	afx_msg void OnSaveall();
 	afx_msg void OnAppExit();
 	afx_msg void OnMeasureItem(int nIDCtl, LPMEASUREITEMSTRUCT lpMeasureItemStruct);
 	afx_msg void OnDrawItem(int nIDCtl, LPDRAWITEMSTRUCT lpDrawItemStruct);

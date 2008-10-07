@@ -139,6 +139,12 @@ LPCSTR CHFE_Address::GetUrl()
 		m_strUrl = str;
 	}
 
+	if (strnicmp (m_strUrl, "ftp://", 6) == 0)
+	{
+		if (m_strUrl.Right (1) != '/' && m_strUrl.Right (1) != '\\')
+			m_strUrl += '/';
+	}  
+
 	
 
 	m_wndUrl.SetWindowText (m_strUrl);

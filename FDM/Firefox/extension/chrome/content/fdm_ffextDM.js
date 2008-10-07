@@ -31,6 +31,35 @@ function fdm_extractPostData(channel)
     return null;
 }
 
+function fdm_gatherCookieForHost (_host, _cookieWeHave)
+{
+   var fdm_cookieManager =
+      Components.classes["@mozilla.org/cookiemanager;1"].getService(Components.interfaces.nsICookieManager);
+   var _cookie = _cookieWeHave;
+
+   for (var iter = fdm_cookieManager.enumerator; iter.hasMoreElements();) 
+   {
+      if ((objCookie = iter.getNext()) instanceof Components.interfaces.nsICookie) 
+      {
+        var cookieHost = objCookie.host;
+        if (cookieHost.charAt(0) == ".")
+          cookieHost = cookieHost.substring (1);
+
+        if (cookieHost == _host || _host.indexOf ("." + cookieHost) != -1)
+        {
+	        if (_cookie.indexOf (objCookie.name + "=" + objCookie.value) == -1)
+	        {
+		        if (_cookie.length)
+		        	_cookie += "; ";
+	        	_cookie += objCookie.name + "=" + objCookie.value;
+	        }
+	}
+      }
+   }
+
+   return _cookie;
+}
+
 function fdm_DM_load (ev)
 {
   var url = Components.classes["@freedownloadmanager.org/FDMUrl;1"].createInstance ();
@@ -40,12 +69,26 @@ function fdm_DM_load (ev)
   if (fdm_FDM.IsLinkShouldBeSkipped (url, dialog.mLauncher.suggestedFileName)) 
     return; // do default processing
 
+  var doc;
+
   try {
-    var doc = dialog.mContext.QueryInterface(Components.interfaces.nsIWebNavigation).document;
-    if (doc.URL != "about:blank")
+    doc = dialog.mContext.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+      .getInterface(Components.interfaces.nsIDOMWindow).document;
+  } catch(err) {
+    doc = top.opener && top.opener.content && top.opener.content.document || null;
+  }
+
+  var cookie = "";
+
+  try {
+     if (doc.URL != "about:blank")
 	url.Referer = doc.URL;
-    url.Cookies = doc.cookie;
+     cookie = doc.cookie;	
   } catch(err) {}
+
+  cookie = fdm_gatherCookieForHost (doc.location.hostname, cookie);
+
+  url.Cookies = cookie;
 
   var fdm_Ext = Components.classes["@freedownloadmanager.org/FDMFirefoxExtension;1"].createInstance ();
   fdm_Ext = fdm_Ext.QueryInterface (Components.interfaces.IFDMFirefoxExtension);

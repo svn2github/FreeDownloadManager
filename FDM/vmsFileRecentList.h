@@ -12,6 +12,7 @@
 class vmsFileRecentList  
 {
 public:
+	void setMaxSize (int i);
 	
 	int get_Count () const;
 	
@@ -39,6 +40,7 @@ protected:
 	std::vector <_inc_FileInfo> m_vList;
 	
 	int m_nMaxEntries;
+	CRITICAL_SECTION m_cs;
 };
 
 #endif 

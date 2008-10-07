@@ -4,7 +4,8 @@
 
 #include "stdafx.h"
 #include "vmsIETmpCookies.h"
-#include <inetfile/inetfile.h>        
+#include <inetfile/inetfile.h>
+#include "vmsCookie.h"        
 
 vmsIETmpCookies::vmsIETmpCookies()
 {
@@ -21,6 +22,11 @@ int vmsIETmpCookies::Find(LPCSTR pszUrl)
 	fsURL url;
 	if (IR_SUCCESS != url.Crack (pszUrl))
 		return -1;
+
+	char szCookie [50000] = "";
+	DWORD dw = sizeof (szCookie);
+	InternetGetCookie (pszUrl, NULL, szCookie, &dw);
+	vmsCookie cookie; cookie.Set (szCookie);
 
 	GetListOfKnownCookies ();
 
@@ -73,18 +79,28 @@ int vmsIETmpCookies::Find(LPCSTR pszUrl)
 	}
 
 	int nIndex = -1;
-	int len = -1;
+	int cCI = -1;
+	int len = 0;
 	
 	
 	for (i = 0; i < vFit.size (); i++)
 	{
-		int n = vFit [i];
-		int l = lstrlen (get_Cookies (n));
-		if (l > len)
+		int n = vFit [i];	
+		vmsCookie c; c.Set (get_Cookies (n));
+		int cCI2 = cookie.GetCommonItemCount (&c);
+		if (cCI2 > cCI || (cCI2 == cCI && len < c.get_ItemCount ()))
 		{
 			nIndex = n;
-			len = l;
+			cCI = cCI2;
+			len = c.get_ItemCount ();
 		}
+	}
+
+	if (nIndex != -1)
+	{
+		vmsCookie c; c.Set (get_Cookies (nIndex));
+		cookie.Add (&c);
+		m_vCookies [nIndex] = cookie.toString ();
 	}
 
 	return nIndex;

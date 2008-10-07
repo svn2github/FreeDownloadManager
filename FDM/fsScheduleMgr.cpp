@@ -694,7 +694,7 @@ BOOL fsScheduleMgr::SaveStateToFile(HANDLE hFile)
 
 			case WTS_STARTDOWNLOAD:
 			case WTS_STOPDOWNLOAD:
-				if (!task->wts.pvIDs->save (hFile))
+				if (!task->wts.dlds.pvIDs->save (hFile))
 					return FALSE;
 			break;
 
@@ -746,8 +746,8 @@ BOOL fsScheduleMgr::LoadStateFromFile(HANDLE hFile)
 
 			case WTS_STARTDOWNLOAD:
 			case WTS_STOPDOWNLOAD:
-				fsnew1 (task->wts.pvIDs, fs::list <UINT>);
-				if (!task->wts.pvIDs->load (hFile))
+				fsnew1 (task->wts.dlds.pvIDs, fs::list <UINT>);
+				if (!task->wts.dlds.pvIDs->load (hFile))
 					return FALSE;
 			break;
 
@@ -780,7 +780,7 @@ void fsScheduleMgr::FreeTask(fsSchedule *task)
 
 		case WTS_STARTDOWNLOAD:
 		case WTS_STOPDOWNLOAD:
-			SAFE_DELETE (task->wts.pvIDs);
+			SAFE_DELETE (task->wts.dlds.pvIDs);
 		break;
 
 		case WTS_DIAL:
@@ -836,9 +836,9 @@ void fsScheduleMgr::StartDownloads(fsSchedule *task)
 {
 	DLDS_LIST vDldsToStart;
 
-	for (int i = task->wts.pvIDs->size () - 1; i >= 0; i--)
+	for (int i = task->wts.dlds.pvIDs->size () - 1; i >= 0; i--)
 	{
-		vmsDownloadSmartPtr dld = _DldsMgr.GetDownloadByID (task->wts.pvIDs->at (i));
+		vmsDownloadSmartPtr dld = _DldsMgr.GetDownloadByID (task->wts.dlds.pvIDs->at (i));
 
 		if (dld != NULL && dld->pMgr->IsRunning () == FALSE)
 		{
@@ -847,7 +847,7 @@ void fsScheduleMgr::StartDownloads(fsSchedule *task)
 
 			if (bDone)
 			{
-				if (task->hts.enType == HTS_DAILY || task->hts.enType == HTS_CONTINUOUSLY)
+				if (task->wts.dlds.dwFlags & SDI_RESTART_COMPLETED_DOWNLOADS)
 					dld->pMgr->SetToRestartState ();
 				else
 					bStart = FALSE;
@@ -866,7 +866,7 @@ void fsScheduleMgr::StartDownloads(fsSchedule *task)
 		}
 		else if (dld == NULL)
 		{
-			task->wts.pvIDs->del (i);
+			task->wts.dlds.pvIDs->del (i);
 		}
 	}
 
@@ -877,9 +877,9 @@ void fsScheduleMgr::StopDownloads(fsSchedule *task)
 {
 	DLDS_LIST vDlds;
 
-	for (int i = task->wts.pvIDs->size () - 1; i >= 0; i--)
+	for (int i = task->wts.dlds.pvIDs->size () - 1; i >= 0; i--)
 	{
-		vmsDownloadSmartPtr dld = _DldsMgr.GetDownloadByID (task->wts.pvIDs->at (i));
+		vmsDownloadSmartPtr dld = _DldsMgr.GetDownloadByID (task->wts.dlds.pvIDs->at (i));
 
 		if (dld != NULL && dld->pMgr->IsRunning ())
 		{		
@@ -891,11 +891,11 @@ void fsScheduleMgr::StopDownloads(fsSchedule *task)
 		}
 		else if (dld == NULL)
 		{
-			task->wts.pvIDs->del (i);
+			task->wts.dlds.pvIDs->del (i);
 		}
 	}
 
-	_DldsMgr.StopDownloads (vDlds);
+	_DldsMgr.StopDownloads (vDlds, TRUE);
 }
 
 void fsScheduleMgr::Dial(fsSchedule *task)
@@ -1257,9 +1257,9 @@ BOOL fsScheduleMgr::IsDownloadScheduled(vmsDownloadSmartPtr dld)
 		if (task->wts.enType == WTS_STARTDOWNLOAD && (task->dwFlags & SCHEDULE_ENABLED))
 		{
 			
-			for (int j = task->wts.pvIDs->size () - 1; j >= 0; j--)
+			for (int j = task->wts.dlds.pvIDs->size () - 1; j >= 0; j--)
 			{
-				if (task->wts.pvIDs->at (j) == dld->nID)
+				if (task->wts.dlds.pvIDs->at (j) == dld->nID)
 				{
 					
 
@@ -1291,12 +1291,12 @@ fsSchedule* fsScheduleMgr::GetScheduleDLTask(DLDS_LIST &vDlds, BOOL bStartDL)
 		fsSchedule *task = m_vTasks [i];
 		if (task->wts.enType == enWTS)
 		{
-			if (task->wts.pvIDs->size () == cDlds)
+			if (task->wts.dlds.pvIDs->size () == cDlds)
 			{
 				for (int j = 0; j < cDlds; j++)  
 				{
 					for (int k = 0; k < cDlds; k++)   
-						if (vDlds [j]->nID == task->wts.pvIDs->at (k))
+						if (vDlds [j]->nID == task->wts.dlds.pvIDs->at (k))
 							break;
 
 					if (k == cDlds) 
@@ -1334,9 +1334,9 @@ void fsScheduleMgr::UpdateTaskDownloads(fsSchedule *task)
 {
 	DLDS_LIST vDlds;
 
-	for (int j = 0; j < task->wts.pvIDs->size ();  j++)
+	for (int j = 0; j < task->wts.dlds.pvIDs->size ();  j++)
 	{
-		vmsDownloadSmartPtr dld = _DldsMgr.GetDownloadByID (task->wts.pvIDs->at (j));
+		vmsDownloadSmartPtr dld = _DldsMgr.GetDownloadByID (task->wts.dlds.pvIDs->at (j));
 		if (dld)
 			_pwndDownloads->UpdateDownload (dld);
 	}

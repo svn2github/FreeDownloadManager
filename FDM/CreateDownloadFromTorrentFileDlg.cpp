@@ -55,6 +55,8 @@ END_MESSAGE_MAP()
 BOOL CCreateDownloadFromTorrentFileDlg::OnInitDialog() 
 {
 	CDialog::OnInitDialog();
+
+	m_dld->pMgr->GetBtDownloadMgr ()->LoadTorrentFile (m_strTorrentFile);
 	
 	m_btnChooseFolder.SetIcon (SICO (IDI_CHOOSEFOLDER));
 	m_btnCreateGroup.SetIcon (SICO (IDI_CREATEGROUP));
@@ -196,7 +198,7 @@ void CCreateDownloadFromTorrentFileDlg::OnAdvanced()
 	CBtDldSheet sheet (LS (L_ADVANCED), this);
 	DLDS_LIST v;
 	v.push_back (m_dld);
-	sheet.Init (&v, BTDS_MISC_PAGE);
+	sheet.Init (&v, BTDS_FILES_PAGE | BTDS_MISC_PAGE);
 	_DlgMgr.DoModal (&sheet);
 }
 

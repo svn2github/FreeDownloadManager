@@ -21,12 +21,12 @@ enum {
 }; 
 
 CURLdigest Curl_input_digest(struct connectdata *conn,
-                             bool proxy, char *header); 
+                             bool proxy, const char *header); 
 
 CURLcode Curl_output_digest(struct connectdata *conn,
                             bool proxy,
-                            unsigned char *request,
-                            unsigned char *uripath);
+                            const unsigned char *request,
+                            const unsigned char *uripath);
 void Curl_digest_cleanup_one(struct digestdata *dig);
 
 #if !defined(CURL_DISABLE_HTTP) && !defined(CURL_DISABLE_CRYPTO_AUTH)

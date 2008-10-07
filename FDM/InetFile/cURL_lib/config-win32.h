@@ -5,7 +5,7 @@
 #ifndef __LIB_CONFIG_WIN32_H
 #define __LIB_CONFIG_WIN32_H            
 
-#define HAVE_ASSERT_H 1          
+#define HAVE_ASSERT_H 1       
 
 #define HAVE_FCNTL_H 1    
 
@@ -139,15 +139,15 @@
 
 #define RETSIGTYPE void
 
-#if (defined(__WATCOMC__) && (__WATCOMC__ >= 1240)) || defined(__POCC__)
+#ifndef _SSIZE_T_DEFINED
+#if (defined(__WATCOMC__) && (__WATCOMC__ >= 1240)) || defined(__POCC__) || \
+    defined(__MINGW32__)
 #elif defined(_WIN64)
 #define ssize_t __int64
 #else
 #define ssize_t int
-#endif 
-
-#ifndef HAVE_WS2TCPIP_H
-#define socklen_t int
+#endif
+#define _SSIZE_T_DEFINED
 #endif     
 
 #define SIZEOF_LONG_DOUBLE 16    
@@ -170,12 +170,51 @@
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #define HAVE_VARIADIC_MACROS_C99 1
-#endif        
+#endif 
 
-#define DL_LDAP_FILE "wldap32.dll"     
+#if defined(__MINGW32__) || defined(__WATCOMC__)
+#define HAVE_LONGLONG 1
+#endif 
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #define _CRT_SECURE_NO_DEPRECATE 1
-#define _CRT_NONSTDC_NO_DEPRECATE 1 
+#define _CRT_NONSTDC_NO_DEPRECATE 1
+#endif  
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1400)
+#  ifndef _USE_32BIT_TIME_T
+#    define SIZEOF_TIME_T 8
+#  else
+#    define SIZEOF_TIME_T 4
+#  endif
+#endif  
+
+#if defined(_MSC_VER) && (_MSC_VER >= 1500)
+#  ifndef _WIN32_WINNT
+#    define _WIN32_WINNT 0x0501
+#  endif
+#  ifndef WINVER
+#    define WINVER 0x0501
+#  endif
+#  if (_WIN32_WINNT < 0x0501) || (WINVER < 0x0501)
+#    error VS2008 does not support Windows build targets prior to WinXP
+#  endif
+#endif    
+
+#if defined(CURL_HAS_NOVELL_LDAPSDK) || defined(CURL_HAS_MOZILLA_LDAPSDK)
+#undef CURL_LDAP_HYBRID
+#undef CURL_LDAP_WIN
+#define HAVE_LDAP_SSL_H 1
+#define HAVE_LDAP_URL_PARSE 1
+#elif defined(CURL_HAS_OPENLDAP_LDAPSDK)
+#undef CURL_LDAP_HYBRID
+#undef CURL_LDAP_WIN
+#define HAVE_LDAP_URL_PARSE 1
+#else
+#undef CURL_LDAP_HYBRID
+#undef HAVE_LDAP_URL_PARSE
+#define CURL_LDAP_WIN 1
+#endif     
 
 #undef OS
 #if defined(_M_IX86) || defined(__i386__) 

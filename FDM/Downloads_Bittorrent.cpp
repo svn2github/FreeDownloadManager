@@ -37,7 +37,7 @@ BOOL CDownloads_Bittorrent::Create(CWnd *pParent)
 	CRect rc (50, 50, 275, 70);
 
 	if (FALSE == CTabCtrl::Create (TCS_SINGLELINE|TCS_RIGHTJUSTIFY|TCS_FOCUSNEVER,
-			rc, pParent, 0x5a11))
+			rc, pParent, 0))
 		return FALSE;
 
 	LOGFONT lf;
@@ -63,6 +63,7 @@ void CDownloads_Bittorrent::Set_ActiveDownload(vmsDownloadSmartPtr dld)
 	m_general.set_ActiveDownload (dld);
 	m_peers.set_ActiveDownload (dld);
 	m_files.set_ActiveDownload (dld);
+	m_dldActive = dld;
 }
 
 void CDownloads_Bittorrent::ApplyLanguage()
@@ -165,4 +166,14 @@ void CDownloads_Bittorrent::OnShowWindow(BOOL bShow, UINT nStatus)
 	size_t nCur = GetCurSel ();
 	if (nCur != -1)
 		m_vTabs [nCur]->PostMessage (WM_COMMAND, ID_UPDATE);
+}
+
+vmsDownloadSmartPtr CDownloads_Bittorrent::getActiveDownload()
+{
+	return m_dldActive;
+}	
+
+void CDownloads_Bittorrent::UpdateActiveDownload()
+{
+	Set_ActiveDownload (m_dldActive);
 }

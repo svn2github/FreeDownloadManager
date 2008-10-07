@@ -15,6 +15,7 @@
 class vmsBtSupport  
 {
 public:
+	static int getBtDllVersion();
 	vmsBtFile* CreateTorrentFileObject();
 	
 	void Shutdown();

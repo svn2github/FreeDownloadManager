@@ -63,7 +63,7 @@ LPCSTR _ppszAgentNames [] = {
 };  
 
 LPCSTR _ppszAgentValues [] = {
-	PRG_AGENT_NAME,
+	vmsFdmAppMgr::getAppAgentName (),
 	"Mozilla/4.0 (compatible; MSIE 5.0; Windows 98)",
 	"Mozilla/4.05 [en] (Win95; I)",
 	"Mozilla/4.0 (Windows 95;US) Opera 3.60  [en]"

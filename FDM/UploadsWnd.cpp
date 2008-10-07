@@ -327,7 +327,7 @@ BOOL CUploadsWnd::LoadFumCoreDll(bool bShowUI)
 			m_hUploadsDll = LoadLibrary (strFP + "fumcore.dll");
 		#else
 			m_hUploadsDll = LoadLibrary ("D:\\VCW\\FDM\\FDM\\Uploader\\CoreDll\\Debug\\fumcore.dll");
-			ASSERT (m_hUploadsDll != NULL);
+
 		#endif
 	
 			if (m_hUploadsDll == NULL)

@@ -17,6 +17,7 @@
 class fsInternetFile2 : public fsSpeaking 
 {
 public:
+	void setUseFtpAsciiMode (bool bUse);
 	UINT64 GetFileSize();
 	LPCSTR get_SuggestedFileName();
 	fsResumeSupportType IsResumeSupported();

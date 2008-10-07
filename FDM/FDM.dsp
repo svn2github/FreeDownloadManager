@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MD /W4 /GX /Zi /O2 /I "include.add" /I "include.add\dshow" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "CURL_STATICLIB" /Yu"stdafx.h" /FD /EHa /c
+# ADD CPP /nologo /MD /W4 /GX /Zi /O2 /I "include.add" /I "include.add\dshow" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "CURL_STATICLIB" /D "USE_SSLEAY" /Yu"stdafx.h" /FD /EHa /c
 # SUBTRACT CPP /WX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /I "./uploader/fum/" /D "NDEBUG" /win32
@@ -54,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 PartMediaPreview/Release/PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Release/FDMCustomized_lib.lib inetfile.lib alsfolderbrowser.lib Mswsock.lib Hash\Release\hash.lib inetfile/curl_lib/release/curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"Lib.add" /OPT:REF /MAPINFO:LINES /MAPINFO:EXPORTS
+# ADD LINK32 PartMediaPreview/Release/PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Release/FDMCustomized_lib.lib inetfile.lib alsfolderbrowser.lib Mswsock.lib Hash\Release\hash.lib inetfile/curl_lib/release/curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib Version.lib Iphlpapi.lib wldap32.lib libeay32.lib ssleay32.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"Lib.add" /OPT:REF /MAPINFO:LINES /MAPINFO:EXPORTS
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "FDM - Win32 Debug"
@@ -71,7 +71,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /GZ /c
-# ADD CPP /nologo /MDd /W4 /Gm /GX /ZI /Od /I "include.add" /I "include.add\dshow" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "CURL_STATICLIB" /Yu"stdafx.h" /FD /GZ /c
+# ADD CPP /nologo /MDd /W4 /Gm /GX /ZI /Od /I "include.add" /I "include.add\dshow" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "CURL_STATICLIB" /D "USE_SSLEAY" /Yu"stdafx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /I "./uploader/fum/" /D "_DEBUG" /win32
 # ADD BASE RSC /l 0x419 /d "_DEBUG" /d "_AFXDLL"
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 PartMediaPreview\Debug\PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Debug/FDMCustomized_lib.lib inetfile_d.lib alsFolderBrowserd.lib Hash\Debug\hash.lib InetFile\curl_lib\debug\curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib /nologo /subsystem:windows /debug /machine:I386 /out:"./debug\fdm.exe" /pdbtype:sept /libpath:"Lib.add"
+# ADD LINK32 PartMediaPreview\Debug\PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Debug/FDMCustomized_lib.lib inetfile_d.lib alsFolderBrowserd.lib Hash\Debug\hash.lib InetFile\curl_lib\debug\curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib Version.lib Iphlpapi.lib libeay32d.lib ssleay32d.lib wldap32.lib /nologo /subsystem:windows /debug /machine:I386 /out:"./debug\fdm.exe" /pdbtype:sept /libpath:"Lib.add"
 
 !ENDIF 
 
@@ -102,11 +102,19 @@ SOURCE=.\AppStatusBar.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\BtDld_Files.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\BtDld_General.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\BtDld_Misc.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\BtDld_Seeding.cpp
 # End Source File
 # Begin Source File
 
@@ -127,6 +135,10 @@ SOURCE=.\ChildView.cpp
 # Begin Source File
 
 SOURCE=.\ClientAreaWnd.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ColumnTreeCtrl.cpp
 # End Source File
 # Begin Source File
 
@@ -190,6 +202,10 @@ SOURCE=.\Dlg_CreateFVDownload.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Dlg_CreateNewTorrent.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Dlg_Download.cpp
 # End Source File
 # Begin Source File
@@ -203,6 +219,62 @@ SOURCE=.\Dlg_MakePortableVer.cpp
 # Begin Source File
 
 SOURCE=.\Dlg_Opinions.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads_Bittorrent.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads_Mirrors.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads_Monitoring.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads_Network.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads_NewDld.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_General.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_General_History.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_General_Misc.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_General_Misc_Advanced.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Notifications.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Page.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_SiteMgr.cpp
 # End Source File
 # Begin Source File
 
@@ -295,6 +367,10 @@ SOURCE=.\DlgFind.cpp
 # Begin Source File
 
 SOURCE=.\DlgFindAdvanced.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgProgramOptions.cpp
 # End Source File
 # Begin Source File
 
@@ -966,6 +1042,14 @@ SOURCE=.\ToolBarEx.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Torrents_Tasks.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TorrentsWnd.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\TreeCtrlEx.cpp
 # End Source File
 # Begin Source File
@@ -1018,6 +1102,10 @@ SOURCE=.\vmsAppSettingsStore.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsAppVersion.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsArchive.cpp
 # End Source File
 # Begin Source File
@@ -1035,6 +1123,10 @@ SOURCE=.\vmsArchiveRAR.cpp
 # Begin Source File
 
 SOURCE=.\vmsBatchList.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsBinaryFileVersionInfo.cpp
 # End Source File
 # Begin Source File
 
@@ -1190,6 +1282,10 @@ SOURCE=.\vmsTorrentExtension.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsTreeCtrlHelper.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsUnRARDLL.cpp
 # End Source File
 # Begin Source File
@@ -1294,11 +1390,19 @@ SOURCE=.\AppStatusBar.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\BtDld_Files.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\BtDld_General.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\BtDld_Misc.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\BtDld_Seeding.h
 # End Source File
 # Begin Source File
 
@@ -1319,6 +1423,10 @@ SOURCE=.\ChildView.h
 # Begin Source File
 
 SOURCE=.\ClientAreaWnd.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ColumnTreeCtrl.h
 # End Source File
 # Begin Source File
 
@@ -1386,6 +1494,10 @@ SOURCE=.\Dlg_CreateFVDownload.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Dlg_CreateNewTorrent.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Dlg_Download.h
 # End Source File
 # Begin Source File
@@ -1399,6 +1511,62 @@ SOURCE=.\Dlg_MakePortableVer.h
 # Begin Source File
 
 SOURCE=.\Dlg_Opinions.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads_Bittorrent.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads_Mirrors.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads_Monitoring.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads_Network.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads_NewDld.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_General.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_General_History.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_General_Misc.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_General_Misc_Advanced.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Notifications.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Page.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_SiteMgr.h
 # End Source File
 # Begin Source File
 
@@ -1491,6 +1659,10 @@ SOURCE=.\DlgFind.h
 # Begin Source File
 
 SOURCE=.\DlgFindAdvanced.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgProgramOptions.h
 # End Source File
 # Begin Source File
 
@@ -2146,6 +2318,14 @@ SOURCE=.\ToolBarEx.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Torrents_Tasks.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\TorrentsWnd.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\TreeCtrlEx.h
 # End Source File
 # Begin Source File
@@ -2198,6 +2378,10 @@ SOURCE=.\vmsAppSettingsStore.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsAppVersion.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsArchive.h
 # End Source File
 # Begin Source File
@@ -2215,6 +2399,10 @@ SOURCE=.\vmsArchiveRAR.h
 # Begin Source File
 
 SOURCE=.\vmsBatchList.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsBinaryFileVersionInfo.h
 # End Source File
 # Begin Source File
 
@@ -2371,6 +2559,10 @@ SOURCE=.\vmsTheme.h
 # Begin Source File
 
 SOURCE=.\vmsTorrentExtension.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsTreeCtrlHelper.h
 # End Source File
 # Begin Source File
 
@@ -2699,6 +2891,22 @@ SOURCE=.\res\tool0_16_d.bmp
 # Begin Source File
 
 SOURCE=.\res\tool0_d.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\tool_bt.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\tool_bt_16.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\tool_bt_16_d.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\tool_bt_d.bmp
 # End Source File
 # Begin Source File
 

@@ -6,7 +6,6 @@
 #define __DICT_H 
 
 #ifndef CURL_DISABLE_DICT
-CURLcode Curl_dict(struct connectdata *conn, bool *done);
-CURLcode Curl_dict_done(struct connectdata *conn);
+extern const struct Curl_handler Curl_handler_dict;
 #endif
 #endif

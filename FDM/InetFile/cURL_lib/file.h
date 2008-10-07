@@ -6,8 +6,6 @@
 #define __FILE_H 
 
 #ifndef CURL_DISABLE_FILE
-CURLcode Curl_file(struct connectdata *, bool *done);
-CURLcode Curl_file_done(struct connectdata *, CURLcode, bool premature);
-CURLcode Curl_file_connect(struct connectdata *);
+extern const struct Curl_handler Curl_handler_file;
 #endif
 #endif

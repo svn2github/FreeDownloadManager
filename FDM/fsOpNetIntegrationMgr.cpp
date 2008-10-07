@@ -32,6 +32,7 @@ void fsOpNetIntegrationMgr::Initialize()
 	CString strNetKey1 = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Netscp.exe";
 	CString strNetKey2 = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Netscp6.exe";
 	CString strNetKey3 = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Netscape.exe";
+	CString strNetKey4 = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\navigator.exe";
 	
 	CString strFfKey = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Firefox.exe";
 	
@@ -83,7 +84,8 @@ void fsOpNetIntegrationMgr::Initialize()
 
 	if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strNetKey1, KEY_READ) ||
 		 ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strNetKey2, KEY_READ) || 
-		 ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strNetKey3, KEY_READ))
+		 ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strNetKey3, KEY_READ) ||
+		 ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strNetKey4, KEY_READ))
 	{
 		char szPath [MY_MAX_PATH];
 		DWORD dw = sizeof (szPath);
@@ -149,7 +151,7 @@ BOOL fsOpNetIntegrationMgr::IsOperaPluginInstalled(BOOL bQueryPluginDirIfUnknown
 		if (bQueryPluginDirIfUnknown == FALSE)
 			return FALSE;
 
-		if (MessageBox (NULL, LS (L_CANTFINDOPERADIR), PRG_NAME, MB_ICONEXCLAMATION|MB_YESNO) == IDNO)
+		if (MessageBox (NULL, LS (L_CANTFINDOPERADIR), vmsFdmAppMgr::getAppName (), MB_ICONEXCLAMATION|MB_YESNO) == IDNO)
 			return FALSE;
 
 		CFolderBrowser *fb = CFolderBrowser::Create (LS (L_CHOOSEOUTFOLDER), NULL, NULL, NULL);
@@ -223,7 +225,7 @@ BOOL fsOpNetIntegrationMgr::IsNetscapePluginInstalled(BOOL bQueryPluginDirIfUnkn
 		if (bQueryPluginDirIfUnknown == FALSE)
 			return FALSE;
 
-		if (MessageBox (NULL, LS (L_CANTFINDNETSCAPEDIR), PRG_NAME, MB_ICONEXCLAMATION|MB_YESNO) == IDNO)
+		if (MessageBox (NULL, LS (L_CANTFINDNETSCAPEDIR), vmsFdmAppMgr::getAppName (), MB_ICONEXCLAMATION|MB_YESNO) == IDNO)
 			return FALSE;
 
 		CFolderBrowser *fb = CFolderBrowser::Create (LS (L_CHOOSEOUTFOLDER), NULL, NULL, NULL);
@@ -287,7 +289,7 @@ BOOL fsOpNetIntegrationMgr::IsFirefoxPluginInstalled(BOOL bQueryPluginDirIfUnkno
 		if (bQueryPluginDirIfUnknown == FALSE)
 			return FALSE;
 
-		if (MessageBox (NULL, LS (L_CANTFINDFIREFOXDIR), PRG_NAME, MB_ICONEXCLAMATION|MB_YESNO) == IDNO)
+		if (MessageBox (NULL, LS (L_CANTFINDFIREFOXDIR), vmsFdmAppMgr::getAppName (), MB_ICONEXCLAMATION|MB_YESNO) == IDNO)
 			return FALSE;
 
 		CFolderBrowser *fb = CFolderBrowser::Create (LS (L_CHOOSEOUTFOLDER), NULL, NULL, NULL);

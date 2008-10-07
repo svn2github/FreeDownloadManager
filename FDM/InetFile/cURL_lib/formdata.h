@@ -8,6 +8,7 @@
 enum formtype {
   FORM_DATA,    
   FORM_CONTENT, 
+  FORM_CALLBACK, 
   FORM_FILE     
 }; 
 
@@ -22,6 +23,7 @@ struct Form {
   struct FormData *data; 
   size_t sent;           
   FILE *fp;              
+  curl_read_callback fread_func; 
 }; 
 
 typedef struct FormInfo {
@@ -38,6 +40,7 @@ typedef struct FormInfo {
   size_t bufferlength;
   char *showfilename; 
   bool showfilename_alloc;
+  char *userp;        
   struct curl_slist* contentheader;
   struct FormInfo *more;
 } FormInfo;

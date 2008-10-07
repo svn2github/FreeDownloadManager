@@ -35,8 +35,8 @@ public:
 		if (strnicmp (pszSite, "www.", 4) == 0)
 			pszSite += 4;	
 
-		if (stricmp (pszSite, "youtube.com") == 0)
-			return 0;
+		register_site_with_subdomains ("youtube.com", 0);
+		
 
 		if (strnicmp (pszSite, "video.google.", 13) == 0)
 			return 1;

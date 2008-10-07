@@ -15,15 +15,6 @@
 #define _WIN32_IE 0x501
 #define _WIN32_WINNT 0x400  
 
-const int PRG_BUILD_NUMBER = 724;
-
-const char* const PRG_AGENT_NAME = "FDM 2.x";
-
-const char* const PRG_NAME		= "Free Download Manager";
-const char* const PRG_FULL_NAME = "Free Download Manager 2.5";
-
-const char* const PRG_VERSION = "2.5";
-
 const char* const IE_USERAGENT_ADDITION	= "FDM";    
 
 #ifdef _USELOGGING

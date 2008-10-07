@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2007, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2008, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: hostares.c,v 1.32 2007-06-11 13:35:33 bagder Exp $
+ * $Id: hostares.c,v 1.37 2008-04-29 04:18:02 yangtse Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -109,7 +109,8 @@ int Curl_resolv_getsock(struct connectdata *conn,
 
 {
   struct timeval maxtime;
-  struct timeval timeout;
+  struct timeval timebuf;
+  struct timeval *timeout;
   int max = ares_getsock(conn->data->state.areschannel,
                          (int *)socks, numsocks);
 
@@ -117,10 +118,10 @@ int Curl_resolv_getsock(struct connectdata *conn,
   maxtime.tv_sec = CURL_TIMEOUT_RESOLVE;
   maxtime.tv_usec = 0;
 
-  ares_timeout(conn->data->state.areschannel, &maxtime, &timeout);
+  timeout = ares_timeout(conn->data->state.areschannel, &maxtime, &timebuf);
 
   Curl_expire(conn->data,
-              (timeout.tv_sec * 1000) + (timeout.tv_usec/1000) );
+              (timeout->tv_sec * 1000) + (timeout->tv_usec/1000));
 
   return max;
 }
@@ -142,30 +143,27 @@ static int ares_waitperform(struct connectdata *conn, int timeout_ms)
   int bitmask;
   int socks[ARES_GETSOCK_MAXNUM];
   struct pollfd pfd[ARES_GETSOCK_MAXNUM];
-  int m;
   int i;
-  int num;
+  int num = 0;
 
   bitmask = ares_getsock(data->state.areschannel, socks, ARES_GETSOCK_MAXNUM);
 
   for(i=0; i < ARES_GETSOCK_MAXNUM; i++) {
     pfd[i].events = 0;
-    m=0;
+    pfd[i].revents = 0;
     if(ARES_GETSOCK_READABLE(bitmask, i)) {
       pfd[i].fd = socks[i];
       pfd[i].events |= POLLRDNORM|POLLIN;
-      m=1;
     }
     if(ARES_GETSOCK_WRITABLE(bitmask, i)) {
       pfd[i].fd = socks[i];
       pfd[i].events |= POLLWRNORM|POLLOUT;
-      m=1;
     }
-    pfd[i].revents=0;
-    if(!m)
+    if(pfd[i].events != 0)
+      num++;
+    else
       break;
   }
-  num = i;
 
   if(num)
     nfds = Curl_poll(pfd, num, timeout_ms);
@@ -232,6 +230,7 @@ CURLcode Curl_wait_for_resolv(struct connectdata *conn,
   CURLcode rc=CURLE_OK;
   struct SessionHandle *data = conn->data;
   long timeout;
+  struct timeval now = Curl_tvnow();
 
   /* now, see if there's a connect timeout or a regular timeout to
      use instead of the default one */
@@ -243,25 +242,27 @@ CURLcode Curl_wait_for_resolv(struct connectdata *conn,
     timeout = CURL_TIMEOUT_RESOLVE * 1000; /* default name resolve timeout */
 
   /* Wait for the name resolve query to complete. */
-  while (1) {
+  while(1) {
     struct timeval *tvp, tv, store;
-    struct timeval now = Curl_tvnow();
     long timediff;
+    int itimeout;
 
-    store.tv_sec = (int)timeout/1000;
-    store.tv_usec = (timeout%1000)*1000;
+    itimeout = (timeout > (long)INT_MAX) ? INT_MAX : (int)timeout;
+
+    store.tv_sec = itimeout/1000;
+    store.tv_usec = (itimeout%1000)*1000;
 
     tvp = ares_timeout(data->state.areschannel, &store, &tv);
 
     /* use the timeout period ares returned to us above */
-    ares_waitperform(conn, tv.tv_sec * 1000 + tv.tv_usec/1000);
+    ares_waitperform(conn, (int)(tvp->tv_sec * 1000 + tvp->tv_usec/1000));
 
     if(conn->async.done)
       break;
 
     timediff = Curl_tvdiff(Curl_tvnow(), now); /* spent time */
     timeout -= timediff?timediff:1; /* always deduct at least 1 */
-    if (timeout < 0) {
+    if(timeout < 0) {
       /* our timeout, so we cancel the ares operation */
       ares_cancel(data->state.areschannel);
       break;
@@ -278,7 +279,7 @@ CURLcode Curl_wait_for_resolv(struct connectdata *conn,
     /* a name was not resolved */
     if((timeout < 0) || (conn->async.status == ARES_ETIMEOUT)) {
       failf(data, "Resolving host timed out: %s", conn->host.dispname);
-      rc = CURLE_OPERATION_TIMEDOUT;
+      rc = CURLE_COULDNT_RESOLVE_HOST;
     }
     else if(conn->async.done) {
       failf(data, "Could not resolve host: %s (%s)", conn->host.dispname,
@@ -315,7 +316,7 @@ Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
 
   *waitp = FALSE;
 
-  if (in != CURL_INADDR_NONE) {
+  if(in != CURL_INADDR_NONE) {
     /* This is a dotted IP address 123.123.123.123-style */
     return Curl_ip2addr(in, hostname, port);
   }

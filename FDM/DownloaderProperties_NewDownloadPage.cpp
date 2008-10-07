@@ -54,6 +54,7 @@ BEGIN_MESSAGE_MAP(CDownloaderProperties_NewDownloadPage, CPropertyPage)
 	ON_BN_CLICKED(IDC_NEWGRP_1, OnNewgrp1)
 	ON_BN_CLICKED(IDC_NEWGRP_2, OnNewgrp2)
 	ON_BN_CLICKED(IDC_CREATEGROUP2, OnCreategroup2)
+	ON_BN_CLICKED(IDC_SETGRPSFLDR, OnSetgrpsfldr)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()      
 
@@ -138,6 +139,7 @@ void CDownloaderProperties_NewDownloadPage::ApplyLanguage()
 		fsDlgLngInfo (IDC_ADVANCED, L_ADVANCED),
 		fsDlgLngInfo (IDC_AUTOSTART, L_STARTDLDAUTOMATICALLY),
 		fsDlgLngInfo (IDC_USEZIP, L_USEZIPPREVIEW),
+		fsDlgLngInfo (IDC_SETGRPSFLDR, L_SETDEFDLDFLDR),
 	};
 
 	_LngMgr.ApplyLanguage (this, lnginfo, sizeof (lnginfo) / sizeof (fsDlgLngInfo), 0);
@@ -252,4 +254,22 @@ void CDownloaderProperties_NewDownloadPage::OnCreategroup2()
 {
 	if (m_wndGroups2.CreateNewGroup (m_wndGroups2.GetSelectedGroup ()))
 		SetModified ();	
+}
+
+void CDownloaderProperties_NewDownloadPage::OnSetgrpsfldr() 
+{
+	CFolderBrowser *fb = CFolderBrowser::Create (LS (L_CHOOSEOUTFOLDER), 
+		_DldsGrps.FindGroup (GRP_OTHER_ID)->strOutFolder, NULL, this);
+	if (fb == NULL)
+		return;
+
+	CString str = fb->GetPath ();
+	if (str.Right (1) != '\\')
+		str += '\\';
+
+	if (MessageBox (LS (L_ALLGRPSFLDRSWBCHANGEDTOTHISFLDR), NULL, MB_YESNO) == IDNO)
+		return;
+
+	for (size_t i = 0; i < _DldsGrps.GetTotalCount (); i++)
+		_DldsGrps.GetGroup (i)->strOutFolder = str;
 }

@@ -5,7 +5,12 @@
 #ifndef __CURL_CURL_H
 #define __CURL_CURL_H   
 
-#include "curlver.h" 
+#include "curlver.h"   
+
+#if (defined(_WIN32) || defined(__WIN32__)) && \
+     !defined(WIN32) && !defined(__SYMBIAN32__)
+#define WIN32
+#endif
 
 #include <stdio.h>
 #include <limits.h> 
@@ -18,13 +23,41 @@
 # include <time.h>
 #endif 
 
-typedef void CURL;
+#if defined(WIN32) && !defined(_WIN32_WCE) && !defined(__GNUC__) && \
+  !defined(__CYGWIN__) || defined(__MINGW32__)
+#if !(defined(_WINSOCKAPI_) || defined(_WINSOCK_H))
+
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#endif
+#else 
+
+#if defined(_AIX) || defined(__NOVELL_LIBC__) || defined(__NetBSD__) || \
+    defined(__minix) || defined(__SYMBIAN32__)
+#include <sys/select.h>
+#endif
+
+#ifndef _WIN32_WCE
+#include <sys/socket.h>
+#endif
+#ifndef __WATCOMC__
+#include <sys/time.h>
+#endif
+#include <sys/types.h>
+#endif
+
+#ifdef __BEOS__
+#include <support/SupportDefs.h>
+#endif
 
 #ifdef  __cplusplus
 extern "C" {
-#endif 
+#endif
 
-#if (defined(WIN32) || defined(_WIN32)) && !defined(CURL_STATICLIB)
+typedef void CURL; 
+
+#if (defined(WIN32) || defined(_WIN32) || defined(__SYMBIAN32__)) && \
+     !defined(CURL_STATICLIB)
 #if defined(BUILDING_LIBCURL)
 #define CURL_EXTERN  __declspec(dllexport)
 #else
@@ -40,7 +73,8 @@ extern "C" {
 #endif
 #endif  
 
-#if (defined(_MSC_VER) && !defined(__POCC__)) || (defined(__LCC__) && defined(WIN32))
+#if (defined(_MSC_VER) && !defined(__POCC__)) || (defined(__LCC__) && \
+     defined(WIN32))
 
 #ifdef _WIN32_WCE
   typedef long curl_off_t;
@@ -54,6 +88,11 @@ extern "C" {
 
   typedef long long curl_off_t;
 #define CURL_FORMAT_OFF_T "%I64d"
+#else 
+#if defined(__ILEC400__)
+
+  typedef long long curl_off_t;
+#define CURL_FORMAT_OFF_T "%lld"
 #else  
 
   typedef off_t curl_off_t; 
@@ -76,6 +115,7 @@ extern "C" {
 #endif
 #endif 
 #endif 
+#endif 
 
 #ifdef UNDEF_FILE_OFFSET_BITS
 
@@ -85,32 +125,6 @@ extern "C" {
 #ifdef UNDEF_FILESIZEBITS
 
 #undef FILESIZEBITS
-#endif
-
-#if defined(_WIN32) && !defined(WIN32)
-
-#define WIN32 1
-#endif
-
-#if defined(WIN32) && !defined(_WIN32_WCE) && !defined(__GNUC__) && \
-  !defined(__CYGWIN__) || defined(__MINGW32__)
-#if !(defined(_WINSOCKAPI_) || defined(_WINSOCK_H))
-
-#include <winsock2.h>
-#endif
-#else 
-
-#if defined(_AIX) || defined(__NOVELL_LIBC__) || defined(__NetBSD__) || defined(__minix)
-#include <sys/select.h>
-#endif
-
-#ifndef _WIN32_WCE
-#include <sys/socket.h>
-#endif
-#ifndef __WATCOMC__
-#include <sys/time.h>
-#endif
-#include <sys/types.h>
 #endif
 
 #ifndef curl_socket_typedef
@@ -143,8 +157,10 @@ struct curl_httppost {
 #define HTTPPOST_PTRCONTENTS (1<<3) 
 #define HTTPPOST_BUFFER (1<<4)      
 #define HTTPPOST_PTRBUFFER (1<<5)   
+#define HTTPPOST_CALLBACK (1<<6)    
 
   char *showfilename;               
+  void *userp;                      
 };
 
 typedef int (*curl_progress_callback)(void *clientp,
@@ -158,12 +174,19 @@ typedef int (*curl_progress_callback)(void *clientp,
 #define CURL_MAX_WRITE_SIZE 16384
 #endif
 
+#define CURL_WRITEFUNC_PAUSE 0x10000001
 typedef size_t (*curl_write_callback)(char *buffer,
                                       size_t size,
                                       size_t nitems,
                                       void *outstream); 
 
 #define CURL_READFUNC_ABORT 0x10000000
+
+#define CURL_READFUNC_PAUSE 0x10000001
+typedef int (*curl_seek_callback)(void *instream,
+                                  curl_off_t offset,
+                                  int origin); 
+
 typedef size_t (*curl_read_callback)(char *buffer,
                                       size_t size,
                                       size_t nitems,
@@ -177,6 +200,19 @@ typedef enum  {
 typedef int (*curl_sockopt_callback)(void *clientp,
                                      curl_socket_t curlfd,
                                      curlsocktype purpose);
+
+struct curl_sockaddr {
+  int family;
+  int socktype;
+  int protocol;
+  unsigned int addrlen; 
+  struct sockaddr addr;
+};
+
+typedef curl_socket_t
+(*curl_opensocket_callback)(void *clientp,
+                            curlsocktype purpose,
+                            struct curl_sockaddr *address);
 
 #ifndef CURL_NO_OLDIES
   
@@ -232,77 +268,77 @@ typedef enum {
   CURLE_UNSUPPORTED_PROTOCOL,    
   CURLE_FAILED_INIT,             
   CURLE_URL_MALFORMAT,           
-  CURLE_URL_MALFORMAT_USER,      
+  CURLE_OBSOLETE4,               
   CURLE_COULDNT_RESOLVE_PROXY,   
   CURLE_COULDNT_RESOLVE_HOST,    
   CURLE_COULDNT_CONNECT,         
   CURLE_FTP_WEIRD_SERVER_REPLY,  
-  CURLE_FTP_ACCESS_DENIED,       
-  CURLE_FTP_USER_PASSWORD_INCORRECT, 
+  CURLE_REMOTE_ACCESS_DENIED,    
+  CURLE_OBSOLETE10,              
   CURLE_FTP_WEIRD_PASS_REPLY,    
-  CURLE_FTP_WEIRD_USER_REPLY,    
+  CURLE_OBSOLETE12,              
   CURLE_FTP_WEIRD_PASV_REPLY,    
   CURLE_FTP_WEIRD_227_FORMAT,    
   CURLE_FTP_CANT_GET_HOST,       
-  CURLE_FTP_CANT_RECONNECT,      
-  CURLE_FTP_COULDNT_SET_BINARY,  
+  CURLE_OBSOLETE16,              
+  CURLE_FTP_COULDNT_SET_TYPE,    
   CURLE_PARTIAL_FILE,            
   CURLE_FTP_COULDNT_RETR_FILE,   
-  CURLE_FTP_WRITE_ERROR,         
-  CURLE_FTP_QUOTE_ERROR,         
+  CURLE_OBSOLETE20,              
+  CURLE_QUOTE_ERROR,             
   CURLE_HTTP_RETURNED_ERROR,     
   CURLE_WRITE_ERROR,             
-  CURLE_MALFORMAT_USER,          
+  CURLE_OBSOLETE24,              
   CURLE_UPLOAD_FAILED,           
   CURLE_READ_ERROR,              
   CURLE_OUT_OF_MEMORY,           
   
-  CURLE_OPERATION_TIMEOUTED,     
-  CURLE_FTP_COULDNT_SET_ASCII,   
+  CURLE_OPERATION_TIMEDOUT,      
+  CURLE_OBSOLETE29,              
   CURLE_FTP_PORT_FAILED,         
   CURLE_FTP_COULDNT_USE_REST,    
-  CURLE_FTP_COULDNT_GET_SIZE,    
-  CURLE_HTTP_RANGE_ERROR,        
+  CURLE_OBSOLETE32,              
+  CURLE_RANGE_ERROR,             
   CURLE_HTTP_POST_ERROR,         
   CURLE_SSL_CONNECT_ERROR,       
   CURLE_BAD_DOWNLOAD_RESUME,     
   CURLE_FILE_COULDNT_READ_FILE,  
   CURLE_LDAP_CANNOT_BIND,        
   CURLE_LDAP_SEARCH_FAILED,      
-  CURLE_LIBRARY_NOT_FOUND,       
+  CURLE_OBSOLETE40,              
   CURLE_FUNCTION_NOT_FOUND,      
   CURLE_ABORTED_BY_CALLBACK,     
   CURLE_BAD_FUNCTION_ARGUMENT,   
-  CURLE_BAD_CALLING_ORDER,       
+  CURLE_OBSOLETE44,              
   CURLE_INTERFACE_FAILED,        
-  CURLE_BAD_PASSWORD_ENTERED,    
+  CURLE_OBSOLETE46,              
   CURLE_TOO_MANY_REDIRECTS ,     
   CURLE_UNKNOWN_TELNET_OPTION,   
   CURLE_TELNET_OPTION_SYNTAX ,   
-  CURLE_OBSOLETE,                
-  CURLE_SSL_PEER_CERTIFICATE,    
+  CURLE_OBSOLETE50,              
+  CURLE_PEER_FAILED_VERIFICATION, 
   CURLE_GOT_NOTHING,             
   CURLE_SSL_ENGINE_NOTFOUND,     
   CURLE_SSL_ENGINE_SETFAILED,    
   CURLE_SEND_ERROR,              
   CURLE_RECV_ERROR,              
-  CURLE_SHARE_IN_USE,            
+  CURLE_OBSOLETE57,              
   CURLE_SSL_CERTPROBLEM,         
   CURLE_SSL_CIPHER,              
   CURLE_SSL_CACERT,              
   CURLE_BAD_CONTENT_ENCODING,    
   CURLE_LDAP_INVALID_URL,        
   CURLE_FILESIZE_EXCEEDED,       
-  CURLE_FTP_SSL_FAILED,          
+  CURLE_USE_SSL_FAILED,          
   CURLE_SEND_FAIL_REWIND,        
   CURLE_SSL_ENGINE_INITFAILED,   
   CURLE_LOGIN_DENIED,            
   CURLE_TFTP_NOTFOUND,           
   CURLE_TFTP_PERM,               
-  CURLE_TFTP_DISKFULL,           
+  CURLE_REMOTE_DISK_FULL,        
   CURLE_TFTP_ILLEGAL,            
   CURLE_TFTP_UNKNOWNID,          
-  CURLE_TFTP_EXISTS,             
+  CURLE_REMOTE_FILE_EXISTS,      
   CURLE_TFTP_NOSUCHUSER,         
   CURLE_CONV_FAILED,             
   CURLE_CONV_REQD,               
@@ -311,29 +347,62 @@ typedef enum {
   CURLE_SSH,                     
 
   CURLE_SSL_SHUTDOWN_FAILED,     
+  CURLE_AGAIN,                   
   CURL_LAST 
-} CURLcode; 
+} CURLcode;
+
+#ifndef CURL_NO_OLDIES     
+
+#define CURLE_SSL_PEER_CERTIFICATE CURLE_PEER_FAILED_VERIFICATION  
+
+#define CURLE_OBSOLETE CURLE_OBSOLETE50 
+#define CURLE_BAD_PASSWORD_ENTERED CURLE_OBSOLETE46
+#define CURLE_BAD_CALLING_ORDER CURLE_OBSOLETE44
+#define CURLE_FTP_USER_PASSWORD_INCORRECT CURLE_OBSOLETE10
+#define CURLE_FTP_CANT_RECONNECT CURLE_OBSOLETE16
+#define CURLE_FTP_COULDNT_GET_SIZE CURLE_OBSOLETE32
+#define CURLE_FTP_COULDNT_SET_ASCII CURLE_OBSOLETE29
+#define CURLE_FTP_WEIRD_USER_REPLY CURLE_OBSOLETE12
+#define CURLE_FTP_WRITE_ERROR CURLE_OBSOLETE20
+#define CURLE_LIBRARY_NOT_FOUND CURLE_OBSOLETE40
+#define CURLE_MALFORMAT_USER CURLE_OBSOLETE24
+#define CURLE_SHARE_IN_USE CURLE_OBSOLETE57
+#define CURLE_URL_MALFORMAT_USER CURLE_OBSOLETE4
+
+#define CURLE_FTP_ACCESS_DENIED CURLE_REMOTE_ACCESS_DENIED
+#define CURLE_FTP_COULDNT_SET_BINARY CURLE_FTP_COULDNT_SET_TYPE
+#define CURLE_FTP_QUOTE_ERROR CURLE_QUOTE_ERROR
+#define CURLE_TFTP_DISKFULL CURLE_REMOTE_DISK_FULL
+#define CURLE_TFTP_EXISTS CURLE_REMOTE_FILE_EXISTS
+#define CURLE_HTTP_RANGE_ERROR CURLE_RANGE_ERROR
+#define CURLE_FTP_SSL_FAILED CURLE_USE_SSL_FAILED  
+
+#define CURLE_OPERATION_TIMEOUTED CURLE_OPERATION_TIMEDOUT
+
+#define CURLE_HTTP_NOT_FOUND CURLE_HTTP_RETURNED_ERROR
+#define CURLE_HTTP_PORT_FAILED CURLE_INTERFACE_FAILED
+#define CURLE_FTP_COULDNT_STOR_FILE CURLE_UPLOAD_FAILED
+
+#define CURLE_FTP_PARTIAL_FILE CURLE_PARTIAL_FILE
+#define CURLE_FTP_BAD_DOWNLOAD_RESUME CURLE_BAD_DOWNLOAD_RESUME 
+
+#define CURLE_ALREADY_COMPLETE 99999
+
+#endif  
 
 typedef CURLcode (*curl_conv_callback)(char *buffer, size_t length);
 
 typedef CURLcode (*curl_ssl_ctx_callback)(CURL *curl,    
                                           void *ssl_ctx, 
-                                          void *userptr); 
-
-#define CURLE_OPERATION_TIMEDOUT CURLE_OPERATION_TIMEOUTED
-
-#ifndef CURL_NO_OLDIES 
-
-#define CURLE_HTTP_NOT_FOUND CURLE_HTTP_RETURNED_ERROR
-#define CURLE_HTTP_PORT_FAILED CURLE_INTERFACE_FAILED
-#define CURLE_FTP_COULDNT_STOR_FILE CURLE_UPLOAD_FAILED
-#endif
+                                          void *userptr);
 
 typedef enum {
-  CURLPROXY_HTTP = 0,
-  CURLPROXY_SOCKS4 = 4,
-  CURLPROXY_SOCKS5 = 5
-} curl_proxytype;
+  CURLPROXY_HTTP = 0,   
+  CURLPROXY_SOCKS4 = 4, 
+  CURLPROXY_SOCKS5 = 5, 
+  CURLPROXY_SOCKS4A = 6, 
+  CURLPROXY_SOCKS5_HOSTNAME = 7 
+} curl_proxytype;  
 
 #define CURLAUTH_NONE         0       
 #define CURLAUTH_BASIC        (1<<0)  
@@ -351,23 +420,25 @@ typedef enum {
 #define CURLSSH_AUTH_KEYBOARD  (1<<3) 
 #define CURLSSH_AUTH_DEFAULT CURLSSH_AUTH_ANY
 
-#ifndef CURL_NO_OLDIES 
-
-#define CURLE_ALREADY_COMPLETE 99999 
-
-#define CURLE_FTP_PARTIAL_FILE CURLE_PARTIAL_FILE
-#define CURLE_FTP_BAD_DOWNLOAD_RESUME CURLE_BAD_DOWNLOAD_RESUME
-#endif
-
 #define CURL_ERROR_SIZE 256 
 
 typedef enum {
-  CURLFTPSSL_NONE,    
-  CURLFTPSSL_TRY,     
-  CURLFTPSSL_CONTROL, 
-  CURLFTPSSL_ALL,     
-  CURLFTPSSL_LAST     
-} curl_ftpssl; 
+  CURLUSESSL_NONE,    
+  CURLUSESSL_TRY,     
+  CURLUSESSL_CONTROL, 
+  CURLUSESSL_ALL,     
+  CURLUSESSL_LAST     
+} curl_usessl;
+
+#ifndef CURL_NO_OLDIES    
+
+#define CURLFTPSSL_NONE CURLUSESSL_NONE
+#define CURLFTPSSL_TRY CURLUSESSL_TRY
+#define CURLFTPSSL_CONTROL CURLUSESSL_CONTROL
+#define CURLFTPSSL_ALL CURLUSESSL_ALL
+#define CURLFTPSSL_LAST CURLUSESSL_LAST
+#define curl_ftpssl curl_usessl
+#endif  
 
 typedef enum {
   CURLFTPSSL_CCC_NONE,    
@@ -402,7 +473,8 @@ typedef enum {
 
 #if defined(__STDC__) || defined(_MSC_VER) || defined(__cplusplus) || \
   defined(__HP_aCC) || defined(__BORLANDC__) || defined(__LCC__) || \
-  defined(__POCC__) || defined(__SALFORDC__) || defined(__HIGHC__)
+  defined(__POCC__) || defined(__SALFORDC__) || defined(__HIGHC__) || \
+  defined(__ILEC400__)
   
 #define CURL_ISOCPP
 #else
@@ -478,7 +550,7 @@ typedef enum {
   
 
   
-  CINIT(LOW_SPEED_LIMIT, LONG , 19),
+  CINIT(LOW_SPEED_LIMIT, LONG, 19),
 
   
   CINIT(LOW_SPEED_TIME, LONG, 20),
@@ -499,9 +571,7 @@ typedef enum {
   CINIT(SSLCERT, OBJECTPOINT, 25),
 
   
-  CINIT(SSLCERTPASSWD, OBJECTPOINT, 26),
-  
-  CINIT(SSLKEYPASSWD, OBJECTPOINT, 26),
+  CINIT(KEYPASSWD, OBJECTPOINT, 26),
 
   
   CINIT(CRLF, LONG, 27),
@@ -547,9 +617,9 @@ typedef enum {
   CINIT(FAILONERROR, LONG, 45),  
   CINIT(UPLOAD, LONG, 46),       
   CINIT(POST, LONG, 47),         
-  CINIT(FTPLISTONLY, LONG, 48),  
+  CINIT(DIRLISTONLY, LONG, 48),  
 
-  CINIT(FTPAPPEND, LONG, 50),    
+  CINIT(APPEND, LONG, 50),       
 
   
   CINIT(NETRC, LONG, 51),
@@ -584,8 +654,6 @@ typedef enum {
 
   
   CINIT(KRBLEVEL, OBJECTPOINT, 63),
-  
-#define CURLOPT_KRB4LEVEL CURLOPT_KRBLEVEL
 
   
   CINIT(SSL_VERIFYPEER, LONG, 64),
@@ -728,7 +796,7 @@ typedef enum {
   CINIT(PROXYAUTH, LONG, 111),
 
   
-  CINIT(FTP_RESPONSE_TIMEOUT, LONG , 112),
+  CINIT(FTP_RESPONSE_TIMEOUT, LONG, 112),
 
   
   CINIT(IPRESOLVE, LONG, 113),
@@ -749,7 +817,7 @@ typedef enum {
   CINIT(NETRC_FILE, OBJECTPOINT, 118),
 
   
-  CINIT(FTP_SSL, LONG, 119),
+  CINIT(USE_SSL, LONG, 119),
 
   
   CINIT(POSTFIELDSIZE_LARGE, OFF_T, 120),
@@ -844,8 +912,43 @@ typedef enum {
   CINIT(NEW_FILE_PERMS, LONG, 159),
   CINIT(NEW_DIRECTORY_PERMS, LONG, 160),
 
+  
+  CINIT(POST301, LONG, 161),
+
+  
+  CINIT(SSH_HOST_PUBLIC_KEY_MD5, OBJECTPOINT, 162),
+
+  
+  CINIT(OPENSOCKETFUNCTION, FUNCTIONPOINT, 163),
+  CINIT(OPENSOCKETDATA, OBJECTPOINT, 164),
+
+  
+  CINIT(COPYPOSTFIELDS, OBJECTPOINT, 165),
+
+  
+  CINIT(PROXY_TRANSFER_MODE, LONG, 166),
+
+  
+  CINIT(SEEKFUNCTION, FUNCTIONPOINT, 167),
+  CINIT(SEEKDATA, OBJECTPOINT, 168),
+
   CURLOPT_LASTENTRY 
 } CURLoption;
+
+#ifndef CURL_NO_OLDIES     
+
+#define CURLOPT_SSLKEYPASSWD CURLOPT_KEYPASSWD
+#define CURLOPT_FTPAPPEND CURLOPT_APPEND
+#define CURLOPT_FTPLISTONLY CURLOPT_DIRLISTONLY
+#define CURLOPT_FTP_SSL CURLOPT_USE_SSL  
+
+#define CURLOPT_SSLCERTPASSWD CURLOPT_KEYPASSWD
+#define CURLOPT_KRB4LEVEL CURLOPT_KRBLEVEL
+
+#else
+
+#undef CURLOPT_DNS_USE_GLOBAL_CACHE 
+#endif 
 
   
 #define CURL_IPRESOLVE_WHATEVER 0 
@@ -856,12 +959,6 @@ typedef enum {
 #define CURLOPT_WRITEDATA CURLOPT_FILE
 #define CURLOPT_READDATA  CURLOPT_INFILE
 #define CURLOPT_HEADERDATA CURLOPT_WRITEHEADER
-
-#ifndef CURL_NO_OLDIES 
-#else
-
-#undef CURLOPT_DNS_USE_GLOBAL_CACHE 
-#endif 
 
   
 enum {
@@ -897,11 +994,7 @@ typedef enum {
   CURL_TIMECOND_LASTMOD,
 
   CURL_TIMECOND_LAST
-} curl_TimeCond;
-
-#ifdef __BEOS__
-#include <support/SupportDefs.h>
-#endif  
+} curl_TimeCond;  
 
 CURL_EXTERN int (curl_strequal)(const char *s1, const char *s2);
 CURL_EXTERN int (curl_strnequal)(const char *s1, const char *s2, size_t n); 
@@ -941,6 +1034,8 @@ typedef enum {
   CFINIT(FILENAME),
   CFINIT(END),
   CFINIT(OBSOLETE2),
+
+  CFINIT(STREAM),
 
   CURLFORM_LASTENTRY 
 } CURLformoption;
@@ -1060,9 +1155,10 @@ typedef enum {
   CURLINFO_COOKIELIST       = CURLINFO_SLIST  + 28,
   CURLINFO_LASTSOCKET       = CURLINFO_LONG   + 29,
   CURLINFO_FTP_ENTRY_PATH   = CURLINFO_STRING + 30,
+  CURLINFO_REDIRECT_URL     = CURLINFO_STRING + 31,
   
 
-  CURLINFO_LASTONE          = 30
+  CURLINFO_LASTONE          = 31
 } CURLINFO; 
 
 #define CURLINFO_HTTP_CODE CURLINFO_RESPONSE_CODE
@@ -1192,13 +1288,37 @@ CURL_EXTERN curl_version_info_data *curl_version_info(CURLversion);
 
 CURL_EXTERN const char *curl_easy_strerror(CURLcode); 
 
-CURL_EXTERN const char *curl_share_strerror(CURLSHcode);
+CURL_EXTERN const char *curl_share_strerror(CURLSHcode); 
+
+CURL_EXTERN CURLcode curl_easy_pause(CURL *handle, int bitmask);
+
+#define CURLPAUSE_RECV      (1<<0)
+#define CURLPAUSE_RECV_CONT (0)
+
+#define CURLPAUSE_SEND      (1<<2)
+#define CURLPAUSE_SEND_CONT (0)
+
+#define CURLPAUSE_ALL       (CURLPAUSE_RECV|CURLPAUSE_SEND)
+#define CURLPAUSE_CONT      (CURLPAUSE_RECV_CONT|CURLPAUSE_SEND_CONT)
 
 #ifdef  __cplusplus
 }
 #endif 
 
 #include "easy.h" 
-#include "multi.h"
+#include "multi.h" 
+
+#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3)) && \
+    !defined(__cplusplus) && !defined(CURL_DISABLE_TYPECHECK)
+#include "typecheck-gcc.h"
+#else
+#if defined(__STDC__) && (__STDC__ >= 1)
+
+#define curl_easy_setopt(handle,opt,param) curl_easy_setopt(handle,opt,param)
+#define curl_easy_getinfo(handle,info,arg) curl_easy_getinfo(handle,info,arg)
+#define curl_share_setopt(share,opt,param) curl_share_setopt(share,opt,param)
+#define curl_multi_setopt(handle,opt,param) curl_multi_setopt(handle,opt,param)
+#endif 
+#endif 
 
 #endif 

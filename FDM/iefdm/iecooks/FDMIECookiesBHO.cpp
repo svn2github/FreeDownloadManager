@@ -27,6 +27,8 @@ IHTMLDocument2Ptr doc_from_hwnd (HWND hwnd)
 		return NULL;
 
 	LPFNOBJECTFROMLRESULT pfObjectFromLresult = (LPFNOBJECTFROMLRESULT)::GetProcAddress( hInst, _T("ObjectFromLresult") );
+	if (pfObjectFromLresult == NULL)
+		return NULL;
 
 	UINT nMsg = RegisterWindowMessage ("WM_HTML_GETOBJECT");
 	
@@ -49,10 +51,11 @@ BOOL is_okpage (HWND hwnd)
 
 	IHTMLLocationPtr spLoc;
 	spDoc->get_location (&spLoc);
+	if (spLoc == NULL)
+		return FALSE;
 
 	BSTR bstrHost = NULL;
 	spLoc->get_hostname (&bstrHost);
-
 	if (bstrHost == NULL)
 		return FALSE;
 
@@ -76,7 +79,7 @@ BOOL GetIEVersion(DWORD *pMajor, DWORD *pMinor, DWORD *pBuild, DWORD *pSubBuild)
     {
         TCHAR szBuff[256];
         DWORD dwCount = sizeof(szBuff);
-        lRet = rk.QueryValue(szBuff, _T("Version"), &dwCount);
+        lRet = rk.QueryValue (szBuff, _T("Version"), &dwCount);
         if(lRet == 0)
         {
             sscanf(szBuff, "%u.%u.%u.%u", pMajor, pMinor, pBuild, pSubBuild);
@@ -110,7 +113,7 @@ LRESULT CALLBACK _IeServerWndProc (HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 
 		while (--cItems)
 		{
-			char sz [300] = "";
+			char sz [1000] = "";
 			GetMenuString (menu, cItems, sz, sizeof (sz), MF_BYPOSITION);
 			if (lstrcmp (sz, szItem) == 0) 
 			{
@@ -231,7 +234,9 @@ STDMETHODIMP CFDMIECookiesBHO::SetSite(IUnknown *pSite)
 	if (m_spWB == NULL)
 		return pSite == NULL ? S_OK : E_INVALIDARG;
 
-	
+	DWORD dw;
+	CloseHandle (
+		CreateThread (NULL, 0, _threadSubclassIeServerWnd, (LPVOID)(IWebBrowser2*)m_spWB, 0, &dw));
 
 	m_spWB_CPC = m_spWB;
 	if (m_spWB_CPC == NULL)
@@ -298,7 +303,7 @@ STDMETHODIMP CFDMIECookiesBHO::ProgressChange(long Progress, long ProgressMax)
 	if (spDoc == NULL)
 		return S_OK;
 
-	BSTR bstr;
+	BSTR bstr = NULL;
 	spDoc->get_cookie (&bstr);
 
 	fsString strCookies, strUrl;
@@ -307,6 +312,7 @@ STDMETHODIMP CFDMIECookiesBHO::ProgressChange(long Progress, long ProgressMax)
 	{
 		strCookies = W2A (bstr);
 		SysFreeString (bstr);
+		bstr = NULL;
 	}
 
 	spDoc->get_URL (&bstr);
@@ -315,6 +321,7 @@ STDMETHODIMP CFDMIECookiesBHO::ProgressChange(long Progress, long ProgressMax)
 	{
 		strUrl = W2A (bstr);
 		SysFreeString (bstr);
+		bstr = NULL;
 	}
 
 	if (m_strUrl != strUrl || m_strCookies != strCookies || 
@@ -425,16 +432,24 @@ STDMETHODIMP CFDMIECookiesBHO::BeforeNavigate2(IDispatch *pdWB, VARIANT *url, VA
 		spForm->get_action (&bstr);
 		
 		bFound = bstr != NULL && wcscmp (url->bstrVal, bstr) == 0;
-		SysFreeString (bstr);
+		if (bstr)
+		{
+			SysFreeString (bstr);
+			bstr = NULL;
+		}
+
 		if (bFound == false)
 			continue;
 
-		bstr = NULL;
 		spForm->get_method (&bstr);
 		
 		if (bstr == NULL || wcsicmp (bstr, L"post"))
 			break;
-		SysFreeString (bstr);
+		if (bstr)
+		{
+			SysFreeString (bstr);
+			bstr = NULL;
+		}
 
 		IHTMLElementPtr spFormElem (spForm);
 		if (spFormElem == NULL)
@@ -482,7 +497,7 @@ void CFDMIECookiesBHO::WalkThroughForm(IHTMLElement *pElement, fsString& str)
 		if (spInp != NULL)
 		{
 			
-			BSTR bstr, bstr2;
+			BSTR bstr = NULL, bstr2 = NULL;
 			spInp->get_name (&bstr);				
 			spInp->get_value (&bstr2);
 			if (bstr)

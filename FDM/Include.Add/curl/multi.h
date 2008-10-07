@@ -115,7 +115,7 @@ CURL_EXTERN CURLMcode curl_multi_timeout(CURLM *multi_handle,
 #undef CINIT 
 
 #ifdef CURL_ISOCPP
-#define CINIT(name,type,number) CURLMOPT_ ## name = CURLOPTTYPE_ ## type + number
+#define CINIT(name,type,num) CURLMOPT_ ## name = CURLOPTTYPE_ ## type + num
 #else
 
 #define LONG          CURLOPTTYPE_LONG

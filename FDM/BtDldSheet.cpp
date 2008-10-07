@@ -38,10 +38,19 @@ END_MESSAGE_MAP()
 
 void CBtDldSheet::Init(DLDS_LIST *pvDlds, DWORD dwPages)
 {
-	m_general.m_pvDlds = m_misc.m_pvDlds = pvDlds;
+	m_general.m_pvDlds = m_files.m_pvDlds = m_seeding.m_pvDlds = m_misc.m_pvDlds = pvDlds;
 
 	if (dwPages & BTDS_GENERAL_PAGE)
 		AddPage (&m_general);
+
+	if ((dwPages & BTDS_FILES_PAGE) && vmsBtSupport::getBtDllVersion () >= 778)
+	{
+		if (pvDlds->size () == 1 && pvDlds->at (0)->pMgr->GetBtDownloadMgr ()->get_FileCount () > 1)
+			AddPage (&m_files);
+	}
+
+	if (dwPages & BTDS_SEEDING_PAGE)
+		AddPage (&m_seeding);
 
 	if (dwPages & BTDS_MISC_PAGE)
 		AddPage (&m_misc);

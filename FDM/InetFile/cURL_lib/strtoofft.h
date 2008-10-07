@@ -10,11 +10,12 @@
 #include <curl/curl.h>  
 
 #if (SIZEOF_CURL_OFF_T > 4) && (SIZEOF_LONG < 8)
-#if HAVE_STRTOLL
+#ifdef HAVE_STRTOLL
 #define curlx_strtoofft strtoll
 #else  
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1300)
+_CRTIMP __int64 __cdecl _strtoi64(const char *, char **, int);  
 #define curlx_strtoofft _strtoi64
 #else 
 curl_off_t curlx_strtoll(const char *nptr, char **endptr, int base);

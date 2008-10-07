@@ -8,6 +8,7 @@
 #include "Downloads_Bittorrent_General.h"	
 #include "Downloads_Bittorrent_Peers.h"	
 #include "Downloads_Bittorrent_Files.h"	
+#include "fsDownload.h"	
 #if _MSC_VER > 1000
 #pragma once
 #endif           
@@ -27,6 +28,8 @@ public:
 	//}}AFX_VIRTUAL  
 
 public:
+	void UpdateActiveDownload();
+	vmsDownloadSmartPtr getActiveDownload();
 	CDownloads_Bittorrent_Files m_files;
 	void UpdatePeersStat();
 	void set_ActiveTab(int nTab);
@@ -40,6 +43,7 @@ public:
 
 	
 protected:
+	vmsDownloadSmartPtr m_dldActive;
 	void ApplyCurTab();
 	void ApplySize();
 	std::vector <CWnd*> m_vTabs;

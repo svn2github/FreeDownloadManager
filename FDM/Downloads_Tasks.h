@@ -33,6 +33,7 @@ class CDownloads_Tasks : public CListCtrlEx
 {
 	friend class CDownloadsWnd; 
 	friend class CDownloaderProperties_ListPage;
+	friend class CDlg_Options_Downloads;
 
 public:
 	CDownloads_Tasks();  

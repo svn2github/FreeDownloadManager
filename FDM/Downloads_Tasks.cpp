@@ -691,20 +691,20 @@ void CDownloads_Tasks::OnDldschedule()
 
 int CDownloads_Tasks::GetDownloadImage(vmsDownloadSmartPtr dld)
 {
-	if (dld->pMgr->IsDone ())
-	{
-		if (dld->pMgr->IsBittorrent () && 
-				dld->pMgr->GetBtDownloadMgr ()->get_State () == BTDS_SEEDING)
-			return 7;	
-		return 1;	
-	}
-
 	if (dld->pMgr->IsRunning ())
 	{
 		if (dld->pMgr->GetDownloadingSectionCount ())
 			return 3;	
 		else
 			return 4;	
+	}
+
+	if (dld->pMgr->IsDone ())
+	{
+		if (dld->pMgr->IsBittorrent () && 
+				(dld->pMgr->GetBtDownloadMgr ()->get_State () == BTDSE_SEEDING || dld->pMgr->GetBtDownloadMgr ()->get_State () == BTDSE_FINISHED))
+			return 7;	
+		return 1;	
 	}
 
 	if (_pwndScheduler && _pwndScheduler->GetMgr ()->IsDownloadScheduled (dld))
@@ -729,14 +729,14 @@ void CDownloads_Tasks::UnscheduleDownload(UINT nID)
 		fsSchedule *task = mgr->GetTask (i);
 		if (task->wts.enType == WTS_STARTDOWNLOAD || task->wts.enType == WTS_STOPDOWNLOAD)
 		{
-			for (int j = task->wts.pvIDs->size () - 1; j >= 0; j--)
+			for (int j = task->wts.dlds.pvIDs->size () - 1; j >= 0; j--)
 			{
 				
-				if (task->wts.pvIDs->at (j) == nID)
+				if (task->wts.dlds.pvIDs->at (j) == nID)
 				{
 					
-					task->wts.pvIDs->del (j);
-					if (task->wts.pvIDs->size () == 0)
+					task->wts.dlds.pvIDs->del (j);
+					if (task->wts.dlds.pvIDs->size () == 0)
 						mgr->DeleteTask (task);	
 					break;
 				}
@@ -1387,7 +1387,7 @@ void CDownloads_Tasks::OnGetdispinfo(NMHDR *pNMHDR, LRESULT *pResult)
 	{
 		int nSubItem = SubItemToSubItem (pItem->iSubItem);
 		if (nSubItem != -1)
-			lstrcpy (pItem->pszText, GetDownloadText (dld, nSubItem));
+			lstrcpy (pItem->pszText, GetDownloadText (dld, nSubItem));		
 	}
 
 	}catch (...) {}
@@ -1417,7 +1417,21 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 		UINT64 uSize = dld->pMgr->GetLDFileSize ();
 
 		if (uSize != _UI64_MAX)
+		{
+			if (dld->pMgr->IsBittorrent ())
+			{
+				UINT64 nToDownload, nDownloaded;
+				dld->pMgr->GetBtDownloadMgr ()->getPartialDownloadProgress (&nToDownload, &nDownloaded);
+				if (nToDownload != uSize)
+				{
+					CString str;
+					str.Format ("%s (%s)", (LPCSTR)BytesToString (nToDownload), (LPCSTR)BytesToString (uSize));
+					return str;
+				}
+			}
+
 			return BytesToString (uSize);
+		}
 		else
 			return "?";	
 	}
@@ -1440,6 +1454,33 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 		CString str;
 		UINT64 uSize = dld->pMgr->GetLDFileSize ();
 		UINT64 uDone = dld->pMgr->GetDownloadedBytesCount ();
+
+		if (dld->pMgr->IsBittorrent ())
+		{
+			UINT64 nToDownload, nDownloaded;
+			dld->pMgr->GetBtDownloadMgr ()->getPartialDownloadProgress (&nToDownload, &nDownloaded);
+			if (nToDownload != uSize)
+			{
+				
+				if (_pwndDownloads->IsSizesInBytes () == FALSE)
+				{
+					float val, val0;
+					char szDim [10], szDim0 [10];
+					BytesToXBytes (uDone, &val, szDim);
+					BytesToXBytes (nDownloaded, &val0, szDim0);
+					str.Format ("%d%% [%.*g %s] (%d%% [%.*g %s])", (int)((double)(INT64)nDownloaded / (INT64)nToDownload * 100), val > 999 ? 4 : 3, val0, szDim0,
+						(int)((double)(INT64)uDone / (INT64)uSize * 100), val > 999 ? 4 : 3, val, szDim);
+				}
+				else
+				{
+					CString s = fsBytesToStr (uDone);
+					CString s0 = fsBytesToStr (nDownloaded);
+					str.Format ("%d%% [%s] (%d%% [%s])", (int)((double)(INT64)nDownloaded / (INT64)nToDownload * 100), (LPCSTR)s0,
+						(int)((double)(INT64)uDone / (INT64)uSize * 100), (LPCSTR)s);
+				}
+				return str;
+			}
+		}
 
 		if (_pwndDownloads->IsSizesInBytes () == FALSE)
 		{
@@ -1477,6 +1518,13 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 		if (uLeft == _UI64_MAX)
 			return "";
 
+		if (dld->pMgr->IsBittorrent ())
+		{
+			UINT64 nToDownload, nDownloaded;
+			dld->pMgr->GetBtDownloadMgr ()->getPartialDownloadProgress (&nToDownload, &nDownloaded);
+			uLeft = nToDownload - nDownloaded;
+		}
+
 		return fsTimeInSecondsToStr (UINT (uLeft / uSpeed));
 	}
 
@@ -1498,7 +1546,8 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 					dld->pMgr->GetBtDownloadMgr ()->get_State () == BTDS_SEEDING)
 			{
 				CString str;
-				str.Format ("%s/%s", BytesToString (dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ()), LS (L_S));
+				str.Format ("%s/%s; %s/%s", BytesToString (0), LS (L_S),
+					BytesToString (dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ()), LS (L_S));
 				return str;
 			}
 
@@ -1506,7 +1555,16 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 		}
 
 		CString str;
-		str.Format ("%s/%s", BytesToString (dld->pMgr->GetSpeed ()), LS (L_S));
+
+		if (dld->pMgr->IsBittorrent () && dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed () != 0)
+		{
+			str.Format ("%s/%s; %s/%s", BytesToString (dld->pMgr->GetSpeed ()), LS (L_S),
+				BytesToString (dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ()), LS (L_S));
+		}
+		else
+		{
+			str.Format ("%s/%s", BytesToString (dld->pMgr->GetSpeed ()), LS (L_S));
+		}
 		return str;
 	}
 
@@ -1990,9 +2048,10 @@ void CDownloads_Tasks::ScheduleSelectedDlds(BOOL bStart)
 		{
 			 
 			pTask->wts.enType = bStart ? WTS_STARTDOWNLOAD : WTS_STOPDOWNLOAD;
-			fsnew1 (pTask->wts.pvIDs, fs::list <UINT>);
+			fsnew1 (pTask->wts.dlds.pvIDs, fs::list <UINT>);
+			pTask->wts.dlds.dwFlags = 0;
 			for (size_t i = 0; i < vDlds.size (); i++)
-				pTask->wts.pvIDs->add (vDlds [i]->nID);
+				pTask->wts.dlds.pvIDs->add (vDlds [i]->nID);
 
 			_pwndScheduler->AddTask (pTask);
 		}
@@ -2028,7 +2087,7 @@ void CDownloads_Tasks::UpdateDownload(size_t nIndex, BOOL bRedraw)
 
 	if (m_vDownloads [nIndex]->pMgr->GetBtDownloadMgr ())
 	{
-		clr = RGB (0, 100, 0); 
+		clr = RGB (0, 100, 100); 
 	}
 	else if (m_vDownloads [nIndex]->pMgr->GetDownloadMgr () && 
 		m_vDownloads [nIndex]->pMgr->GetDownloadMgr ()->GetDownloader ()->is_WasAccessedAtLeastOnce ())

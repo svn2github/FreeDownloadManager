@@ -61,31 +61,63 @@ void CDownloads_Bittorrent_Peers::UpdateStat()
 		return;
 
 	vmsBtDownloadPeerInfoList *p;
-	p = m_dld->pMgr->GetBtDownloadMgr ()->get_PeerInfoList ();
+	p = m_dld ? m_dld->pMgr->GetBtDownloadMgr ()->get_PeerInfoList () : NULL;
 	if (p == NULL)
 	{
 		DeleteAllItems ();
+		m_vPeers.clear ();
 		return;
 	}
 
-	if (p->UpdateList () || m_bDldChanged)
+	if (p->UpdateList () || m_bDldChanged || m_vPeers.size () != (size_t)p->get_PeerCount ())
 	{
 		m_bDldChanged = false;
-		DeleteAllItems ();
+		
+		
 
-		for (int i = 0; i < p->get_PeerCount (); i++)
+		m_vPeers.clear ();
+
+		for (size_t i = 0; i < (size_t)p->get_PeerCount (); i++)
 		{
 			vmsBtDownloadPeerInfo *peer = p->get_Peer (i);
+			_inc_peer peer1;
 
-			char sz [100];
+			peer1.uBytesDownloaded = peer->get_BytesDownloaded ();
+			peer1.uBytesUploaded = peer->get_BytesUploaded ();
+
+			if (peer1.uBytesDownloaded == 0 && peer1.uBytesUploaded == 0)
+				continue;
+
+			peer1.uDownloadSpeed = peer->get_DownloadSpeed ();
+			peer1.uUploadSpeed = peer->get_UploadSpeed ();
+
+			char sz [1000];
 			peer->get_Ip (sz);
-			InsertItem (i, sz);
-
+			peer1.strIp = sz;
+			
 			peer->get_Client (sz);
-			SetItemText (i, 1, sz);
+			wchar_t wsz [1000];
+			MultiByteToWideChar (CP_UTF8, 0, sz, -1, wsz, 1000);
+			WideCharToMultiByte (CP_ACP, 0, wsz, -1, sz, 1000, NULL, NULL);
+			peer1.strClient = sz;
+
+			m_vPeers.push_back (peer1);
 		}
 
-		if (p->get_PeerCount ())
+		size_t cItems = GetItemCount ();
+		for (i = 0; i < m_vPeers.size (); i++)
+		{
+			if (i < cItems)
+				SetItemText (i, 0, m_vPeers [i].strIp);
+			else
+				InsertItem (i, m_vPeers [i].strIp);
+			SetItemText (i, 1, m_vPeers [i].strClient);
+		}
+
+		while ((size_t)GetItemCount () > m_vPeers.size ())
+			DeleteItem (GetItemCount () - 1);
+
+		if (m_vPeers.size ())
 		{
 			SetColumnWidth (0, LVSCW_AUTOSIZE);
 			SetColumnWidth (1, LVSCW_AUTOSIZE);
@@ -96,32 +128,42 @@ void CDownloads_Bittorrent_Peers::UpdateStat()
 			}
 		}
 	}
+	else
+	{
+		for (size_t i = 0; i < (size_t)p->get_PeerCount (); i++)
+		{
+			vmsBtDownloadPeerInfo *peer = p->get_Peer (i);
+			_inc_peer &peer1 = m_vPeers [i];
+			peer1.uBytesDownloaded = peer->get_BytesDownloaded ();
+			peer1.uBytesUploaded = peer->get_BytesUploaded ();
+			peer1.uDownloadSpeed = peer->get_DownloadSpeed ();
+			peer1.uUploadSpeed = peer->get_UploadSpeed ();
+		}
+	}
 
 	UpdatePeersDetails ();
 }
 
 void CDownloads_Bittorrent_Peers::UpdatePeersDetails()
 {
-	vmsBtDownloadPeerInfoList *p;
-	p = m_dld->pMgr->GetBtDownloadMgr ()->get_PeerInfoList ();
-	if (p == NULL)
+	if (m_vPeers.size () == 0)
 		return;
 
-	if (GetItemCount () != p->get_PeerCount ())
+	if ((size_t)GetItemCount () != m_vPeers.size ())
 		return;
 
-	for (int i = 0; i < p->get_PeerCount (); i++)
+	for (size_t i = 0; i < m_vPeers.size (); i++)
 	{
-		vmsBtDownloadPeerInfo *peer = p->get_Peer (i);
+		_inc_peer &peer = m_vPeers [i];
 
 		CString str;
 
-		str.Format ("%s, %s/%s", BytesToString (peer->get_BytesDownloaded ()),
-			BytesToString (peer->get_DownloadSpeed ()), LS (L_S));
+		str.Format ("%s, %s/%s", BytesToString (peer.uBytesDownloaded),
+			BytesToString (peer.uDownloadSpeed), LS (L_S));
 		SetItemText (i, 2, str);
 
-		str.Format ("%s, %s/%s", BytesToString (peer->get_BytesUploaded ()),
-			BytesToString (peer->get_UploadSpeed ()), LS (L_S));
+		str.Format ("%s, %s/%s", BytesToString (peer.uBytesUploaded),
+			BytesToString (peer.uUploadSpeed), LS (L_S));
 		SetItemText (i, 3, str);
 
 		

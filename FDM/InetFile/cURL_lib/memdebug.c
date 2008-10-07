@@ -1,4 +1,3 @@
-#ifdef CURLDEBUG
 /***************************************************************************
  *                                  _   _ ____  _
  *  Project                     ___| | | |  _ \| |
@@ -19,11 +18,12 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: memdebug.c,v 1.53 2007-06-28 11:11:29 jehousley Exp $
+ * $Id: memdebug.c,v 1.56 2008-05-14 23:36:26 danf Exp $
  ***************************************************************************/
 
 #include "setup.h"
 
+#ifdef CURLDEBUG
 #include <curl/curl.h>
 
 #ifdef HAVE_SYS_SOCKET_H
@@ -47,7 +47,10 @@
 
 struct memdebug {
   size_t size;
-  double mem[1];
+  union {
+    double d;
+    void * p;
+  } mem[1];
   /* I'm hoping this is the thing with the strictest alignment
    * requirements.  That also means we waste some space :-( */
 };
@@ -68,7 +71,7 @@ static long memsize = 0;  /* set number of mallocs allowed */
 /* this sets the log file name */
 void curl_memdebug(const char *logname)
 {
-  if (!logfile) {
+  if(!logfile) {
     if(logname)
       logfile = fopen(logname, "w");
     else
@@ -84,7 +87,7 @@ void curl_memdebug(const char *logname)
    successfully! */
 void curl_memlimit(long limit)
 {
-  if (!memlimit) {
+  if(!memlimit) {
     memlimit = TRUE;
     memsize = limit;
   }
@@ -182,8 +185,8 @@ char *curl_dostrdup(const char *str, int line, const char *source)
   len=strlen(str)+1;
 
   mem=curl_domalloc(len, 0, NULL); /* NULL prevents logging */
-  if (mem)
-  memcpy(mem, str, len);
+  if(mem)
+    memcpy(mem, str, len);
 
   if(logfile)
     fprintf(logfile, "MEM %s:%d strdup(%p) (%zd) = %p\n",

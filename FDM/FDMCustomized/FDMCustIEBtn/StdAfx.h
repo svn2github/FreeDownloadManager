@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/        
+*/
+
+        
 
 #if !defined(AFX_STDAFX_H__75DCB19E_9452_4485_8AE3_A5883F740317__INCLUDED_)
 #define AFX_STDAFX_H__75DCB19E_9452_4485_8AE3_A5883F740317__INCLUDED_
@@ -22,6 +24,6 @@ typedef void SHANDLE_PTR;
 extern CComModule _Module;
 #include <atlcom.h>
 
-//{{AFX_INSERT_LOCATION}//}}  
+//{{AFX_INSERT_LOCATION}//}//}}  
 
 #endif 

@@ -97,10 +97,14 @@ void CDlgVidSeek::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 		KillTimer (1);
 	}
 
+        ASSERT (m_seek != NULL);
+        if (m_seek == NULL)
+		return;
+
 	if (nSBCode == SB_ENDSCROLL)
 	{
 		double pos = m_wndSeek.GetPos ();
-		if (m_llDuration < 1000)	
+		if (m_llDuration < 1000 && m_llDuration != 0)	
 			pos /= m_llDuration;
 		else
 			pos /= 1000.0;

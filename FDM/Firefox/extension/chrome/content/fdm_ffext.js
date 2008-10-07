@@ -4,13 +4,43 @@ fdm_FDM = fdm_FDM.QueryInterface (Components.interfaces.IFDMForFirefox);
 var fdm_hoverElement = null;
 var fdm_lastClickCaptureTime = 0;
 
+function fdm_gatherCookieForHost (_host, _cookieWeHave)
+{
+   var fdm_cookieManager =
+      Components.classes["@mozilla.org/cookiemanager;1"].getService(Components.interfaces.nsICookieManager);
+   var _cookie = _cookieWeHave;
+
+   for (var iter = fdm_cookieManager.enumerator; iter.hasMoreElements();) 
+   {
+      if ((objCookie = iter.getNext()) instanceof Components.interfaces.nsICookie) 
+      {
+        var cookieHost = objCookie.host;
+        if (cookieHost.charAt(0) == ".")
+          cookieHost = cookieHost.substring (1);
+
+        if (cookieHost == _host || _host.indexOf ("." + cookieHost) != -1)
+        {
+	        if (_cookie.indexOf (objCookie.name + "=" + objCookie.value) == -1)
+	        {
+		        if (_cookie.length)
+		        	_cookie += "; ";
+	        	_cookie += objCookie.name + "=" + objCookie.value;
+	        }
+	}
+      }
+   }
+
+   return _cookie;
+}
+
+
 function fdm_dlURL (strUrl)
 {
   var url = Components.classes["@freedownloadmanager.org/FDMUrl;1"].createInstance ();
   url = url.QueryInterface (Components.interfaces.IFDMUrl);
   url.Url = strUrl;
   url.Referer = document.commandDispatcher.focusedWindow.document.URL;
-  url.Cookies = document.commandDispatcher.focusedWindow.document.cookie;
+  url.Cookies = fdm_gatherCookieForHost (document.commandDispatcher.focusedWindow.document.location.hostname, document.commandDispatcher.focusedWindow.document.cookie);
 
   var urlRcvr = Components.classes["@freedownloadmanager.org/FDMUrlReceiver;1"].createInstance ();
   urlRcvr = urlRcvr.QueryInterface (Components.interfaces.IFDMUrlReceiver);
@@ -179,18 +209,19 @@ function fdm_gatherElements (url, urlListRcvr, elements, bSelectedOnly)
   }
 }
 
-function fdm_gatherAllElements (bSelectedOnly)
+function fdm_gatherAllElements (bSelectedOnly, cookie)
 {
   var url = Components.classes["@freedownloadmanager.org/FDMUrl;1"].createInstance ();
   url = url.QueryInterface (Components.interfaces.IFDMUrl);
   url.Referer = document.commandDispatcher.focusedWindow.document.URL;
-  url.Cookies = document.commandDispatcher.focusedWindow.document.cookie;
+  url.Cookies = cookie;
 
   var urlListRcvr = Components.classes["@freedownloadmanager.org/FDMUrlListReceiver;1"].createInstance ();
   urlListRcvr = urlListRcvr.QueryInterface (Components.interfaces.IFDMUrlListReceiver);
 
   fdm_gatherElements (url, urlListRcvr, 
       document.commandDispatcher.focusedWindow.document.links, bSelectedOnly);
+
   fdm_gatherElements (url, urlListRcvr, 
       document.commandDispatcher.focusedWindow.document.images, bSelectedOnly);
 
@@ -199,11 +230,11 @@ function fdm_gatherAllElements (bSelectedOnly)
 
 function fdm_dlall ()
 {
-  fdm_gatherAllElements (false);
+  fdm_gatherAllElements (false, fdm_gatherCookieForHost (document.commandDispatcher.focusedWindow.document.location.hostname, document.commandDispatcher.focusedWindow.document.cookie));
 }
 
 function fdm_dlselected ()
 {
-  fdm_gatherAllElements (true);
+  fdm_gatherAllElements (true, fdm_gatherCookieForHost (document.commandDispatcher.focusedWindow.document.location.hostname, document.commandDispatcher.focusedWindow.document.cookie));
 }
 

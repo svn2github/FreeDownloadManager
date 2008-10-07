@@ -300,7 +300,7 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 	}
 
 	
-	CHAR szHdr [10000] = "";
+	CHAR szHdr [20000] = "";
 
 	if (uStartPos)
 		sprintf (szHdr, "Range: bytes=%I64u-\r\n", uStartPos); 
@@ -314,7 +314,7 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 	if (cTryings == 0)
 	{
 		
-		char szReq [10000];
+		char szReq [90000];
 		sprintf (szReq, "%s %s %s\r\nReferer: %s", pszVerb, 
 			pszFilePath, m_pszHttpVersion, 
 			m_pszReferer ? m_pszReferer : "-");
@@ -688,18 +688,18 @@ fsInternetResult fsHttpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64
 	IgnoreSecurityProblems ();
 
 	int nSizeAdd = 0;
-	fsString strMpHdr;
+	fsString strMultipartHdr;
 
 	if (m_bUseMultipart)
 	{
 		m_strLabel = "-----------------------------284583012225247";
 
-		strMpHdr = m_strLabel; strMpHdr += "\r\n";
-		strMpHdr += "Content-Disposition: form-data; name=\"uploadFormFile\"; filename=\"";
-		strMpHdr += strFileName; strMpHdr += "\"\r\n";
-		strMpHdr += "Content-Type: application/octet-stream\r\n\r\n";
+		strMultipartHdr = m_strLabel; strMultipartHdr += "\r\n";
+		strMultipartHdr += "Content-Disposition: form-data; name=\"uploadFormFile\"; filename=\"";
+		strMultipartHdr += strFileName; strMultipartHdr += "\"\r\n";
+		strMultipartHdr += "Content-Type: application/octet-stream\r\n\r\n";
 
-		nSizeAdd = strMpHdr.GetLength () + m_strLabel.GetLength () + 6;
+		nSizeAdd = strMultipartHdr.GetLength () + m_strLabel.GetLength () + 6;
 	}
  
 	INTERNET_BUFFERS BufferIn = {0};
@@ -718,7 +718,7 @@ fsInternetResult fsHttpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64
 	if (m_bUseMultipart)
 	{
 		DWORD dw;
-		if (FALSE == InternetWriteFile (m_hFile, strMpHdr, strMpHdr.GetLength (), &dw))
+		if (FALSE == InternetWriteFile (m_hFile, strMultipartHdr, strMultipartHdr.GetLength (), &dw))
 		{
 			ir = fsWinInetErrorToIR ();
 			CloseHandle ();

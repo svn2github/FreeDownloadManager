@@ -36,7 +36,6 @@ public:
 	//}}AFX_VIRTUAL  
 
 protected:
-	int m_iOldProgress;
 	CWnd_DownloadProgress m_wndProgress;
 	
 	void Update();

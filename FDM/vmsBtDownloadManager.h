@@ -11,7 +11,8 @@
 
 #include "Bittorrent\fdmbtsupp\vmsBtDownload.h"
 #include "fsTicksMgr.h"
-#include "vmsDownloadMgrEx.h"  
+#include "vmsDownloadMgrEx.h"
+#include "tree.h"  
 
 #define	BTDF_LAUNCH_WHEN_DONE					1
 #define BTDF_LAUNCH_WHEN_DONE_NO_CONFIRM		(1 << 1)
@@ -19,6 +20,7 @@
 #define BTDF_RESERVE_DISK_SPACE					(1 << 3)
 #define BTDF_IGNORE_ALL_RESTRICTIONS			(1 << 4)
 #define BTDF_DISABLE_SEEDING					(1 << 5)
+#define BTDF_NEVER_DELETE_FILES_ON_DISK			(1 << 6)
 
 enum vmsBtDownloadManagerEvent
 {
@@ -29,6 +31,8 @@ enum vmsBtDownloadManagerEvent
 	BTDME_DOWNLOAD_STOPPED_OR_DONE,
 	BTDME_ALLOCATION_FAILED,
 	BTDME_SEEDING,
+	BTDME_FATAL_ERROR,
+	BTDME_STOP_SEEDING,
 };
 
 typedef DWORD (*fntBtDownloadManagerEventHandler)(class vmsBtDownloadManager*, vmsBtDownloadManagerEvent, DWORD, LPVOID);
@@ -48,6 +52,23 @@ enum vmsBtDownloadStateEx
 class vmsBtDownloadManager  
 {
 public:
+	static void Shutdown();
+	float getRequiredRatio();
+	void setRequiredRatio (float f);
+	bool isSeedingEnabled () const;
+	void setFilePriority (int nFileIndex, int iPriority, bool bApply = true);
+	int getFilePriority (int nFileIndex) const;
+	void getPartialDownloadProgress (UINT64 *pnBytesToDownload, UINT64 *pnBytesDownloaded);
+	void PrioritizeFiles (int *piPriorities);
+	BOOL LoadTorrentFile (LPCSTR pszFile);
+	struct vmsFile {
+		fsString strName;
+		UINT64 nFileSize;
+		int nIndex; 
+		int iPriority;
+	};
+	void GetFilesTree (fs::ListTree <vmsFile> &tree);
+	BOOL isSeeding();
 	fsString get_RootFolderName();
 	UINT64 get_SplittedByteCountAtBeginningOfFile();
 	void GetSectionsInfo (std::vector <vmsSectionInfo> &v);
@@ -71,10 +92,10 @@ public:
 	BOOL IsCantStart();
 	BOOL MoveToFolder(LPCSTR pszPath);
 	UINT GetSpeed();
-	int GetDownloadingSectionCount();
+	int GetDownloadingSectionCount(bool bFromCache = true);
 	void GetSectionInfo(int nIndex, vmsSectionInfo *sect);
 	BOOL IsDownloading();
-	UINT64 GetDownloadedBytesCount();
+	UINT64 GetDownloadedBytesCount(bool bFromCache = true);
 	UINT64 GetTotalFilesSize();
 	int GetNumberOfSections();
 	BOOL IsRunning();
@@ -86,7 +107,7 @@ public:
 	vmsBtDownloadPeerInfoList* get_PeerInfoList();
 	void get_PeersStat (int *pnPeersConnected, int *pnSeedsTotal, int *pnLeechersTotal, int *pnSeedsConnected);
 	UINT64 get_WastedByteCount();
-	double get_ShareRating();
+	double getRatio();
 	UINT64 get_TotalUploadedByteCount();
 	fsString m_strTrackerStatus;
 	fsString get_CurrentTracker();
@@ -111,13 +132,30 @@ public:
 	UINT GetUploadSpeed();
 	fsString get_TorrentName();
 	vmsBtDownloadStateEx get_State();
-	BOOL CreateByTorrentFile (LPCSTR pszTorrentFile, LPCSTR pszOutputPath, LPCSTR pszTorrentUrl);
+	BOOL CreateByTorrentFile (LPCSTR pszTorrentFile, LPCSTR pszOutputPath, LPCSTR pszTorrentUrl, BOOL bSeedOnly = FALSE);
 	void DeleteBtDownload();
 
 	vmsBtDownloadManager();
 	virtual ~vmsBtDownloadManager();
 
 protected:
+	void AddToDldsList();
+	void DeleteFromDldsList();
+	static DWORD WINAPI _threadDlds (LPVOID lp);
+	void ApplyNewFilesPriorities();
+	void CalculateFilesPieces ();
+	void calculateFoldersSizesInTree(fs::ListTree <vmsFile> *pTree);
+	void addFileToTree (fs::ListTree <vmsFile> *pTree, LPCSTR pszFile, int nFileIndex);
+	bool m_bWasFatalErrorInLoadState;
+	
+	struct _inc_CachedValues {
+		int nDownloadingSectionCount;
+		fsTicksMgr nDownloadingSectionCount_time;
+		fsTicksMgr nDownloadedBytes_time;
+		UINT64 nPartial_BytesDownloaded, nPartial_BytesToDownload;
+		fsTicksMgr nPartial_time;
+	}m_cache;
+
 	void SaveBtDownloadState_Pieces();
 	LONG m_nUsingBtDownload;
 	static DWORD WINAPI _threadCheckStartSeeding (LPVOID lp);
@@ -131,7 +169,7 @@ protected:
 	void StopThread();
 	static DWORD WINAPI _threadBtDownloadManager(LPVOID lp);
 	BOOL m_bStoppedByUser;
-	bool m_bThreadRunning, m_bThreadDoJob, m_bThreadNeedStop;
+	bool m_bDlThreadRunning, m_bDlThreadDoJob, m_bDlThreadNeedStop;
 	void ProcessFilePathMacroses(CString &str);
 	BOOL CreateBtDownload();
 	
@@ -145,6 +183,9 @@ protected:
 	
 	UINT m_uLowSpeedMaxTime; 
 	UINT m_uTrafficLimit; 
+
+	
+	float m_fRequiredRatio;
 
 	struct _inc_BtDownloadInfo
 	{
@@ -163,8 +204,20 @@ protected:
 		BOOL bDone;
 		std::vector <bool> vPieces; 
 		UINT64 nDownloadedBytes;
+		std::vector <BYTE> vFilesPriorities;
 	};
 	_inc_BtDownloadInfo m_info;
+
+	struct _inc_FilePieces {
+		int nStartPiece, nEndPiece;
+		_inc_FilePieces (int start, int end) : nStartPiece (start), nEndPiece (end) {}
+	};
+	std::vector <_inc_FilePieces> m_vFilesPieces;
+
+	static std::vector <vmsBtDownloadManager*> *m_pvpDlds;
+	static LPCRITICAL_SECTION m_pcsvpDlds;
+	static HANDLE m_htDlds;
+	static LONG m_cStatDataRefs;
 };
 
 #endif 

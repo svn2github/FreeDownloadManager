@@ -60,6 +60,9 @@ fsInternetResult fsInternetFile2::Initialize()
 			curl_easy_setopt (m_curl, CURLOPT_HEADERDATA, this);
 
 			curl_easy_setopt (m_curl, CURLOPT_FOLLOWLOCATION, TRUE);
+
+			curl_easy_setopt (m_curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+			curl_easy_setopt (m_curl, CURLOPT_SSL_VERIFYHOST, FALSE);
 		}
 	}
 
@@ -420,4 +423,9 @@ LPCSTR fsInternetFile2::get_SuggestedFileName()
 UINT64 fsInternetFile2::GetFileSize()
 {
 	return m_uFileSize;
+}
+
+void fsInternetFile2::setUseFtpAsciiMode(bool bUse)
+{
+	curl_easy_setopt (m_curl, CURLOPT_TRANSFERTEXT, bUse);
 }

@@ -12,10 +12,10 @@
 #endif
 
 CURLcode Curl_unencode_deflate_write(struct connectdata *conn,
-                                     struct Curl_transfer_keeper *k,
+                                     struct SingleRequest *req,
                                      ssize_t nread);
 
 CURLcode
 Curl_unencode_gzip_write(struct connectdata *conn,
-                         struct Curl_transfer_keeper *k,
+                         struct SingleRequest *k,
                          ssize_t nread);

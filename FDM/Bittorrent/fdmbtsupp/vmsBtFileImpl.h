@@ -24,9 +24,13 @@ public:
 	void get_TorrentComment (LPSTR pszRes);
 	int get_PieceCount ();
 	int get_PieceSize ();
-
+	
 	virtual void Release ();
 	void AddRef ();
+
+	BOOL CreateNewTorrent (LPCSTR pszSrcPath, LPCSTR pszTrackers, LPCSTR pszUrlSeeds, 
+		LPCSTR pszCreator, LPCSTR pszComment, int iPieceSize, int *pnCreateProgress, BOOL *pbNeedCancel);
+	BOOL GenerateFastResumeDataForSeed (LPCSTR pszSrcFolderOrFile, LPBYTE pbData, DWORD dwSize, LPDWORD pdwSize);
 
 	vmsBtFileImpl(void);
 public:

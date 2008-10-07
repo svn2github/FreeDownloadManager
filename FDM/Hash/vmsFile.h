@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/        
+*/
+
+        
 
 #if !defined(AFX_VMSFILE_H__CC4F8BEC_228B_4CED_9F88_1B186737F773__INCLUDED_)
 #define AFX_VMSFILE_H__CC4F8BEC_228B_4CED_9F88_1B186737F773__INCLUDED_

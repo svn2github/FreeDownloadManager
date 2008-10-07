@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/        
+*/
+
+        
 
 #if !defined(AFX_VMSDES_H__F4F35898_CAE4_400F_84AA_922FD377DE21__INCLUDED_)
 #define AFX_VMSDES_H__F4F35898_CAE4_400F_84AA_922FD377DE21__INCLUDED_

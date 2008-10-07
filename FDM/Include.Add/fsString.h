@@ -146,7 +146,7 @@ struct fsString
 		return pszString;
 	}
 
-	int Length ()
+	int Length () const
 	{
 		if (pszString)
 			return _tcslen (pszString);
@@ -154,12 +154,17 @@ struct fsString
 			return 0;
 	}
 
-	BOOL IsEmpty ()
+	BOOL IsEmpty () const
 	{
 		return pszString == NULL || *pszString == 0;
 	}
 
-	int GetLength () {return Length ();}
+	char LastChar () const
+	{
+		return pszString ? pszString [GetLength () - 1] : (char)0;
+	}
+
+	int GetLength () const {return Length ();}
 
 	void Replace (LPCSTR , LPCSTR ) {}
 

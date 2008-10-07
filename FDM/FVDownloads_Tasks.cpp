@@ -90,11 +90,14 @@ BOOL CFVDownloads_Tasks::Create(CWnd *pwndParent)
 	return TRUE;
 }
 
-void CFVDownloads_Tasks::AddDownload(vmsDownloadSmartPtr dld)
+void CFVDownloads_Tasks::AddDownload(vmsDownloadSmartPtr dld, BOOL bPlaceToTop)
 {
-	m_vDlds.push_back (dld);
+	if (bPlaceToTop)
+		m_vDlds.insert (m_vDlds.begin (), dld);
+	else
+		m_vDlds.push_back (dld);
 	
-	VirtualView_ItemWillBeAdded (GetSysColor (COLOR_WINDOW), GetSysColor (COLOR_WINDOWTEXT), FALSE);
+	VirtualView_ItemWillBeAdded (GetSysColor (COLOR_WINDOW), GetSysColor (COLOR_WINDOWTEXT), bPlaceToTop);
 	SetItemCountEx (m_vDlds.size (), LVSICF_NOINVALIDATEALL | LVSICF_NOSCROLL);
 }
 

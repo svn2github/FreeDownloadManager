@@ -9,11 +9,12 @@
 class vmsBtSessionImpl : public vmsBtSession
 {
 public:
+	void SetMaxHalfOpenConnections (int limit);
 	void RestoreDownloadHandle (vmsBtDownloadImpl* dld);
 	void ListenOn (int portFrom, int portTo);
 	BOOL IsListening ();
 	USHORT get_ListenPort ();
-	vmsBtDownload* CreateDownload (vmsBtFile *torrent, LPCSTR pszOutputPath, LPBYTE pbFastResumeData, DWORD dwFRDataSize, BOOL bCompactMode);
+	vmsBtDownload* CreateDownload (vmsBtFile *torrent, LPCSTR pwszOutputPath, LPBYTE pbFastResumeData, DWORD dwFRDataSize, vmsBtStorageMode enStorageMode);
 	void SetDownloadLimit (int limit);
 	void SetUploadLimit (int limit);
 	void SetMaxUploads (int limit);

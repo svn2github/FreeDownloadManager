@@ -23,7 +23,7 @@ vmsBtSessionImpl::vmsBtSessionImpl(void)
 	m_bDHTstarted = FALSE;
 	m_session.set_severity_level (alert::info);
 	m_session.add_extension (libtorrent::create_ut_pex_plugin);
-	m_session.set_max_half_open_connections (5);
+	m_session.set_max_half_open_connections (7);
 	m_bThreadRunning = true;
 	m_bNeedStop = false;
 	m_pfnEvHandler = NULL;
@@ -43,7 +43,17 @@ vmsBtSessionImpl::~vmsBtSessionImpl(void)
 	DeleteCriticalSection (&m_csDeleteDownload);
 }
 
-vmsBtDownload* vmsBtSessionImpl::CreateDownload (vmsBtFile *torrent, LPCSTR pszOutputPath, LPBYTE pbFastResumeData, DWORD dwFRDataSize, BOOL bCompactMode)
+time_t FILETIMEToUnixTime (FILETIME filetime)
+{
+	long long int t = filetime.dwHighDateTime;
+    t <<= 32;
+    t += (unsigned long)filetime.dwLowDateTime;
+    t -= 116444736000000000LL;
+
+	return t / 10000000;
+}
+
+vmsBtDownload* vmsBtSessionImpl::CreateDownload (vmsBtFile *torrent, LPCSTR pszOutputPath, LPBYTE pbFastResumeData, DWORD dwFRDataSize, vmsBtStorageMode enStorageMode)
 {
 	char szPath [10000];
 	strcpy (szPath, pszOutputPath);
@@ -54,18 +64,31 @@ vmsBtDownload* vmsBtSessionImpl::CreateDownload (vmsBtFile *torrent, LPCSTR pszO
 			*psz = '/';
 		psz++;
 	}
+	if (strlen (szPath) == 2 && szPath [1] == ':')
+		strcat (szPath, "/");
 
 	try 
 	{
 		torrent_handle th;
 		vmsBtFileImpl *torrentimpl = (vmsBtFileImpl*) torrent;
 
-		entry e2 = pbFastResumeData ? bdecode (pbFastResumeData, pbFastResumeData + dwFRDataSize) : entry ();
+		entry entryFastResume = pbFastResumeData ? bdecode (pbFastResumeData, pbFastResumeData + dwFRDataSize) : entry ();
+		
+		
 
-		th = m_session.add_torrent (*torrentimpl->m_torrent, szPath, e2, bCompactMode != 0);
+		storage_mode_t sm;
+		if (enStorageMode == BTSM_SPARSE)
+			sm = storage_mode_sparse;
+		else if (enStorageMode == BTSM_ALLOCATE)
+			sm = storage_mode_allocate;
+		else
+			sm = storage_mode_compact;
+
+		th = m_session.add_torrent (*torrentimpl->m_torrent, szPath, entryFastResume, sm);
 		th.set_ratio (1);
 
 		vmsBtDownloadImpl *pDld = new vmsBtDownloadImpl;
+		pDld->AddRef ();
 		pDld->m_handle = th;
 		pDld->m_pTorrent = torrentimpl; torrentimpl->AddRef ();
 		pDld->m_strOutputPath = szPath;
@@ -92,7 +115,7 @@ void vmsBtSessionImpl::DeleteDownload (vmsBtDownload* pDld)
 		try {
 			m_session.remove_torrent (p->m_handle);
 		}catch (...) {}
-		delete p;
+		p->Release ();
 	}
 
 	LeaveCriticalSection (&m_csDeleteDownload);
@@ -148,7 +171,9 @@ void vmsBtSessionImpl::DHT_start (LPBYTE pbState, DWORD dwStateSize)
 	if (m_bDHTstarted)
 		return;
 	m_bDHTstarted = TRUE;
-	m_session.start_dht (pbState ? bdecode (pbState, pbState + dwStateSize) : entry ());
+	try {
+		m_session.start_dht (pbState ? bdecode (pbState, pbState + dwStateSize) : entry ());
+	}catch (...){}
 }
 
 void vmsBtSessionImpl::DHT_stop ()
@@ -203,7 +228,7 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 		ev.pszMsg = alert->msg ().c_str ();
 		
 		
-		int iDownloadIndex = -1;
+		torrent_handle hDownload;
 		std::string strIp; 
 
 		listen_failed_alert *lfa = dynamic_cast <listen_failed_alert*> (alert.get ());
@@ -217,7 +242,7 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 		if (fea != NULL)
 		{
 			ev.enType = BTSET_FILE_ERROR;
-			iDownloadIndex = pthis->FindDownloadIndex (fea->handle);
+			hDownload = fea->handle;
 			goto _lRaiseEvent;
 		}
 
@@ -225,7 +250,7 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 		if (taa != NULL)
 		{
 			ev.enType = BTSET_TRACKER_ANNOUNCE;
-			iDownloadIndex = pthis->FindDownloadIndex (taa->handle);
+			hDownload = taa->handle;
 			goto _lRaiseEvent;
 		}
 
@@ -233,7 +258,7 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 		if (ta != NULL)
 		{
 			ev.enType = BTSET_TRACKER;
-			iDownloadIndex = pthis->FindDownloadIndex (ta->handle);
+			hDownload = ta->handle;
 			ev.times_in_row = ta->times_in_row;
 			ev.status_code = ta->status_code;
 			goto _lRaiseEvent;
@@ -243,7 +268,7 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 		if (tra != NULL)
 		{
 			ev.enType = BTSET_TRACKER_REPLY;
-			iDownloadIndex = pthis->FindDownloadIndex (tra->handle);
+			hDownload = tra->handle;
 			goto _lRaiseEvent;
 		}
 
@@ -251,7 +276,7 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 		if (twa != NULL)
 		{
 			ev.enType = BTSET_TRACKER_WARNING;
-			iDownloadIndex = pthis->FindDownloadIndex (twa->handle);
+			hDownload = twa->handle;
 			goto _lRaiseEvent;
 		}
 
@@ -267,7 +292,7 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 		if (hfa != NULL)
 		{
 			ev.enType = BTSET_HASH_FAILED;
-			iDownloadIndex = pthis->FindDownloadIndex (hfa->handle);
+			hDownload = hfa->handle;
 			ev.piece_index = hfa->piece_index;
 			goto _lRaiseEvent;
 		}
@@ -276,7 +301,7 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 		if (pba != NULL)
 		{
 			ev.enType = BTSET_PEER_BAN;
-			iDownloadIndex = pthis->FindDownloadIndex (pba->handle);
+			hDownload = pba->handle;
 			strIp = pba->ip.address ().to_string ().c_str ();
 			ev.pszIp = strIp.c_str ();
 			goto _lRaiseEvent;
@@ -302,16 +327,28 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 
 _lRaiseEvent:
 
-		if (iDownloadIndex != -1)
-			ev.pDownload = pthis->m_vDownloads [iDownloadIndex];
-		else
-			ev.pDownload = NULL;
+		vmsBtDownloadImpl *pDld = NULL;
+		if (hDownload.is_valid ())
+		{
+			EnterCriticalSection (&pthis->m_csDeleteDownload);
+			int i = pthis->FindDownloadIndex (hDownload);
+			if (i != -1)
+			{
+				pDld = pthis->m_vDownloads [i];
+				pDld->AddRef ();
+			}
+			LeaveCriticalSection (&pthis->m_csDeleteDownload);
+		}
+		ev.pDownload = pDld;
 
 		pthis->m_pfnEvHandler (pthis, &ev, pthis->m_pEvData);
 
 		if (ev.pDownload != NULL && 
 				(ev.enType == BTSET_TRACKER || ev.enType == BTSET_TRACKER_REPLY || ev.enType == BTSET_TRACKER_WARNING))
 			((vmsBtDownloadImpl*)ev.pDownload)->OnTrackerAlert (ev.pszMsg);
+
+		if (pDld)
+			pDld->Release ();
 	}
 
 	pthis->m_bThreadRunning = false;
@@ -337,12 +374,25 @@ int vmsBtSessionImpl::FindDownloadIndex (const torrent_handle &h)
 
 void vmsBtSessionImpl::SetProxySettings (LPCSTR pszIp, int nPort, LPCSTR pszUser, LPCSTR pszPwd)
 {
-	session_settings s = m_session.settings ();
-	s.proxy_ip = pszIp ? pszIp : "";
-	s.proxy_port = nPort;
-	s.proxy_login = pszUser ? pszUser : "";
-	s.proxy_password = pszPwd ? pszPwd : "";
-	m_session.set_settings (s);
+	proxy_settings ps;
+
+	if (pszIp && *pszIp)
+	{
+		ps.hostname = pszIp;
+		ps.port = nPort;
+		ps.username = pszUser;
+		ps.password = pszPwd;
+		ps.type = pszUser && *pszUser ? proxy_settings::http_pw : proxy_settings::http;
+	}
+	else
+	{
+		ps.type = proxy_settings::none;
+	}
+
+	m_session.set_peer_proxy (ps);
+	m_session.set_web_seed_proxy (ps);
+	m_session.set_tracker_proxy (ps);
+	m_session.set_dht_proxy (ps);
 }
 
 void vmsBtSessionImpl::RestoreDownloadHandle (vmsBtDownloadImpl* dld)
@@ -419,4 +469,10 @@ void vmsBtSessionImpl::SetUserAgent (LPCSTR pszUA)
 	session_settings s = m_session.settings ();
 	s.user_agent = pszUA;
 	m_session.set_settings (s);
+}
+
+void vmsBtSessionImpl::SetMaxHalfOpenConnections (int limit)
+{
+	if (limit > 0 && limit < 200)
+		m_session.set_max_half_open_connections (limit);
 }

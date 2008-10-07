@@ -9,6 +9,8 @@
 
 #ifdef HAVE_SYS_POLL_H
 #include <sys/poll.h>
+#elif defined(HAVE_POLL_H)
+#include <poll.h>
 #endif  
 
 #if defined(USE_WINSOCK) && (USE_WINSOCK > 1) && \
@@ -18,9 +20,14 @@
 #undef  HAVE_POLL_FINE
 #define HAVE_POLL_FINE 1
 #define poll(x,y,z) WSAPoll((x),(y),(z))
+#if defined(_MSC_VER) && defined(POLLRDNORM)
+#define HAVE_STRUCT_POLLFD 1
+#endif
 #endif  
 
-#ifndef HAVE_SYS_POLL_H
+#if !defined(HAVE_STRUCT_POLLFD) && \
+    !defined(HAVE_SYS_POLL_H) && \
+    !defined(HAVE_POLL_H)
 
 #define POLLIN      0x01
 #define POLLPRI     0x02

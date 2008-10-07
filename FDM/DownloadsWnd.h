@@ -67,6 +67,8 @@ struct vmsDWCD_AdditionalParameters
 	#define DWDCDAP_F_DONTCHECKURLALREADYEXISTS	(1 << 10)
 	
 	#define DWDCDAP_F_FLASHVIDEODOWNLOAD		(1 << 11)
+	
+	#define DWDCDAP_F_TORRENTDOWNLOAD			(1 << 12)
 };    
 
 #define DWCD_NOFORCEAUTOLAUNCH				((DWORD) -1)
@@ -82,6 +84,7 @@ struct vmsDWCD_AdditionalParameters
 #define WM_DLD_SHOWOPINIONS			(WM_APP+1003)  
 
 #define WM_DLD_CONVERT_MEDIA		(WM_APP+1004)
+#define WM_DLD_LAUNCH				(WM_APP+1005)
 
 extern CDownloadsWnd* _pwndDownloads;
 
@@ -91,6 +94,7 @@ class CDownloadsWnd : public CWnd
 	friend class CDownloads_Tasks;
 	friend class CDownloaderProperties_MonitorPage;
 	friend class CDownloaderProperties_ListPage;
+	friend class CDlg_Options_Downloads;
 	friend class CDlgExportDownloads;
 	friend class CMainFrame;
 
@@ -106,13 +110,15 @@ public:
 	//}}AFX_VIRTUAL  
 
 public:
+	void OnBtDownloadDefProperties();
+	BOOL CreateNewTorrent();
 	static HMENU Plugin_GetViewMenu();
 	static HMENU Plugin_GetMainMenu();
 	BOOL IsMediaDownload (vmsDownloadSmartPtr dld);
 	int DeleteDownloads(DLDS_LIST_REF v, BOOL bByUser, BOOL bDontConfirmFileDeleting);
 	void ShowDownloads (DLDS_LIST_REF v);
 	
-	BOOL CreateBtDownloadFromFile (LPCSTR pszFile, LPCSTR pszTorrentUrl, BOOL bSilent = FALSE);
+	BOOL CreateBtDownloadFromFile (LPCSTR pszFile, LPCSTR pszTorrentUrl, BOOL bSilent = FALSE, BOOL bSeedOnly = FALSE, LPCSTR pszOutputOrSrcForSeedFolder = NULL);
 	
 	void OnBtDownloadProperties(DLDS_LIST &vDlds, CWnd* pwndParent = NULL);
 	
@@ -257,6 +263,7 @@ public:
 
 	
 protected:
+	afx_msg LRESULT OnWmDldLaunch (WPARAM wp, LPARAM lp);
 	DLDS_LIST m_vUploadDownloads;
 	afx_msg LRESULT OnDldConvertMedia (WPARAM, LPARAM lp);
 	

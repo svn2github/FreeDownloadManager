@@ -108,7 +108,7 @@ void fsUpdateMgr::CheckForUpdate(bool bByUser)
 	SAFE_DELETE_ARRAY (dnp->pszReferer);
 
 	fsnew (dnp->pszReferer, char, 100);
-	sprintf (dnp->pszReferer, "FDM - Build number = %d", PRG_BUILD_NUMBER);
+	sprintf (dnp->pszReferer, "FDM - Build number = %s", vmsFdmAppMgr::getBuildNumber ());
 
 	Event (UME_CONNECTING);
 
@@ -190,7 +190,7 @@ void fsUpdateMgr::ProcessUpdateLstFile()
 	
 	if (0 == GetPrivateProfileSectionNames (szSections, sizeof (szSections), 
 		fsGetDataFilePath ("Update\\proupd.lst")) || 
-		 atoi (szSections) <= PRG_BUILD_NUMBER )
+		atoi (szSections) <= (int)vmsFdmAppMgr::getVersion ()->m_appVersion [2].dwVal)
 	{
 		ASSERT (GetPrivateProfileSectionNames (szSections, sizeof (szSections), fsGetDataFilePath ("Update\\proupd.lst")));
 		
@@ -204,7 +204,7 @@ void fsUpdateMgr::ProcessUpdateLstFile()
 	m_strBN = szSections;
 
 	CString strCurBN;	
-	strCurBN.Format ("%d", PRG_BUILD_NUMBER);
+	strCurBN = vmsFdmAppMgr::getBuildNumber ();
 	
 	m_strUpgSize = "";
 	m_strUpgFileName = "";
@@ -225,7 +225,7 @@ void fsUpdateMgr::ProcessUpdateLstFile()
 		
 		BOOL bNewBNNow = bCommon == FALSE && strcmp (pszSect, m_strBN) == 0;
 		
-		BOOL bBiggerBNNow = bCommon == FALSE && atoi (pszSect) > PRG_BUILD_NUMBER;
+		BOOL bBiggerBNNow = bCommon == FALSE && atoi (pszSect) > (int)vmsFdmAppMgr::getVersion ()->m_appVersion [2].dwVal;
 
 		
 		while (*pszValue)
@@ -374,7 +374,7 @@ void fsUpdateMgr::Update(BOOL bByFull)
 		
 		if (m_strUpgFileName.GetLength () == 0)
 			
-			strUrl.Format ("%sfdm%dto%supg.exe", m_strDlUpgradesPath, PRG_BUILD_NUMBER, m_strBN);
+			strUrl.Format ("%sfdm%sto%supg.exe", m_strDlUpgradesPath, vmsFdmAppMgr::getBuildNumber (), m_strBN);
 		else
 			
 			strUrl.Format ("%s%s", m_strDlUpgradesPath, m_strUpgFileName);

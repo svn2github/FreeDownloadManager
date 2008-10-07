@@ -64,20 +64,24 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube(LPCSTR pszHtml)
 {
 	fsString strTitle, strUrl; 
 
-	LPSTR psz = strstr (pszHtml, "<h1 id=\"video_title\"");
+	LPSTR psz = strstr (pszHtml, "<meta name=\"title\"");
 
 	if (psz)
 	{
-		psz = strchr (psz, '>');
+		psz = strstr (psz, "content=");
 		if (psz)
 		{
-			psz++;
-			while (*psz && *psz != '<')
+			psz += lstrlen ("content=");
+			if (*psz == '"')
 			{
-				if (is_valid_char (*psz))
-					strTitle += *psz++;
-				else
-					psz++;
+				psz++;
+				while (*psz && *psz != '"')
+				{
+					if (is_valid_char (*psz))
+						strTitle += *psz++;
+					else
+						psz++;				
+				}
 			}
 		}
 	}
@@ -100,7 +104,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube(LPCSTR pszHtml)
 
 		fsString str;
 	
-		while (*psz != ':')
+		while (*psz && *psz != ':')
 		{
 			if (*psz == ' ')
 			{
@@ -112,6 +116,17 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube(LPCSTR pszHtml)
 
 		if (str.IsEmpty ())
 			break;
+
+		if (*psz == ':')
+			psz++;
+		while (*psz == ' ')
+			psz++;
+
+		if (str.Length () > 2 && str [0] == '"' && str [str.Length () - 1] == '"')
+		{
+			lstrcpy (str, str.pszString+1);
+			str [str.Length () - 1] = 0;
+		}
 
 		if (lstrcmpi (str, "BASE_YT_URL") == 0)
 		{
@@ -367,26 +382,49 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Further_LiveDigital(LPCSTR pszTxt)
 
 BOOL vmsVideoSiteHtmlCodeParser::Parse_MySpace(LPCSTR pszHtml)
 {
+	CString str; 
+
 	LPCSTR psz = strstr (pszHtml, "flashvars=");
 	if (psz == NULL)
 		psz = strstr (pszHtml, "flashVars=");
-	if (psz == NULL)
-		return FALSE;
-	psz += 10;
+	if (psz != NULL)
+	{
+		psz += 10;
 
-	if (*psz == '"')
-		psz++;
-	else if (strnicmp (psz, "&quot;", 6) == 0)
-		psz += 6;
+		if (*psz == '"')
+			psz++;
+		else if (strnicmp (psz, "&quot;", 6) == 0)
+			psz += 6;
+		else
+			return FALSE;
+
+		while (*psz && *psz != '"' && strnicmp (psz, "&quot;", 6))
+			str += *psz++;
+		if (str.IsEmpty ())
+			return FALSE;
+		str.Replace ("m=", "mediaID=");
+	}
 	else
-		return FALSE;
-
-	CString str;
-	while (*psz && *psz != '"' && strnicmp (psz, "&quot;", 6))
-		str += *psz++;
-	if (str.IsEmpty ())
-		return FALSE;
-	str.Replace ("m=", "mediaID=");
+	{
+		psz = strstr (pszHtml, "videoID =");
+		if (!psz)
+		{
+			psz = strstr (pszHtml, "videoid=");
+			if (!psz)
+				return FALSE;
+			else 
+				psz += 8;
+		}
+		else
+		{
+			psz += 9;
+		}
+		while (*psz == ' ')
+			psz++;
+		str = "videoID=";
+		while (isdigit (*psz))
+			str += *psz++;
+	}
 
 	fsString strUrl;
 	strUrl = "http://"; strUrl += "mediaservices.myspace.com/services/rss.ashx?";
@@ -405,6 +443,9 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Further_MySpace(LPCSTR pszHtml)
 	USES_CONVERSION;
 	IXMLDOMDocumentPtr spXML;
 	IXMLDOMNodePtr spNode, spNode2;
+
+	while (*pszHtml && *pszHtml != '<')
+		pszHtml++;
 
 	spXML.CreateInstance (__uuidof (DOMDocument));
 
@@ -680,15 +721,20 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Grouper(LPCSTR pszHtml)
 fsString vmsVideoSiteHtmlCodeParser::ExtractValue(LPSTR &psz)
 {
 	char c;
-	while (*psz && *psz != '"' && *psz != '\'')
+	while (*psz == ' ')
 		psz++;
-	if (*psz == 0)
-		return "";
-	c = *psz++;
+	if (*psz == '"' || *psz == '\'')
+		c = *psz++;
+	else 
+		c = ',';
 	fsString strRes;
 	while (*psz && *psz != c)
+	{
+		if (*psz == '}' && c == ',')
+			break;
 		strRes += *psz++;
-	if (*psz)
+	}
+	if (*psz != '}')
 		psz++;
 	return strRes;
 }

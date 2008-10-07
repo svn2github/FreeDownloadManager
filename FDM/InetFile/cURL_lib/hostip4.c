@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: hostip4.c,v 1.40 2007-07-01 22:01:19 bagder Exp $
+ * $Id: hostip4.c,v 1.42 2007-11-07 09:21:35 bagder Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -285,12 +285,11 @@ Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
      */
   else {
 #if (defined(NETWARE) && !defined(__NOVELL_LIBC__))
-    NETDB_DEFINE_CONTEXT
     h = gethostbyname((char*)hostname);
 #else
     h = gethostbyname(hostname);
 #endif
-    if (!h)
+    if(!h)
       infof(conn->data, "gethostbyname(2) failed for %s\n", hostname);
 #endif /*HAVE_GETHOSTBYNAME_R */
   }
@@ -298,7 +297,7 @@ Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
   if(h) {
     ai = Curl_he2ai(h, port);
 
-    if (buf) /* used a *_r() function */
+    if(buf) /* used a *_r() function */
       free(buf);
   }
 

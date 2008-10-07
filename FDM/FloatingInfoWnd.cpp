@@ -141,6 +141,8 @@ void CFloatingInfoWnd::RebuildList()
 	if (IsWindow (m_wndList) == FALSE)
 		return;
 
+	bool bDownloading = false;
+
 	m_mxList.Lock ();
 
 	m_wndList.DeleteAllItems ();
@@ -153,10 +155,15 @@ void CFloatingInfoWnd::RebuildList()
 	{
 		vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);
 		if (dld->pMgr->IsRunning ())
+		{
+			bDownloading = true;
 			AddDownloadToList (dld, false);
+		}
 		if (dld->pMgr->IsBittorrent () && 
 				dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ())
+		{
 			v.push_back (dld);
+		}
 	}
 
 	for (i = 0; i < v.size (); i++)
@@ -166,6 +173,9 @@ void CFloatingInfoWnd::RebuildList()
 	catch (...) {}
 	
 	m_mxList.Unlock ();
+
+	if (m_bNeedToShow && (m_wndList.GetItemCount () == 0 || bDownloading == false))
+		NeedToShow (FALSE);
 }
 
 void CFloatingInfoWnd::AddDownloadToList(vmsDownloadSmartPtr dld, bool bUploadInfo)
@@ -189,11 +199,13 @@ void CFloatingInfoWnd::AddDownloadToList(vmsDownloadSmartPtr dld, bool bUploadIn
 
 void CFloatingInfoWnd::UpdateDownloadProgress(int nItem)
 {
+try{
 	CString str;
 	bool bUpload = m_wndList.GetItemImage (nItem) == 1;
 	if (bUpload == false)
 		str.Format ("%d%%", (int)((fsDownload*) m_wndList.GetItemData (nItem))->pMgr->GetPercentDone ());
 	m_wndList.SetItemText (nItem, 1, str);
+}catch (...){}
 }
 
 int CFloatingInfoWnd::FindIndex(vmsDownloadSmartPtr dld)
@@ -261,6 +273,7 @@ void CFloatingInfoWnd::NeedToShow(BOOL b)
 
 void CFloatingInfoWnd::UpdateDownloadSpeed(int nItem)
 {
+try{
 	CString str;
 	CHAR szDim [10];
 	float val;
@@ -273,6 +286,7 @@ void CFloatingInfoWnd::UpdateDownloadSpeed(int nItem)
 		dld->pMgr->GetSpeed (), &val, szDim);
 	str.Format ("%.*g %s/s", val > 999 ? 4 : 3, val, szDim);
 	m_wndList.SetItemText (nItem, 2, str);
+}catch (...){}
 }
 
 void CFloatingInfoWnd::TurnOffWindow()

@@ -53,10 +53,6 @@
 
 #undef HAVE_DES_H 
 
-#undef HAVE_DLFCN_H 
-
-#undef HAVE_DLOPEN 
-
 #undef HAVE_ERR_H 
 
 #define HAVE_FCNTL_H 
@@ -100,8 +96,6 @@
 #undef HAVE_KRB_H 
 
 #undef HAVE_LIBCRYPTO 
-
-#undef HAVE_LIBDL 
 
 #undef HAVE_LIBNSL 
 
@@ -260,8 +254,6 @@
 #undef const 
 
 #undef size_t 
-
-#undef socklen_t 
 
 #undef ssize_t 
 

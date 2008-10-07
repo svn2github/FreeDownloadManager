@@ -33,4 +33,14 @@ public:
 	virtual int get_PieceSize () = NULL;
 
 	virtual void Release () = NULL;
+
+	
+	
+	
+	
+	
+	virtual BOOL CreateNewTorrent (LPCSTR pszSrcPath, LPCSTR pszTrackers, LPCSTR pszUrlSeeds, 
+		LPCSTR pszCreator, LPCSTR pszComment, int iPieceSize, int *pnCreateProgress, BOOL *pbNeedCancel) = NULL;
+
+	virtual BOOL GenerateFastResumeDataForSeed (LPCSTR pszSrcFolderOrFile, LPBYTE pbData, DWORD dwSize, LPDWORD pdwSize) = NULL;
 };

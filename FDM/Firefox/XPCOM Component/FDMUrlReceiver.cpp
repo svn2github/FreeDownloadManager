@@ -4,6 +4,7 @@
 
 #include "FDMUrlReceiver.h"
 #include "common.h"
+#include <nsMemory.h>
 
 NS_IMPL_ISUPPORTS1(CFDMUrlReceiver, IFDMUrlReceiver)
 
@@ -53,27 +54,27 @@ nsresult CFDMUrlReceiver::ApplyUrlToReceiver(IWGUrlReceiver *pUrlRcvr, IFDMUrl *
 	url->GetUrl (&wsz);
 	bstr = wsz;
 	CC (pUrlRcvr->put_Url (bstr));
-	delete [] wsz;
+	nsMemory::Free (wsz);
 
 	url->GetReferer (&wsz);
 	bstr = wsz;
 	CC (pUrlRcvr->put_Referer (bstr));
-	delete [] wsz;
+	nsMemory::Free (wsz);
 
 	url->GetComment (&wsz);
 	bstr = wsz;
 	CC (pUrlRcvr->put_Comment (bstr));
-	delete [] wsz;
+	nsMemory::Free (wsz);
 
 	url->GetCookies (&wsz);
 	bstr = wsz;
 	CC (pUrlRcvr->put_Cookies (bstr));
-	delete [] wsz;
+	nsMemory::Free (wsz);
 
 	url->GetPostData (&wsz);
 	bstr = wsz;
 	CC (pUrlRcvr->put_PostData (bstr));
-	delete [] wsz;
+	nsMemory::Free (wsz);
 
 	return NS_OK;
 }

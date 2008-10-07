@@ -114,7 +114,11 @@ BOOL fsDownloadRegSaver::Save(t_downloads* vDownloads, LPCSTR pszFileName)
 	CloseHandle (hFile);
 
 	if (GetFileAttributes (strFileName) != DWORD (-1))
+	{
+		
+		SetFileAttributes (strFileName, FILE_ATTRIBUTE_HIDDEN);
 		DeleteFile (strFileName);
+	}
 
 	
 	return MoveFile (strFileNameBak, strFileName);

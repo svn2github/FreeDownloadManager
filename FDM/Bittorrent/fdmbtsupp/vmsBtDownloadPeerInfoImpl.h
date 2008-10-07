@@ -15,6 +15,7 @@ public:
 	int get_UploadSpeed ();
 	UINT64 get_BytesDownloaded ();
 	UINT64 get_BytesUploaded ();
+	UINT get_Flags ();
 
 	vmsBtDownloadPeerInfoImpl(void);
 

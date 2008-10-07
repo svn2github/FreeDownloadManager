@@ -48,9 +48,10 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;..\libtorrent-0.12\include\&quot;;&quot;..\libtorrent-0.12\include\libtorrent\&quot;;..\boost_1_33_1\"
-				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;_FILE_OFFSET_BITS=64;BOOST_THREAD_USE_LIB;UNICODE;_CRT_SECURE_NO_DEPRECATE"
+				AdditionalIncludeDirectories="..\libtorrent\include\;..\libtorrent\include\libtorrent\;..\boost_1_34_1\;..\libtorrent\zlib\"
+				PreprocessorDefinitions="WIN32;_WINDOWS;_USRDLL;_FILE_OFFSET_BITS=64;BOOST_THREAD_USE_LIB;UNICODE;_CRT_SECURE_NO_DEPRECATE;_WIN32_WINNT=0x0500"
 				MinimalRebuild="true"
+				ExceptionHandling="2"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="2"
@@ -61,7 +62,7 @@
 				ProgramDataBaseFileName=".\Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -76,11 +77,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\libtorrent-0.12\release\libtorrent-0.12.lib wsock32.lib"
+				AdditionalDependencies="..\libtorrent\release\libtorrent.lib wsock32.lib ..\openssl\libeay32-md.lib User32.lib Gdi32.lib Advapi32.lib"
 				OutputFile="e:\program files\free download manager\fdmbtsupp.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\boost_1_33_1\stage\lib"
+				AdditionalLibraryDirectories="..\boost_1_34_1\lib"
 				ModuleDefinitionFile="fdmbtsupp.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Debug/fdmbtsupp.pdb"
@@ -147,10 +148,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
+				Optimization="1"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;..\libtorrent-0.12\include\&quot;;&quot;..\libtorrent-0.12\include\libtorrent\&quot;;..\boost_1_33_1\"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_FILE_OFFSET_BITS=64;BOOST_THREAD_USE_LIB;_CRT_SECURE_NO_DEPRECATE;UNICODE"
+				FavorSizeOrSpeed="2"
+				AdditionalIncludeDirectories="&quot;..\libtorrent\include\&quot;;&quot;..\libtorrent\include\libtorrent\&quot;;..\boost_1_34_1\;&quot;..\libtorrent\zlib\&quot;"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;_FILE_OFFSET_BITS=64;_CRT_SECURE_NO_DEPRECATE;UNICODE"
 				StringPooling="true"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -177,11 +179,12 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\libtorrent-0.12\release\libtorrent-0.12.lib wsock32.lib"
+				LinkLibraryDependencies="false"
+				AdditionalDependencies="..\libtorrent\release\libtorrent.lib wsock32.lib ..\openssl\libeay32-md.lib User32.lib Gdi32.lib Advapi32.lib"
 				OutputFile=".\Release\fdmbtsupp.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				AdditionalLibraryDirectories="..\boost_1_33_1\stage\lib"
+				AdditionalLibraryDirectories="..\boost_1_34_1\lib"
 				ModuleDefinitionFile="fdmbtsupp.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\Release/fdmbtsupp.pdb"
@@ -248,6 +251,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\fdmbtsupp.rc"
+				>
+			</File>
+			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -296,6 +303,10 @@
 			>
 			<File
 				RelativePath=".\common.h"
+				>
+			</File>
+			<File
+				RelativePath=".\resource.h"
 				>
 			</File>
 			<File

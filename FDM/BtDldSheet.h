@@ -7,12 +7,16 @@
 
 #include "BtDld_General.h"	
 #include "BtDld_Misc.h"	
+#include "BtDld_Files.h"	
+#include "BtDld_Seeding.h"	
 #if _MSC_VER > 1000
 #pragma once
 #endif     
 
 #define BTDS_GENERAL_PAGE		1
-#define BTDS_MISC_PAGE			(1 << 1)
+#define BTDS_FILES_PAGE			(1 << 1)
+#define BTDS_SEEDING_PAGE		(1 << 2)
+#define BTDS_MISC_PAGE			(1 << 3)
 #define BTDS_ALL				(0xffffffff)      
 
 class CBtDldSheet : public CPropertySheet
@@ -32,6 +36,8 @@ public:
 	//}}AFX_VIRTUAL  
 
 public:
+	CBtDld_Seeding m_seeding;
+	CBtDld_Files m_files;
 	CBtDld_Misc m_misc;
 	BOOL IsNeedUpdateTasks();
 	void Init (DLDS_LIST* pvDlds, DWORD dwPages = BTDS_ALL);

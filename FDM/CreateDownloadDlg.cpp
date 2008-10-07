@@ -157,13 +157,16 @@ void CCreateDownloadDlg::OnOK()
 	fsnew (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, CHAR, strFile.GetLength () + 1);
 	lstrcpy (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, strFile);
 	
-	int ret = _CheckDownloadAlrExists (m_dld);
-	if (ret)
+	if (_App.CheckIfDownloadWithSameUrlExists ())
 	{
-		SAFE_DELETE_ARRAY (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
-		if (ret == 1)
-			EndDialog (ID_DLNOTADDED);
-		return;
+		int ret = _CheckDownloadAlrExists (m_dld);
+		if (ret)
+		{
+			SAFE_DELETE_ARRAY (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
+			if (ret == 1)
+				EndDialog (ID_DLNOTADDED);
+			return;
+		}
 	}
 
 	m_dld->pGroup = m_wndGroups.GetSelectedGroup ();

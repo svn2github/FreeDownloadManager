@@ -14,6 +14,10 @@
 #endif  
 
 #ifdef USE_ARES
+#include <ares_version.h>
+#endif
+
+#ifdef USE_ARES
 #define CURLRES_ASYNCH
 #define CURLRES_ARES
 #endif
@@ -55,6 +59,10 @@
 
 #ifdef CURLRES_ARES
 #define CURL_ASYNC_SUCCESS ARES_SUCCESS
+#if ARES_VERSION >= 0x010500
+
+#define HAVE_CARES_CALLBACK_TIMEOUTS 1
+#endif
 #else
 #define CURL_ASYNC_SUCCESS CURLE_OK
 #define ares_cancel(x) do {} while(0)
@@ -81,13 +89,10 @@ typedef struct Curl_addrinfo Curl_addrinfo;
 struct addrinfo;
 struct hostent;
 struct SessionHandle;
-struct connectdata;
+struct connectdata; 
 
-void Curl_global_host_cache_init(void);
+struct curl_hash *Curl_global_host_cache_init(void);
 void Curl_global_host_cache_dtor(void);
-struct curl_hash *Curl_global_host_cache_get(void);
-
-#define Curl_global_host_cache_use(__p) ((__p)->set.global_dns_cache)
 
 struct Curl_dns_entry {
   Curl_addrinfo *addr;
@@ -148,10 +153,16 @@ int curl_dogetnameinfo(GETNAMEINFO_QUAL_ARG1 GETNAMEINFO_TYPE_ARG1 sa,
 
 CURLcode Curl_addrinfo4_callback(void *arg,
                                  int status,
+#ifdef HAVE_CARES_CALLBACK_TIMEOUTS
+                                 int timeouts,
+#endif
                                  struct hostent *hostent);
 
 CURLcode Curl_addrinfo6_callback(void *arg,
                                  int status,
+#ifdef HAVE_CARES_CALLBACK_TIMEOUTS
+                                 int timeouts,
+#endif
                                  struct addrinfo *ai);  
 
 Curl_addrinfo *Curl_ip2addr(in_addr_t num, const char *hostname, int port); 

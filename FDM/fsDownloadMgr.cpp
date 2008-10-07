@@ -73,7 +73,7 @@ fsDownloadMgr::~fsDownloadMgr()
 {
 	StopDownloading ();
 	MSG msg;
-	while (m_iThread )
+	for (int i = 0; i < 10*1000 / 10 && m_iThread; i++)
 	{
 		while (PeekMessage (&msg, 0, 0, 0, PM_REMOVE))
 			DispatchMessage (&msg);
@@ -2557,14 +2557,15 @@ DWORD WINAPI fsDownloadMgr::_threadReserveDiskSpace(LPVOID lp)
 	
 	
 	
-	
-
 	ASSERT (pthis->m_dldr.GetNumberOfSections () == 1);
 	ASSERT (pthis->m_dldr.GetLDFileSize () != _UI64_MAX);
 
 	UINT64 uStartPos = pthis->m_dldr.GetDownloadedBytesCount () + 100 * 1024 * 1024;
 	
 	UINT64 uHundredthPart = pthis->m_dldr.GetLDFileSize () / 100;
+
+	fsTicksMgr timeStart;
+	bool bEvent = true;
 
 	for (UINT64 uCurPos = uStartPos; uCurPos < pthis->m_dldr.GetLDFileSize (); uCurPos += uHundredthPart)
 	{
@@ -2591,6 +2592,13 @@ DWORD WINAPI fsDownloadMgr::_threadReserveDiskSpace(LPVOID lp)
 		
 		if (pthis->m_dldr.IsRunning () == FALSE)
 			break;
+
+		fsTicksMgr timeNow;
+		if (bEvent && timeNow - timeStart > 3*1000)
+		{
+			bEvent = false;
+			pthis->Event (LS (L_PREP_FILES_ONDISK));
+		}
 	}
 	
 	

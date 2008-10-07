@@ -38,16 +38,22 @@ END_MESSAGE_MAP()
 
 void CDownloadAlrExistsDlg::OnResume() 
 {
+	if (IsDlgButtonChecked (IDC_DONTCHECKAGAIN) == BST_CHECKED)
+		_App.CheckIfDownloadWithSameUrlExists (FALSE);
 	EndDialog (IDC_RESUME);	
 }
 
 void CDownloadAlrExistsDlg::OnRestart() 
 {
+	if (IsDlgButtonChecked (IDC_DONTCHECKAGAIN) == BST_CHECKED)
+		_App.CheckIfDownloadWithSameUrlExists (FALSE);
 	EndDialog (IDC_RESTART);	
 }
 
 void CDownloadAlrExistsDlg::OnLaunch() 
 {
+	if (IsDlgButtonChecked (IDC_DONTCHECKAGAIN) == BST_CHECKED)
+		_App.CheckIfDownloadWithSameUrlExists (FALSE);
 	EndDialog (IDC_LAUNCH);	
 }
 
@@ -86,6 +92,7 @@ void CDownloadAlrExistsDlg::ApplyLanguage()
 		fsDlgLngInfo (IDC_RESTART, L_RESTART),
 		fsDlgLngInfo (IDC_LAUNCH, L_LAUNCH),
 		fsDlgLngInfo (IDCANCEL, L_CANCEL),
+		fsDlgLngInfo (IDC_DONTCHECKAGAIN, L_DONTCHECKAGAIN),
 	};
 
 	CString str = LS (L_COMMENT); str += ':';
@@ -129,4 +136,12 @@ BOOL CDownloadAlrExistsDlg::OnHelpInfo(HELPINFO* pHelpInfo)
 	PrepareCHMgr (pHelpInfo->MousePos);
 	_CHMgr.OnWT ();
 	return TRUE;
+}
+
+void CDownloadAlrExistsDlg::OnCancel() 
+{
+	if (IsDlgButtonChecked (IDC_DONTCHECKAGAIN) == BST_CHECKED)
+		_App.CheckIfDownloadWithSameUrlExists (FALSE);
+	
+	CDialog::OnCancel();
 }

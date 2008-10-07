@@ -611,7 +611,7 @@ Upgrade to version %s (%s)
 Free Download Manager should be restarted. Restart now?
 Update done
 Can't find updater
-Specify the update’s type here
+Specify the update's type here
 Update FDM using full distributive
 Update FDM using upgrade distributive
 Look for more information about update process
@@ -797,7 +797,7 @@ Launch the downloaded file
 Version
 Click here to contact us
 Click here to download the latest version
-Warning:  this computer program is protected by copyright law and international treaties. Unauthorized reproduction or distribution of this program, or any portion of it, may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law.
+Warning:  this computer program is protected by copyright law and international treaties. Inappropriate to license reproduction or distribution of this program, or any portion of it, may result in severe civil and criminal penalties, and will be prosecuted to the maximum extent possible under the law.
 ; === new version ===
 Download all with Free Download Manager
 Add list of downloads
@@ -991,18 +991,18 @@ Search with specified time
 Set
 Search in Recycle Bin
 Search with specified file size
-Minimal
-Maximal
+Minimum
+Maximum
 Search in List of Downloads
 Search in History of Downloads
 Search only for downloads that satisfy the specified time range
 Set the time range
 Search in Recycle Bin
 Search only for files that satisfy the specified file size range
-Minimal size required
-Maximal size required
+Minimum size required
+Maximum size required
 Search in group
-Choose the group where the search will be performed
+Choose the group where search will be performed
 ; END
 Searching download...
 There are no items found
@@ -1033,18 +1033,18 @@ Warning
 Use hidden attribute for uncompleted download
 Append comment to the file name when done
 Do not store server's pages
-Check this box if you do not want to store server pages on your computer, but only files and images
+Check this box if you do not want to store server pages on your computer, but store only files and images
 Use ZIP preview
-Check this box if you want to preview the content of ZIP archive at the beginning of downloading to download only a part of archive.
+Check this box if you want to preview the contents of ZIP archive at the beginning of downloading to download only part of the archive.
 Volume:
 Start download automatically
 Check this box if you want FDM to start each new download automatically
 Please check the files to download
 Set the alternative locations (URLs) for this download
 Do not preview in future
-You have turned off ZIP preview. If you want to turn it on, please go to Options -> Download options (Ctrl+O) -> New Download page, and check the "Use ZIP Preview" box. 
+You have disabled ZIP preview. If you want to enable it, please go to Options -> Download options (Ctrl+O) -> New Download page, and check the "Use ZIP Preview" box. 
 Ignore list
-List of web pages that should be ignored while downloading a site.
+List of web pages that should be ignored when downloading a site.
 Subfolders
 Add
 Ignore all subfolders also
@@ -1052,11 +1052,11 @@ Ignore all subfolders also
 Use rollback on broken connections
 Size of rollback
 bytes
-Check this option if you want to turn on rollback feature. This option helps you to protect your downloads from being damaged.
-Size of rollback. Greater size will allow rollback to work more safely. Recommended size is 3000 bytes. You may increase this value if your download still remains damaged.
+Check this option if you want to enable rollback feature. This option helps you to protect your downloads from being damaged.
+Size of rollback. A greater size will allow rollback to work more safely. Recommended size is 3000 bytes. You can increase this value if your download still remains damaged.
 ; downloader options -> monitor tab
 Don't monitor for files smaller than
-Use this option if you want FDM to skip files that are smaller than specified size
+Use this option if you want FDM to skip files smaller than the specified size
 KBytes
 Warning! Recycle Bin is too large. This may slow performance dramatically. It is recommended to clear Recycle Bin. Would you like to do this?
 Don't check this again
@@ -1129,8 +1129,8 @@ Hide
 ; "Traffic usage mode has been changed" window
 Traffic usage mode has been changed
 You have switched network traffic usage mode.\nFree Download Manager has three modes:
-In this mode Free Download Manager will download at maximum speed possible. This is the most aggressive mode.
-In this mode Free Download Manager will download at average speed. This mode allows you to browse Internet and keep the high speed of downloading at the same time.
+In this mode Free Download Manager will download at the maximum speed possible. This is the most aggressive mode.
+In this mode Free Download Manager will download at average speed. This mode allows you to browse the Internet and keep the high speed of downloading at the same time.
 In this mode Free Download Manager will download at low speed. This mode allows you to download without the dramatic slowing-down of the network.
 ;
 Rename at Restart
@@ -1141,15 +1141,15 @@ Downloads Information List Files
 ;
 Export options
 ;
-Set the date of a file identical to the date specified by a server
-Set the same date of a downloaded file as the one on a server
+Set the date of a file identical to the date specified by the server
+Set the same date of a downloaded file as the one on the server
 Generate description file
 Generate a file with the name "*.dsc.txt" (* - name of a downloaded file) that will contain a small description of a downloaded file (comments + url + date). This file will be generated only for a download that has comments.
 This file has been downloaded from
-Don't retrieve the file date from a server
+Don't retrieve the file date from the server
 This option allows you to increase the speed of starting an FTP download. Free Download Manager will use SIZE command instead of LIST.
 Don't save logs of downloads
-Enabling this option will make Free Download Manager start and shut down faster and will decrease the memory usage.
+Enabling this option will make Free Download Manager start and shut down faster and will decrease memory usage.
 ;
 Export history of downloads
 Export all entries
@@ -1174,7 +1174,7 @@ Open
 Do you want to see this window again?
 Yes, but temporarily hide progress window for this download
 No, don't show such progress windows for any download
-Yes, but don't show me progress window of this download
+Yes, but don't show me progress window for this download
 Using the SHIFT key means that this download will be deleted from disk and you will not be able to restore it.\nAre you sure?
 Choose group
 Set groups' root folder
@@ -1187,7 +1187,7 @@ If checked, FDM will create a special window with information about downloading 
 ; general settings | misc page
 Timeouts for confirmations
 Launch download
-Ask for type of shutdown
+Ask for shutdown type
 Confirmation timeout for "Tools | Hang-up when done" command.
 Confirmation timeout for "Tools | Exit when done" command.
 Confirmation timeout for "Tools | Shutdown computer when done" command.
@@ -1220,18 +1220,18 @@ Extract
 Extraction
 Destination folder
 Failed to extract. File format is unknown.
-Traffic downloaded in this month\n(%s has been downloaded in the previous month)
+Traffic downloaded in this month\n(%s was downloaded in the previous month)
 Total speed of downloading
 Disable Tools | "when done" task after execution
-When enabled, any Tools | "when done" task will be automatically disabled after execution. So it will be launched only once.
+When enabled, any Tools | "when done" task will be automatically disabled after execution. Therefore, it will be launched only once.
 ; %s
-; 1st - name of a file
+; 1st - file name
 ; 2nd, 3rd - file info (size + date).
 "%s" file already exists.\n\nDo you want to replace it\n(%s)\n\nwith the new one\n(%s)?
 Yes for all
 Skip
 Skip all
-Format of archive is unknown
+Archive format is unknown
 Visit web site
 Install pack
 By default, FDM supports ZIP, RAR and ARJ archives only.\nYou can extend the list of supported archives by installing additional archive support pack for Free Download Manager (Internet connection is required).
@@ -1255,16 +1255,16 @@ Don't show this window again if check succeeds
 Unable to find the executable file of the antivirus program you've chosen.\nPlease specify it yourself.
 Files' sizes are not equal
 Save as:\n(Sample: file(*)(*A)(*a).txt)
-Invalid save as template specified.\nMake sure it corresponds to the template of URL.
+Invalid save as template specified.\nMake sure it corresponds to the URL template.
 When done
 When done (all completed or in error)
 Applications
 What's This?
 Opinions
 ;
-Dear folk!
-Free Download Manager (FDM) is one of the most popular downloading applications in the world, having millions of active users, but now after it became social we want more!
-If you find it as useful and a must-have program as we do, we kindly ask you to help us spread the word by posting a link to it in your blog, website or personal space, such as Myspace/MSN.
+Dear all!
+Free Download Manager (FDM) is one of the most popular downloading applications in the world, having millions of active users, but now, when it has become social, we want more!
+If you find it as useful and must-have tool as we do, we kindly ask you to help us spread the word by posting a link to it in your blog, website or personal space, such as Myspace/MSN.
 ; %s will be replaced with "FDM buzz" 
 Official %s has been started on August 16, 2006. Our  goal is to make FDM the fastest-spreading Internet utility after FireFox!
 FDM buzz
@@ -1277,18 +1277,18 @@ Join the buzz
 No, Thank you
 FDM Community
 Switch to "Opinions" after download
-If enabled, "Opinions" tab will be automatically activated when download will be finished.
+If enabled, "Opinions" tab will be automatically activated when download is finished.
 Modify Internet Explorer's network identification
-If enabled this will instruct web sites you browse that the Free Download Manager is installed on your program. However using this option may result in blocking of some sites.
+If enabled, this will instruct web sites you browse that Free Download Manager is installed on your program. However, using this option may result in blocking of some sites.
 Malicious?
-Check if somebody of Free Download Manager's users reported about this download that it contains virus/adware/spyware/etc.
-OK, nobody of Free Download Manager's users reported about this download that it is malicious.\n\nHowever, this does not guarantee that this download is not malicious and it is recommended to check it using some antivirus program.
+Check if any of Free Download Manager's users reported this download as containing virus/adware/spyware/etc.
+OK, none of Free Download Manager's users reported this download as malicious.\n\nHowever, this does not guarantee that this download is not malicious and it is recommended to check it using some antivirus program.
 ; keep all %xxx, \n as is.
-There are %d of %d of Free Download Manager's users reported that this download is malicious.\nAverage rating for this download is %.*g.\n\nShow opinions about this download?
-Check each new download before the downloading if it is malicious
-Use this option to get FDM check automatically, before the downloading, if somebody of users reported about this download that it is malicious.
+There are %d of %d of Free Download Manager's users reported that this download is malicious.\nThe average rating for this download is %.*g.\n\nShow opinions about this download?
+Check each new download before downloading if it is malicious
+Use this option to get FDM check automatically, before downloading, if any of users reported this download as malicious.
 Display opinions when downloading
-If enabled, FDM will activate "Opinions" tab automatically and show opinions about download at the downloading.
+If enabled, FDM will activate "Opinions" tab automatically and show opinions about download when downloading.
 Checking if download is malicious (see options to disable this)
 OK, nobody reported that it is malicious
 Warning! Somebody reported that this download is malicious
@@ -1296,7 +1296,7 @@ Close
 Loading
 Don't download this
 Cache the operations of writing the downloaded data to disk
-If enabled, FDM will use internal cache buffer with the size you specified for operations of writing the downloaded data. This will reduce the number of using times of your HDD. This may increase the speed of downloading for high-speed connections.\nHowever because of downloaded data is not written to HDD immediately it will required to re-download this data again on some computer failure (at worst of size you specified).\nRecommended for the high-speed connections.
+If enabled, FDM will use internal cache buffer with the size you specified for operations of writing the downloaded data. This will reduce the number of times your HDD is used. This may increase the speed of downloading for high-speed connections.\nHowever, because downloaded data is not written to HDD immediately, it will be required to re-download this data again if a computer failure occurs (at worst, you will have to re-download as much data as you specified for the cache size).\nRecommended for high-speed connections.
 Can't install SeaMonkey (Mozilla Suite) monitoring
 Can't uninstall SeaMonkey (Mozilla Suite) monitoring
 Check this box if you want FDM to catch clicks in Mozilla Firefox browser
@@ -1305,23 +1305,23 @@ Allow the browser to download if you press Cancel
 Check this box if you want your browser to download file when you press Cancel in the "Create download" dialog
 Add FDM to the browser context menu
 Check this box to add items "Download with Free Download Manager" and "Download web site with Free Download Manager" to the browser context menu (menu appears when you right click)
-Select menu items to display in the browser context menu
+Select menu items to display in browser context menu
 Can't install Firefox monitoring
 Move files to folder
 Speed is too low. Restarting section...
 Restart if speed is too low during (in min):
-Restart section at the dramatic decrease of the speed of downloading.
+Restart section at the dramatic decrease of downloading speed.
 Would you like to see such download progress windows again?
 Sorry, this service is currently unavailable. Please try again later.
 Move top
 Move bottom
-Place download at the top of list
-Check this option if you would like download to be placed at the top of the list of downloads.
-Monitoring in Firefox browser can't be enabled due to FlashGot extension is installed.\nYou should uninstall FlashGot first.
+Place download at the top of the list
+Check this option if you would like the download to be placed at the top of the list of downloads.
+Monitoring in Firefox browser can't be enabled because FlashGot extension is installed.\nYou should uninstall FlashGot first.
 Enable
 Disable
 Switch
-If the Pause all downloads mode is enabled it will be disabled, else it will be enabled.
+If the Pause all downloads mode is enabled, it will be disabled, otherwise it will be enabled.
 Official %s will be started on August 16, 2006. Our  goal is to make FDM the fastest-spreading Internet utility after FireFox!
 Automatically download and install updates
 Only notify me when update is available
@@ -1329,23 +1329,23 @@ Turn off automatic updates
 Now monitoring is enabled in %s.
 Delete record
 OK to delete?
-There is no write access to Free Download Manager's folder.\nYou should grant write access in order to allow Free Download Manager to save its data files, othewise all data will be losed after the restart of Free Download Manager.
-This small box allows you to drag&&drop links from your browser into Free Download Manager.\nIt allows quickly show or hide Free Download Manager's window using mouse left button double-click.\n\nIn order to hide it right click on it and uncheck "Drop box" menu item.
+There is no write access to Free Download Manager's folder.\nYou should grant write access in order to allow Free Download Manager to save its data files, othewise all data will be lost after the restart of Free Download Manager.
+This small box allows you to drag&drop links from your browser into Free Download Manager.\nIt allows to quickly show or hide Free Download Manager's window with a left button double-click.\n\nIn order to hide it, right click on it and uncheck "Drop box" menu item.
 Free Download Manager's Drop box
 Disable all notifications for batch downloads
 Check this options in order to disable all (balloon, sounds) notifications for downloads created by "%s" command.
 Skip list
-Specify list of extensions of files and the list of sites that should not be monitored.
+Specify the list of files extensions and the list of sites that should not be monitored.
 Don't catch download from these sites (space separated):
 Free Download Manager will not monitor downloads from the sites specified in this list. Specify domain names here (e.g. "site.com"). You may use '*' symbols.
-Warning!\nThere was an error occured while trying to perform virus check.\nWould you like to launch downloaded file anyway?
+Warning!\nAn error occurred while trying to perform virus check.\nWould you like to launch downloaded file anyway?
 Integrity
-Perform the integrity check when file will be downloaded
-In order to perform the integrity check Free Download Manager should know the valid checksum of the file. In most cases you should provide it for the each download.
+Perform the integrity check when file is downloaded
+In order to perform the integrity check Free Download Manager should know the valid checksum of the file. In most cases you should provide it for each download.
 If the check failed
 Valid checksum of this file
 Do nothing
-Specify here what FDM should do when the integrity check failed.\nAsk - FDM will ask you what to do.\nRestart - FDM will restart this download from the beginning.\nDo nothing - FDM will add the record about fail check to the log of downloading and will not do anything more.
+Specify here what FDM should do when the integrity check fails.\nAsk - FDM will ask you what to do.\nRestart - FDM will restart this download from the beginning.\nDo nothing - FDM will add the record about fail check to the downloading log file and will not do anything more.
 Performing integrity check...
 Integrity check succeeded.
 Integrity check failed!
@@ -1356,8 +1356,8 @@ Result checksum
 Check/uncheck all
 ; group's properties dialog
 Macroses
-name of a server (e.g. "freedownloadmanager.org")
-path to the downloading file on a server
+name of the server (e.g. "freedownloadmanager.org")
+path to the downloading file on the server
 current year
 current month (number from 1 to 12)
 current day
@@ -1365,7 +1365,7 @@ current day
 equivalent to "%year%-%month%-%day%"
 ;
 From Mozilla Firefox
-FDM will take proxy settings from the Firefox
+FDM will take proxy settings from Firefox
 ; new download settings
 Use this group
 ; Downloads -> Schedule ->
@@ -1374,17 +1374,17 @@ Stop
 Schedule download start
 Schedule download stop
 ;
-; downloads that not completed or were completed recently
+; downloads that are not completed or have been completed recently
 Not completed+Recent
 Parent group
 ;
 ; create new download dialog -> set output folder as default dialog
-Set as default for the all groups of downloads also
+Set as default for all the groups of downloads
 ; %s - place of name of the group. don't change this
 OK to set this folder as the default output folder for the "%s" group?
 ;
 ;
-Rub out the list of the downloads
+Clean up the list of the downloads
 Uploads
 Upload files
 Start uploading
@@ -1394,7 +1394,7 @@ Move selected upload(s) up
 Move selected upload(s) down
 Uploaded
 List of uploads
-Retieving destination upload URL from the base server...
+Retrieving destination upload URL from the base server...
 Abort
 ; outlook express: view | insert file | ...
 As attachment
@@ -1403,29 +1403,29 @@ Folder
 ;
 Add files
 Add folder
-Bittorrent
-Enable Bittorrent protocol support
+BitTorrent
+Enable BitTorrent protocol support
 Limit upload traffic
 Limit the number of upload connections
 Use ports in the range from
 to
 Enable DHT
-Enable/disable Bittorrent protocol support. However if there are any Bittorrent downloads in the list on in the Recycle Bin of FDM, Bittorrent protocol will not be disabled completely.
-Limit the maximum total speed of upload connections. This is not recommended for Bittorrent protocol and may reduce your download speed.
+Enable/disable BitTorrent protocol support. However if there are any BitTorrent downloads in the list or in the Recycle Bin of FDM, BitTorrent protocol will not be disabled completely.
+Limit the maximum total speed of upload connections. This is not recommended for BitTorrent protocol and may reduce your download speed.
 Limit the maximum number of total upload connections. Setting the too low number may result in decreasing of your downloading speed.
 Specify here the range of ports that FDM will use for upload connections.
-Enable DHT extension
+Enable DHT extension (download without using the tracker). Enabling this option will affect the increase of network traffic usage.
 Name
 Login is required for the tracker
-Add Bittorrent download
-An error occured while trying to process this torrent file.
+Add BitTorrent download
+An error occurred while trying to process this torrent file.
 Torrent file
-It seems that you would like to download a .torrent file. It's required to enable Bittorrent support in Free Download Manager to do this.\n\nWould you like to enable Bittorrent?
-Retype your passwords: passwords you've typed does not match.
+It seems that you would like to download a .torrent file. It's required to enable BitTorrent support in Free Download Manager to do this.\n\nWould you like to enable BitTorrent?
+Retype your passwords: passwords you've typed do not match.
 Specify the files you would like to upload.
 Upload properties
 Metalink info file has been detected. Continue downloading.
-Bittorrent info file has been detected. Continue downloading.
+BitTorrent info file has been detected. Continue downloading.
 Failed to access the files on the disk.
 Connecting tracker...
 Failed to receive the valid response from the tracker.
@@ -1444,11 +1444,11 @@ Keep files in this folder
 Changes will be applied after the restart of Free Download Manager.
 Show download progress window
 Create portable version
-Portable version of Free Download Manager is for using it on different computers without neccesity to install and configure it on each computer.\n\nYou may place it on flash disk for example.\n\nOnce launched it will register itself in the computer's system and integrates to browsers. And at exit it will unregister itself automatically.\n\nChoose here the path where you would like to create this version. This should be the folder on some removable drive.\n\nE.g. "I:\My portable programs\".
+Portable version of Free Download Manager can be used on different computers without the need to install and configure it on each computer.\n\nIt can be conveniently placed on a flash disk, for example.\n\nOnce launched, it registers itself in the computer's system and integrates to browsers. At exit it will unregister itself automatically.\n\nSpecify here the path where you would like to create this version. It should be a folder on some removable drive.\n\nE.g. "I:\My portable programs\".
 Integration
 Associate Free Download Manager with .torrent files
 Always use this group for new downloads
-Always use this group and every time remember the last output folder
+Always use this group and remember the last output folder each time
 Flash video downloads
 Download video with Free Download Manager
 This site is not supported. See the list of supported sites.
@@ -1501,11 +1501,11 @@ Tracker
 Tracker status
 Upload speed
 Bytes uploaded
-Share rating
+Share ratio
 Wasted byte count
 Torrent file URL
 Are you sure?\nThis will restart the download from the beginning.
-Traffic used ("downloaded"; "uploaded") in this month\n(%s has been used in the previous month)
+Traffic used ("downloaded"; "uploaded") in this month\n(%s was used in the previous month)
 Total speed ("download"; "upload")
 Files to upload
 Package name
@@ -1576,8 +1576,8 @@ Integration settings
 Upload of %s has been completed.\nYou should use the following URL as the download link:
 Total size
 Open in the browser
-Current version of Free Download Manager can't be longer used to upload files. It's required to update it.
-Current version of Free Upload Manager can't be longer used. It's required to update it. Please visit freedownloadmanager.org site.
+Current version of Free Download Manager cannot longer be used to upload files. It's required to update it.
+Current version of Free Upload Manager cannot longer be used. It's required to update it. Please visit freedownloadmanager.org site.
 Too long input.
 Upload manager integration settings
 Free Upload Manager integration settings
@@ -1585,11 +1585,54 @@ Upload
 Downloading update...
 Enable seeding
 Disable seeding by default
-Consider download as malicious if minumum
+Consider download as malicious if minimum
 % of users marked it as malicious
-OK, Free Download Manager's users did not report about this download that it is malicious.\n\nHowever, this does not guarantee that this download is not malicious and it is recommended to check it using some antivirus program.
+OK, Free Download Manager's users did not report this download as malicious.\n\nHowever, this does not guarantee that this download is not malicious and it is recommended to check it using some antivirus program.
 OK, FDM's users did not report that this download is malicious
 drive letter FDM was started from. E.g. "C:". Is useful for portable version.
 You should install Video Conversion plugin in order to use this feature.
-You should install Bittorrent plugin in order to download via Bittorrent protocol.
-Note: these files are Free Download Manager's service files (not the files you download).
+You should install BitTorrent plugin in order to download via BitTorrent protocol.
+Note: these files (*.sav) are Free Download Manager's service files (not the files you download).
+Would you like to copy current data files to the new folder (existing files will be overwritten) ?
+Default download folders of all groups will be set to this folder.\nOK to continue?
+Set default download folder
+Prevent computer from stand by while downloading
+Maximum number of half-open connections
+Torrents
+Failed to access the files on the disk. Check if disk is not full or write protected.
+Ratio
+List of torrents
+Add torrent download from web
+Add torrent download from file
+Create new torrent
+(auto)
+Source
+Piece size
+Trackers
+Add tracker
+Remove tracker
+Start seeding this torrent
+Save
+Create new torrent
+Torrent files
+Priority
+;normal/high priority
+skip
+normal
+high
+Floating windows
+Service files (list of downloads, history, etc.)
+Default settings of site downloads
+You have paused all downloads. This means all downloads will download in the very restricted speed (1B/s usually).\nThis allows to "pause" even the downloads with no resume support.\n\nYou should call this command again or restart FDM in order to return to normal state.
+Seeding
+Enable seeding (highly recommended)
+Unlimited seeding
+Limit by ratio
+Seed until ratio will be
+Limit by time
+Seed during
+Check if download with the same URL already exists
+Save history of downloads
+List my most recently downloaded files
+Default settings of Bittorrent downloads
+Restart completed downloads

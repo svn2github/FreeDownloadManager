@@ -150,7 +150,7 @@ int CFlashVideoDownloadsWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	for (size_t i = 0; i < _DldsMgr.GetCount (); i++)
 	{
 		if (_DldsMgr.GetDownload (i)->dwFlags & DLD_FLASH_VIDEO)
-			m_wndTasks.AddDownload (_DldsMgr.GetDownload (i));
+			m_wndTasks.AddDownload (_DldsMgr.GetDownload (i), TRUE);
 	}
 	
 	return 0;
@@ -165,10 +165,10 @@ void CFlashVideoDownloadsWnd::OnSize(UINT nType, int cx, int cy)
 	
 }
 
-void CFlashVideoDownloadsWnd::AddDownload(vmsDownloadSmartPtr dld)
+void CFlashVideoDownloadsWnd::AddDownload(vmsDownloadSmartPtr dld, BOOL bPlaceToTop)
 {
 	ASSERT (dld->dwFlags & DLD_FLASH_VIDEO);
-	m_wndTasks.AddDownload (dld);
+	m_wndTasks.AddDownload (dld, bPlaceToTop);
 }
 
 void CFlashVideoDownloadsWnd::OnFvdldCreate() 

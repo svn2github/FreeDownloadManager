@@ -10,6 +10,8 @@
 CURLcode Curl_open(struct SessionHandle **curl);
 CURLcode Curl_setopt(struct SessionHandle *data, CURLoption option,
                      va_list arg);
+CURLcode Curl_dupset(struct SessionHandle * dst, struct SessionHandle * src);
+void Curl_freeset(struct SessionHandle * data);
 CURLcode Curl_close(struct SessionHandle *data); 
 CURLcode Curl_connect(struct SessionHandle *, struct connectdata **,
                       bool *async, bool *protocol_connect);
@@ -39,24 +41,16 @@ int Curl_doing_getsock(struct connectdata *conn,
                        curl_socket_t *socks,
                        int numsocks);
 
+bool Curl_isPipeliningEnabled(const struct SessionHandle *handle);
 CURLcode Curl_addHandleToPipeline(struct SessionHandle *handle,
-                                  struct curl_llist *pipe);
+                                  struct curl_llist *pipeline);
 int Curl_removeHandleFromPipeline(struct SessionHandle *handle,
-                                  struct curl_llist *pipe);
-bool Curl_isHandleAtHead(struct SessionHandle *handle,
-                         struct curl_llist *pipe);
+                                  struct curl_llist *pipeline);
 
-void Curl_close_connections(struct SessionHandle *data);
+void Curl_close_connections(struct SessionHandle *data); 
 
-#if 0
-CURLcode Curl_protocol_fdset(struct connectdata *conn,
-                             fd_set *read_fd_set,
-                             fd_set *write_fd_set,
-                             int *max_fdp);
-CURLcode Curl_doing_fdset(struct connectdata *conn,
-                          fd_set *read_fd_set,
-                          fd_set *write_fd_set,
-                          int *max_fdp);
-#endif
+void Curl_reset_reqproto(struct connectdata *conn);
+
+#define CURL_DEFAULT_PROXY_PORT 1080 
 
 #endif

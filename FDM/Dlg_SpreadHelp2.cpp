@@ -75,12 +75,12 @@ margin-bottom: 0px; } \n-->\n</style><body bgcolor='#%s'>\
 		CMainFrame* pFrm = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
 
 		CString str3;
-		str3.Format ("<a href='http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%d_%d'>%s</a>", 
-			PRG_BUILD_NUMBER, pFrm->m_Customizations.get_AffiliateID (), LS (L_FDMBUZZ));
+		str3.Format ("<a href='http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%s_%d'>%s</a>", 
+			vmsFdmAppMgr::getBuildNumber (), pFrm->m_Customizations.get_AffiliateID (), LS (L_FDMBUZZ));
 
 		CString str4;
-		str4.Format ("<a href='http://fdm.freedownloadmanager.org/fromfdm/blog.php3?from=%d_%d'>%s</a>",
-			PRG_BUILD_NUMBER, pFrm->m_Customizations.get_AffiliateID (), LS (L_BLOG));
+		str4.Format ("<a href='http://fdm.freedownloadmanager.org/fromfdm/blog.php3?from=%s_%d'>%s</a>",
+			vmsFdmAppMgr::getBuildNumber (), pFrm->m_Customizations.get_AffiliateID (), LS (L_BLOG));
 
 		strHTML.Format (str, str3, str4);
 	}
@@ -104,12 +104,12 @@ margin-bottom: 0px; } \n-->\n</style><body bgcolor='#%s'>\
 		CMainFrame* pFrm = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
 
 		CString str3;
-		str3.Format ("http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%d_%d", 
-			PRG_BUILD_NUMBER, pFrm->m_Customizations.get_AffiliateID ());
+		str3.Format ("http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%s_%d", 
+			vmsFdmAppMgr::getBuildNumber (), pFrm->m_Customizations.get_AffiliateID ());
 
 		CString str4;
-		str4.Format ("http://fdm.freedownloadmanager.org/fromfdm/blog.php3?from=%d_%d",
-			PRG_BUILD_NUMBER, pFrm->m_Customizations.get_AffiliateID ());
+		str4.Format ("http://fdm.freedownloadmanager.org/fromfdm/blog.php3?from=%s_%d",
+			vmsFdmAppMgr::getBuildNumber (), pFrm->m_Customizations.get_AffiliateID ());
 
 		strHTML.Format (str, str3, str4);
 	}
@@ -173,8 +173,8 @@ void CDlg_SpreadHelp2::OnOK()
 	CString str;
 	CMainFrame* pFrm = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
 
-	str.Format ("http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%d_%d",
-		PRG_BUILD_NUMBER, pFrm->m_Customizations.get_AffiliateID ());
+	str.Format ("http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%s_%d",
+		vmsFdmAppMgr::getBuildNumber (), pFrm->m_Customizations.get_AffiliateID ());
 
 	fsOpenUrlInBrowser (str);
 

@@ -8,13 +8,13 @@
         <!-- Required Items -->
         <em:id>fdm_ffext@freedownloadmanager.org</em:id>
         <em:name>Free Download Manager plugin</em:name>
-        <em:version>1.3</em:version>
+        <em:version>1.3.4</em:version>
 
         <em:targetApplication> <!-- Firefox -->
             <Description>
                 <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id>
                 <em:minVersion>1.5</em:minVersion>
-                <em:maxVersion>2.9.*</em:maxVersion>
+                <em:maxVersion>3.*</em:maxVersion>
             </Description>
         </em:targetApplication>
 

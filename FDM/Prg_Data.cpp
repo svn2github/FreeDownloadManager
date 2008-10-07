@@ -53,7 +53,7 @@ BOOL CPrg_Data::OnInitDialog()
 	
 	CSpinButtonCtrl *pSpin = (CSpinButtonCtrl*) GetDlgItem (IDC_AUTOSAVESPIN);
 	pSpin->SetRange (1, UD_MAXVAL);
-	SetDlgItemInt (IDC_AUTOSAVE, _DldsMgr.m_uAutosaveInterval / 60 / 1000, FALSE);
+	SetDlgItemInt (IDC_AUTOSAVE, _App.AutosaveInterval () / 60 / 1000, FALSE);
 
 	ApplyLanguage ();
 
@@ -105,7 +105,7 @@ BOOL CPrg_Data::OnApply()
 		return FALSE;
 	}
 
-	_DldsMgr.m_uAutosaveInterval = nVal * 60 * 1000;
+	_App.AutosaveInterval (nVal * 60 * 1000);
 
 	CString strOldVal = _App.DataFolder ();
 	CString str;
@@ -115,14 +115,22 @@ BOOL CPrg_Data::OnApply()
 	{
 		_App.DataFolder (str);
 
-		extern bool _bNeedRecalcAppDataFolder;
-		_bNeedRecalcAppDataFolder = true;
-		
 		CRegKey key;
 		if (ERROR_SUCCESS != key.Create (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Upload Manager"))
 			key.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Upload Manager");
 
 		key.SetValue (fsGetAppDataFolder (), "force_data_folder");
+
+		if (IDYES == MessageBox (LS (L_COPYDATAFILESNOW), NULL, MB_YESNO))
+		{
+			vmsCopyFiles (fsGetAppDataFolder (), _App.DataFolder (), "*.sav");
+			extern bool _bNeedRecalcAppDataFolder;
+			_bNeedRecalcAppDataFolder = true;
+		}
+		else
+		{
+			MessageBox (LS (L_RESTARTISREQ));
+		}
 	}
 	
 	return CPropertyPage::OnApply();

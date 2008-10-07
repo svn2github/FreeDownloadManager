@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/          
+*/
+
+          
 
 #if !defined(AFX_STDAFX_H__F33B04E6_66D1_4F3B_8762_ABDB2B49550C__INCLUDED_)
 #define AFX_STDAFX_H__F33B04E6_66D1_4F3B_8762_ABDB2B49550C__INCLUDED_
@@ -15,6 +17,6 @@
 
 #include <windows.h>    
 
-//{{AFX_INSERT_LOCATION}//}}  
+//{{AFX_INSERT_LOCATION}//}//}}  
 
 #endif 

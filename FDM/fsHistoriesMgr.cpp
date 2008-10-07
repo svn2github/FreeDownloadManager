@@ -54,6 +54,7 @@ void fsHistoriesMgr::ClearAll()
 	_LastBatchUrls.ClearHistory ();
 	_LastFolders.ClearHistory ();
 	_LastFind.ClearHistory ();
+	_LastFlashVideoUrls.ClearHistory ();
 
 	_pwndHFE->ClearHistory ();
 }

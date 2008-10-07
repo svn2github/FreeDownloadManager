@@ -96,7 +96,7 @@ void vmsSkinMgr::Scan_TryFolder(LPCSTR pszFolder)
 
 	
 	
-	if (skin.nFDMBuild < 425 || skin.nFDMBuild > PRG_BUILD_NUMBER)
+	if (skin.nFDMBuild < 425 || skin.nFDMBuild > (int)vmsFdmAppMgr::getVersion ()->m_appVersion [2].dwVal)
 		return;
 
 	m_vList.add (skin);
@@ -136,6 +136,7 @@ HBITMAP vmsSkinMgr::bmp(UINT nID)
 		IDB_SHEDULER, IDB_SITELIST, IDB_SITELIST_SEL,
 		IDB_TOOL0, IDB_TOOL0_16, IDB_TOOL0_16_D, IDB_TOOL0_D,
 		IDB_TOOL_DLDS, IDB_TOOL_DLDS_D, IDB_TOOL_DLD_16, IDB_TOOL_DLD_16_D,
+		IDB_TOOL_BT, IDB_TOOL_BT_D, IDB_TOOL_BT_16, IDB_TOOL_BT_16_D,
 		IDB_TOOL_HFE, IDB_TOOL_HFE_D, IDB_TOOL_HFE_16, IDB_TOOL_HFE_16_D,
 		IDB_TOOL_SCHEDULE, IDB_TOOL_SCHEDULE_D, IDB_TOOL_SCH_16, IDB_TOOL_SCH_16_D,
 		IDB_TOOL_SITES, IDB_TOOL_SITES_D, IDB_TOOL_SITES_16, IDB_TOOL_SITES_16_D,
@@ -150,6 +151,7 @@ HBITMAP vmsSkinMgr::bmp(UINT nID)
 		"scheduler_sel", "scheduler", "sitelist", "sitelist_sel",
 		"tool0", "tool0_small", "tool0_small_d", "tool0_d",
 		"tool_dld", "tool_dld_d", "tool_dld_small", "tool_dld_small_d",
+                "tool_bt", "tool_bt_d", "tool_bt_small", "tool_bt_small_d",
 		"tool_hfe",	"tool_hfe_d", "tool_hfe_small", "tool_hfe_small_d",
 		"tool_sch", "tool_sch_d", "tool_sch_small", "tool_sch_small_d",
 		"tool_sites", "tool_sites_d", "tool_sites_small", "tool_sites_small_d",

@@ -43,6 +43,8 @@ BOOL CCBD_SeeResultsDlg::OnInitDialog()
 	for (int i = 0; i < m_bl->get_ResultCount (); i++)
 		m_wndList.InsertItem (i, m_bl->get_Result (i));
 
+	m_wndList.SetColumnWidth (0, LVSCW_AUTOSIZE);
+
 	SetWindowText (LS (L_SEERESULTS));
 	
 	return TRUE;

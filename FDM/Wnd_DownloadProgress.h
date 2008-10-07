@@ -5,7 +5,6 @@
 #if !defined(AFX_WND_DOWNLOADPROGRESS_H__C0502D42_DC5A_4BC7_8595_53B73DA2AEB2__INCLUDED_)
 #define AFX_WND_DOWNLOADPROGRESS_H__C0502D42_DC5A_4BC7_8595_53B73DA2AEB2__INCLUDED_
 
-#include "vmsRenderer.h"	
 #include "vmsObjectSmartPtr.h"
 
 #if _MSC_VER > 1000
@@ -34,11 +33,14 @@ public:
 
 	
 protected:
+	int m_iLastProgress;
+	CBitmap m_bmpProgress;
 	static DWORD WINAPI _threadDraw (LPVOID lp);
 	HANDLE m_hthDraw, m_hevDraw, m_hevShutdown;
-	vmsRenderer m_renderer;
 	//{{AFX_MSG(CWnd_DownloadProgress)
 	afx_msg void OnPaint();
+	afx_msg void OnDestroy();
+	afx_msg void OnSize(UINT nType, int cx, int cy);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };    

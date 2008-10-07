@@ -8,9 +8,11 @@
 #include "fsDownload.h"	
 #if _MSC_VER > 1000
 #pragma once
-#endif           
+#endif   
 
-class CDownloads_Bittorrent_Files : public CListCtrl
+#include "ColumnTreeCtrl.h"    
+
+class CDownloads_Bittorrent_Files : public CColumnTreeCtrl
 {
 
 public:
@@ -33,10 +35,15 @@ public:
 
 	
 protected:
+	void ShowContextMenu(HTREEITEM hItem);
+	afx_msg void OnRclick (NMHDR* , LRESULT* pResult);
+	void AddFiles (fs::ListTree <vmsBtDownloadManager::vmsFile>* pTree, CColumnTreeCtrl *pTreeCtrl, HTREEITEM hRoot);
 	int m_nFileNameOffset;
 	vmsDownloadSmartPtr m_dld;
 	//{{AFX_MSG(CDownloads_Bittorrent_Files)
-	afx_msg void OnGetdispinfo(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnBtfilesDontdownload();
+	afx_msg void OnBtfilesHighpiority();
+	afx_msg void OnBtfilesNormalpriority();
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()

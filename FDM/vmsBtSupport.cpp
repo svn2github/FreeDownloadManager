@@ -47,7 +47,7 @@ vmsBtSession* vmsBtSupport::get_Session()
 		_pfnSession = (FNS) m_dllBt.GetProcAddress ("vmsBt_getSession");
 		if (_pfnSession)
 		{
-			_pfnSession ()->SetUserAgent (PRG_AGENT_NAME);
+			_pfnSession ()->SetUserAgent (vmsFdmAppMgr::getAppAgentName ());
 			ApplyListenPortSettings ();
 			ApplyDHTSettings ();
 			ApplyRestrainAllDownloadsMode ();
@@ -77,9 +77,10 @@ void vmsBtSupport::ApplyRestrainAllDownloadsMode()
 		vmsBtSession *pBtSession = get_Session ();
 		
 		int limit = fsInternetDownloader::is_PauseMode () ? 1 : -1;
+		int ulimit = fsInternetDownloader::is_PauseMode () ? 1 : 
+			_App.Bittorrent_UploadTrafficLimit (_DldsMgr.GetTUM ());
 		pBtSession->SetDownloadLimit (limit);
-		pBtSession->SetUploadLimit (
-			_App.Bittorrent_UploadTrafficLimit (_DldsMgr.GetTUM ()));
+		pBtSession->SetUploadLimit (ulimit);
 	}
 }
 
@@ -302,6 +303,37 @@ bool vmsBtSupport::LoadBtDll(vmsDLL &dll)
 	if (str [str.GetLength () - 1] != '\\')
 		str += '\\';
 	str += "fdmbtsupp.dll";
+
 	return dll.Load (str);
 }
 
+int vmsBtSupport::getBtDllVersion()
+{
+	static int ver = -1;
+	if (ver != -1)
+		return ver;
+
+	CString str = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
+	if (str [str.GetLength () - 1] != '\\')
+		str += '\\';
+	str += "fdmbtsupp.dll";
+
+	if (GetFileAttributes (str) == DWORD (-1))
+		return ver = INT_MAX;
+	
+	DWORD dw;
+	DWORD dwSize = GetFileVersionInfoSize (str, &dw);
+	if (dwSize == 0)
+		return ver = 0;
+	LPVOID pvVer = _alloca (dwSize);
+	ZeroMemory (pvVer, dwSize);
+	if (FALSE == GetFileVersionInfo (str, 0, dwSize, pvVer))
+		return ver = 0;
+	
+	VS_FIXEDFILEINFO *pFileInfo = NULL;
+	UINT u;
+	if (FALSE == VerQueryValue (pvVer, _T ("\\"), (LPVOID*)&pFileInfo, &u))
+		return ver = 0;
+	
+	return ver = pFileInfo->dwFileVersionLS >> 32;
+}

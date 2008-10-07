@@ -53,7 +53,21 @@ struct timeval {
 #define SEND_4TH_ARG 0
 #endif   
 
-#ifdef HAVE_RECV
+#if defined(WIN32) && !defined(HAVE_CONFIG_H)
+#  if ( defined(_MSC_VER) && !defined(INET_ADDRSTRLEN) ) || \
+      (!defined(_MSC_VER) && !defined(HAVE_WS2TCPIP_H) )
+#    define socklen_t int
+#  endif
+#endif 
+
+#if defined(__minix)
+
+#define sread(x,y,z) (ssize_t)read((RECV_TYPE_ARG1)(x), \
+                                   (RECV_TYPE_ARG2)(y), \
+                                   (RECV_TYPE_ARG3)(z))
+
+#elif defined(HAVE_RECV) 
+
 #if !defined(RECV_TYPE_ARG1) || \
     !defined(RECV_TYPE_ARG2) || \
     !defined(RECV_TYPE_ARG3) || \
@@ -74,9 +88,15 @@ struct timeval {
   Error Missing_definition_of_macro_sread
   
 #endif
-#endif 
+#endif  
 
-#ifdef HAVE_SEND
+#if defined(__minix)
+
+#define swrite(x,y,z) (ssize_t)write((SEND_TYPE_ARG1)(x), \
+                                    (SEND_TYPE_ARG2)(y), \
+                                    (SEND_TYPE_ARG3)(z))
+
+#elif defined(HAVE_SEND)
 #if !defined(SEND_TYPE_ARG1) || \
     !defined(SEND_QUAL_ARG2) || \
     !defined(SEND_TYPE_ARG2) || \
@@ -227,7 +247,9 @@ typedef int sig_atomic_t;
 #define argv_item_t  __char_ptr32
 #else
 #define argv_item_t  char *
-#endif 
+#endif   
+
+#define ZERO_NULL 0 
 
 #if defined (__LP64__) && defined(__hpux) && !defined(_XOPEN_SOURCE_EXTENDED)
 #include <sys/socket.h> 
@@ -295,7 +317,7 @@ inline static ssize_t Curl_hp_recvfrom(int s, void *buf, size_t len, int flags,
 #define accept(a,b,c) Curl_hp_accept((a),(b),(c))
 #define recvfrom(a,b,c,d,e,f) Curl_hp_recvfrom((a),(b),(c),(d),(e),(f))
 
-#endif 
+#endif  
 
 #endif 
 

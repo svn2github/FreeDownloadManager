@@ -38,6 +38,7 @@ public:
 
 	
 protected:
+	bool m_bRepaintBitmap;
 	CBitmap m_bmpProgress;
 	int m_iLastProgress;
 	HANDLE m_hthDrawProgress, m_hevShutdown, m_hevDraw;

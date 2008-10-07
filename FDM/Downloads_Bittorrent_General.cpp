@@ -47,7 +47,10 @@ void CDownloads_Bittorrent_General::set_ActiveDownload(vmsDownloadSmartPtr dld)
 {
 	m_dld = dld;
 	if (dld == NULL)
+	{
+		DeleteAllItems ();
 		return;
+	}
 	UpdateStat ();	
 }
 
@@ -142,7 +145,7 @@ void CDownloads_Bittorrent_General::UpdateUploadStat()
 
 	SetItemText (7, 1, BytesToString (mgr->get_TotalUploadedByteCount ()));
 
-	str.Format ("%.*g", 4, (float)mgr->get_ShareRating ());
+	str.Format ("%.*g", 4, (float)mgr->getRatio ());
 	SetItemText (8, 1, str);
 }
 

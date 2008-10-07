@@ -36,14 +36,24 @@
 #ifndef CURL_DISABLE_FTP
 #ifdef HAVE_GSSAPI
 
+#ifdef HAVE_OLD_GSSMIT
+#define GSS_C_NT_HOSTBASED_SERVICE gss_nt_service_name
+#endif
+
 #include <stdlib.h>
 #ifdef HAVE_NETDB_H
 #include <netdb.h>
 #endif
 #include <string.h>
+#ifdef HAVE_GSSMIT
+/* MIT style */
 #include <gssapi/gssapi.h>
 #include <gssapi/gssapi_generic.h>
 #include <gssapi/gssapi_krb5.h>
+#else
+/* Heimdal-style */
+#include <gssapi.h>
+#endif
 
 #include "urldata.h"
 #include "base64.h"
@@ -51,6 +61,9 @@
 #include "sendf.h"
 #include "krb4.h"
 #include "memory.h"
+
+#define _MPRINTF_REPLACE /* use our functions only */
+#include <curl/mprintf.h>
 
 /* The last #include file should be: */
 #include "memdebug.h"
@@ -106,7 +119,7 @@ krb5_overhead(void *app_data, int level, int len)
 }
 
 static int
-krb5_encode(void *app_data, void *from, int length, int level, void **to,
+krb5_encode(void *app_data, const void *from, int length, int level, void **to,
             struct connectdata *conn)
 {
   gss_ctx_id_t *context = app_data;
@@ -118,7 +131,10 @@ krb5_encode(void *app_data, void *from, int length, int level, void **to,
   /* shut gcc up */
   conn = NULL;
 
-  dec.value = from;
+  /* NOTE that the cast is safe, neither of the krb5, gnu gss and heimdal 
+   * libraries modify the input buffer in gss_seal()
+   */
+  dec.value = (void*)from;
   dec.length = length;
   maj = gss_seal(&min, *context,
 		 level == prot_private,
@@ -145,7 +161,7 @@ krb5_auth(void *app_data, struct connectdata *conn)
   char *p;
   const char *host = conn->dns_entry->addr->ai_canonname;
   ssize_t nread;
-  unsigned int l = sizeof(conn->local_addr);
+  socklen_t l = sizeof(conn->local_addr);
   struct SessionHandle *data = conn->data;
   CURLcode result;
   const char *service = "ftp", *srv_host = "host";
@@ -185,7 +201,7 @@ krb5_auth(void *app_data, struct connectdata *conn)
 
     gssbuf.value = data->state.buffer;
     gssbuf.length = snprintf(gssbuf.value, BUFSIZE, "%s@%s", service, host);
-    maj = gss_import_name(&min, &gssbuf, gss_nt_service_name, &gssname);
+    maj = gss_import_name(&min, &gssbuf, GSS_C_NT_HOSTBASED_SERVICE, &gssname);
     if(maj != GSS_S_COMPLETE) {
       gss_release_name(&min, &gssname);
       if(service == srv_host) {

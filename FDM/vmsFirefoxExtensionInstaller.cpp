@@ -27,6 +27,16 @@ bool vmsFirefoxExtensionInstaller::Do(LPCSTR pszCID, LPCSTR pszExtPath, bool bIn
 
 	LOG ("vmsFEI::Do: " << v.size () << " profiles found" << nl);
 
+	CString str = _App.Firefox_PortableVersionPath ();
+	if (!str.IsEmpty ())
+	{
+		fsString str2 = (LPCSTR)(str + "\\data\\profile");
+		char sz [MY_MAX_PATH];
+		GetModuleFileName (NULL, sz, MY_MAX_PATH);
+		str2 [0] = sz [0];
+		v.add (str2);
+	}
+
 	if (v.size () == 0)
 		return false;
 
@@ -74,6 +84,16 @@ bool vmsFirefoxExtensionInstaller::IsInstalled(LPCSTR pszCID, bool bInDefaultPro
 
 	FU_STRINGLIST v; int nDefaultProfile;
 	vmsFirefoxUtil::GetProfilesPathes (v, nDefaultProfile);
+
+	CString str = _App.Firefox_PortableVersionPath ();
+	if (!str.IsEmpty ())
+	{
+		fsString str2 = (LPCSTR)(str + "\\data\\profile");
+		char sz [MY_MAX_PATH];
+		GetModuleFileName (NULL, sz, MY_MAX_PATH);
+		str2 [0] = sz [0];
+		v.add (str2);
+	}
 
 	LOG ("vmsFEI::IsInst: " << v.size () << " profiles found" << nl);
 

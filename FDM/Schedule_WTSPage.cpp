@@ -168,7 +168,7 @@ void CSchedule_WTSPage::ShowGroup(int iGrp, BOOL bShow, BOOL bEnabled)
 	
 	static UINT ppGrpID [][20] = {
 		{5, IDC__PROGNAME, IDC_PROGNAME, IDC_CHOOSENAME, IDC__ARGUMENTS, IDC_ARGUMENTS},
-		{4, IDC_SELDLDS, IDC_TOSEL, IDC_TOUNSEL, IDC_UNSELDLDS},
+		{5, IDC_SELDLDS, IDC_TOSEL, IDC_TOUNSEL, IDC_UNSELDLDS, IDC_RESTARTDLDIFDONE},
 		{4, IDC_SELDLDS, IDC_TOSEL, IDC_TOUNSEL, IDC_UNSELDLDS},
 		{0},	
 		{0},	
@@ -218,6 +218,8 @@ void CSchedule_WTSPage::OnSelchangeWts()
 
 		case WTS_STARTDOWNLOAD:
 			BuildDownloadsList ();
+			CheckDlgButton (IDC_RESTARTDLDIFDONE, 
+				m_task->wts.dlds.dwFlags & SDI_RESTART_COMPLETED_DOWNLOADS ? BST_CHECKED : BST_UNCHECKED);
 			LVCOLUMN col;
 			col.mask = LVCF_TEXT;
 			col.pszText = (LPSTR) LS (L_DLDSTOSTART);
@@ -386,12 +388,12 @@ void CSchedule_WTSPage::BuildDownloadsList()
 		vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);	
 		BOOL bToUnsel = TRUE;
 
-		if (m_task->wts.enType == m_iWTS && m_task->wts.pvIDs != NULL)
+		if (m_task->wts.enType == m_iWTS && m_task->wts.dlds.pvIDs != NULL)
 		{
-			for (int i = m_task->wts.pvIDs->size () - 1; i >= 0; i--)
+			for (int i = m_task->wts.dlds.pvIDs->size () - 1; i >= 0; i--)
 			{
 				
-				if (m_task->wts.pvIDs->at (i) == dld->nID)
+				if (m_task->wts.dlds.pvIDs->at (i) == dld->nID)
 				{
 					
 					bToUnsel = FALSE;
@@ -728,12 +730,16 @@ BOOL CSchedule_WTSPage::ApplyStartStopDownloads()
 
 	FreeSchedule ();
 
-	fsnew1 (m_task->wts.pvIDs, fs::list <UINT>);
+	fsnew1 (m_task->wts.dlds.pvIDs, fs::list <UINT>);
 
 	int cItems = m_wndSelDlds.GetItemCount ();
 
 	for (int i = 0; i < cItems; i++)
-		m_task->wts.pvIDs->add (m_wndSelDlds.GetItemData (i));
+		m_task->wts.dlds.pvIDs->add (m_wndSelDlds.GetItemData (i));
+
+	m_task->wts.dlds.dwFlags = 0;
+	if (IsDlgButtonChecked (IDC_RESTARTDLDIFDONE) == BST_CHECKED)
+		m_task->wts.dlds.dwFlags |= SDI_RESTART_COMPLETED_DOWNLOADS;
 
 	return TRUE;
 }
@@ -884,6 +890,7 @@ void CSchedule_WTSPage::ApplyLanguage()
 		fsDlgLngInfo (IDC_RAD_ENABLE, L_ENABLE),
 		fsDlgLngInfo (IDC_RAD_DISABLE, L_DISABLE),
 		fsDlgLngInfo (IDC_RAD_INVERT, L_SWITCH),
+		fsDlgLngInfo (IDC_RESTARTDLDIFDONE, L_RESTARTCOMPLDLDS),
 	};
 
 	CString str = LS (L_CHANGETUMTO); str += ':';

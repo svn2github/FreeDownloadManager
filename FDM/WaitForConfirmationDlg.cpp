@@ -159,5 +159,5 @@ void CWaitForConfirmationDlg::OnCancel()
 void CWaitForConfirmationDlg::DoPostDlg()
 {
 	if (m_bDontAsk && m_strMsgIfDontAskAfain.GetLength () != 0)
-		MessageBox (m_strMsgIfDontAskAfain, PRG_NAME, MB_OK);
+		MessageBox (m_strMsgIfDontAskAfain, vmsFdmAppMgr::getAppName (), MB_OK);
 }

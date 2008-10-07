@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/          
+*/
+
+          
 
 #if !defined(AFX_STDAFX_H__0CA4122A_5758_4A99_B804_CB72B44676C6__INCLUDED_)
 #define AFX_STDAFX_H__0CA4122A_5758_4A99_B804_CB72B44676C6__INCLUDED_
@@ -19,7 +21,7 @@
 #include <afxcmn.h>			
 #endif   
 
-//{{AFX_INSERT_LOCATION}//}}  
+//{{AFX_INSERT_LOCATION}//}//}}  
 
 #include "fsTrayIconMgr.h"
 extern fsTrayIconMgr _TrayMgr;

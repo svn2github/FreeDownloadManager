@@ -1,5 +1,5 @@
-; Translate for: Free Download Manager 2.5 build 718
-; Translator   : Geralt, 2007 
+; Translate for: Free Download Manager 2.5 build 755
+; Translator   : Geralt, 2008
 ; Source       : Ondøej Josefus, June 2005
 ;
 ; Translator - Geralt, 2007
@@ -312,9 +312,9 @@ Binární
 ASCII pro soubory s pøíponou:
 Zvolte, jak bude FDM identifikován HTTP serverem
 Øetìzec bude poslán jako pole poskytovatele na HTTP server. Vìtšinou není vyžadováno
-Zvolte, jestliže chcete, aby FDM používal HTTP verzi 1.1
-Zvolte, jestliže chcete, aby FDM používal cookies
-Zvolte, jestliže chcete, aby FDM používal pasivní mód pro FTP servery. Nìkdy je to nezbytné pøi používání firewallu
+Zvolte, jestliže si pøejete, aby FDM používal HTTP verzi 1.1
+Zvolte, jestliže si pøejete, aby FDM používal cookies
+Zvolte, jestliže si pøejete, aby FDM používal pasivní mód pro FTP servery. Nìkdy je to nezbytné pøi používání firewallu
 Použít pro FTP pøenos binární mód. Nastavte, jestliže stahovaný soubor není textový
 Použít pro FTP pøenos ASCII mód. Nastavte, jestliže stahovaný soubor je textový
 FDM bude používat ASCII mód pro soubory se zadanou pøíponou. Pro ostatní soubory bude FDM používat binární mód pøenosu
@@ -378,7 +378,7 @@ Neodstraòovat soubor
 Odstranit soubor
 FDM uloží seznam stahování automaticky po zadaném èasovém intervalu. Zamezí tak nechtìné ztrátì dat ze seznamu pøi možném vypnutí poèítaèe nebo výpadku proudu
 Zvolte, co by FDM mìl udìlat pøi odstraòování nedokonèeného stahování
-Zvolte, jestliže chcete odstranit stahovaný soubor automaticky ze seznamu stahování pokud je jeho stahování dokonèeno
+Zvolte, jestliže chcete odstranit stahovaný soubor automaticky ze seznamu stahování, pokud je jeho stahování dokonèeno
 Sledování
 Monitor
 Schránka
@@ -387,8 +387,8 @@ Ignorovat soubory s pøíponou
 Klávesa ALT nesmí být stisknuta
 Pouze pøi stisku klávesy ALT
 Zadejte prosím pøípony
-Zvolte, jestliže chcete, aby FDM zachytil kliknutí v Internet Exploreru
-Zvolte, jestliže chcete, aby FDM sledoval obsah schránky
+Zvolte, jestliže si pøejete, aby FDM zachytil kliknutí v Internet Exploreru
+Zvolte, jestliže si pøejete, aby FDM sledoval obsah schránky
 Sledovat jen soubory se zadanou pøíponou
 Nesledovat soubory se zadanou pøíponou 
 Sledovat jen pokud není stisknuta klávesa ALT
@@ -405,7 +405,7 @@ Pøi stisku tlaèítka Minimalizovat, bude FDM minimalizováno do systémové lišty
 Pokud nebude aktivováno, pak klepnutí na tlaèítko Zavøít bude stejné jako klepnutí jako na tlaèítko Minimalizovat
 Aktualizace
 Adresa serveru pro aktualizaci
-FDM ovìøí zda není dostupná novìjší verze programu
+FDM ovìøí, zda není dostupná novìjší verze programu
 Prùvodce optimalizací použití sítì
 Vítejte v prùvodci pro optimalizaci sítì!
 Prùvodce Vám pomùže nastavit optimální nastavení pro Váš typ pøipojení. Nastaví výchozí nastavení pro stahování.
@@ -550,7 +550,7 @@ Spojení se serverem bylo ztraceno. Pokus o obnovení
 Vytváøení seznamu
 Získat velikost a datum úpravy souborù
 Použitím tohoto parametru mùže výraznì klesnout rychlost
-Zvolte, jestliže chcete, aby se FDM dotázal na velikost a datum souborù z HTTP serverù
+Zvolte, jestliže si pøejete, aby se FDM dotázal na velikost a datum souborù z HTTP serverù
 Název stránky
 Pøipojení
 Pøihlášení
@@ -656,7 +656,7 @@ Pøi zvolení bude stažen i styl webových stránek (CSS). Doporuèeno
 Pøi zvolení nebudou webové stránky z jiných umístìní staženy. Napøíklad, když nezaškrtnete a spustíte stahování z http://example.com/, pak http://othersite.com/some.html nebude staženo, ale http://example.com/some.html bude staženo
 Pøi zvolení budou staženy i obrázky z webových stránek
 Pøi zvolení nebudou staženy obrázky z webových stránek, které odkazují na jiná umístìní
-Hloubka stahování. Napøíklad, spustíte stahování z http://ex.com/index.html. Zde je link na http://ex.com/some.html z http://ex.com/index.html. Pak hloubka http://ex.com/some.html bude 1. Nastavení hloubky na 0 bude mít za následek jen startovní stránky.
+Hloubka stahování. Napøíklad, spustíte-li stahování z http://ex.com/index.html bude stažen i odkaz z níc, tzn. http://ex.com/some.html (hloubka stahování = 1). Nastavením hloubky na 0, stáhnete pouze úvodní stránku s obsahem.
 Stáhnout soubory z webových stránek
 Stáhnout soubory z jiných umístìní
 Odstranit soubory s pøíponou
@@ -718,8 +718,8 @@ Nemohu nainstalovat monitorování Opery
 Nemohu odinstalovat monitorování Opery
 Nemohu nainstalovat monitorování Netscapu
 Nemohu odinstalovat monitorování Netscapu
-Zvolte, jestliže chcete, aby FDM zachycovalo kliknutí v Opeøe
-Zvolte, jestliže chcete, aby FDM zachycovalo kliknutí v Netscape
+Zvolte, jestliže si pøejete, aby FDM zachycovalo klepnutí na odkazy v Opera
+Zvolte, jestliže si pøejete, aby FDM zachycovalo klepnutí na odkazy v Netscape
 ; create download dlg
 Dotaz na velikost
 ; request a size of a download
@@ -749,7 +749,7 @@ Krok sekvence. Napø. pokud je krok roven 10, pak sekvence bude 0, 10, 20, ...
 Poèet zástupných bajtù. Napø. pokud je roven 1, pak sekvence bude 1, 2, 3. Když je roven 2, pak sekvence bude 01, 02, 03.
 Kliknìte, pro zobrazení vytvoøené sekvence
 Umožnit Internet Exploreru stahovat, pøi stisknu tlaèítka Storno
-Zvolte, jestliže chcete, aby Internet Explorer stáhnul soubor, když stisknete tlaèítko Storno v dialogu "Vytvoøit stahování"
+Zvolte, jestliže si pøejete, aby Internet Explorer stáhnul soubor, když stisknete tlaèítko Storno v dialogu "Vytvoøit stahování"
 Koneèné èíslo sekvence musí být vìtší než poèáteèní
 Prosím použijte (*) v URL pro specifikování šablony URL
 Vytvoøit pøíponu, pokud soubor žádnou nemá
@@ -787,17 +787,17 @@ Spustit stažený soubor
 Verze
 Kontaktovat autory
 Stáhnout aktuální verzi
-Upozornìní:  tento program je chránìn autorským zákonem a mezinárodními smlouvami. Neautorizované kopírování nebo distribuce programu, nebo jeho èásti, mùže pøinést výsledky v podání obèanských a kriminálních trestù, a budou stíhány v maximálním rozsahu možném podle práva.
+Upozornìní:  Tento program je chránìn autorským zákonem a mezinárodními smlouvami. Neautorizované kopírování nebo distribuce programu, nebo jeho èásti, mùže pøinést výsledky v podání obèanských a kriminálních trestù, a budou stíhány v maximálním rozsahu možném podle práva.
 ; === new version ===
 Stáhnout vše Free Download Managerem
 Pøidat seznam stahování
 Odebrat oznaèené
 Toto je seznam URL pro pøidání
 Kliknìte na tlaèítko pro odebrání oznaèených URL ze seznamu
-Nemohu nalézt adresáø Firefox Plugin. Chcete ho specifikovat ruènì?
-Nemohu nainstalovat monitorování Firefoxu
-Nemohu odinstalovat monitorování Firefoxu
-Zvolte, jestliže chcete, aby FDM zachycovalo kliknutí v Mozille Firefox
+Nemohu nalézt adresáø pro Firefox Plugin. Pøejete si ho zvolit ruènì?
+Nemohu nainstalovat sledování Firefoxu
+Nemohu odinstalovat sledování Firefoxu
+Zvolte, jestliže si pøejete, aby FDM sledoval klepnutí na odkazy v Mozille Firefox
 Stáhnout vybrané Free Download Managerem
 Spouštìní
 Webové stránky
@@ -843,9 +843,9 @@ Nové stahování
 Automaticky urèit skupinu pro stahování
 Nastavit skupinu na:
 Uložit stahování do adresáøe pro skupinu
-Zvolte, jestliže chcete, aby skupiny pro stahování byly urèeny podle pøípon souborù nebo nastavení Správce stránek
+Zvolte, jestliže si pøejete, aby skupiny pro stahování byly urèeny podle pøípon souborù nebo podle nastavení Správce stránek
 Ruènì nastavit výchozí skupinu
-Zvolte, jestliže chcete, aby stahování byla uloženo do výchozího adresáøe skupiny (viz. vlastnosti skupin)
+Zvolte, jestliže si pøejete, aby stahování byla uložena do výchozího adresáøe skupiny (viz. vlastnosti skupin)
 Ruènì nastavit výchozí adresáø pro skupinu
 ; END
 ; BEGIN: Monitoring page
@@ -857,7 +857,7 @@ Vyberte položky zobrazované v plovoucím menu Internet Exploreru
 Vybrat položky menu k zobrazení
 Nejménì jedna položka menu musí být vybrána
 Používat zvuky
-Zvolte, jestliže chcete, aby FDM pøehrával zvuky pøi nìkterých událostech (napø. když je stahování kompletní)
+Zvolte, jestliže si pøejete, aby FDM pøehrával zvuky pøi nìkterých událostech (napø. když je stahování kompletní)
 Vybrat zvuk pro každou událost
 ; BEGIN : Customize sounds dialog
 Nastavit zvuky
@@ -901,8 +901,8 @@ Uložit pouze historii adresáøù
 Ponechat záznamy bìhem
 Maximální poèet záznamù
 Vyèistit historii
-FDM uloží svoji historii napsaných linkù a adresáøù
-FDM uloží jen historii adresáøù
+FDM uloží historii odkazù a názvù složek
+FDM uloží pouze historii adresáøù
 FDM odstraní záznamy v historii, které jsou mimo specifikovaný èasový interval
 Maximální poèet záznamù v historii. Když bude poèet záznamù vìtší než tato hodnota, FDM smaže nejstarší záznamy
 Odstranit všechny záznamy z historie
@@ -940,7 +940,7 @@ Zvolte, jestliže nechcete pøesouvat odstranìná stahování do koše
 Zvolte, jestliže chcete urèit maximální poèet odstranìných stahování pøesouvaných do koše
 Maximální poèet stahování v koši
 Zvolte, jestliže nechcete pøesouvat kompletní stahování do koše po jejich odstranìní
-Zvolte, jestliže chcete, aby FDM vyžadoval Váš souhlas, když se pokusíte odstranit stahování
+Zvolte, jestliže si pøejete, aby FDM vyžadoval Váš souhlas, když se pokusíte odstranit stahování
 ;END
 Obnovit
 Obnovuji stahování...
@@ -992,7 +992,7 @@ Hledat jen soubory, které vyhovují zadanému rozsahu velikosti souboru
 Vyžadována minimální velikost
 Vyžadována maximální velikost
 Hledat ve skupinì
-Vybrat skupinu která bude prohledána
+Vyberte skupinu, která bude prohledána
 ; END
 Najít stahování...
 Nenalezeny položky
@@ -1017,7 +1017,7 @@ Filtr
 Pøípony [oddìleno mezerami, napø. zip rar arj]:
 Odstranit soubory s tìmito pøíponami
 Ponechat jen soubory s tìmito pøíponami
-Øetìzec argumentu neobsahuje %file% makro. Toto makro je nezbytné pro sdìlení vašemu antiviru, které soubory zkontrolovat.
+Øetìzec argumentu neobsahuje %file% makro. Toto makro je nezbytné pro informaci antiviru, které soubory má zkontrolovat.
 Pøejete si pokraèovat?
 Upozornìní
 Pro nedokonèené stahování použít atribut skrytý
@@ -1028,7 +1028,7 @@ Použít náhled ZIP archivù
 Zvolte, jestliže chcete zobrazovat náhled obsahu ZIP archivù na zaèátku stahování pro stahování pouze èásti archivu.
 Hlasitost:
 Spustit stahování automaticky
-Zvolte, jestliže chcete, aby FDM automaticky spouštìl každé nové stahování
+Zvolte, jestliže si pøejete, aby FDM automaticky spouštìl každé nové stahování
 Prosím zvolte soubory ke stahování
 Zadejte alternativní URL pro toto stahování
 Pøíštì nezobrazovat náhled
@@ -1043,14 +1043,14 @@ Použít redukci pøi pøerušeném spojení
 Velikost redukce
 bytù
 Zvolte, jestliže chcete zapnout redukci. Redukce pomáhá pøedejít poškození vašeho stahování.
-Velikost redukce. Vìtší rozsah umožní redukci pracovat bezpeènìji. Doporuèená velikost je 3000 bytù. Tuto velikost mùžete zvìtšit pokud vaše stahování zùstává poškozeno.
+Velikost redukce. Vìtší rozsah umožní redukci pracovat bezpeènìji. Doporuèená velikost je 3000 bytù. Tuto velikost mùžete zvìtšit, pokud vaše stahování zùstává poškozeno.
 ; downloader options -> monitor tab
 Nesledovat soubory menši než
 Zvolte, jestliže chcete aby FDM pøeskakoval soubory menší než uvedené velikosti
 KBytù
-Upozornìní! Koš je pøíliš velký. To muže výraznì snížit výkon. Dopoèuje se vyprázdnit koš. Pøejete si to provést?
+Upozornìní! Koš je pøíliš velký. To mùže výraznì snížit výkon. Dopoèujeme vyprázdnit koš. Pøejete si to provést?
 Pøíštì již nekontrolovat
-Upozornìní! Historie stahování je pøíliš velká. To muže výraznì snížit výkon. Dopoèuje se vyèistit Historii. Pøejete si to provést?
+Upozornìní! Historie stahování je pøíliš velká. To mùže výraznì snížit výkon. Doporuèujeme vyèistit Historii. Pøejete si to provést?
 Server nemùže zaruèit svou schopnost navazování. Chybná odpovìï
 Kopírovat do schránky
 ; general settings | skins page
@@ -1082,13 +1082,13 @@ Pøed ukonèením odstranit všechna hesla
 Odstranit všechna hesla
 ; create new HTML Spider task
 Automaticky odstranit dokonèená stahování (doporuèeno)
-Zvolte, jestliže chcete automaticky mazat stahování HTML Spideru. Toto zrychluje stahování vìtších stránek.
+Zvolte, jestliže si pøejete automaticky mazat stahování HTML Spideru. Toto zrychluje stahování vìtších stránek.
 Zmìny se projeví až po restartu Free Download Manageru.
 Nový styl
 Starý styl
 Název adresáøe je neplatný
 Skrýt plovoucí okno v celoobrazovkovém módu
-Zvolte, pokud chcete aby bylo automaticky skryto plovoucí okno v celoobrazovkovém módu.
+Zvolte, pokud si pøejete, aby bylo automaticky skryto plovoucí okno v celoobrazovkovém módu.
 bylo naplánováno ke spuštìní.
 Pøejete si jej spustit?
 Spustit stažený soubor po dokonèení stahování
@@ -1169,7 +1169,7 @@ Pøi použití klávesy SHIFT bude toto stahování odstranìno z disku a nebude možné 
 Zvolte skupinu
 Nastavte výchozí složku skupiny
 Nastavte výchozí složku skupiny.\nZmìny budou použity pouze pro nová stahování.
-Naposled stahované soubory
+Poslední stahované soubory
 (žádné)
 Omezit všechna stahování
 Zobrazit okno prùbìhu stahování
@@ -1192,7 +1192,7 @@ Stáhnout stránky pouze z této složky
 Zahrnout podsložky
 Ignorovat všechny webové stránky umístìné v této složce
 Stáhnout stránky umístìné pouze v této složce a ignorovat ostatní webové stránky.
-Zvolte tuto volbu pokud si pøejete aby HTML Spider ignoroval (nebo stahoval pouze) stránky umístìné ve všech podsložkách zadaných složek.
+Zvolte tuto volbu pokud si pøejete, aby HTML Spider ignoroval (nebo stahoval pouze) stránky umístìné ve všech podsložkách zadaných složek.
 Zde mùžete zadat URL složky.\nPøíklad: "http://site.com/docs/".
 Typ
 Ignorovat
@@ -1231,7 +1231,7 @@ Dolù
 Pøesune vybrané stahování nahoru
 Pøesune vybrané stahování dolù
 Ovìøit integritu souboru
-Nìkteré webové stránky nabízí ovìøení správnosti souborù dostupných pro stažení, nejprve je ale nutné aby se uživatel ujistil zda stažený soubor není poškozen.  Zde mùžete zadat tento kontrolní souèet a FDM ovìøí integritu souboru.
+Nìkteré webové stránky nabízí ovìøení správnosti souborù dostupných pro stažení, nejprve je ale nutné aby se uživatel ujistil, zda stažený soubor není poškozen.  Zde mùžete zadat tento kontrolní souèet a FDM ovìøí integritu souboru.
 Algoritmus
 Kontrolní souèet
 Vložit ze schránky
@@ -1245,7 +1245,7 @@ Pøíštì již toto okno nezobrazovat, pøi úspìšném ovìøení
 Nelze nalézt spustitelný soubor antivirového programu, který jste zvolili.\nZadejte jej prosím manuálnì.
 Velikosti souborù si neodpovídají
 Uložit jako:\n(Pøíklad: soubor(*)(*A)(*a).txt)
-Neplatné uložení del zadané šablony.\nOvìøte správnost s odpovídající šablonou URL.
+Neplatné uložení dle zadané šablony.\nOvìøte správnost s odpovídající šablonou URL.
 Po dokonèení
 Po dokonèení (všechno dokonèeno nebo pøi chybì)
 Aplikace
@@ -1254,7 +1254,7 @@ Názory
 ;
 Vážení uživatelé!
 Free Download Manager (FDM) je jeden z nej populárnìjších programù pro stahování na svìtì, jeho služeb využívají miliony aktivních uživatelù, ale nyní bychom si pøáli více!
-Pokud shledáte Free Download Manager užiteèným a nezbytným programem, rádi bychom Vás požádali zda ybste nemohli umístit na Váš blog, webové stránky nebo jinde (npaø.: Myspace/MSNwe) slovo nebo odkaz na náš program.
+Pokud shledáte Free Download Manager užiteèným a nezbytným programem, rádi bychom Vás požádali zda byste nemohli umístit na Váš blog, webové stránky nebo jinde (napø.: Myspace/MSNwe) slovo nebo odkaz na náš program.
 ; %s will be replaced with "FDM buzz" 
 Oficiálnì byl %s vydán August 16, 2006. naším cílem je vytvoøit z FDM nejvíce využívaný nástroj po FireFoxu!
 FDM buzz
@@ -1269,7 +1269,7 @@ FDM komunita
 Pøepnout na záložku "Názory" po stažení
 Pøi zvolení bude záložka "Názory" automaticky aktivována po dokonèení stahování.
 Upravit nastavení identifikace Internet Exploreru v síti
-Pøi zvolení mùžou být webovým stránkám dány instrukce, že pro prohlížení webu používéte Free Download Manager nainstalovaný na Vašem PC. Toto nastavení mùže mít za dùsledek zablokování pøístupu k nìkterým stránkám.
+Pøi zvolení mùžou být webovým stránkám dány instrukce, že pro prohlížení webu používáte Free Download Manager nainstalovaný na Vašem PC. Toto nastavení mùže mít za dùsledek zablokování pøístupu k nìkterým stránkám.
 Nebezpeèí?
 Ovìøí, zda nìkdo z uživatelù Free Download Manageru nenahlásil, že toto stahování obsahuje virus/adware/spyware/atd.
 OK, nikdo z uživatelù Free Download Manageru nehlásil, že by toto stahování mohlo být nebezpeèné.\n\nTímto samozøejmì není zaruèeno, že stahování je bezpeèné a radìji Vám odporuèujeme jej ovìøit pomocí antivirového programu.
@@ -1280,22 +1280,22 @@ Použijte tuto volbu pro automatické ovìøení pøed zapoèetím stahování, zda nìkdo 
 Zobrazovat názory pøi stahování
 Pøi zapnutí, FDM automaticky aktivuje záložku "Názory" a zobrazí názory na toto stahování bìhem stahování souboru.
 Ovìøuji, zda stahování není nebezpeèné (zobrazit možnosti pro vypnutí této funkce)
-OK, nikdo nehlasil, že je stahování nebezpeèné
+OK, nikdo nehlásil, že je stahování nebezpeèné
 Upozornìní! Nìkdo nahlásil, že toto stahování je nebezpeèné
 Zavøít
 Naèítám
 Nestahovat soubor
-Pøed zápisem na disk umístit stahovaná data do mezipamìti
-Pøi zvolení bude FDM využívat zásobníku vyrovnávací pamìti o velikosti, kterou jste zadali pro operace zápisu stahovaných dat. Tímto zmenšíte poèet pøístupu na pevný Váš disk a zároveò zvýšíte rychlost stahování u vysocerychlostních pøipojení.\nToho je docíleno tak, že stahovaná data nejsou zapisována okamžitì na pevný disk, což však vyžaduje opìtovný restart stahování pøi zhroucení poèítaèe (nejhùøe bude stahována zdadaná velikost).\nDoporuèeno pro vysocerychlostní pøípojení.
+Pøed zápisem na disk umístit stahovaná data do vyrovnávací pamìti
+Pøi zvolení bude FDM využívat zásobníku vyrovnávací pamìti o velikosti, kterou jste zadali pro operace zápisu stahovaných dat. Tímto zmenšíte poèet pøístupu na pevný Váš disk a zároveò zvýšíte rychlost stahování u vysokorychlostních pøipojení.\nToho je docíleno tak, že stahovaná data nejsou zapisována okamžitì na pevný disk, což však vyžaduje opìtovný restart stahování pøi zhroucení poèítaèe (v nejhorším pøípadì bude stahována zadaná velikost).\nDoporuèeno pro vysokorychlostní pøipojení.
 Nelze nainstalovat sledování SeaMonkey (Mozilla Suite)
 Nelze odinstalovat sledování SeaMonkey (Mozilla Suite)
-Zvolte, pokud si pøejete aby FDM zachytával klepnutí v prohlížeèi Mozilla Firefox
-Zvolte, pokud si pøejete aby FDM zachytával klepnutí v prohlížeèi SeaMonkey (Mozilla Suite)
+Zvolte, pokud si pøejete, aby FDM zachytával klepnutí na odkazy v prohlížeèi Mozilla Firefox
+Zvolte, pokud si pøejete, aby FDM zachytával klepnutí v prohlížeèi SeaMonkey (Mozilla Suite)
 Umožnit prohlížeèi stahovat soubor pøi stisku tlaèítka Storno
-Zvolte, pokud si pøejete aby Váš prohlížeè stáhl soubor i pøesto, že jste v dialogu pro vytvoøení stahování stiskli tlaèítko Storno
+Zvolte, pokud si pøejete, aby Váš prohlížeè stáhl soubor i pøesto, že jste v dialogu pro vytvoøení stahování stiskli tlaèítko Storno
 Pøidat FDM do kontextového menu prohlížeèe
 Zvolte pro pøidání položek "Stáhnout pomocí Free Download Manageru" a "Stáhnout web pomocí Free Download Manageru" do kontextového menu prohlížeèe (menu vyvoláte stisknutím pravého tlaèítka myši)
-Zvolte položky menu, které s ezobrazí v kontextovém menu prohlížeèe
+Zvolte položky menu, které se zobrazí v kontextovém menu prohlížeèe
 Nelze nainstalovat sledování Firefoxu
 Pøesunout soubory do složky
 Rychlost je pøíliš pomalá. Restartuji sekci...
@@ -1317,18 +1317,18 @@ Automaticky stáhnout a nainstalovat aktualizace
 Pouze upozornit na dostupnost aktualizací
 Vypnout automatické aktualizace
 Sledování je zapnuto v programu %s.
-Odstrani záznam
+Odstranit záznam
 OK pro odstranìní?
-Není možné získat pøístup pro zápis do složky programu Free Download Manager's folder.\nPovolte prosím zápis programu Free Download Manager do této složky pro uložení datových souborù, pokud tak neuèiníte, budou všechna data po restartu programu ztracena.
-Toto malé okno umožnòuje použít funkci drag&&drop pro pøenos odkazù z Vašeho prohlížeèe do programu Free Download Manager.\nOkno umo6ñuje taktéž rychlé zobrazení nebo skrytí okna programu Free Download Manager a to pouhým dvojklikem levým tlaèítkem myši.\n\nPro vypnutí zachytávacího okna klepnìte pravým tlaèítkem na nìj a a deaktivujte položku menu "Box pro zachycení".
+Není možné získat pøístup pro zápis do složky programu Free Download Manageru.\nPovolte prosím zápis programu Free Download Manager do této složky pro uložení datových souborù, pokud tak neuèiníte, budou všechna data po restartu programu ztracena.
+Toto malé okno umožòuje použít funkci drag&&drop pro pøenos odkazù z Vašeho prohlížeèe do programu Free Download Manager.\nOkno umožòuje taktéž rychlé zobrazení nebo skrytí okna programu Free Download Manager a to pouhým dvojklikem levým tlaèítkem myši.\n\nPro vypnutí zachytávacího okna klepnìte pravým tlaèítkem na okno a deaktivujte položku menu "Box pro zachycení".
 Free Download Manager - Box pro zachycení
 Vypnout všechna upozornìní pro dávková stahování
 Zvolte tuto možnost pro vypnutí všech (bublinových a zvukových) upozornìní pro stahování vytvoøené pøíkazem "%s".
 Seznam výjimek
 Zadejte seznam pøípon souborù a seznam serverù, které nebudou sledovány.
 Nestahovat z následujích serverù (oddìlte mezerou):
-Free Download Manager nebude sledovat stahování ze serverù zadaných v tomto seznamu. Zde zadejte názvy domén (napø. "site.com"). Lze použít i nahrazovaích znakù '*'.
-Upozornìní!\nNastala chyba pøi pokusù ovìøení antivirem.\nPøejete si pøesto pokraèovat ve stahování?
+Free Download Manager nebude sledovat stahování ze serverù zadaných v tomto seznamu. Zde zadejte názvy domén (napø. "site.com"). Lze použít i nahrazovací znaky '*'.
+Upozornìní!\nNastala chyba pøi pokusu ovìøení souboru antivirem.\nPøejete si pøesto pokraèovat ve stahování?
 Integrita
 Spustit pøi stahování souboru ovìøení integrity
 Pro ovìøení integrity by mìl Free Download Manager znát soubor s platným kontrolní souètem. V mnoha pøípadech je pøikládán ke každému stahování.
@@ -1336,10 +1336,10 @@ Pokud ovìøení selže
 Platný kontr. souèet souboru
 Nedìlat nic
 Zvolte jak se má FDM zachovat pokud ovìøení integrity selže.\nDotázat se - FDM se zeptá co má dìlat.\nRestart - FDM restartuje toto stahování.\nNedìlat nic - FDM pøidá záznam o tom, že ovìøení selhalo do zprávy o stahování a neudìlá nic víc.
-Spuštím ovìøení integrity...
+Spouštím ovìøení integrity...
 Ovìøení integrity úspìšné.
 Ovìøení integrity selhalo!
-Zvolte algoritumus pro ovìøení integrity.
+Zvolte algoritmus pro ovìøení integrity.
 Platný kontr. souèet
 Zpráva kontr. souètu
 ; zip preview window
@@ -1347,7 +1347,7 @@ Oznaèit/odznaèit vše
 ; group's properties dialog
 Makra
 název serveru (napø. "freedownloadmanager.org")
-cesta ke stahovanému souboru an serveru
+cesta ke stahovanému souboru na serveru
 aktuální rok
 aktuální mìsíc (èíslo od 1 do 12)
 aktuální den
@@ -1382,9 +1382,9 @@ Zastavit upload
 Naplánovat upload
 Pøesunout vybrané uploady nahoru
 Pøesunout vybrané uploady dolù
-Uploadováno
+Nahráno
 Seznam uploadù
-Získávám cílové umístìní uploadované URL ze základního serveru...
+Získávám cílové umístìní nahrané URL ze základního serveru...
 Storno
 ; outlook express: view | insert file | ...
 Jako pøílohu
@@ -1434,7 +1434,7 @@ Ponechat soubory v této složce
 Zmìny se projeví až po restartu programu Free Download Manager.
 Zobrazit okno s prùbìhem stahován
 Vytvoøit pøenositelnou verzi
-Pøenositelnou verzi programu Free Download Manager je možné použít na jiných poèítaèích bez nutnosti opìtovné instalace a konfigurace.\n\nTuto verzi lze umístit napø. na flash disk.\n\nJakmile je pøenosná verze jednou spuštìna v systému poèítaèe, tak se integruje do prohlížeèù. Po ukonèení se zase automaticky odregistruje.\n\nZde zvolte cestu, kde si pøejete vytvoøit tuto verzi. Mìlo by se jednat o složku na nìkterém z pøenositelných médií.\n\nNapø. "I:\Prenosne programy\".
+Pøenositelnou verzi programu Free Download Manager je možné použít na jiných poèítaèích bez nutnosti opìtovné instalace a konfigurace.\n\nTuto verzi lze umístit napø. na flash disk.\n\nJakmile je pøenosná verze jednou spuštìna v systému poèítaèe, tak se integruje do prohlížeèù. Po ukonèení se zase automaticky odregistruje.\n\nZde zvolte cestu, kde si pøejete vytvoøit pøenositelnou verzi. Mìlo by se jednat o složku na nìkterém z pøenositelných médií.\n\nNapø. "I:\Prenosne programy\".
 Integrace
 Asociovat Free Download Manager s .torrent soubory
 Vždy použít tuto skupinu pro nové stahovaní
@@ -1465,7 +1465,7 @@ Video bitrate
 Audio bitrate
 Nastavit jako výchozí
 ;
-Vytoøit stahování flash videa
+Vytvoøit stahování flash videa
 Automaticky pøevést stažené video do zadaného formátu
 Pokroèilé nastavení
 Zobrazit seznam podporovaných webù
@@ -1495,7 +1495,7 @@ Hodnocení sdílení
 Wasted byte count
 URL torrent souboru
 Opravdu si to pøejete?\nTímto bude restartováno stahování.
-Datové toky ("staženo"; "uploadováno") za tento mìsíc\n(za minulý mìsíc %s)
+Datové toky ("staženo"; "nahráno") za tento mìsíc\n(za minulý mìsíc %s)
 Celková rychlost ("stahování"; "upload")
 Soubory pro upload
 Název balíèku
@@ -1578,7 +1578,13 @@ Zakázat fragmentaci jako výchozí
 Považovat soubor za nebezpeèný, pokud nejménì
 % uživatelù oznaèilo soubor jako nebezpeèný
 OK, uživatelé Free Download Manageu nehlásili o tomto stahování žádné nebezpeèné informace.\n\nTo ale neznamená, že soubor nemusí být nebezpeèný a proto Vám doporuèujeme stahování ovìøit antivirovým programem.
-OK, uživatelé programu FDM nehlásili o tomto souboru ždádné nebezpeèné informace
-písmeno jednotky ze ketré bude FDM spuštìn. Napø.: "C:". Vhodné nastavení pro pøenosnou verzi.
+OK, uživatelé programu FDM nehlásili o tomto souboru žádné nebezpeèné informace
+písmeno jednotky ze které bude FDM spuštìn. Napø.: "C:". Vhodné nastavení pro pøenosnou verzi.
 Pro použití této funkce je nutné nejprve nainstalovat plugin Video Conversion.
 Pro stahování pomocí Bittorrent protokolu je nutné nejprve nainstalovat Bittorrent plugin.
+Poznámka: Tyto soubory jsou programovými soubory programu Free Download Manager (nejedná se o soubory stahování).
+Pøejete si zkopírovat aktuální datové soubory do nové složky (existující soubory budou pøepsány) ?
+Tato složka bude nastavena jako výchozí složka pro stahování u všech skupin.\nStisknìte OK pro pokraèování?
+Nastavit výchozí složku stahování
+Zabránit poèítaèi pøejít do režimu stand by pøi stahování
+Maximální poèet napùl-otevøených pøipojení

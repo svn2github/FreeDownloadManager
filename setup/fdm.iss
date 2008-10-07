@@ -3,7 +3,7 @@
 [Setup]
 AppName=Free Download Manager
 AppId=Free Download Manager
-AppVerName=Free Download Manager 2.5
+AppVerName=Free Download Manager 2.6 BETA
 AppPublisher=FreeDownloadManager.ORG
 AppPublisherURL=http://www.freedownloadmanager.org/
 AppSupportURL=http://www.freedownloadmanager.org/
@@ -75,11 +75,11 @@ Source: "Free Download Manager\MediaConverter.dll"; DestDir: "{app}"; Flags: res
 Source: "Free Download Manager\player.swf"; DestDir: "{app}"; Flags: restartreplace
 ; ----------------
 ; FUM bundle
-Source: "Free Upload Manager\fumshext.dll"; DestDir: "{app}\FUM"; Flags: restartreplace
-Source: "Free Upload Manager\fumiebtn.dll"; DestDir: "{app}\FUM"; Flags: restartreplace;
+;Source: "Free Upload Manager\fumshext.dll"; DestDir: "{app}\FUM"; Flags: restartreplace
+;Source: "Free Upload Manager\fumiebtn.dll"; DestDir: "{app}\FUM"; Flags: restartreplace;
 Source: "Free Upload Manager\fumcore.dll"; DestDir: "{app}\FUM"; Flags: restartreplace
-Source: "Free Upload Manager\fumoei.exe"; DestDir: "{app}\FUM"; Flags: restartreplace
-Source: "Free Upload Manager\fumoei.dll"; DestDir: "{app}\FUM"; Flags: restartreplace
+;Source: "Free Upload Manager\fumoei.exe"; DestDir: "{app}\FUM"; Flags: restartreplace
+;Source: "Free Upload Manager\fumoei.dll"; DestDir: "{app}\FUM"; Flags: restartreplace
 Source: "Free Upload Manager\fum.exe"; DestDir: "{app}\FUM"; Flags: restartreplace
 Source: "Free Upload Manager\fum.tlb"; DestDir: "{app}\FUM"; Flags: ignoreversion restartreplace
 Source: "Free Download Manager\msvcp60.dll"; DestDir: "{app}\FUM"; Flags: restartreplace
@@ -106,11 +106,10 @@ Name: "{group}\{cm:UninstallProgram,Free Download Manager}"; Filename: "{uninsta
 
 [Registry]
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Download Manager"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Download Manager RCS"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Download Manager"; Valuetype: string; Valuename: "Path"; Valuedata: "{app}"
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; Valuetype: string; Valuename: "Free Download Manager"; Valuedata: """{app}\fdm.exe"" -autorun"; Flags: uninsdeletevalue; tasks: autorun
 Root: HKLM; Subkey: "Software\FreeDownloadManager.ORG\Free Download Manager"; Flags: uninsdeletekey
-Root: HKLM; Subkey: "Software\VicMan Software\Free Download Manager"; Flags: uninsdeletekey
-Root: HKCU; Subkey: "Software\VicMan Software\Free Download Manager"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Upload Manager"; Valuetype: string; Valuename: "Path_old"; Valuedata: "{reg:HKCU\Software\FreeDownloadManager.ORG\Free Upload Manager,Path}"; Check: DoesNeedSaveOldFumPath;
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Upload Manager"; Valuetype: string; Valuename: "Path"; Valuedata: "{app}\FUM";
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Upload Manager"; Valuetype: string; Valuename: "lngsroot"; Valuedata: "{app}"; Flags: uninsdeletevalue;
@@ -183,16 +182,19 @@ begin
   iLng := 1;
   vLngNames [iLng] := 'Albanian'; vLngIds [iLng] := $1C; vLngFiles [iLng] := 'alb.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Arabic';  vLngIds [iLng] := $01; vLngFiles [iLng] := 'arb.lng'; iLng := iLng + 1;
-  vLngNames [iLng] := 'Portuguese'; vLngIds [iLng] := $16; vLngFiles [iLng] := 'ptbr.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Brazilian Portuguese'; vLngIds [iLng] := $16; vLngFiles [iLng] := 'ptbr.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Bulgarian'; vLngIds [iLng] := $02; vLngFiles [iLng] := 'bul.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Catalan'; vLngIds [iLng] := $03; vLngFiles [iLng] := 'cat.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Chinese'; vLngIds [iLng] := $04; vLngFiles [iLng] := 'cht.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Croatian';  vLngIds [iLng] := $1A; {only:(041A, 101A)} vLngFiles [iLng] := 'cro.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Czech';  vLngIds [iLng] := $05; vLngFiles [iLng] := 'czk.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Danish'; vLngIds [iLng] := $06; vLngFiles [iLng] := 'dan.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Dutch'; vLngIds [iLng] := $13; vLngFiles [iLng] := 'dut.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'English'; vLngIds [iLng] := $09; vLngFiles [iLng] := 'eng.lng'; nEngIndex := iLng; iLng := iLng + 1;
+  vLngNames [iLng] := 'Farsi'; vLngIds [iLng] := $29; vLngFiles [iLng] := 'far.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Finnish'; vLngIds [iLng] := $0B; vLngFiles [iLng] := 'fin.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'French';  vLngIds [iLng] := $0C; vLngFiles [iLng] := 'fre.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Galician';  vLngIds [iLng] := $56; vLngFiles [iLng] := 'gal.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'German'; vLngIds [iLng] := $07; vLngFiles [iLng] := 'ger.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Greek'; vLngIds [iLng] := $08; vLngFiles [iLng] := 'ell.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Hebrew'; vLngIds [iLng] := $0D; vLngFiles [iLng] := 'heb.lng'; iLng := iLng + 1;
@@ -200,9 +202,11 @@ begin
   vLngNames [iLng] := 'Italian'; vLngIds [iLng] := $10; vLngFiles [iLng] := 'ita.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Japanese'; vLngIds [iLng] := $11; vLngFiles [iLng] := 'jpn.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Korean';  vLngIds [iLng] := $12; vLngFiles [iLng] := 'kor.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Lithuanian'; vLngIds [iLng] := $27;  vLngFiles [iLng] := 'lt.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Macedonian'; vLngIds [iLng] := $2F;  vLngFiles [iLng] := 'mac.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Norwegian'; vLngIds [iLng] := $14; vLngFiles [iLng] := 'nor.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Polish';  vLngIds [iLng] := $15; vLngFiles [iLng] := 'pol.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Portuguese'; vLngIds [iLng] := $16; vLngFiles [iLng] := 'pt_PT.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Romanian'; vLngIds [iLng] := $18; vLngFiles [iLng] := 'rom.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Russian'; vLngIds [iLng] := $19; vLngFiles [iLng] := 'rus.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Serbian'; vLngIds [iLng] := $1A; {(except: Croatian)} vLngFiles [iLng] := 'srb.lng'; iLng := iLng + 1;
@@ -280,8 +284,8 @@ end;
 
 function FDM_FUM_NextButtonClick(Page: TWizardPage): Boolean;
 begin
-  bFumIntegration := fum_cbIntegrate.Checked;
-  bFumAutostart := fum_cbAutostart.Checked;
+  bFumIntegration := False; //fum_cbIntegrate.Checked;
+  bFumAutostart := False; //fum_cbAutostart.Checked;
   Result := True;
 end;
 
@@ -745,6 +749,12 @@ _lSearch:
       goto _lSearch;
     end;
   end;
+  if vLngIds [i] = $16 then begin
+    if (GetSystemDefaultLanguageId <> $0416) and (vLngNames [i] = 'Brazilian Portuguese') then begin
+      i := i + 1;
+      goto _lSearch;
+    end;
+  end;
 
   if (vLngNames [i] = '') then
     i := nEngIndex;
@@ -771,7 +781,7 @@ var
 begin
   nPage := FDM_Community_CreatePage(wpLicense);
   nPage := FDM_Bittorrent_CreatePage (nPage);
-  nPage := FDM_FUM_CreatePage(nPage);
+  //nPage := FDM_FUM_CreatePage(nPage);
   nPage := FDM_Language_CreatePage(nPage);
   ApplyFDMCommunitySettingsToForm ();
   ApplyBittorrentSettingsToForm ();
@@ -969,12 +979,22 @@ begin
   ShellExec ('open', s + 'fum.exe', '-regserver', s, SW_SHOW, ewNoWait, nError);
 end;
 
+procedure UnregisterUploaderIntegration ();
+begin
+  UnregisterServer (False, ExpandConstant ('{app}\fum\fumshext.dll'), True);
+  UnregisterServer (False, ExpandConstant ('{app}\fum\fumiebtn.dll'), True);
+  RestartReplace (ExpandConstant ('{app}\fum\fumshext.dll'), '');
+  RestartReplace (ExpandConstant ('{app}\fum\fumiebtn.dll'), '');
+end;
+
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 begin
   if CurUninstallStep = usUninstall then
     ShutdownFdmAndFum ();
     
   if CurUninstallStep = usPostUninstall then begin
+
+    UnregisterUploaderIntegration ();
 
     RegisterOldFumInstallation ();
 
@@ -1012,8 +1032,8 @@ end;
 [Run]
 Filename: "{app}\fdm.exe"; Parameters: "-regserver"; StatusMsg: "Registering..."
 Filename: "{app}\FUM\fum.exe"; Parameters: "-regserver"; StatusMsg: "Registering...";
-Filename: "{app}\FUM\fum.exe"; Parameters: "{code:FUMIntegrationCmdLine}"; StatusMsg: "Registering...";
-Filename: "{app}\FUM\fum.exe"; Parameters: "-stui"; Check: IsFumIntegrationEnabled;
+;Filename: "{app}\FUM\fum.exe"; Parameters: "{code:FUMIntegrationCmdLine}"; StatusMsg: "Registering...";
+;Filename: "{app}\FUM\fum.exe"; Parameters: "-stui"; Check: IsFumIntegrationEnabled;
 Filename: "{app}\fdm.exe"; Description: "{cm:LaunchProgram,Free Download Manager}"; Flags: nowait postinstall skipifsilent
 
 [UninstallRun]

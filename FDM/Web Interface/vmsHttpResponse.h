@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/        
+*/
+
+        
 
 #if !defined(AFX_VMSHTTPRESPONSE_H__B1739215_2E5D_465A_B436_CF3F15A6775E__INCLUDED_)
 #define AFX_VMSHTTPRESPONSE_H__B1739215_2E5D_465A_B436_CF3F15A6775E__INCLUDED_

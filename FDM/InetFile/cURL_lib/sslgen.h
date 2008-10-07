@@ -17,7 +17,7 @@ CURLcode Curl_ssl_connect(struct connectdata *conn, int sockindex);
 CURLcode Curl_ssl_connect_nonblocking(struct connectdata *conn,
                                       int sockindex,
                                       bool *done);
-void Curl_ssl_close(struct connectdata *conn);
+void Curl_ssl_close(struct connectdata *conn, int sockindex);
 
 void Curl_ssl_close_all(struct SessionHandle *data);
 CURLcode Curl_ssl_set_engine(struct SessionHandle *data, const char *engine);
@@ -25,7 +25,7 @@ CURLcode Curl_ssl_set_engine(struct SessionHandle *data, const char *engine);
 CURLcode Curl_ssl_set_engine_default(struct SessionHandle *data);
 ssize_t Curl_ssl_send(struct connectdata *conn,
                       int sockindex,
-                      void *mem,
+                      const void *mem,
                       size_t len);
 ssize_t Curl_ssl_recv(struct connectdata *conn, 
                       int sockindex,            
@@ -50,7 +50,7 @@ int Curl_ssl_check_cxn(struct connectdata *conn);
 
 CURLcode Curl_ssl_shutdown(struct connectdata *conn, int sockindex);
 
-bool Curl_ssl_data_pending(struct connectdata *conn,
+bool Curl_ssl_data_pending(const struct connectdata *conn,
                            int connindex);
 
 #if !defined(USE_SSL) && !defined(SSLGEN_C)

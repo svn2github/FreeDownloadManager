@@ -1,4 +1,4 @@
-; This is the German language file by User_99 (user_99@gmx.at) v2.5.1 for 2.5.704
+; This is the German language file by User_99 (user_99@gmx.at) v2.6.0 for 2.6.792
 ; You can translate it into your native language
 ; To do this, follow instructions:
 ; - PLEASE make sure FDM hasn't already been translated into your language 
@@ -99,7 +99,7 @@ Zeige Hauptfenster
 Browserüberwachung
 Zwischenablageüberwachung
 Alle Downloads starten
-Alle Downloads anhalten
+Alle Downloads abbrechen
 -
 Weiter
 -
@@ -611,7 +611,7 @@ Aktualisierung auf Version %s (%s)
 FDM sollte neu gestartet werden. Jetzt Neustarten?
 Aktualisierung erfolgreich
 Kann Aktualisierung nicht finden
-Wählen Sie den Aktualisierungsart hier
+Wählen Sie die Aktualisierungsart hier
 Aktualisiere FDM mittels Gesamtpaket
 Aktualisiere FDM mittels Aktualisierungspaket
 Zeige weitere Informationen zum Aktualisierungsvorgang an
@@ -638,7 +638,7 @@ Webseitenbaum
 Download Webseite
 HTML-Spider Einstellungen
 Herunterladen beginnen
-Herunterladen anhalten
+Herunterladen abbrechen
 Zeitgesteuertes herunterladen
 Löschen
 Öffne Webseite im Browser
@@ -1414,7 +1414,7 @@ Unterstützung für Bittorrent-Protokoll aktivieren. Falls ein Bittorrent-Link in 
 Grenze für die maximale ausgehende Bandbreite. Für das Bittorrent-Protokoll wird eine Begrenzung nicht empfohlen und kann die Downloadgeschwindigkeit vermindern.
 Grenze für Anzahl der maximal ausgehenden Verbindungen. Wenige Verbindungen erhöhen möglicherweise Ihre Downloadgeschwindigkeit.
 Angabe des zu verwendenden Portbereichs, den FDM für ein Hochladen verwenden kann.
-DHT-Erweiterung aktivieren
+DHT-Erweiterung aktivieren (Herunterladen, ohne die Tracker zu verwenden). Bei Verwendung dieser Option kann der Netzwerkverkehr zunehmen.
 Name
 Anmelden für Tracker erforderlich
 Bittorrent-Download hinzufügen
@@ -1592,3 +1592,34 @@ OK, die FDM-Gemeinschaft meldet keine Probleme über diesen Download.
 FDM wurde von folgendem Laufwerksbuchstaben gestartet. Bsp.: "C:". Nützlich für die portable Version.
 Sie sollten das Videokonvertierungs-Plugin installieren, um diese Funktion zu verwenden.
 Sie sollten das Bittorrent-Plugin installieren, um über das Bittorrent-Protokoll Dateien herunterladen zu können.
+Hinweis: Das sind Dateien (*.sav) für FDM-Dienste. Keine Dateien, die Sie herunterladen.
+Möchten Sie alle aktuellen Dateien in den neuen Ordner kopieren (vorhandene Dateien werden überschrieben)?
+Das ist der neue Standard-Download-Ordner für alle Gruppen \nOk, um fortzufahren?
+Standard-Download-Ordner festlegen
+Stand-by-Betrieb während des Herunterladens verhindern
+Maximale Anzahl der halb-offenen Verbindungen
+Torrents
+Auf die Dateien konnte nicht zugegriffen werden. Prüfen Sie auf freie Festplattenkapazität oder die Dateien sind schreibgeschützt.
+Verhältnis
+Liste der Torrents
+Torrent-Download von Webseite hinzufügen
+Torrent-Download aus Datei hinzufügen
+Neuen Torrent erzeugen
+(auto)
+Quelle
+Teilgröße
+Trackers
+Hinzufügen
+Entfernen
+Seeding für diesen Torrent beginnen
+Speichern
+Neuen Torrent erzeugen
+Torrent_Dateien
+Priorität
+;normal/high priority
+Überspringen
+Normal
+Hoch
+Schwebendes Fenster
+Service-Dateien (Liste der Downloads, Verlauf, usw.)
+Standardeinstellungen für Webseitendownloads

@@ -43,9 +43,13 @@ public:
 	BOOL is_HandleValid ();
 	void OnTrackerAlert (LPCSTR pszMsg);
 	int get_CurrentTaskProgress ();
+	void PrioritizeFiles (int* piPriorities);
+
+	void AddRef () {InterlockedIncrement (&m_cRefs);}
+	void Release () {if (0 == InterlockedDecrement (&m_cRefs)) delete this;}
 
 	vmsBtDownloadImpl(void);
-public:
+protected:
 	virtual ~vmsBtDownloadImpl(void);
 
 public:
@@ -57,7 +61,11 @@ public:
 	std::string m_strOutputPath;
 
 protected:
+	std::vector <DWORD> m_vTicksTrackersConnected;
 	vmsBtDownloadPeerInfoListImpl m_peerList;
+	long m_cRefs;
+	torrent_status& status ();
+	torrent_status m_status; DWORD m_dwDob_status;
 
 	
 	

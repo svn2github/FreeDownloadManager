@@ -473,6 +473,7 @@ public:
 	virtual ~fsInternetDownloader();
 
 protected:
+	void CheckIfSuggFileNameEncoded();
 	struct _inc_tOU_param {
 		fsInternetDownloader *pthis;
 		fsInternetURLFile *pFile;

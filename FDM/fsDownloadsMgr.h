@@ -59,6 +59,7 @@ enum fsDownloadsMgrEvent
 	DME_ENDDELETEMANYDOWNLOADS,	
 	DME_RECYCLEBINCONTENTCHANGED,	
 	DME_BTDLD_STAT_CHANGED,		
+	DME_DLD_CHANGED_TO_BT_TYPE,
 };  
 
 enum fsTUM
@@ -99,11 +100,13 @@ enum fsConnectionType
 	CT_MODEM_56_ISDN,	
 	CT_DUAL_ISDN,		
 	CT_CABLE_DSL_256,
-	CT_CABLE_DSL_300,
 	CT_CABLE_DSL_512,
-	CT_T1,
+	CT_CABLE_DSL_768,
+	CT_CABLE_DSL_1M,
+	CT_CABLE_DSL_1_5M,
+	CT_CABLE_DSL_2M,
 	CT_LAN_10,
-	CT_UNKNOWN			
+	CT_UNKNOWN,			
 };    
 
 enum fsTUMManage
@@ -130,6 +133,7 @@ struct fsStateInfoFileHdr
 class fsDownloadsMgr  
 {
 	friend class CDownloaderProperties_ListPage;
+	friend class CDlg_Options_Downloads;
 	friend class CPrg_Data; 
 public:
 	BOOL AllowStartNewDownloads();
@@ -169,7 +173,7 @@ public:
 	
 	void LastFilesDownloaded_Clear();
 	
-	const vmsFileRecentList* get_LastFilesDownloaded () const;
+	vmsFileRecentList* get_LastFilesDownloaded ();
 	
 	UINT GetNextDownloadID();
 	
@@ -276,7 +280,6 @@ public:
 	
 	fsTrafficUsageMode* GetTUMs ();
 	
-	void SetAutosaveInterval (UINT uInterval);
 	
 	void StartGroup (vmsDownloadsGroupSmartPtr pGroup);
 	void StopGroup (vmsDownloadsGroupSmartPtr pGroup);
@@ -457,7 +460,6 @@ protected:
 	fsDeleteDownloadReaction m_enDDR;	
 	fsTUM m_enTUM;				
 	fsTUM m_enUserTUM;			
-	UINT m_uAutosaveInterval;	
 	BOOL m_bNeedExit;			
 	static DWORD WINAPI _threadDownloadsMgr (LPVOID lp);
 	

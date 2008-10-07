@@ -282,7 +282,7 @@ void CSpiderWnd::_DownloaderEvents(fsWebPageDownloader *dldr, fsWPDEvent ev, int
 			char szUrl [10000];
 			dldr->GetDownloadingSiteName (szUrl);
 			strtmp.Format ("%s - %s", szUrl, LS (L_DONE));
-			CMainFrame::ShowTimeoutBalloon (strtmp, PRG_NAME);
+			CMainFrame::ShowTimeoutBalloon (strtmp, vmsFdmAppMgr::getAppName ());
 			break;
 	}
 

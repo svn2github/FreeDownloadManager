@@ -46,7 +46,8 @@ protected:
 	struct _inc_ModeStgs {
 		int iUplTrafLim;	
 		int iUplConnLim;	
-		_inc_ModeStgs (int t = -1, int c = -1) : iUplTrafLim (t), iUplConnLim (c) {}
+		int iMaxHalfConnections;
+		_inc_ModeStgs (int t = -1, int c = -1, int hc = 8) : iUplTrafLim (t), iUplConnLim (c), iMaxHalfConnections (hc) {}
 	};
 	
 	std::vector <_inc_ModeStgs> m_vModes;
@@ -69,6 +70,7 @@ protected:
 	afx_msg void OnWhatisthis();
 	afx_msg void OnAssocwithtorrent();
 	afx_msg void OnDisableSeeding();
+	afx_msg void OnChangeMaxhalfsval();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 

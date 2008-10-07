@@ -14,7 +14,7 @@
 
 typedef DLDS_LIST t_downloads;  
 
-#define DLFILE_CURRENT_VERSION	(12)
+#define DLFILE_CURRENT_VERSION	(14)
 
 #define DLFILE_SIG "FDM Downloads  "
 

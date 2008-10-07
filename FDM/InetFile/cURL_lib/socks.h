@@ -6,14 +6,15 @@
 #define __SOCKS_H  
 
 CURLcode Curl_SOCKS4(const char *proxy_name,
-                     char *hostname,
+                     const char *hostname,
                      int remote_port,
                      int sockindex,
-                     struct connectdata *conn); 
+                     struct connectdata *conn,
+                     bool protocol4a); 
 
 CURLcode Curl_SOCKS5(const char *proxy_name,
                      const char *proxy_password,
-                     char *hostname,
+                     const char *hostname,
                      int remote_port,
                      int sockindex,
                      struct connectdata *conn);

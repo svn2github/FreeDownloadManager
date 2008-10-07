@@ -39,7 +39,7 @@ public:
 	void ApplyLanguageToMenu (CMenu* menu);
 	void UpdateMenu(CMenu *pPopup);
 	void ApplyLanguage();
-	void AddDownload (vmsDownloadSmartPtr dld);
+	void AddDownload (vmsDownloadSmartPtr dld, BOOL bPlaceToTop);
 	BOOL Create (CWnd* pwndParent);
 	virtual ~CFVDownloads_Tasks();
 

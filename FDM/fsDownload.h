@@ -63,7 +63,9 @@ typedef DWORD (*fntDownloadsMgrEventFunc)(struct fsDownload* dld, enum fsDownloa
 
 #define DLD_MF_AUTO_CONVERT				(1 << 21)  
 
-#define DLD_NEED_ONDONE_FOR_FLASH_VIDEO	(1 << 22)    
+#define DLD_NEED_ONDONE_FOR_FLASH_VIDEO	(1 << 22)
+
+#define DLD_TORRENT_DOWNLOAD			(1 << 23)    
 
 struct fsDownload : public vmsObject
 {
@@ -76,6 +78,8 @@ struct fsDownload : public vmsObject
 	DWORD dwFlags;				
 	DWORD dwReserved;
 	FILETIME dateAdded;			
+	
+	DWORD adwTimeAllowed [7]; 
 
 	fntDownloadsMgrEventFunc pfnDownloadEventsFunc; 
 	LPVOID lpEventsParam;				
@@ -103,6 +107,7 @@ struct fsDownload : public vmsObject
 		dwFlags = dld.dwFlags;
 		dwReserved = 0;
 		dateAdded = dld.dateAdded;
+		CopyMemory (adwTimeAllowed, dld.adwTimeAllowed, sizeof (adwTimeAllowed));
 
 		pfnDownloadEventsFunc = dld.pfnDownloadEventsFunc;
 		lpEventsParam = dld.lpEventsParam;
@@ -114,10 +119,13 @@ struct fsDownload : public vmsObject
 		pfnDownloadEventsFunc = NULL; dwFlags = 0; 
 		pGroup = NULL;
 		dwReserved = 0;
+		memset (adwTimeAllowed, 0xff, sizeof (adwTimeAllowed));
 		#ifndef FDM_DLDR__RAWCODEONLY
 		pdlg = NULL;
 		#endif
 	}
+
+	BOOL isTorrent () {return (dwFlags & DLD_TORRENT_DOWNLOAD) != 0 || pMgr->IsBittorrent ();}
 };
 
 typedef vmsObjectSmartPtr <fsDownload> vmsDownloadSmartPtr;

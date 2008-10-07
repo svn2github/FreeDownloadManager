@@ -9,10 +9,11 @@
 CURLcode Curl_ossl_connect(struct connectdata *conn, int sockindex);
 CURLcode Curl_ossl_connect_nonblocking(struct connectdata *conn,
                                        int sockindex,
-                                       bool *done);
-void Curl_ossl_close(struct connectdata *conn); 
+                                       bool *done); 
 
-int Curl_ossl_close_all(struct SessionHandle *data);
+void Curl_ossl_close(struct connectdata *conn, int sockindex); 
+
+int Curl_ossl_close_all(struct SessionHandle *data); 
 
 CURLcode Curl_ossl_set_engine(struct SessionHandle *data, const char *engine); 
 
@@ -27,7 +28,7 @@ void Curl_ossl_cleanup(void);
 
 ssize_t Curl_ossl_send(struct connectdata *conn,
                        int sockindex,
-                       void *mem,
+                       const void *mem,
                        size_t len);
 ssize_t Curl_ossl_recv(struct connectdata *conn, 
                        int num,                  

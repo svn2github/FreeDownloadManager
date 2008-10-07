@@ -46,7 +46,7 @@ int Curl_read(struct connectdata *conn, curl_socket_t sockfd,
 
 CURLcode Curl_write(struct connectdata *conn,
                     curl_socket_t sockfd,
-                    void *mem, size_t len,
+                    const void *mem, size_t len,
                     ssize_t *written); 
 
 int Curl_debug(struct SessionHandle *handle, curl_infotype type,

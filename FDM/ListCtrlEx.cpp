@@ -590,7 +590,12 @@ void CListCtrlEx::OnColumnclick(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	NM_LISTVIEW* pNMListView = (NM_LISTVIEW*)pNMHDR;
 
-	if (m_sortMode != LCSM_NONE && m_iSortCol == pNMListView->iSubItem)
+	HDITEM hditem;
+	hditem.mask = HDI_ORDER;
+	GetHeaderCtrl ()->GetItem (pNMListView->iSubItem, &hditem);
+	int iSortCol = SubItemToSubItem (hditem.iOrder);
+
+	if (m_sortMode != LCSM_NONE && m_iSortCol == iSortCol)
 	{
 		
 
@@ -607,14 +612,12 @@ void CListCtrlEx::OnColumnclick(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 	else
 	{
-		m_iSortCol = SubItemToSubItem(pNMListView->iSubItem);
+		m_iSortCol = iSortCol;
 		if (m_sortMode == LCSM_NONE)
 			m_sortMode = m_sortModeSupport & LCSM_ASCENDING_NOTSUPPORTED ? LCSM_DESCENDING : LCSM_ASCENDING;
 	}
 
 	OnSortModeChanged ();
-
-	
 
 	*pResult = 0;
 }

@@ -135,3 +135,4 @@ void CBtDld_Misc::OnReservespace()
 
 	SetModified ();		
 }
+

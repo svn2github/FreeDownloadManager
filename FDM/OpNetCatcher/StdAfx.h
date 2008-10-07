@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/          
+*/
+
+          
 
 #if !defined(AFX_STDAFX_H__C9CBE628_F485_41EA_86E2_E314E5579CA3__INCLUDED_)
 #define AFX_STDAFX_H__C9CBE628_F485_41EA_86E2_E314E5579CA3__INCLUDED_
@@ -13,6 +15,6 @@
 
 #include <windows.h>    
 
-//{{AFX_INSERT_LOCATION}//}}  
+//{{AFX_INSERT_LOCATION}//}//}}  
 
 #endif 

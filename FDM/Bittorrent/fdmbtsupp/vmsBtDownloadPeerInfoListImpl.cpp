@@ -35,8 +35,8 @@ bool vmsBtDownloadPeerInfoListImpl::UpdateList ()
 	{
 		vmsBtDownloadPeerInfoImpl peer;
 		peer_info *p = &v [i];
-		if (p->total_download == 0 && p->total_upload == 0)
-			continue;
+		
+		
 		peer.m_peer = *p;
 		vPeers.push_back (peer);
 	}

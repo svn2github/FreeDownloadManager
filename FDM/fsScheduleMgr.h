@@ -75,6 +75,14 @@ enum fsRestrainAllDlds
 	RAD_ENABLE,
 	RAD_DISABLE,
 	RAD_INVERT,			
+};
+
+#define SDI_RESTART_COMPLETED_DOWNLOADS		1     
+
+struct fsDownloadsInfo
+{
+	fs::list <UINT> *pvIDs; 
+	DWORD dwFlags; 
 };  
 
 struct fsWhatToStart
@@ -84,7 +92,7 @@ struct fsWhatToStart
 	union		
 	{
 		fsProgramInfo prog;		
-		fs::list <UINT> *pvIDs; 
+		fsDownloadsInfo dlds;
 		fsTUM enTUM;			
 		fsShutdown shutdown;	
 		fsDialInfo dial;  
@@ -160,7 +168,21 @@ enum fsExternalEvent
 	EV_DIALINGSUCCESS,		
 	EV_DIALINGFAILED,		
 	EV_NODOWNLOADS			
-};  
+};    
+
+#define SCHEDULERFILE_CURRENT_VERSION	(2)
+#define SCHEDULERFILE_SIG     "FDM Scheduler Tasks"
+struct fsSchedulerFileHdr
+{
+	char szSig [sizeof (SCHEDULERFILE_SIG) + 1];
+	WORD wVer;
+	
+	fsSchedulerFileHdr ()
+	{
+		strcpy (szSig, SCHEDULERFILE_SIG);
+		wVer = SCHEDULERFILE_CURRENT_VERSION;
+	}
+};      
 
 typedef void (*fntScheduleMgrEvents)(fsSchedule *task, fsScheduleMgrEvent ev, LPVOID lp);
 typedef void (*fntScheduleMgrEventDesc)(LPCSTR pszEvent, fsScheduleMgrEventType type, LPVOID lp);

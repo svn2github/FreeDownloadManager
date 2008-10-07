@@ -17,6 +17,7 @@ class CDownloads_Downloads : public CWnd
 	friend class CDownloadsWnd;
 	friend class CDownloads_Groups;
 	friend class CDownloaderProperties_ListPage;
+	friend class CDlg_Options_Downloads;
 	friend class CDlgExportDownloads;
 	friend class CMainFrame;
 

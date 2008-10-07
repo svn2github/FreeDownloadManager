@@ -1,3 +1,4 @@
+
 ; This is a language file.
 ; You can translate it into your native language.
 ; To do this, follow instructions:
@@ -13,11 +14,13 @@
 ; Your language name. Please keep it in English
 ;
 Dutch
+;
 ;By CyGho,	http://www.cygho.nl
 ;Corrected and completed for FDM 1.9	by Jozef van Breuseghem, Oct 2005,	joeviebie@gmail.com
 ;Corrected and completed for FDM 2.0	by Charleshan Denninger, Apr 2006,	http://www.denninger.nl
 ;Minor corrections added for FDM 2.0	by Charleshan Denninger, May 2006,	http://www.denninger.nl
 ;Corrected and completed for FDM 2.1	by Charleshan Denninger, August 2006,	http://www.denninger.nl
+;Redacted and completed  for FDM 2.5 build 758  by Martin Schrijver,  August  2008, m.schrijver@zonnet.nl
 ;
 ;
 ; Below are the strings to translate:
@@ -29,75 +32,75 @@ Plakken
 Lichte modus
 Medium modus
 Zware modus
-Download opties
-Inbel verbinding
+Opties voor downloaden
+Inbelverbinding
 Over FDM
 FDM afsluiten
 Bestand
 Bewerken
 Beeld
 Opties
-Gereedschap
+Extra
 Help
 Werkbalk
-Status Balk
-Optimalisatie Assistent
-Standaard download instellingen
+Statusbalk
+Optimalisatie-assistent
+Standaard download-instellingen
 Algemene instellingen
-Inbel verbinding
-Ophangen indien gereed.
-Computer uitzetten indien gereed.
-Open Help Referentie venster.
-FDM homepagina.
-Vertel een vriend.
-Stuur e-mail naar ondersteuningsgroep.
-Automatisch controleren op updates.
-Controleer nu op updates.
+Inbelverbinding
+Ophangen indien gereed
+Computer uitzetten indien gereed
+Open Helpvenster
+FDM homepage
+Vertel een vriend
+Stuur e-mail naar Support
+Automatisch controleren op updates
+Controleer nu op updates
 -
 -
-Overschakelen naar:
-Bandbreedte gebruiksmodus
+Overschakelen naar
+Modus gegevensoverdracht
 Registratie
 Downloads
 Planner
-Site Verkenner
+Verkenner website
 HTTP//FTP Verkenner
-Site Beheerder
+Beheerder website
 Download toevoegen
 Start download
 Stop download
 Download plannen
 Voeg taak toe
-Taak eigenschappen
+Taakeigenschappen
 Download geselecteerde bestanden
 Stop
 Vernieuwen
 Voeg site toe
-Site eigenschappen
-Download groepen
-Download info
-Planner log
-Site Verkenner log
+Website-eigenschappen
+Downloadgroepen
+Downloadinformatie
+Plannerlogboek
+Website-Verkenner-logboek
 Zijbalk
 Maak nieuwe download
 Verwijder download
 Open bestand
 Open map
 Start download direct
-Download eigenschappen
+Download-eigenschappen
 Activeer taak
 Deactiveer taak
 Verwijder taak
 Open bovenliggende map
 Verbreken
 Download
-Site Verkenner instellingen
+Website-Verkenner-instellingen
 Verwijder site
 Tijdelijke ingang
 Sites
-Laat hoofdvenster zien
-Browser bewaking
-Klembord bewaking
+Toon hoofdvenster
+Browserbewaking
+Klembordbewaking
 Start alle downloads
 Stop alle downloads
 -
@@ -117,130 +120,130 @@ Compleet
 In uitvoering
 Gepland
 Gestopt
-Andere
+Overig
 Maak nieuwe groep
 Verwijder groep
 Verwijder alle downloads
 Verwijder alle complete downloads
-Open groep map
-Groep eigenschappen
-Groep naam:
-Standaard map:
+Open groepsmap
+Groepseigenschappen
+Groepsnaam:
+Standaardmap
 Bestandsextensies [scheiden met spatie]:
-Standaard download prioriteit
+Standaard downloadprioriteit
 Zeer laag
 Laag
 Gemiddeld
 Hoog
 Zeer hoog
-Geef groep naam
-Input fout
-Groep met dezelfde naam bestaat reeds. Geef een andere naam:
-Geef map naam:
-Kies standaard groep map.
-Geef hier de groep naam.
-Standaard map voor opslaan downloads van deze groep.
+Geef groepsnaam
+Invoerfout
+Groep met deze naam bestaat reeds. Geef een andere naam:
+Geef mapnaam
+Kies standaard groepsmap
+Geef groepsnaam
+Standaardmap voor opslaan downloads van deze groep
 Bladeren
-Bestandsextensies voor deze groep. Wordt gebruikt voor automatische detectie van de downloadgroep.
-Standaard download prioriteit voor deze groep.
-Annuleer veranderingen en sluit dialoogvenster.
-Pas veranderingen toe en sluit dialoogvenster.
-Fout in download groepen.
-Installeer FDM opnieuw
+Bestandsextensies voor deze groep. Wordt gebruikt voor automatische detectie van de downloadgroep
+Standaard downloadprioriteit voor deze groep
+Annuleer veranderingen en sluit dialoogvenster
+Pas veranderingen toe en sluit dialoogvenster
+Fout in downloadgroepen
+Installeer FDM opnieuw!
 Fout
-Kan lijst met downloads niet laden. Zij is waarschijnlijk beschadigd of in gebruik door een ander programma.
-Initialisatie van Internet Explorer integratie is mislukt.
-Weet je het zeker?
-Dit zal alle groepen downloads verwijderen.
+Kan lijst met downloads niet laden. Deze is waarschijnlijk beschadigd of in gebruik door een ander programma
+Initialisatie van Internet Explorer Integration is mislukt
+Weet u het zeker?
+Dit zal alle groepsdownloads verwijderen
 Bevestiging
 Bestandsnaam
-Grootte
+Bytes
 Gedownload
-Tijd te gaan
-Stukken
+Tijd over
+Sectie
 Snelheid
 Commentaar
-Log
+Logboek
 Voortgang
 Tijd
 Datum
 Informatie
-Opruimen
-Automatisch verschuiven
-Onbekende netwerk fout.
-Toegang geweigerd. Verkeerde naam of wachtwoord.
-Toegang geweigerd. Verkeerd wachtwoord.
+Wissen
+Automatisch scrollen
+Onbekende netwerkfout
+Toegang geweigerd. Verkeerde naam of wachtwoord
+Toegang geweigerd. Verkeerd wachtwoord
 Gelukt
-Kan niet verbinden met de server.
-Bestand niet gevonden op de server.
-Verbinding met de server is verbroken.
-Server geeft geen reactie.
-Kan server naam niet herleiden.
-Server ondersteunt geen hervatten. Stop deze download niet, anders moet je opnieuw beginnen...
-Proxy gebruikersnaam en wachtwoord vereist.
-Uitgebreide fout.
-Verkeerd verzoek. Mogelijk een ongeldige URL.
-Onbekende server fout.
-Verbinding onderbroken.
-Ongeldige URL.
-Geen Internet verbinding.
-Geselecteerde HTTP versie wordt door deze server niet ondersteund.
-Onbekende fout.
-Kan bestand niet van de schijf verwijderen.
-Limiet van aantal verbindingen op deze server is bereikt.
-Limiet van aantal verbindingen is bereikt.
+Kan niet verbinden met de server
+Bestand niet gevonden op de server
+Verbinding met de server is verbroken
+Server geeft geen reactie
+Kan servernaam niet herleiden
+Server ondersteunt geen hervatten. Stop deze download niet, anders moet u opnieuw beginnen...
+Proxy: gebruikersnaam en wachtwoord vereist
+Uitgebreide fout
+Verkeerd verzoek. Mogelijk een ongeldige URL
+Onbekende serverfout
+Verbinding verbroken
+Ongeldige URL
+Geen Internetverbinding.
+Geselecteerde HTTP-versie wordt door deze server niet ondersteund
+Onbekende fout
+Kan bestand niet van de schijf verwijderen
+Maximum aantal verbindingen op deze server is bereikt
+Maximum aantal verbindingen is bereikt
 Pauze %d sec.
-Stuk
+Sectie
 Gestart
-Klaar
+Gereed
 Download compleet
-Verbinding...
-Verbinden geslaagd
+Verbinden...
+Verbinding geslaagd
 Omleiden...
-Omleiding geslaagd. Openen nieuwe URL.
+Omleiding geslaagd. Openen nieuwe URL
 Starten download...
 Gestopt
-Maken van nieuw stuk...
+Maken van nieuwe sectie...
 Geannuleerd
 Herstarten download...
 Openen van bestand op schijf...
-Bestandsnaam is te lang.
-Bestand bestaat al. Hernoemen naar.
-Hernoemen naar:
-Output bestand is verwijderd. Onmogelijk om verder te gaan.
-Bestand bestaat al. Overschrijven.
-Bestand bestaat al. Hervatten download.
-Bestand bestaat al.
-Bestand op schijf openen mislukt.
+Bestandsnaam is te lang
+Bestand bestaat al. Hernoemen naar
+Hernoemen naar
+Outputbestand is verwijderd. Onmogelijk om verder te gaan
+Bestand bestaat al. Overschrijven
+Bestand bestaat al. Hervatten download
+Bestand bestaat al
+Bestand op schijf openen mislukt
 Bestandsgrootte op de server is veranderd!
-Aanpassen voor nieuwe grootte...
-Kan bestand niet overschrijven.
-Bestand zal worden hernoemd.
-Kan bestand niet terug naar originele naam hernoemen.
-Kan groepen niet opslaan.
-Kan de downloads niet opslaan.
+Aanpassen aan nieuwe grootte...
+Kan bestand niet overschrijven
+Bestand zal worden hernoemd
+Kan bestand niet oorspronkelijke naam geven
+Kan groepen niet opslaan
+Kan de downloads niet opslaan
 Inbelverbinding
 Verbinden met:
-Bel automatisch in.
+Bel automatisch in
 Verbinden
-Kies inbelverbinding hier:
-Vink dit aan als je de volgende keer automatisch wilt inbellen.
-Bel nu in.
-Bel niet in en sluit dit dialoogvenster.
-Kan geen inbelverbinding vinden op deze computer.
-Lijn is bezet.
-Hardware fout.
-Geen beltoon.
+Kies inbelverbinding hier
+De volgende keer automatisch inbellen
+Bel nu in
+Bel niet in en sluit dit dialoogvenster
+Kan geen inbelverbinding vinden op deze computer
+Lijn is bezet
+Hardwarefout
+Geen beltoon
 Bellen
 Poging
 Openen poort...
 Inbellen naar provider...
 Verbonden met andere computer.
-Verifiëren van gebruikersnaam en wachtwoord.
-Verbindingsnelheid is %d BPS.
-Verbreek verbinding.
+Verifiëren van gebruikersnaam en wachtwoord
+Verbindingsnelheid is %d BPS
+Verbreek verbinding
 Herhaling
-Gebruikersnaam en wachtwoord verplicht.
+Gebruikersnaam en wachtwoord verplicht
 Gebruiker:
 Wachtwoord:
 Groep:
@@ -250,190 +253,192 @@ Start
 Automatisch
 Handmatig
 Plannen
-Prioriteit van download:
+Prioriteit van download
 Geavanceerd
-Adres van het te downloaden bestand:
-Geef gebruikersnaam hier:
-Geef wachtwoord hier:
-Vink dit aan als voor de server autorisatie vereist is.
-Naam van de groep om downloads in te plaatsen. Groepen helpen je om downloads te beheren.
-Map om downloads in op te slaan.
-Nieuwe naam voor te downloaden bestand. Laat het veld leeg als je de originele naam wilt gebruiken.
-Korte beschrijving van de download.
-Deze download start zo snel mogelijk automatisch.
-FDM zal niet proberen deze download automatisch te starten.
-Plan deze download.
-Configureren download planning.
-Download prioriteit. Downloads met hoge prioriteit starten eerst. Downloads met lage prioriteit worden uitgesteld.
-Bekijk geavanceerde instellingen van deze download.
-Opgegeven URL is niet correct. Controleer deze AUB.
-Geef gebruikersnaam:
-Kies uitvoer map:
+Adres van het te downloaden bestand
+Geef gebruikersnaam hier
+Geef wachtwoord hier
+Autorisatie voor server vereist
+Naam van de groep om downloads in te plaatsen. Groepen helpen u om downloads te beheren
+Map om downloads in op te slaan
+Nieuwe naam voor te downloaden bestand. Laat het veld leeg als u de originele naam wilt gebruiken
+Korte beschrijving van de download
+Deze download start zo snel mogelijk automatisch
+FDM zal niet proberen deze download automatisch te starten
+Planning voor deze download
+Configureren downloadplanning
+Downloadprioriteit. Downloads met hoge prioriteit starten eerder dan downloads met lagere prioriteit
+Bekijk geavanceerde instellingen van deze download
+Opgegeven URL is niet correct. Controleer deze AUB!
+Geef gebruikersnaam
+Kies uitvoermap
 Algemeen
-Algemene informatie.
+Algemene informatie
 Download momenteel opgeslagen naar bestand:
 Naam van het gedownloade bestand:
-URL van deze download kan niet worden veranderd.
-Deze download is bezig. Kan de bestandsnaam niet veranderen.
-Kan het bestand niet hernoemen.
-Bestand niet gevonden.
-Pad niet gevonden.
-Ongeldig .exe formaat.
-Bestand is in gebruik door een ander programma.
-Toegang niet toegestaan.
-Apparaat is niet klaar.
-Schijf is vol.
-Bestandsnaam is niet geldig.
-Inloggen is verplicht.
+URL van deze download kan niet worden veranderd
+Deze download is bezig. Kan de bestandsnaam niet veranderen
+Kan het bestand niet hernoemen
+Bestand niet gevonden
+Pad niet gevonden
+Ongeldig .exe-formaat
+Bestand is in gebruik door een ander programma
+Toegang geweigerd
+Apparaat is niet klaar
+Schijf is vol
+Bestandsnaam is niet geldig
+Inloggen is verplicht
 Verbinding
 Netwerk
 Fouten
-Pauze tussen verbindingspogingen [in seconden]:
-Maximum aantal pogingen:
-Wachttijd [in seconden]:
+Pauze tussen verbindingspogingen [in seconden]
+Maximum aantal pogingen
+Wachttijd [in seconden]
 Minimum grootte:
 Maximum aantal:
-Beperking van bandbreedte voor deze download.
-Beperk bandbreedte tot:
-Negeer alle beperkingen.
+Beperking van bandbreedte voor deze download
+Beperk bandbreedte tot
+Negeer alle beperkingen
 B
-kB
+KB
 MB
+;second. E.G KB/S
 s
-Geef de waarde groter dan %d:
-Selecteer de grootte:
-Wachttijd tot herverbinden met de server na een fout:
-Vink dit aan als je het maximum aantal niet geslaagde download pogingen wilt beperken.
-Wachttijd tot reactie van de server:
+Geef een waarde groter dan %d
+Selecteer de grootte
+Wachttijd tot herverbinden met de server na een fout
+Maximum aantal niet geslaagde downloadpogingen beperken
+Wachttijd tot reactie van de server
 Minimum grootte per stuk. Download wordt niet opgedeeld in kleinere stukken.
-Maximum aantal stukken. Download wordt niet opgedeeld in meer stukken.
-Bandbreedte (maximum) die FDM mag gebruiken voor deze download.
-Negeer beperkingen voor bandbreedte en maximum aantal verbindingen voor deze download.
-Je kunt de waarde in Bytes (B), kiloBytes (kB) of MegaBytes (MB) in dit veld opgeven.\nUitleg is te vinden op:\nhttp://en.wikipedia.org/wiki/Binary_prefixes\n en:\nhttp://nl.wikipedia.org/wiki/Bandbreedte
+Maximum aantal secties. Download wordt niet opgedeeld in meer secties
+Bandbreedte (maximum) die FDM mag gebruiken voor deze download
+;
+Negeer beperkingen voor bandbreedte en maximum aantal verbindingen voor deze download
+U kunt de waarde in Bytes (B), kiloBytes (KB) of MegaBytes (MB) in dit veld opgeven.\nUitleg is te vinden op:\nhttp://en.wikipedia.org/wiki/Binary_prefixes\n en:\nhttp://nl.wikipedia.org/wiki/Bandbreedte
 Protocol
 Identificeer op server als:
 Verwijzing:
-Gebruik HTTP 1.1.
-Gebruik cookies.
-Gebruik passieve modus.
-Overdracht modus:
-Binair.
+Gebruik HTTP 1.1
+Gebruik cookies
+Gebruik passieve modus
+Overdrachtsmodus:
+Binair
 ASCII voor bestanden met de extensie:
-Specificeer hoe FDM geïdentificeerd wordt met de HTTP-server.
-Deze regel wordt verzonden als verwijsveld naar de HTTP-server. Gewoonlijk is dit niet verplicht.
-Vink dit aan als je wilt dat FDM HTTP versie 1.1 gebruikt.
-Vink dit aan als je wilt dat FDM cookies gebruikt.
-Vink dit aan als je wilt dat FDM passieve modus gebruikt voor FTP servers. Soms is dit nodig bij werken met firewalls.
-Gebruik binaire modus voor FTP overdracht. Gebruik deze modus als het geen tekst bestand betreft.
-Gebruik ASCII modus voor FTP overdracht. Gebruik deze modus als het een tekst bestand betreft.
-FDM gebruikt ASCII modus voor bestanden met de hier aangeduide extensies. Voor andere bestanden wordt binaire modus gebruikt.
+Specificeer hoe FDM geïdentificeerd wordt met de HTTP-server
+Deze regel wordt verzonden als verwijsveld naar de HTTP-server Gewoonlijk is dit niet verplicht
+Activeren opdat FDM HTTP versie 1.1 gebruikt
+Activeren opdat FDM cookies gebruikt
+Activeren opdat FDM passieve modus gebruikt voor FTP-servers. Soms is dit nodig bij het werken met firewalls
+Gebruik binaire modus voor FTP-overdracht. Gebruik deze modus als het geen tekstbestand betreft
+Gebruik ASCII modus voor FTP-overdracht. Gebruik deze modus als het een tekstbestand betreft
+FDM gebruikt ASCII-modus voor bestanden met de hier aangegeven extensies. Voor andere bestanden wordt binaire modus gebruikt
 Proxy
-Gebruik proxy instellingen.
+Gebruik proxy-instellingen.
 Van Microsoft Internet Explorer.
-Specificeer handmatig.
-Gebruik geen proxy.
+Specificeer handmatig
+Gebruik geen proxy
 Instellingen
 Adres:
 Poort:
-Geef een proxy adres:
-Geef een proxy poort:
-FDM gebruikt proxy instellingen van Internet Explorer.
-Zelf proxy instellingen aanduiden.
-FDM zal geen proxy gebruiken.
-Kies de server types waarvoor de proxy wordt ingesteld.
-Geef het proxy adres dat gebruikt moet worden.
-Geef hier de proxy poort. Gewoonlijk is dat 80, 3128, 1080 of 8080.
-Vink dit aan als je je bij de proxy moet aanmelden.
+Geef een proxy-adres
+Geef een proxy-poort
+FDM gebruikt proxy-instellingen van Internet Explorer
+Zelf proxy-instellingen aangeven
+FDM zal geen proxy gebruiken
+Kies de server types waarvoor de proxy wordt ingesteld
+Geef het proxy adres dat gebruikt moet worden
+Geef hier de proxy-poort. Gewoonlijk is dat 80, 3128, 1080 of 8080
+Vink aan als je je bij de proxy moet aanmelden
 Diversen
 Lokaal bestand
 Als het bestand al bestaat:
-Reserveer schijfruimte voor te downloaden bestand.
+Reserveer schijfruimte voor te downloaden bestand
 Toegevoegde extensie voor onvolledige download:
-Internet server
-Download niet herstarten als server geen hervatten ondersteunt.
+Internetserver
+Download niet herstarten als server geen hervatten ondersteunt
 Als bestandsgrootte op de server is veranderd:
-Stoppen bij fouten.
+Stoppen bij fouten
 Vragen
-Herschrijven
+Overschrijven
 Hernoemen
 Hervatten
 Herstarten
 Aanpassen
-Geef de bestandsextensie:
-Hier kan je aanduiden wat FDM moet doen als het bestand al op schijf bestaat.
-Vink dit aan als je schijfruimte wilt reserveren voor een download die wordt gestart.
-Indien aangevinkt zal FDM de aangeduide extensie toevoegen aan de bestandsnaam tijdens downloaden. Zodra het downloaden compleet is wordt de originele bestandsnaam teruggezet.
-FDM zal downloaden niet hervatten als de server dit niet ondersteunt.
-Hier kan je aanduiden wat FDM moet doen als de bestandsgrootte is veranderd op de server.
-Vink dit aan om de download te stoppen als het bestand niet gevonden wordt op de server.
-Vink dit aan om de download te stoppen als gebruikersnaam of wachtwoord ongeldig zijn.
-Bandbreedte modi
-Duid de modus aan om in te stellen:
+Geef de bestandsextensie
+Hier kunt u aangeven wat FDM moet doen als het bestand al op schijf bestaat
+Schijfruimte reserveren voor een download die wordt gestart
+Indien aangevinkt zal FDM de aangeduide extensie toevoegen aan de bestandsnaam tijdens het downloaden. Zodra het downloaden compleet is wordt de oorspronkelijke bestandsnaam teruggezet
+FDM zal downloaden niet hervatten als de server dit niet ondersteunt
+Hier kunt u aangeven wat FDM moet doen als de bestandsgrootte is veranderd op de server
+Download stoppen als het bestand niet gevonden wordt op de server
+Download stoppen als gebruikersnaam of wachtwoord ongeldig zijn
+Modi bandbreedte
+Kies de modus om in te stellen:
 Maximum aantal verbindingen:
 Maximum aantal verbindingen per server:
 Beperking van bandbreedte:
-Onbeperkt
-Duid bandbreedteverbruik modus aan die je wilt instellen.
-Vink dit aan om het maximum aantal verbindingen te beperken.
-Vink dit aan om het maximum aantal verbindingen per server te beperken.
-Duid hier FDM bandbreedte aan (maximum) voor downloaden bestanden.
+Geen
+Kies in te stellen bandbreedteverbruikmodus
+Beperk maximum aantal verbindingen
+Beperk maximum aantal verbindingen per server
+Geef FDM-bandbreedte aan (maximum) voor downloaden bestanden
 Alle downloads
 Lijst van downloads
-Automatisch opslaan elke:
+Automatisch opslaan elke
 min.
 Bij verwijderen van onvolledige download
-Automatisch verwijderen complete downloads.
-Verwijder bestand niet.
-Verwijder bestand.
-FDM slaat downloadlijst automatisch op na aangeduid tijdsinterval. Dit beschermt de lijst bij vastlopen van de computer of bij stroomuitval.
-Duid hier aan wat FDM moet doen met het bestand op de schijf als een onvolledige download wordt verwijderd.
-Vink dit aan als de download automatisch van de lijst verwijderd moet worden zodra deze gereed is.
-Bewaking / Monitoring
-Controle op:
-Klembord.
+Automatisch verwijderen complete downloads
+Verwijder bestand niet
+Verwijder bestand
+FDM slaat downloadlijst automatisch op na aangeduide tijdsinterval. Dit beschermt de lijst bij vastlopen van de computer of bij stroomuitval
+Geef hier aan wat FDM moet doen met het bestand op de schijf als een onvolledige download wordt verwijderd
+Download automatisch van de lijst verwijderderen zodra deze gereed is
+Bewaking
+Controle op
+Klembord
 Neem bestanden met de extensies:
 Negeer bestanden met de extensies:
-ALT moet niet worden ingedrukt.
-ALT moet worden ingedrukt.
-Geef de extensies:
-Vink dit aan als FDM muisklikken in Internet Explorer moet opvangen.
-Vink dit aan als FDM het klembord moet bewaken.
-Controleer enkel bestanden met aangeduide extensies.
-Controleer geen bestanden met aangeduide extensies.
-Controleer enkel als ALT niet is ingedrukt.
-Controleer enkel als ALT is ingedrukt.
+ALT moet niet worden ingedrukt
+ALT moet worden ingedrukt
+Geef de extensies
+FDM moet muisklikken in Internet Explorer opvangen
+FDM moet het klembord bewaken
+Controleer alleen bestanden met aangeduide extensies
+Controleer geen bestanden met aangeduide extensies
+Controleer alleen als ALT niet is ingedrukt
+Controleer alleen als ALT is ingedrukt
 Opstarten
-Laden bij opstarten.
-Start geminimaliseerd.
+Laden bij opstarten Windows
+Geminimaliseerd starten
 Systeem
 Minimaliseer naar systeemvak.
-Knop sluiten minimaliseert venster.
-FDM wordt automatisch gestart als Windows start.
-FDM wordt geminimaliseerd na starten.
-Als je op de knop minimaliseren klikt wordt FDM geminimaliseerd naar systeemvak.
-Indien aangevinkt: klikken op de knop sluiten geeft dezelfde actie als klikken op de knop minimaliseren.
+Knop sluiten minimaliseert venster
+FDM wordt automatisch gestart als Windows start
+FDM wordt geminimaliseerd na starten
+Als u op de knop "minimaliseren" klikt wordt FDM geminimaliseerd naar systeemvak
+Indien aangevinkt: klikken op de knop sluiten heeft hetzelfde effect als klikken op de knop minimaliseren
 Update
-Adres van de update server:
-FDM controleert automatisch op nieuwe versie.
-Netwerkgebruik optimalisatie assistent
-Welkom bij de netwerkgebruik optimalisatie assistent!
-Deze assistent helpt je de optimale instellingen te bepalen voor uw type verbinding. Het stelt de download eigenschappen en standaard eigenschappen in voor de download.
-Duidt het type verbinding aan:
+Adres van de update-server
+FDM controleert automatisch op nieuwe versie
+Netwerkoptimalisatie-assistent
+Welkom bij de netwerkoptimalisatie-assistent!
+Deze assistent helpt u de optimale instellingen te bepalen voor uw type verbinding. Het stelt de downloadeigenschappen en standaardeigenschappen in voor de download
+Kies het type verbinding:
 Voltooien
-Duid hier uw type Internet verbinding aan.
-Configureer FDM voor een optimale werking met uw verbinding.
+Duid hier uw type Internetverbinding aan
+Configureer FDM voor een optimale werking met uw verbinding
 Taak
-Start tijd
-Volgende start tijd
-Laatste start tijd
-Kan het rooster niet laden. Het is beschadigd of wordt gebruikt door een ander programma.
-Kan het rooster niet laden.
-Kan het rooster niet opslaan.
-Taak "%s" is gepland. Wil je deze starten?
-Verander bandbreedtegebruik modus naar "%s".
+Starttijd
+Volgende starttijd
+Laatste starttijd
+Kan het rooster niet laden. Het is beschadigd of wordt gebruikt door een ander programma
+Kan het rooster niet laden
+Kan het rooster niet opslaan
+Taak "%s" is gepland. Wilt u deze starten?
+Verander bandbreedtegebruik-modus naar "%s"
 Ophangen
 Alle verbindingen
-Verander bandbreedtegebruik modus naar:
+Verander bandbreedtegebruik-modus in
 Computer uitzetten
 Herstarten
 Uitloggen
@@ -450,65 +455,65 @@ Alle
 dagen
 uren
 Bij starten FDM
-Als inbellen succesvol is.
-Als inbellen mislukt.
-Als er geen actieve downloads zijn.
-Als de snelheid lager of gelijk is aan %d bps gedurende %d:
-Als alle downloads verstoord zijn gedurende:
+Als inbellen succesvol is
+Als inbellen mislukt
+Als er geen actieve downloads zijn
+Als de snelheid lager of gelijk is aan %d bps gedurende %d
+Als alle downloads verstoord zijn gedurende
 Nooit
 Onbekend
-Succesvol verbonden met "%s".
-Verbinden met "%s" mislukt.
-Starten gelukt.
-Geen geheugen meer.
-Kan niet starten.
-Geplande uitvoering veroorzaakt afsluiten programma bij opstarten. Geplande taak wordt genegeerd.
-Maximum inbel pogingen:
-Pauze tussen pogingen:
+Succesvol verbonden met "%s"
+Verbinden met "%s" mislukt
+Starten gelukt
+Geen geheugen meer
+Kan niet starten
+Geplande uitvoering veroorzaakt afsluiten programma bij opstarten Geplande taak wordt genegeerd
+Maximum inbelpogingen
+Pauze tussen pogingen
 Ophangen als verbindingssnelheid lager is dan:
-Opnieuw proberen.
+Opnieuw proberen
 Niet meer dan:
-Gebruik verbinding:
-Indien gelukt:
+Gebruik verbinding
+Indien gelukt
 keer
-Alle actieve verbindingen verbreken.
-Verbinding om te verbreken:
-Programma naam:
+Alle actieve verbindingen verbreken
+Verbinding om te verbreken
+Programmanaam:
 Argumenten:
 Afsluitwijze:
-Dwing programma's om af te sluiten.
-Programma starten.
-Breng inbelverbinding tot stand.
-Verbinding verbreken.
-Verander bandbreedtegebruik modus.
-FDM afsluiten.
-Computer uitzetten.
-Downloads te starten:
-Downloads te stoppen:
+Dwing programma's om af te sluiten
+Programma starten
+Breng inbelverbinding tot stand
+Verbinding verbreken
+Verander bandbreedtegebruik-modus.
+FDM afsluiten
+Computer uitzetten
+Downloads te starten
+Downloads te stoppen
 Toepassingen
 Alle bestanden
-Helaas, dit onderdeel is alleen beschikbaar in Windows 2000, XP en hoger.
-Geef programma naam op:
-Selecteer de downloads:
-Selecteer de bandbreedtegebruik modus die gebruikt moet worden als taak wordt gestart:
-Vink dit aan als je het maximum aantal mislukte inbel pogingen wilt beperken.
-Tijd tussen mislukte inbel pogingen:
-Vink dit aan om verbinding te maken met een snelheid hoger dan de opgegeven waarde.
-Duidt de minimum vereiste verbindingssnelheid aan.
-Indien aangevinkt zal FDM weer proberen om de vereiste verbinding tot stand te brengen.
-Vink dit aan om het maximum aantal mislukte pogingen om een verbinding tot stand te brengen te beperken.
-Duidt de vereiste download(s) aan.
-Lijst van alle beschikbare downloads.
-Voeg aangeduide download toe aan de download takenlijst.
-Verwijder aangeduide download van de download takenlijst.
-Duid hier het te starten programma aan.
-Zoek programma op de computer.
-Geef hier programma argumenten:
-Duid hier type sessie afsluiting aan:
-Vink dit aan om het afsluiten van uw sessie te dwingen. Dit is nuttig bij vastgelopen programma's. Helaas gaan in dat geval wél de NIET opgeslagen gegevens verloren.
-Duid hier geplande actie aan.
-Vink dit aan als FDM alle actieve verbindingen moet verbreken.
-Duid hier de te verbreken verbindingen aan.
+Helaas, dit onderdeel is alleen beschikbaar in Windows 2000, XP en hoger
+Geef programmanaam op
+Selecteer de downloads
+Selecteer de bandbreedtegebruik-modus die gebruikt moet worden als taak wordt gestart
+Beperk maximum aantal mislukte inbelpogingen
+Tijd tussen mislukte inbel pogingen
+Maak verbinding met een snelheid hoger dan de opgegeven waarde
+Geef de minimaal vereiste verbindingssnelheid aan
+Indien aangevinkt zal FDM weer proberen om de vereiste verbinding tot stand te brengen
+Beperk maximum aantal mislukte pogingen om een verbinding tot stand te brengen
+Geef de vereiste download(s) aan
+Lijst van alle beschikbare downloads
+Voeg aangegeven download toe aan de download-takenlijst
+Verwijder aangegeven download van de download-takenlijst
+Duid hier het te starten programma aan
+Zoek programma op de computer
+Geef hier programma-argumenten
+Duid hier type sessie-afsluiting aan
+Gedwongen afsluiting van uw sessie. Dit is nuttig bij vastgelopen programma's. Helaas gaan in dat geval wél de NIET opgeslagen gegevens verloren
+Geef hier geplande actie aan
+FDM moet alle actieve verbindingen verbreken
+Geef hier de te verbreken verbindingen aan
 Op bepaalde dagen:
 Zondag
 Maandag
@@ -517,278 +522,278 @@ Woensdag
 Donderdag
 Vrijdag
 Zaterdag
-Bij gebeurtenis:
+Bij gebeurtenis
 Gedurende
-Lage snelheid:
+Min. snelh:
 min.
 Minuten
 Uren
 Dagen
-Als download snelheid te laag is.
-Als alle downloads fout zijn.
-Duid dagen aan:
+Als download snelheid te laag is
+Als alle downloads fout zijn
+Geef dagen aan
 Start de taak op aangeduide tijd:
 Stel hier de tijd in om de taak te starten.
-Start de taak op aangeduide datum.
-Stel hier de datum in om de taak te starten:
-Start de taak op bepaalde dagen van de week.
-Start de taak elke zondag.
-Start de taak elke maandag.
-Start de taak elke dinsdag.
-Start de taak elke woensdag.
-Start de taak elke donderdag.
-Start de taak elke vrijdag.
-Start de taak elke zaterdag.
-Start de taak periodiek.
-In dit veld duid je het tijdsinterval aan in minuten, uren of dagen.
-Start de taak bij een gebeurtenis.
-Duid hier het type gebeurtenis aan:
+Start de taak op een bepaalde tijd
+Stel hier de datum in om de taak te starten
+Start de taak op bepaalde dagen van de week
+Start de taak elke zondag
+Start de taak elke maandag
+Start de taak elke dinsdag
+Start de taak elke woensdag
+Start de taak elke donderdag
+Start de taak elke vrijdag
+Start de taak elke zaterdag
+Start de taak periodiek
+In dit veld duid je de tijdsinterval aan in minuten, uren of dagen
+Start de taak bij een gebeurtenis
+Duid hier het type gebeurtenis aan
 Geef hier het tijdsinterval:
-Geef hier de minimaal benodigde snelheid:
-Bevestiging is vereist om taak uit te voeren.
-Wachten op bevestiging gedurende:
+Geef hier de minimaal benodigde snelheid
+Bevestiging is vereist om taak uit te voeren
+Wachten op bevestiging gedurende
 sec.
-Indien aangevinkt zal FDM om bevestiging vragen om deze taak uit te voeren.
-Indien aangevinkt zal FDM wachten op bevestiging gedurende het opgegeven tijdsinterval. Als er niet wordt gereageerd gedurende deze tijd zal de taak gestart worden.
+Indien aangevinkt zal FDM om bevestiging vragen om deze taak uit te voeren
+Indien aangevinkt zal FDM wachten op bevestiging gedurende de opgegeven tijdsinterval. Als er niet wordt gereageerd gedurende deze tijd zal de taak gestart worden
 Adres:
-Opbouwen lijst met te downloaden bestanden.
-Verbinding maken met de server.
-Proberen gebruikersnaam en wachtwoord te gebruiken uit de Site Beheerder.
-Ontvangen lijst met bestanden van server.
-Verbinding met server is verbroken. Proberen te herstellen.
-Opbouwen lijst.
-Ontvangen grootte en laatste wijzigingsdatum van bestanden.
-Deze parameter kan de snelheid drastisch verlagen.
-Vink dit aan als FDM grootte en datum van bestanden op HTTP servers moet opvragen.
-Site naam:
-Verbindingen:
-Inloggen:
-Groep:
-Kan lijst met sites niet laden. Is waarschijnlijk beschadigd of in gebruik door een ander programma.
-Kan lijst met sites niet opslaan.
+Opbouwen lijst met te downloaden bestanden
+Verbinding maken met de server
+Proberen gebruikersnaam en wachtwoord te gebruiken uit de Website-beheerder
+Ontvangen lijst met bestanden van server
+Verbinding met server is verbroken. Poging tot herstel
+Opbouwen lijst
+Ontvangen grootte en laatste wijzigingsdatum bestanden
+Deze parameter kan de snelheid drastisch verlagen
+FDM moet grootte en datum van bestanden op HTTP-servers opvragen
+Site naam
+Verbindingen
+Inloggen
+Groep
+Kan lijst met sites niet laden. Is waarschijnlijk beschadigd of in gebruik door een ander programma
+Kan lijst met sites niet opslaan
 Maximum aantal gelijktijdige verbindingen:
-Standaard groep voor een nieuwe download van deze site:
-Gebruik passieve FTP modus.
-Geef de site naam AUB.
+Standaardgroep voor een nieuwe download van deze site:
+Gebruik passieve FTP-modus.
+Geef de websitenaam AUB.
 Site met deze naam bestaat al. Geef een andere naam:
-Maximum aantal verbindingen moet groter zijn dan 0.
-Duid groep aan AUB.
-Duid hier de site naam aan.
-Vink dit aan om het maximum aantal gelijktijdige verbindingen op deze server te beperken.
-Vink dit aan om downloads van deze server automatisch bij aangeduide groep toe te voegen.
-Vraag gebruiker.
+Maximum aantal verbindingen moet groter zijn dan 0
+Duid groep aan AUB
+Duid hier de sitenaam aan
+Berperk het maximum aantal gelijktijdige verbindingen op deze server
+Voeg downloads van deze server automatisch aan aangeduide groep toe
+Vraag gebruiker
 Niet meer vragen.
-Schijf schrijffout.
+Schrijffout
 Bestand "%s" bestaat al op schijf. Wat nu?
-Er zal niet meer om worden gevraagd. Je keuze wordt aanvaard als standaard.
-Overschrijven bestaand bestand.
-Hernoem dit bestand.
-Downloaden hervatten. (Downloaden wordt hervat op positie gelijk aan grootte van bestaand bestand).
-Stop deze download.
+Er zal niet meer om worden gevraagd. Uw keuze wordt aanvaard als standaard
+Overschrijven bestaand bestand
+Hernoem dit bestand
+Downloaden hervatten. (Downloaden wordt hervat op positie gelijk aan grootte van bestaand bestand)
+Stop deze download
 Ja
 Nee
-Download
-is verwijderd. Wil je het bestand op de schijf ook verwijderen?
-Geef een gebruikersnaam en wachtwoord AUB.
-Inloggen op "%s".
-Verstuur de opgegeven gebruikersnaam en wachtwoord naar de server.
-Niet verbinden met deze server.
+Download 
+is verwijderd. Wilt u het bestand op de schijf ook verwijderen?
+Geef een gebruikersnaam en wachtwoord AUB
+Inloggen op "%s"
+Verstuur de opgegeven gebruikersnaam en wachtwoord naar de server
+Niet verbinden met deze server
 De grootte van "%s" is veranderd op de server. Wat nu?
-Herstart download vanaf het begin.
+Herstart download vanaf het begin
 Download aan de nieuwe bestandsgrootte aanpassen. Niet aanbevolen.
 Wachten AUB.
 Update
 Beschrijving
 Update met:
-Controleren op update.
-Je gebruikt al de nieuwste versie.
+Controleren op update
+U gebruikt al de nieuwste versie!
 Downloaden
-Versie %s build %s is beschikbaar.
-Volledig distributie van versie %s (%s).
-Upgrade naar versie %s.
-Upgrade naar versie %s (%s).
+Versie %s build %s is beschikbaar
+Volledig distributie van versie %s (%s)
+Upgrade naar versie %s
+Upgrade naar versie %s (%s)
 FDM moet opnieuw worden gestart. Nu herstarten?
-Update gereed.
-Kan updater niet vinden.
-Duid hier het type update aan.
-Update FDM met volledige distributie.
-Update FDM met upgrade distributie.
-Kijk voor meer info over update proces.
+Update gereed
+Kan updater niet vinden
+Duid hier het type update aan
+Update FDM met volledig pakket
+Update FDM met upgrade-pakket
+Kijk voor meer info over update-proces
 Wat is nieuw in deze versie?
-Start updaten FDM nu.
-Annuleer updaten en sluit dit venster.
-Maak downloads.
-Selecteer inhoud.
-Deselecteer inhoud.
-Lijst toe te voegen downloads.
-Vink de aangeduide map items aan om ze toe te voegen aan de lijst met downloads.
-Vink de aangeduide map items uit om ze niet toe te voegen aan de lijst met downloads.
-Over FDM.
-Copyright ©.
-Alle rechten beschermd.
-Geregistreerd aan:
-Reeds geüpdatet. Herstarten is vereist.
-Ongeldige gebruikersnaam of wachtwoord.
-Kan geschiedenis bestand niet laden.
-Kan geschiedenis bestand niet opslaan.
-HTML Spin standaard instellingen
-HTML Spin
-Web pagina boom
-Download web site
-Web pagina download instellingen
+Start updaten FDM nu
+Annuleer updaten en sluit dit venster
+Maak downloads
+Selecteer inhoud
+Deselecteer inhoud
+Lijst toe te voegen downloads
+Vink aangeduide mapitems aan om ze toe te voegen aan de lijst met downloads
+Vink aangeduide mapitems uit om ze niet toe te voegen aan de lijst met downloads
+Over FDM
+Copyright ©
+Alle rechten voorbehouden
+Geregistreerd o.n.v.:
+Reeds geüpdatet. Herstarten is vereist
+Ongeldige gebruikersnaam of wachtwoord
+Kan geschiedenis bestand niet laden
+Kan geschiedenis bestand niet opslaan
+HTML Spider-standaardinstellingen
+HTML Spider
+Webpaginaboom
+Download website
+Downloadinstellingen webpagina
 Start downloaden
 Stop downloaden
 Plan downloaden
 Verwijderen
-Open web pagina in browser
+Open webpagina in browser
 Start downloaden automatisch
-Web site (pagina) URL:
-Bestanden:
+Website(pagina)-URL
+Bestanden
 Downloads ook verwijderen?
-Kan lijst met web pagina's niet laden.
-Kan lijst met web pagina's niet opslaan.
-URL van web pagina of HTTP server waarvan je wilt downloaden:
-URL van web pagina of HTTP server vanaf waar download is gestart:
-Mapnaam voor opslaan van downloads:
-Uitvoer map:
-Web pagina's
+Kan lijst met webpagina's niet laden
+Kan lijst met webpagina's niet opslaan
+URL van webpagina of HTTP-server waarvan u wilt downloaden
+URL van webpagina of HTTP-server vanaf waar download is gestart
+Mapnaam voor opslaan van downloads
+Uitvoermap:
+Webpagina's
 Pagina's
-Extensies van web pagina bestanden met HTML code:
-Download web pagina stijlen.
-Download web pagina's vanaf andere sites.
+Extensies van webpaginabestanden met HTML code:
+Download webpagina-stijlen
+Download webpagina's vanaf andere sites
 Afbeeldingen
-Download afbeeldingen.
-Download afbeeldingen die koppelen naar andere sites.
-Download diepte:
-Extensies van web pagina bestanden met HTML code. Web pagina's worden gescand naar koppelingen van afbeeldingen en andere pagina's om te downloaden.
-Indien aangevinkt, zullen ook web pagina's stijlen (CSS) worden gedownload. Aanbevolen.
-Indien uitgevinkt, zullen geen web pagina's van andere sites worden gedownload. Bijvoorbeeld, download is gestart van http://example.com/, dan wordt http://othersite.com/some.html niet gedownload, maar http://example.com/some.html wel.
-Indien aangevinkt, zullen ook web pagina afbeeldingen worden gedownload.
-Indien uitgevinkt, zullen geen web pagina afbeeldingen worden gedownload die koppelen naar andere sites.
-Diepte van downloaden. Bijvoorbeeld, download is gestart van http://ex.com/index.html. Er is een koppeling van http://ex.com/index.html naar http://ex.com/some.html. De diepte van http://ex.com/some.html is dan 1. Met diepte ingesteld op 0 wordt enkel de inhoud van de startpagina gedownload.
-Download bestanden van web pagina's.
-Download bestanden van andere sites.
-Verwijder bestanden met extensie:
-Schakelaar:
-Download.
-Download niet.
+Download afbeeldingen
+Download afbeeldingen die gekoppeld zijn aan andere sites
+Downloaddiepte:
+Extensies van webpagina bestanden met HTML-code. Web pagina's worden gescand op koppelingen van afbeeldingen en andere pagina's om te downloaden.
+Indien aangevinkt, zullen ook webpagina's-stijlen (CSS) worden gedownload. Aanbevolen.
+Indien uitgevinkt, zullen geen webpagina's van andere sites worden gedownload. Bijvoorbeeld: download is gestart van http://example.com/, dan wordt http://othersite.com/some.html niet gedownload, maar http://example.com/some.html wel
+Indien aangevinkt, zullen ook webpagina-afbeeldingen worden gedownload
+Indien uitgevinkt, zullen geen webpagina-afbeeldingen worden gedownload die gekoppeld zijn aan andere sites
+Diepte van downloaden. Bijvoorbeeld: download is gestart van http://ex.com/index.html. Er is een koppeling van http://ex.com/index.html naar http://ex.com/some.html. De diepte van http://ex.com/some.html is dan 1. Met diepte ingesteld op 0 wordt alleen de inhoud van de startpagina gedownload
+Download bestanden van webpagina's
+Download bestanden van andere sites
+Verwijder bestanden met extensie
+Schakelaar
+Download
+Download niet
 Bestanden met extensies:
-Vink dit aan om bestanden te downloaden van web pagina's.
-Vink dit aan om bestanden te downloaden van andere sites.
-Vink dit aan om bestanden met de aangeduide extensies te negeren.
-Indien aangevinkt worden bestanden met onderstaande extensies gedownload.
-Indien aangevinkt worden bestanden met onderstaande extensies NIET gedownload.
+Aanvinken om bestanden te downloaden van web pagina's
+Aanvinken om bestanden te downloaden van andere sites
+Aanvinken om bestanden met de aangeduide extensies te negeren
+Indien aangevinkt worden bestanden met onderstaande extensies gedownload
+Indien aangevinkt worden bestanden met onderstaande extensies NIET gedownload
 Exporteer instellingen
 Importeer instellingen
-Starten Regedit.exe mislukt.
-Er is een fout opgetreden tijdens proberen instellingen te exporteren.
-Er is een fout opgetreden tijdens proberen instellingen te importeren.
-FDM register bestanden.
-Verwijderen van afbeeldingen op extensie:
+Uitvoeren Regedit.exe mislukt
+Er is een fout opgetreden tijdens poging instellingen te exporteren
+Er is een fout opgetreden tijdens poging instellingen te importeren
+FDM registerbestanden
+Verwijderen van afbeeldingen op extensie
 Afbeeldingen met de extensies:
-Vink dit aan om afbeeldingen met aangeduide extensies te negeren.
-Indien aangevinkt worden afbeeldingen met onderstaande extensies gedownload.
-Indien aangevinkt worden afbeeldingen met onderstaande extensies NIET gedownload.
-Dit niet downloaden en verwijder.
-Server ondersteunt geen downloads hervatten. Herstart vanaf het begin.
-URL openen is mislukt.
-Jammer, onverwachte fout is opgetreden tijdens proberen te schrijven in het register.
-Bedankt voor uw registratie! Herstart FDM.
-Download met Free Download Manager.
-Download web site met Free Download Manager.
-Voeg FDM toe aan Internet Explorer context menu.
-Vink dit aan om de items "Download met Free Download Manager" en "Download web site met Free Download Manager" aan Internet Explorer context menu toe te voegen (menu verschijnt bij rechter muisklik).
-Verlaag de bandbreedte tijdens surf (browser) activiteit.
-Verlaag met één niveau.
-Activeer de Lichte modus.
-Vink dit aan om het gebruik van de bandbreedte automatisch te verlagen tijdens browsen op het Internet. Hierdoor blijft browsen veel sneller tijdens downloaden met FDM.
-Bandbreedte gebruik modus wordt verlaagd met één niveau. Zwaar->Medium, Medium->Licht.
-Bandbreedte gebruik modus wordt veranderd naar Licht.
-Geldig voor:
-Geldig voor sub domeinen:
-Vink dit aan om dit gegeven te gebruiken voor downloaden via HTTP.
-Vink dit aan om dit gegeven te gebruiken voor downloaden via HTTPS.
-Vink dit aan om dit gegeven te gebruiken voor downloaden via FTP.
-Vink dit aan om dit gegeven te gebruiken voor downloaden van sub domein servers. Bijvoorbeeld, voor de site: "http://site.com" is dit: "http://some.site.com".
-Duid minstens één protocol aan AUB.
+Negeer afbeeldingen met aangeduide extensies
+Afbeeldingen met onderstaande extensies worden gedownload
+Afbeeldingen met onderstaande extensies worden NIET gedownload
+Niet downloaden en verwijderen
+Server ondersteunt geen downloads hervatten. Herstart vanaf het begin
+URL openen is mislukt
+Helaas, onverwachte fout is opgetreden tijdens poging te schrijven in het register.
+Bedankt voor uw registratie! Herstart FDM
+Download met Free Download Manager
+Download website met Free Download Manager
+Voeg FDM toe aan Internet Explorer's context menu
+Vink dit aan om de items "Download met Free Download Manager" en "Download website met Free Download Manager" aan Internet Explorer's contextmenu toe te voegen (menu verschijnt bij rechter muisklik)
+Verlaag de bandbreedte tijdens surf(browser)activiteit
+Verlaag met één niveau
+Activeer de Lichte modus
+Vink dit aan om het gebruik van de bandbreedte automatisch te verlagen tijdens browsen op het Internet. Hierdoor blijft browsen veel sneller tijdens downloaden met FDM
+Bandbreedtemodus wordt verlaagd met één niveau. Zwaar -> Medium, Medium -> Licht
+Bandbreedtemodus wordt veranderd naar Licht
+Geldig voor
+Geldig voor subdomeinen
+Vink dit aan om te downloaden via HTTP
+Vink dit aan om te downloaden via HTTPS
+Vink dit aan om te downloaden via FTP
+Vink dit aan om te downloaden van subdomeinservers. Bijvoorbeeld, voor de site: "http://site.com" is dit: "http://some.site.com"
+Geef minstens één protocol aan AUB
 Maximum aantal actieve downloads:
-Vink dit aan als je het maximum aantal gelijktijdige actieve downloads wilt beperken.
-Herstart download.
-Maak een extra stuk.
-Stop een stuk.
+Beperk het maximum aantal gelijktijdig actieve downloads 
+Herstart download
+Maak een extra sectie
+Stop een sectie
 ; Context: [section x] - Stopped
 Gestopt
 ; Tray menu
 Opvangbak
 ;
-Kan Opera Plugin map niet vinden. Wil je deze handmatig aanduiden?
-Kan Netscape Plugin map niet vinden. Wil je deze handmatig aanduiden?
-Kan Opera monitor niet installeren.
-Kan Opera monitor niet verwijderen.
-Kan Netscape monitor niet installeren.
-Kan Netscape monitor niet verwijderen.
-Vink dit aan als FDM muisklikken in Opera moet opvangen.
-Vink dit aan als FDM muisklikken in Netscape moet opvangen.
+Kan Opera Plugin map niet vinden. Wilt u deze handmatig aanduiden?
+Kan Netscape Plugin map niet vinden. Wilt u deze handmatig aanduiden?
+Kan Opera monitor niet installeren
+Kan Opera monitor niet verwijderen
+Kan Netscape monitor niet installeren
+Kan Netscape monitor niet verwijderen
+Vink dit aan als FDM muisklikken in Opera moet opvangen
+Vink dit aan als FDM muisklikken in Netscape moet opvangen
 ; Create download dlg
-Vraag grootte op.
+Vraag grootte op
 ; Request a size of a download
-Vraag aan...
-Vraag grootte van een download aan de server.
+Opvragen...
+Vraag grootte van download aan de server
 Ja op alles
 Nee op alles
-Gedetailleerde log
-Indien aangevinkt laat FDM antwoorden van de server zien.
-Veranderingen worden actief na herstarten van de browser.
+Gedetailleerd logboek
+Indien aangevinkt laat FDM antwoorden van de server zien
+Veranderingen worden actief na herstarten van de browser
 Lijst van taken
 Lijst van bestanden
 Lijst van sites
 Lijst van pagina's
 Verwijderen downloads
 Opbouwen downloadlijst
-Maak groeps (batch) download
+Maak batch-download
 Van:
 Tot:
 Stap:
 Wildcard Bytes:
 Resultaten:
 Voorbeeld:
-Reeks start getal:
-Reeks eind getal:
-Reeks stap. Bijvoorbeeld, indien deze 10 is, dan wordt de reeks 0, 10, 20, ...
-Aantal wildcard Bytes. Bijvoorbeeld, als deze 1 is, dan wordt de reeks 1, 2, 3. Als deze 2 is, dan wordt het 01, 02, 03.
-Klik hier om de gegenereerde reeks te bekijken.
-Laat Internet Explorer toe te downloaden bij Annuleren.
-Vink dit aan als je wilt dat Internet Explorer het bestand download als er op Annuleren wordt geklikt in het "Maak downloads" dialoog venster.
-Het laatste getal in de reeks moet groter zijn dan het start getal.
+Start getal reeks
+Eind getal reeks
+Reeks-stap. Bijvoorbeeld: indien deze 10 is, dan wordt de reeks 0, 10, 20, ...
+Aantal wildcard Bytes. Bijvoorbeeld, als deze 1 is, dan wordt de reeks 1, 2, 3. Als deze 2 is, dan wordt het 01, 02, 03
+Klik hier om de gegenereerde reeks te bekijken
+Laat Internet Explorer toe te downloaden bij Annuleren
+Vink dit aan als u wilt dat Internet Explorer het bestand download als er op Annuleren wordt geklikt in het "Maak downloads" dialoog venster
+Het laatste getal in de reeks moet groter zijn dan het startgetal
 Gebruik (*) in de URL om het sjabloon van de URL aan te duiden.
-Maak een extensie als het bestand er geen heeft:
-Vink dit aan om een specifieke extensie te maken voor het bestand dat er geen heeft. Bijvoorbeeld als de bestandsnaam "bestand" is en je hebt "txt" aangeduid, dan wordt het resultaat "bestand.txt".
-Laat grootte alleen in Bytes zien.
-Vink dit aan om alle groottes in Bytes te laten zien in plaats van kiloBytes of MegaBytes.
-Controleren op virussen.
+Maak een extensie als het bestand er geen heeft
+Vink dit aan om een specifieke extensie te geven aan het bestand dat er geen heeft. Bijvoorbeeld als de bestandsnaam "bestand" is en u hebt "txt" aangegeven, dan wordt het resultaat "bestand.txt"
+Laat grootte alleen in Bytes zien
+Laat alle groottes in Bytes te laten zien in plaats van KiloBytes of MegaBytes
+Controleren op virussen
 Opties:
 Extensies:
-Vink dit aan om gedownloade bestanden automatisch op virussen te controleren.
-Geef hier de naam van het Antivirus programma:
-Geef hier de argumenten voor het Antivirus programma:
-Geef hier de extensies van de downloads die moeten gecontroleerd worden:
-Geef de Antivirus naam:
+Laat gedownloade bestanden automatisch op virussen controleren
+Geef hier de naam van het Antivirus-programma
+Geef hier de argumenten voor het Antivirus programma
+Geef hier de extensies van de  te controleren downloads aan 
+Geef de Antivirus-programma aan
 De naam is ongeldig. Controleren AUB.
-Starten Antivirus.
-Schakel taak uit na uitvoering.
-Verwijder taak na uitvoering.
-Vink dit aan om de taak automatisch uit te schakelen na uitvoering.
-Vink dit aan om de taak automatisch te verwijderen na uitvoering.
+Starten Antivirus
+Schakel taak uit na uitvoering
+Verwijder taak na uitvoering
+Schakel taak automatisch uit na uitvoering
+Verwijder taak automatisch na uitvoering
 Ga
 Terug
-Genereer automatisch een bestandsnaam.
-Vink dit aan om automatisch een bestandsnaam te genereren.
-Opslaan onder de "htm" extensie.
-Vink dit aan om alle web pagina's op te slaan onder een "htm" extensie.
-Klik op deze knop om de gemiddelde grootte van alle downloads te berekenen.
-Bewaar de mapstructuur van de server.
-Vink dit aan om de originele mapstructuur van de server te behouden. Anders worden alle bestanden van de server in één map opgeslagen.
-Je hebt een andere map aangeduid. Deze map als standaard voor deze groep instellen? Je kunt de standaard map ook veranderen in de eigenschappen van de groep.
+Genereer automatisch een bestandsnaam
+Vink aan om automatisch een bestandsnaam te genereren
+Opslaan onder de "htm"-extensie
+Sla alle webpagina's op met een "htm" extensie
+Klik om de gemiddelde grootte van alle downloads te berekenen
+Bewaar de mapstructuur van de server
+Behoud de originele mapstructuur van de server, anders worden alle bestanden van de server in één map opgeslagen
+U hebt een andere map aangegeven. Deze map als standaard voor deze groep instellen? U kunt de standaardmap ook veranderen in de eigenschappen van de groep
 ; === ADDED LINES ===
 Download met deze URL bestaat reeds. Wat nu?
 Uitvoeren
@@ -796,160 +801,160 @@ Start het gedownloade bestand
 Versie
 Klik hier om ons te bereiken
 Klik hier om de laatste versie te downloaden
-Waarschuwing: dit computer programma is beschermd door copyright wetgeving en internationale verdragen. Niet toegelaten reproductie of verdeling van dit programma, of een deel ervan, kan resulteren in strenge burgerlijke en strafrechterlijke straffen, en zal zo ver mogelijk vervolgd worden als wettelijk toegelaten is.
+Waarschuwing: dit computerprogramma is beschermd door copyright-wetgeving en internationale verdragen. Ongeoorloofde reproductie of verspreiding van dit programma, of een deel ervan, kan resulteren in zowel civielrechtelijke als strafrechtelijke vervolging.
 ; === new version ===
-Download alles met Free Download Manager.
+Download alles met Free Download Manager
 Voeg lijst met downloads toe
 Verwijder keuze
-Dit is de lijst met toe te voegen URL's:
-Klik op deze knop om alle aangeduide URL's te verwijderen van de lijst.
-Kan Mozilla Firefox Plugin map niet vinden. Wil je deze handmatig aanduiden?
-Kan Mozilla Firefox monitor niet installeren.
-Kan Mozilla Firefox monitor niet verwijderen.
-Vink dit aan als FDM muisklikken in Mozilla Firefox moet afvangen.
-Download selectie met Free Download Manager.
+Dit is de lijst met toe te voegen URL's
+Klik op deze knop om alle aangeduide URL's te verwijderen uit de lijst
+Kan Mozilla Firefox Plugin map niet vinden. Wilt u deze handmatig aangeven?
+Kan Mozilla Firefox monitor niet installeren
+Kan Mozilla Firefox monitor niet verwijderen
+FDM-muisklikken in Mozilla Firefox afvangen
+Download selectie met Free Download Manager
 Starten
-Web sites
-Lopende downloads
-Er zijn nu geen lopende downloads.
-Aanduidingen
-Gebruik "ballonnen" in systeemvak.
-Tijdsverloop
-Vink dit aan om systeemvak "ballon" aanduidingen te activeren als een download stopt of eindigt. Opmerking: Dit werkt enkel bij Windows 2000 / XP en hoger.
-Sluit automatisch de "ballon" na dit tijdsverloop.
+Websites
+Downloaden ...
+Er zijn nu geen lopende downloads
+Berichten
+Gebruik "ballonnen" in systeemvak
+Tijdsduur
+Activeer "ballon"-berichten in systeemvak als een download stopt of eindigt. Opmerking: Dit werkt alleen bij Windows 2000 / XP en hoger
+Sluit automatisch de "ballon" na dit tijdsverloop
 Spiegels
-Zoek automatisch naar spiegels voor URL.
-Maximum aantal spiegel sites:
-Bereken spiegel's snelheid.
-Herbereken de snelheid elke:
-Kies deze knop om FDM automatisch te laten zoeken naar spiegel sites voor elke download.
-Beperk het aantal spiegel sites per download.\nHierdoor vermindert de rekentijd voor de spiegelsnelheid.
-Kies deze knop om FDM de snelheid van elke spiegelserver te laten berekenen.
-Herbereken automatisch de spiegelsnelheid na het aangeduide tijdsverloop.
-Niet zoeken als bestand kleiner is dan:
-FDM zal geen spiegels zoeken als de bestandsgrootte kleiner is dan hier opgegeven.
-Zoek niet als de bestandsgrootte onbekend is (aanbevolen).
-Voeg spiegel site toe.
-Zoek spiegel sites.
-Voeg handmatig een spiegel URL toe voor deze download.
-Zoek naar spiegel URL's voor deze download met FileSearching.COM
-Lijst met spiegel URL's:
-Server snelheid:
-Wordt gebruikt:
-Meet spiegel's snelheid.
-Meet spiegelserver snelheid.
-Downloads Info.
+Zoek automatisch naar spiegels voor URL
+Maximum aantal spiegelsites
+Bereken snelheid spiegel
+Herbereken de snelheid elke
+Laat FDM automatisch zoeken naar spiegelsites voor elke download
+Beperk het aantal spiegelsites per download.\nHierdoor vermindert de rekentijd voor de spiegelsnelheid
+Kies deze knop om FDM de snelheid van elke spiegelserver te laten berekenen
+Herbereken automatisch de spiegelsnelheid na het angegeven tijdsverloop.
+Niet zoeken als bestand kleiner is dan
+FDM zal geen spiegels zoeken als de bestandsgrootte kleiner is dan hier opgegeven
+Zoek niet als de bestandsgrootte onbekend is (aanbevolen)
+Voeg spiegelsite toe
+Zoek spiegelsites
+Voeg handmatig een spiegel-URL toe voor deze download
+Zoek naar spiegel-URL's voor deze download met FileSearching.COM
+Lijst met spiegel-URL's
+Serversnelheid
+Wordt gebruikt
+Meet spiegel's snelheid
+Meet spiegelserver's snelheid
+Verloop download
 Wachten...
-Spiegel URL voor download.
-Bestand groter dan 2GB. Dergelijke downloads worden alleen ondersteund via FTP.
+Spiegel-URL voor download.
+Bestand groter dan 2GB. Dergelijke downloads worden alleen ondersteund via FTP
 ;
 ;
 ; #NEW LINES (BUILDS NEWER THAN 195)#
 ;
 ;
 ; BEGIN: New Download page
-Nieuwe Download
-Bepaal automatisch de groep voor de download.
-Zet groep op:
-Sla download op in de map eigen aan de groep.
-Vink dit aan als de download groep moet bepaald worden door de bestandsextensie of door de instellingen van de Site Beheerder.
-Stel de standaard groep handmatig in.
-Vink dit aan als de download moet opgeslagen worden in de standaard map van de groep (zie eigenschappen van de groep).
-Stel de standaard uitvoer map handmatig in.
+Nieuwe dld
+Bepaal automatisch de groep voor de download
+Instellingen voor groep
+Sla download op in de bij de groep behorende map
+Downloadgroep moet bepaald worden door de bestandsextensie of door de instellingen van de Sitebeheerder
+Stel de standaardgroep handmatig in
+Download moet opgeslagen worden in de standaardmap van de groep (zie eigenschappen van de groep)
+Stel de standaard uitvoermap handmatig in
 ; END
 ; BEGIN: Monitoring page
-Stille bewaking.
-Vink dit aan als de "Maak downloads" dialoog niet moet getoond worden als download toegevoegd wordt vanuit browser.
-Aanpassen
-Kies welke menu onderdelen in de context menu van Internet Explorer moeten komen.
+Stille bewaking
+De "Maak downloads" dialoog moet niet getoond worden als download toegevoegd wordt vanuit browser
+Bewerken
+Kies welke menu-onderdelen in het contextmenu van Internet Explorer moeten komen
 ; END
-Kies menu onderdelen om te tonen.
-Minstens één menu onderdeel moet gekozen worden.
-Gebruik geluiden.
-Kies deze knop als FDM geluid moet afspelen bij selecte gebeurtenissen (Bijv. als de download compleet is).
-Kies geluid voor elke gebeurtenis.
+Kies menu-onderdelen om te tonen
+Minstens één menu-onderdeel moet gekozen worden
+Gebruik geluiden
+FDM moet geluid moet afspelen bij selecte gebeurtenissen (Bijv. als de download compleet is)
+Kies geluid voor elke gebeurtenis
 ; BEGIN : Customize sounds dialog
 Pas geluiden aan
 Kies geluid
 Verwijder
 Test
-Lijst van FDM gebeurtenissen en bijpassende geluiden. Hier kun je FDM instellen om een geluid te spelen bij een gebeurtenis.
-Download toegevoegd - speel geluid als één of meer downloads toegevoegd worden aan de lijst.
-Download compleet - speel geluid als download volledig gelukt is.
-Download mislukt - speel geluid als een fout gebeurt tijdens de download van een bestand.
-Verbinding geslaagd - speel geluid als "Breng inbelverbinding tot stand" door taakplanner gelukt is.
-Verbinding mislukt - speel geluid als "Breng inbelverbinding tot stand" door taakplanner mislukt is.
-Stel geluid in voor gekozen gebeurtenis.
-Speel geen geluid als de gekozen gebeurtenis zich voordoet.
+Lijst van FDM-gebeurtenissen en bijpassende geluiden. Hier kunt u FDM instellen om een geluid te laten horen bij een gebeurtenis
+Download toegevoegd - laat geluid horen als één of meer downloads toegevoegd worden aan de lijst
+Download compleet - laat geluid horen als download volledig gelukt is
+Download mislukt - laat geluid horen als zich een fout voordoet tijdens het downloaden van een bestand
+Verbinding geslaagd - laat geluid horen als "Breng inbelverbinding tot stand" door taakplanner gelukt is
+Verbinding mislukt - laat geluid horen als "Breng inbelverbinding tot stand" door taakplanner mislukt is
+Stel geluid in voor gekozen gebeurtenis
+Laat geen geluid horen als de gekozen gebeurtenis zich voordoet
 Test gekozen geluid.
-Gebeurtenis:
+Gebeurtenis
 Geluidsbestand:
-Geen geluid.
-Download toegevoegd.
-Download voltooid.
-Download mislukt.
-Verbinding geslaagd.
-Verbinding mislukt.
-Geluidsbestanden:
+Geen geluid
+Download toegevoegd
+Download voltooid
+Download mislukt
+Verbinding geslaagd
+Verbinding mislukt
+Geluidsbestanden
 ; END
-Zoeken naar spiegel sites...
-Meet de spiegel's snelheid...
-Zoeken naar spiegel sites is al gedaan.
-Verbinden met zoek machine...
+Zoeken naar spiegelsites...
+Meten spiegel's snelheid...
+Zoeken naar spiegelsites is al gebeurd
+Verbinden met zoekmachine...
 Ophalen resultaten...
-Er zijn %d spiegel sites gevonden.
-Zoeken spiegel sites voltooid.
+Er zijn %d spiegelsites gevonden
+Zoeken spiegelsites voltooid
 Probeert een andere spiegel site...
-Er zijn geen spiegel sites gevonden.
+Er zijn geen spiegelsites gevonden
 Mislukt
-Spiegel site snelheid gemeten.
-; BEGIN: History page
+Spiegelsitesnelheid gemeten
+;BEGIN: History page
 Geschiedenis
-Sla geschiedenis op van koppelingen en mappen.
-Sla enkel geschiedenis op van mappen.
-Bewaar gegevens gedurende:
-Maximum aantal gegevens:
-Geschiedenis wissen.
+Sla geschiedenis op van koppelingen en mappen
+Sla alleen geschiedenis op van mappen
+Bewaar gegevens gedurende
+Maximum aantal gegevens
+Geschiedenis wissen
 FDM zal de geschiedenis van getypte koppelingen en mappen opslaan.
-FDM zal enkel de geschiedenis van mappen opslaan.
-FDM zal de gegevens uit de geschiedenis verwijderen die langer bestaan dan de aangeduide tijdsperiode.
-Maximum aantal gegevens in de geschiedenis. Als dit aantal groter is, zal FDM de oudste gegevens verwijderen.
-Verwijder alle geschiedenisgegevens.
+FDM zal alleen de geschiedenis van mappen opslaan
+FDM zal de gegevens uit de geschiedenis verwijderen die langer bestaan dan de aangeduide tijdsperiode
+Maximum aantal gegevens in de geschiedenis. Als dit aantal groter is, zal FDM de oudste gegevens verwijderen
+Verwijder alle geschiedenisgegevens
 ; END
 Importeer
 Exporteer
-Importeer downloadlijst.
-Exporteer downloadlijst.
+Importeer downloadlijst
+Exporteer downloadlijst
 Tekstbestanden
-Kan een bestand niet openen.
+Kan een bestand niet openn
 Exporteer alle downloads.
-Exporteer alle downloads in de lijst.
-Exporteer geselecteerde downloads.
-Complete downloads niet exporteren.
-Toevoegen als het bestand reeds bestaat.
-Ongeldige naam voor een groep. Gebruik geen / of \ symbolen.
-FDM afsluiten indien gereed.
+Exporteer alle downloads in de lijst
+Exporteer geselecteerde downloads
+Complete downloads niet exporteren
+Toevoegen als het bestand reeds bestaat
+Ongeldige naam voor een groep. Gebruik geen / of \ symbolen
+FDM afsluiten indien gereed
 ; BEGIN : Downloads History window
-Toegevoegd.
-Opgeslagen in:
+Toegevoegd
+Opgeslagen in
 ; END
 Prullenbak
 ; BEGIN: Recycle Bin
 Eigenschappen
-Prullenbak leegmaken.
+Prullenbak leegmaken
 ;END
 ;BEGIN: Recycle Bin properties
-Verwijderde downloads niet in Prullenbak plaatsen.
-Bewaar maximum:
+Verwijderde downloads niet in Prullenbak plaatsen
+Bewaar maximaal
 downloads
-Bewaar geen complete downloads.
-Vraag om bevestiging bij verwijderen downloads.
+Bewaar geen complete downloads
+Vraag om bevestiging bij verwijderen downloads
 Eigenschappen Prullenbak
-Vink dit aan als verwijderde downloads niet moeten bewaard worden in de Prullenbak.
-Vink dit aan als het aantal verwijderde downloads in de Prullenbak moet beperkt worden.
-Maximum aantal downloads in de Prullenbak.
-Vink dit aan als complete downloads niet in de Prullenbak moeten bewaard worden na verwijderen.
-Vink dit aan als FDM bevestiging moet vragen bij het verwijderen van een download.
+Verwijderde downloads moeten niet bewaard worden in de Prullenbak
+Het aantal verwijderde downloads in de Prullenbak moet beperkt worden
+Maximum aantal downloads in de Prullenbak
+Complete downloads moeten niet in de Prullenbak bewaard worden na verwijderen.
+FDM moet om bevestiging vragen bij het verwijderen van een download
 ;END
 Herstel
 Herstellen downloads...
@@ -960,61 +965,61 @@ Een week
 Een maand
 Aangepast...
 ; end
-Verwijder geschiedenis.
-Sla download geschiedenis op.
-Sla alléén de geschiedenis van complete downloads op.
-Kies deze optie als de geschiedenis van de downloads bewaard moet worden.
-Kies deze optie als alléén de geschiedenis van complete downloads bewaard moet worden.
-Instellingen voor download geschiedenis.
-Bouw de lijst met geschiedenis gegevens op...
+Verwijder geschiedenis
+Sla downloadgeschiedenis op
+Sla alléén de geschiedenis van complete downloads op
+De geschiedenis van downloads moet bewaard worden
+Alléén de geschiedenis van complete downloads moet bewaard worden
+Instellingen voor downloadgeschiedenis
+Opbouwen van lijst met geschiedenisgegevens...
 ; Download was deleted
 Is verwijderd
 Kies tijdsbereik
 Zoek
-Zoek volgende
-Zoek wat:
+Zoek verder
+Zoek naar
 ; BEGIN : Find dialog
-Zoek in:
-Lokale bestandsnaam:
-Duid hier aan wat moet gezocht worden.
-Zoek in bestandsdeel van URL.
-Zoek in volledige URL.
-Zoek in commentaar van download.
-Zoek in de naam en het pad van het gedownloade bestand op de lokale schijf.
-Stel geavanceerde zoekinstellingen in.
+Zoek in
+Lokale bestandsnaam
+Geef hier aan wat gezocht moet worden
+Zoek in bestandsdeel van URL
+Zoek in volledige URL
+Zoek in commentaar van download
+Zoek in naam en pad van het gedownloade bestand op de lokale schijf
+Geavanceerde zoekinstellingen
 ; ADVANCED settings
-Zoek waar
-Zoek in downloadlijst.
-Zoek in Download Geschiedenis.
-Zoek in opgegeven periode.
-Stel in:
-Zoek in Prullenbak.
-Zoek met opgegeven bestandsgrootte.
+Waar zoeken
+Zoek in downloadlijst
+Zoek in Downloadgeschiedenis
+Zoek in opgegeven periode
+Stel in
+Zoek in Prullenbak
+Zoek met opgegeven bestandsgrootte
 Minimaal
 Maximaal
 Zoek in downloadlijst.
-Zoek in Download Geschiedenis.
-Zoek enkel downloads binnen de opgegeven periode.
-Stel de periode in:
-Zoek in Prullenbak.
-Zoek enkel bestanden die binnen de opgegeven bestandsgrootten vallen.
-Minimum vereiste grootte:
-Maximum vereiste grootte:
+Zoek in downloadgeschiedenis.
+Zoek alleen downloads binnen de opgegeven periode
+Stel de periode in
+Zoek in Prullenbak
+Zoek alleen bestanden die binnen de opgegeven bestandsgrootte vallen
+Minimum vereiste grootte
+Maximum vereiste grootte
 Zoek in groep:
-Kies de groep waar het zoeken moet gebeuren.
+Kies de groep waarin het zoeken moet plaatsvinden
 ; END
 Zoeken naar download...
-Er zijn geen items gevonden.
-Er zijn geen items meer gevonden.
-Zoeken klaar.
-URL naar klembord.
+Er zijn geen items gevonden
+Er zijn geen verdere items gevonden
+Zoeken beëindigd
+URL naar klembord
 ZIP voorvertonen
-Minstens één bestand aanduiden.
-Het bestand dat je download is mogelijk een ZIP archief. Wil je het vooraf bekijken?
+Minstens één bestand aanduiden
+Het bestand dat u download is mogelijk een ZIP-archief. Wilt u het vooraf bekijken?
 Audio/Video voorvertonen
-Openen van het bestand mislukt.
-Onbekend media type.
-Installeer DirectX 8.0 of hoger om dit te gebruiken. De recentste DirectX kun je downloaden van www.microsoft.com.
+Openen van het bestand mislukt
+Onbekend media-type
+Installeer DirectX 8.0 of hoger om dit te gebruiken. De recentste DirectX kunt u downloaden van www.microsoft.com
 Media Info
 Grootte:
 Beschikbaar:
@@ -1024,301 +1029,639 @@ Afspelen
 Pauze
 Filter
 Extensies [gescheiden door spaties, bijv. zip rar arj]:
-Verwijder bestanden met deze extensies:
-Behoud enkel bestanden met deze extensies:
-Argumenten reeks bevat geen %file% macro. Deze macro is noodzakelijk opdat uw antivirus programma zou weten welke bestanden te controleren.
-Toch verder doen?
+Verwijder bestanden met deze extensies
+Behoud alleen bestanden met deze extensies
+Argumentenreeks bevat geen %file% macro. Deze macro is noodzakelijk omt uw antivirusprogramma telaten weten welke bestanden te controleren
+Toch verder gaan?
 Waarschuwing
-Verberg onvolledige downloads.
-Voeg commentaar toe aan de bestandsnaam indien gereed.
-Sla geen serverpagina's op.
-Vink dit aan als je geen serverpagina's op uw computer wil bewaren, doch enkel bestanden en afbeeldingen.
-Gebruik ZIP voorvertoning.
-Vink dit aan als je de inhoud van het ZIP archief vooraf wil bekijken bij het begin van het downloaden om slechts een deel van het archief te downloaden.
+Verberg onvolledige downloads
+Voeg commentaar toe aan de bestandsnaam indien gereed
+Sla geen serverpagina's op
+Vink dit aan als u geen serverpagina's op uw computer wilt bewaren, maar alleen bestanden en afbeeldingen
+Gebruik ZIP voorvertoning
+Inhoud van ZIP-archief vooraf bekijken bij het begin van het downloaden om slechts een deel van het archief te downloaden
 Volume:
-Start download automatisch indien gereed.
-Vink dit aan als FDM elke nieuwe download automatisch moet starten.
-Controleer de te downloaden bestanden.
-Stel de alternatieve locaties (URL's) in voor deze download.
-Voortaan niet meer voorvertonen.
-Je hebt ZIP voorvertonen uitgeschakeld. Als je het wenst in te schakelen, ga naar Opties -> Download opties (Ctrl+O) -> Nieuwe Download tab, en vink "Gebruik ZIP voorvertoning" aan.
-Negeer lijst:
-Lijst met te negeren web pagina's bij het downloaden van een site.
+Start download automatisch indien gereed
+FDM moet elke nieuwe download automatisch starten
+Controleer de te downloaden bestanden
+Stel de alternatieve locaties (URL's) in voor deze download
+Voortaan niet meer voorvertonen
+U hebt ZIP voorvertonen uitgeschakeld. Als U het wenst in te schakelen, ga naar Opties -> Download opties (Ctrl+O) -> Nieuwe Download tab, en vink "Gebruik ZIP voorvertoning" aan
+Negeer lijst
+Lijst met te negeren web pagina's bij het downloaden van een site
 Submappen
 Toevoegen
-Negeer ook alle submappen.
+Negeer ook alle submappen
 ; Proxy tab new settings
-Gebruik terugrollen (rollback) na onderbroken verbindingen.
+Gebruik terugrollen (rollback) na onderbroken verbindingen
 Grootte voor terugrol:
 Bytes
-Vink deze optie aan als je de terugrol (rollback) wil inschakelen. Deze optie helpt de downloads beschermen tegen beschadiging.
-Grootte van de terugrol (rollback). Hoe groter, hoe veiliger de terugrol zal kunnen werken. Aanbevolen grootte is 3000 Bytes. Vergroot deze waarde als uw downloads nog beschadigd zijn.
+Vink deze optie aan als je de terugrol (rollback) wil inschakelen. Deze optie helpt de downloads te beschermen tegen beschadiging
+Grootte van de terugrol (rollback). Hoe groter, hoe veiliger de terugrol zal kunnen werken. Aanbevolen grootte is 3000 Bytes. Vergroot deze waarde als uw downloads nog steeds beschadigd zijn
 ; downloader options -> monitor tab
-Niet bewaken voor bestanden kleiner dan:
-Gebruik deze optie als FDM bestanden mag overslaan die kleiner zijn dan de aangeduide grootte.
+Niet bewaken bij bestanden kleiner dan
+Gebruik deze optie als FDM bestanden mag overslaan die kleiner zijn dan de aangeduide grootte
 kBytes
-Waarschuwing! De Prullenbak is te groot. Dit kan de prestaties merkelijk verminderen. Het is aan te raden de Prullenbak leeg te maken. Wil je dit doen?
-Niet meer controleren.
-Waarschuwing! De Download Geschiedenis is te groot. Dit kan de prestaties merkelijk verminderen. Het is aan te raden de Geschiedenis te wissen. Wil je dit doen?
-Server kan zijn mogelijkheid tot hervatten niet waarborgen. Antwoord is ongeldig.
-Kopieer naar klembord.
+Waarschuwing! De Prullenbak is te groot. Dit kan de prestaties aanmerkelijk verminderen. Aangeradem wordt de Prullenbak leeg te maken. Wilt u dat doen?
+Niet meer controleren
+Waarschuwing! De Downloadgeschiedenis is te groot. Dit kan de prestaties aanmerkelijk verminderen. Aangeraden wordt de geschiedenis te wissen. Wilt u dit doen?
+Server kan zijn mogelijkheid tot hervatten niet waarborgen. Antwoord is ongeldig
+Kopieer naar klembord
 ; general settings | skins page
 Weergaven
 Weergave
-Laat weergave toe zijn eigen pictogrammen te gebruiken.
-Laat weergave toe zijn eigen bitmap's te gebruiken.
+Laat weergave toe zijn eigen pictogrammen te gebruiken
+Laat weergave toe zijn eigen bitmap's te gebruiken
 ; default skin
 <standaard>
-NOTITIE: Wijzigingen zijn pas van toepassing na herstarten van Free Download Manager.
-Toon download info terwijl bezig.
+NOTITIE: Wijzigingen zijn pas van toepassing na herstarten van FDM
+Toon downloadinformatie tijdens het downloaden
 Sla bestanden over met extensies:
-Lijst met uitgezonderde bestandsextensies:
-Geen lopende downloads.
-Speel geluidsbestand als alle downloads afgerond zijn.
-Importeer lijst met URL's van het klembord.
+Lijst met uitgezonderde bestandsextensies
+Geen lopende downloads
+Speel geluidsbestand als alle downloads afgerond zijn
+Importeer lijst met URL's van het klembord
 Wachtwoorden
-Opties voor Netwerk Beheer
+Opties voor netwerkbeheer
 ; Save password dialog
 Wachtwoord opslaan?
-Free Download Manager kan het wachtwoord voor deze server opslaan zodat het niet bij elke download van deze server moet ingetikt worden.
+Free Download Manager kan het wachtwoord voor deze server opslaan zodat het niet bij elke download van deze server ingegeven hoeft te worden
 Dit wachtwoord opslaan?
-Vraag niet om enig wachtwoord op te slaan.
+Vraag niet om enig wachtwoord op te slaan
 ; Site Manager options | Passwords tab
-Gebruik Netwerk Beheer om mijn wachtwoorden op te slaan.
-Vraag mij om wachtwoorden op te slaan of niet.
-Vraag mij niet om wachtwoorden op te slaan.
-Verwijder alle wachtwoorden bij het afsluiten.
-Verwijder alle wachtwoorden.
+Gebruik Netwerkbeheer om mijn wachtwoorden op te slaan
+Vraag mij om wachtwoorden op te slaan of niet
+Vraag mij niet om wachtwoorden op te slaan
+Verwijder alle wachtwoorden bij het afsluiten
+Verwijder alle wachtwoorden
 ; Create new HTML Spider task
-Verwijder complete downloads automatisch (aanbevolen).
-Vink dit aan als de downloads van HTML Spin automatisch verwijderd moeten worden. Dit versnelt de download van grote sites.
-Wijzigingen zijn van toepassing na herstarten van Free Download Manager.
+Verwijder complete downloads automatisch (aanbevolen)
+Downloads van HTML Spin moeten automatisch verwijderd worden. Dit versnelt de download van grote sites
+Wijzigingen zijn van toepassing na herstarten van Free Download Manager
 Nieuwe Stijl
 Oude Stijl
-De mapnaam is ongeldig.
-Verberg zwevende vensters in volledig scherm modus.
-Vink dit aan als vlottende vensters moeten verborgen worden bij modus volledig scherm.
-was gepland om gestart te worden.
-Wil je het starten?
-Start de download als deze gereed is.
-Gebruik (*), (*A) of (*a) in de URL om het URL sjabloon aan te duiden.
-Spiegel zoek machine (site):
-Slaapstand.
-Stand-by.
-Onthoud mijn keuze.
-Stel voor om de standaardmap van de groep te wijzigen.
-Sla bestand op.
-Open bestand.
-Sla bestand op en open het.
-Download type:
-Snelkoppeling naar FDM.
-Snelkoppeling naar Free Download Manager.
+De mapnaam is ongeldig
+Programmavenster in volledig scherm tonen
+Vlottende vensters moeten verborgen worden bij modus volledig scherm
+was gepland om gestart te worden
+Wilt u het starten?
+Start de download als deze gereed is
+Gebruik (*), (*A) of (*a) in de URL om het URL-sjabloon aan te duiden
+Spiegelzoekmachine (site):
+Slaapstand
+Stand-by
+Onthoud mijn keuze
+Stel voor om de standaardmap van de groep te wijzigen
+Bestand opslaan
+Bestand openen
+Bestand opslaan en openen
+Wijze van downloaden:
+Snelkoppeling naar FDM
+Snelkoppeling naar Free Download Manager
 Beste gebruiker!
-Het programma Free Download Manager wordt je kosteloos ter beschikking gesteld. Je kunt het gratis gebruiken zo lang als je wilt.
-Nochtans, indien je Free Download Manager nuttig vindt, vragen we je ons te helpen het te verspreiden door de snelkoppeling ernaar op uw website te plaatsen. Zo zullen meer mensen horen over Free Download Manager.
-Dank bij voorbaat voor uw hulp,\nFree Download Manager ontwikkelingsteam.
-Herinner mij binnen 3 dagen.
-Herinner mij volgende keer als ik Free Download Manager start.
-Toon mij dit venster niet meer.
-Toon HTML code snelkoppeling.
+Het programma Free Download Manager wordt u kosteloos ter beschikking gesteld. U kunt het gratis gebruiken zo lang u wilt. 
+Nochtans, indien u Free Download Manager nuttig vindt, vragen we u ons te helpen het te verspreiden door de snelkoppeling ernaar op uw website te plaatsen. Zo zullen meer mensen horen over Free Download Manager.
+Dank bij voorbaat voor uw hulp,\nFree Download Manager ontwikkelingsteam
+Herinner mij binnen 3 dagen
+Herinner mij volgende keer als ik Free Download Manager start
+Toon dit venster niet meer
+Toon HTML code snelkoppeling
 HTML code snelkoppeling.
-Meer voorbeelden.
-Kopieer naar klembord.
+Meer voorbeelden
+Kopieer naar klembord
 Verberg
 ; "Traffic usage mode has been changed" window
-Bandbreedte modus is gewijzigd.
-Je hebt de netwerk bandbreedte modus gewijzigd.\nFree Download Manager heeft drie modi:
-In deze modus download Free Download Manager op maximumsnelheid. Dit is de meest agressieve modus.
-In deze modus download Free Download Manager met middelmatige snelheid. Met deze modus kan je surfen op het Internet en tegelijk met hoge snelheid downloaden.
-In deze modus download Free Download Manager op lage snelheid. Met deze modus kan je downloaden zonder merkbare vertraging op het netwerk.
+Bandbreedtemodus is gewijzigd
+U hebt de bandbreedtemodus gewijzigd.\nFree Download Manager heeft drie modi:
+In deze modus download Free Download Manager op maximumsnelheid. Dit is de meest agressieve modus
+In deze modus download Free Download Manager met middelmatige snelheid Met deze modus kun je surfen op internet en tegelijk met hoge snelheid downloaden
+In deze modus download Free Download Manager op lage snelheid. Met deze modus kan je downloaden zonder merkbare vertraging op het netwerk
 ;
-Hernoem bij herstarten.
+Hernoem bij herstarten
 Geef een waarde minder dan %d
 ; export/import downloads
-URL Bestandenlijst:
-Downloads Informatie Bestandenlijst.
+URL Bestandenlijst
+Download-Informatie-Bestandenlijst
 ;
-Exporteer opties.
+Exportopties
 ;
-Zet de bestandsdatum gelijk aan die gespecificeerd op de server.
-Zet de datum van een gedownload bestand gelijk aan de datum van het bestand op de (bron) server.
-Genereer een commentaar bestand.
-Genereer een commentaar bestand met de naam "*.dsc.txt".\n(waarin * de naam is van het gedownloade bestand) die een korte beschrijving bevat van het gedownloade bestand (commentaar + url + datum).\nDit bestand wordt alléén gegenereerd als een download voorzien is van commentaar.
-Dit bestand is gedownload van:
-Ontvang de bestand's datum niet van een server.
-Deze optie stelt je in staat om de snelheid van een FTP download te verhogen. Free Download Manager zal het SIZE commando gebruiken in plaats van het LIST commando.
-Géén log bijhouden van de downloads.
-Het inschakelen van deze optie zal Free Download Manager sneller laten starten, afsluiten en resulteert in een lagere belasting van het computergeheugen.
+Zet de bestandsdatum gelijk aan die gespecificeerd op de server
+Zet de datum van een gedownload bestand gelijk aan die op de (bron)server
+Genereer een commentaarbestand
+Genereer een commentaarbestand met de naam "*.dsc.txt".\n(waarin * de naam is van het gedownloade bestand) die een korte beschrijving bevat van het gedownloade bestand (commentaar + url + datum).\nDit bestand wordt alléén gegenereerd als een download voorzien is van commentaar
+Dit bestand is gedownload van
+Ontvang de bestandsdatum niet van een server
+Deze optie stelt u in staat om de snelheid van een FTP-download te verhogen. FDM zal SIZE gebruiken in plaats van het LIST-commando
+Géén logboek bijhouden van de downloads
+Het inschakelen van deze optie zal Free Download Manager sneller laten starten en afsluiten en resulteert in een lager geheugengebruik
 ;
-Exporteer download geschiedenis.
-Exporteer alle items.
-Exporteer alle items uit de lijst.
-Exporteer geselecteerde items.
-Exporteer alléén items over voltooide downloads.
+Exporteer downloadgeschiedenis
+Exporteer alle items
+Exporteer alle items uit de lijst
+Exporteer geselecteerde items
+Exporteer alléén items m.b.t. voltooide downloads
 ;
 HTML Bestanden.
 ;
-Free Download Manager Download Geschiedenis.
-URL van de download:
-Gedownload naar bestand:
-Grootte van het bestand:
-Download is voltooid.
-Download is verwijderd.
+FDM downloadgeschiedenis
+URL van de download
+Gedownload naar bestand
+Grootte van het bestand
+Download is voltooid
+Download is verwijderd
 ;
-Opgeslagen in:
-Bestand's grootte:
-Hervat ondersteuning:
-sluit dit dialoogvenster zodra de download is voltooid of gestopt.
+Opgeslagen in
+Bestandsgrootte
+Ondersteunt hervatten
+Sluit dit dialoogvenster zodra de download is voltooid of gestopt
 Open
-Wilt je dit venster opnieuw zien?
-Ja, ik wil dit venster zien bij elke download.
-Nee, toon dit venster niet meer.
-Ja, maar niet voor deze download.
-Gebruik maken van de SHIFT toets betekent dat deze download PERMANENT wordt verwijderd.\nWeet je het zeker?
-Kies groep:
-Stel de groep's bronmap in:
-Selecteer de groep's bronmap.\nWijzigingen zullen alléén worden toegepast op nieuwe downloads.
-Laatst gedownloade bestanden:
+Wilt u dit venster opnieuw zien?
+Ja, ik wil dit venster zien bij elke volgende download
+Nee, toon dit venster niet meer
+Ja, maar niet meer voor deze download
+Gebruik maken van de SHIFT-toets betekent dat deze download PERMANENT wordt verwijderd.\nWeet u het zeker?
+Kies groep
+Kies bronmap van groep
+Kies bronmap van groep.\nWijzigingen worden pas toegepast op nieuwe downloads
+Laatst gedownloade bestanden
 (leeg)
-Pauzeer alle downloads.
-Toon voortgangs venster voor downloads.
-Indien geselecteerd, toont FDM een speciaal venster met informatie voor elke actieve download.
+Pauzeer alle downloads
+Toon download-voortgangsvenster
+Indien geselecteerd, toont FDM een speciaal venster met informatie over elke actieve download
 ; general settings | misc page
 Wachttijden voor bevestigingen
 Start download
-Bepaal de manier van afsluiten:
-Wachttijd voor bevestiging "Gereedschap | Ophangen indien gereed" commando.
-Wachttijd voor bevestiging "Gereedschap | Afsluiten indien gereed" commando.
-Wachttijd voor bevestiging "Gereedschap | Computer uitzetten indien gereed" commando.
-Wachttijd om het gedownloade bestand te openen zodra de download voltooid is.
-Indien geactiveerd, zal FDM je vragen op welke manier "Gereedschap | Computer uitzetten indien gereed" commando uitgevoerd moet worden.
-Vraag niet om bevestiging.
+Bepaal de manier van afsluiten
+Wachttijd voor bevestiging commando "Extra | Ophangen indien gereed" 
+Wachttijd voor bevestiging commando "Extra | Afsluiten indien gereed" 
+Wachttijd voor bevestiging commando "Extra | Computer uitzetten indien gereed"
+Wachttijd om het gedownloade bestand te openen zodra de download voltooid is
+Indien geactiveerd, zal FDM vragen op welke manier het commando "Extra | Computer uitzetten indien gereed" uitgevoerd moet worden
+Vraag niet om bevestiging
 ; 5 seconds, 10 seconds, ...
 %d seconden
 Wacht op mijn bevestiging
-Negeer pagina's uit deze map:
-Download alléén pagina's uit deze map:
-Inclusief submappen.
-Negeer alle in deze map gevonden web pagina's.
-Download alléén in deze map gevonden web pagina's en negeer alle andere web pagina's.
-Gebruik deze optie als je wilt dat HTML Spin in de geselecteerde map en submappen gevonden web pagina's negeert (of juist download).
-Geef de hier de volledige URL op.\nBijvoorbeeld: "http://site.com/docs/".
+Negeer pagina's uit deze map
+Download alléén pagina's uit deze map
+Inclusief submappen
+Negeer alle in deze map gevonden webpagina's
+Download alléén in deze map gevonden webpagina's en negeer alle andere webpagina's
+Gebruik deze optie als u wilt dat HTML-Spider in de geselecteerde map en submappen gevonden webpagina's negeert (of juist download)
+Geef de hier de volledige URL op.\nBijvoorbeeld: "http://site.com/docs/"
 Type
 Negeer
 Alléén
 Opsommingreeks
 Toewijzen
-Hier kan je de opsommingreeks opgeven voor een groeps download.\nBijv. 1-100, of 1-100s2w3.
+Hier kunt u de opsommingreeks opgeven voor een groepsdownload.\nBijv. 1-100, of 1-100s2w3
 Klik op deze knop om de opsommingreeks toe te wijzen via het dialoogvenster.
-Enkel nummer
-Nummer
-Opsommingreeks toewijzen
+Enkel getal
+Getal
+Getallenreeksreeks toewijzen
 Fout in syntaxis.
 Archief uitpakken
 Uitpakken
 Uitpakken
-Doel map
-Uitpakken mislukt. Het bestand's type is onbekend.
-Download verkeer deze maand:\n(%s werd vorige maand gedownload).
-Totale download snelheid:
-Deactiveer "Gereedschap | ... indien gereed" taak na uitvoer.
-Indien geactiveerd, wordt elke "Gereedschap | ... indien gereed" taak automatisch gedeactiveerd.\nDus wordt de taak maar één keer gestart.
+Doelmap
+Uitpakken mislukt. Het bestandstype is onbekend
+Downloadverkeer deze maand:\n(%s werd vorige maand gedownload).
+Totale downloadsnelheid
+Deactiveer "Extra | ... indien gereed"
+Indien geactiveerd, wordt elke "Extra | ... indien gereed"-taak automatisch gedeactiveerd.\nDus wordt de taak maar één keer gestart
 ; %s
 ; 1st - name of a file
 ; 2nd, 3rd - file info (size + date).
-Bestand "%s" bestaat al.\n\nWil je het vervangen\n(%s)\n\nmet het nieuwe\n(%s)?
+Bestand "%s" bestaat al.\n\nWilt u het vervangen\n(%s)\n\ndoor het nieuwe\n(%s)?
 Ja op alles
 Overslaan
 Alles overslaan
 Type van archief is onbekend
-Bezoek web site
+Bezoek website
 Installeer pakket
-Standaard ondersteund FDM alleen ZIP, RAR en ARJ archieven.\nU kunt de lijst met ondersteunde archieven uitbreiden door het installeren van het aanvullende archief ondersteuning pakket voor Free Download Manager (Internet verbinding is noodzakelijk).
-FDM archief ondersteuning pakket
+Standaard ondersteunt FDM alleen ZIP, RAR en ARJ archieven.\nU kunt de lijst met ondersteunde archieven uitbreiden door het installeren van het aanvullende archief-ondersteuningspakket voor Free Download Manager (internetverbinding is noodzakelijk)
+FDM'archiveringspakket
 Verplaats omhoog
 Verplaats omlaag
 Verplaats geselecteerde download(s) omhoog
 Verplaats geselecteerde download(s) omlaag
-Controleer of bestand volledig is.
-Sommige web sites voorzien in speciale controlesommen voor voor download beschikbare bestanden zodat gebruikers kunnen controleren of het gedownloade bestand niet is beschadigd. Je kunt deze controlesom hier opgeven zodat FDM het bestand op volledigheid kan controleren.
+Controleer of bestand volledig is
+Sommige websites voorzien in speciale controlesommen voor voor download beschikbare bestanden zodat gebruikers kunnen controleren of het gedownloade bestand niet is beschadigd. U kunt deze controlesom hier opgeven zodat FDM het bestand op volledigheid kan controleren
 Algoritme
 Controlesom
 Kopieer van klembord
 Controleer
 Bezig met het berekenen van de controlesom voor het gedownloade bestand...
-Bestand's volledigheid controle gelukt.
-Bestand's volledigheid controle mislukt.
-Bestand's volledigheid controle is geslaagd.\nEr zijn geen fouten gevonden in het gedownloade bestand.
-Bestand's volledigheid controle is voltooid.\nEr zijn fouten gevonden: Het bestand is beschadigd gedurende het download proces. De download moet opnieuw worden gestart.
-Toon dit venster niet weer als de controle gelukt is.
-Kan het uitvoerbare bestand van het gekozen antivirus programma niet vinden.\nGeef deze AUB. zelf op.
-Bestand's groottes zijn niet gelijk.
-Opslaan als:\n(Voorbeeld: bestand(*)(*A)(*a).txt).
-Onjuist 'Opslaan als' sjabloon opgegeven.\nZorg ervoor dat het correspondeert met het URL sjabloon.
-Indien gereed.
-Indien gereed (alles compleet of met fouten).
+Volledigheidcontrole gelukt
+Volledigheidcontrole mislukt
+Volledigheidcontrole is geslaagd.\nEr zijn geen fouten gevonden in het gedownloade bestand
+Volledigheid controle is voltooid.\nEr zijn fouten gevonden Het bestand is beschadigd gedurende het downloadproces. De download moet opnieuw worden gestart
+Toon dit venster niet weer als de controle gelukt is
+Kan het uitvoerbare bestand van het gekozen antivirusprogramma niet vinden.\nGeef deze AUB zelf op
+Bestandsgroottes zijn niet gelijk
+Opslaan als:\n(Voorbeeld: bestand(*)(*A)(*a).txt)
+Onjuist 'Opslaan als' sjabloon opgegeven.\nZorg ervoor dat het correspondeert met het URL-sjabloon
+Indien gereed
+Indien gereed (alles compleet of met fouten)
 Applicaties
-Wat's Dit?!
+Wat doet deze instelling?
 Opinies
 ;
-Joehoe!
-Free Download Manager (FDM) is een van de meest populaire download programma’s ter wereld, met miljoenen actieve gebruik(st)ers, maar nu we bekend zijn willen we meer!
-Als je FDM net zo bruikbaar en goed vind als wij, zouden we je vriendelijk willen verzoeken onze bekendheid te vergroten door een verwijzing naar ons te maken in je blog, website of online gemeenschap, zoals MySpace / MSN.
+Geachte FDM-gebruiker,
+Free Download Manager (FDM) is een van de meest populaire downloadprogramma’s ter wereld, met miljoenen actieve gebruik(st)ers, maar nu we bekend zijn willen we meer!
+Als u FDM net zo bruikbaar en goed vindt als wij, zouden we u vriendelijk willen verzoeken onze bekendheid te vergroten door een verwijzing naar ons te maken in uw blog, website of online gemeenschap, zoals MySpace / MSN.
 ; %s will be replaced with "FDM buzz"
-Officieel werd %s gestart op 16 augustus 2006. Ons doel is om FDM het snelst verspreidende internet tool te maken na FireFox!
+Officieel werd %s gestart op 16 augustus 2006. Ons doel is om FDM het snelst verspreidende internet-tool te maken na FireFox!
 FDM buzz
 ; %s will be replaced with "blog"
-Je kunt FDM’s voortgang zien in onze %s.
+U kunt FDM’s voortgang zien in onze %s
 blog
-Alvast bedankt voor jullie hulp,\nhet Free Download Manager development team.
-Toon mij dit venster niet meer, ik heb ’n goed geheugen.
-Sluit je aan bij de buzz.
-Nee bedankt.
-FDM Gemeenschap
-Overschakelen naar "Opinies" na download.
-Indien ingeschakeld, wordt het "Opinies" tabblad automatisch geopend na elke download.
-Modificeer Internet Explorer's netwerk identificatie.
-Indien actief verteld deze optie de web sites die je bezoekt dat je gebruik maakt van Free Download Manager. Let erop dat sommige sites het gebruik van downloadmanagers blokkeren.
+Alvast bedankt voor uw hulp,\nhet Free Download Manager ontwikkelingsteam 
+Toon dit venster niet meer
+Sluit u aan bij de buzz
+Nee bedankt
+Opinies
+Overschakelen naar "Opinies" na download
+Indien ingeschakeld, wordt het "Opinies"-tabblad automatisch geopend na elke download
+Wijzig Internet Explorer's netwerk-identificatie
+Indien actief vertelt deze optie de websites die u bezoekt dat u gebruik maakt van Free Download Manager. Let erop dat sommige sites het gebruik van downloadmanagers blokkeren
 Kwaadaardig?
-Controleer of iemand van de Free Download Manager gebruik(st)ers gerapporteerd heeft dat deze download virussen/adware/spyware/ed. bevat.
-Oké, niemand van de Free Download Manager gebruik(st)ers heeft aangegeven dat deze download schadelijk is.\n\nToch is dit géén garantie dat deze download niet kwaadaardig is! Een (virus)controle wordt aanbevolen.
+Controleer of iemand van de Free Download Manager-gebruik(st)ers gerapporteerd heeft dat deze download virussen/adware/spyware bevat
+Oké, niemand van de Free Download Manager-gebruik(st)ers heeft aangegeven dat deze download schadelijk is.\n\nToch is dit géén garantie dat deze download niet kwaadaardig is! Een (virus)controle wordt aanbevolen
 ; keep all %xxx, \n as is.
-%d op de %d van Free Download Manager gebruik(st)ers heeft gerapporteerd dat deze download gevaarlijk is.\nDe gemiddelde score voor deze download is %.*g.\n\nWil je de opinies bij deze download bekijken?
-Controleer bij elke nieuwe download vooraf of zij als kwaadaardig gemeld is.
-Gebruik deze optie om FDM vooraf en automatisch te laten controleren of iemand van je mede gebruik(st)ers haar als kwaadaardig gemarkeerd heeft.
-Toon opinies tijdens het downloaden.
-Indien ingeschakeld zal FDM het "Opinies" tabblad automatisch tijdens het downloaden tonen.
-Controleert of deze download kwaadaardig is (in te stellen via het "Opties" menu).
-Oké, niemand heeft gerapporteerd dat dit kwaadaardig is.
+%d op de %d van Free Download Manager-gebruik(st)ers heeft gerapporteerd dat deze download gevaarlijk is.\nDe gemiddelde score voor deze download is %.*g.\n\nWilt u de opinies bij deze download bekijken?
+Controleer bij elke nieuwe download vooraf of deze als kwaadaardig gemeld is
+Gebruik deze optie om FDM vooraf en automatisch te laten controleren of iemand van de medegebruik(st)ers deze als kwaadaardig gemarkeerd heeft
+Toon opinies tijdens het downloaden
+Indien ingeschakeld zal FDM het "Opinies"-tabblad automatisch tijdens het downloaden tonen
+Controleert of deze download kwaadaardig is (in te stellen via het "Opties"-menu)
+Oké, niemand heeft gerapporteerd dat dit kwaadaardig is
 Waarschuwing! Iemand heeft deze download als kwaadaardig gerapporteerd!
-Sluit
+Sluiten
 Laden
 Niet downloaden!
-Cache de download operaties op schijf.
-Indien ingeschakeld zal FDM de interne cache buffer gebruiken met de hier gespecificeerde grootte voor download operaties.\nDit verminderd de schrijfoperaties naar je harde schijf (HDD). En kan de download snelheid voor hoge-snelheids verbindingen verhogen.\nNadeel kan zijn dat de gecachte data bij een systeemcrash verloren gaat doordat deze data niet direct op de harde schijf wordt weggeschreven. Dit stuk moet dan opnieuw gedownload worden (In het slechtste geval ter grootte van de opgegeven buffer).\nAanbevolen voor verbindingen met hoge-snelheid.
-Kan SeaMonkey (Mozilla Suite) monitor niet installeren.
-Kan SeaMonkey (Mozilla Suite) monitor niet verwijderen.
-Vink dit aan als FDM muisklikken in Mozilla Firefox moet afvangen.
-Vink dit aan als FDM muisklikken in SeaMonkey (Mozilla Suite) moet afvangen.
-Laat de browser toe te downloaden als FDM geannuleerd wordt.
-Vink dit aan als je wilt dat de browser de download overneemt als je Annuleren kiest in het "Maak downloads" dialoog venster.
-Voeg FDM toe aan de browsers context menu.
-Vink dit aan om de items "Download met Free Download Manager" en "Download web site met Free Download Manager" aan je browsers context menu toe te voegen (menu verschijnt bij rechter muisklik).
-Kies welke onderdelen in het context menu van de browser moeten komen.
-Kan Mozilla Firefox monitor niet installeren.
-Verplaats bestanden naar map:
+Cache de download-schrijfoperaties op schijf
+Indien ingeschakeld zal FDM de interne cache-buffer gebruiken met de hier gespecificeerde grootte voor download-schrijfoperaties.\nDit vermindert de schrijfoperaties naar uw harde schijf en kan de downloadsnelheid voor hoge-snelheids erbindingen verhogen.\nNadeel kan zijn dat de gecachte data bij een systeemcrash verloren gaan doordat deze data niet direct op de harde schijf worden weggeschreven. Dit stuk moet dan opnieuw gedownload worden (In het slechtste geval ter grootte van de opgegeven buffer).\nAanbevolen voor verbindingen met hoge snelheid.
+Kan SeaMonkey (Mozilla Suite) monitoring niet installeren
+Kan SeaMonkey (Mozilla Suite) monitor niet verwijderen
+FDM noet muisklikken in Mozilla Firefox afvangen
+FDM moet muisklikken in SeaMonkey (Mozilla Suite) afvangen
+Laat de browser toe te downloaden als u annuleert
+Aanvinken als u wilt dat de browser de download overneemt wanneer u "Annuleren" kiest in het "Maak downloads" dialoog venster
+Voeg FDM toe aan het contextmenu van de browser
+Vink dit aan om de items "Download met Free Download Manager" en "Download website met Free Download Manager" aan uw browsers contextmenu toe te voegen (menu verschijnt bij rechter muisklik)
+Kies welke onderdelen in het contextmenu van de browser moeten komen
+Kan Mozilla Firefox monitoring niet installeren
+Verplaats bestanden naar map
 Snelheid te laag. Herstart sectie...
-Herstart als de snelheid te laag is gedurende (in min):
-Herstart sectie zodra de downloadsnelheid dramatisch afneemt.
-Wil je het download voortgangs venster opnieuw zien?
-Sorry, dit onderdeel is helaas niet beschikbaar. Probeer het later nog eens.
+Herstart als de snelheid te laag is gedurende (in min)
+Herstart sectie zodra de downloadsnelheid drastisch afneemt
+Wilt u het download-voortgangsvenster opnieuw zien?
+Sorry, dit onderdeel is helaas niet beschikbaar. Probeer het later nog eens
 Verplaats naar boven
 Verplaats naar beneden
-Verplaats de download naar de top van de lijst.
-Vink dit aan als je wilt dat de download bovenaan de downloadlijst wordt gezet.
-Monitoring in de Firefox browser kan niet worden geactiveerd omdat de FlashGot extensie conflicteerd met onze Free Download Manager extensie.\nDe FlashGot extensie moet éérst gedeïnstalleerd worden.\nDoe dit vanuit FireFox's menu "Extra"->"Extensies".
+Verplaats naar top van lijst
+Plaats de download bovenaan de downloadlijst
+Monitoring in de Firefox browser kan niet worden geactiveerd omdat de FlashGot extensie conflicteert met onze FDM-extensie.\nDe FlashGot-extensie moet éérst gedeïnstalleerd worden.\nDoe dit vanuit FireFox's menu "Extra"->"Extensies"
 Activeer
 Deactiveer
 Wissel
-Als de "Pauzeer alle downloads" mode is geactiveerd wordt zij uitgeschakeld, anders wordt zij ingeschakeld.
-Officieel word %s gestart op 16 augustus 2006. Ons doel is om FDM het snelst verspreidende internet tool na FireFox te maken!
+Als de "Pauzeer alle downloads"-modus is geactiveerd wordt deze uitgeschakeld, anders wordt deze ingeschakeld
+Officieel word %s gestart op 16 augustus 2006. Ons doel is om FDM het snelst verspreidende internettool na FireFox te maken!
+;
+; new by Martin Schrijver, april 2008
+;
+Download en installeer updates automatisch
+Waarschuw me alleen als update beschikbaar is
+Schakel automatische updates uit
+Bewaking geactiveerd in %s.
+Verwijder record
+Verwijderen akkoord?
+Geen schrijfbevoegdheid naar FDM's map.\nU moet toestemming verlenen om FDM data te laten wegschrijven, anders zullen alle data verloren zijn na de herstart van FDM.
+Deze verzamelbox maakt het mogelijk links van uw browser naar FDM te verslepen.\nHet maakt snel tonen of verbergen van het FDM-hoofdvenster mogelijk middels dubbelklikken met de linker muisknop./n/nKlik er op met de rechter muisknop om te verbergen en vink menuitem "Verzamelbox" uit
+Free Download Manager's verzamelbox 
+Zet alle berichten over batch-downloads uit
+Vink deze optie aan om alle attenderingen (ballonnen, geluiden) uit te zetten voor downloads geactiveerd door "%s" commando
+Sla lijst over
+Specificeer lijst van bestandsextenties en van sites die niet moeten worden bewaakt
+Download niet van deze sites (gescheiden door spatie):
+FDM zal geen downloads bewaken die in deze lijst zijn aangegeven. Specificeer hier domeinnamen (bijv. "site.com"). U kunt '*'-symbolen gebruiken.
+Attentie!\nEr heeft zich een fout voorgedaan tijdens het checken op virussen.\nWilt u het gedownloade bestand desondanks uitvoeren?
+Integriteit
+Doe integriteitscontrole wanneer bestand wordt gedownload
+Voor het doen van een integriteitscontrole moet FDM de juiste checksum van ieder bestand weten. Meestal moet u dit voor iedere download aangeven.
+Als de controle mislukt
+Geldige checksum van dit bestand
+Doe niets
+Geef hier aan wat FDM moet doen als de controle faalt.\nVraag - FDM zal vragen wat te doen.\nRestart - FDM zal de download herstarten vanaf het begin.\nDoe niets - FDM zal het record over de controle aan het logbestand toevoegen en zal verder niets doen.
+Controleren van integriteit...
+Integriteitstest geslaagd.
+Integriteitstest mislukt!
+Specificeer algoritme integriteitstest
+Geldige checksum
+Resultaat checksum
+; zip preview window
+Vink aan/uit
+;group's properties dialog
+Variabelen
+naam van een server (bijv. "freedownloadmanager.org")
+pad naar te downloaden bestand op een server
+huidige jaar
+huidige maand (getal van 1 tot 12)
+huidige dag
+; vertaal onderstaande regel niet
+equivalent van "%year%-%month%-%day%"
+;
+Van Mozilla Firefox
+FDM zal de proxy-instellingen overnemen van Firefox
+;new download settings
+Gebruik deze groep
+;Download ->Schedule -> 
+Start
+Stop
+Geplande start download
+Geplande stop download
+;
+;downloads that not completed or were completed recently
+Niet voltooid + Recent
+Stamgroep
+;
+;create new download dialog -> set output folder as default dialog
+Als standaard voor alle andere download-groepen instellen
+;
+Deze map tot standaard outputmap maken voor de "%s"groep?
+;
+;
+Lijst met downloads wissen
+Uploaden
+Bestanden uploaden
+Start uploaden
+Stop uploaden
+Geplande upload
+Verschuif geselecteerde upload(s) naar boven
+Verschuif geselecteerde upload(s) naar beneden
+Ge-upload
+Lijst van te uploaden bestanden
+Terugvinden bestemming upload URL van de basisserver...
+Afbreken
+;outlook express :view | insert file | ...
+Als attachement
+Als link (upload)
+Map
+;
+Voeg bestanden toe
+Voeg map toe
+Bittorrent
+Schakel ondersteuning in voor Bittorent-protocol
+Limiteer upload-verkeer
+Limiteer het aantal upload-verbindingen
+Gebruik poorten in de range van
+tot
+Schakel DHT in
+Schakel ondersteuning Bittorrent protocol in/uit. Als de lijst of de prullenbank van FDM echter Bittorrent downloads bevat, zal het Bittorrent protocol niet volledig worden uitgeschakeld
+Beperk de maximale bandbreedte van upload-verbindingen. Dit wordt niet aanbevolen voor het Bittorrent-protocol (kan de downloadsnelheid dan verminderen)
+Beperk het maximaal aantal upload-verbindingen.Een laag aantal verhoogt mogelijk de downloadsnelheid.
+Geef hier het aantal poorten aan dat FDM zal gebruiken voor upload-verbindingen
+Schakel DHT in (download zonder gebruik van tracker). Dit kan toename van het netwerkverkeer tot gevolg hebben
+Naam
+Aanmelden voor tracker vereist
+Voeg Bittorrent-download toe
+Er heeft zich een fout voorgedaan bij de uitvoering van het torrent-bestand
+Torrent-bestand
+Het lijkt erop dat u een .torrent-bestand wil downloaden. Daarvoor is Bittorrent-ondersteuning nodig in FDM.\n\nWilt u Bittorrent inschakelen?
+Type uw wachtwoord opnieuw
+Geef aan welke bestanden u wilt uploaden.
+Instellingen voor uploaden
+Metalink infobestand ontdekt. Vervolg downloaden.
+Bittorrent infobestand ontdekt. Vervolg downloaden.
+Geen toegang tot bestanden op schijf.
+Verbinding met tracker...
+Geen geldig antwoord van tracker ontvangen.
+Geldig antwoord van tracker ontvangen.
+Hash check van het downloadgedeelte mislukt. Opnieuw...
+Sta alle bandbreedte toe voor deze download
+Automatisch laden van FDM bij start windows uitschakelen?
+Sorry, FDM Community service is momenteel niet beschikbaar. Probeer het later nog eens.
+De bestandsnaam mag geen /\*?"<>| tekens bevatten.Kies een andere bestandsnaam.
+De mapnaam mag geen /\*?"<>| tekens bevatten. Kies een andere mapnaam
+Vensterinstellingen...
+Transparantie
+Data
+Bewaar alle bestanden in map van huidige gebruiker
+Bewaar alle bestanden in deze map
+De veranderingen zullen van toepassing zijn na een herstart van FDM
+Toon het venster met de download-voortgang
+Creëer draagbare versie
+Een draagbare versie van FDM is bedoeld voor verschillende computers zonder deze op iedere computer te installeren en configureren..\n\nU kunt deze versie bijv. op een USB-stick zetten.\n\nEenmaal gestart zal deze zichzelf aanmelden en in de browser integreren. Op het eind zal deze zich automatisch afmelden.\n\nKies het pad waar u de versie wil creëeren. Dit zou een map moeten zijn op een draagbaar medium.\n\nBijv. "I:\mijn draagbare programmas\".
+Integratie
+Associeer FDM met Bittorrent-bestanden
+Gebruik altijd deze groep voor alle nieuwe downloads
+Gebruik altijd deze groep en onthoud iedere keer de laatste outputmap
+Flash video downloads
+Download video met Free Download Manager
+Deze site wordt niet ondersteund. Zie de lijst van ondersteunde sites.
+Kijk in venster Downloads
+Dit is de pagina met flash video. Flash video downloaden...
+Converteren...
+Convertering
+Converteeropties
+Bestandsformaat
+Videoformaat
+;video kwaliteit
+Kwaliteit
+Zeer laag
+Laag
+Normaal
+Gemiddeld
+Hoog
+Zeer hoog
+;
+AVI met MPEG-4 (*.avi)
+AVI met XVID (*.avi)
+Niet veranderen
+Video bitrate
+Audio bitrate
+Onthoud instellingen als standaard
+;
+Creëer flash video download
+Converteer gedownloade video automatisch naar het aangegeven formaat
+Geavanceerde opties
+Toon lijst met ondersteunde sites
+;used in "cretate flash video download" window
+bijv.
+Volgende poging tot tracker-verbinding over %d seconden
+Voorbereiden bestanden op de schijf... Dit kan enkele minuten duren
+Status
+Voorbereiden bestanden op de schijf...
+MP4 for iPOD/PSP (MPEG4 + AAC, *.mp4)
+Media preview/converteren
+Converteer mediabestand
+Swich automatisch naar deze tab
+;keep"\n\n%s\n" as is
+Mediabestand is succesvol geconverteerd en opgeslagen in\n\$s\n.
+Converteren mediabestand\n\n%s niet geslaagd.
+Groep voor nieuwe downloads
+Hash-informatie
+Verbindingen
+Client
+Stukken
+Tracker
+Tracker status
+Upload-snelheid
+Bytes ge-upload
+Share rating
+Aantal verloren bytes
+Torrent-bestand URL
+Weet u het zeker?\nHet downloaden zal geheel opnieuw beginnen.
+Toaal dataverkeer in deze maand: ("gedownload"; "ge-upload")\n(%s in vorige maand)
+Totale snelheid ("Download", "Upload")
+Te uploaden bestanden
+Naam pakket
+Compressie
+Geef wachtwoord voor deze download
+Type opnieuw
+Bewaar deze bestanden
+Verondersteld aantal downloads
+Voeg link toe aan deze bestanden in onze catalogus
+Sluit geavanceerde informatie bij (alle velden zijn optioneel)
+Beschrijving
+Tags
+Uw naam
+Uw e-mail
+Ontvanger's e-mail
+Minder dan 10
+Van 10 tot 100
+Meer dan 100
+2 dagen
+7 dagen
+1 maand
+;compression methods
+Geen
+Snel
+Gemiddeld
+Optimaal
+Upload-instellingen
+Integreer uploader in
+Explorer's contextmenu
+Explorer's "Send to..." menu
+Gebruik vereenvoudigd upload-menu
+Minimaal formaat van te uploaden bestand
+HTTP proxy-instellingen
+Activering upload
+Upload vereist activering om onze server tegen automatische uploads te beschermen. Geef activeringscode.
+Verbinding maken met upload-server
+Verbinding met upload-server geslaagd
+Bestand is succesvol ge-upload naar server
+Upload is gestopt
+Zip-archief maken van ge-uploade bestanden...
+Maken van zip-archief mislukt
+Maken van zip-archief geslaagd
+Verzoek verzenden naar server
+Informatie over upload verzenden naar server
+Informatie is verzonden
+Verzenden van upload-informatie naar server mislukt
+Activeren upload...
+Upload succesvol geactiveerd
+Activeren upload mislukt
+Upload-bestand is gewijzigd
+Onverwachte fout
+Berekenen checksum
+;
+Ik stem in met
+voorwaarden
+U dient in te stemmen met de voorwaarden
+Zoeken naar updates mislukt
+Nieuwe versie is beschikbaar. Een update is vereist.\nWilt u nu updaten?
+Het is noodzakelijk FDM te updaten
+U dient FDM opnieuw te starten
+Aanbeveling ook attachements te uploaden
+Aan bericht toevoegen (langzaam)...
+Uploaden en als link toevoegen (als de bliksem)...
+Bij de start van de upload deed zich een fout voor. Controleer uw verbinding of probeer het later opnieuw.
+Uw attachment is groot.\nOm verschillende redenen wordt aanbevolen geen grote bestanden als attachment te verzenden, maar bestanden te uploaden en betreffende links te verzenden.\n\nWilt u uploaden?
+Upload is aanbevolen
+Instellingen integratie
+Upload van %s is voltooid.\nU dient de volgende URL als download-link te gebruiken:
+Totale omvang
+Open in uw browser
+De huidige versie van FDM kan niet langer worden gebruikt om te uploaden. U dien te updaten.
+De huidige versie van Free Upload Manager kan niet langer worden gebruikt. U dien te updaten.
+Invoer te lang
+Integratie-instellingen van Upload manager
+Free Upload Manager integratie-instellingen
+Upload
+Downloading update...
+
+Seeding activeren
+Seeding standaard niet activeren
+Beschouw download als kwaadaardig indien minimaal
+% van de gebruikers deze als kwaadardig aanmerkt
+OK, FDM-gebruikers hebben niets bericht over de kwaadaardigheid van deze download.\n\nDat garandeert echter niet dat deze download niet kwaadaardig is en aanbevolen wordt deze met een antivirusprogramma te checken.
+OK, FDM-gebruikers hebben niets bericht over de kwaadaardigheid van deze download.
+stationsletter van waaruit FDM is gestart
+U dient de Video Conversation plugin te installeren om deze feature te gebruiken.
+U dien de Bittorrent plugin te installeren om via het Bittorrent-protocol te kunnen downloaden.
+Let op: deze bestanden (*.sav) zijn service-bestanden van FDM (niet de bestanden die u downloadt).
+Wilt u de huidige databestanden naar de nieuwe map kopieren (bestaande bestanden worden overschreven)?
+De standaard downloadmappen van alle groepen worden geplaatst in deze map.\nDoorgaan?
+Geef de standaard downloadmap aan
+Verhinder slaapstand van computer tijdens het downloaden
+Maximaal aantal half-open verbindingen
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

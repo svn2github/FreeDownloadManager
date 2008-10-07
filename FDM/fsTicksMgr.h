@@ -20,7 +20,6 @@ public:
 	fsTicksMgr();
 	virtual ~fsTicksMgr();
 
-protected:
 	DWORD m_dwTicks;	
 };
 

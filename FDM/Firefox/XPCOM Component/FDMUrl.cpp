@@ -4,6 +4,7 @@
 
 #include "FDMUrl.h"
 #include <windows.h>
+#include <nsmemory.h>
 
 NS_IMPL_ISUPPORTS1(CFDMUrl, IFDMUrl)
 
@@ -23,8 +24,8 @@ CFDMUrl::~CFDMUrl()
 
 NS_IMETHODIMP CFDMUrl::GetUrl(PRUnichar * *aUrl)
 {
-    *aUrl = new PRUnichar [m_strUrl.length () + 1];
-	wcscpy (*aUrl, m_strUrl);
+    *aUrl = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strUrl, 
+		(m_strUrl.length ()+1) * sizeof (wchar_t));
 	return NS_OK;
 }
 NS_IMETHODIMP CFDMUrl::SetUrl(const PRUnichar * aUrl)
@@ -35,20 +36,21 @@ NS_IMETHODIMP CFDMUrl::SetUrl(const PRUnichar * aUrl)
 
 NS_IMETHODIMP CFDMUrl::GetReferer(PRUnichar * *aReferer)
 {
-    *aReferer = new PRUnichar [m_strReferer.length () + 1];
-	wcscpy (*aReferer, m_strReferer);
+    *aReferer = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strReferer, 
+		(m_strReferer.length ()+1) * sizeof (wchar_t));
 	return NS_OK;
 }
 NS_IMETHODIMP CFDMUrl::SetReferer(const PRUnichar * aReferer)
 {
-    m_strReferer = aReferer;
+	if (_wcsicmp (aReferer, L"about:blank"))
+		m_strReferer = aReferer;
 	return NS_OK;
 }  
 
 NS_IMETHODIMP CFDMUrl::GetComment(PRUnichar * *aComment)
 {
-    *aComment = new PRUnichar [m_strComment.length () + 1];
-	wcscpy (*aComment, m_strComment);
+    *aComment = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strComment, 
+		(m_strComment.length ()+1) * sizeof (wchar_t));
 	return NS_OK;
 }
 NS_IMETHODIMP CFDMUrl::SetComment(const PRUnichar * aComment)
@@ -59,8 +61,8 @@ NS_IMETHODIMP CFDMUrl::SetComment(const PRUnichar * aComment)
 
 NS_IMETHODIMP CFDMUrl::GetCookies(PRUnichar * *aCookies)
 {
-    *aCookies = new PRUnichar [m_strCookies.length () + 1];
-	wcscpy (*aCookies, m_strCookies);
+    *aCookies = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strCookies, 
+		(m_strCookies.length ()+1) * sizeof (wchar_t));
 	return NS_OK;
 }
 NS_IMETHODIMP CFDMUrl::SetCookies(const PRUnichar * aCookies)
@@ -71,10 +73,11 @@ NS_IMETHODIMP CFDMUrl::SetCookies(const PRUnichar * aCookies)
 
 NS_IMETHODIMP CFDMUrl::GetPostData(PRUnichar * *aPostData)
 {
-    *aPostData = new PRUnichar [m_strPostData.length () + 1];
-	wcscpy (*aPostData, m_strPostData);
+	*aPostData = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strPostData, 
+		(m_strPostData.length ()+1) * sizeof (wchar_t));
 	return NS_OK;
 }
+
 NS_IMETHODIMP CFDMUrl::SetPostData(const PRUnichar * aPostData)
 {
 	if (aPostData)

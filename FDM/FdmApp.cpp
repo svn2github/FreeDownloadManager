@@ -175,7 +175,7 @@ BOOL CFdmApp::InitInstance()
 		CString str = m_strAppPath; str += "Data";
 		CreateDirectory (str, NULL);
 		if (0 == GetTempFileName (str, "fdm", 0, szTmpFile))
-			MessageBox (NULL, LS (L_NOWRITEACCESSTODATAFOLDER), PRG_NAME, MB_ICONWARNING);
+			MessageBox (NULL, LS (L_NOWRITEACCESSTODATAFOLDER), vmsFdmAppMgr::getAppName (), MB_ICONWARNING);
 		else
 			DeleteFile (szTmpFile);
 	}
@@ -287,6 +287,13 @@ BOOL CFdmApp::InitInstance()
 		ua.RemovePP ("Free Download Manager"); 
 	}
 
+	if (FALSE == GetProfileInt ("EnvCheck", "778", FALSE))
+	{
+		if (vmsBtSupport::getBtDllVersion () < 778)
+			MessageBox (NULL, "Please update Bittorrent module.\nSome functions will be disabled until you update it.", "Warning", MB_ICONEXCLAMATION);
+		WriteProfileInt ("EnvCheck", "778", TRUE);
+	}
+
 	CMainFrame* pFrame = NULL;
 	fsnew1 (pFrame, CMainFrame);
 	m_pMainWnd = pFrame;
@@ -302,21 +309,24 @@ BOOL CFdmApp::InitInstance()
 
 	LOG ("main window and client area was created" << nl);
 
-	_App.View_ReadWndPlacement (pFrame, "MainFrm");
-
 	
-	if (_tcscmp (m_lpCmdLine, _T ("-autorun")) == 0)
-		pFrame->ShowWindow (SW_HIDE);	
-	else if (_App.Prg_StartMinimized ())
+	BOOL bHidden = _tcscmp (m_lpCmdLine, _T ("-autorun")) == 0;
+
+	_App.View_ReadWndPlacement (pFrame, "MainFrm", bHidden);
+
+	if (!bHidden)
 	{
-		if (IsWindowVisible (pFrame->m_hWnd))
-			pFrame->ShowWindow (SW_MINIMIZE);
-	}
-	else
-	{
-		pFrame->UpdateWindow();
-		if (pFrame->IsWindowVisible ())
-			pFrame->SetForegroundWindow ();
+		if (_App.Prg_StartMinimized ())
+		{
+			if (IsWindowVisible (pFrame->m_hWnd))
+				pFrame->ShowWindow (SW_MINIMIZE);
+		}
+		else
+		{
+			pFrame->UpdateWindow();
+			if (pFrame->IsWindowVisible ())
+				pFrame->SetForegroundWindow ();
+		}
 	}
 
 	m_bStarting = FALSE;
@@ -461,8 +471,9 @@ BOOL CAboutDlg::OnInitDialog()
 	m_wndDLURL.SetUrl ("http://www.freedownloadmanager.org/download.htm");
 	
 	CString strVer;
-	char szVer [] = "%s %s build %d";
-	strVer.Format (szVer, LS (L_VERSION), PRG_VERSION, PRG_BUILD_NUMBER);
+	char szVer [] = "%s %s build %s";
+	strVer.Format (szVer, LS (L_VERSION), vmsFdmAppMgr::getVersion ()->m_strProductVersion.c_str (), 
+		vmsFdmAppMgr::getBuildNumber ());
 	SetDlgItemText (IDC__VER, strVer);
 
 	
@@ -868,7 +879,7 @@ LONG CFdmApp::_UEF(_EXCEPTION_POINTERS *info)
 	LOG ("creating dump file...");
 
 	char szFile [MAX_PATH]; char szName [100];
-	wsprintf (szName, "fdm%d.dmp", PRG_BUILD_NUMBER);
+	wsprintf (szName, "fdm%s.dmp", vmsFdmAppMgr::getBuildNumber ());
 	GetTempPath (MAX_PATH, szFile);
 	lstrcat (szFile, szName);
 	HANDLE hFile = CreateFile (szFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
@@ -1177,11 +1188,15 @@ void CFdmApp::CheckRegistry()
 		LOG ("old key detected." << nl); 
 
 		CRegKey key2;
-		if (ERROR_SUCCESS != key2.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Download Manager\\Settings\\View"))
+		if (ERROR_SUCCESS != key2.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Download Manager\\Settings\\History"))
 		{
 			LOG ("importing old key" << nl);
 
-			if (ERROR_SUCCESS == key2.Create (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG"))
+			LONG lRes = key2.Create (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG");
+			if (lRes != ERROR_SUCCESS)
+				lRes = key2.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG");
+
+			if (ERROR_SUCCESS == lRes)
 			{
 				key.Open (HKEY_CURRENT_USER, strOldRKey);
 

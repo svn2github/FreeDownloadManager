@@ -13,6 +13,7 @@
 #include "fsArchiveFileStream.h"
 #include "vmsSpeedTracker.h"
 #include "vmsInternetSession.h"
+#include "InetFile/base64.h"
 
 using namespace fsArchive;
 
@@ -537,7 +538,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 	DWORD dwBufSize = 2000;				
 	BYTE *pBuffer = new BYTE [dwBufSize];	
 	ZeroMemory (pBuffer, dwBufSize);
-	DWORD dwMaxRead = is_PauseMode () ? 1 : dwBufSize;		
+	DWORD dwMaxRead = is_PauseMode () ? (sect->pThis->m_enRST == RST_PRESENT ? 1 : 100) : dwBufSize;		
 	DWORD dwRead;		
 	DWORD dwLastRead = 0; 
 	fsTicksMgr timeOld, timeNew;
@@ -1003,7 +1004,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 		timeNew.Now ();
 
 		
-		UINT uSpeedLimit = is_PauseMode () ? 1 : sect->uSpeedLimit;
+		UINT uSpeedLimit = is_PauseMode () ? (sect->pThis->m_enRST == RST_PRESENT ? 1 : 100) : sect->uSpeedLimit;
 		if (timeNew - timeOld >= 1000 || dwLastRead >= uSpeedLimit)
 		{
 			if (timeNew - timeOld >= 1000)
@@ -1433,6 +1434,7 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 	*ppFile = m_pOpeningFile;
 	m_enRST = m_enRST == RST_NONE ? RST_NONE : m_pOpeningFile->IsResumeSupported ();
 	m_strSuggFileName = m_pOpeningFile->GetSuggestedFileName ();
+	CheckIfSuggFileNameEncoded ();
 	m_bWasAccessedAtLeastOnce = TRUE;
 	m_pOpeningFile = NULL;
 
@@ -1532,6 +1534,7 @@ void fsInternetDownloader::StopDownloading()
 		m_pMirrURLMgr->Abort ();
 	}catch (...) {}
 
+	try{
 	for (int i = 0; i < m_vSections.size (); i++)
 	{
 		fsSection *sect = &m_vSections [i];
@@ -1540,6 +1543,7 @@ void fsInternetDownloader::StopDownloading()
 			sect->file->CloseHandle ();
 		}catch (...) {ASSERT (FALSE);}
 	}
+	}catch (...){ASSERT (FALSE);}
 
 	m_cThreads--;
 }
@@ -2220,6 +2224,7 @@ int fsInternetDownloader::GetDoneSectionCount()
 
 UINT64 fsInternetDownloader::GetBytesLeft()
 {
+try{
 	UINT64 uLeft = 0;
 	int cSections = m_vSections.size ();
 
@@ -2235,6 +2240,7 @@ UINT64 fsInternetDownloader::GetBytesLeft()
 	}
 
 	return uLeft - m_dwDataLenInCache;
+}catch (...) {return _UI64_MAX;}
 }
 
 void fsInternetDownloader::SetOutputFile(HANDLE hOutFile)
@@ -2465,12 +2471,40 @@ fsInternetResult fsInternetDownloader::QuerySize(fsInternetURLFile *file)
 					DNP ()->pszUserName, DNP ()->pszPassword, szUrlPath, szUrl, &dwLen);
 			}
 			else
-				strcpy (szUrl, pszUrl);	  
+				strcpy (szUrl, pszUrl);	
 
+			fsDownload_NetworkProperties *dnp = DNP ();
+
+			
+			LPSTR pszUser = new char [10000], pszPassword = new char [10000];
+			if (dnp->pszUserName)
+				strcpy (pszUser, dnp->pszUserName);
+			else
+				*pszUser = 0;
+			
+			if (dnp->pszPassword)
+				strcpy (pszPassword, dnp->pszPassword);
+			else
+				*pszPassword = 0;
+			
+			
 			ir = fsDNP_ApplyUrl (DNP (), szUrl);
-
+			
 			if (ir != IR_SUCCESS)
 				return ir;
+			
+			if (dnp->pszUserName == NULL || *dnp->pszUserName == 0)
+			{
+				SAFE_DELETE_ARRAY (dnp->pszUserName);
+				dnp->pszUserName = new char [strlen (pszUser) + 1];
+				strcpy (dnp->pszUserName, pszUser);
+				
+				SAFE_DELETE_ARRAY (dnp->pszPassword);
+				dnp->pszPassword = new char [strlen (pszPassword) + 1];
+				strcpy (dnp->pszPassword, pszPassword);
+			}
+			
+			delete [] pszUser; delete [] pszPassword;
 
 			
 
@@ -2490,6 +2524,7 @@ fsInternetResult fsInternetDownloader::QuerySize(fsInternetURLFile *file)
 	m_bWasAccessedAtLeastOnce = TRUE;
 	m_enRST = m_enRST == RST_NONE ? RST_NONE : file->IsResumeSupported ();
 	m_strSuggFileName = file->GetSuggestedFileName ();
+	CheckIfSuggFileNameEncoded ();
 
 	if (m_strFileName.Length () == 0)
 	{
@@ -3309,9 +3344,16 @@ DWORD WINAPI fsInternetDownloader::_threadOpenUrl(LPVOID lp)
 {
 	_inc_tOU_param *p = (_inc_tOU_param*) lp;
 
-	DWORD dw = p->pFile->Open (fsNPToScheme (p->dnp->enProtocol), p->dnp->pszServerName,
+	DWORD dw;
+	
+	try {
+		dw = p->pFile->Open (fsNPToScheme (p->dnp->enProtocol), p->dnp->pszServerName,
 				p->dnp->pszUserName, p->dnp->pszPassword, p->dnp->uServerPort, 
 				p->dnp->pszPathName, p->uStartPos, p->dnp->dwFlags & DNPF_IMMEDIATELY_SEND_AUTH_AS_BASIC);
+	}
+	catch (...) {
+		dw = IR_ERROR;
+	}
 
 	delete p;
 
@@ -3324,4 +3366,48 @@ void fsInternetDownloader::LockWriteFile(BOOL bLock)
 		EnterCriticalSection (&m_csWriteToFile);
 	else
 		LeaveCriticalSection (&m_csWriteToFile);
+}
+
+void fsInternetDownloader::CheckIfSuggFileNameEncoded()
+{
+	if (m_strSuggFileName.Length () < 13)
+		return;
+
+	if (strnicmp (m_strSuggFileName, "=?UTF-8?", 8))
+		return;
+
+	LPCSTR psz = &m_strSuggFileName [8];
+	if (*psz != 'B' && *psz != 'b') 
+		return;
+	if (psz [1] != '?')
+		return; 
+
+	psz += 2;
+
+	fsString str;
+	while (psz [1] && (*psz != '?' || psz [1] != '='))
+		str += *psz++;
+	
+	if (*psz != '?' || psz [1] != '=')
+		return; 
+
+	LPBYTE pb = new BYTE [str.Length ()];
+
+	int len = base64_decode (str, pb);
+	if (len <= 0)
+	{
+		delete [] pb;
+		return; 
+	}
+
+	LPWSTR pwsz = new wchar_t [len+1];
+	MultiByteToWideChar (CP_UTF8, 0, (LPCSTR)pb, len, pwsz, len);
+
+	WideCharToMultiByte (CP_ACP, 0, pwsz, len, (LPSTR)pb, len, NULL, NULL);
+	pb [len] = 0;
+
+	m_strSuggFileName = (LPSTR)pb;
+
+	delete [] pb;
+	delete [] pwsz;
 }
