@@ -1,0 +1,1598 @@
+; This is a language file
+; You can translate it into your native language
+; To do this, follow instructions:
+; - PLEASE make sure FDM hasn't already been translated into your language 
+;   You should go to FDM web site (http://freedownloadmanager.org) and 
+;   check the list of available languages
+;   or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng into your language
+; - send the translated file to support@freedownloadmanager.org 
+;
+;
+; Translator - Sérgio Marques, Versão 2.5 Build 731
+; e-mail: contatica@netcabo.pt 
+; please e-mail me if you find any mistake 
+
+; Your language name. Please keep it in English
+;
+Portuguese
+;
+;
+; Below are the strings to translate:
+;
+Guardar tudo
+Cortar
+Copiar
+Colar
+Modo lento
+Modo normal
+Modo rápido
+Opções de transferências
+Ligações Dial-Up
+Sobre F D M
+Sair
+Ficheiro
+Editar
+Ver
+Opções
+Ferramentas
+Ajuda
+Barra de ferramentas
+Barra de estado
+Optimização da ligação
+Definições pré-definidas de transferências
+Definições gerais
+Ligações Dial-Up
+Desligar ao concluir
+Desligar PC ao concluir 
+Ajuda
+Site F D M
+Avisar os amigos
+Enviar e-mail para grupo de suporte
+Verificar actualizações automaticamente
+Verificar actualizações agora
+-
+-
+Mudar para
+Modo de tráfego utilizado
+Registar
+Transferências
+Agendamento
+Explorador de sites
+Explorador HTTP/FTP
+Gestor de sites
+Adicionar transferência
+Iniciar transferência
+Parar transferência
+Agendar transferência
+Adicionar tarefa
+Propriedades da tarefa
+Transferir ficheiros seleccionados
+Parar
+Actualizar
+Adicionar site
+Propriedades do site
+Grupo de transferência
+Informação sobre a transferência
+Log de agendamentos
+Log de Explorador de Site
+Barra lateral
+Criar nova transferência
+Apagar transferência
+Abrir ficheiro
+Abrir pasta
+Iniciar transferência automaticamente
+Propriedades da transferência
+Activar tarefa
+Desactivar tarefa
+Apagar tarefa
+Abrir pasta raiz 
+Desligar
+Transferência
+Definições do Explorador de sites 
+Apagar site
+Entrada temporária
+Sites
+Exibir janela principal
+Monitorizar navegador
+Monitorizar área de transferência
+Iniciar todas as transferências
+Parar todas as transferências
+-
+Continuar
+-
+-
+-
+-
+-
+Cancelar
+-
+-
+-
+Todos os grupos
+Filtros
+Concluídos
+Em evolução
+Agendados
+Parados
+Outro
+Criar novo grupo
+Apagar grupo
+Apagar todas as transferências
+Apagar todas as transferências concluídas
+Abrir pasta do grupo
+Propriedades do grupo
+Nome do grupo:
+Pasta pré-definida:
+Extensões do ficheiro [separadas por espaço]:
+Prioridade pré-definida da transferência
+Muito baixa
+Baixa
+Média
+Alta
+Muito alta
+Por favor introduza o nome do grupo
+Erro de entrada
+Já existe um grupo com esse nome. Por favor indique outro. 
+Por favor introduza o nome da pasta
+Seleccione a pasta pré-definida do grupo
+Introduza, aqui, o nome do grupo
+Pasta pré-definida para guardar as transferências deste grupo
+Navegar
+Extensão pré-definida para este grupo. Utilizado para detectar, automaticamente, o grupo de transferências
+Prioridade pré-definida para este grupo
+Cancelar alterações e fechar
+Aplicar alterações e fechar
+Erro nos grupos de transferências
+Por favor reinstale o FDM
+Erro
+Impossível carregar lista de transferências. Poderá está danificada ou sendo utilizada por outra aplicação
+Falha ao integrar com o Internet Explorer
+Tem a certeza?
+Isto apagará todos os grupos de transferências
+Confirmação
+Nome do ficheiro
+Tamanho
+Transferido
+Tempo restante
+Secções
+Velocidade
+Comentários
+Log
+Evolução
+Hora
+Data
+Informação
+Limpar
+Rodagem automática
+Erro de rede desconhecido
+Acesso negado. Nome de utilizador ou senha inválida
+Acesso negado. Senha inválida
+Sucesso
+Não foi possível ligar ao servidor
+Ficheiro não encontrado no servidor
+Perdida ligação ao servidor
+Servidor não responde
+Não foi possível encontrar nome do servidor
+O servidor não aceita retomada de transferência. Não pare a transferência ou terá que reinicia-la.
+Nome de utilizador e senha requeridos pelo Proxy
+Erro contínuo
+Requisição mal feita. URL inexistente
+Erro desconhecido de servidor
+Ligação abortada
+URL incorrecta
+Sem ligação à Internet
+Versão do protocolo HTTP, não é suportada pelo servidor
+Erro desconhecido
+Não foi possível apagar ficheiro do disco
+Atingido limite de ligações a este servidor
+Limite de ligações atingido
+Pausa de %d segundos
+Secção
+Iniciada
+Concluída
+Transferência concluída
+Ligando...
+Ligação efectuada com sucesso
+Redireccionando...
+Redireccionado efectuado. Abrindo nova página
+Iniciando transferência...
+Parada
+Criando nova secção...
+Cancelada
+Reiniciando transferência...
+Abrindo ficheiro no disco...
+O nome do ficheiro é muito comprido
+O ficheiro já existe. Renomear como
+Renomear como
+O ficheiro de saída foi apagado. Não é possível continuar
+O ficheiro já existe. Regravar
+O ficheiro já existe. Retomando transferência
+O ficheiro já existe
+Falha ao abrir o ficheiro do disco
+O tamanho do ficheiro foi alterado no servidor!
+Ajustando para novo tamanho...
+Não é possível substituir o ficheiro
+O ficheiro será renomeado
+Não foi possível renomear com o nome original
+Não foi possível guardar grupo (s)
+Não foi possível guardar a transferência
+Ligação Dial-Up
+Ligar a:
+Ligação automática
+Ligar
+Seleccione, aqui, a ligação Dial-Up
+Marque esta caixa se deseja ligar automaticamente da próxima vez
+Ligar agora
+Não ligar e fechar
+Não existem ligações Dial-Up neste computador
+Linha ocupada
+Falha de hardware
+Sem sinal de linha
+A efectuar ligação
+Tentativa
+Abrindo porta...
+Ligando ao provedor...
+Ligado ao computador remoto
+Verificando nome de utilizador e senha...
+Velocidade da ligação é %d BPS
+Desligado
+Repetição
+Nome de utilizador e senha requeridos
+Utilizador:
+Senha:
+Grupo:
+Guardar na pasta:
+Guardar como:
+Iniciar
+Automaticamente
+Manualmente
+Agendar
+Prioridade da transferência
+Avançado
+Endereço do ficheiro que pretende transferir
+Introduza nome de utilizador aqui
+Introduza a senha aqui
+Marque esta caixa se o servidor requerer autorização
+Nome do grupo para guardar a transferência. Grupos ajudam a organizar as transferências
+Pasta para guardar transferências
+Novo nome para o ficheiro transferido. Deixe em branco para manter o nome original
+Breve descrição da transferência
+Esta transferência será iniciada automaticamente, assim que possível
+O FDM não iniciará esta transferência automaticamente
+Agendar esta transferência
+Configurar agendamento de transferência
+Prioridade da transferência. Transferências com prioridade superior serão iniciadas primeiro. As de prioridade reduzida serão adiadas.
+Ver definições avançadas para esta transferência
+URL incorrecta. Por favor verifique
+Por favor insira nome de utilizador
+Seleccione a pasta de saída
+Geral
+Informações gerais
+Transferir actual para a pasta:
+Nome do ficheiro transferido
+A URL desta transferência não pode ser alterada
+Transferência em evolução. Não é possível alterar o nome do ficheiro
+Não foi possível renomear o ficheiro
+Ficheiro não encontrado
+Caminho não encontrado
+Formato .exe inválido
+O ficheiro está a ser utilizado por outra aplicação
+Acesso negado
+Dispositivo não está pronto
+Disco está cheio
+Nome de ficheiro inválido
+Login requerido
+Ligação
+Rede
+Erros
+Pausa entre tentativas de ligação [em segundos]:
+Número máximo de tentativas
+Tempo esgotado [em segundos]:
+Tamanho mínimo:
+Número máximo:
+Restrição de tráfego para esta transferência
+Limitar tráfego
+Ignorar todas as restrições
+B
+KB
+MB
+; second. e.g. KB/s
+s
+Introduza um valor maior que %d
+Por favor seleccione a dimensão.
+Tempo de espera para replicação ao servidor, em caso de erro
+Marque esta caixa para limitar o número máximo de tentativas, para transferência sem sucesso
+Tempo de espera para resposta do servidor.
+Tamanho mínimo da secção. A transferência não será dividida em secções menores.
+Número máximo de secções. A transferência não será dividida em mais secções.
+Especificar o tráfego máximo para a transferência
+Ignorar as restrições de tráfego e de número máximo de ligações para esta transferência
+Pode especificar, neste campo, o valor em bytes (B), kilobytes (KB) ou megabytes (MB)
+Protocolo
+Identificar-se no servidor como:
+Referência:
+Utilizar HTTP 1.1
+Utilizar cookies
+Utilizar modo passivo
+Modo de transferência
+Binário
+ASCII para ficheiros com as extensões:
+Especifica como o FDM será identificado pelos servidores HTTP
+Esta linha será enviada como campo de referência para o servidor HTTP. Por regra, não será necessário
+Marque esta caixa para o FDM utilizar o protocolo HTTP versão 1.1
+Marque esta caixa para o FDM utilizar cookies
+Marque esta caixa para o FDM utilizar o modo passivo em servidores FTP.Poderá ser necessário, se utilizar firewalls
+Utilizar o modo binário para transferências FTP. Utilizado para transferências que não forem de texto
+Utilizar o modo ASCII para transferências FTP. Utilizado para transferências de ficheiros texto
+O FDM utilizará o modo ASCII para ficheiros com as extensões especificadas. Para os restantes ficheiros, será utilizado o modo binário
+Proxy
+Obter definições de Proxy
+Do Internet Explorer
+Especificar manualmente
+Não utilizar Proxy
+Definições
+Endereço:
+Porta:
+Por favor indique o endereço Proxy
+Por favor indique a porta Proxy
+O FDM utilizará as definições de Proxy do Internet Explorer
+Especificar as definições de Proxy
+O FDM não utilizará Proxy
+Seleccione o tipo de servidores para os quais pretende especificar Proxy
+Indique o endereço Proxy a utilizar
+Indique a porta Proxy aqui. Como regra, deve ser 3128, 1080 ou 8080
+Marque esta caixa, se o servidor Proxy precisar de autenticação
+Diversos
+Ficheiro local
+Se o ficheiro já existir:
+Reservar espaço em disco para o ficheiro a transferir
+Extensões adicionais para transferências não concluídas:
+Servidor Internet
+Caso o servidor não permitir retoma, não reinicie a transferência 
+Se o tamanho do ficheiro foi alterado no servidor:
+Parar na ocorrência de erros
+Perguntar
+Sob rescrever
+Renomear
+Retomar
+Reiniciar
+Ajustar
+Por favor especifique a extensão do ficheiro
+Aqui você pode especificar o que o FDM deve fazer, se o ficheiro já existir no disco
+Marque esta caixa para reservar espaço em disco, quando uma transferência for iniciada
+Se marcada, o FDM vai anexar uma extensão específica ao nome do ficheiro. Quando a transferência estiver concluída, o FDM restaurará o seu nome original
+O FDM não reiniciará a transferência caso o servidor não tenha suporte a retomada
+Especifique, aqui, o que o FDM deve fazer se o tamanho do ficheiro for alterado no servidor
+Marque esta caixa para que parar a transferência, caso o ficheiro não seja encontrado no servidor
+Marque esta caixa para parar as transferências, se o nome de utilizador ou senha forem inválidos
+Modo de tráfego utilizado
+Seleccione o modo a configurar:
+Número máximo de ligações:
+Número máximo de ligações por servidor:
+Restrições de tráfego:
+Ilimitado
+Seleccione, aqui, o modo de tráfego que pretende configurar
+Marque esta caixa para limitar o número máximo de ligações
+Marque esta caixa para limitar o número máximo de ligações por servidor
+Especifique, aqui, o tráfego máximo para o(s) ficheiro(s) a transferir
+Todas as transferências
+Lista de transferências
+Guardar automaticamente
+min.
+Ao apagar transferências não concluídas
+Remover automaticamente transferências concluídas
+Não apagar o ficheiro
+Apagar ficheiro
+O FDM guarda a lista de transferências, automaticamente, após um intervalo de tempo. Deste modo a lista está protegida contra falhas de hardware ou energia
+Especifique, aqui, o que o FDM deve fazer com o ficheiro no disco ao apagar transferências incompletas
+Marque esta caixa para apagar automaticamente da lista a transferência, após a sua conclusão
+Monitorizando
+Monitor
+Área de transferência
+Monitorizar ficheiros com as extensões
+Ignorar ficheiros com as extensões
+ALT não precisa ser pressionada
+É necessário pressionar ALT
+Por favor especifique as extensões
+Marque esta caixa para o FDM capturar os cliques do Internet Explorer
+Marque esta caixa para o FDM monitorizar a área de transferência
+Monitorizar apenas os ficheiros com as seguintes extensões
+Não monitorizar os ficheiros com as seguintes extensões
+Monitorizar apenas se ALT não estiver pressionada
+Monitorizar apenas se ALT estiver pressionada
+Iniciar
+Carregar ao iniciar o Windows
+Iniciar minimizado
+Sistema
+Minimizar na bandeja
+Botão Fechar minimiza a janela
+O FDM será iniciado automaticamente com o Windows
+O FDM será minimizado após o início
+Quando você clicar no botão "Minimizar" o FDM será minimizado na bandeja
+Se marcada, clicar no botão "Fechar" será o mesmo que clicar no botão "Minimizar"
+Actualizar
+Endereço do servidor de actualização
+O FDM verificará, automaticamente, se há versões mais recentes
+Assistente de optimização de ligação
+Bem-vindo ao assistente de optimização de ligação.
+Este assistente vai ajuda-lo(a) a optimizar a sua ligação. Irá definir as propriedades pré-definidas para o FDM e para as transferências.
+Por favor seleccione o tipo de ligação:
+Concluir
+Especifique, aqui, o tipo de ligação à Internet
+Configurar FDM para optimizar a sua ligação
+Tarefa
+Hora de início
+Próxima hora de início
+Última hora de início
+Não foi possível carregar lista de agendamentos. Poderá está danificada ou sendo utilizada por outra aplicação
+Não foi possível carregar log de agendamentos
+Não foi possível guardar lista de agendamentos
+Tarefa "%s" foi agendada. Deseja inicia-la?
+Alterando modo de tráfego utilizado para "%s"
+Desligar
+Todas as ligações
+Alterar modo de tráfego utilizado para
+Desligar o computador
+Reiniciar
+Logoff
+Uma vez
+Dom
+Seg
+Ter
+Qua
+Qui
+Sex
+Sab
+Nos dias:
+A cada
+dias
+horas
+Quando o FDM iniciar
+Quando a ligação for bem sucedida
+Quando falhar a ligação
+Quando não houverem transferências activas
+Quando a velocidade for menor ou igual a %d BPS durante %d
+Quando todas as transferências apresentarem erros durante
+Nunca
+Desconhecido
+Ligado com sucesso a "%s"
+Falha ao ligar a "%s"
+Sucesso
+Memória insuficiente
+Não foi possível iniciar
+A execução do agendamento fará com que o programa feche ao iniciar. Agendamento será ignorado
+Tentativas máximas de ligação
+Pausa entre tentativas
+Desligar se a velocidade for menor que:
+Tentar novamente
+Não mais que
+Utilizar ligação
+Se bem sucedida
+vezes
+Desligar todas as ligações activas
+Ligação a desligar
+Nome do programa:
+Argumentos:
+Tipo de encerramento:
+Forçar fecho das aplicações
+Abrir programa
+Estabelecer ligação Dial-Up
+Terminar ligação
+Alterar o modo de tráfego
+Sair do FDM
+Desligar o computador
+Transferências a iniciarem
+Transferências a pararem
+Aplicações
+Todos os ficheiros
+Lamento mas esta função só está disponível para Windows 2000, XP ou superior
+Por favor indique o nome do programa
+Por favor seleccione as transferências
+Modo de tráfego para a tarefa
+Marque esta caixa para limitar o máximo de tentativas
+Tempo entre as tentativas
+Marque esta caixa para estabelecer uma ligação com velocidade não inferior à especificada
+Indique a velocidade mínima da ligação
+O FDM tentará estabelecer novamente a ligação requerida se esta caixa estiver marcada
+Marque esta caixa para limitar o número máximo de tentativas
+Indique a (s) transferência (s) aqui
+Lista de transferências disponíveis
+Adicionar a transferência seleccionada à lista de tarefas
+Remover a transferência seleccionada da lista de tarefas
+Especifique o programa que deseja abrir
+Procurar programa no computador
+Indique os argumentos do programa
+Indique o tipo de sessão para terminar
+Marque esta caixa para forçar o fecho da sessão. Isto será útil quando houver aplicações bloqueadas no sistema, mas neste caso todos os dados que não foram gravados serão perdidos
+Especifique a acção agendada
+Marque esta caixa para que o FDM feche todas as ligações activas
+Especifique a ligação que deseja fechar
+Em certos dias
+Domingo
+Segunda
+Terça
+Quarta
+Quinta
+Sexta
+Sábado
+No evento
+Durante
+Velocidade reduzida:
+min.
+Minutos
+Horas
+Dias
+Quando a velocidade for muito baixa
+Quando todas as transferências apresentarem erros
+Por favor indique os dias
+Iniciar a tarefa numa hora especificada
+Definir a hora para iniciar a tarefa
+Iniciar a tarefa numa data específica
+Definir a data para iniciar a tarefa
+Iniciar a tarefa em certos dias da semana
+Iniciar a tarefa todo Domingo
+Iniciar a tarefa toda Segunda
+Iniciar a tarefa toda Terça
+Iniciar a tarefa toda Quarta
+Iniciar a tarefa toda Quinta
+Iniciar a tarefa toda Sexta
+Iniciar a tarefa todo Sábado
+Iniciar a tarefa periodicamente
+Este campo permite especificar o intervalo de tempo, em minutos, horas ou dias
+Iniciar a tarefa se ocorrer algum evento
+Especificar o tipo de evento aqui
+Indique o intervalo de tempo
+Indique a velocidade mínima
+Confirmação requerida para executar a tarefa
+Aguardar confirmação durante
+seg.
+Se marcada, o FDM solicitará a confirmação da execução da tarefa
+Se marcada, o FDM aguardará a sua confirmação durante o intervalo de tempo determinado. Se você não reagir durante este tempo a tarefa será iniciada
+Endereço:
+Criando a lista de ficheiros a transferir
+Ligando ao servidor
+Tentando utilizar nome de utilizador e senha, armazenados no Gestor de sites
+Recebendo a lista dos ficheiros do servidor
+Ligação com o servidor perdida. Tentando restaurar
+Criando a lista
+Recebendo tamanho e última data de modificação dos ficheiros
+Utilizar este parâmetro pode reduzir drasticamente a velocidade
+Marque esta caixa se desejar que o FDM verifique tamanho e data dos ficheiros nos servidores HTTP
+Nome do site
+Ligações
+Login
+Grupo
+Não foi possível carregar a lista de sites. Poderá está danificada ou em utilização por outra aplicação
+Não foi possível guardar a lista de sites
+Número máximo de ligações simultâneas:
+Grupo pré-definido para uma nova transferência neste site
+Utilizar modo passivo FTP
+Por favor indique o nome do site
+Já existe um site com o mesmo nome. Por favor, indique outro
+Número máximo de ligações deve ser maior que 0
+Por favor seleccione o grupo
+Especifique, aqui, o nome do site
+Marque esta caixa para limitar o número máximo de ligações simultâneas
+Marque esta caixa para adicionar transferências deste servidor para o grupo seleccionado
+Perguntar ao utilizador
+Não perguntar novamente
+Erro ao escrever no disco
+O ficheiro "%s" já existe no disco. O que deseja fazer?
+Não perguntar novamente. A opção será aceita como pré-definida
+Sob rescrever o ficheiro existente
+Renomear este ficheiro
+Retomar transferência. [a transferência será iniciada na mesma posição do tamanho do ficheiro existente]
+Parar esta transferência
+Sim
+Não
+Transferir
+foi apagado. Apagar do disco?
+Por favor indique nome de utilizador e senha
+Login para "%s"
+Enviar nome de utilizador e senha especificada para o servidor
+Não ligar para este servidor
+O tamanho de "%s" foi alterado no servidor. O que deseja fazer?
+Reiniciar a transferência do início
+Ajustar transferência para o novo tamanho do ficheiro [Não recomendado]
+Por favor aguarde
+Actualizar
+Descrição
+Actualizar utilizando:
+Verificando actualizações
+Você já tem a versão mais recente
+Transferindo
+Versão %s Build %s disponível
+Versão completa %s (%s)
+Actualizar para a versão %s
+Actualizar para a versão %s (%s)
+O FDM deve ser reiniciado. Reiniciar agora?
+Actualizado
+Impossível encontrar actualizações
+Especificar o tipo de actualização
+Actualizar o FDM utilizando distribuição completa
+Actualizar o FDM utilizando distribuição de actualização
+Procurar mais informações sobre o processo de actualização
+O que há de novo nesta versão?
+Iniciar actualização do FDM agora
+Cancelar actualização e fechar
+Criar transferências
+Seleccionar conteúdo
+De seleccionar conteúdo
+Lista de transferências a adicionar
+Marque os itens da pasta seleccionada para adicioná-los à lista de transferências
+Desmarque os itens da pasta seleccionada para removê-los da lista de transferências
+Sobre FDM
+Direitos de autor (c)
+Todos os direitos reservados
+Registado para:
+Já está actualizado. É preciso reiniciar
+Nome de utilizador ou senha inválidos
+Não foi possível carregar histórico
+Não foi possível guardar histórico
+Definições pré-definidas do HTML Spider
+HTML Spider
+Árvore de páginas web
+Transferir web site
+Definições para transferir páginas web
+Iniciar transferência
+Parar transferência
+Agendar transferência
+Apagar
+Abrir página web no navegador
+Iniciar transferência automaticamente
+URL do web site (página)
+Ficheiros
+Apagar transferências?
+Não foi possível carregar lista de páginas web
+Não foi possível guardar lista de páginas web
+URL da página web ou do servidor HTTP do qual pretende transferir
+URL da página web ou do servidor HTTP do qual a transferência foi iniciada 
+Nome da pasta para guardar transferências
+Pasta de saída:
+Páginas web
+Páginas
+Extensões para ficheiros de páginas web com código HTML:
+Transferir ficheiros CSS
+Transferir páginas web de outros sites
+Imagens
+Transferir imagens
+Transferir imagens com link para outros sites
+Níveis de transferência:
+Extensões para ficheiros de páginas web com código HTML. As páginas web serão analisadas para verificar a existência de links para imagens ou outras páginas
+Se marcada, os ficheiros CSS também serão transferidos. [Recomendado]
+Se desmarcada, páginas web de outros sites não serão transferidas. Por exemplo, se a caixa estiver desmarcada e você iniciou uma transferência de {http://exemplo.com/}, então {http://outrosite.com/algum.htm} não será transferida, mas {http://example.com/algum.html} será
+Se marcada, imagens de páginas web também serão transferidas
+Se desmarcada, imagens de páginas web com links a outros sites não serão transferidas
+Níveis de transferência. Por exemplo, você iniciou a transferência de {http://ex.com/index.html}. Na página, há um link para http://ex.com/some.html de {http://ex.com/index.html}. Neste caso o nível de {http://ex.com/some.html} será 1. Configurando o nível em 0 fará com que apenas seja transferido o conteúdo da primeira página.
+Transferir ficheiros de páginas web
+Transferir ficheiros de outros sites
+Eliminar ficheiros com as seguintes extensões
+Mudar para
+Transferir
+Não transferir
+ficheiros com extensões:
+Marque esta caixa para transferir ficheiros de páginas web
+Marque esta caixa para transferir ficheiros de outros sites
+Marque esta caixa para ignorar ficheiros com as seguintes extensões
+Ficheiros com as extensões especificadas em baixo serão transferidos se marcados
+Ficheiros com as extensões especificadas em baixo não serão transferidas se marcados
+Exportar definições
+Importar definições
+Falha ao executar regedit.exe
+Ocorreu um erro ao exportar as definições
+Ocorreu um erro ao importar as definições
+Ficheiros de registo do FDM
+Eliminação de imagens por extensão
+imagens com as extensões:
+Marque esta caixa para ignorar imagens com as extensões especificadas
+Imagens com as extensões especificadas em baixo serão transferidas se marcadas
+Imagens com as extensões especificadas em baixo não serão transferidas se marcadas
+Não transferir e apagar
+O servidor não suporta retomada. Reinicie a transferência
+Falha ao abrir a URL
+Erro inesperado ao tentar escrever no registo
+Obrigado pelo registo! Por favor reinicie o FDM
+Transferir com FDM
+Transferir web site com FDM
+Adicionar o FDM ao menu de contexto do navegador
+Marque esta caixa para adicionar os itens "Transferir com FDM" e "Download Site com FDM" ao menu de contexto do navegador [o menu aparece com um clique no botão direito do rato]
+Diminuir nível de tráfego durante a actividade do navegador
+Diminuir um nível
+Utilizar modo lento
+Marque esta caixa para diminuir automaticamente o modo de tráfego quando você estiver navegando na Internet. Isto deixará o seu navegador mais rápido quando o FDM está transferir algo
+O modo de tráfego será diminuído um nível. De rápido>normal, de normal>lento
+O modo de tráfego será alterado para lento
+Válido para
+Válido para sub-domínios
+Marque esta caixa para utilizar este registo para transferências via HTTP
+Marque esta caixa para utilizar este registo para transferências via HTTPS
+Marque esta caixa para utilizar este registo para transferências via FTP
+Marque esta caixa para utilizar este registo para transferências em servidores de um sub-domínio. Por exemplo, para o site http://site.com será http://algum.site.com.
+Por favor seleccione, pelo menos, um dos protocolos
+Número máximo de transferências simultâneas
+Marque esta caixa para limitar o número máximo de transferências em simultâneo
+Reiniciar a transferência
+Criar mais uma secção
+Parar uma secção
+; context: [section x] - Stopped
+Parada
+; tray menu
+Caixa de transferência
+;
+Não foi possível encontrar a pasta de plug-ins do Opera. Deseja especificá-la manualmente?
+Não foi possível encontrar a pasta de plug-ins do Netscape. Deseja especificá-la manualmente?
+Não foi possível instalar monitor do Opera
+Não foi possível desinstalar monitor do Opera
+Não foi possível instalar monitor do Netscape
+Não foi possível desinstalar monitor do Netscape
+Marque esta caixa para o FDM capturar “cliques” no Opera
+Marque esta caixa para o FDM capturar “cliques” no Netscape
+; create download dlg
+Tamanho
+; request the size of a download
+Pedido...
+Pesquisar o tamanho de uma transferência no servidor
+Sim para todos
+Não para todos
+Relatório detalhado
+Se marcada, o FDM mostrará as respostas do servidor
+Alterações serão aplicadas após o reinício do navegador.
+Lista de tarefas
+Lista de ficheiros
+Lista de sites
+Lista de páginas
+Apagando transferências
+Criando lista de transferências
+Criar transferências em lote
+De:
+Até:
+Passo:
+Bytes:
+Resultados
+Exemplo:
+Número inicial da sequência
+Número final da sequência
+Passo de sequência. Por exemplo, se for 10, a sequência será 0, 10, 20, ...
+Contagem de bytes. Por exemplo, se for 1, a sequência será 1, 2, 3. Se for 2, a sequência será 01, 02, 03.
+Clique aqui para ver a sequência gerada
+Permitir ao navegador transferir se pressionar "Cancelar"
+Marque esta caixa para permitir ao navegador transferir o ficheiro se pressionar "Cancelar" no diálogo "Criar transferência"
+O número final da sequência deve ser superior ao inicial
+Por favor utilize (*) na URL para especificar o modelo
+Criar extensão se o ficheiro não tiver uma
+Marque esta caixa para criar uma extensão específica para um ficheiro que não a tenha. Por exemplo, se o nome do ficheiro for "file" e você tiver especificado "txt", o resultado será "ficheiro.txt"
+Mostrar tamanho em bytes
+Marque esta caixa para mostrar todos os tamanhos em bytes ao invés de kilobytes ou megabytes
+Verificar com antivírus
+Argumentos:
+Extensões:
+Marque a caixa para verificação automática do ficheiro pelo antivírus
+Indique, aqui, o nome do programa antivírus
+Indique, aqui, os argumentos do antivírus
+Indique as extensões dos ficheiros transferidos que serão verificados
+Por favor indique o nome do antivírus
+Nome inválido. Por favor, verifique
+Abrindo antivírus
+Desactivar tarefa após execução
+Apagar tarefa após execução
+Marque esta caixa para desactivar a tarefa automaticamente, após execução.
+Marque esta caixa para excluir a tarefa automaticamente, após execução.
+Ir
+Voltar
+Gerar nome de ficheiro automaticamente
+Marque esta caixa para gerar, automaticamente, um nome para o ficheiro transferido
+Guardar com extensão "htm"
+Marque esta caixa para guardar todas as páginas web com a extensão "htm"
+Clique neste botão para calcular o tamanho de todos as transferências
+Manter a estrutura de pastas do servidor
+Clique neste botão para manter a estrutura original das pastas do servidor. De outra forma todos os ficheiros do servidor serão guardados numa única pasta
+Você escolheu outra pasta. Quer defini-la como pré-definida deste grupo? Você também pode alterar a pasta pré-definida em Propriedades do grupo.
+; === ADDED LINES ===
+Transferência com esta URL já existe. O que deseja fazer?
+Abrir
+Abrir ficheiro transferido
+Versão
+Clique aqui para nos contactar
+Clique aqui para transferir a última versão
+Aviso: Este programa de computador está protegido por direitos de autor e tratados internacionais. A reprodução ou distribuição, não autorizada,deste programa ou de qualquer uma das suas partes, pode resultar em punições civis ou criminais, que serão aplicadas na máxima extensão do rigor da lei. 
+; === new version ===
+Transferir todos com FDM
+Adicionar à lista de transferências
+Remover seleccionado (s)
+Esta é a lista de URLS a serem adicionadas
+Clique neste botão para remover da lista as URLs seleccionadas
+Não foi possível encontrar pasta de plug-ins do Firefox. Deseja especificá-la manualmente?
+Não foi possível instalar monitor do Firefox
+Não foi possível desinstalar o monitor do Firefox
+Marque esta caixa para o FDM capturar os “cliques” no Firefox
+Transferência seleccionada pelo FDM
+Iniciando
+Websites
+Transferências activas
+Actualmente, não existem transferências activas
+Notificações
+Usar "balões" na bandeja
+Tempo esgotado
+Marque esta caixa para habilitar notificações através de "balões" na bandeja quando a transferência for parada ou finalizada. [só funciona com Windows 2000/XP ou superior]
+O "balão" será automaticamente fechado após esse tempo
+Servidores
+Procurar por servidores automaticamente
+Número máximo de servidores
+Calcular velocidade
+Recalcular velocidade a cada
+Marque esta caixa para que o FDM procure servidores automaticamente 
+Limitar o número de servidores por transferência. Permite a redução do tempo de cálculo para velocidade dos servidores
+Marque esta caixa para o FDM calcular a velocidade de cada servidor
+A velocidade dos servidores será recalculada automaticamente a cada intervalo de tempo especificado
+Não procurar se o tamanho do ficheiro for inferior a
+O FDM não procurará servidores se o tamanho do ficheiro for menor que o especificado
+Não procurar se o tamanho do ficheiro for desconhecido [recomendado]
+Adicionar servidor
+Procurar servidores
+Adicionar servidor manualmente para esta transferência
+Procurar servidores para esta transferência em FileSearching.com
+Lista de servidores
+Velocidade do servidor
+Em utilização
+Calcular velocidade do servidor
+Calcular velocidade dos servidores
+Informações sobre a transferência
+Aguardando...
+Servidor para transferência
+O ficheiro excede 2GB. Tais transferências só são suportados via FTP
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Nova transferência
+Determinar grupo automaticamente
+Grupo:
+Guardar a transferência na pasta apropriada
+Marque esta caixa para determinar automaticamente através da extensão do ficheiro ou pelas definições do Gestor de Sites
+Definir grupo manualmente
+Marque essa caixa se quiser guardar a transferência na pasta pré-definida do grupo [veja as Propriedades do grupo]
+Definir manualmente a pasta de saída 
+; END
+; BEGIN: Monitoring page
+Monitorizando silencioso
+Se marcada, não será exibido o diálogo "Criar transferência" quando adicionar uma transferência através do navegador 
+Personalizar
+Seleccione os itens de menu a serem exibidos no menu de contexto do navegador
+; END
+Seleccione os itens de menu a serem exibidos
+Deve ser seleccionado, pelo menos, um item
+Utilizar sons
+Marque este botão para o FDM tocar sons em alguns eventos (ex.: quando a transferência for concluída)
+Seleccione o som para cada evento
+; BEGIN : Customize sounds dialog
+Personalizar sons
+Definir sons
+Remover
+Testar
+Lista de eventos do FDM e sons apropriados. Você pode ajustar o FDM para tocar um som quando ocorrer um evento
+Transferência adicionada - tocar som quando uma ou mais transferências forem adicionados à lista
+Transferência concluída - tocar som quando a transferência for concluída com sucesso.
+Falha ao transferir - tocar som quando ocorrer um erro ao transferir o ficheiro.
+Ligação efectuada com sucesso - tocar som quando for estabelecida uma ligação Dial Up numa tarefa agendada.
+Falha na ligação - tocar som quando uma ligação Dial Up falhar numa tarefa agendada.
+Definir som para o evento seleccionado
+Não tocar som quando o evento seleccionado ocorrer
+Testar o som seleccionado
+Evento
+Ficheiro de som
+Sem som
+Transferência adicionada
+Transferência concluída
+Falha ao transferir
+Ligação efectuada com sucesso
+Falha ao ligar
+Ficheiros de som
+; END
+Procurando servidores...
+Calculando velocidade dos servidores...
+Procura de servidores já foi realizada
+Ligando ao servidor de procura...
+Recebendo resultados...
+Foram encontrados %d servidores
+Procura de servidores concluída
+Tentando outro servidor...
+Não foram encontrados servidores
+Falhou
+A velocidade dos servidores já foi calculada
+; BEGIN: History page
+Histórico
+Guardar histórico de links e pastas
+Guardar apenas histórico de pastas
+Manter relatórios entre
+Número máximo de relatórios
+Limpar histórico
+O FDM guardará o histórico de links e pastas 
+O FDM só guardará o histórico de pastas
+O FDM apagará os relatórios existentes no histórico além do período estipulado
+Número máximo de relatórios. Quando o número de relatórios exceder este valor, os mais antigos serão apagados
+Apagar todos os relatórios do histórico
+; END
+Importar
+Exportar
+Importar lista de transferências
+Exportar lista de transferências
+Ficheiros de texto
+Não foi possível abrir o ficheiro
+Exportar todas as transferências
+Exportar todas as transferências na lista
+Exportar transferências seleccionadas
+Não exportar transferências concluídas
+Anexar se o ficheiro já existir
+Nome do grupo inválido. Por favor não utilize os símbolos / ou \
+Sair após a conclusão 
+; BEGIN : Downloads History window
+Adicionado
+Guardado em
+; END
+Reciclagem
+; BEGIN: Recycle Bin
+Propriedades
+Limpar reciclagem
+;END
+; BEGIN : Recycle Bin properties
+Não enviar transferências apagadas para a reciclagem
+Manter no máximo
+transferências
+Não manter transferências concluídas
+Pedir confirmação ao eliminar transferências
+Propriedades da reciclagem
+Marque esta caixa para não enviar transferências apagadas para a reciclagem
+Marque esta caixa para limitar o número de transferências apagadas, a enviar para a reciclagem
+Número máximo de transferências que serão enviados para a reciclagem
+Marque esta caixa para que transferências concluídas não sejam enviadas para a reciclagem
+Marque esta caixa para que o FDM solicite confirmação para apagar uma transferência
+;END
+Restaurar
+Restaurando transferências...
+; History subitems
+Hoje
+Ontem
+Uma semana
+Um mês
+Personalizar...
+; end
+Limpar histórico
+Guardar histórico de transferências
+Guardar apenas para transferências concluídas
+Marque esta caixa para guardar o histórico das transferências
+Marque esta caixa para guardar, apenas, o histórico das transferências concluídas
+Definições do histórico de transferências
+Criando lista de históricos...
+; Download was deleted
+Foi apagada
+Seleccione o espaço de tempo
+Procurar
+Procurar próximo
+Procurar o que
+; BEGIN : Find dialog
+Procurar em
+Nome do ficheiro local
+Especifique o que deseja encontrar
+Procurar num ficheiro parcial da URL
+Procurar em toda a URL
+Procurar em comentários 
+Procurar no nome e caminho do ficheiro transferido no disco
+Definições avançadas de procura
+; ADVANCED settings
+Onde procurar
+Procurar na lista de transferências
+Procurar no histórico de transferências
+Procurar num período específico
+Definir
+Procurar na reciclagem
+Procurar por tamanho
+Mínimo
+Máximo
+Procurar na lista de transferências
+Procurar no histórico de transferências
+Apenas procurar em transferências realizadas num período específico 
+Definir período
+Procurar na reciclagem
+Que satisfaçam o tamanho especificado
+Tamanho mínimo requerido
+Tamanho máximo requerido
+Procurar no grupo
+Seleccione o grupo a procurar
+; END
+Procurando transferência...
+Item não encontrado
+Não foram encontrados mais itens
+Procura concluída
+Copiar URL para a área de transferência
+Pré-visualizar ficheiro ZIP
+Deve ser seleccionado, pelo menos, um ficheiro.
+É possível que o ficheiro a transferir esteja no formato ZIP. Deseja visualizá-lo?
+Pré-visualizar Áudio/Vídeo
+Falha ao abrir o ficheiro.
+Tipo de media desconhecido.
+Para utilizar esta função, deve instalar o DirectX 8.0 ou superior. Pode transferir a última versão do DirectX a partir site da Microsoft.
+Informação de media
+Tamanho:
+Disponível:
+Duração:
+Sem som
+Tocar
+Pausar
+Filtrar
+Extensões [separadas por espaços, ex.: zip rar arj]:
+Remover ficheiro com tais extensões
+Apenas manter ficheiros com tais extensões
+Argumentos não contêm a macro %file%. Esta macro é necessária para indicar ao antivírus, o ficheiro a ser verificado.
+Continuar mesmo assim?
+Aviso
+Utilizar atributo "oculto" para transferências incompletas
+Anexar comentário ao nome do ficheiro quando concluído
+Não guardar páginas de servidor
+Marque esta caixa se não desejar manter páginas de servidores no computador, mas somente ficheiros e imagens
+Utilizar pré-visualização zip
+Marque esta caixa para pré-visualizar o conteúdo do ficheiro ZIP antes de transferir.
+Volume:
+Iniciar transferência automaticamente
+Marque esta caixa para o FDM iniciar novas transferências automaticamente 
+Por favor seleccione os ficheiros a transferir
+Definir localizações alternativas (URLs) para esta transferência
+Não pré-visualizar no futuro
+Pré-visualização de ZIP está desactivada. Para reactivá-la, vá para Opções => Opções de transferências (Ctrl+O) => Nova página de transferência e marque a caixa "Utilizar pré-visualização de ZIP".
+Ignorar lista
+Lista de páginas web que devem ser ignoradas ao transferir um site.
+Sub pastas
+Adicionar
+Ignorar todas as sub pastas
+; Proxy tab new settings
+Usar recuperação [recomendado]
+Tamanho definido:
+bytes
+Marque esta opção se quiser activar a função de recuperação. Esta função ajudará a evitar que as suas transferências fiquem danificadas.
+Valores maiores permitirão a recuperação com mais segurança. O valor recomendado é de 3000 bytes, podendo ser aumentado caso as transferências continuem danificadas.
+; downloader options -> monitor tab
+Não monitorizar ficheiros inferiores a
+Utilizar esta opção para que o FDM ignore ficheiros inferiores ao tamanho especificado
+KBytes
+Aviso! O tamanho da reciclagem é grande demais e pode diminuir o desempenho drasticamente. Deve limpar a reciclagem. Gostaria de fazê-lo?
+Não verificar novamente
+Aviso! O Histórico é grande demais e pode diminuir o desempenho drasticamente. Deve limpar o Histórico. Gostaria de fazê-lo?
+O servidor não garante a retomada de transferências. Resposta inválida.
+Copiar para a área de transferência
+; general settings | skins page
+Temas
+Tema
+Tema deve utilizar os seus próprios ícones
+Tema deve utilizar os seus próprios bitmaps
+; default skin
+<pré-definido>
+Nota: Qualquer alteração só terá efeito após o reinício do FDM
+Exibir informações de transferência durante a evolução 
+Ignorar ficheiros com as extensões:
+Lista de extensões dos ficheiros a ignorar
+Nenhuma transferência activa
+Tocar som ao concluir as transferências
+Importar lista de URLs da área de transferência
+Senhas
+Opções do Gestor de sites
+; Save password dialog
+Guardar senha?
+O FDM pode guardar a senha para esse servidor, para evitar a necessidade de digitá-la a cada transferência a partir deste.
+Guardar esta senha?
+Não sugerir gravação de senha
+; Site Manager options | Passwords tab
+Utilizar Gestor de Site para guardar as minhas senhas
+Perguntar antes de guardar senhas
+Não sugerir gravação de senhas
+Apagar todas as senhas ao sair
+Apagar todas as senhas
+; create new HTML Spider task
+Remover as transferências concluídas da lista [recomendado]
+Marque esta caixa para apagar as transferências do HTML Spider automaticamente. Isso acelera as transferências de sites pesados.
+Alterações só terão efeito após o reinício do FDM
+New Style
+Old Style
+O nome do directório é inválido
+Ocultar janelas flutuantes no modo de ecrã inteiro
+Marque esta caixa para esconder as janelas flutuantes, automaticamente, no modo de ecrã inteiro
+foi agendada para iniciar.
+Deseja iniciá-las?
+Abrir transferência após conclusão
+Utilizar (*), (*A) or (*a) na URL para especificar o modelo para a URL
+Site de busca de servidores:
+Hibernar
+Em espera
+Lembrar opção
+Sugerir mudança de pasta pré-definida de grupo
+Guardar ficheiro
+Abrir ficheiro
+Guardar e abrir ficheiro
+Tipo de transferência:
+Link para FDM 
+Link para Free Download Manager
+Caro utilizador!
+Free Download Manager é um programa gratuito. Você poderá utilizá-lo pelo tempo que desejar. 
+Todavia, se você agostou do FDM, solicitamos-lhe ajuda para promove-lo podendo, por exemplo, colocar um link no seu site para HTTP://freedownloadmanager.or. Isso fará com que um maior número de pessoas conheça o Free Download Manager.
+Antecipadamente gratos por sua colaboração,\nEquipa de desenvolvimento do Free Download Manager.
+Lembre-me daqui a 3 dias
+Lembre-me da próxima vez que iniciar o FDM
+Não exibir janela novamente
+Ver o código HTML do link
+Código HTML do link
+Mais exemplos
+Copiar para área de transferência
+Ocultar
+; "Traffic usage mode has been changed" window
+O modo de tráfego foi alterado
+Você trocou o modo para o tráfego na rede.\nO FDM está disponível em três modos:
+Neste modo, o FDM irá transferir na máxima velocidade possível. É o modo mais "agressivo".
+Neste modo, o FDM irá transferir em velocidade normal. Este modo permite navegar pela Internet, ao mesmo tempo que transfere os ficheiros.
+Neste modo, o FDM irá transferir na mínima velocidade. Este modo permite a transferência, sem muita redução na velocidade da navegação.
+;
+Renomear ao reiniciar
+Introduza um valor inferior a %d
+; export/import downloads
+Lista de ficheiros URL
+Lista de ficheiros de informação das transferências
+;
+Opções de exportação
+;
+Datar a transferência conforme especificada pelo servidor
+Datar a transferência conforme datada no servidor
+Gerar um ficheiro de descrição
+Gerar um ficheiro com o nome "*.dsc.txt" [* é o nome do ficheiro transferido] que conterá uma pequena descrição do ficheiro transferido[comentários + url + data]. Esse ficheiro apenas será gerado para transferências com comentários.
+Ficheiro transferido de
+Não utilizar as datas existentes no servidor
+Essa opção permite o aumento da velocidade para iniciar transferências FTP. O FDM utilizará o comando "Tamanho" ao invés de "Lista".
+Não guardar logs de transferências
+Marcar essa opção fará o FDM iniciar e desligar mais rapidamente, diminuindo a utilização de memória.
+;
+Exportar histórico de transferências
+Exportar todas as entradas
+Exportar todas as entradas da lista
+Exportar as entradas seleccionadas
+Exportar somente as entradas de transferências concluídas
+;
+Ficheiros HTML
+;
+Histórico de transferências
+URL da transferência
+Transferido para ficheiro
+Tamanho do ficheiro
+Transferência concluída
+Transferência apagada
+;
+Guardado em
+Tamanho 
+Suporte a retomada
+Fechar esse diálogo, ao concluir ou parar a transferência
+Abrir
+Exibir janela novamente?
+Sim, mas escondendo temporariamente a janela "Evolução" para esta transferência
+Não quero ver mais esta janela
+Sim, mas sem janela de evolução para esta transferência
+Utilização da tecla SHIFT implica a eliminação da transferência sem hipotese de recuperação.\nTem certeza?
+Escolha o grupo
+Definir pasta raiz do grupo
+Seleccione a pasta raiz do grupo.\nAs alterações só serão aplicadas para novas transferências.
+Transferências recentes
+(vazio)
+Parar todas as transferências
+Exibir janela de evolução
+Se marcada, o FDM criará uma janela especial, com informações sobre as transferências em curso
+; general settings | misc page
+Tempo de espera para confirmação
+Abrir transferência
+Perguntar pelo tipo de encerramento
+Tempo de confirmação para o comando "Ferramentas | Desligar ao concluir".
+Tempo de confirmação para o comando "Ferramentas | Fechar o FDM (após concluir)".
+Tempo de confirmação para o comando "Ferramentas | Desligar o PC ao concluir".
+Tempo de confirmação para abrir o ficheiro após a conclusão da transferência.
+Se marcada, o FDM perguntará pelo tipo de encerramento para o comando "Ferramentas | Desligar o PC ao concluir".
+Não pedir confirmação
+; 5 segundos, 10 segundos,...
+%d segundos
+Esperar pela confirmação
+Ignorar páginas desta pasta
+Transferir páginas desta pasta
+Incluindo sub pastas
+Ignorar todas as páginas web localizadas nessa pasta.
+Transferir somente páginas web localizadas nesta pasta, ignorando todas a outras.
+Marque essa opção para que o HTML Spider ignore (ou apenas transfira)páginas localizadas em todas as sub pastas da pasta especificada.
+Especifique aqui a URL da pasta.\nExample: "http://site.com/docs/".
+Tipo
+Ignorar
+Apenas
+Série de números
+Assinar
+Especifique, aqui, a série de números para a lista do lote.\nEx. 1-100, or 1-100s2w3.
+Clique neste botão para definir uma série de números através da janela de diálogo que se abrirá.
+Número único
+Número
+Assinar série de números
+Erro de sintaxe 
+Extrair ficheiros
+Extrair
+Extracção
+Pasta de destino
+Falha na extracção. Formato do ficheiro desconhecido.
+Tráfego deste mês\n(%s no mês anterior)
+Velocidade total da transferência
+Desactivar em Ferramentas "Ao concluir" após execução
+Quando activada, qualquer tarefa tipo "Ao concluir" será desactivada após execução. Assim, será iniciada uma única vez.
+; %s
+; 1st - name of a file
+; 2nd, 3rd - file info (size + date).
+"%s" Ficheiro já existe.\n\nDeseja substitui-lo\n(%s)\n\npelo novo\n(%s)?
+Sim para todos
+Ignorar
+Ignorar todos
+Formato desconhecido
+Visite o web site
+Pacote de instalação
+Por omissão, o FDM apenas suporta ficheiros ZIP, RAR e ARJ .\nVocê pode estender a lista de ficheiros suportados, instalando um pacote adicional do FDM [é necessária uma ligação à Internet].
+Pacote FDM de suporte a ficheiros 
+Mover para cima
+Mover para baixo
+Mover transferência (s) seleccionada (s) para cima  
+Mover transferência (s) seleccionada (s) para baixo  
+Verificar integridade do ficheiro
+Alguns web sites fornecem "checksums" para ficheiros transferidos, garantindo-lhes a integridade. Pode introduzir este checksum aqui, que o FDM verificará a integridade do ficheiro.
+Algoritmo
+Checksum
+Colar da área de transferência
+Verificar
+Calculando o checksum do ficheiro...
+Sucesso ao verificar integridade do ficheiro
+Falha ao verificar integridade do ficheiro
+A verificação de integridade do ficheiro foi concluída com sucesso.\nNão foram encontrados erros.
+A verificação de integridade do ficheiro foi concluída.\nForam encontrados erros: o ficheiro está danificado. Deve reiniciar a transferência.
+Não exibir essa janela novamente se o teste tiver sucesso
+Não foi possível encontrar o executável do programa antivírus que escolheu.\nPor favor especifique-o manualmente.
+Tamanho dos ficheiros não coincide
+Guardar como:\n(Ex.: file(*)(*A)(*a).txt)
+O modelo especificado em "Guardar como" é inválido.\nCertifique-se de que corresponde ao modelo da URL.
+Quando terminar
+Quando terminar (concluído ou errado)
+Aplicações
+O que é isto?
+Opiniões
+;
+Caros amigos!
+Free Download Manager (FDM) é um dos mais aplicativos para transferência de ficheiros mais populares do mundo, contando com milhões de utilizadores activos, mas agora que se tornou aberto queremos mais! 
+Se você achou o FDM tão útil e indispensável como nós o achamos, pedimos que você nos ajude a "espalha-lo", colocando um link no seu blog, web site ou espaço pessoal, como o Myspace/MSN...
+; %s will be replaced with "FDM buzz" 
+Oficialmente, o %s começou em 16 de Agosto de 2006. O nosso objectivo é fazer do FDM, o utilitário mais amplamente divulgado na Internet, depois do FireFox!  
+FDM Buzz 
+; %s will be replaced with "blog"  
+Você poderá acompanhar a evolução do FDM em %s.
+blog
+A equipa de desenvolvimento do FDM agradece a sua ajuda
+Não exibir novamente, tenho boa memória. 
+Juntar-me ao BUZZ!
+Não, obrigado
+Comunidade FDM  
+Trocar para "Opiniões" depois de transferir
+Se marcada, o separador "Opiniões" será automaticamente activado, após a conclusão da transferência.
+Modificar identificação do Internet Explorer na rede
+Se marcada, instruirá os web sites que você navegar que o FDM está instalado no sistema. No entanto, utilizar esta opção pode resultar no bloqueio de alguns sites.
+Maléfico?
+Verificar se algum utilizador FDM, indicou que esta transferência tem algum tipo de virus/spyware/adware/etc.
+OK, nenhum utilizador FDM relatou sobre esta transferência ser maléfica [virus/spy].\n\nNo entanto, isso não é garantia de que a transferência não seja um malware sendo recomendável a sua verificação através do antivírus/spyware.
+; keep all %xxx, \n as is.
+Existem %d de %d de utilizadores FDM informando que a transferência é um malware [virus/spy/ad].\nA avaliação média desta transferência é %.*g.\n\nExibir as opiniões a respeito desta transferência?
+Antes de cada nova transferência, verificar se é um malware
+Utilizar estaa opção, para deixar o FDM verificar automaticamente, antes de transferir, se algum utilizador indicou esta transferência como malware [virus/spy].
+Exibir "Opiniões" durante a transferência
+Se marcada, FDM activará o separador "Opiniões" automaticamente e mostrará opiniões sobre a transferência.
+Verificando se a transferência é um malware (ver em opções com desactivar)
+OK, ninguém indicou esta transferência como malware [virus/spy/ad]
+Atenção! Alguém informou que esta transferência é um malware [virus/spy/ad]  
+Fechar
+Carregando
+Não faça esta transferência
+Durante a escrita no disco, para proteger os dados, usar cache de
+Se marcada, o FDM usará um buffer interno de cache com o tamanho que você especificar, para as operações de escrita dos dados transferidos. Isso reduzirá o número de acessos ao disco e poderá aumentar a velocidade das transferências.\nDe qualquer forma, como os dados não são imediatamente escritos no disco, caso haja uma falha no PC, esses dados em deverão ser\nnovamente transferidos (a quantidade de dados que você especificou).\nRecomendado para ligações de banda larga.
+Não é possível instalar o monitorizador do SeaMonkey
+Não é possível desinstalar o monitorizador do SeaMonkey
+Marque essa caixa para que o FDM capture os cliques no Mozilla Firefox
+Marque essa caixa para que o FDM capture os cliques no SeaMonkey
+Permitir transferência pelo navegador se decidir "Cancelar"  
+Marque essa caixa para o navegador transferir o ficheiro, quando você pressionar "Cancelar" na caixa de diálogo "Criar transferência"
+Adiciona o FDM ao menu de contexto do navegador
+Marque essa caixa para adicionar os itens "Transferir com FDM" e "Transferir Site com FDM" ao menu de contexto do navegador (menu do botão direito do mouse)
+Seleccione os itens de menu a serem instalados no menu de contexto do navegador
+Não é possível instalar a monitorização do Firefox
+Mover ficheiros para a pasta
+A velocidade é muito baixa. Reiniciando secção...
+Reiniciar se a velocidade ficar muito baixa durante(min):
+Reiniciar secção caso haja uma diminuição muito alta na velocidade da transferência. 
+Deseja visualizar novamente a janela de evolução?
+Desculpe, esse serviço não está disponível. Tente mais tarde.
+Mover para cima
+Mover para baixo
+Colocar no topo da lista
+Marque essa opção para que a transferência seja colocada no topo da lista. 
+Monitorização do Firefox  não pode ser activada porque a extensão FlashGot está instalada.\nDeve remover esta extensão.
+Activar
+Desactivar
+Trocar
+Se o modo "Parar todas as transferências" estiver activado, deverá ser desactivado ou de outra forma continuará activo.
+Oficialmente o %s começou em 16 de Agosto de 2006. Nosso objectivo é fazer do FDM o utilitário mais rapidamente divulgado na Internet, depois do FireFox! 
+Transferir e instalar actualizações automaticamente
+Notificar, mas não transferir 
+Desligar actualizações automáticas
+Monitor está activado em %s.
+Apagar registo
+OK para apagar?
+Não tem permissões de escrita na pasta FDM.\nDeve garantir direitos de escrita para o FDM guardar os ficheiros, ou então estes serão perdidos ao reiniciar o FDM. 
+Esta caixa permite pegar&&largar links directamente do navegador para o FDM.\nIsto permitir-lhe mostrar e esconder, rapidamente, a janela do FDM usando o botão esquerdo do rato.\n\nPara esconder, prima o botão direito ou desmarque a caixa de transferência no menu. 
+Caixa de transferências do FDM.
+Desactivar notificações para transferências em lote
+Marque esta opção para desactivar todas as notificações para transferências criadas através de "%s"
+Lista de exclusão
+Especifique a lista de extensões de ficheiros bem como a lista de sites que não devem ser monitorizados.
+Não capturar transferências destes sites (separados por espaços):
+O FDM não irá monitorizar transferências dos sites especificados nesta lista. Especifique aqui os domínios (ex."site.com"). Pode usar símbolos.
+Aviso!\nOcorreu um erro ao procurar por virus.\nDeseja, ainda assim, abrir o ficheiro?
+Integridade
+Verificar integridade ao transferir o ficheiro
+Para verificar a integridade do ficheiro, o FDM deve saber o checksum do ficheiro. Na maioria dos casos, deverá especifica-lo para cada transferência.
+Se falhar a verificação
+Checksum válido deste ficheiro
+Não fazer nada
+Especifique aqui o que o FDM deve fazer quando falhar a verificação de integridade.\nPerguntar - FDM deve perguntar o que fazer.\nReiniciar - FDM irá reiniciar esta transferência do inicio.\nNão fazer nada - FDM irá adicionar ao registo a falha e não fará mais nada.
+Verificando integridade...
+Verificação de integridade efectuada com sucesso.
+Falha ao verificar integridade!
+Especifique o algoritmo de verificação.
+Checksum válido
+Resultado do checksum
+; zip preview window
+Verificar/Não verificar todos
+; group's properties dialog
+Macros
+nome do servidor (ex. freedownloadmanager.org)
+caminho para a transferência
+ano actual
+mês actual (1 a 12)
+dia actual
+; don't translate "%year%-%month%-%day%" here
+equivalente a "%year%-%month%-%day%"
+;
+Do Firefox
+FDM irá assumir definições de proxy a partir do Firefox
+; new download settings
+Usar este grupo
+; Downloads -> Schedule ->
+Iniciar
+Parar
+Agendar início de transferência
+Agendar paragem de transferência
+;
+; downloads that not completed or were completed recently
+Não concluídos mais recentes
+Grupo raiz
+;
+; create new download dialog -> set output folder as default dialog
+Definir como pré-definida para todos os grupos de transferências
+; %s - place of name of the group. don't change this
+OK para definir esta pasta como pré-definida para o grupo "%s"?
+;
+;
+Apagar da lista de transferências
+Uploads
+Uploads de ficheiros
+Iniciar upload
+Parar upload
+Agendar upload
+Mover upload seleccionado para cima
+Mover upload seleccionado para cima
+Com sucesso
+Lista de Uploads
+Retendo URL destino do servidor base...
+Abortar
+; outlook express: view | insert file | ...
+Como anexo
+Como link
+Pasta
+;
+Adicionar ficheiros
+Adicionar pasta
+Bittorrent
+Activar protocolo Bittorrent
+Limite de tráfego para Uploads
+Limitar o número de ligações Upload
+Usar portas no intervalo
+até
+Activar DHT
+Activar/Desactivar protocolo Bittorrent. Contudo, se existir alguma transferência Bittorrent na reciclagem, o protocolo não será desactivado completamente.
+Limitar velocidade de Uploads. Não recomendado para o protocolo Bittorrent e poderá reduzir a velocidade da transferência.
+Limitar o número de ligações para Uploads. Definir um número pequeno poderá resultar na perda de velocidade das transferências.   
+Especificar o intervalo de portas que o FDM irá utilizar para as ligações de Upload.
+Activar extensão DHT
+Nome
+Login necessário
+Adicionar transferência Bittorrent
+Ocorreu um erro ao tentar processar este ficheiro torrent.
+Ficheiro torrent
+Parece que quer transferir um ficheiro torrent.Para o fazer, deve activar o protocolo Bitorrent.\nDeseja activá-lo? 
+Repita senhas: senhas introduzidas não coincidem.
+Especifique os ficheiros para Upload.
+Propriedades de Upload
+Ficheiro Metalink info foi detectado. Continuando transferência.
+Ficheiro Bittorrent info foi detectado. Continuando transferência.
+Falha ao aceder aos ficheiros no disco.
+Ligando...
+Resposta não válida.
+Resposta recebida com sucesso.
+Verificar parte de transferência mal sucedida. Retransferindo...
+Garantir largura de banda para esta transferência.
+Desactivar início automático do FDM ao arrancar o Windows?
+Desculpe, mas o serviço solicitado não está disponível. Tente mais tarde.
+Nome do ficheiro não pode conter os seguintes símbolos: \ / : * ? " < > |. Introduza um nome válido.
+Nome da pasta não pode conter os seguintes símbolos: \ / : * ? " < > |. Introduza um nome válido.
+Personalizar janela flutuante...
+Transparência
+Dados
+Manter ficheiros de dados na pasta do utilizador actual
+Manter ficheiros nesta pasta
+Alterações serão aplicadas após o reinício do FDM.
+Mostrar janela de evolução
+Criar FDM portátil
+Esta versão do FDM poderá ser utilizada em qualquer computador, sem necessidade de instalação ou configuração.\n\nPode, por exemplo, gravá-la numa pen.\n\nApós a execução do aplicativo, a aplicação será automaticamente registada e integrada aos navegadores. Ao fechar a aplicação, o registo será perdido.\nEscolha o caminho para a criação da aplicação. 
+Integração
+Associar ficheiros .torrent ao FDM
+Utilizar sempre este grupo para novas transferências
+Utilizar sempre este grupo e lembrar a última pasta de saída
+Transferências Flash Vídeo
+Transferir vídeo com FDM
+Site não suportado. Verifique a lista de sites suportados.
+Ver na janela de transferências
+Esta é uma página com vídeos Flash. A transferir...
+Convertendo...
+Converter
+Opções de conversão
+Formato do ficheiro
+Tamanho do vídeo
+; video quality
+Qualidade
+Muito reduzida
+Reduzida
+Normal
+Média
+Elevada
+Muito elevada
+;
+AVI usando MPEG-4 (*.avi)
+AVI usando XVID (*.avi)
+Não alterar
+Bitrate de vídeo
+Bitrate de áudio
+Lembrar definições
+;
+Criar transferência Flash Vídeo
+Converter automaticamente os vídeos transferidos, para o formato especifico
+Opções avançadas
+Ver lista de sites suportados
+; used in "create flash video download" window
+exemplo
+Próxima tentativa de ligação em %d segundos
+Preparando ficheiros no disco... Pode demorar alguns minutos
+Estado
+Preparando ficheiros no disco
+MP4 para iPod/PSP (MPEG4 + AAC, *.mp4)
+Converter/Pré-visualizar media
+Coverter ficheiros de media
+Trocar para este separador automaticamente
+;keep "\n\n%s\n" as is
+O ficheiro foi convertido com sucesso e gravado em \n\n%s\n.
+Falha ao converter ficheiro\n\n%s.
+Grupo para novas transferências
+Informação
+Examinar
+Cliente
+Peças
+Tracker
+Estado de tracker
+Velocidade de Upload
+Bytes enviados
+Rácio de partilha
+Contar bytes perdidos
+URL de ficheiro torrent
+Tem a certeza?\nIrá reiniciar a transferência do inicio.
+Tráfego utilizado ("transferido"; "enviado") neste mês\n(%s no mês anterior)
+Velocidade total ("transferência"; "envio")
+Ficheiros a enviar
+Nome do pacote
+Comprimir
+Definir senha para esta transferência
+Repetir senha
+Manter estes ficheiros
+Número suposto de transferências
+Adicionar link aos ficheiros no catálogo
+Incluir informação avançada (todos os campos são opcionais)
+Descrição
+Tags
+Seu nome
+Seu e-mail
+E-mail para receber
+Menos de 10
+De 10 a 100
+Mais de 100
+2 dias
+7 dias
+1 mês
+;compression methods
+Nenhum
+Rápido
+Médio
+Melhor
+Definições de Uploader
+Integrar Uploader ao
+Menu de contexto do explorador
+Menu "enviar para..."
+Utilizar menu simples
+Tamanho mínimo do ficheiro a enviar
+Definições de proxy HTTP
+Activação de Upload
+O Upload requer activação, para proteger o servidor de Uploads automáticos. Introduza código de activação.
+Ligando ao servidor de Upload
+Ligação ao servidor efectuada com sucesso
+Ficheiro enviado com sucesso
+O envio do ficheiro foi interrompido
+Criar arquivo zip do ficheiro a enviar...
+Falha ao criar o arquivo
+Arquivo criado com sucesso
+Enviando o pedido ao servidor
+Enviando informações sobre o ficheiro, para o servidor
+Informação enviada
+Falha ao enviar a informação sobre o ficheiro, para o servidor
+Activando Upload
+Upload activado com sucesso
+Falha ao activar Upload
+O ficheiro foi alterado no disco
+Erro inesperado
+Calculando checksum
+; "I agree to terms" string in two lines
+Concordo com
+as condições
+Deve concordar com as condições.
+Falha ao verificar actualizações
+Nova versão disponível. Actualização necessária.\nDeseja actualizar agora?
+Actualização do FDM necessária
+Reinicio do FDM necessário
+Sugerir para enviar anexos
+Anexar à carta (lento)...
+Enviar e inserir link (rápido)...
+Ocorreu um erro ao enviar o ficheiro. Verifique a ligação e tente novamente. 
+Anexou um ficheiro(s) grande(s).\nDevido a várias razões não é recomendado ficheiros deste tamanho como anexos,mas sim enviar ficheiros e links para eles.\n\Deseja enviar na mesma?   
+Envio recomendado
+Definições de integração
+Envio de %s concluído.\nDeve utilizar o link seguinte como URL para transferir:    
+Tamanho total
+Abrir no navegador
+Esta versão do FDM não pode ser utilizada para enviar ficheiros. Deve actualizar para a versão mais recente. 
+Esta versão do FDM não pode ser utilizada. Deve actualizar para a versão mais recente. Por favor visite "Freedownloadmanager.org"
+Entrada muito comprida.
+Definições de integração do gestor de Uploads
+Definições de integração do Free Upload Manager
+Enviar
+Transferindo actualizações...
+Activar escalamento das transferências
+Desactivar escalamento por omissão
+Considerar como maliciosa se, pelo menos,
+% dos utilizadores a definirem como tal
+OK, os utilizadores FDM não divulgaram nada negativo sobre esta transferência.\n\Contudo, não há garantia que a transferência não seja maliciosa. Assim deve verifica-la com o anti-vírus. 
+OK, os utilizadores FDM não divulgaram nada negativo sobre esta transferência
+letra da drive para executar o FDM. Útil para versões portáteis.
+Deve instalar o plugin Vídeo Converter para poder transferir através deste protocolo.
+Deve instalar o plugin Bittorrent para poder transferir através deste protocolo.
+Nota: estes ficheiros são serviços do FDM
+Deseja copiar os ficheiros actuais para a nova pasta? (ficheiros existentes serão sobrescritos)
+Pasta pré-definida para todos os grupos será esta.\nOK para continuar?
+Seleccionar pasta pré-definida

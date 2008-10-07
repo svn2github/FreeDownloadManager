@@ -1,0 +1,1605 @@
+; This is a language file
+; You can translate it into your native language
+; To do this, follow instructions:
+; - PLEASE make sure FDM hasn't already been translated into your language 
+;   You should go to FDM web site (http://freedownloadmanager.org) and 
+;   check the list of available languages
+;   or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng into your language
+; - send the translated file to support@freedownloadmanager.org 
+;
+; Free Download Manager language file
+; www.freedownloadmanager.org
+;
+; Language Name: Galego
+; Intended application version: 2.5 build 738
+;
+; Translator: Manuel Meixide (m.meixide0@gmail.com)
+; Last Updated: 27-08-2008
+;
+; Previous translations:
+;
+;******************************************************************************
+
+; Your language name. Please keep it in
+Galician
+;
+;
+; Below are the strings to translate:
+;
+Gardar todo
+Cortar
+Copiar
+Pegar
+Modo livián
+Modo medio
+Modo pesado
+Opcións de descarga
+Conexión telefónica
+Acerca de FDM
+Saír
+Arquivo
+Edición
+Ver
+Opcións
+Ferramentas
+Axuda
+Barra de ferramentas
+Barra de estado
+Asistente de optimización
+Configuración predeterminada de descargas
+Configuración xeral
+Conexión telefónica
+Colgar ao finalizar
+Apagar PC ao finalizar
+Consulta de axuda
+Páxina Web de FDM
+Notificar a un amigo
+Enviar e-mail ao grupo de soporte
+Verificar actualizacións automaticamente
+Buscar actualizacións agora
+-
+-
+Cambiar a 
+Modo de uso de tráfico
+Rexistro
+Descargas
+Programador
+Explorador de sitios
+Explorador HTTP//FTP
+Administrador de sitios
+Agregar descarga
+Iniciar descarga
+Deter descarga
+Programar descarga
+Agregar tarefa
+Propiedades de tarefa
+Descargar arquivos seleccionados
+Deter
+Actualizar
+Agregar sitio
+Propiedades do sitio
+Grupos de descargas
+Detalles da descarga
+Rexistro do programador
+Rexistro do explorador de sitios
+Barra lateral
+Crear nova descarga
+Eliminar descarga
+Executar arquivo
+Abrir cartafol
+Iniciar descarga automaticamente
+Propiedades da descarga
+Habilitar tarefa
+Desactivar tarefa
+Eliminar tarefa
+Abrir cartafol superior
+Desconectar
+Descargar
+Configuración do Explorador de sitios
+Eliminar sitio
+Entrada temporal
+Sitios
+Mostrar fiestra principal
+Monitorear navegador
+Monitorear portapapeis
+Iniciar todas as descargas
+Deter todas as descargas
+-
+Continuar
+-
+-
+-
+-
+-
+Cancelar
+-
+-
+-
+Todos os grupos
+Filtros
+Completo
+En progreso
+Programado
+Detido
+Outro
+Crear novo grupo
+Eliminar grupo
+Eliminar todas as descargas
+Eliminar todas as descargas completas
+Abrir cartafol de grupo
+Propiedades do grupo
+Nome do grupo:
+Cartafol predeterminado:
+Extensións de arquivos (separadas por espazos):
+Prioridade predeterminada de descarga
+Moi baixa
+Baixa
+Media
+Alta
+Moi alta
+Por favor introduza o nome do grupo
+Erro de entrada
+Xa existe un grupo co mesmo nome. Por favor introduza outro nome
+Por favor introduza o nome do cartafol
+Elixa o cartafol de grupo predeterminado
+Introduza o nome do grupo aquí
+Cartafol predeterminado para gardar as descargas deste grupo
+Navegar
+Extensión de arquivo para este grupo. Usada para detectar o grupo de descarga automaticamente
+Prioridade de descarga predeterminada para este grupo
+Cancelar cambios e pechar a fiestra
+Aplicar cambios e pechar a fiestra
+Erro en grupos de descarga
+Por favor reinstale Free Download Manager
+Erro
+Imposible cargar a lista de descargas. Posiblemente foi danada ou estea sendo usada por outra aplicación
+Fallou ao iniciar a integración con Internet Explorer
+Está seguro?
+Isto eliminará todas as descargas do grupo
+Confirmación
+Nome do arquivo
+Tamaño
+Descargado
+Tempo restante
+Seccións
+Velocidade
+Comentario
+Rexistro
+Progreso
+Hora
+Data
+Información
+Limpar
+Auto desprazar
+Erro de rede descoñecido
+Acceso denegado. Nome de usuario ou contraseña non válidos
+Acceso denegado. Contraseña non válida
+Operación exitosa
+Imposible conectar ao servidor
+Arquivo non atopado no servidor
+Perdeuse a conexión co servidor
+O servidor non responde
+Imposible resolver o nome do servidor
+O servidor non soporta a continuación de descargas. Non deteña esta descarga; pola contra terá que iniciala desde o principio
+Requírese o nome de usuario e a contraseña do Proxy
+Erro estendido
+Mala petición. Posiblemente sexa unha dirección mala
+Erro de servidor descoñecido
+Conexión abortada
+Mala dirección
+Non hai conexión a Internet
+Versión HTTP seleccionada non soportada polo servidor
+Erro descoñecido
+Imposible eliminar o arquivo do disco
+Alcanzouse o límite de conexións con este servidor
+Alcanzouse o límite de conexións
+Pausa %d seg.
+Sección
+Iniciada
+Terminada
+Descarga completa
+Conectando...
+Conexión exitosa
+Redireccionando...
+Redirección exitosa. Abrindo nova dirección
+Iniciando descarga...
+Detida
+Creando nova sección...
+Cancelada
+Reiniciando descarga...
+Abrindo arquivo en disco...
+Nome de arquivo demasiado longo
+O arquivo xa existe. Cambie o nome a 
+Renomear a
+arquivo de destino foi eliminado. Imposible continuar
+O arquivo xa existe. Sobrescribir
+O arquivo xa existe. Renovar descarga
+O arquivo xa existe
+Fallo ao abrir arquivo en disco
+O tamaño do arquivo cambiou no servidor!
+Axustando o novo tamaño...
+Imposible sobrescribir o arquivo
+O arquivo será renomeado
+Imposible renomear o arquivo ao seu nome orixinal
+Imposible gardar os grupos
+Imposible gardar descárgalas
+Conexión telefónica
+Conectar a:
+Marcar automaticamente 
+Conectar
+Elixir a conexión aquí
+Marque esta casa se quere iniciar a conexión automaticamente a próxima vez
+Marcar agora
+Non marcar e pechar esta fiestra
+Non se atoparon entradas para marcar
+Liña ocupada
+Fallo de hardware
+Non hai ton
+Marcando
+Intento
+Abrindo porto...
+Marcando ao provedor...
+Conectado a computadora remota
+Verificando usuario e contraseña...
+Velocidade de conexión %d BPS
+Desconectado
+Repetición
+O servidor require autentificación
+Usuario:
+Contraseña:
+Grupo:
+Gardar no cartafol:
+Gardar como:
+Iniciar
+Automaticamente
+Manualmente
+Programar
+Prioridade de descarga
+Avanzado
+Dirección do arquivo que quere descargar
+Ingrese usuario aquí
+Ingrese contraseña aquí
+Marque esta casa se o servidor require autenticación
+Nome do grupo para situar as descargas. Os grupos axúdanlle a ordenar as súas descargas
+Cartafol para gardar as descargas
+Novo nome para o arquivo descargado. Deixe este campo baleiro se quere gardar o arquivo co seu nome orixinal
+Descrición curta de descarga
+Esta descarga iniciarase automaticamente en canto sexa posible
+FDM non intentará iniciar esta descarga automaticamente
+Programar esta descarga
+Configurar programador de descarga
+Prioridade de descarga. As descargas con prioridade máis alta iniciaranse primeiro. As descargas con menor prioridade serán pospostas
+Ver configuración avanzada para esta descarga
+Dirección incorrecta. Por favor verifíquea
+Por favor ingrese usuario
+Elixa o cartafol de destino
+Xeral
+Información Xeral
+Gardar a descarga no arquivo:
+Nome do arquivo descargado
+A dirección desta descarga non se pode cambiar
+Descarga en progreso. Imposible cambiar o nome
+Imposible renomear o arquivo
+Arquivo non atopado
+Ruta non atopada
+Formato .exe non válido
+O arquivo está sendo usado por outra aplicación
+Acceso denegado
+O dispositivo non está listo
+Disco cheo
+Nome de arquivo non válido
+Require o inicio de sesión
+Conexión
+Rede
+Erros
+Pausa entre intentos de conexión (en segundos):
+Número máximo de intentos
+Tempo de espera (en segundos):
+Tamaño mínimo:
+Cantidade máxima:
+Restrición do tráfico para a descarga
+Limitar o tráfico a 
+Ignorar todas as restricións
+B
+KB
+MB
+; second. e.g. KB/s
+s
+Ingresar valor maior a %d
+Por favor seleccionar dimensión
+Tempo de espera de conexión do servidor en caso de erro
+Marque esta casa se quere limitar o número máximo de intentos de descargas non exitosos
+Tempo de espera para a resposta do servidor
+Tamaño mínimo de sección. A descarga non se dividirá en seccións de menor tamaño
+Número máximo de seccións. A descarga non se dividirá nun número maior de seccións
+Especifique o tráfico (máximo) que FDM tomará para a descarga
+Ignorar restricións de tráfico e restricións para o número máximo de conexións para esta descarga
+Pode especificar o valor en bytes (B), kilobytes (KB) ou megabytes (MB) neste campo
+Protocolo
+Identificarse no servidor como:
+Remitente:
+Usar HTTP 1.1
+Usar cookies
+Usar modo pasivo
+Modo de transferencia
+Binario
+Usar ASCII para arquivos coas extensións:
+Especificar como FDM identificarase co servidor HTTP
+Esta cadea enviarase como campo Remitente ao servidor HTTP. Como regra, non se require
+Marque esta casa se quere que FDM use HTTP versión 1.1
+Marque esta casa se quere que FDM use cookies
+Marque esta casa se quere que FDM use modo pasivo para servidores FTP. Ás veces é necesario cando se traballa con firewalls
+Usar modo binario para transferencias FTP. Estableza este modo se o arquivo que está descargando non é de texto
+Usar modo ASCII para transferencias FTP. Estableza este modo se o arquivo que está descargando é de texto
+FDM usará o modo ASCII para arquivo con extensións especificadas. Para outros arquivos FDM usará o modo binario
+Proxy
+Obter configuración proxy
+De Microsoft Internet Explorer
+Especificar manualmente
+Non usar proxy
+Configuración
+Dirección:
+Porto:
+Ingrese a dirección do proxy
+Ingrese o porto do proxy
+FDM tomará a configuración do proxy de Internet Explorer
+Especifique a configuración proxy vostede mesmo
+FDM non usará proxy
+Elixa o tipo de servidores para os que quere especificar o proxy
+Ingrese a dirección do proxy que queira usar
+Ingrese o porto do proxy. Como regra, é 3128, 1080 ou 8080
+Marque esta casa se o servidor proxy require autenticación
+Varios
+Arquivo local
+Se o arquivo xa existe:
+Reservar espazo no disco para descargar o arquivo
+Extensión adicional de arquivo para descargas incompletas:
+Servidor de Internet
+Non reiniciar a descarga se o servidor non admite renovar
+Se o tamaño do arquivo cambiou no servidor:
+Deter en erros
+Preguntar
+Sobrescribir
+Renombrar
+Renovar
+Reiniciar
+Axustar
+Especifique a extensión do arquivo
+Aquí pode especificar o que fará FDM se o arquivo xa existe no disco
+Marque esta casa se quere que se reserve espazo en disco cando se inicie a descarga
+Se a marca, FDM engadirá a extensión especificada ao arquivo mentres se descarga. Cando a descarga termine FDM renomerá o arquivo ao seu nome orixinal
+FDM non reiniciará a descarga se o servidor remoto non o admite
+Pode especificar o que fará FDM se o tamaño do arquivo foi cambiado no servidor
+Marque esta casa para deter a descarga cando o arquivo non se atope no servidor
+Marque esta casa para deter a descarga cando o usuario e contraseña non sexan válidos
+Modos de tráfico
+Seleccione o modo a configurar:
+Número máximo de conexións:
+Número máximo de conexións por servidor:
+Restricións de tráfico:
+ilimitado
+Seleccione o modo de tráfico que desexa configurar
+Marque esta casa para limitar o número máximo de conexións
+Marque esta casa para limitar o número máximo de conexións por servidor
+Especifique aquí o tráfico (máximo) de FDM para descargar arquivos
+Todas
+Listado de descargas
+Auto-gardar cada
+min.
+Ao eliminar unha descarga incompleta
+Eliminar automaticamente da lista as descargas completas
+Non eliminar o arquivo
+Eliminar o arquivo
+FDM garda a lista das descargas automaticamente despois do intervalo de tempo especificado. Protexe a lista de posibles colgues do seu PC ou fallas de enerxía
+Especifique aquí o que fará FDM co arquivo no disco cando se eliminen as descargas incompletas
+Marque esta casa se quere eliminar automaticamente as descargas da lista cando finalicen
+Seguimento
+Facer seguimento
+Portapapeis
+Facer seguimento de arquivos con extensións
+Ignorar arquivos con extensións
+Non debe presionarse ALT
+Debe presionarse ALT
+Por favor especifique as extensións
+Marque esta casa se quere que FDM rexístrese no Internet Explorer
+Marque esta casa se quere que FDM monitoree a súa portapapeles
+Facer seguimento soamente de arquivos con extensións especificadas
+Non facer seguimento de arquivos con extensións especificadas 
+Facer seguimento soamente se a tecla ALT non está presionada
+Facer seguimento soamente se a tecla ALT está presionada
+Inicio
+Cargar ao comezo
+Iniciar minimizado
+Sistema
+Minimizar cara á bandexa
+O botón Pechar minimiza a fiestra
+FDM iniciarase automaticamente cando inicie Windows
+FDM minimizarase logo de iniciar
+Cando faga clic no botón Minimizar FDM minimizarase cara á bandexa do sistema
+Se está marcado, ao facer clic no botón Pechar será similar ao botón Minimizar
+Actualizar
+Dirección do servidor de actualización
+FDM verificará automaticamente se hai unha nova versión
+Asistente de optimización do uso de rede
+Benvido ao asistente de optimización do uso de rede!
+Este asistente axudaralle a establecer os valores óptimos para o seu tipo de conexión. Configurará as propiedades do administrador de descargas e as propiedades predeterminadas para a descarga.
+Seleccione o tipo de conexión
+Terminar
+Especifique o tipo de conexión a Internet
+Configurar FDM para traballo óptimo coa súa conexión
+Tarefa
+Hora de inicio
+Seguinte hora de inicio
+Última hora de inicio
+Imposible cargar a lista de programacións. Posiblemente estea danada ou sendo usada por outra aplicación
+Imposible cargar o rexistro do Programador
+Imposible gardar a lista de programacións
+Tarefa "%s" programada. Iniciala?
+Cambiar o modo de tráfico a "%s"
+Colgar
+Todas as conexións
+Cambiar o modo de tráfico a 
+Apagar
+Reiniciar
+Pechar sesión
+Unha vez 
+Dom
+Lun
+Mar
+Mer
+Xov
+Ven
+Sab
+Os días:
+Todos
+días
+horas
+Ao comezo de FDM
+Cando se realice o marcado
+Cando falle o marcado
+Cando non haxa descargas activas
+Cando a velocidade sexa menor ou igual a %d BPS durante %d
+Cando todas as descargas teñan estado de erro
+Nunca
+Descoñecido
+Conectado exitosamente a "%s"
+Fallo ao conectar a "%s"
+Execución exitosa
+Fóra de memoria
+Imposible executar
+A execución programada ocasionará a saída do programa ao comezo. A programación será ignorada
+Máximos intentos de marcado
+Pausa entre intentos
+Colgar se a velocidade de conexión é menor que:
+Intentar de novo
+Non máis que
+Usar a conexión
+Se é exitosa
+veces
+Cortar todas as conexións activas
+Conexión a cortar
+Nome do programa:
+Argumentos:
+Tipo de apagado:
+Forzar aplicacións a pechar
+Executar programa
+Establecer conexión telefónica
+Cortar conexión
+Cambiar modo de tráfico
+Saír de FDM
+Apagar PC
+Descargas a iniciar
+Descargas a deter
+Aplicacións
+Todos os arquivos
+Síntoo, esta característica está dispoñible só en Windows 2000, XP e superior
+Por favor ingresar nome de programa
+Por favor seleccionar descargas
+Seleccione o modo de tráfico que queira que sexa establecido ao iniciar a tarefa
+Marque esta casa se quere limitar o número máximo de intentos de marcado errados 
+Tempo entre intentos errados
+Marque esta casa para establecer conexión con velocidade non menor ao valor que especificou
+Especifique o valor mínimo de velocidade de conexión requirida
+FDM intentará establecer novamente a conexión requirida se marca esta casa
+Marque esta casa para limitar o número máximo de intentos errados para establecer a conexión
+Especifique aquí as descargas requiridas
+Lista de todas as descargas dispoñibles
+Agregar a descarga seleccionada á lista de tarefas de descargas
+Eliminar a descarga seleccionada da lista de tarefas de descargas
+Especifique o programa que queira executar aquí
+Buscar o programa na súa computadora
+Especifique argumentos do programa aquí
+Especifique o tipo de fin de sesión aquí
+Marque esta casa para forzar o fin da súa sesión. É útil se hai aplicacións colgadas no sistema. Neste caso, os datos non gardados perderanse
+Especifique a acción programada aquí
+Marque esta casa se quere que FDM corte todas as conexións activas
+Especifique a conexión a cortar aquí
+En certos días
+Domingo
+Luns
+Martes
+Mércores
+Xoves
+Venres
+Sábado
+En eventos
+Duración
+Velocidade baixa:
+min.
+Minutos
+Horas
+Días
+Cando a velocidade de descarga sexa demasiado baixa
+Cando todas as descargas estean en estado de erro
+Por favor especifique os días
+Iniciar a tarefa á hora especificada
+Estableza a hora para iniciar a tarefa aquí
+Iniciar a tarefa na data especificada
+Estableza a data para iniciar a tarefa aquí
+Iniciar a tarefa en certos días da semana
+Iniciar a tarefa todos os Domingos
+Iniciar a tarefa todos os Luns
+Iniciar a tarefa todos os Martes
+Iniciar a tarefa todos os Mércores
+Iniciar a tarefa todos os Xoves
+Iniciar a tarefa todos os Venres
+Iniciar a tarefa todos os Sábados
+Iniciar a tarefa periodicamente
+Este campo permítelle especificar o intervalo de tempo en minutos, horas ou días
+Iniciar a tarefa cando suceda algún evento
+Especifique aquí o tipo de evento
+Introduza aquí o intervalo de tempo
+Introduza aquí a velocidade mínima requirida
+Mostrar confirmación para executar a tarefa
+Esperar confirmación durante
+seg.
+Se está marcado, FDM pediralle confirmar a execución desta tarefa
+Se está marcado, FDM esperará que confirme durante o intervalo de tempo especificado. Se non reacciona durante este tempo a tarefa iniciarase
+Dirección:
+Construción da lista de arquivos a descargar
+Conectando ao servidor
+Intentando usar o usuario e contraseña almacenados no Administrador do Sitio
+Recuperando lista de arquivos do servidor
+A conexión co servidor perdeuse. Intentando restaurar
+Construíndo lista
+Recuperar tamaño e data de última modificación
+(Esta opción pode diminuír drasticamente a velocidade)
+Marque esta casa se quere que FDM pregunte o tamaño e a data dos arquivos nos servidores HTTP
+Nome do sitio
+Conexións
+Inicio de sesión
+Grupo
+Imposible cargar a lista de sitios. Posiblemente estea danada ou sendo usada por outra aplicación
+Imposible gardar a lista de sitios
+Máximas conexións simultáneas:
+Grupo por defecto para unha nova descarga deste sitio
+Usar modo pasivo FTP
+Por favor ingrese o nome do sitio
+Xa existe un sitio co mesmo nome. Por favor ingrese outro nome
+O número de máximas conexións debe ser maior a 0
+Por favor seleccione o grupo
+Especifique o nome do sitio aquí
+Marque esta casa para limitar o número máximo de conexións simultáneas a este servidor
+Marque esta casa para agregar descargas desde este servidor ao grupo seleccionado automaticamente 
+Pedir usuario
+Non preguntarme outra vez
+Erro de escritura en disco
+O arquivo "%s" xa existe no disco. Que facer?
+Non preguntarlle isto outra vez. A súa elección será aceptada por defecto
+Sobrescribir o arquivo existente
+Renomear este arquivo
+Renovar descarga. (A descarga iniciarase na mesma posición do tamaño do arquivo existente)
+Deter esta descarga
+Si
+Non
+Descargar
+Eliminouse. Eliminar o arquivo do disco tamén?
+Por favor ingrese usuario e contrasinal
+Inicio a "%s"
+Enviar o usuario e contrasinal como o especificou ao servidor
+Non conectar a este servidor
+O tamaño de "%s" cambiouse no servidor. Que facer?
+Reiniciar a descarga desde o comezo
+Axustar a descarga para o novo tamaño. Non recomendado
+Por favor espere
+Actualizar
+Descrición
+Actualizar usando:
+Verificar actualizacións
+Vostede xa está usando a nova versión
+Descargando
+A versión %s construída %s está dispoñible
+Distribución completa da versión %s (%s)
+Actualizar a versión %s
+Actualizar a versión %s (%s)
+Free Download Manager debe reiniciarse. Reiniciar agora?
+Actualización completa
+Imposible atopar a actualización
+Especifique o tipo de actualización aquí
+Actualizar FDM usando a distribución completa
+Actualizar FDM usando a distribución de actualización
+Buscar máis información sobre o proceso de actualización
+Que é o novo nesta versión?
+Iniciar a actualización de FDM agora
+Cancelar a actualización e pechar esta fiestra
+Crear descargas
+Seleccionar contido
+Desmarcar contido
+Lista de descargas a agregar
+Marcar os elementos do cartafol seleccionado para agregalos á lista de descarga
+Desmarcar os elementos do cartafol seleccionado para non agregalos á lista de descarga
+Acerca de FDM
+Copyright (c)
+Todos os dereitos reservados
+Rexistrado a:
+Xa está actualizado. Requírese reiniciar
+Nome de usuario ou contrasinal non válidos
+Imposible cargar o arquivo de historial
+Imposible gardar o arquivo de historial
+Configuración predeterminada da araña HTML
+Araña HTML
+Árbore de páxinas Web
+Descargar sitio web
+Configuración descargas páxinas Web
+Iniciar descarga
+Deter descarga
+Programar descarga
+Eliminar
+Abrir páxina Web no navegador
+Iniciar a descarga automaticamente
+Dirección do sitio web
+Arquivos
+Eliminar tamén as descargas?
+Imposible cargar a lista de páxinas Web
+Imposible gardar a lista de páxinas Web
+Dirección da páxina Web ou servidor HTTP de onde queira descargar
+Dirección da páxina Web ou servidor HTTP desde o cal iniciouse a descarga
+Nome do cartafol onde gardar descárgalas
+Cartafol de destino:
+Páxinas Web
+Páxinas
+Extensións de arquivos de páxinas Web con código HTML:
+Descargar arquivos CSS
+Descargar páxinas Web desde outros sitios
+Imaxes
+Descargar imaxes
+Descargar imaxes que vinculen a outros sitios
+Profundidade da descarga:
+Extensións de arquivos de páxinas Web con código HTML. As páxinas Web examinaranse buscando enlaces de imaxes e doutras páxinas a descargar
+Se está marcado, os arquivos de estilo descargaranse tamén. Recomendado
+Se non se marca, non se descargarán páxinas Web doutros sitios. Por exemplo, se esta casa déixase sen marcar e comeza a descargar de http://exemplo.com, entón http://otrositio.com/algo.html non se descargará, pero http://exemplo.com/algo.html descargarase.
+Se está marcado, as imaxes das páxinas Web descargaranse tamén
+Se está desmarcado, as imaxes das páxinas Web que vinculen a outros sitios non se descargarán
+Profundidade da descarga. Por exemplo, iniciou descargando de http://ex.com/index.html. Desde esta páxina hai un enlace a http://ex.com/algo.html. Entón a profundidade de http://ex.com/algo.html será 1. Establecer a profundidade en 0 fará que só se descargue a páxina de contido.
+Descargar arquivos de páxinas Web
+Descargar arquivos doutros sitios
+Eliminación de arquivos por extensión
+Activar
+Descargar
+Non descargar
+Arquivos con extensións:
+Marque esta casa para descargar arquivos de páxinas Web
+Marque esta casa para descargar arquivos doutros sitios
+Marque esta casa para ignorar arquivos con extensións especificadas
+Os arquivos con extensións, especificadas abaixo, descargaranse se está marcado
+Os arquivos con extensións, especificadas abaixo, non se descargarán se está marcado
+Exportar configuración
+Importar configuración
+Fallo ao executar Regedit.exe
+Un erro ocorreu mentres se intentaba exportar a configuración
+Un erro ocorreu mentres se intentaba importar a configuración
+Arquivos de rexistro de FDM
+Eliminación de imaxes por extensión
+Imaxes con extensións:
+Marque esta casa para ignorar imaxes con extensións especificadas
+As imaxes con extensións, especificadas abaixo, descargaranse se está marcado
+As imaxes con extensións, especificadas abaixo, NON se descargarán se está marcado
+Non descargar isto e eliminar
+O servidor non soporta descarga renovada. Reiniciar desde o comezo
+Fallo ao abrir a dirección
+Síntoo, ocorreu un erro inesperado mentres se intentaba escribir no rexistro
+Grazas por rexistrarse! Por favor reinicie FDM
+Descargar con Free Download Manager
+Descargar sitio web con Free Download Manager
+Agregar FDM ao menú contextual de IExplorer
+Marque esta casa para agregar os elementos "Descargar con Free Download Manager" e "Descargar sitio web con Free Download Manager" ao menú contextual do navegador (o menú aparece cando fai clic secundario)
+Diminuír o uso do tráfico na actividade do navegador
+Diminuír un nivel
+Establecer o modo Livián
+Marque esta casa para diminuír automaticamente o uso de tráfico cando navegue en Internet. Isto permítelle navegar máis rápido cando FDM está descargando algo
+O modo de uso de tráfico diminuirase nun nivel. Pesado->Medio, Medio->Livián
+O modo de uso de tráfico cambiarase a Livián
+Válido para
+Válido para subdominios
+Marque esta casa para usar este rexistro para descargas vía HTTP
+Marque esta casa para usar este rexistro para descargas vía HTTPS
+Marque esta casa para usar este rexistro para descargas vía FTP
+Marque esta casa para usar este rexistro para descargas desde servidores de subdominios. Por exemplo, para o sitio http://sitio.com será http://algun.sitio.com
+Por favor seleccione polo menos un protocolo
+Número máximo de descargas executándose
+Marque esta casa se quere liminar o número máximo de descargas executándose á vez
+Reiniciar descarga
+Crear unha sección máis
+Deter unha sección
+; context: [section x] - Stopped
+Detida
+; tray menu
+Caixa de arrastre
+;
+Imposible atopar o directorio do plugin de Opera. Desexa especificalo manualmente?
+Imposible atopar o directorio do plugin Netscape. Desexa especificalo manualmente?
+Imposible instalar o monitoreo de Opera
+Imposible desinstalar o monitoreo de Opera
+Imposible instalar o monitoreo de Netscape
+Imposible desinstalar o monitoreo de Netscape
+Marque esta casa se quere que FDM capture os clics en Opera
+Marque esta casa se quere que FDM capture os clics en Netscape
+; create download dlg
+Tamaño da cola
+; request download size
+Solicitar...
+Tamaño de cola dunha descarga desde o servidor
+Si a todo
+Non a todo
+Rexistro detallado
+Se se marca, FDM mostrará as respostas do servidor
+Os cambios terán efecto logo de reiniciar o navegador
+Listado de tarefas
+Listado de arquivos
+Listado de sitios
+Listado de páxinas
+Eliminando descargas
+Construíndo a lista de descargas
+Crear descarga por lotes
+De:
+A:
+Paso:
+Bytes comodines:
+Resultados
+Mostra:
+Número inicial da secuencia
+Número final da secuencia
+Paso da secuencia. Por exemplo, se é 10, entón a secuencia será 0, 10, 20, ...
+Cantidade de bytes comodines. Por exemplo, se é 1, entón a secuencia será 1, 2, 3. Se é 2, entón a secuencia será 01, 02, 03.
+Faga clic aquí para ver a secuencia xerada
+Permitir que o navegador descargue se presiona Cancelar
+Marque isto se quere que o seu navegador descargue o arquivo cando presione Cancelar na fiestra "Crear descarga"
+O número de secuencia final debe ser maior que o inicial
+Por favor use (*) na dirección para especificar a plantilla
+Agregar unha extensión se o arquivo non a ten
+Marque esta casa para crear a extensión especificada para o arquivo que non a teña. Por exemplo se o nome de arquivo é "arquivo" e especificou "txt", o resultado será "arquivo.txt"
+Mostrar tamaños en bytes soamente
+Marque esta casa para mostrar todos os tamaños en bytes en lugar de kilobytes ou megabytes
+Realizar procura de virus
+Argumentos:
+Extensións:
+Marque esta casa para verificar os arquivos descargados co antivirus automaticamente
+Especifique o nome do programa antivirus aquí
+Especifique os argumentos para o antivirus aquí
+Especifique as extensións de arquivos descargados para a súa verificación aquí
+Por favor ingrese o nome do antivirus
+Nome non válido. Por favor verifíqueo
+Execución de antivirus
+Desactivar a tarefa logo da execución
+Eliminar a tarefa logo da execución
+Marque esta casa para desactivar automaticamente a tarefa logo da execución
+Marque esta casa para eliminar automaticamente a tarefa logo da execución
+Ir
+Atrás
+Xerar nome automaticamente
+Marque esta casa para xerar un nome de arquivo de descarga automaticamente 
+Gardar coa extensión "htm"
+Marque esta casa para gardar todas as páxinas Web baixo extensión "htm"
+Faga clic neste botón para calcular o tamaño aproximado de todas as descargas
+Manteña a estrutura de cartafois do servidor
+Marque este botón para manter a estrutura orixinal de cartafois do servidor. Doutro xeito todos os arquivos do servidor gardaranse nun só cartafol
+Vostede seleccionou outro cartafol. Establece esta cartafol por defecto para este grupo? Tamén pode cambiar o cartafol por defecto nas propiedades do grupo.
+; === ADDED LINES ===
+A descarga con esta dirección xa existe. Que facer?
+Executar
+Executar o arquivo descargado
+Versión
+Faga clic aquí para contactarnos
+Faga clic aquí para descargar a última versión
+Advertencia: Este programa está protexido polas leis de dereito de autor e tratados internacionais. Licenza : GNU General Public License (GPL). A reprodución ou distribución de xeito non autorizado na devandita licenza, deste programa, ou calquera parte del, pode resultar en serias penas civís e criminais, e procederase ao máximo alcance posible baixo a lei.
+; === new version ===
+Descargar todo con Free Download Manager
+Agregar lista de descargas
+Quitar seleccionados
+Esta é a lista de direccións a ser agregadas
+Faga clic neste botón para quitar todas as direccións seleccionadas da lista
+Imposible atopar o directorio Firefox Plugin. Desexa especificalo manualmente?
+Imposible instalar o monitoreo de Firefox
+Imposible desinstalar o monitoreo de Firefox
+Marque esta casa se quere que FDM capture con Mozilla Firefox
+Descargar a selección con Free Download Manager
+Iniciar
+Sitios web
+Descargas activas
+Non hai descargas activas actualmente
+Notificacións
+Usar "globos" na bandexa de sistema
+Tempo de espera
+Marque esta casa para habilitar as notificacións "globo" na bandexa cando unha descarga detéñase ou termine. Nota: esta característica só traballa en Windows 2000/XP e superior
+Pechar automaticamente o "globo" despois de que este tempo termine
+Espellos
+Buscar automaticamente direccións espello
+Número máximo de espellos
+Calcular velocidade de espellos
+Recalcular velocidade cada
+Marque este botón para que FDM busque direccións de espellos para cada descarga automaticamente
+Limitar o número de direccións espellos por descarga. Isto permite reducir o tempo de cálculo da velocidade de espellos
+Marque este botón para que FDM calcule a velocidade de cada servidor espello
+Recalcular automaticamente a velocidade de espellos a través do intervalo de tempo especificado
+Non buscar se o tamaño do arquivo é inferior a 
+FDM non buscará espellos se o tamaño do arquivo é menor que o tamaño especificado
+Non buscar se o tamaño do arquivo é descoñecido (recomendado)
+Agregar espello
+Buscar espellos
+Agregar dirección espello para esta descarga automaticamente
+Buscar direccións espellos para esta descarga con FileSearching.COM
+Lista de direccións espellos
+Velocidade do servidor
+En uso
+Medir velocidade
+Medir velocidade de servidores espellos
+Información de descargas
+Esperando...
+Dirección espello para descarga
+O tamaño do arquivo excede 2GB. Tales descargas son soportadas vía FTP soamente
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Novo
+Determinar automaticamente o grupo de descarga 
+Grupo:
+Gardar descarga no cartafol do grupo apropiado
+Marque esta casa se quere que o grupo de descarga sexa determinado pola extensión do arquivo ou os valores do Administrador do Sitio
+Establecer manualmente o grupo predeterminado
+Marque esta casa se quere que a descarga gárdese no seu cartafol de grupo (vexa Propiedades do Grupo)
+Estableza o cartafol de destino manualmente
+; END
+; BEGIN: Monitoring page
+Monitoreo silencioso
+Se está marcado, non se mostrará a fiestra "Crear descarga" cando se agregue unha descarga desde o navegador
+Configurar
+Seleccionar elementos de menú para mostrar no menú contextual do navegador
+; END
+Elixir elementos de menú a mostrar
+Debe elixir polo menos un elemento de menú
+Usar sons
+Marque este botón se quere que FDM reproduza sons ou algún evento (ex. cando a descarga complétese)
+Elixa son para cada evento
+; BEGIN : Customize sounds dialog
+Configurar sons
+Establecer son
+Quitar
+Probar
+Lista de sons apropiados e eventos de FDM. Aquí pode axustar FDM para que reproduza un son cando ocorra un evento
+Descarga agregada - reproduce son cando unha ou máis descargas son agregadas á lista de descargas
+Descarga completa - reproduce un son cando a descarga complétase exitosamente.
+Descarga errada - executa un son cando ocorre un erro mentres se intenta descargar un arquivo.
+Marcado establecido - executa un son cando a tarefa do Programador "Establecer conexión telefónica" execútase con éxito.
+Marcado errado - executa un son cando a tarefa do Programador "Establecer conexión telefónica" falla por algunha razón.
+Establecer un son para eventos seleccionados
+Non executar son cando ocorra un evento seleccionado
+Probar son seleccionado
+Evento
+Arquivo de son
+Sen son
+Descarga agregada
+Descarga completa
+Descarga errada
+Marcado exitoso
+Marcado errado
+Arquivos de son
+; END
+Buscando espellos...
+Medindo velocidade de espellos...
+A procura de espellos xa foi executada
+Conectando con servidor de procura...
+Obtendo resultados...
+Hai %d espellos atopados
+Procura de espello terminada
+Intentando outro espello...
+Non hai espellos atopados
+Fallo
+A Velocidade de espellos foi medida
+; BEGIN: History page
+Historial
+Gardar historial de enlaces e cartafois
+Gardar historial de cartafois soamente
+Manter os rexistros durante
+Número máximo de rexistros
+Limpar historial
+FDM gardará o historial de enlaces e nomes de cartafol introducidos
+FDM gardará o historial de cartafois soamente
+FDM eliminará os rexistros existentes no historial que superen o período de tempo especificado
+Número máximo de rexistros no historial. Cando o número de rexistros exceda este valor, FDM eliminará os rexistros máis vellos
+Eliminar todos os rexistros do historial
+; END
+Importar
+Exportar
+Importar lista de direccións
+Exportar lista de descargas
+Arquivos de texto
+Imposible abrir o arquivo
+Exportar todas as descargas
+Exportar todas as descargas na lista
+Exportar as descargas seleccionadas
+Non exportar as descargas completas
+Agregar se o arquivo xa existe
+Nome de grupo non válido. Por favor non use os símbolos / ou \.
+Saír ao finalizar
+; BEGIN : Downloads History window
+Agregado
+Gardado en ;
+END
+Papeleira de reciclaxe
+; BEGIN: Recycle Bin
+Propiedades
+Limpar Papeleira de reciclaxe
+;END
+;BEGIN: Recycle Bin properties
+Non colocar descargas eliminadas na Papeleira
+Manter máximo
+descargas
+Non manter descargas completadas
+Pedir confirmación cando se eliminen descargas
+Propiedades da Papeleira de reciclaxe
+Marque este botón se non quere almacenar as descargas eliminadas na Papeleira
+Marque este botón se quere limitar o número de descargas eliminadas almacenadas na Papeleira
+Número máximo de descargas para almacenar na Papeleira
+Marque este botón se quere que as descargas completas non se almacenen na Papeleira logo de eliminalas
+Marque este botón se quere que FDM pídalle confirmación cando intente eliminar unha descarga
+;END
+Restaurar
+Restaurando descargas...
+; History subitems
+Hoxe
+Onte
+Unha semana
+Un mes
+Configurar...
+; end
+Limpar historial
+Gardar historial de descargas
+Gardar soamente o historial de descargas completas
+Marque este botón se quere gardar o historial das súas descargas
+Marque este botón se quere almacenar o historial de descargas completas soamente
+Configuración do historial de descargas
+Construíndo lista de rexistros do historial...
+; Download was deleted
+Eliminouse
+Elixir rango de tempo
+Buscar
+Buscar seguinte
+Que buscar
+; BEGIN : Find dialog
+Buscar en 
+Nome do arquivo local
+Especifique o que queira buscar aquí
+Buscar en parte da dirección do arquivo 
+Buscar en dirección completa
+Buscar en comentario de descarga
+Buscar no nome e ruta do arquivo de descarga no disco local
+Establecer configuración de procura avanzada
+; ADVANCED settings
+Onde buscar
+Buscar en Lista de Descargas
+Buscar en historial de descargas
+Procura con tempo especificado
+Establecer
+Buscar en Papeleira de reciclaxe
+Buscar con tamaño de arquivo especificado
+Mínimo
+Máximo
+Buscar en Lista de Descargas
+Buscar en historial de descargas
+Buscar só descargas que satisfagan o rango de tempo especificado
+Establecer rango de tempo
+Buscar en Papeleira de reciclaxe
+Buscar só arquivos que satisfagan o rango de tamaño de arquivo especificado
+Tamaño mínimo requirido
+Tamaño máximo requirido
+Buscar en grupo
+Elixir o grupo onde se realizará a procura
+; END
+Buscando descarga...
+Non se atoparon elementos
+Non se atoparon máis elementos
+Procura terminada
+Copiar dirección ao portapapeles
+Vista previa ZIP
+Debería seleccionar polo menos un arquivo.
+É posible que o arquivo que está descargando sexa un arquivo ZIP. Desexa ver o seu contido?
+Vista previa de Audio e Vídeo
+Fallo ao abrir o arquivo.
+Tipo de medio descoñecido.
+Por favor instale DirectX 8.0 ou superior para usar esta característica. Vostede pode descargar o último DirectX desde microsoft.com.
+Información de medios
+Tamaño:
+Dispoñibilidade:
+Duración:
+Silencio
+Reproducir
+Pausar
+Filtrar
+Extensións (divididas por espazos, ex. zip rar arj):
+Quitar os arquivos con estas extensións
+Soamente deixar arquivos con estas extensións
+A cadea de argumentos non contén a macro %file%. Esta macro é necesaria para indicar ao seu programa antivirus o arquivo a verificar.
+Continuar de calquera xeito?
+Advertencia
+Usar atributo oculto para as descargas incompletas
+Engadir comentario ao nome do arquivo ao finalizar
+Non almacenar páxinas do servidor
+Marque este botón se non quere almacenar páxinas de servidor no seu computador, só arquivos e imaxes
+Usar vista previa ZIP
+Marque este botón se quere ver o contido do arquivo ZIP ao comezo da descarga para descargar só unha parte do arquivo.
+Volume:
+Iniciar a descarga automaticamente
+Marque este botón se quere que FDM inicie cada nova descarga automaticamente
+Por favor marque o arquivo a descargar
+Estableza localizacións alternativas de direccións para esta descarga
+Non mostrar vista previa no futuro
+Vostede desactivou a vista previa ZIP. Se queira activala, por favor vaia a Opcións -> Opcións de descarga (Ctrl+Ou) -> pestana Nova, e marque o botón "Usar vista previa ZIP".
+Lista de ignorado
+Lista de páxinas Web que deben ignorarse mentres descarga un sitio.
+Subcarpetas
+Agregar
+Ignorar todas as subcarpetas tamén
+; Proxy tab new settings
+Usar retroceso en conexións interrompidas
+Tamaño do retroceso
+bytes
+Marque esta opción se quere habilitar a función de retroceso. Esta opción axúdalle a protexer a súa descarga contra posibles danos.
+Tamaño do retroceso. Un maior tamaño permitirá que o retroceso traballe con máis seguridade. O tamaño recomendado é de 3000 bytes. Pode aumentar este valor se a súa descarga aínda permanece danada.
+; downloader options -> monitor tab
+Non monitorear arquivos inferiores a 
+Use esta opción se desexa que FDM sáeche os arquivos inferiores ao tamaño especificado
+KBytes
+Advertencia! A Papeleira de reciclaxe é demasiado grande. Isto pode retardar dramaticamente o rendemento. Recoméndase baleirar a Papeleira de reciclaxe. Desexa facelo?
+Non verifique isto de novo
+Advertencia! O historial de descargas é demasiado grande. Isto pode retardar a performance dramaticamente. Recoméndase limpar o historial. Gustaríalle facer isto?
+O servidor non pode garantir a súa capacidade de reasumir. A contestación non válida.
+Copiar ao portapapeles
+; xeneral settings | skins page
+Temas
+Tema
+Permitir ao tema usar as súas propias iconas  
+Permitir ao tema usar os seus propios gráficos
+; default skin
+<predeterminado>
+NOTA: Calquera cambio efectuarase só logo de reiniciar Free Download Manager.
+Mostrar información das descargas en progreso
+Saltar arquivos con extensións:
+Lista de extensións de arquivos para saltar
+Ningunha descarga activa 
+Tocar o arquivo de son cando todas as descargas se completen
+Importar lista do portapapeis
+Contrasinal
+Opcións do Administrador de Sitios
+; Save password dialog
+Gardar contrasinais?
+Free Download Manager pode gardar o contrasinal deste servidor para evitar a necesidade de introducila cada vez vostede descargue do mesmo.
+Gardar este contrasinal?
+Non me suxira gardar calquera contrasinal
+; Site Manager options | Passwords tab
+Usar o administrador de sitios para almacenar os meus contrasinais  
+Preguntar se se garda a contrasinal ou non
+Non suxerir gardar os contrasinais  
+Borrar todos os contrasinais antes de saír
+Borrar todos as contrasinais
+; create new HTML Spider task
+Borrar descargas completas automaticamente (recomendado)
+Marque aquí se vostede quere que a descarga do explorador Web sexa borrada automaticamente. Isto acelera a descarga de sitios grandes.
+Os cambios efectuaranse logo de reiniciar Free Download Manager
+Novo Estilo
+Vello Estilo
+O nome do directorio non é válido
+Ocultar fiestras flotantes no modo de pantalla completa
+Marque esta casa se desexa ocultar as fiestras flotantes automaticamente durante o modo de pantalla completa.
+foi programado para executarse.
+Desexa executalo?
+Executar a descarga cando estea completa
+Por favor use (*), (*A) ou (*a) na dirección para especificar persoal
+Servidor de procura de espellos:
+Hibernar
+Suspender
+Recordar a miña elección
+Suxerir cambiar o cartafol predeterminada do grupo
+Gardar arquivo
+Abrir arquivo
+Gardar e abrir arquivo
+Tipo de descarga:
+Enlace a FDM
+Enlace a Free Download Manager
+Estimado usuario!
+Free Download Manager é un programa que se lle proporciona gratis. Pode usalo gratuitamente xa que logo tempo como desexe.
+Con todo, se atopa Free Download Manager útil, pedímoslle que nos axude a divulgalo colocando un enlace a este no seu sitio web. Isto permitirá que máis persoas coñezan sobre Free Download Manager.
+Grazas anticipadas pola súa axuda,\no equipo de desenvolvemento de Free Download Manager.
+Recordar dentro de 3 días  
+Recordar a próxima que vez que execute Free Download Manager
+Non mostrar de novo esta fiestra
+Ver o código HTML do enlace
+Código HTML do enlace
+Máis exemplos
+Copiar ao portapapeis
+Ocultar
+; "Traffic usage mode has been changed" window
+O modo de uso do tráfico cambiou
+Vostede cambiou o modo de uso de tráfico da rede.\nFree Download Manager ten tres modos:
+Neste modo Free Download Manager descargará á máxima velocidade posible. Este é o modo máis agresivo.
+Neste modo Free Download Manager descargará a velocidade media. Este modo permítelle navegar Internet e manter unha alta velocidade de descarga ao mesmo tempo.
+Neste modo Free Download Manager descargará a baixa velocidade. Este modo permítelle descargar sen un retardo dramático da rede.
+;
+Renombrar ao reiniciar
+Introduce un valor menor que %d
+; export/import downloads
+Lista de arquivos de dirección
+Información Descargas Lista de Arquivos
+;
+Opcións de exportación
+;
+Establecer data de arquivos polo servidor
+Fai que a data do arquivo descargado sexa idéntica á existente no servidor
+Xerar un arquivo de descrición
+Xerar un arquivo co nome "*.dsc.txt" (* - nome do arquivo descargado) que conterá unha pequena descrición do arquivo descargado (comentario + dirección + data). Este arquivo será xerado só para unha descarga que teña comentarios.
+Este arquivo foi descargado desde
+Non recuperar a data do arquivo desde o servidor
+Esta opción permítelle incrementar a velocidade de comezar unha descarga FTP. Free Download Manager usará o comando SIZE en lugar de LIST.
+Non gardar rexistros das descargas
+Activar esta opción fará que Free Download Manager arrinque e apáguese máis rápido, e reducirá o uso de memoria.
+;
+Exportar historial de descargas
+Exportar todas as entradas
+Exportar todas as entradas na lista
+Exportar as entradas seleccionadas
+Exportar só as entradas das descargas completas
+;
+Arquivos HTML
+;
+Historial de descargas de Free Download Manager
+Dirección de descargas
+Descargado ao arquivo
+Tamaño de arquivo
+A descarga completouse
+A descarga foi eliminada
+;
+Gardado en 
+Tamaño do arquivo
+Renovar soporte
+Pechar esta fiestra cando a descarga estea completa ou detida
+Abrir
+Quere ver esta fiestra outra vez?
+Si, quero ver esta fiestra para cada descarga
+Non, non me mostre máis esta fiestra
+Si, pero non para esta descarga
+Usar a tecla SHIFT significa que esta descarga será eliminada do disco e non poderá recuperala.\nEstá seguro?
+Elixir grupo
+Establecer o cartafol raíz dos grupos
+Seleccione o cartafol raíz dos grupos.\nOs cambios aplicaranse só ás novas descargas.
+Últimos arquivos descargados
+(baleiro)
+Pausar todas as descargas
+Mostrar fiestra de progreso das descargas
+Si se marca, FDM creará unha fiestra especial con información acerca das descargas para cada descarga funcionando
+; xeral settings | misc page
+Fose de tempo para confirmacións
+Executar descarga
+Preguntar o tipo de apagado
+Confirmación de tempo de espera para "Ferramentas | Colgar ao finalizar".
+Confirmación de tempo de espera para "Ferramentas | Saír ao terminar".
+Confirmación de tempo de espera para "Ferramentas | Apagar PC ao finalizar".
+Confirmación de tempo de espera para executar arquivo descargado cando está completo.
+Se se marca, FDM preguntará o tipo de apagado para "Ferramentas | Apagar PC ao finalizar".
+Non pedir confirmacións
+; 5 seconds, 10 seconds, ...
+%d segundos
+Esperar a miña confirmación
+Ignorar páxinas desde esta cartafol
+Descargar páxinas só desde esta cartafol
+Incluír subcarpetas
+Ignorar todas as páxinas Web situadas nesta cartafol.
+Todos as páxinas localizadas só nesta cartafol e ignorar outras páxinas Web.
+Marque esta opción se quere que o explorador Web ignore (ou só descargue) páxinas localizadas en todas as subcarpetas da especificada.
+Aquí deberías especificar unha dirección do cartafol.nEjemplo/*nEjemplo: "http://sitio.com/docs/".
+Tipo
+Ignorar
+Só
+Conxunto de núms.
+Asignar
+Aquí debería especificar o conxunto de números para a lista de lotes.nEjemplo/*nEjemplo: 1-100, ó 1-100s2w3.
+Faga clic neste botón para asignar o conxunto de números usados usando a fiestra de diálogo.
+Número simple
+Número
+Asignar conxunto de números
+Erro de sintaxe
+Extraer arquivo
+Extraer
+Extracción
+Cartafol de destino
+Fallo ao extraer. O formato do arquivo é descoñecido.
+Tráfico descargado neste mes\n(%s foi descargado no mes anterior)
+Total velocidade de descarga
+Desactivar Ferramentas logo da execución da tarefa
+Cando active, algunha Ferramentas | "cando faga" a tarefa será automaticamente desactivada logo de executar. Así que se lanzará só unha vez.
+; %s
+; 1st - name of a file
+; 2nd, 3rd - file info (size + dáche).
+O arquivo "%s" aínda existe.\n\nQuere substituílo\n(%s)\n\ncon un novo\n(%s)?
+Si a todo
+Saltar
+Saltar todo
+O formato do arquivo é descoñecido
+Visitar o sitio na Rede
+Instalar paquete
+Por defecto, FDM soporta só arquivos ZIP, RAR e ARJ.\nPode estender a lista de arquivos soportados instalando o paquete adicional de soporte de arquivos para Free Download Manager (requírese conexión a Internet).
+Paquete de soporte de arquivos de FDM
+Subir
+Baixar
+Mover descargas seleccionadas arriba
+Mover descargas seleccionadas abaixo
+Verificar arquivo
+Algúns sitios da Rede proporcionan firmas especiais para os arquivos dispoñibles a fin de permitir que os usuarios asegúrense de que o arquivo descargado non está danado. Pode introducir esa firma aquí e FDM verificará o arquivo.
+Algoritmo
+Checksum
+Pegar desde o portapapeis
+Verificar
+Calculando o checksum do arquivo descargado...
+Verificación do arquivo exitosa
+Verificación do arquivo errada
+A verificación do arquivo foi completada con éxito.\nNon hai erros atopados no arquivo descargado.
+A verificación do arquivo completouse.\nSe atoparon erros: este arquivo danouse durante o proceso de descarga. Requírese reiniciar a descarga desde o principio.
+Non mostrar esta fiestra outra vez se a verificación é exitosa
+Incapaz de atopar o arquivo executable do antivirus que escolleu.\nPor favor, especifíqueo vostede mesmo.
+O tamaño dos arquivos non é o mesmo
+Gardar como:\n(Mostra: arquivo(*)(*A)(*a).txt)
+Non válido ao gardar como plantilla especificada.\nEstá seguro que corresponde a esta plantilla de direccións?
+Ao finalizar
+Ao finalizar (todo completado ou con erros)
+Aplicacións
+Que é isto?
+Opinións
+;
+Querido amigo!
+Free Download Manager (FDM) é unha das aplicacións de descarga máis populares do mundo, con millóns de usuarios activos, pero agora logo de popularizarse, queremos máis!
+Se atopa o programa tan útil e imprescindible como nós, amablemente pedímoslle que nos axude a esparcir a noticia colocando un enlace ao programa no seu blog, sitio web ou espazo persoal, tal como Myspace/MSN.
+; %s will be replaced with "FDM buzz" 
+Iniciouse o %s oficial o 16 de agosto de 2006. A nosa meta é facer de FDM a utilidade de Internet de máis rápida difusión logo de Firefox!
+Rumor sobre FDM
+; %s will be replaced with "blog" 
+Pode seguir o progreso de FDM no noso %s.
+blog
+Grazas anticipadas pola súa axuda,\no equipo de desenvolvemento de Free Download Manager.
+Non mostrar máis esta fiestra, teño boa memoria.
+Unirse ao rumor
+Non, grazas
+Comunidade FDM
+Cambiar a "Opinións" logo de descargar
+Se se habilita, a pestana "Opinións" activarase automaticamente cando finalice a descarga.
+Modificar a identificación de rede do Internet Explorer
+Se se habilita, informarase aos sitios que navegue que Free Download Manager está instalado no seu programa. Con todo, utilizar esta opción pode resultar no bloqueo dalgúns sitios.
+Malicioso?
+Verificar se algún usuario de Free Download Manager reportou que esta descarga contén virus/adware/spyware/etc.
+Ben, ningún usuario de Free Download Manager reportou que esta descarga sexa maliciosa.\n\nSin embargo, isto non garante que a descarga non sexa maliciosa e recoméndase verificala usando algún programa antivirus.
+; keep all %xxx, \n as is.
+Hai %d de %d de usuarios de Free Download Manager que reportaron esta descarga como maliciosa.\nA cualificación media para esta descarga é %.*g.\n\nMostrar opinións acerca desta descarga?
+Verificar cada nova descarga para determinar se é maliciosa
+Use esta opción para que FDM verifique automaticamente, antes de descargar, se algún usuario reportou que esta descarga é maliciosa.
+Mostrar opinións ao descargar
+Se se habilita, FDM activará a pestana "Opcións" automaticamente e mostrará opinións sobre a descarga mentres transcorra.
+Verificando se a descarga é maliciosa (vexa as opcións para desactivar isto)
+Ben, ninguén reportou que sexa maliciosa
+¡Advertencia! Alguén reportou que esta descarga é maliciosa
+Pechar
+Cargando
+Non descargar isto
+Caché para as operacións de escritura de datos
+Se se habilita, FDM usará un búfer de caché interno do tamaño especificado para as operacións de escritura dos datos descargados. Isto reducirá o uso do seu disco duro, e pode incrementar a velocidade da descarga para as conexións rápidas.nSin/*nSin embargo, como os datos descargados non se escriben inmediatamente ao disco duro, será necesario volver descargalos ante calquera fallo do computador (no peor caso serán do tamaño que especificou).nRecomendado/*nRecomendado para as conexións de alta velocidade.
+Imposible instalar monitoreo en SeaMonkey (Mozilla Suite)
+Imposible desinstalar monitoreo en SeaMonkey (Mozilla Suite)
+Marque esta casa se desexa que FDM capture os clics no navegador Mozilla Firefox
+Marque esta casa se desexa que FDM capture os clics no navegador SeaMonkey (Mozilla Suite)
+Permitir que o navegador descargue se presiona Cancelar
+Marque esta casa se desexa que a súa navegador descargue un arquivo cando presione Cancelar na fiestra "Crear descarga"
+Engadir FDM ao menú contextual de navegador
+Marque esta casa para agregar as opcións "Descargar con Free Download Manager" e "Descargar sitio web con Free Download Manager" ao menú contextual do seu navegador (o menú que aparece cando fai clic secundario)
+Seleccione as opcións a mostrar no menú contextual do navegador
+Imposible instalar monitoreo de Firefox
+Mover arquivos ao cartafol
+A velocidade é demasiado lenta. Reiniciando sección...
+Reiniciar se a velocidade é moi baixa durante (en min.):
+Reiniciar a sección ante unha diminución dramática da velocidade de descarga.
+Quere ver a fiestra de progreso de descarga novamente?
+O servizo non está dispoñible agora. Por favor, intente máis tarde.
+Mover ao comezo
+Mover ao final
+Colocar descarga ao comezo da lista
+Marque esta opción se desexa que a descarga colóquese ao comezo da lisa de descargas.
+Imposible habilitar o monitoreo en Firefox porque a extensión FlashGot está instalada.\nPrimeramente debe desinstalar FlashGot.
+Habilitar
+Desactivar
+Cambiar
+Se se habilita o modo Pausar todas as descargas desactivarase, pola contra habilitarase.
+O %s oficial iniciará o 16 de agosto de 2006. A nosa meta é facer de FDM a utilidade de Internet de máis rápida difusión logo de Firefox!
+Descargar automaticamente e instalar actualizacións
+Notifíqueme só cando unha actualización estea dispoñible
+Desactivar as actualizacións automáticas
+Agora o seguimento está activado en %s.
+Eliminar rexistro
+Acepta eliminar?
+Non hai acceso de escritura para ao cartafol do Free Download Manager.\nDebe conceder o acceso de escritura para permitir que Free Download Manager garde os seus arquivos de datos, doutro xeito todos os datos perderanse ao reiniciar Free Download Manager.
+Esta caixa permítelle arrastrar&&soltar enlaces desde a súa navegador en Free Download Manager.\nLe permite rapidamente mostrar ou ocultar a fiestra de Free Download Manager facendo dobre clic co botón esquerdo do rato.\nPara ocultala faga clic co botón dereito do rato e destilde "Caixa de arrastre".
+"Caixa de arrastre" de Free Download Manager
+Desactivar todas as notificacións para grupo de descargas
+Active esta opción para desactivar todas as notificacións de descargas (globos, sons) creadas polo comando "%s".
+Omitir lista
+Especificar a lista de extensións de arquivos e a lista de sitios que non deben ser monitoreados.
+Non descargar destes sitios (espazo separado):
+Free Download Manager non monitoreará descargas dos sitios especificados nesta lista. Especifique os nomes de dominio aquí (ex. "site.com"). Pode usar '*' asteriscos.
+Advertencia!\nOcorreu un erro mentres se trataba de levar a cabo a revisión de virus.\nGustaríalle executar o arquivo descargado de todos os xeitos?
+Integridade
+Levar a cabo a verificación cando o arquivo descárguese
+Para levar a cabo a verificación comprobe que Free Download Manager coñece o checksum lexítimo do arquivo. Na maioría dos casos pode fornecerllo en cada descarga.
+Se a verificación falla
+Verificación válida deste arquivo
+Non facer nada
+Especifique aquí que fará FDM cando a verificación falle.\nPreguntar - FDM  preguntaralle que facer.\nReiniciar - FDM reiniciará esta descarga desde o comezo.\nNon facer nada - FDM engadirá o rexistro acerca de fálla no rexistro de descargas e non fará nada máis.
+Realizando verificación...
+Verificación exitosa.
+Verificación errada!
+Especificar algoritmo de integridade.
+Checksum válido
+Resultado de checksum
+; zip preview window
+Seleccionar/Deseleccionar todo
+; group's properties dialog
+Macros
+nome dun servidor (ex. "freedownloadmanager.org")
+ruta do arquivo a descargar do servidor
+ano actual
+mes actual (números de 1 a 12)
+día actual
+; don't translate "%year%-%month%-%day%" here
+equivalente a "%year%-%month%-%day%"
+;
+De Mozilla Firefox
+FDM tomará opcións de proxy do Firefox
+; new download settings
+Usar este grupo
+; Downloads -> Schedule ->
+Iniciar
+Deter
+Programar inicio de descarga
+Programar detención de descarga
+;
+; downloads that not completed or were completed recently
+Non completados+Recentes
+Grupo principal
+;
+; create new download dialog -> set output folder as default dialog
+Predeterminar tamén para todos os grupos de descargas
+; %s - place of name of the group. don't change this
+Acepta predeterminar esta cartafol para o grupo "%s"?
+;
+;
+Borrar a lista de descargas
+Subidas
+Arquivos subidos
+Iniciar subida
+Deter subida
+Programar subida
+Mover as subidas seleccionadas arriba
+Mover as subidas seleccionadas abaixo
+Subido
+Lista de subidas
+Recuperar a URL destino de subida do servidor...
+Cancelar
+; outlook express: view | insert file | ...
+Como adxunto
+Como enlace (subida)
+Cartafol
+;
+Engadir arquivos
+Engadir cartafois
+Bittorrent
+Aceptar o protocolo Bittorrent
+Limitar o tráfico de subida
+Limitar as conexións de subida
+Usar portos de 
+a 
+Habilitar DHT
+Habilitar/Desactivar o protocolo Bittorrent. Con todo se hai algunha descarga de Bittorrent en Papeleira de reciclaxe de FDM, o protocolo de Bittorrent non estará deshabilitado totalmente.
+Limitar a velocidade total máxima de conexións de subida. Isto non é recomendable para o protocolo Bittorrent e pode reducir a súa velocidade de descarga.
+Limitar o número máximo de conexións de subidas totais. Colocar un número demasiado baixo pode resultar na diminución de velocidade das súas descargas.
+Especificar aquí o rango de portos que FDM usará para conexións de subida.
+Habilitar extensión DHT
+Nome
+Iniciar sesión é requirido polo tracker
+Engadir descarga Bittorrent
+Un erro ocorreu cando se trataba de procesar este arquivo torrent.
+Arquivo Torrent
+Parece que quere descargar un arquivo .torrent. É necesario que habilite Bittorrent en Free Download Manager.\n\nQuere habilitar Bittorrent?
+Reescriba o seu contrasinal: o contrasinal ingresado non coincide.
+Especifique os arquivos que quere subir.
+Propiedades de subida
+O arquivo de información de Metalink foi detectado. Continuar descargando.
+O arquivo de información de Bittorrent foi detectado. Continuar descargando.
+Fallou o acceso aos arquivos no disco.
+Conectando ao tracker...
+Fallou ao recibir unha resposta válida do tracker.
+A resposta foi recibida exitosamente do tracker.
+A verificación Hash da parte descargada fallou. Volvendo descargalo...
+Dar todo o ancho de banda para esta descarga
+Desactivar o inicio automático do Free Download Manager ao comezo de Windows?
+Lamentámolo, o servizo da Comunidade FDM non está dispoñible actualmente. Por favor inténteo máis tarde.
+Os nomes de arquivo non poden conter os carácteres seguintes \ / : * ? " < > |. Por favor ingrese outro nome.
+Os nomes de arquivo non poden conter os carácteres seguintes : * ? " < > |. Por favor ingrese outro nome.
+Personalizar fiestra flotante...
+Transparencia
+Datos
+Manter todos os arquivos de datos no cartafol do usuario actual
+Manter arquivos nesta cartafol
+Os cambios serán aplicados despois do reinicio de Free Download Manager.
+Mostrar a fiestra de progreso de descarga
+Crear versión portable
+A versión Portable do Free Download Manager é para usalo en diversas computadoras sen necesidade de instalalo e configuralo en cada computadora.\n\nPode colocalo por exemplo nun disco flash (USB).\n\nUnha vez executado rexistrarase no sistema e integrarase nos navegadores. E ao saír elimínanse automaticamente.\n\nElija aquí a ruta onde quere crear esta versión. Debe ser un cartafol nunha unidade removible.\n\nEj. "I:Mis/Mío programas portables\".
+Integración
+Asociar Free Download Manager con arquivos .torrent
+Usar sempre este grupo para novas descargas
+Usar sempre este grupo e recordar o último cartafol usado
+Descargar vídeos Flash
+Descargar vídeo con Free Download Manager
+Este sitio non está soportado. Vexa a lista de sitios soportados.
+Ver na fiestra de descargas
+Esta páxina ten vídeos flash. Descargando vídeos flash...
+Convertendo...
+Converter
+Opcións de conversión
+Formato de arquivo
+Tamaño Vídeo
+; vídeo quality
+Calidade
+Moi baixo
+Baixo
+Normal
+Media
+Alta
+Moi alto
+;
+AVI usando MPEG-4 (*.avi)
+AVI usando XVID (*.avi)
+Non cambiar
+Bitrate Vídeo
+Bitrate Audio
+Recordar as opcións por defecto
+;
+Crear descarga de vídeo flash
+Converter automaticamente o vídeo descargado ao formato especificado
+Configurar as opcións avanzadas
+Ver a lista de sitios soportados
+; used in "create flash vídeo download" window
+ex.
+Seguinte intento para conectarse ao tracker en %d segundos
+Preparando arquivos no disco... Ésto pode demorar algúns minutos
+Estado
+Preparando arquivos no disco...
+MP4 para iPod/PSP (MPEG4 + AAC, *.mp4)
+Vista previa/converter
+Converter arquivos
+Cambiar a esta pestana automaticamente
+;keep "\n\n%s\n" as is
+O arquivo converteuse exitosamente e almacenado en\n\n%s\n.
+Fallou a conversión do arquivo\n\n%s.
+Grupo para novas descargas
+Info hash
+Peers
+Cliente
+Pezas
+Tracker
+Estado Tracker
+Velocidade subida
+Bytes subidos
+Nivel de compartidos
+Bytes perdidos
+URL arquivo Torrent
+Está seguro?\nIsto reiniciará a descarga desde o comezo.
+Tráfico usado ("descargado"; "subido") neste mes\n(%s foi usado o mes anterior)
+Velocidade Total ("descarga"; "subida")
+Arquivos a subir
+Nome do paquete
+Comprimir
+Colocar contraseña para esta descarga
+Retipear
+Gardar estes arquivos
+Número suposto de descargas
+Engadir enlace a estes arquivos no noso catálogo
+Incluír información avanzada (todos os campos son opcionais)
+Descrición
+Etiquetas
+Nome
+Correo-e
+Correo-e do receptor
+Menos de 10
+De 10 a 100
+Máis de 100
+2 días
+7 días
+1 mes
+;compression methods
+Ningún
+Rápida
+Media
+Mellor
+Opcións subida
+Integrar subidas en 
+Menú contextual do Explorador
+Menú "Enviar a..." do Explorador
+Utilizar menú simple de subidas
+Tamaño mínimo de arquivo a subir
+Opcións de proxy HTTP
+Activación de subida
+As subidas requiren activación. Isto requírese para protexer o noso servidor contra subidas automáticas. Ingrese o código de activación.
+Conectando ao servidor de subidas
+Conectado con éxito ao servidor de subidas
+O arquivo foi subido ao servidor exitosamente
+A subida foi detida
+Creando arquivo zip dos arquivos a subir...
+Fallou a creación do arquivo zip
+O arquivo zip foi creado exitosamente
+Enviando a petición ao servidor
+Enviando información da subida ao servidor
+A información foi enviada
+Fallou o envío da información ao servidor
+Activando subida...
+A subida foi activada exitosamente
+Fallou a activación da subida
+O arquivo subido cambiou
+Erro inesperado
+Calculando comprobación...
+; "I agree to terms" string in two lines
+Acepto
+os termos
+Debe aceptar os termos.
+Fallou a comprobación das actualizacións
+Unha nova versión está dispoñible. Requírese actualización.\nQuere actualizar agora?
+Requírese actualizar Free Download Manager
+Requírese reiniciar Free Download Manager
+Suxerirme subir adxuntos
+Achegar á letra (lento)...
+Subir e inserir enlace (rapidamente)...
+Un erro ocorreu mentres se iniciaba a subida. Comprobe a súa conexión ou inténteo outra vez máis adiante.
+achegou un(vos) arquivo(s) grande(s).\nPor moitas razóns non é recomendable adxuntar arquivos grandes, mellor subilos e mandar enlace de baixada para eles.\n\nQuere subilos?
+Recoméndase subir
+Opcións de integración
+A subida de %s foi completada.nUse/*nUse a seguinte URL para descargalo:
+Tamaño total
+Abrir no navegador
+A versión actual do Free Download Manager non pode ser usada para subir arquivos. Debe actualizalo.
+A versión actual do Free Upload Manager non pode ser usada. Debe actualizala. Por favor visite o sitio freedownloadmanager.org.
+Ingreso moi grande.
+Opcións de integración do administrador de subidas
+Opcións de integración do Free Upload Manager
+Subida
+Descargando actualización...
+Habilitar seeding
+Desactivar seeding
+Considerar a descarga maliciosa se un % 
+de usuarios marcouna como maliciosa
+Está ben, os usuarios do Free Download Manager non informaron que esta descarga sexa maliciosa.\n\nNembargantes, isto non garante que esta descarga non sexa maliciosa e é recomendable verificala usando algún programa antivirus.
+Está ben, os usuarios de FDM non informaron que esta descarga sexa maliciosa
+Letra desde a que debe comezar a unidade FDM  . Ex. "C:". É útil para a versión portable.
+Debe instalar un plugin de conversión de vídeo para usar esta característica.
+Debe instalar o plugin Bittorrent para descargar polo protocolo Bittorrent.
+Nota: estes arquivos son arquivos de servizo do Free Download Manager (non son os arquivos que vostede descarga).
+Gustaríalle copiar os arquivos actuais ao novo cartafol (os arquivos existentes serán sobrescritos)?
+O cartafol de descargas de todos os grupos cambiarase a esta cartafol.\nAceptar para continuar
+Configurar cartafol de descargas
