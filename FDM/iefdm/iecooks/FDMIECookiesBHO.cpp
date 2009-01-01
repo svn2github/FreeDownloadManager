@@ -8,6 +8,7 @@
 #include <mshtml.h>
 #include <oleacc.h>
 #include "../../vmsVideoSiteHtmlCodeParser.h"
+#include "vmsIeTabsHookFitter.h"
 
 _COM_SMARTPTR_TYPEDEF(IHTMLInputElement, __uuidof(IHTMLInputElement));
 
@@ -67,7 +68,6 @@ BOOL is_okpage (HWND hwnd)
 	return FALSE;
 }
 
-WNDPROC _pfnIeServerOrigProc = NULL;
 BOOL _bUseUnicode;
 DWORD _dwIeMajorVersion;
 
@@ -115,12 +115,13 @@ LRESULT CALLBACK _IeServerWndProc (HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 		{
 			char sz [1000] = "";
 			GetMenuString (menu, cItems, sz, sizeof (sz), MF_BYPOSITION);
+
 			if (lstrcmp (sz, szItem) == 0) 
 			{
 				BOOL bRemoveSeparator = GetMenuState (menu, cItems+1, MF_BYPOSITION) & 
 						GetMenuState (menu, cItems-1, MF_BYPOSITION) & MF_SEPARATOR;
 
-				if (_dwIeMajorVersion != 7)
+				if (_dwIeMajorVersion < 7)
 				{
 					_nRemovedMenuPrevIndex = cItems - 1;
 					_szRemovedMenuPrevString [0] = 0;
@@ -139,6 +140,7 @@ LRESULT CALLBACK _IeServerWndProc (HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 				RemoveMenu (menu, cItems, MF_BYPOSITION);
 				if (bRemoveSeparator)
 					RemoveMenu (menu, cItems, MF_BYPOSITION);
+
 				break;
 			}
 		}
@@ -159,8 +161,7 @@ LRESULT CALLBACK _IeServerWndProc (HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 		}
 	}
 
-	return _bUseUnicode ? CallWindowProcW (_pfnIeServerOrigProc, hwnd, msg, wp, lp) : 
-		CallWindowProcA (_pfnIeServerOrigProc, hwnd, msg, wp, lp);
+	return 0;
 }
 
 HWND find_ie_server (HWND hwnd)
@@ -177,17 +178,7 @@ HWND find_ie_server (HWND hwnd)
 		GetClassName (hwnd2, sz, sizeof (sz));
 
 		if (lstrcmpi (sz, "Internet Explorer_Server") == 0)
-		{
-			LONG lProc;
-			if (_bUseUnicode)
-				lProc = GetWindowLongW (hwnd2, GWL_WNDPROC);
-			else
-				lProc = GetWindowLongA (hwnd2, GWL_WNDPROC);
-			if (_pfnIeServerOrigProc == NULL)
-				_pfnIeServerOrigProc = (WNDPROC)lProc;
-			if (lProc == (LONG)_pfnIeServerOrigProc)
-				return hwnd2;
-		}
+			return hwnd2;
 
 		HWND hwnd3 = find_ie_server (hwnd2);
 		if (hwnd3 != NULL)
@@ -195,34 +186,11 @@ HWND find_ie_server (HWND hwnd)
 	}
 }
 
-DWORD WINAPI _threadSubclassIeServerWnd (LPVOID lp)
-{
-	IWebBrowser2* wb = (IWebBrowser2*) lp;
-
-	_bUseUnicode = (GetVersion () & 0x80000000) == 0;
-	DWORD dw;
-	GetIEVersion (&_dwIeMajorVersion, &dw, &dw, &dw);
-
-	HWND hwnd;
-	wb->get_HWND ((long*)&hwnd);
-
-	HWND hwnd2;
-	do {
-		Sleep (1000);
-		hwnd2 = find_ie_server (hwnd);
-	}
-	while (hwnd2 == NULL);
-	
-	if (_bUseUnicode)
-		SetWindowLongW (hwnd2, GWL_WNDPROC, (LONG)_IeServerWndProc);
-	else
-		SetWindowLongA (hwnd2, GWL_WNDPROC, (LONG)_IeServerWndProc);
-	
-	return 0;
-}
-
 STDMETHODIMP CFDMIECookiesBHO::SetSite(IUnknown *pSite)
 {
+	if (pSite == NULL)
+		vmsIeTabsHookFitter::o ().RemoveTabHook (m_spWB);
+
 	if (m_spWB != NULL)
 		Disconnect ();
 
@@ -234,9 +202,11 @@ STDMETHODIMP CFDMIECookiesBHO::SetSite(IUnknown *pSite)
 	if (m_spWB == NULL)
 		return pSite == NULL ? S_OK : E_INVALIDARG;
 
+	_bUseUnicode = (GetVersion () & 0x80000000) == 0;
 	DWORD dw;
-	CloseHandle (
-		CreateThread (NULL, 0, _threadSubclassIeServerWnd, (LPVOID)(IWebBrowser2*)m_spWB, 0, &dw));
+	GetIEVersion (&_dwIeMajorVersion, &dw, &dw, &dw);
+
+	vmsIeTabsHookFitter::o ().SetTabHook (m_spWB);
 
 	m_spWB_CPC = m_spWB;
 	if (m_spWB_CPC == NULL)
@@ -290,48 +260,7 @@ STDMETHODIMP CFDMIECookiesBHO::Disconnect()
 
 STDMETHODIMP CFDMIECookiesBHO::ProgressChange(long Progress, long ProgressMax)
 {
-	USES_CONVERSION;
-
-	
-
-	IDispatchPtr spdDoc;
-	m_spWB->get_Document (&spdDoc);
-	if (spdDoc == NULL)
-		return S_OK;
-
-	IHTMLDocument2Ptr spDoc (spdDoc);
-	if (spDoc == NULL)
-		return S_OK;
-
-	BSTR bstr = NULL;
-	spDoc->get_cookie (&bstr);
-
-	fsString strCookies, strUrl;
-
-	if (bstr)
-	{
-		strCookies = W2A (bstr);
-		SysFreeString (bstr);
-		bstr = NULL;
-	}
-
-	spDoc->get_URL (&bstr);
-
-	if (bstr)
-	{
-		strUrl = W2A (bstr);
-		SysFreeString (bstr);
-		bstr = NULL;
-	}
-
-	if (m_strUrl != strUrl || m_strCookies != strCookies || 
-			m_strPostData != "")
-	{
-		m_strUrl = strUrl;
-		m_strCookies = strCookies;
-		SaveInfoToDisk ();
-	}
-
+	AnalyzePageAndWriteInfo ();
 	return S_OK;
 }
 
@@ -467,6 +396,9 @@ STDMETHODIMP CFDMIECookiesBHO::BeforeNavigate2(IDispatch *pdWB, VARIANT *url, VA
 			m_strPostData [m_strPostData.GetLength ()-1] = 0;
 	}
 
+	m_strUrl = ""; 
+	AnalyzePageAndWriteInfo ();
+
 	return S_OK;
 }
 
@@ -565,5 +497,50 @@ STDMETHODIMP CFDMIECookiesBHO::DocumentComplete(IDispatch *pDisp, VARIANT *URL)
 {
 	
 
+	
+
 	return S_OK;
+}
+
+void CFDMIECookiesBHO::AnalyzePageAndWriteInfo()
+{
+	USES_CONVERSION;
+	
+	IDispatchPtr spdDoc;
+	m_spWB->get_Document (&spdDoc);
+	if (spdDoc == NULL)
+		return;
+	
+	IHTMLDocument2Ptr spDoc (spdDoc);
+	if (spDoc == NULL)
+		return;
+	
+	BSTR bstr = NULL;
+	spDoc->get_cookie (&bstr);
+	
+	fsString strCookies, strUrl;
+	
+	if (bstr)
+	{
+		strCookies = W2A (bstr);
+		SysFreeString (bstr);
+		bstr = NULL;
+	}
+	
+	spDoc->get_URL (&bstr);
+	
+	if (bstr)
+	{
+		strUrl = W2A (bstr);
+		SysFreeString (bstr);
+		bstr = NULL;
+	}
+	
+	if (m_strUrl != strUrl || m_strCookies != strCookies || 
+		m_strPostData != "")
+	{
+		m_strUrl = strUrl;
+		m_strCookies = strCookies;
+		SaveInfoToDisk ();
+	}
 }

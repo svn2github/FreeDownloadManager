@@ -26,6 +26,7 @@ BEGIN_MESSAGE_MAP(CDownloads_Bittorrent_Files, CColumnTreeCtrl)
 	ON_COMMAND(ID_BTFILES_DONTDOWNLOAD, OnBtfilesDontdownload)
 	ON_COMMAND(ID_BTFILES_HIGHPIORITY, OnBtfilesHighpiority)
 	ON_COMMAND(ID_BTFILES_NORMALPRIORITY, OnBtfilesNormalpriority)
+	ON_WM_SHOWWINDOW()
 	//}}AFX_MSG_MAP
 	ON_NOTIFY_REFLECT(NM_RCLICK, OnRclick)
 END_MESSAGE_MAP()      
@@ -154,7 +155,7 @@ void CDownloads_Bittorrent_Files::ShowContextMenu(HTREEITEM hItem)
 {
 	CMenu menu;
 	menu.LoadMenu (IDM_BTFILES);
-	
+	ApplyLanguageToMenuBtFiles (&menu);
 	CMenu *pPopup = menu.GetSubMenu (0);
 
 	CPoint pt; GetCursorPos (&pt);
@@ -202,5 +203,22 @@ void CDownloads_Bittorrent_Files::OnBtfilesNormalpriority()
 		m_dld->pMgr->GetBtDownloadMgr ()->setFilePriority (iFile, 1);
 		SetItemText (hItem, 3, LS (L_PRIORITY_NORMAL));
 	}	
+}  
+
+void CDownloads_Bittorrent_Files::OnShowWindow(BOOL bShow, UINT nStatus) 
+{
+	CColumnTreeCtrl::OnShowWindow(bShow, nStatus);
+	
+	if (bShow)
+		UpdateProgress ();
 }
 
+void CDownloads_Bittorrent_Files::ApplyLanguageToMenuBtFiles(CMenu *pmenu)
+{
+	pmenu->ModifyMenu (ID_BTFILES_NORMALPRIORITY, MF_BYCOMMAND|MF_STRING, ID_BTFILES_NORMALPRIORITY, 
+		LS (L_NORMAL_PRIORITY));
+	pmenu->ModifyMenu (ID_BTFILES_HIGHPIORITY, MF_BYCOMMAND|MF_STRING, ID_BTFILES_HIGHPIORITY, 
+		LS (L_HIGH_PRIORITY));
+	pmenu->ModifyMenu (ID_BTFILES_DONTDOWNLOAD, MF_BYCOMMAND|MF_STRING, ID_BTFILES_DONTDOWNLOAD, 
+		LS (L_DONTDOWNLOAD));
+}

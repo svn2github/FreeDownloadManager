@@ -2,6 +2,8 @@
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
 */
 
+#ifndef __CURL_CONTENT_ENCODING_H
+#define __CURL_CONTENT_ENCODING_H
 
 #include "setup.h" 
 
@@ -19,3 +21,5 @@ CURLcode
 Curl_unencode_gzip_write(struct connectdata *conn,
                          struct SingleRequest *k,
                          ssize_t nread);
+
+#endif

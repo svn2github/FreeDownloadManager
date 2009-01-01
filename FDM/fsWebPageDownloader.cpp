@@ -23,15 +23,20 @@ fsWebPageDownloader::fsWebPageDownloader()
 {
 	m_pfnEvents = NULL;
 	ReadDefaultWPDS (&m_wpds);
-	InitializeCriticalSection (&m_cs_Done_Redir_Events);
+	InitializeCriticalSection (&m_csthreadProcessDoneAndRedirEventsAccLists);
 	m_nMaxID = 0;
 	m_bStopped = FALSE;
 	m_bIsDeleting = FALSE;
 	m_bWasShutdownMsg = FALSE;
+	m_bthreadProcessDoneAndRedirEvents_Running = false;
+	m__threadProcessDoneAndRedirEvents__NeedCheckDoneOrStopped = false;
 }
 
 fsWebPageDownloader::~fsWebPageDownloader()
 {
+	while (m_bthreadProcessDoneAndRedirEvents_Running)
+		Sleep (10);
+
 	for (size_t i = 0; i < m_vConfs.size (); i++)
 	{
 		SAFE_DELETE (m_vConfs [i].wp->pvUnpLinks);
@@ -41,7 +46,7 @@ fsWebPageDownloader::~fsWebPageDownloader()
 	for (i = 0; i < (size_t)m_wpds.vIgnoreList.size (); i++)
 		delete m_wpds.vIgnoreList [i];
 
-	DeleteCriticalSection (&m_cs_Done_Redir_Events);
+	DeleteCriticalSection (&m_csthreadProcessDoneAndRedirEventsAccLists);
 }
 
 BOOL fsWebPageDownloader::Create(LPCSTR pszPageURL, BOOL bAutoStart, fsSchedule *task)
@@ -192,50 +197,26 @@ DWORD fsWebPageDownloader::_DldEvents(fsDownload* dld, enum fsDownloadsMgrEvent 
 	switch (ev)
 	{
 		case DME_DOWNLOADSTOPPEDORDONE:
-			if (pThis->m_bWasShutdownMsg == FALSE)
-			{
-				if (pThis->IsDone ())
-				{
-					pThis->m_bWasShutdownMsg = TRUE;
-					pThis->Event (WPDE_DONE);
-				}
-				else if (pThis->IsRunning () == FALSE)
-				{
-					pThis->m_bWasShutdownMsg = TRUE;
-					pThis->Event (WPDE_STOPPED);
-				}
-			}
+			pThis->m__threadProcessDoneAndRedirEvents__NeedCheckDoneOrStopped = true;
+			pThis->MakeSureProcessDoneAndRedirEventsThreadStarted ();
 			break;
 	
 		case DME_DOWNLOADEREVENTRECEIVED:
 			if (dld->pMgr->IsRunning () == FALSE && dld->pMgr->IsDone ())
 			{
-				
-				EnterCriticalSection (&pThis->m_cs_Done_Redir_Events);
-				
-				try { 
-					pThis->OnWPDownloadDone (dld);
-				}
-				catch (...) {}
-				LeaveCriticalSection (&pThis->m_cs_Done_Redir_Events);
+				EnterCriticalSection (&pThis->m_csthreadProcessDoneAndRedirEventsAccLists);
+				pThis->m__threadProcessDoneAndRedirEvents__FinishedDownloads.push_back (dld);
+				LeaveCriticalSection (&pThis->m_csthreadProcessDoneAndRedirEventsAccLists);
+				pThis->MakeSureProcessDoneAndRedirEventsThreadStarted ();
 			}
 			break;
 
 		case DME_DOWNLOADWILLBEDELETED:
 		{
-			fsDLWebPage* wp = pThis->FindWebPage (dld);
-	
-			try {
-			if (wp)
-			{
-				wp->strFile = wp->dld->pMgr->get_OutputFilePathName (); 
-				if (dld->pMgr->IsDone () == FALSE)
-					wp->bState |= WPSTATE_DLDWASDELETED;	
-				
-				pThis->Event (WPDE_DLDWILLBEDELETED, (int)(fsDownload*) dld);
-				wp->dld = NULL;	
-			}
-			} catch (...) {}
+			EnterCriticalSection (&pThis->m_csthreadProcessDoneAndRedirEventsAccLists);
+			pThis->m__threadProcessDoneAndRedirEvents__WillBeDeletedDownloads.push_back (dld);
+			LeaveCriticalSection (&pThis->m_csthreadProcessDoneAndRedirEventsAccLists);
+			pThis->MakeSureProcessDoneAndRedirEventsThreadStarted ();
 			dld = NULL;
 		}
 		break;
@@ -285,12 +266,10 @@ DWORD fsWebPageDownloader::_DldEvents(fsDownload* dld, enum fsDownloadsMgrEvent 
 			break;
 
 		case DME_REDIRECTED:
-			
-			EnterCriticalSection (&pThis->m_cs_Done_Redir_Events);
-			try {
-				pThis->OnDldRedirected (dld);
-			}catch (...) {}
-			LeaveCriticalSection (&pThis->m_cs_Done_Redir_Events);
+			EnterCriticalSection (&pThis->m_csthreadProcessDoneAndRedirEventsAccLists);
+			pThis->m__threadProcessDoneAndRedirEvents__RedirDownloads.push_back (dld);
+			LeaveCriticalSection (&pThis->m_csthreadProcessDoneAndRedirEventsAccLists);
+			pThis->MakeSureProcessDoneAndRedirEventsThreadStarted ();
 			dld = NULL;
 			break;
 
@@ -302,7 +281,12 @@ DWORD fsWebPageDownloader::_DldEvents(fsDownload* dld, enum fsDownloadsMgrEvent 
 	catch (...) {}
 
 	if (dld)
-		pThis->Event (WPDE_DLDEVENTRECEIVED, (int) dld);
+	{
+		EnterCriticalSection (&pThis->m_csthreadProcessDoneAndRedirEventsAccLists);
+		pThis->m__threadProcessDoneAndRedirEvents__RcvdEventDownloads.push_back (dld);
+		LeaveCriticalSection (&pThis->m_csthreadProcessDoneAndRedirEventsAccLists);
+		pThis->MakeSureProcessDoneAndRedirEventsThreadStarted ();
+	}
 
 	return TRUE;
 }
@@ -966,7 +950,18 @@ BOOL fsWebPageDownloader::IsRunning()
 
 BOOL fsWebPageDownloader::IsDone()
 {
-	return GetDoneFileCount () == GetFileCount ();
+	for (int i = m_vConfs.size () - 1; i >= 0; i--)
+	{
+		fsDLWebPage *wp = m_vConfs [i].wp;
+		
+		if (wp->dld && (wp->bState & WPSTATE_DLDWASDELETED) == 0)
+		{
+			if (wp->dld->pMgr->IsDone () == FALSE)
+				return FALSE;
+		}
+	}
+
+	return TRUE;
 }
 
 BOOL fsWebPageDownloader::IsScheduled()
@@ -1163,6 +1158,8 @@ void fsWebPageDownloader::StartDownloading()
 			continue;
 		vDlds.push_back (dld);
 	}
+
+	MakeSureProcessDoneAndRedirEventsThreadStarted ();
 
 	_DldsMgr.StartDownloads (vDlds, TRUE);
 }
@@ -2274,4 +2271,161 @@ BOOL fsWebPageDownloader::IsURLShouldBeIgnored(fsURL &url)
 	}
 
 	return bOnlyConditionPresent ? TRUE : FALSE;
+}
+
+DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
+{
+	LOGFN ("fsWebPageDownloader::_threadProcessDoneAndRedirEvents");
+
+	fsWebPageDownloader *pthis = (fsWebPageDownloader*)lp;
+	pthis->m_bthreadProcessDoneAndRedirEvents_Running = true;
+
+	SetThreadPriority (GetCurrentThread (), THREAD_PRIORITY_BELOW_NORMAL);
+
+	try{
+
+	while (pthis->m__threadProcessDoneAndRedirEvents__FinishedDownloads.size () ||
+		pthis->m__threadProcessDoneAndRedirEvents__RedirDownloads.size () ||
+		pthis->m__threadProcessDoneAndRedirEvents__RcvdEventDownloads.size () ||
+		pthis->m__threadProcessDoneAndRedirEvents__WillBeDeletedDownloads.size () ||
+		pthis->m__threadProcessDoneAndRedirEvents__NeedCheckDoneOrStopped)
+	{
+		if (pthis->m__threadProcessDoneAndRedirEvents__FinishedDownloads.size () == 0 && 
+				pthis->m__threadProcessDoneAndRedirEvents__RedirDownloads.size () == 0 &&
+				pthis->m__threadProcessDoneAndRedirEvents__RcvdEventDownloads.size () == 0 && 
+				pthis->m__threadProcessDoneAndRedirEvents__WillBeDeletedDownloads.size () == 0 &&
+				pthis->m__threadProcessDoneAndRedirEvents__NeedCheckDoneOrStopped == false)
+		{
+			Sleep (100);
+			continue;
+		}
+
+		LOGsnl ("Processing will be deleted downloads");
+
+		while (pthis->m__threadProcessDoneAndRedirEvents__WillBeDeletedDownloads.size ())
+		{
+			EnterCriticalSection (&pthis->m_csthreadProcessDoneAndRedirEventsAccLists);
+			vmsDownloadSmartPtr dld = pthis->m__threadProcessDoneAndRedirEvents__WillBeDeletedDownloads [0];
+			pthis->m__threadProcessDoneAndRedirEvents__WillBeDeletedDownloads.erase (pthis->m__threadProcessDoneAndRedirEvents__WillBeDeletedDownloads.begin ());
+			LeaveCriticalSection (&pthis->m_csthreadProcessDoneAndRedirEventsAccLists);
+		
+			fsDLWebPage* wp = pthis->FindWebPage (dld);
+			
+			try {
+				if (wp)
+				{
+					wp->strFile = wp->dld->pMgr->get_OutputFilePathName (); 
+					if (dld->pMgr->IsDone () == FALSE)
+						wp->bState |= WPSTATE_DLDWASDELETED;	
+					
+					pthis->Event (WPDE_DLDWILLBEDELETED, (int)(fsDownload*) dld);
+					wp->dld = NULL;	
+				}
+			} catch (...) {}
+		}
+
+		LOGsnl ("Processing redir downloads...");
+
+		while (pthis->m__threadProcessDoneAndRedirEvents__RedirDownloads.size ())
+		{
+			EnterCriticalSection (&pthis->m_csthreadProcessDoneAndRedirEventsAccLists);
+			vmsDownloadSmartPtr dld = pthis->m__threadProcessDoneAndRedirEvents__RedirDownloads [0];
+			pthis->m__threadProcessDoneAndRedirEvents__RedirDownloads.erase (pthis->m__threadProcessDoneAndRedirEvents__RedirDownloads.begin ());
+			LeaveCriticalSection (&pthis->m_csthreadProcessDoneAndRedirEventsAccLists);
+
+			try {
+				pthis->OnDldRedirected (dld);
+			}catch (...) {}			
+		}
+
+		LOGsnl ("Processing finished downloads...");
+
+		_pwndDownloads->BeginCreateDownloads ();
+
+		while (pthis->m__threadProcessDoneAndRedirEvents__FinishedDownloads.size ())
+		{
+			EnterCriticalSection (&pthis->m_csthreadProcessDoneAndRedirEventsAccLists);
+			vmsDownloadSmartPtr dld = pthis->m__threadProcessDoneAndRedirEvents__FinishedDownloads [0];
+			pthis->m__threadProcessDoneAndRedirEvents__FinishedDownloads.erase (pthis->m__threadProcessDoneAndRedirEvents__FinishedDownloads.begin ());
+			LeaveCriticalSection (&pthis->m_csthreadProcessDoneAndRedirEventsAccLists);
+			
+			try {
+				pthis->OnWPDownloadDone (dld);
+			}catch (...) {}			
+		}
+
+		_pwndDownloads->EndCreateDownloads ();
+
+		LOGsnl ("Processing downloads having events...");
+
+		std::vector <UINT> vProceeded;
+		while (pthis->m__threadProcessDoneAndRedirEvents__RcvdEventDownloads.size ())
+		{
+			EnterCriticalSection (&pthis->m_csthreadProcessDoneAndRedirEventsAccLists);
+			vmsDownloadSmartPtr dld = pthis->m__threadProcessDoneAndRedirEvents__RcvdEventDownloads [0];
+			pthis->m__threadProcessDoneAndRedirEvents__RcvdEventDownloads.erase (pthis->m__threadProcessDoneAndRedirEvents__RcvdEventDownloads.begin ());
+			LeaveCriticalSection (&pthis->m_csthreadProcessDoneAndRedirEventsAccLists);
+
+			for (size_t i = 0; i < vProceeded.size (); i++)
+			{
+				if (vProceeded [i] == dld->nID)
+					break;
+			}
+
+			if (i == vProceeded.size ())
+			{
+				try {
+					pthis->Event (WPDE_DLDEVENTRECEIVED, (int)(fsDownload*)dld);
+					vProceeded.push_back (dld->nID);
+				}catch (...) {}
+			}
+
+			if (vProceeded.size () > 50)
+				vProceeded.clear ();
+		}
+
+		LOGsnl ("Processing need check done or stopped...");
+
+		if (pthis->m__threadProcessDoneAndRedirEvents__NeedCheckDoneOrStopped)
+		{
+			pthis->m__threadProcessDoneAndRedirEvents__NeedCheckDoneOrStopped = false;
+
+			if (pthis->m_bWasShutdownMsg == FALSE)
+			{
+				if (pthis->IsDone ())
+				{
+					pthis->m_bWasShutdownMsg = TRUE;
+					pthis->Event (WPDE_DONE);
+				}
+				else if (pthis->IsRunning () == FALSE)
+				{
+					pthis->m_bWasShutdownMsg = TRUE;
+					pthis->Event (WPDE_STOPPED);
+				}
+			}
+		}
+
+		LOGsnl ("Once cycle done");
+	}
+
+	}catch (...) {ASSERT (FALSE);}
+
+	pthis->m_bthreadProcessDoneAndRedirEvents_Running = false;
+	return 0;
+}
+
+void fsWebPageDownloader::MakeSureProcessDoneAndRedirEventsThreadStarted()
+{
+	if (m_bthreadProcessDoneAndRedirEvents_Running == false)
+	{
+		m_bthreadProcessDoneAndRedirEvents_Running = true;
+		DWORD dw;
+		CloseHandle (
+			CreateThread (NULL, 0, _threadProcessDoneAndRedirEvents, this, 0, &dw));
+	}
+}
+
+bool fsWebPageDownloader::isDownloadsMgrRequired() const
+{
+	return m_bthreadProcessDoneAndRedirEvents_Running;
 }

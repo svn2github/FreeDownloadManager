@@ -53,11 +53,9 @@
 
 #define HAVE_GETTIMEOFDAY 1    
 
-#define HAVE_GMTIME_R 1                                           
+#define HAVE_GMTIME_R 1                                        
 
-#define HAVE_INET_PTON 1 
-
-#define HAVE_INTTYPES_H 1                                                                
+#define HAVE_INTTYPES_H 1                                                             
 
 #define HAVE_LIMITS_H 1 
 
@@ -75,7 +73,7 @@
 
 #define HAVE_NETINET_IN_H 1    
 
-#define HAVE_NET_IF_H 1                                     
+#define HAVE_NET_IF_H 1                                  
 
 #define HAVE_O_NONBLOCK 1    
 
@@ -89,7 +87,9 @@
 
 #define HAVE_RAND_EGD 1       
 
-#define HAVE_RECV 1    
+#define HAVE_RECV 1 
+
+#define HAVE_RECVFROM 1    
 
 #define HAVE_SELECT 1 
 
@@ -167,9 +167,7 @@
 
 #define HAVE_UTIME_H 1 
 
-#define HAVE_VARIADIC_MACROS_C99 1 
-
-#define HAVE_VARIADIC_MACROS_GCC 1                                           
+#define HAVE_VARIADIC_MACROS_C99 1                                           
 
 #ifdef __WINS__
 #define OS "i386-pc-epoc32"
@@ -186,6 +184,15 @@
 #define RECV_TYPE_ARG4 int
 #define RECV_TYPE_RETV ssize_t
 
+#define RECVFROM_TYPE_ARG1 int
+#define RECVFROM_TYPE_ARG2 void
+#define RECVFROM_TYPE_ARG3 size_t
+#define RECVFROM_TYPE_ARG4 int
+#define RECVFROM_TYPE_ARG5 struct sockaddr
+#define RECVFROM_TYPE_ARG6 size_t
+#define RECVFROM_TYPE_RETV ssize_t
+#define RECVFROM_TYPE_ARG2_IS_VOID 1
+
 #define SEND_TYPE_ARG1 int
 #define SEND_QUAL_ARG2 const
 #define SEND_TYPE_ARG2 void*
@@ -198,10 +205,6 @@
 #define SELECT_TYPE_ARG234 (fd_set *) 
 
 #define SELECT_TYPE_ARG5 (struct timeval *) 
-
-#define SIZEOF_CURL_OFF_T 8 
-
-#define SIZEOF_LONG 4 
 
 #define SIZEOF_OFF_T 8 
 
@@ -225,4 +228,17 @@
 
 #ifdef _DEBUG
 
+#endif 
+
+#ifndef __LONG_LONG_SUPPORTED
+#define __LONG_LONG_SUPPORTED
+#endif 
+
+#ifdef HAVE_LIBZ
+#define HAVE_ZLIB_H 1
+#endif 
+
+#ifdef USE_SSL
+#define USE_OPENSSL 1
+#define USE_SSLEAY 1
 #endif

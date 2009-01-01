@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
+*/
+
+    
 
 #ifndef __COMMON_STRINGCONVERT_H
 #define __COMMON_STRINGCONVERT_H

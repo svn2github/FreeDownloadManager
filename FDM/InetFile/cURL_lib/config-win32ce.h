@@ -45,8 +45,6 @@
 
 #define HAVE_INET_ADDR 1 
 
-#define HAVE_INET_NTOA 1 
-
 #define HAVE_IOCTLSOCKET 1 
 
 #define HAVE_PERROR 1 
@@ -59,7 +57,7 @@
 
 #define HAVE_SETVBUF 1 
 
-#define HAVE_SOCKET 1             
+#define HAVE_SOCKET 1                   
 
 #define HAVE_STRSTR 1 
 
@@ -93,6 +91,22 @@
 
 #define RECV_TYPE_RETV int 
 
+#define HAVE_RECVFROM 1 
+
+#define RECVFROM_TYPE_ARG1 SOCKET 
+
+#define RECVFROM_TYPE_ARG2 char 
+
+#define RECVFROM_TYPE_ARG3 int 
+
+#define RECVFROM_TYPE_ARG4 int 
+
+#define RECVFROM_TYPE_ARG5 struct sockaddr 
+
+#define RECVFROM_TYPE_ARG6 int 
+
+#define RECVFROM_TYPE_RETV int 
+
 #define HAVE_SEND 1 
 
 #define SEND_TYPE_ARG1 SOCKET 
@@ -118,13 +132,7 @@
 #define ssize_t int
 #endif     
 
-#define SIZEOF_LONG_DOUBLE 16    
-
-#ifdef SIZEOF_CURL_OFF_T
-#undef SIZEOF_CURL_OFF_T
-#endif 
-
-#define SIZEOF_CURL_OFF_T 4        
+#define SIZEOF_LONG_DOUBLE 16           
 
 #define HAVE_STRUCT_TIMEVAL 1        
 
@@ -141,6 +149,18 @@
 #  endif
 #endif    
 
+#if defined(_MSC_VER) && !defined(_WIN32_WCE)
+#  if (_MSC_VER >= 900) && (_INTEGRAL_MAX_BITS >= 64)
+#    define USE_WIN32_LARGE_FILES
+#  else
+#    define USE_WIN32_SMALL_FILES
+#  endif
+#endif
+
+#if !defined(USE_WIN32_LARGE_FILES) && !defined(USE_WIN32_SMALL_FILES)
+#  define USE_WIN32_SMALL_FILES
+#endif    
+
 #define CURL_LDAP_WIN 1
 #undef CURL_LDAP_HYBRID
 #undef HAVE_LDAP_URL_PARSE     
@@ -153,24 +173,6 @@
 #define CURL_DISABLE_FILE 1
 #define CURL_DISABLE_TELNET 1
 #define CURL_DISABLE_LDAP 1
-
-#ifdef HAVE_WINDOWS_H
-#  ifndef WIN32_LEAN_AND_MEAN
-#    define WIN32_LEAN_AND_MEAN
-#  endif
-#  include <windows.h>
-#  ifdef HAVE_WINSOCK2_H
-#    include <winsock2.h>
-#    ifdef HAVE_WS2TCPIP_H
-#       include <ws2tcpip.h>
-#    endif
-#  else
-#    ifdef HAVE_WINSOCK_H
-#      include <winsock.h>
-#    endif
-#  endif
-#  include <process.h>
-#endif
 
 #define ENOSPC 1
 #define ENOMEM 2

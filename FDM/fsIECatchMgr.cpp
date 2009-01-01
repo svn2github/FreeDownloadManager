@@ -86,7 +86,7 @@ BOOL fsIECatchMgr::OnBeforeNavigate(LPCSTR pszUrl, BOOL bCheckALT)
 	if (bExtPresent)
 		return TRUE;	
 
-	return _pwndDownloads->CreateDownload (pszUrl, TRUE) == FALSE;
+	return UINT_MAX == _pwndDownloads->CreateDownload (pszUrl, TRUE);
 
 	}
 	catch (...)

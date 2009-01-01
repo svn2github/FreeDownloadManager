@@ -120,6 +120,8 @@ UINT fsDownloadsMgr::Add(vmsDownloadSmartPtr dld, BOOL bKeepIDAsIs, bool bPlaceT
 
 	m_bSkip1Cicle = TRUE;
 
+	dld->dwFlags &= ~DLD_WAS_DELETED;
+
 	return dld->nID;
 }
 
@@ -276,13 +278,14 @@ DWORD fsDownloadsMgr::_DownloadMgrEvents(fsDownloadMgr *pMgr, fsDownloaderEvent 
 
 void fsDownloadsMgr::ProcessDownloads()
 {
+	if (m_dwPDTimeLimit && isAllowedToPDCurrently () == false)
+		return;
+
 	
 	DLDS_LIST vDldsToStop, vDldsToStart;
 
 	if (m_bAllowStart == FALSE || m_bDisablePD)
 		return;
-
-	LOG ("fsDsM::PD: start" << nl);
 
 	
 	m_mxBuildConns.Lock ();
@@ -299,8 +302,6 @@ void fsDownloadsMgr::ProcessDownloads()
 	
 	for (size_t i = 0; i < (size_t)_SitesMgr.GetSiteCount (); i++)
 		_SitesMgr.GetSite (i)->cConnsNow = min (_SitesMgr.GetSite (i)->cMaxConns, cMaxCPS);
-
-	LOG ("fsDsM::PD: 1" << nl);
 
 	for (i = 0; i < m_vDownloads.size (); i++)
 	{
@@ -415,25 +416,17 @@ void fsDownloadsMgr::ProcessDownloads()
 
 	} catch (...) {}
 
-	LOG ("fsDsM::PD: 2" << nl);
-
 	m_mxBuildConns.Unlock (); 
 
 	StopDownloads (vDldsToStop);
 	StartDownloads (vDldsToStart);
-
-	LOG ("fsDsM::PD: exit" << nl);
 }
 
 void fsDownloadsMgr::StartDownloads(DLDS_LIST &vpDlds, BOOL )
 {
-	LOG ("fsDsM::SD: start" << nl);
-
 	try {
 
-	UINT cRunning = GetRunningDownloadCount ();
-
-	LOG ("fsDsM::SD: number of running downloads = " << (DWORD)cRunning << nl);
+	UINT cRunning = GetRunningDownloadCount (false);
 
 	for (size_t i = 0; i < vpDlds.size (); i++)
 	{
@@ -443,8 +436,6 @@ void fsDownloadsMgr::StartDownloads(DLDS_LIST &vpDlds, BOOL )
 		{
 			if (dld->pMgr->IsDone () == FALSE)
 			{
-				LOG ("fsDsM::SD: start download (" << dld->pMgr->get_URL () << ")" << nl);
-
 				dld->pMgr->StartDownloading ();
 				cRunning ++;
 			}
@@ -460,14 +451,10 @@ void fsDownloadsMgr::StartDownloads(DLDS_LIST &vpDlds, BOOL )
 	ApplyTrafficLimit ();
 
 	Event (NULL, DME_DLDSAUTOSTARTMDFD);
-
-	LOG ("fsDsM::SD: exit" << nl);
 }
 
 void fsDownloadsMgr::StopDownloads(DLDS_LIST &vDlds, BOOL bByUser)
 {
-	LOG ("fsDsM::SpD: start" << nl);
-
 	try {
 
 	
@@ -487,8 +474,6 @@ void fsDownloadsMgr::StopDownloads(DLDS_LIST &vDlds, BOOL bByUser)
 
 	if (bByUser)
 		Event (NULL, DME_DLDSAUTOSTARTMDFD);
-
-	LOG ("fsDsM::SpD: exit" << nl);
 }
 
 void fsDownloadsMgr::SetEventsFunc(fntDownloadsMgrEventFunc pfn, LPVOID lpParam)
@@ -790,6 +775,9 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 		else
 			pThis->m_bSkip1Cicle = FALSE;
 
+		if (pThis->m_dwPDTimeLimit)
+			pThis->ManagePD ();
+
 		Sleep (1000);
 		now.Now ();
 	}
@@ -806,8 +794,6 @@ fsTrafficUsageMode* fsDownloadsMgr::GetTUMs()
 
 void fsDownloadsMgr::RebuildServerList(BOOL bUpdateSiteList)
 {
-	LOG ("fsDsM::RSL: start" << nl);
-
 	m_mxBuildConns.Lock (); 
 
 	try {
@@ -906,21 +892,14 @@ void fsDownloadsMgr::RebuildServerList(BOOL bUpdateSiteList)
 		}
 	}
 	catch (...) {}
-
-	LOG ("fsDsM::RSL: done" << nl);
 }
 BOOL fsDownloadsMgr::OnQueryNewSection(vmsDownloadSmartPtr dld, UINT nUsingMirror)
 {
-	LOG ("Entering DLSM::OnQueryNewSection..." << nl);
-
 	ASSERT (dld->pMgr->GetDownloadMgr () != NULL);
 	
 	
 	if (dld->pMgr->GetDownloadMgr ()->GetDP ()->bIgnoreRestrictions)
-	{
-		LOG ("Exit DLSM::OnQueryNewSection" << nl);
 		return TRUE;
-	}
 
 	EnterCriticalSection (&m_csQSection);
 	BOOL b = TRUE; 
@@ -950,7 +929,6 @@ BOOL fsDownloadsMgr::OnQueryNewSection(vmsDownloadSmartPtr dld, UINT nUsingMirro
 		dld->bAutoStart = TRUE;
 
 	LeaveCriticalSection (&m_csQSection);
-	LOG ("Exit DLSM::OnQueryNewSection" << nl);
 	return b;
 }
 
@@ -1020,8 +998,6 @@ fsTUM fsDownloadsMgr::GetTUM()
 
 void fsDownloadsMgr::ApplyTrafficLimit()
 {
-	LOG ("fsDsM::ATL: start" << nl);
-
 	
 	ASSERT (m_aTUM [TUM_HEAVY].uTrafficLimit == UINT_MAX);
 	m_aTUM [TUM_HEAVY].uTrafficLimit = UINT_MAX;
@@ -1029,12 +1005,7 @@ void fsDownloadsMgr::ApplyTrafficLimit()
     try {
 
 	if (m_vDownloads.size () == 0)
-	{
-		LOG ("fsDsM::ATL: exit [0]" << nl);
 		return;
-	}
-
-	LOG ("fsDsM::ATL: apply bt properties" << nl);	
 
 	if (_BT.is_Initialized ())
 	{
@@ -1068,8 +1039,6 @@ void fsDownloadsMgr::ApplyTrafficLimit()
 
 	}
 	catch (...) {}
-
-	LOG ("fsDsM::ATL: exit" << nl);
 }
 
 void fsDownloadsMgr::StartAllDownloads(BOOL bByUser)
@@ -1188,6 +1157,7 @@ void fsDownloadsMgr::SaveSettings()
 	_App.Avir_Name (m_strVirName);
 	_App.Avir_Args (m_strVirArgs);
 	_App.Avir_Exts (m_strVirExts);
+	_App.DldsMgrPDTimeLimit (m_dwPDTimeLimit);
 }
 
 void fsDownloadsMgr::ApplyConnectionType(fsConnectionType enCT)
@@ -1483,17 +1453,26 @@ void fsDownloadsMgr::ReadSettings()
 	ReadDeletedSettings ();
 
 	m_histmgr.ReadSettings ();
+
+	m_dwPDTimeLimit = _App.DldsMgrPDTimeLimit ();
 }
 
-int fsDownloadsMgr::GetRunningDownloadCount()
+int fsDownloadsMgr::GetRunningDownloadCount(bool bIncludeBtSeeds)
 {
 	int cRunning = 0;
 
 	try {
 
 		for (size_t i = 0; i < m_vDownloads.size (); i++)
+		{
 			if (m_vDownloads [i]->pMgr->IsRunning ())
+			{
 				cRunning ++;
+				if (false == bIncludeBtSeeds && m_vDownloads [i]->pMgr->IsBittorrent () &&
+						m_vDownloads [i]->pMgr->IsDone ())
+					cRunning--;
+			}
+		}
 	}
 	catch (...) {}
 
@@ -1581,11 +1560,6 @@ int fsDownloadsMgr::DeleteDownloads2(DLDS_LIST *vDlds, BOOL bByUser, BOOL bDontC
 	if (bDontConfirmFileDeleting && enDDR == DDR_ASK)
 		enDDR = DDR_WITHFILE;	
 
-	#ifdef _USELOGGING
-	if (IsDeletingNow ())
-		LOG ("Someone is deleting downloads already..." << nl);
-	#endif
-
 	
 	while (IsDeletingNow ())
 	{
@@ -1603,13 +1577,9 @@ int fsDownloadsMgr::DeleteDownloads2(DLDS_LIST *vDlds, BOOL bByUser, BOOL bDontC
 	if (pbNeedStop && *pbNeedStop)
 		return 0;
 
-	LOG ("Start deleting..." << nl);
-
 	m_bDeletingNow = TRUE;
 	m_bDisablePD = TRUE;
 	LockList ();
-
-	LOG ("list locked, going into loop..." << nl);
 
 	vmsDownloadSmartPtr dldFake;
 	Download_CreateInstance (dldFake);
@@ -1701,6 +1671,7 @@ int fsDownloadsMgr::DeleteDownloads2(DLDS_LIST *vDlds, BOOL bByUser, BOOL bDontC
 		m_vDownloads [iIndex] = dldFake;
 		dld->pGroup->cDownloads--;
 
+		dld->dwFlags |= DLD_WAS_DELETED;
 		Event (dld, DME_DOWNLOADWASDELETEDFROMLIST);
 		dld->pfnDownloadEventsFunc = NULL;
 
@@ -1740,8 +1711,6 @@ int fsDownloadsMgr::DeleteDownloads2(DLDS_LIST *vDlds, BOOL bByUser, BOOL bDontC
 	m_vDownloads = v;	
 
 	_pwndDownloads->set_DontUpdateTIPO (FALSE);
-
-	LOG ("downloads deleted from list" << nl);
 
 	m_bDeletingNow = FALSE;
 	m_bDisablePD = FALSE;
@@ -2035,8 +2004,6 @@ BOOL fsDownloadsMgr::DeleteDownloadFile(vmsDownloadSmartPtr dld, BOOL bNoCancel,
 
 	if (enDDR == DDR_ASK)
 	{
-		LOG ("asking user permission for deleting this download..." << nl);
-
 		CDDRDlg dlg;
 		dlg.m_bNoCancel = bNoCancel;
 		if (dld->pMgr->GetDownloadMgr ())
@@ -2044,12 +2011,7 @@ BOOL fsDownloadsMgr::DeleteDownloadFile(vmsDownloadSmartPtr dld, BOOL bNoCancel,
 		else if (dld->pMgr->GetBtDownloadMgr ())
 			dlg.m_strUrl = dld->pMgr->GetBtDownloadMgr ()->get_TorrentName ();
 		if (IDCANCEL == dlg.DoModal ())
-		{
-			LOG ("user has declined that" << nl);
 			return FALSE;
-		}
-
-		LOG ("user has approved" << nl);
 		
 		if (dlg.m_bDontAskAgain) m_enDDR = enDoDDR = dlg.m_enDDR;
 		if (dlg.m_bForAll) enDoDDR = dlg.m_enDDR;
@@ -2058,8 +2020,6 @@ BOOL fsDownloadsMgr::DeleteDownloadFile(vmsDownloadSmartPtr dld, BOOL bNoCancel,
 		
 	if (enDDR == DDR_WITHFILE)
 	{
-		LOG ("deleting file..." << nl);
-
 		if (dld->pMgr->GetDownloadMgr ())
 		{
 			dld->pMgr->GetDownloadMgr ()->SetEventDescFunc (NULL, 0);
@@ -2073,12 +2033,7 @@ BOOL fsDownloadsMgr::DeleteDownloadFile(vmsDownloadSmartPtr dld, BOOL bNoCancel,
 		
 		Event (dld, DME_DOWNLOADFILEWILLBEDELETED);
 		if (FALSE == dld->pMgr->DeleteFile ())
-		{
-			LOG ("can't delete" << nl);
 			MessageBox (NULL, LS (L_CANTDELETE), LS (L_ERR), MB_ICONERROR);
-		}
-
-		LOG ("file deleted" << nl);
 	}
 	
 	return TRUE;
@@ -2123,11 +2078,6 @@ int fsDownloadsMgr::DeleteDeletedDownloads2(DLDS_LIST *vDlds, BOOL bNoCancel, BO
 	fsnew1 (pvDlds, DLDS_LIST);
 	UINT i = 0;
 	fsDeleteDownloadReaction enDDR = m_enDDR;
-
-	#ifdef _USELOGGING
-	if (IsDeletingDeletedNow ())
-		LOG ("Someone is deleting downloads already..." << nl);
-	#endif
 
 	
 	while (IsDeletingDeletedNow ())
@@ -2981,12 +2931,9 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsMetaLink(vmsDownloadSmartPtr dld)
 	if (mf.get_FileCount () == 0)
 		return FALSE;
 
-	
-	BOOL bRecreated = FALSE;
-	
-	int iWinOSFile = -1;
+	std::vector <int> viFiles;
 
-	for (int iFile = 0; iFile < mf.get_FileCount () && iWinOSFile != -1; iFile++)
+	for (int iFile = 0; iFile < mf.get_FileCount (); iFile++)
 	{
 		vmsMetalinkFile_File *file = mf.get_File (iFile);
 
@@ -2994,104 +2941,133 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsMetaLink(vmsDownloadSmartPtr dld)
 		if (file->strOS.GetLength () && strstr (file->strOS, "Windows") == NULL)
 			continue;
 
-		iWinOSFile = iFile;
+		viFiles.push_back (iFile);
 	}
 
-	if (iWinOSFile == -1)
-		iWinOSFile = 0;
+	if (viFiles.size () == 0)
+		viFiles.push_back (0);
 
-	vmsMetalinkFile_File *file = mf.get_File (iWinOSFile);
-	
-	if (file->vMirrors.size () == 0)
-		return FALSE;
-
-	
-	fsString strBtUrl;
-
-	for (int i = 0; i < file->vMirrors.size (); i++)
+	for (iFile = 0; iFile < (int)viFiles.size (); iFile++)
 	{
-		vmsMetalinkFile_File_Url *url = &file->vMirrors [i];
-
-		if (strcmpi (url->strProtocol, "http") && strcmpi (url->strProtocol, "https") &&
-				strcmpi (url->strProtocol, "ftp"))
+		vmsMetalinkFile_File *file = mf.get_File (viFiles [iFile]);
+	
+		if (file->vMirrors.size () == 0)
 		{
-			if (strcmpi (url->strProtocol, "bittorrent") == 0)
-				strBtUrl = url->strUrl;
-			continue;
+			if (iFile == 0)
+				return FALSE;
+			else
+				continue;
+		}
+
+		if (iFile)
+		{
+			vmsDownloadSmartPtr dld2;
+			Download_CreateInstance (dld2);
+			_DldsMgr.Download_CloneSettings (dld2, dld);
+			dld = dld2;
+		}
+
+		
+		fsString strBtUrl;
+		
+		BOOL bRecreated = FALSE;
+
+		for (int i = 0; i < file->vMirrors.size (); i++)
+		{
+			vmsMetalinkFile_File_Url *url = &file->vMirrors [i];
+
+			if (strcmpi (url->strProtocol, "http") && strcmpi (url->strProtocol, "https") &&
+					strcmpi (url->strProtocol, "ftp"))
+			{
+				if (strcmpi (url->strProtocol, "bittorrent") == 0)
+					strBtUrl = url->strUrl;
+				continue;
+			}
+
+			if (bRecreated == FALSE)
+			{
+				if (IR_SUCCESS != dld->pMgr->GetDownloadMgr ()->CreateByUrl (url->strUrl, TRUE))
+					continue;
+				if (iFile == 0)
+					dld->pMgr->GetDownloadMgr ()->Reset ();
+				bRecreated = TRUE;
+			}
+			else
+			{
+				dld->pMgr->GetDownloadMgr ()->GetDownloader ()->AddMirrorURL (url->strUrl);
+			}
 		}
 
 		if (bRecreated == FALSE)
 		{
-			if (IR_SUCCESS != dld->pMgr->GetDownloadMgr ()->CreateByUrl (url->strUrl, TRUE))
+			if (strBtUrl.IsEmpty ())
+				return FALSE;
+			
+			
+			if (IR_SUCCESS != dld->pMgr->GetDownloadMgr ()->CreateByUrl (strBtUrl, TRUE))
+			{
+				if (iFile == 0)
+					return FALSE;
 				continue;
-			dld->pMgr->GetDownloadMgr ()->Reset ();
+			}
+			if (iFile == 0)
+				dld->pMgr->GetDownloadMgr ()->Reset ();
 			bRecreated = TRUE;
 		}
-		else
+
+		if (iFile == 0)
+			Event (dld, LS (L_METALINK_DETECTED), EDT_INQUIRY);
+
+		for (i = 0; i < file->vHashes.size (); i++)
 		{
-			dld->pMgr->GetDownloadMgr ()->GetDownloader ()->AddMirrorURL (url->strUrl);
+			vmsMetalinkFile_File_Hash *hash = &file->vHashes [i];
+			DWORD dwAlg;
+			if (hash->strChecksum.GetLength () == 0)
+				continue;
+		
+			if (lstrcmpi (hash->strAlgorithm, "md5") == 0)
+				dwAlg = HA_MD5;
+
+			else if (lstrcmpi (hash->strAlgorithm, "sha1") == 0 || 
+					lstrcmpi (hash->strAlgorithm, "sha-1") == 0)
+				dwAlg = HA_SHA1;
+
+			else
+				continue;
+
+			
+			dld->pMgr->GetDownloadMgr ()->GetDP ()->dwIntegrityCheckAlgorithm = dwAlg;
+			SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum);
+			dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum = new char [hash->strChecksum.GetLength () + 1];
+			lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum, hash->strChecksum);
 		}
-	}
 
-	if (bRecreated == FALSE)
-	{
-		if (strBtUrl.IsEmpty ())
-			return FALSE;
-		
-		
-		if (IR_SUCCESS != dld->pMgr->GetDownloadMgr ()->CreateByUrl (strBtUrl, TRUE))
-			return FALSE;
-		dld->pMgr->GetDownloadMgr ()->Reset ();
-		bRecreated = TRUE;
-	}
+		if (iFile == 0)
+			DeleteFile (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
+		LPSTR psz = strrchr (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, '\\');
+		if (psz == NULL)
+			psz = strrchr (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, '/');
+		if (psz)
+			*psz = 0;
 
-	Event (dld, LS (L_METALINK_DETECTED), EDT_INQUIRY);
+		char szNewFile [MY_MAX_PATH];
+		lstrcpy (szNewFile, dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
+		lstrcat (szNewFile, "\\");
+		if (file->strName.pszString != NULL)
+			lstrcat (szNewFile, file->strName);
+		SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
+		dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new char [lstrlen (szNewFile) + 1];
+		lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, szNewFile);
 
-	for (i = 0; i < file->vHashes.size (); i++)
-	{
-		vmsMetalinkFile_File_Hash *hash = &file->vHashes [i];
-		DWORD dwAlg;
-		if (hash->strChecksum.GetLength () == 0)
-			continue;
-		
-		if (lstrcmpi (hash->strAlgorithm, "md5") == 0)
-			dwAlg = HA_MD5;
+		if (dld->strComment.GetLength () != 0)
+			dld->strComment += "\r\n";
+		dld->strComment += mf.get_Description ();
 
-		else if (lstrcmpi (hash->strAlgorithm, "sha1") == 0 || 
-				lstrcmpi (hash->strAlgorithm, "sha-1") == 0)
-			dwAlg = HA_SHA1;
-
+		if (iFile == 0)
+			dld->pMgr->StartDownloading ();
 		else
-			continue;
-
-		
-		dld->pMgr->GetDownloadMgr ()->GetDP ()->dwIntegrityCheckAlgorithm = dwAlg;
-		SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum);
-		dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum = new char [hash->strChecksum.GetLength () + 1];
-		lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum, hash->strChecksum);
+			_pwndDownloads->CreateDownload (dld, NULL, FALSE, false);
 	}
-
-	DeleteFile (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
-	LPSTR psz = strrchr (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, '\\');
-	if (psz == NULL)
-		psz = strrchr (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, '/');
-	if (psz)
-		*psz = 0;
-
-	char szNewFile [MY_MAX_PATH];
-	lstrcpy (szNewFile, dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
-	lstrcat (szNewFile, "\\");
-	if (file->strName.pszString != NULL)
-		lstrcat (szNewFile, file->strName);
-	SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
-	dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new char [lstrlen (szNewFile) + 1];
-	lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, szNewFile);
-
-	if (dld->strComment.GetLength () != 0)
-		dld->strComment += "\r\n";
-	dld->strComment += mf.get_Description ();
-
-	dld->pMgr->StartDownloading ();
 
 	return TRUE;
 }
@@ -3512,18 +3488,9 @@ DWORD fsDownloadsMgr::_BtDownloadManagerEventHandler(vmsBtDownloadManager *pMgr,
 
 BOOL fsDownloadsMgr::OnDownloadStoppedOrDone(vmsDownloadSmartPtr dld)
 {
-	#ifdef _USELOGGING
-	LPVOID lp = dld->pMgr->GetDownloadMgr () ? (LPVOID)dld->pMgr->GetDownloadMgr () : (LPVOID)dld->pMgr->GetBtDownloadMgr ();
-	#endif
-	#define LOG_local(x) LOG("fsDsM::ODSOD(" << (DWORD)lp << "): " << x << nl)
-
-	LOG_local ("1");
 	Event (dld, DME_DOWNLOADEREVENTRECEIVED);
-	LOG_local ("2");
 	Event (dld, DME_DOWNLOADSTOPPEDORDONE);
-	LOG_local ("3");
 	Event (dld, DME_UPDATEDLDDIALOG);
-	LOG_local ("4");
 
 	if (m_gabInfo.dld == dld)
 		m_gabInfo.dld = NULL;
@@ -3608,9 +3575,7 @@ BOOL fsDownloadsMgr::OnDownloadStoppedOrDone(vmsDownloadSmartPtr dld)
 	}
 
 	ProcessDownloads ();	
-	LOG_local ("5");
 	CheckNoActiveDownloads (); 
-	LOG_local ("6");
 
 	return TRUE;
 }
@@ -3660,15 +3625,10 @@ void fsDownloadsMgr::GetRunningDownloads(DLDS_LIST &v)
 
 void fsDownloadsMgr::ApplyTrafficLimit_NoHpDld()
 {
-	LOG ("fsDsM::ATL_NHD: start" << nl);
-
 	DLDS_LIST vRunningDlds;
 	GetRunningDownloads (vRunningDlds);
 	if (vRunningDlds.size () == 0)
-	{
-		LOG ("fsDsM::ATL_NHD: exit [0]" << nl);
 		return;
-	}
 
 	
 	UINT tlpd = m_enTUM == TUM_HEAVY ? UINT_MAX : 
@@ -3677,24 +3637,17 @@ void fsDownloadsMgr::ApplyTrafficLimit_NoHpDld()
 	m_bSkip1Cicle = TRUE;
 
 	ApplyTrafficLimitForListOfDownloads (vRunningDlds, tlpd);
-
-	LOG ("fsDsM::ATL_NHD: exit" << nl);
 }
 
 void fsDownloadsMgr::ApplyTrafficLimit_HasHpDld()
 {
-	LOG ("fsDsM::ATL_HHD: start" << nl);
-
 	ASSERT (m_gabInfo.dld != NULL);
 	ASSERT (m_gabInfo.dld->pMgr->IsRunning ());
 
 	DLDS_LIST vRunningDlds;
 	GetRunningDownloads (vRunningDlds);
 	if (vRunningDlds.size () == 0)
-	{
-		LOG ("fsDsM::ATL_HHD: exit [0]" << nl);
 		return;
-	}
 
 	
 
@@ -3704,7 +3657,6 @@ void fsDownloadsMgr::ApplyTrafficLimit_HasHpDld()
 		if (m_gabInfo.dld->pMgr->GetDownloadMgr ())
 			uTraffLimit = min (uTraffLimit, m_gabInfo.dld->pMgr->GetDownloadMgr ()->GetDP ()->uTrafficRestriction);
 		m_gabInfo.dld->pMgr->LimitTraffic (uTraffLimit);
-		LOG ("fsDsM::ATL_HHD: exit [1]" << nl);
 		return;
 	}
 
@@ -3791,21 +3743,15 @@ void fsDownloadsMgr::ApplyTrafficLimit_HasHpDld()
 		ApplyTrafficLimitForListOfDownloads (vRunningDlds, 
 			(m_gabInfo.uBandwidth - m_gabInfo.uDldMaxSpeed) / vRunningDlds.size ());
 	}
-
-	LOG ("fsDsM::ATL_HHD: exit" << nl);
 }
 
 void fsDownloadsMgr::ApplyTrafficLimitForListOfDownloads(DLDS_LIST vDlds, UINT nLimit)
 {
-	LOG ("fsDsM::ATLFLOD: start" << nl);
-
 	UINT uShortage = 0;
 	UINT cLimitedWithReqLimit = 0;
 
 	if (nLimit == 0)
 		nLimit = 1;
-
-	LOG ("fsDsM::ATLFLOD: number of downloads = " << DWORD (vDlds.size ()) << nl);
 
 	
 	for (size_t i = 0; i < vDlds.size (); i++)
@@ -3833,8 +3779,6 @@ void fsDownloadsMgr::ApplyTrafficLimitForListOfDownloads(DLDS_LIST vDlds, UINT n
 		}
 	}
 
-	LOG ("fsDsM::ATLFLOD: 1" << nl);
-
 	if (cLimitedWithReqLimit)
 		uShortage /= cLimitedWithReqLimit;
 
@@ -3847,8 +3791,6 @@ void fsDownloadsMgr::ApplyTrafficLimitForListOfDownloads(DLDS_LIST vDlds, UINT n
 			pMgr->LimitTraffic (nLimit + uShortage);
 		}
 	}
-
-	LOG ("fsDsM::ATLFLOD: exit" << nl);
 }
 
 void fsDownloadsMgr::set_HighestPriorityDownload(vmsDownloadSmartPtr dld)
@@ -4080,4 +4022,59 @@ DWORD WINAPI fsDownloadsMgr::_threadStartSeeding(LPVOID lp)
 BOOL fsDownloadsMgr::AllowStartNewDownloads()
 {
 	return m_bAllowStart;
+}
+
+void fsDownloadsMgr::ManagePD()
+{
+	if (m_dwPDTimeLimit == 0)
+		return;
+
+	bool bTimeAllow = isAllowedToPDCurrently ();
+
+	static bool _bStarted = false;
+	
+	if (bTimeAllow)
+	{
+		if (_bStarted == false)
+		{
+			_bStarted = true;
+			ProcessDownloads ();
+		}
+	}
+	else
+	{
+		if (_bStarted)
+		{
+			_bStarted = false;
+			StopAllDownloads (FALSE);
+		}
+	}
+}
+
+bool fsDownloadsMgr::isAllowedToPDCurrently() const
+{
+	if (m_dwPDTimeLimit == 0)
+		return true;
+	
+	int t1 = LOWORD (m_dwPDTimeLimit);
+	int t2 = HIWORD (m_dwPDTimeLimit);
+	
+	SYSTEMTIME st; GetLocalTime (&st);
+	
+	bool bNeedInvert = false;
+	bool bTimeAllow;
+	
+	if (t1 > t2)
+	{
+		bNeedInvert = true;
+		t2 += t1;
+		t1 = t2 - t1;
+		t2 = t2 - t1;
+	}
+	
+	bTimeAllow = st.wHour >= t1 && st.wHour < t2;
+	if (bNeedInvert)
+		bTimeAllow = !bTimeAllow;
+
+	return bTimeAllow;
 }

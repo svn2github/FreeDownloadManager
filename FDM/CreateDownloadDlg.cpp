@@ -37,8 +37,7 @@ CCreateDownloadDlg::CCreateDownloadDlg(vmsDownloadSmartPtr dld, LPCSTR pszStartU
 	//{{AFX_DATA_INIT(CCreateDownloadDlg)
 	//}}AFX_DATA_INIT
 	
-	LOG ("constructing create download dialog..."); 
-
+	
 	m_bScheduled = FALSE;
 	if (pszStartUrl) m_strUrl = pszStartUrl;
 	if (pszComment) m_strComment = pszComment;
@@ -49,8 +48,6 @@ CCreateDownloadDlg::CCreateDownloadDlg(vmsDownloadSmartPtr dld, LPCSTR pszStartU
 	m_bSetFocusToOKBtn = false;
 	m_bPlaceAtTop = false;
 	m_pszCookies = m_pszPostData = NULL;
-	
-	LOG ("ok." << nl); 
 }  
 
 void CCreateDownloadDlg::DoDataExchange(CDataExchange* pDX)
@@ -255,33 +252,22 @@ BOOL CCreateDownloadDlg::OnInitDialog()
 
 	m_wndGroups.Fill ();
 
-	LOG ("filling in history of urls...");
-
 	CComboBox *pUrls = (CComboBox*) GetDlgItem (IDC_URL);
 	for (int i = 0; i < _LastUrlFiles.GetRecordCount (); i++)
 		pUrls->AddString (_LastUrlFiles.GetRecord (i));
-
-	LOG ("ok." << nl);
-	LOG ("filling in history of folders...");
 
 	CComboBox *pDirs = (CComboBox*) GetDlgItem (IDC_OUTFOLDER);
 	for (i = 0; i < _LastFolders.GetRecordCount (); i++)
 		pDirs->AddString (_LastFolders.GetRecord (i));
 
-	LOG ("ok." << nl);
-
 	CheckRadioButton (IDC_STARTNOW, IDC_STARTSCHEDULE, IDC_STARTNOW);
 	m_dld->bAutoStart = TRUE;  
-
-	LOG ("initializing download manager...");
 
 	if (IR_SUCCESS != m_dld->pMgr->GetDownloadMgr ()->CreateByUrl (m_strUrl, TRUE) && m_strUrl != "http://")
 	{
 		m_strUrl = "http://";
 		m_dld->pMgr->GetDownloadMgr ()->CreateByUrl ("http://", TRUE);
-	}
-	
-	LOG ("ok." << nl); 
+	}  
 
 	if (m_strReferer != "")
 	{
@@ -334,11 +320,7 @@ BOOL CCreateDownloadDlg::OnInitDialog()
 		OnChangeGroups ();
 	}
 
-	LOG ("applying mirror parameters for download..."); 
-
 	_DldsMgr.Apply_MirrParameters (m_dld);
-
-	LOG ("ok." << nl); 
 
 	m_wndDldType.AddString (LS (L_SAVEFILE));
 	m_wndDldType.AddString (LS (L_OPENFILE));
@@ -349,8 +331,6 @@ BOOL CCreateDownloadDlg::OnInitDialog()
 	OnFileauto ();
 
 	UpdateEnabled ();
-
-	LOG ("create download dialog initialized" << nl); 
 
 	if (m_bSetFocusToOKBtn)
 	{
@@ -368,8 +348,6 @@ void CCreateDownloadDlg::OnChangeSaveas()
 
 void CCreateDownloadDlg::UpdateEnabled()
 {
-	LOG ("updating enabled..."); 
-
 	GetDlgItem (IDC__USER)->EnableWindow (m_bAuthorization);
 	GetDlgItem (IDC_USER)->EnableWindow (m_bAuthorization);
 	GetDlgItem (IDC__PASSWORD)->EnableWindow (m_bAuthorization);
@@ -384,8 +362,6 @@ void CCreateDownloadDlg::UpdateEnabled()
 	BOOL b = nSel != 1 && IsDlgButtonChecked (IDC_FILEAUTO) == BST_UNCHECKED;
 	GetDlgItem (IDC__SAVEAS)->EnableWindow (b);
 	GetDlgItem (IDC_SAVEAS)->EnableWindow (b);
-
-	LOG ("ok." << nl); 
 }
 
 void CCreateDownloadDlg::OnAuthorization() 
@@ -563,8 +539,6 @@ void CCreateDownloadDlg::Update_User_Password()
 {
 	BOOL b = m_bAuthChanged;
 
-	LOG ("updating user and password..."); 
-
 	fsDownload_NetworkProperties *dnp = m_dld->pMgr->GetDownloadMgr ()->GetDNP ();
 	if (*dnp->pszUserName)
 	{
@@ -579,8 +553,6 @@ void CCreateDownloadDlg::Update_User_Password()
 
 	SetDlgItemText (IDC_USER, dnp->pszUserName);
 	SetDlgItemText (IDC_PASSWORD, dnp->pszPassword);
-
-	LOG ("ok." << nl); 
 
 	UpdateEnabled ();
 
@@ -603,8 +575,6 @@ void CCreateDownloadDlg::OnSelchangeUrl()
 void CCreateDownloadDlg::UrlChanged()
 {
 	
-	
-	LOG ("processing new url..." << nl); 
 
 	CHAR szFile [10000];
 	*szFile = 0;
@@ -619,10 +589,7 @@ void CCreateDownloadDlg::UrlChanged()
 	}
 
 	if (IR_SUCCESS != url.Crack (m_strUrl))
-	{
-		LOG ("bad url" << nl); 
 		return;
-	}
 
 	if (m_bGroupChanged == FALSE)
 	{
@@ -657,21 +624,16 @@ void CCreateDownloadDlg::UrlChanged()
 		}
 	}
 
-	LOG ("searching for appropriate records in the Sites Manager..." << nl); 
-
 	fsSiteInfo *site = _SitesMgr.FindSite2 (url.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (url.GetInternetScheme ())));
 	if (site)
 	{
-		LOG ("an site was found" << nl); 
 		if (site->strUser != NULL && m_bAuthChanged == FALSE && *url.GetUserName () == 0)
 		{
-			LOG ("applying user and password..."); 
 			CheckDlgButton (IDC_USELOGIN, BST_CHECKED);
 			SetDlgItemText (IDC_USER, site->strUser);
 			if (site->strPassword)
 				SetDlgItemText (IDC_PASSWORD, site->strPassword);
 			m_bAuthorization = TRUE;
-			LOG ("done." << nl); 
 			UpdateEnabled ();
 		}
 
@@ -681,9 +643,6 @@ void CCreateDownloadDlg::UrlChanged()
 			OnChangeGroups();
 		}
 	}
-	else LOG ("no sites found" << nl); 
-
-	LOG ("url was processed" << nl); 
 }
 
 void CCreateDownloadDlg::OnContextMenu(CWnd* , CPoint point) 

@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: hostares.c,v 1.37 2008-04-29 04:18:02 yangtse Exp $
+ * $Id: hostares.c,v 1.45 2008-11-06 17:19:57 yangtse Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -52,10 +52,6 @@
 #include <stdlib.h>
 #endif
 
-#ifdef HAVE_SETJMP_H
-#include <setjmp.h>
-#endif
-
 #ifdef HAVE_PROCESS_H
 #include <process.h>
 #endif
@@ -73,18 +69,14 @@
 #include "strerror.h"
 #include "url.h"
 #include "multiif.h"
+#include "inet_pton.h"
 #include "connect.h"
 #include "select.h"
 
 #define _MPRINTF_REPLACE /* use our functions only */
 #include <curl/mprintf.h>
 
-#if defined(HAVE_INET_NTOA_R) && !defined(HAVE_INET_NTOA_R_DECL)
-#include "inet_ntoa_r.h"
-#endif
-
 #include "memory.h"
-
 /* The last #include file should be: */
 #include "memdebug.h"
 
@@ -297,6 +289,7 @@ CURLcode Curl_wait_for_resolv(struct connectdata *conn,
   return rc;
 }
 
+
 /*
  * Curl_getaddrinfo() - when using ares
  *
@@ -312,14 +305,39 @@ Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
 {
   char *bufp;
   struct SessionHandle *data = conn->data;
-  in_addr_t in = inet_addr(hostname);
-
+  struct in_addr in;
+  int family = PF_INET;
+#ifdef ENABLE_IPV6 /* CURLRES_IPV6 */
+  struct in6_addr in6;
+#endif /* CURLRES_IPV6 */
   *waitp = FALSE;
 
-  if(in != CURL_INADDR_NONE) {
+  /* First check if this is an IPv4 address string */
+  if(Curl_inet_pton(AF_INET, hostname, &in) > 0) {
     /* This is a dotted IP address 123.123.123.123-style */
-    return Curl_ip2addr(in, hostname, port);
+    return Curl_ip2addr(AF_INET, &in, hostname, port);
   }
+
+#ifdef ENABLE_IPV6 /* CURLRES_IPV6 */
+  /* Otherwise, check if this is an IPv6 address string */
+  if (Curl_inet_pton (AF_INET6, hostname, &in6) > 0) {
+    /* This must be an IPv6 address literal.  */
+    return Curl_ip2addr(AF_INET6, &in6, hostname, port);
+  }
+
+  switch(data->set.ip_version) {
+  case CURL_IPRESOLVE_V4:
+  default: /* By default we try ipv4, as PF_UNSPEC isn't supported by c-ares.
+              This is a bit disturbing since users may very well assume that
+              both kinds of addresses are asked for, but the problem is really
+              in c-ares' end here. */
+    family = PF_INET;
+    break;
+  case CURL_IPRESOLVE_V6:
+    family = PF_INET6;
+    break;
+  }
+#endif /* CURLRES_IPV6 */
 
   bufp = strdup(hostname);
 
@@ -332,7 +350,7 @@ Curl_addrinfo *Curl_getaddrinfo(struct connectdata *conn,
     conn->async.dns = NULL;   /* clear */
 
     /* areschannel is already setup in the Curl_open() function */
-    ares_gethostbyname(data->state.areschannel, hostname, PF_INET,
+    ares_gethostbyname(data->state.areschannel, hostname, family,
                        (ares_host_callback)Curl_addrinfo4_callback, conn);
 
     *waitp = TRUE; /* please wait for the response */

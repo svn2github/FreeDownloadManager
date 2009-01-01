@@ -70,6 +70,8 @@ BOOL CDlg_Options_Downloads_Monitoring::OnInitDialog()
 	CheckDlgButton (IDC_OPERA, _NOMgr.IsOperaPluginInstalled () ? BST_CHECKED : BST_UNCHECKED);
 	CheckDlgButton (IDC_NETSCAPE, _NOMgr.IsNetscapePluginInstalled () ? BST_CHECKED : BST_UNCHECKED);
 	CheckDlgButton (IDC_MOZILLA,  _NOMgr.IsMozillaSuitePluginInstalled () ? BST_CHECKED : BST_UNCHECKED);
+	CheckDlgButton (IDC_SAFARI,  _NOMgr.IsSafariPluginInstalled () ? BST_CHECKED : BST_UNCHECKED);
+	CheckDlgButton (IDC_CHROME,  _NOMgr.IsChromePluginInstalled () ? BST_CHECKED : BST_UNCHECKED);
 	
 	CheckDlgButton (IDC_SILENT, _App.Monitor_Silent () ? BST_CHECKED : BST_UNCHECKED);
 	
@@ -261,6 +263,62 @@ BOOL CDlg_Options_Downloads_Monitoring::Apply()
 		{
 			MessageBox (LS (L_CANTDEINITMOZMONITOR), LS (L_ERR), MB_ICONERROR);
 			CheckDlgButton (IDC_MOZILLA, BST_CHECKED);
+		}
+		else
+			bRR = TRUE;
+	}
+
+	
+	
+	if (IsDlgButtonChecked (IDC_SAFARI) == BST_CHECKED)
+	{
+		dwMUSO |= MONITOR_USERSWITCHEDON_SAFARI;
+		
+		if (_NOMgr.IsSafariPluginInstalled (TRUE) == FALSE)
+		{
+			if (FALSE == _NOMgr.InstallSafariPlugin ())
+			{
+				MessageBox (LS (L_CANTINITSAFARIMONITOR), LS (L_ERR), MB_ICONERROR);
+				CheckDlgButton (IDC_SAFARI, BST_UNCHECKED);
+			}
+			else
+				bRR = TRUE;
+		}
+	}
+	else if (_NOMgr.IsSafariPluginInstalled (strNDir.GetLength ()))
+	{
+		if (FALSE == _NOMgr.DeinstallSafariPlugin ())
+		{
+			MessageBox (LS (L_CANTDEINITSAFARIMONITOR), LS (L_ERR), MB_ICONERROR);
+			CheckDlgButton (IDC_SAFARI, BST_CHECKED);
+		}
+		else
+			bRR = TRUE;
+	}
+
+	
+	
+	if (IsDlgButtonChecked (IDC_CHROME) == BST_CHECKED)
+	{
+		dwMUSO |= MONITOR_USERSWITCHEDON_CHROME;
+		
+		if (_NOMgr.IsChromePluginInstalled (TRUE) == FALSE)
+		{
+			if (FALSE == _NOMgr.InstallChromePlugin ())
+			{
+				MessageBox (LS (L_CANTINITCHROMEMONITOR), LS (L_ERR), MB_ICONERROR);
+				CheckDlgButton (IDC_CHROME, BST_UNCHECKED);
+			}
+			else
+				bRR = TRUE;
+		}
+	}
+	else if (_NOMgr.IsChromePluginInstalled (strNDir.GetLength ()))
+	{
+		if (FALSE == _NOMgr.DeinstallChromePlugin ())
+		{
+			MessageBox (LS (L_CANTDEINITCHROMEMONITOR), LS (L_ERR), MB_ICONERROR);
+			CheckDlgButton (IDC_CHROME, BST_CHECKED);
 		}
 		else
 			bRR = TRUE;

@@ -1,6 +1,6 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+*/    
 
       
 
@@ -37,6 +37,6 @@ protected:
 	vmsSingleInstance m_si;
 };      
 
-//{{AFX_INSERT_LOCATION}//}//}}  
+//{{AFX_INSERT_LOCATION}//}//}//}}  
 
 #endif 

@@ -22,13 +22,14 @@
 #include "Dlg_Options_Downloads_Mirrors.h"	
 #include "Dlg_Options_Downloads_Monitoring.h"	
 #include "Dlg_Options_Notifications.h"	
-#include "Dlg_Options_SiteMgr.h"	    
+#include "Dlg_Options_SiteMgr.h"	
+#include "Dlg_Options_Downloads_TimeLimit.h"	    
 
-class CDlgProgramOptions : public CDlg_Options
+class CProgramOptions : public CDlg_Options
 {
 
 public:
-	CDlgProgramOptions(CWnd* pParent = NULL, LPCSTR pszStartPage = NULL);     
+	CProgramOptions(CWnd* pParent = NULL, LPCSTR pszStartPage = NULL);     
 
 	//{{AFX_DATA(CDlgProgramOptions)
 	enum { IDD = IDD_OPTIONS };
@@ -42,6 +43,7 @@ public:
 	//}}AFX_VIRTUAL  
 
 protected:
+	CDlg_Options_Downloads_TimeLimit m_downloads_timelimit;
 	CDlg_Options_SiteMgr m_sitemgr;
 	CDlg_Options_Notifications m_notifications;
 	CDlg_Options_Downloads_Monitoring m_downloads_monitoring;

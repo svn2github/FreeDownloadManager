@@ -23,8 +23,6 @@
 
 #undef HAVE_GETHOSTBYNAME_R_6 
 
-#undef HAVE_INET_NTOA_R_DECL 
-
 #undef NEED_REENTRANT 
 
 #undef HAVE_KRB4 
@@ -42,6 +40,8 @@
 #define DISABLED_THREADSAFE 
 
 #undef ENABLE_IPV6 
+
+#define HAVE_ALARM 1 
 
 #define HAVE_ALLOCA_H 
 
@@ -82,10 +82,6 @@
 #define HAVE_STRUCT_TIMEVAL 
 
 #undef HAVE_INET_ADDR 
-
-#undef HAVE_INET_NTOA 
-
-#undef HAVE_INET_NTOA_R 
 
 #define HAVE_INTTYPES_H 
 
@@ -288,6 +284,24 @@
 #define RECV_TYPE_ARG4 int 
 
 #define RECV_TYPE_RETV ssize_t 
+
+#define HAVE_RECVFROM 1 
+
+#define RECVFROM_TYPE_ARG1 int 
+
+#define RECVFROM_TYPE_ARG2 void 
+
+#define RECVFROM_TYPE_ARG2_IS_VOID 1 
+
+#define RECVFROM_TYPE_ARG3 size_t 
+
+#define RECVFROM_TYPE_ARG4 int 
+
+#define RECVFROM_TYPE_ARG5 struct sockaddr 
+
+#define RECVFROM_TYPE_ARG6 int 
+
+#define RECVFROM_TYPE_RETV ssize_t 
 
 #define HAVE_SEND 1 
 

@@ -118,6 +118,42 @@ struct timeval {
   Error Missing_definition_of_macro_swrite
   
 #endif
+#endif  
+
+#if 0
+#if defined(HAVE_RECVFROM)
+
+#if !defined(RECVFROM_TYPE_ARG1) || \
+    !defined(RECVFROM_TYPE_ARG2) || \
+    !defined(RECVFROM_TYPE_ARG3) || \
+    !defined(RECVFROM_TYPE_ARG4) || \
+    !defined(RECVFROM_TYPE_ARG5) || \
+    !defined(RECVFROM_TYPE_ARG6) || \
+    !defined(RECVFROM_TYPE_RETV)
+  
+  Error Missing_definition_of_return_and_arguments_types_of_recvfrom
+  
+#else
+#define sreadfrom(s,b,bl,f,fl) (ssize_t)recvfrom((RECVFROM_TYPE_ARG1)  (s),  \
+                                                 (RECVFROM_TYPE_ARG2 *)(b),  \
+                                                 (RECVFROM_TYPE_ARG3)  (bl), \
+                                                 (RECVFROM_TYPE_ARG4)  (0),  \
+                                                 (RECVFROM_TYPE_ARG5 *)(f),  \
+                                                 (RECVFROM_TYPE_ARG6 *)(fl))
+#endif
+#else 
+#ifndef sreadfrom
+  
+  Error Missing_definition_of_macro_sreadfrom
+  
+#endif
+#endif  
+
+#ifdef RECVFROM_TYPE_ARG6_IS_VOID
+#  define RECVFROM_ARG6_T int
+#else
+#  define RECVFROM_ARG6_T RECVFROM_TYPE_ARG6
+#endif
 #endif    
 
 #define ISSPACE(x)  (isspace((int)  ((unsigned char)x)))

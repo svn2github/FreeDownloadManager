@@ -19,6 +19,7 @@ CFG=cURL_lib - Win32 Debug
 !MESSAGE 
 !MESSAGE "cURL_lib - Win32 Release" (based on "Win32 (x86) Static Library")
 !MESSAGE "cURL_lib - Win32 Debug" (based on "Win32 (x86) Static Library")
+!MESSAGE "cURL_lib - Win32 Release_nossl" (based on "Win32 (x86) Static Library")
 !MESSAGE 
 
 # Begin Project
@@ -74,12 +75,36 @@ LIB32=link.exe -lib
 # ADD BASE LIB32 /nologo
 # ADD LIB32 /nologo
 
+!ELSEIF  "$(CFG)" == "cURL_lib - Win32 Release_nossl"
+
+# PROP BASE Use_MFC 0
+# PROP BASE Use_Debug_Libraries 0
+# PROP BASE Output_Dir "cURL_lib___Win32_Release_nossl"
+# PROP BASE Intermediate_Dir "cURL_lib___Win32_Release_nossl"
+# PROP BASE Target_Dir ""
+# PROP Use_MFC 0
+# PROP Use_Debug_Libraries 0
+# PROP Output_Dir "Release_nossl"
+# PROP Intermediate_Dir "Release_nossl"
+# PROP Target_Dir ""
+# ADD BASE CPP /nologo /MD /W3 /GX /O2 /I "../../include.add/" /I "../../include.add/openssl" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "CURL_STATICLIB" /D "USE_SSLEAY" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /O2 /I "../../include.add/" /I "../../include.add/openssl" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "CURL_STATICLIB" /YX /FD /c
+# ADD BASE RSC /l 0x419 /d "NDEBUG"
+# ADD RSC /l 0x419 /d "NDEBUG"
+BSC32=bscmake.exe
+# ADD BASE BSC32 /nologo
+# ADD BSC32 /nologo
+LIB32=link.exe -lib
+# ADD BASE LIB32 /nologo
+# ADD LIB32 /nologo
+
 !ENDIF 
 
 # Begin Target
 
 # Name "cURL_lib - Win32 Release"
 # Name "cURL_lib - Win32 Debug"
+# Name "cURL_lib - Win32 Release_nossl"
 # Begin Group "Source Files"
 
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
@@ -98,6 +123,10 @@ SOURCE=.\content_encoding.c
 # Begin Source File
 
 SOURCE=.\cookie.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\curl_addrinfo.c
 # End Source File
 # Begin Source File
 
@@ -238,6 +267,10 @@ SOURCE=.\parsedate.c
 # Begin Source File
 
 SOURCE=.\progress.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\rawstr.c
 # End Source File
 # Begin Source File
 

@@ -216,34 +216,19 @@ void CDlgSounds::OnDblclkSounds(NMHDR* , LRESULT* pResult)
 
 void CDlgSounds::OnSetsound() 
 {
-	LOG ("setsnd: building filter" << nl);
-	
 	CString strFilter;
 	strFilter.Format ("%s (*.wav)|*.wav||", LS (L_SOUNDFILES));
 
-	LOG ("setsnd: getting snd file" << nl);
-
 	CString strFile = GetSndFile (GetCurSelSnd ());
-
-	LOG ("setsnd: building dlg" << nl);
 
 	CFileDialog dlg (TRUE, "wav", strFile, OFN_HIDEREADONLY|OFN_NOCHANGEDIR, strFilter, this);
 
-	LOG ("setsnd: do modal" << nl);
-
 	if (_DlgMgr.DoModal (&dlg) == IDCANCEL)
-	{
-		LOG ("setsnd: domodal canceled" << nl);
 		return;
-	}
-
-	LOG ("setsnd: domodal: ok." << nl);
 
 	m_wndSnds.SetItemText (GetCurSelSnd (), 1, dlg.GetPathName ());
 
-	LOG ("setsnd: updating" << nl);
 	UpdateEnabled ();
-	LOG ("setsnd: exit" << nl);
 }
 
 void CDlgSounds::OnRemove() 

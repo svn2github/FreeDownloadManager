@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: content_encoding.c,v 1.27 2007-11-24 23:16:55 bagder Exp $
+ * $Id: content_encoding.c,v 1.28 2008-09-06 05:29:05 yangtse Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -89,7 +89,7 @@ inflate_stream(struct connectdata *conn,
 
   /* Dynamically allocate a buffer for decompression because it's uncommonly
      large to hold on the stack */
-  decomp = (char*)malloc(DSIZ);
+  decomp = malloc(DSIZ);
   if(decomp == NULL) {
     return exit_zlib(z, &k->zlib_init, CURLE_OUT_OF_MEMORY);
   }

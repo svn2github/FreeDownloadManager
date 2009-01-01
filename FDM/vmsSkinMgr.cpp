@@ -96,7 +96,7 @@ void vmsSkinMgr::Scan_TryFolder(LPCSTR pszFolder)
 
 	
 	
-	if (skin.nFDMBuild < 425 || skin.nFDMBuild > (int)vmsFdmAppMgr::getVersion ()->m_appVersion [2].dwVal)
+	if (skin.nFDMBuild < 829 || skin.nFDMBuild > (int)vmsFdmAppMgr::getVersion ()->m_appVersion [2].dwVal)
 		return;
 
 	m_vList.add (skin);
@@ -151,7 +151,7 @@ HBITMAP vmsSkinMgr::bmp(UINT nID)
 		"scheduler_sel", "scheduler", "sitelist", "sitelist_sel",
 		"tool0", "tool0_small", "tool0_small_d", "tool0_d",
 		"tool_dld", "tool_dld_d", "tool_dld_small", "tool_dld_small_d",
-                "tool_bt", "tool_bt_d", "tool_bt_small", "tool_bt_small_d",
+        "tool_bt", "tool_bt_d", "tool_bt_small", "tool_bt_small_d",
 		"tool_hfe",	"tool_hfe_d", "tool_hfe_small", "tool_hfe_small_d",
 		"tool_sch", "tool_sch_d", "tool_sch_small", "tool_sch_small_d",
 		"tool_sites", "tool_sites_d", "tool_sites_small", "tool_sites_small_d",

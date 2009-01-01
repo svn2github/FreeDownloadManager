@@ -58,8 +58,6 @@ DWORD WINAPI fsScheduleMgr::_threadScheduleMgr(LPVOID lp)
 		}
 	}
 
-	LOG ("threadScheduleMgr shutted down" << nl);
-
 	pThis->m_bNeedExit = FALSE;
 
 	return 0;
@@ -1220,28 +1218,16 @@ DWORD WINAPI fsScheduleMgr::_threadShutdown(LPVOID uFlags)
 		return 0;
 	}
 
-	LOG ("Shutting down computer..." << nl);
-	LOG ("goto OnAppExit..." << nl);
-
 	_PluginMgr.OnAppExit (FALSE);
-
-	LOG ("saving history..." << nl);
 
 	((CFdmApp*)AfxGetApp ())->SaveSettings ();
 	((CFdmApp*)AfxGetApp ())->SaveHistory ();
 
-	LOG ("saving state..." << nl);
-
 	((CMainFrame*) AfxGetApp ()->m_pMainWnd)->SaveState ();
 
 	
-	
-
-	LOG ("performing shutdown..." << nl);
 
 	ExitWindowsEx ((UINT) uFlags, 0);
-
-	LOG ("did shutdown" << nl);
 
 	
 

@@ -335,6 +335,6 @@ BOOL CFlashVideoDownloadsWnd::CreateDownload(LPCSTR pszUrl)
 
 	
 
-	return _pwndDownloads->CreateDownload (dlg.m_strUrl, FALSE, NULL, NULL, 
+	return UINT_MAX != _pwndDownloads->CreateDownload (dlg.m_strUrl, FALSE, NULL, NULL, 
 		dlg.m_bSetupAdvStgs == FALSE, DWCD_NOFORCEAUTOLAUNCH, NULL, &ap);
 }

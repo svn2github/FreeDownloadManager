@@ -266,8 +266,6 @@ void CSpiderAddPageDlg::OnUrlChanged()
 	{
 		if (site->strUser != NULL && m_bAuthChanged == FALSE && *url.GetUserName () == 0)
 		{
-			LOG ("applying user and password...");
-			
 			CheckDlgButton (IDC_USELOGIN, BST_CHECKED);
 			SetDlgItemText (IDC_USER, site->strUser);
 			if (site->strPassword)

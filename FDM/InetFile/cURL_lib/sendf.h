@@ -40,6 +40,11 @@ CURLcode Curl_client_write(struct connectdata *conn, int type, char *ptr,
 void Curl_read_rewind(struct connectdata *conn,
                       size_t extraBytesRead); 
 
+int Curl_read_plain(curl_socket_t sockfd,
+                    char *buf,
+                    size_t bytesfromsocket,
+                    ssize_t *n); 
+
 int Curl_read(struct connectdata *conn, curl_socket_t sockfd,
               char *buf, size_t buffersize,
               ssize_t *n);
@@ -48,6 +53,11 @@ CURLcode Curl_write(struct connectdata *conn,
                     curl_socket_t sockfd,
                     const void *mem, size_t len,
                     ssize_t *written); 
+
+CURLcode Curl_write_plain(struct connectdata *conn,
+                          curl_socket_t sockfd,
+                          const void *mem, size_t len,
+                          ssize_t *written); 
 
 int Curl_debug(struct SessionHandle *handle, curl_infotype type,
                char *data, size_t size,

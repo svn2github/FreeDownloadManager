@@ -19,7 +19,9 @@ typedef struct _CTVHITTESTINFO {
   UINT flags; 
   HTREEITEM hItem; 
   int iSubItem;
-} CTVHITTESTINFO;  
+} CTVHITTESTINFO;        
+
+#define ID_CTCC_GETTOOLTIPTEXT	(WM_APP+1)
 
 class CCustomTreeChildCtrl : public CTreeCtrl
 {
@@ -40,6 +42,10 @@ public:
 	BOOL SetBkImage(LVBKIMAGE* plvbkImage);
 
 protected:
+	BOOL PreTranslateMessage(MSG* pMsg);
+	virtual int OnToolHitTest(CPoint point, TOOLINFO* pTI ) const;
+	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
+	CToolTipCtrl m_ttip;
 	DECLARE_MESSAGE_MAP()
 
 	int m_nFirstColumnWidth; 
@@ -59,7 +65,6 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-	BOOL OnToolTipNeedText( UINT id, NMHDR * pTTTStruct, LRESULT * pResult );
 
 	
 
@@ -106,6 +111,7 @@ public:
 	HTREEITEM HitTest(CTVHITTESTINFO* pHitTestInfo) const;
 	
 protected:
+	afx_msg LRESULT OnCtccGetToolTipText (WPARAM wp, LPARAM lp);
 	bool m_bCreatingWindowByOurself;
 	
 	DECLARE_MESSAGE_MAP()

@@ -29,16 +29,9 @@ void fsUrlsToDownloadRegKeyMgr::CheckKey()
 {
 	CRegKey key;
 
-	LOG ("cheking URLsToDownload reg key...");
-
 	if (ERROR_SUCCESS != key.Open (HKEY_CURRENT_USER, 
 				"Software\\FreeDownloadManager.ORG\\Free Download Manager\\URLsToDownload"))
-	{
-		LOG ("failed to open key" << nl);
 		return;
-	}
-
-	LOG (nl);
 
 	fs::list <fsString> vKeys;
 	BOOL bZL = _DldsMgr.GetCount () == 0;
@@ -79,8 +72,6 @@ void fsUrlsToDownloadRegKeyMgr::CheckKey()
 				*szReferer = 0;
 
 				key2.QueryValue (szReferer, "Referer", &dw);
-
-				LOG ("another url found" << nl);
 				
 				fsURL url;
 				if (url.Crack (szUrl) == IR_SUCCESS)
@@ -91,20 +82,12 @@ void fsUrlsToDownloadRegKeyMgr::CheckKey()
 					_pwndDownloads->CreateDownload (szUrl, FALSE, szComment, *szReferer ? szReferer : NULL, 
 						bSilent, dwForceAutoLaunch, (LPBOOL)&bAutoStart, &params);
 				}
-				else
-					LOG ("bad url" << nl);
-	
-				LOG ("url processed" << nl);
 			}
 		}
 
 		vKeys.add (szKeyName);
 	}
 
-	LOG ("deleting all URLsToDownload reg key entries...");
-
 	for (i = 0; i < vKeys.size (); i++)
 		key.RecurseDeleteKey (vKeys [i]);
-
-	LOG ("done." << nl);
 }

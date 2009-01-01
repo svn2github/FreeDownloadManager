@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
+*/
+
+    
 
 #ifndef INTFLOAT_READWRITE_H
 #define INTFLOAT_READWRITE_H

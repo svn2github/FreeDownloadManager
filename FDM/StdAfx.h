@@ -15,10 +15,10 @@
 #define _WIN32_IE 0x501
 #define _WIN32_WINNT 0x400  
 
-const char* const IE_USERAGENT_ADDITION	= "FDM";    
+const char* const IE_USERAGENT_ADDITION	= "FDM";      
 
-#ifdef _USELOGGING
-#pragma message ("============== WARNING: _USELOGGING is defined ==============")
+#ifdef SCL_ENABLE
+#pragma message ("============== WARNING: SCL_ENABLE is defined ==============")
 #endif
 
 #define _TB_SIZE_X	_SkinMgr.tbSizeX()
@@ -31,7 +31,7 @@ const char* const IE_USERAGENT_ADDITION	= "FDM";
 #include <afxdtctl.h>		
 #ifndef _AFX_NO_AFXCMN_SUPPORT
 #include <afxcmn.h>			
-#endif     
+#endif 
 
 #pragma warning (disable : 4192)
 #pragma warning (disable : 4146)
@@ -76,6 +76,7 @@ extern CFdmModule _Module;
 
 //{{AFX_INSERT_LOCATION}//}}
 
+#include "vmsSourceCodeLogger.h"
 #include "Include.add/inetfile/inetfile.h"
 #include "vmsMediaConvertMgr.h"
 #include "vmsFdmAppMgr.h"
@@ -99,7 +100,6 @@ extern CFdmModule _Module;
 #include "fsIEContextMenuMgr.h"
 #include "fsOpNetIntegrationMgr.h"
 #include "fsIECatchMgr.h"
-#include "fsProgramLogMgr.h"
 #include "fsSoundsMgr.h"
 #include "fsHistoriesMgr.h"
 #include "vmsSkinMgr.h"
@@ -130,12 +130,6 @@ extern fsSitesMgr _SitesMgr;
 extern fsIEContextMenuMgr _IECMM;
 extern fsOpNetIntegrationMgr _NOMgr;
 extern fsIECatchMgr _IECatchMgr;
-#ifdef _USELOGGING
-extern fsProgramLogMgr _Log;
-#define LOG(x) _Log << x
-#else
-#define LOG(x)
-#endif
 extern fsSoundsMgr _Snds;
 extern fsHistoriesMgr _HsMgr;
 extern fsCmdHistoryMgr _LastFind;
@@ -154,8 +148,8 @@ extern DWORD _dwAppState;
 #ifndef _DEBUG
 #define IS_PORTABLE_MODE	((_dwAppState & APPSTATE_PORTABLE_MODE) != 0)
 #else
-#define IS_PORTABLE_MODE	((_dwAppState & APPSTATE_PORTABLE_MODE) != 0)
 
+#define IS_PORTABLE_MODE	FALSE	
 #endif
 
 #include "lngphrases.h"  
@@ -164,10 +158,5 @@ extern DWORD _dwAppState;
 #define TRAY_ICON_DOWNLOADING	1
 #define TRAY_ICON_ERRORS		2
 #define TRAY_ICON_UNKNOWN		3
-
-#ifdef _DEBUG
-extern void dbglog ( char* szFormat ... );
-extern void dbglog_eraselog ();
-#endif
 
 #endif 

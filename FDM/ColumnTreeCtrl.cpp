@@ -60,8 +60,8 @@ BEGIN_MESSAGE_MAP(CCustomTreeChildCtrl, CTreeCtrl)
 	ON_WM_VSCROLL()
 	ON_WM_MOUSEWHEEL()
 	ON_WM_TIMER()
+	ON_WM_CREATE()
 	ON_WM_KEYDOWN()
-	
 	
 END_MESSAGE_MAP()          
 
@@ -180,6 +180,25 @@ void CCustomTreeChildCtrl::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 void CCustomTreeChildCtrl::OnMouseMove(UINT nFlags, CPoint point)
 {
+	if (::IsWindow (m_ttip.m_hWnd))
+    {
+        TOOLINFO ti;
+		WPARAM wp = MAKEWPARAM (point.x, point.y);
+		ti.lpszText = (char*)malloc (100);
+		strcpy (ti.lpszText, "");
+		GetParent ()->SendMessage (ID_CTCC_GETTOOLTIPTEXT, wp, (LPARAM)&ti);
+
+		static CString _strOld;
+		
+		if (_strOld != ti.lpszText)
+        {
+			_strOld = ti.lpszText;
+			m_ttip.UpdateTipText (_strOld, this);
+        }
+
+		free (ti.lpszText);
+    }  
+
 	
 	if (CheckHit(point))
 	{
@@ -609,12 +628,7 @@ BOOL CCustomTreeChildCtrl::CheckHit(CPoint point)
 	}
 
 	return FALSE;
-}
-
-BOOL CCustomTreeChildCtrl::OnToolTipNeedText( UINT id, NMHDR * pTTTStruct, LRESULT * pResult )
-{
-	return FALSE;
-}    
+}  
 
 #define COLUMN_MARGIN		1		  
 
@@ -633,6 +647,8 @@ BEGIN_MESSAGE_MAP(CColumnTreeCtrl, CStatic)
 	ON_WM_HSCROLL()
 	ON_WM_SETTINGCHANGE()
 	ON_WM_ENABLE()
+	
+	ON_MESSAGE (ID_CTCC_GETTOOLTIPTEXT, OnCtccGetToolTipText)
 END_MESSAGE_MAP()  
 
 CColumnTreeCtrl::CColumnTreeCtrl()
@@ -683,7 +699,7 @@ void CColumnTreeCtrl::Initialize()
 	GetClientRect(&rcClient);
 	
 	
-	m_Tree.Create(WS_CHILD | WS_VISIBLE  | TVS_NOHSCROLL | TVS_NOTOOLTIPS, CRect(), this, TreeID);
+	m_Tree.Create(WS_CHILD | WS_VISIBLE  | TVS_NOHSCROLL, CRect(), this, TreeID);
 	m_Header.Create(WS_CHILD |  WS_VISIBLE | HDS_FULLDRAG  , rcClient, this, HeaderID);
 	m_Header2.Create(WS_CHILD , rcClient, this, Header2ID);
 
@@ -1347,3 +1363,79 @@ void CColumnTreeCtrl::OnEnable(BOOL bEnable)
 	m_Tree.EnableWindow(bEnable);
 	m_horScroll.EnableWindow(bEnable);
 }
+
+int CCustomTreeChildCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
+{
+	
+
+	CRect ClientRect(0, 0, 1000, 1000);
+    if (m_ttip.Create (this, TTS_ALWAYSTIP) && m_ttip.AddTool(this, ""))
+    {
+        m_ttip.SendMessage (TTM_SETMAXTIPWIDTH, 0, SHRT_MAX);
+        m_ttip.SendMessage (TTM_SETDELAYTIME, TTDT_AUTOPOP, SHRT_MAX);
+        m_ttip.SendMessage (TTM_SETDELAYTIME, TTDT_INITIAL, 200);
+        m_ttip.SendMessage (TTM_SETDELAYTIME, TTDT_RESHOW, 200);
+    }
+
+	return CTreeCtrl::OnCreate (lpCreateStruct);
+}
+
+int CCustomTreeChildCtrl::OnToolHitTest(CPoint point, TOOLINFO *pTI) const
+{
+	
+
+	return CTreeCtrl::OnToolHitTest (point, pTI);
+}  
+
+LRESULT CColumnTreeCtrl::OnCtccGetToolTipText(WPARAM wp, LPARAM lp)
+{
+	CPoint pt (LOWORD (wp), HIWORD (wp));
+
+	if (pt.x > m_arrColWidths [0])
+		return 0;
+	
+	m_Tree.ClientToScreen (&pt);
+	ScreenToClient (&pt);
+
+	HTREEITEM hItem = HitTest (pt);
+	if (hItem == NULL)
+		return 0;
+
+	CString strText = GetItemText (hItem, 0);
+
+	CDC *pdc = GetDC ();
+	pdc->SelectObject (m_Tree.GetFont ());
+	int cxText = pdc->GetTextExtent (strText).cx;
+	ReleaseDC (pdc);
+	CRect rc;
+	m_Tree.GetItemRect (hItem, &rc, TRUE);
+	if (cxText + rc.left + 7 < m_arrColWidths [0])
+		return 0;
+	
+	TOOLINFO *pTI = (TOOLINFO*)lp;
+	strcpy (pTI->lpszText, strText);
+	m_Tree.GetItemRect (hItem, &pTI->rect, FALSE);
+	return 0;
+}
+
+BOOL CCustomTreeChildCtrl::PreTranslateMessage(MSG *pMsg)
+{
+	if (::IsWindow(m_ttip.m_hWnd) && pMsg->hwnd == m_hWnd)
+    {
+        switch(pMsg->message)
+        {
+        case WM_LBUTTONDOWN:    
+        case WM_MOUSEMOVE:
+        case WM_LBUTTONUP:    
+        case WM_RBUTTONDOWN:
+        case WM_MBUTTONDOWN:    
+        case WM_RBUTTONUP:
+        case WM_MBUTTONUP:
+            m_ttip.RelayEvent(pMsg);
+            break;
+        }
+    }
+
+	return CTreeCtrl::PreTranslateMessage (pMsg);
+}
+

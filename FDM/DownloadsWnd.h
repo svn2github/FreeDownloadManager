@@ -21,7 +21,8 @@
 #include "fsMutex.h"	
 #include "Downloads_History.h"	
 #include "Downloads_Deleted.h"	
-#include "fsFindDownloadMgr.h"	  
+#include "fsFindDownloadMgr.h"	
+#include "fsDownload.h"	  
 
 enum fsDLsWndWhatIsNow
 {
@@ -110,6 +111,8 @@ public:
 	//}}AFX_VIRTUAL  
 
 public:
+	void EndCreateDownloads();
+	void BeginCreateDownloads();
 	void OnBtDownloadDefProperties();
 	BOOL CreateNewTorrent();
 	static HMENU Plugin_GetViewMenu();
@@ -189,7 +192,7 @@ public:
 	static HWND Plugin_CreateMainWindow (HWND hParent);
 	
 	
-	void DeleteDownload (vmsDownloadSmartPtr dld, BOOL bByUser);
+	void DeleteDownload (vmsDownloadSmartPtr dld, BOOL bByUser, BOOL bDontConfirmFileDeleting = FALSE);
 	
 	void OnDownloadsGroupChanged ();
 	
@@ -234,7 +237,8 @@ public:
 	
 	
 	
-	BOOL CreateDownload (LPCSTR pszStartUrl, BOOL bReqTopMostDialog = FALSE, LPCSTR pszComment = NULL, LPCSTR pszReferer = NULL, BOOL bSilent = FALSE, DWORD dwForceAutoLaunch = DWCD_NOFORCEAUTOLAUNCH, BOOL* pbAutoStart = NULL, vmsDWCD_AdditionalParameters* pParams = NULL, UINT* pRes = NULL);
+	
+	UINT CreateDownload (LPCSTR pszStartUrl, BOOL bReqTopMostDialog = FALSE, LPCSTR pszComment = NULL, LPCSTR pszReferer = NULL, BOOL bSilent = FALSE, DWORD dwForceAutoLaunch = DWCD_NOFORCEAUTOLAUNCH, BOOL* pbAutoStart = NULL, vmsDWCD_AdditionalParameters* pParams = NULL, UINT* pRes = NULL);
 	
 	afx_msg void OnDownloadCreate();
 	
@@ -263,6 +267,11 @@ public:
 
 	
 protected:
+	BOOL m_bDontUseSoundsForDownloadsHasBeenJustAdded;
+	bool m_bDownloadsHasBeenAddedToTop;
+	DLDS_LIST m_vDownloadsHasBeenAdded;
+	void onDownloadsHasBeenAdded (DLDS_LIST &vDlds, bool bPlaceToTop, BOOL bDontUseSounds);
+	bool m_bCreatingLotOfDownloads;
 	afx_msg LRESULT OnWmDldLaunch (WPARAM wp, LPARAM lp);
 	DLDS_LIST m_vUploadDownloads;
 	afx_msg LRESULT OnDldConvertMedia (WPARAM, LPARAM lp);

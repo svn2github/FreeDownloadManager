@@ -15,7 +15,9 @@ extern const struct Curl_handler Curl_handler_https;
 
 bool Curl_compareheader(const char *headerline,  
                         const char *header,   
-                        const char *content);  
+                        const char *content); 
+
+char *Curl_copy_header_value(const char *h); 
 
 CURLcode Curl_proxyCONNECT(struct connectdata *conn,
                            int tunnelsocket,
@@ -33,6 +35,7 @@ void Curl_http_auth_stage(struct SessionHandle *data, int stage);
 CURLcode Curl_http_input_auth(struct connectdata *conn,
                               int httpcode, const char *header);
 CURLcode Curl_http_auth_act(struct connectdata *conn);
+CURLcode Curl_http_perhapsrewind(struct connectdata *conn);
 
 int Curl_http_should_fail(struct connectdata *conn); 
 

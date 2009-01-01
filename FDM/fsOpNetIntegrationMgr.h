@@ -12,6 +12,12 @@
 class fsOpNetIntegrationMgr  
 {
 public:
+	BOOL DeinstallChromePlugin();
+	BOOL InstallChromePlugin();
+	BOOL IsChromePluginInstalled(BOOL bQueryPluginDirIfUnknown = FALSE);
+	BOOL DeinstallSafariPlugin();
+	BOOL InstallSafariPlugin();
+	BOOL IsSafariPluginInstalled(BOOL bQueryPluginDirIfUnknown = FALSE);
 	BOOL DeinstallMozillaSuitePlugin();
 	BOOL InstallMozillaSuitePlugin();
 	BOOL IsMozillaSuitePluginInstalled(BOOL bQueryPluginDirIfUnknown = FALSE);
@@ -43,6 +49,8 @@ protected:
 	CString m_strNetPath;	
 	CString m_strFfPath;	
 	CString m_strMozSPath;	
+	CString m_strSafariPath; 
+	CString m_strChromePath; 
 };
 
 #endif 

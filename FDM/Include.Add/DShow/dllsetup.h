@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/                                                                  
+*/
+
+                                                                  
 
 STDAPI AMovieDllRegisterServer2( BOOL );
 STDAPI AMovieDllRegisterServer();

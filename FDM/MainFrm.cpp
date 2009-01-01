@@ -223,20 +223,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	if (FALSE == ReadCusomizationInfo ())
 		return -1;
 
-	LOG ("building title...");
-
 	UpdateTitle ();
-
-	LOG ("ok." << nl);
-
-	LOG ("building main menu...");
 
 	m_odmenu.Attach (GetMenu (), TRUE);
 	LoadMenuImages ();
-
-	LOG ("ok." << nl);
-
-	LOG ("building main toolbar...");
 
 	if (FALSE == _TBMgr.Create (this))
 		return -1;
@@ -287,10 +277,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 	_TBMgr.ShowGroup (0, 0);
 
-	LOG ("ok." << nl);
-
-	LOG ("building status bar...");
-
 	if (!m_wndStatusBar.Create(this) ||
 		!m_wndStatusBar.SetIndicators(indicators,
 		  sizeof(indicators)/sizeof(UINT)))
@@ -306,13 +292,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	nStyle &= ~ SBPS_NOBORDERS;
 	m_wndStatusBar.SetPaneInfo (0, nID, nStyle, cx);
 
-	LOG ("ok." << nl);
-
-	LOG ("creating rebar...");
-
 	m_wndReBar.Create (this);
-
-	LOG ("ok." << nl);
 
 	if (m_Customizations.get_BannerCount ())
 	{
@@ -322,8 +302,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		int r = dw % (int)(m_Customizations.get_BannerCount () * 1.333);
 		r = r % m_Customizations.get_BannerCount ();
 		DisplayBanner (r);
-		
-		LOG ("building rebar..." << nl);
 		
 		m_wndReBar.AddBar (&m_wndBanner, NULL, NULL, RBBS_FIXEDBMP|RBBS_NOGRIPPER);
 	}
@@ -355,8 +333,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 		rbbi.cx = rbbi.cxIdeal = rc.Width ();
 		m_wndReBar.GetReBarCtrl ().SetBandInfo (nIndex, &rbbi);
 	}
-		
-	LOG ("ok." << nl);
 	
 	_ClipbrdMgr.Initialize (m_hWnd);
 
@@ -398,12 +374,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	
 	if (_UpdateMgr.m_enAUT != AUT_TURNOFF && IS_PORTABLE_MODE == FALSE)
 	{
-		LOG ("creating update thread...");
-
 		DWORD dw;
 		CreateThread (NULL, 0, _threadUpdate, this, 0, &dw);
-
-		LOG ("ok." << nl);
 	}
 
 	ReadTotalTrafficInfo ();
@@ -505,8 +477,6 @@ void CMainFrame::OnClose()
 	{
 		CFrameWnd::OnClose();
 		
-		LOG ("CMF::OnClose: exit" << nl);
-		
 		_bInFunc = false; 
 		return;
 	}
@@ -541,9 +511,7 @@ void CMainFrame::OnClose()
 
 		CFdmApp::ScheduleExitProcess (30);
 
-		LOG ("CMF::OC: proceed to default handler..." << nl);
 		CFrameWnd::OnClose();
-		LOG ("CMF::OC: default handler done.");
 	}
 
 	_bInFunc = false; 
@@ -556,7 +524,7 @@ void CMainFrame::OnDlddefoptions()
 #include "DlgProgramOptions.h"
 void CMainFrame::OnDldroptions() 
 {
-	CDlgProgramOptions dlg;
+	CProgramOptions dlg;
 	dlg.DoModal ();
 	
 }
@@ -763,7 +731,7 @@ void CMainFrame::ShowTrayMenu(BOOL bModeTray)
 		fsSetImage (ID_STOPALL, 4),
 		fsSetImage (ID_PAUSEALLDLDS, 5),
 		fsSetImage (ID_DIAL, 7),
-		fsSetImage (ID_APP_ABOUT, 8),
+		fsSetImage (ID_APP_ABOUT, 10),
 	};
 
 	m_odTrayMenu.SetImages (img, sizeof (img) / sizeof (fsSetImage));
@@ -1137,7 +1105,8 @@ void CMainFrame::OnMonitorbrowser()
 {
 	BOOL bMonitor = _App.Monitor_IE2 () || _App.Monitor_Firefox () ||
 		_NOMgr.IsNetscapePluginInstalled () || _NOMgr.IsOperaPluginInstalled () ||
-		_NOMgr.IsMozillaSuitePluginInstalled ();
+		_NOMgr.IsMozillaSuitePluginInstalled () || _NOMgr.IsSafariPluginInstalled () ||
+		_NOMgr.IsChromePluginInstalled ();
 	
 	BOOL bRR = FALSE; 
 
@@ -1165,7 +1134,6 @@ void CMainFrame::OnMonitorbrowser()
 			dwMonitorNow |= MONITOR_USERSWITCHEDON_FIREFOX;
 	}
 
-	
 	if (bMonitor)
 	{
 		if (_NOMgr.IsNetscapePluginInstalled ())
@@ -1183,6 +1151,18 @@ void CMainFrame::OnMonitorbrowser()
 		if (_NOMgr.IsMozillaSuitePluginInstalled ())
 		{
 			_NOMgr.DeinstallMozillaSuitePlugin ();
+			bRR = TRUE;
+		}
+
+		if (_NOMgr.IsSafariPluginInstalled ())
+		{
+			_NOMgr.DeinstallSafariPlugin ();
+			bRR = TRUE;
+		}
+
+		if (_NOMgr.IsChromePluginInstalled ())
+		{
+			_NOMgr.DeinstallChromePlugin ();
 			bRR = TRUE;
 		}
 	}
@@ -1214,6 +1194,24 @@ void CMainFrame::OnMonitorbrowser()
 				dwMonitorNow |= MONITOR_USERSWITCHEDON_SEAMONKEY;
 			}
 		}
+
+		if ((dwMUSO & MONITOR_USERSWITCHEDON_SAFARI) && 
+			_NOMgr.IsSafariPluginInstalled () == FALSE)
+		{
+			if (_NOMgr.InstallSafariPlugin ()) {
+				bRR = TRUE;
+				dwMonitorNow |= MONITOR_USERSWITCHEDON_SAFARI;
+			}
+		}
+
+		if ((dwMUSO & MONITOR_USERSWITCHEDON_CHROME) && 
+			_NOMgr.IsChromePluginInstalled () == FALSE)
+		{
+			if (_NOMgr.InstallChromePlugin ()) {
+				bRR = TRUE;
+				dwMonitorNow |= MONITOR_USERSWITCHEDON_CHROME;
+			}
+		}
 	}
 
 	if (dwMonitorNow) {
@@ -1228,6 +1226,10 @@ void CMainFrame::OnMonitorbrowser()
 			str += str == "" ? "Netscape" : ", Netscape";
 		if (dwMonitorNow & MONITOR_USERSWITCHEDON_SEAMONKEY)
 			str += str == "" ? "SeaMonkey" : ", SeaMonkey";
+		if (dwMonitorNow & MONITOR_USERSWITCHEDON_SAFARI)
+			str += str == "" ? "Apple Safari" : ", Apple Safari";
+		if (dwMonitorNow & MONITOR_USERSWITCHEDON_CHROME)
+			str += str == "" ? "Google Chrome" : ", Google Chrome";
 		
 		CString str2;
 		str2.Format (LS (L_MONITORING_TURNEDON_IN), str);
@@ -2169,7 +2171,7 @@ void CMainFrame::OnProceedFurherInitialization()
 	for (int i = 0; i < app->m_vUrlsToAdd.size (); i++)
 	{
 		BOOL bSilent = app->m_vUrlsToAdd [i].bForceSilent ? TRUE : _App.Monitor_Silent ();
-		BOOL bAdded = _pwndDownloads->CreateDownload (app->m_vUrlsToAdd [i].strUrl, FALSE, NULL, 
+		BOOL bAdded = UINT_MAX != _pwndDownloads->CreateDownload (app->m_vUrlsToAdd [i].strUrl, FALSE, NULL, 
 			NULL, bSilent);
 		
 		if (bAdded && bSilent)
@@ -2365,14 +2367,10 @@ BOOL CMainFrame::ReadCusomizationInfo()
 
 void CMainFrame::DisplayBanner(int iIndex)
 {
-	LOG ("CMF:DB: enter" << nl);
-
 	vmsFDMBanner* banner = m_Customizations.get_Banner (iIndex);
 	CString str = "fdmcsbr.";
 	str += banner->szType;
 	CString strFile = fsGetDataFilePath (str);
-
-	LOG ("CMF:DB: file" << nl);
 	
 	HANDLE hFile = CreateFile (strFile, GENERIC_WRITE, 0, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
@@ -2382,12 +2380,8 @@ void CMainFrame::DisplayBanner(int iIndex)
 	WriteFile (hFile, banner->pbImage, banner->dwSize, &dw, NULL);
 	CloseHandle (hFile);
 
-	LOG ("CMF:DB: set" << nl);
-
 	m_wndBanner.SetBanner (strFile, banner->pszLinksTo);
 	DeleteFile (strFile);
-
-	LOG ("CMF:DB: done." << nl);
 }
 
 void CMainFrame::SetupButton()

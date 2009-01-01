@@ -136,6 +136,10 @@ class fsDownloadsMgr
 	friend class CDlg_Options_Downloads;
 	friend class CPrg_Data; 
 public:
+	
+	
+	
+	DWORD m_dwPDTimeLimit;
 	BOOL AllowStartNewDownloads();
 	vmsDownloadSmartPtr get_HighestPriorityDownload();
 	void AddEvent (vmsDownloadSmartPtr dld, LPCSTR pszEvent, fsDownloadMgr_EventDescType enType = EDT_RESPONSE_S);
@@ -245,7 +249,7 @@ public:
 	void AttachToIECatchMgr (fsIECatchMgr* mgr);
 #endif
 	
-	int GetRunningDownloadCount();
+	int GetRunningDownloadCount(bool bIncludeBtSeeds = true);
 	
 	void ApplyTrafficLimit();
 	
@@ -310,6 +314,8 @@ public:
 	virtual ~fsDownloadsMgr();
 
 protected:
+	bool isAllowedToPDCurrently () const;
+	void ManagePD ();
 	static DWORD WINAPI _threadStartSeeding (LPVOID lp);
 	void EventEx (vmsDownloadSmartPtr dld, LPCSTR pszEvent, fsDownloadMgr_EventDescType enType, int nMaxCharsPerLine);
 	BOOL OnDldDone_CheckDownloadIsHtmlPageWithVideo(vmsDownloadSmartPtr dld);

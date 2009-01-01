@@ -255,6 +255,7 @@
 #define IDD_OPTIONS_NOTIFICATIONS       369
 #define IDD_OPTIONS_SITEMGR             370
 #define IDD_BTDLD_SEEDING               371
+#define IDD_OPTIONS_DOWNLOADS_TIMELIMIT 372
 #define IDC_URL                         1001
 #define IDC_BUTTON2                     1003
 #define IDC_SETTIME                     1003
@@ -593,9 +594,11 @@
 #define IDC_MOZILLA                     1044
 #define IDC_ALLOWBITMAPS2               1044
 #define IDC__ADDRESS                    1045
+#define IDC_SAFARI                      1045
 #define IDC__PORT                       1046
 #define IDC_CHECK6                      1046
 #define IDC_THU                         1046
+#define IDC_CHROME                      1046
 #define IDC_FILENOTFOUND                1047
 #define IDC_CHECK7                      1047
 #define IDC_FRI                         1047
@@ -998,6 +1001,7 @@
 #define IDC_ENABLE_SEEDING              1336
 #define IDC_STATIC0                     1337
 #define IDC_DONTCHECKAGAIN              1339
+#define IDC_SETLIMIT                    1340
 #define IDC__COPYRIGHT                  1900
 #define IDC__REGTO                      1901
 #define IDC_USEMAXCONNS                 2034
@@ -1127,9 +1131,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        372
+#define _APS_NEXT_RESOURCE_VALUE        373
 #define _APS_NEXT_COMMAND_VALUE         33015
-#define _APS_NEXT_CONTROL_VALUE         1340
+#define _APS_NEXT_CONTROL_VALUE         1341
 #define _APS_NEXT_SYMED_VALUE           112
 #endif
 #endif

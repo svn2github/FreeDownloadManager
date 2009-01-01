@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2007, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2008, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: telnet.c,v 1.99 2008-06-03 18:03:11 danf Exp $
+ * $Id: telnet.c,v 1.106 2008-10-23 11:49:19 bagder Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -53,7 +53,6 @@
 #include <net/if.h>
 #endif
 #include <sys/ioctl.h>
-#include <signal.h>
 
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
@@ -77,6 +76,8 @@
 #include "arpa_telnet.h"
 #include "memory.h"
 #include "select.h"
+#include "strequal.h"
+#include "rawstr.h"
 
 /* The last #include file should be: */
 #include "memdebug.h"
@@ -241,7 +242,7 @@ CURLcode init_telnet(struct connectdata *conn)
 {
   struct TELNET *tn;
 
-  tn = (struct TELNET *)calloc(1, sizeof(struct TELNET));
+  tn = calloc(1, sizeof(struct TELNET));
   if(!tn)
     return CURLE_OUT_OF_MEMORY;
 
@@ -834,7 +835,7 @@ static CURLcode check_telnet_options(struct connectdata *conn)
               option_keyword, option_arg) == 2) {
 
       /* Terminal type */
-      if(curl_strequal(option_keyword, "TTYPE")) {
+      if(Curl_raw_equal(option_keyword, "TTYPE")) {
         strncpy(tn->subopt_ttype, option_arg, 31);
         tn->subopt_ttype[31] = 0; /* String termination */
         tn->us_preferred[CURL_TELOPT_TTYPE] = CURL_YES;
@@ -842,7 +843,7 @@ static CURLcode check_telnet_options(struct connectdata *conn)
       }
 
       /* Display variable */
-      if(curl_strequal(option_keyword, "XDISPLOC")) {
+      if(Curl_raw_equal(option_keyword, "XDISPLOC")) {
         strncpy(tn->subopt_xdisploc, option_arg, 127);
         tn->subopt_xdisploc[127] = 0; /* String termination */
         tn->us_preferred[CURL_TELOPT_XDISPLOC] = CURL_YES;
@@ -850,7 +851,7 @@ static CURLcode check_telnet_options(struct connectdata *conn)
       }
 
       /* Environment variable */
-      if(curl_strequal(option_keyword, "NEW_ENV")) {
+      if(Curl_raw_equal(option_keyword, "NEW_ENV")) {
         buf = strdup(option_arg);
         if(!buf)
           return CURLE_OUT_OF_MEMORY;
@@ -1289,7 +1290,7 @@ static CURLcode telnet_do(struct connectdata *conn, bool *done)
   if(event_select_func(sockfd, event_handle, FD_READ|FD_CLOSE) == SOCKET_ERROR) {
     close_event_func(event_handle);
     FreeLibrary(wsock2);
-    return 0;
+    return CURLE_OK;
   }
 
   /* If stdin_handle is a pipe, use PeekNamedPipe() method to check it,

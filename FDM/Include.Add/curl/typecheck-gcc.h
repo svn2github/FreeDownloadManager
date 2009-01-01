@@ -146,7 +146,11 @@ _CURL_WARNING(_curl_easy_getinfo_err_curl_slist,
    (option) == CURLOPT_INTERFACE ||                                           \
    (option) == CURLOPT_NETRC_FILE ||                                          \
    (option) == CURLOPT_USERPWD ||                                             \
+   (option) == CURLOPT_USERNAME ||                                            \
+   (option) == CURLOPT_PASSWORD ||                                            \
    (option) == CURLOPT_PROXYUSERPWD ||                                        \
+   (option) == CURLOPT_PROXYUSERNAME ||                                       \
+   (option) == CURLOPT_PROXYPASSWORD ||                                       \
    (option) == CURLOPT_ENCODING ||                                            \
    (option) == CURLOPT_REFERER ||                                             \
    (option) == CURLOPT_USERAGENT ||                                           \
@@ -174,6 +178,8 @@ _CURL_WARNING(_curl_easy_getinfo_err_curl_slist,
    (option) == CURLOPT_SSH_HOST_PUBLIC_KEY_MD5 ||                             \
    (option) == CURLOPT_SSH_PUBLIC_KEYFILE ||                                  \
    (option) == CURLOPT_SSH_PRIVATE_KEYFILE ||                                 \
+   (option) == CURLOPT_CRLFILE ||                                             \
+   (option) == CURLOPT_ISSUERCERT ||                                          \
    0) 
 
 #define _curl_is_write_cb_option(option)                                      \

@@ -152,15 +152,11 @@ BOOL CPluginFrame2::Initialize()
 	m_pMainFrame = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
 	m_bMoreTabs = _App.View_MoreTabs ();
 
-	LOG ("initializing core..." << nl);
-
 	
 	if (FALSE == _PluginMgr.LoadPlugins (this))
 		return FALSE;
 
 	int cMenuImages;
-
-	LOG ("building plugins' menu pictures...");
 
 	for (int i = 0; i < _PluginMgr.GetPluginCount (); i++)
 	{
@@ -197,9 +193,6 @@ BOOL CPluginFrame2::Initialize()
 			}
 		}
 	}
-
-	LOG ("ok." << nl);
-	LOG ("core initialized." << nl);
 
 	int iPlug = _App.ActivePlugin ();
 	if (iPlug >= _PluginMgr.GetPluginCount () || iPlug < 0)

@@ -40,7 +40,7 @@ protected:
 public:
 
 	vmsVariantValue () {enType = VVT_EMPTY;}
-	vmsVariantValue (const vmsVariantValue& vt) {vmsVariantValue (); *this = vt;}
+	vmsVariantValue (const vmsVariantValue& vt) {enType = VVT_EMPTY; *this = vt;}
 	
 	~vmsVariantValue () {clear ();}
 

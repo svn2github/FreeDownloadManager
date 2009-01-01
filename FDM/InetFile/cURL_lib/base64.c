@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2007, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2008, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: base64.c,v 1.45 2007-11-05 09:45:09 bagder Exp $
+ * $Id: base64.c,v 1.50 2008-09-06 05:29:05 yangtse Exp $
  ***************************************************************************/
 
 /* Base64 encoding/decoding
@@ -42,7 +42,7 @@
 
 #include "urldata.h" /* for the SessionHandle definition */
 #include "easyif.h"  /* for Curl_convert_... prototypes */
-#include "base64.h"
+#include "curl_base64.h"
 #include "memory.h"
 
 /* include memdebug.h last */
@@ -117,7 +117,7 @@ size_t Curl_base64_decode(const char *src, unsigned char **outptr)
   /* Decode all but the last quantum (which may not decode to a
   multiple of 3 bytes) */
   for(i = 0; i < numQuantums - 1; i++) {
-    decodeQuantum((unsigned char *)newstr, src);
+    decodeQuantum(newstr, src);
     newstr += 3; src += 4;
   }
 
@@ -153,14 +153,14 @@ size_t Curl_base64_encode(struct SessionHandle *data,
   char *convbuf = NULL;
 #endif
 
-  char *indata = (char *)inp;
+  const char *indata = inp;
 
   *outptr = NULL; /* set to NULL in case of failure before we reach the end */
 
   if(0 == insize)
     insize = strlen(indata);
 
-  base64data = output = (char*)malloc(insize*4/3+4);
+  base64data = output = malloc(insize*4/3+4);
   if(NULL == output)
     return 0;
 
@@ -171,7 +171,7 @@ size_t Curl_base64_encode(struct SessionHandle *data,
    * so we copy it to a buffer, translate it, and use that instead.
    */
   if(data) {
-    convbuf = (char*)malloc(insize);
+    convbuf = malloc(insize);
     if(!convbuf) {
       free(output);
       return 0;
@@ -271,7 +271,7 @@ int main(int argc, argv_item_t argv[], char **envp)
   data = (unsigned char *)suck(&dataLen);
   base64Len = Curl_base64_encode(handle, data, dataLen, &base64);
 
-  fprintf(stderr, "%d\n", base64Len);
+  fprintf(stderr, "%zu\n", base64Len);
   fprintf(stdout, "%s\n", base64);
 
   free(base64); free(data);
@@ -356,7 +356,7 @@ void *suck(int *lenptr)
 
   do {
     cursize *= 2;
-    buf = (unsigned char *)realloc(buf, cursize);
+    buf = realloc(buf, cursize);
     memset(buf + len, 0, cursize - len);
     lastread = fread(buf + len, 1, cursize - len, stdin);
     len += lastread;

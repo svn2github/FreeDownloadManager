@@ -41,8 +41,10 @@ CURL_EXTERN int curl_accept(int s, void *addr, void *addrlen,
 
 CURL_EXTERN FILE *curl_fopen(const char *file, const char *mode, int line,
                              const char *source);
+#ifdef HAVE_FDOPEN
 CURL_EXTERN FILE *curl_fdopen(int filedes, const char *mode, int line,
                               const char *source);
+#endif
 CURL_EXTERN int curl_fclose(FILE *file, int line, const char *source);
 
 #ifndef MEMDEBUG_NODEFINES 
@@ -60,6 +62,7 @@ CURL_EXTERN int curl_fclose(FILE *file, int line, const char *source);
 #define accept(sock,addr,len)\
  curl_accept(sock,addr,len,__LINE__,__FILE__)
 
+#ifdef HAVE_GETADDRINFO
 #if defined(getaddrinfo) && defined(__osf__)
 
 #define ogetaddrinfo(host,serv,hint,res) \
@@ -69,17 +72,20 @@ CURL_EXTERN int curl_fclose(FILE *file, int line, const char *source);
 #define getaddrinfo(host,serv,hint,res) \
   curl_dogetaddrinfo(host,serv,hint,res,__LINE__,__FILE__)
 #endif
+#endif 
 
 #ifdef HAVE_GETNAMEINFO
 #undef getnameinfo
 #define getnameinfo(sa,salen,host,hostlen,serv,servlen,flags) \
   curl_dogetnameinfo(sa,salen,host,hostlen,serv,servlen,flags, __LINE__, \
   __FILE__)
-#endif
+#endif 
 
+#ifdef HAVE_FREEADDRINFO
 #undef freeaddrinfo
 #define freeaddrinfo(data) \
-  curl_dofreeaddrinfo(data,__LINE__,__FILE__) 
+  curl_dofreeaddrinfo(data,__LINE__,__FILE__)
+#endif  
 
 #undef sclose
 #define sclose(sockfd) curl_sclose(sockfd,__LINE__,__FILE__)

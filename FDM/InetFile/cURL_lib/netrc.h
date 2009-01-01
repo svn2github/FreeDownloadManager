@@ -5,7 +5,7 @@
 #ifndef __NETRC_H
 #define __NETRC_H
 
-int Curl_parsenetrc(char *host,
+int Curl_parsenetrc(const char *host,
                     char *login,
                     char *password,
                     char *filename);

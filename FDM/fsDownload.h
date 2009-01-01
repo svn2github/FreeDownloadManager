@@ -65,7 +65,9 @@ typedef DWORD (*fntDownloadsMgrEventFunc)(struct fsDownload* dld, enum fsDownloa
 
 #define DLD_NEED_ONDONE_FOR_FLASH_VIDEO	(1 << 22)
 
-#define DLD_TORRENT_DOWNLOAD			(1 << 23)    
+#define DLD_TORRENT_DOWNLOAD			(1 << 23)
+
+#define DLD_WAS_DELETED					(1 << 24)    
 
 struct fsDownload : public vmsObject
 {

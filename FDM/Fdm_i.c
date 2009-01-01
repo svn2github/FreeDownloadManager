@@ -5,7 +5,7 @@
 
 
 /* File created by MIDL compiler version 5.01.0164 */
-/* at Tue Aug 05 16:29:49 2008
+/* at Thu Jan 01 15:33:59 2009
  */
 /* Compiler settings for D:\VCW\FDM\FDM\Fdm.idl:
     Os (OptLev=s), W1, Zp8, env=Win32, ms_ext, c_ext

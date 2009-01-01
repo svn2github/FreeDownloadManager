@@ -284,8 +284,6 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 	int iCur;
 	fsDownload_Properties dp;
 
-	LOG ("dp_mp: apply: set enAER" << nl);
-
 	iCur = m_wndAER.GetCurSel ();
 	if (iCur != CB_ERR)
 	{
@@ -295,16 +293,12 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 		DP_SET (enAER, FALSE, &iCur);
 	}
 
-	LOG ("dp_mp: apply: set reserve disk space" << nl);
-
 	UINT uChecked = IsDlgButtonChecked (IDC_RESERVESPACE);
 	if (uChecked != BST_INDETERMINATE)
 	{
 		BOOL b = uChecked == BST_CHECKED;
 		DP_SET (bReserveDiskSpace, FALSE, &b);
 	}
-
-	LOG ("dp_mp: apply: set addext" << nl);
 
 	uChecked = IsDlgButtonChecked (IDC_USEEXT);
 	if (uChecked == BST_CHECKED)
@@ -326,8 +320,6 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 	else if (uChecked == BST_UNCHECKED)
 		DP_SET (pszAdditionalExt, TRUE, "");
 
-	LOG ("dp_mp: apply: set createext" << nl);
-
 	uChecked = IsDlgButtonChecked (IDC_USECREATEEXT);
 	if (uChecked == BST_CHECKED)
 	{
@@ -347,8 +339,6 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 	}
 	else if (uChecked == BST_UNCHECKED)
 		DP_SET (pszCreateExt, TRUE, "");
-
-	LOG ("dp_mp: apply: set hiddenflag" << nl);
 
 	uChecked = IsDlgButtonChecked (IDC_USEHIDDENFLAG);
 	if (uChecked != BST_INDETERMINATE)
@@ -382,8 +372,6 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 			}
 		}
 	}
-
-	LOG ("dp_mp: apply: set don'trestart" << nl);
 	
 	uChecked = IsDlgButtonChecked (IDC_DONTRESTARTIFNORESUME);
 	if (uChecked != BST_INDETERMINATE)
@@ -393,8 +381,6 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 		else
 			DP_UNSET_MASK (dwFlags, DPF_DONTRESTARTIFNORESUME);
 	}
-
-	LOG ("dp_mp: apply: set append comment" << nl);
 
 	uChecked = IsDlgButtonChecked (IDC_APPENDCOMMENT);
 	if (uChecked != BST_INDETERMINATE)
@@ -432,15 +418,11 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 			DP_UNSET_MASK (dwFlags, DPF_STARTWHENDONE);
 	}
 
-	LOG ("dp_mp: apply: set SCR" << nl);
-
 	iCur = m_wndSCR.GetCurSel ();
 	if (iCur != CB_ERR)
 	{
 		DP_SET (enSCR, FALSE, &iCur);
 	}
-
-	LOG ("dp_mp: apply: set filenotfound" << nl);
 
 	uChecked = IsDlgButtonChecked (IDC_FILENOTFOUND);
 	if (uChecked != BST_INDETERMINATE)
@@ -449,16 +431,12 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 		DP_SET_EX (DP_OFFSET (aEP) + DFE_NOTFOUND * sizeof (dfep), sizeof (dfep), FALSE, &dfep);
 	}
 
-	LOG ("dp_mp: apply: set accden" << nl);
-
 	uChecked = IsDlgButtonChecked (IDC_ACCDENIED);
 	if (uChecked != BST_INDETERMINATE)
 	{
 		fsDownloadFileErrorProcessing dfep = uChecked == BST_CHECKED ? DFEP_STOP : DFEP_IGNORE;
 		DP_SET_EX (DP_OFFSET (aEP) + DFE_ACCDENIED * sizeof (dfep), sizeof (dfep), FALSE, &dfep);
 	}
-
-	LOG ("dp_mp: apply: done." << nl);
 
 	return CPropertyPage::OnApply();
 }

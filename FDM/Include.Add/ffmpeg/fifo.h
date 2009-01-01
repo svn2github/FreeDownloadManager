@@ -1,6 +1,6 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+*/    
 
 #ifndef FIFO_H
 #define FIFO_H

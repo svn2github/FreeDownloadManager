@@ -328,6 +328,9 @@ void fsHTMLParser::SetKillDupes(BOOL bKill)
 
 void fsHTMLParser::ReplaceUrl(int iIndex, LPCSTR pszNewUrl)
 {
+	if (strcmp (m_vUrls [iIndex], pszNewUrl) == 0)
+		return;
+
 	fsTextRegion &rgn = m_vUrlsRgns [iIndex];
 	int nHole = ReplaceString (pszNewUrl, rgn); 
 
@@ -376,6 +379,9 @@ int fsHTMLParser::ReplaceString(LPCSTR pszNewVal, fsTextRegion &rgn)
 
 void fsHTMLParser::ReplaceImage(int iIndex, LPCSTR pszNewImg)
 {
+	if (strcmp (m_vImgs [iIndex], pszNewImg) == 0)
+		return;
+
 	fsTextRegion &rgn = m_vImgsRgns [iIndex];
 	int nHole = ReplaceString (pszNewImg, rgn);
 
@@ -560,6 +566,9 @@ fsLinkRelType fsHTMLParser::GetLinkUrlRelType(int iIndex)
 
 void fsHTMLParser::ReplaceLinkUrl(int iIndex, LPCSTR pszNewUrl)
 {
+	if (strcmp (m_vLinkUrls [iIndex], pszNewUrl) == 0)
+		return;
+
 	fsTextRegion &rgn = m_vLinkUrlsRgns [iIndex];
 	int nHole = ReplaceString (pszNewUrl, rgn);
 
@@ -818,6 +827,8 @@ LPCSTR fsHTMLParser::GetFrameUrl(int iIndex)
 
 void fsHTMLParser::ReplaceFrameUrl(int iIndex, LPCSTR pszNewUrl)
 {
+	if (strcmp (m_vFrameUrls [iIndex], pszNewUrl) == 0)
+		return;
 	fsTextRegion &rgn = m_vFrameRgns [iIndex];
 	int nHole = ReplaceString (pszNewUrl, rgn);
 

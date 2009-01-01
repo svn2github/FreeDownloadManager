@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: formdata.c,v 1.104 2008-03-31 10:02:25 bagder Exp $
+ * $Id: formdata.c,v 1.112 2008-10-20 21:56:35 bagder Exp $
  ***************************************************************************/
 
 /*
@@ -56,14 +56,14 @@ Content-Type: application/octet-stream
 vlue for PTRCONTENTS + CONTENTSLENGTH + CONTENTTYPE
 (or you might see v^@lue at the start)
 
-Content-Disposition: form-data; name="FILE1_+_CONTENTTYPE"; filename="inet_ntoa_r.h"
+Content-Disposition: form-data; name="FILE1_+_CONTENTTYPE"; filename="formdata.h"
 Content-Type: text/html
 ...
 
 Content-Disposition: form-data; name="FILE1_+_FILE2"
 Content-Type: multipart/mixed, boundary=curlz1s0dkticx49MV1KGcYP5cvfSsz
 ...
-Content-Disposition: attachment; filename="inet_ntoa_r.h"
+Content-Disposition: attachment; filename="formdata.h"
 Content-Type: application/octet-stream
 ...
 Content-Disposition: attachment; filename="Makefile.b32"
@@ -73,13 +73,13 @@ Content-Type: application/octet-stream
 Content-Disposition: form-data; name="FILE1_+_FILE2_+_FILE3"
 Content-Type: multipart/mixed, boundary=curlirkYPmPwu6FrJ1vJ1u1BmtIufh1
 ...
-Content-Disposition: attachment; filename="inet_ntoa_r.h"
+Content-Disposition: attachment; filename="formdata.h"
 Content-Type: application/octet-stream
 ...
 Content-Disposition: attachment; filename="Makefile.b32"
 Content-Type: application/octet-stream
 ...
-Content-Disposition: attachment; filename="inet_ntoa_r.h"
+Content-Disposition: attachment; filename="formdata.h"
 Content-Type: application/octet-stream
 ...
 
@@ -87,13 +87,13 @@ Content-Type: application/octet-stream
 Content-Disposition: form-data; name="ARRAY: FILE1_+_FILE2_+_FILE3"
 Content-Type: multipart/mixed, boundary=curlirkYPmPwu6FrJ1vJ1u1BmtIufh1
 ...
-Content-Disposition: attachment; filename="inet_ntoa_r.h"
+Content-Disposition: attachment; filename="formdata.h"
 Content-Type: application/octet-stream
 ...
 Content-Disposition: attachment; filename="Makefile.b32"
 Content-Type: application/octet-stream
 ...
-Content-Disposition: attachment; filename="inet_ntoa_r.h"
+Content-Disposition: attachment; filename="formdata.h"
 Content-Type: application/octet-stream
 ...
 
@@ -171,7 +171,7 @@ AddHttpPost(char *name, size_t namelength,
             struct curl_httppost **last_post)
 {
   struct curl_httppost *post;
-  post = (struct curl_httppost *)calloc(sizeof(struct curl_httppost), 1);
+  post = calloc(sizeof(struct curl_httppost), 1);
   if(post) {
     post->name = name;
     post->namelength = (long)(name?(namelength?namelength:strlen(name)):0);
@@ -222,7 +222,7 @@ static FormInfo * AddFormInfo(char *value,
                               FormInfo *parent_form_info)
 {
   FormInfo *form_info;
-  form_info = (FormInfo *)malloc(sizeof(FormInfo));
+  form_info = malloc(sizeof(FormInfo));
   if(form_info) {
     memset(form_info, 0, sizeof(FormInfo));
     if(value)
@@ -325,9 +325,9 @@ static char *memdup(const char *src, size_t buffer_length)
   }
   else
     /* no length and a NULL src pointer! */
-    return strdup((char *)"");
+    return strdup("");
 
-  buffer = (char*)malloc(length+add);
+  buffer = malloc(length+add);
   if(!buffer)
     return NULL; /* fail */
 
@@ -410,7 +410,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
   /*
    * We need to allocate the first struct to fill in.
    */
-  first_form = (FormInfo *)calloc(sizeof(struct FormInfo), 1);
+  first_form = calloc(sizeof(struct FormInfo), 1);
   if(!first_form)
     return CURL_FORMADD_MEMORY;
 
@@ -705,7 +705,7 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
   }
 
   if(CURL_FORMADD_OK == return_value) {
-    /* go through the list, check for copleteness and if everything is
+    /* go through the list, check for completeness and if everything is
      * alright add the HttpPost item otherwise set return_value accordingly */
 
     post = NULL;
@@ -743,8 +743,11 @@ CURLFORMcode FormAdd(struct curl_httppost **httppost,
         }
         if( !(form->flags & HTTPPOST_PTRNAME) &&
              (form == first_form) ) {
-          /* copy name (without strdup; possibly contains null characters) */
-          form->name = memdup(form->name, form->namelength);
+          /* Note that there's small risk that form->name is NULL here if the
+             app passed in a bad combo, so we better check for that first. */
+          if(form->name)
+            /* copy name (without strdup; possibly contains null characters) */
+            form->name = memdup(form->name, form->namelength);
           if(!form->name) {
             return_value = CURL_FORMADD_MEMORY;
             break;
@@ -838,8 +841,7 @@ static CURLcode AddFormData(struct FormData **formp,
                             size_t length,
                             curl_off_t *size)
 {
-  struct FormData *newform = (struct FormData *)
-    malloc(sizeof(struct FormData));
+  struct FormData *newform = malloc(sizeof(struct FormData));
   if(!newform)
     return CURLE_OUT_OF_MEMORY;
   newform->next = NULL;
@@ -849,7 +851,7 @@ static CURLcode AddFormData(struct FormData **formp,
     if(!length)
       length = strlen((char *)line);
 
-    newform->line = (char *)malloc(length+1);
+    newform->line = malloc(length+1);
     if(!newform->line) {
       free(newform);
       return CURLE_OUT_OF_MEMORY;
@@ -1563,7 +1565,7 @@ int main(int argc, argv_item_t argv[])
   char value4[] = "value for simple PTRCONTENTS";
   char value5[] = "value for PTRCONTENTS + CONTENTSLENGTH";
   char value6[] = "value for PTRCONTENTS + CONTENTSLENGTH + CONTENTTYPE";
-  char value7[] = "inet_ntoa_r.h";
+  char value7[] = "formdata.h";
   char value8[] = "Makefile.b32";
   char type2[] = "image/gif";
   char type6[] = "text/plain";
@@ -1674,7 +1676,7 @@ int main(int argc, argv_item_t argv[])
   } while(1);
 
   fprintf(stdout, "size: ");
-  fprintf(stdout, CURL_FORMAT_OFF_T, size);
+  fprintf(stdout, "%" FORMAT_OFF_T, size);
   fprintf(stdout, "\n");
   if(errors)
     fprintf(stdout, "\n==> %d Test(s) failed!\n", errors);
@@ -1729,7 +1731,7 @@ char *Curl_FormBoundary(void)
 
   static const char table16[]="abcdef0123456789";
 
-  retstring = (char *)malloc(BOUNDARY_LENGTH+1);
+  retstring = malloc(BOUNDARY_LENGTH+1);
 
   if(!retstring)
     return NULL; /* failed */

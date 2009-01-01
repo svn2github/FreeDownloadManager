@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: file.c,v 1.109 2008-05-21 21:36:42 danf Exp $
+ * $Id: file.c,v 1.116 2008-11-04 09:57:36 bagder Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -58,7 +58,6 @@
 #include <net/if.h>
 #endif
 #include <sys/ioctl.h>
-#include <signal.h>
 
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
@@ -202,7 +201,7 @@ static CURLcode file_connect(struct connectdata *conn, bool *done)
   Curl_reset_reqproto(conn);
 
   if(!data->state.proto.file) {
-    file = (struct FILEPROTO *)calloc(sizeof(struct FILEPROTO), 1);
+    file = calloc(sizeof(struct FILEPROTO), 1);
     if(!file) {
       free(real_path);
       return CURLE_OUT_OF_MEMORY;
@@ -333,7 +332,8 @@ static CURLcode file_upload(struct connectdata *conn)
       failf(data, "Can't open %s for writing", file->path);
       return CURLE_WRITE_ERROR;
     }
-    fp = fdopen(fd, "wb");
+    close(fd);
+    fp = fopen(file->path, "wb");
   }
 
   if(!fp) {
@@ -347,7 +347,7 @@ static CURLcode file_upload(struct connectdata *conn)
 
   /* treat the negative resume offset value as the case of "-" */
   if(data->state.resume_from < 0) {
-    if(stat(file->path, &file_stat)) {
+    if(fstat(fileno(fp), &file_stat)) {
       fclose(fp);
       failf(data, "Can't get the size of %s", file->path);
       return CURLE_WRITE_ERROR;
@@ -451,6 +451,8 @@ static CURLcode file_do(struct connectdata *conn, bool *done)
   if( -1 != fstat(fd, &statbuf)) {
     /* we could stat it, then read out the size */
     expected_size = statbuf.st_size;
+    /* and store the modification time */
+    data->info.filetime = (long)statbuf.st_mtime;
     fstated = TRUE;
   }
 

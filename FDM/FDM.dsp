@@ -250,6 +250,10 @@ SOURCE=.\Dlg_Options_Downloads_NewDld.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Dlg_Options_Downloads_TimeLimit.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Dlg_Options_General.cpp
 # End Source File
 # Begin Source File
@@ -754,10 +758,6 @@ SOURCE=.\fsPluginMgr.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\fsProgramLogMgr.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=.\fsRASMgr.cpp
 # End Source File
 # Begin Source File
@@ -1174,6 +1174,18 @@ SOURCE=.\vmsDownloadsListHelper.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsFdmApiDownloadImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsFdmApiDownloadsMgrImpl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsFdmApiImpl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsFdmAppMgr.cpp
 # End Source File
 # Begin Source File
@@ -1246,6 +1258,10 @@ SOURCE=.\vmsObject.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsPluginSupport.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsRegisteredApp.cpp
 # End Source File
 # Begin Source File
@@ -1259,6 +1275,10 @@ SOURCE=.\vmsSimpleFileDownloader.cpp
 # Begin Source File
 
 SOURCE=.\vmsSkinMgr.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsSourceCodeLogger.cpp
 # End Source File
 # Begin Source File
 
@@ -1539,6 +1559,10 @@ SOURCE=.\Dlg_Options_Downloads_Network.h
 # Begin Source File
 
 SOURCE=.\Dlg_Options_Downloads_NewDld.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Dlg_Options_Downloads_TimeLimit.h
 # End Source File
 # Begin Source File
 
@@ -2042,10 +2066,6 @@ SOURCE=.\fsPluginMgr.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\fsProgramLogMgr.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\fsRASMgr.h
 # End Source File
 # Begin Source File
@@ -2450,6 +2470,18 @@ SOURCE=.\vmsDownloadsListHelper.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsFdmApiDownloadImpl.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsFdmApiDownloadsMgrImpl.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsFdmApiImpl.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsFdmAppMgr.h
 # End Source File
 # Begin Source File
@@ -2526,6 +2558,10 @@ SOURCE=.\vmsObjectSmartPtr.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsPluginSupport.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsRegisteredApp.h
 # End Source File
 # Begin Source File
@@ -2539,6 +2575,10 @@ SOURCE=.\vmsSimpleFileDownloader.h
 # Begin Source File
 
 SOURCE=.\vmsSkinMgr.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsSourceCodeLogger.h
 # End Source File
 # Begin Source File
 

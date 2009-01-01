@@ -65,8 +65,6 @@
 
 #define HAVE_INET_ADDR 1 
 
-#define HAVE_INET_NTOA 1 
-
 #define HAVE_IOCTLSOCKET 1 
 
 #define HAVE_PERROR 1 
@@ -75,17 +73,21 @@
 
 #define HAVE_RAND_STATUS 1 
 
+#define HAVE_CRYPTO_CLEANUP_ALL_EX_DATA 1 
+
 #define HAVE_SELECT 1 
 
 #define HAVE_SETVBUF 1 
 
 #define HAVE_SOCKET 1    
 
-#define HAVE_STRICMP 1 
-
 #define HAVE_STRDUP 1 
 
 #define HAVE_STRFTIME 1 
+
+#define HAVE_STRICMP 1    
+
+#define HAVE_STRNICMP 1 
 
 #define HAVE_STRSTR 1 
 
@@ -96,8 +98,6 @@
 #ifndef __BORLANDC__
 #define HAVE_UTIME 1
 #endif 
-
-#define HAVE_GETNAMEINFO 1 
 
 #define GETNAMEINFO_QUAL_ARG1 const 
 
@@ -120,6 +120,22 @@
 #define RECV_TYPE_ARG4 int 
 
 #define RECV_TYPE_RETV int 
+
+#define HAVE_RECVFROM 1 
+
+#define RECVFROM_TYPE_ARG1 SOCKET 
+
+#define RECVFROM_TYPE_ARG2 char 
+
+#define RECVFROM_TYPE_ARG3 int 
+
+#define RECVFROM_TYPE_ARG4 int 
+
+#define RECVFROM_TYPE_ARG5 struct sockaddr 
+
+#define RECVFROM_TYPE_ARG6 int 
+
+#define RECVFROM_TYPE_RETV int 
 
 #define HAVE_SEND 1 
 
@@ -150,17 +166,7 @@
 #define _SSIZE_T_DEFINED
 #endif     
 
-#define SIZEOF_LONG_DOUBLE 16    
-
-#ifdef SIZEOF_CURL_OFF_T
-#undef SIZEOF_CURL_OFF_T
-#endif  
-
-#if defined(__BORLANDC__) || defined(__POCC__) || defined(__SALFORDC__)
-#define SIZEOF_CURL_OFF_T 4
-#else
-#define SIZEOF_CURL_OFF_T 8
-#endif     
+#define SIZEOF_LONG_DOUBLE 16        
 
 #ifndef __SALFORDC__
 #define HAVE_STRUCT_SOCKADDR_STORAGE 1
@@ -199,6 +205,34 @@
 #  if (_WIN32_WINNT < 0x0501) || (WINVER < 0x0501)
 #    error VS2008 does not support Windows build targets prior to WinXP
 #  endif
+#endif  
+
+#if defined(HAVE_WS2TCPIP_H)
+#  if defined(_WIN32_WINNT) && (_WIN32_WINNT >= 0x0501)
+#    define HAVE_FREEADDRINFO 1
+#    define HAVE_GETADDRINFO  1
+#    define HAVE_GETNAMEINFO  1
+#  elif defined(_MSC_VER) && (_MSC_VER >= 1200)
+#    define HAVE_FREEADDRINFO 1
+#    define HAVE_GETADDRINFO  1
+#    define HAVE_GETNAMEINFO  1
+#  endif
+#endif    
+
+#if defined(_MSC_VER) && !defined(_WIN32_WCE)
+#  if (_MSC_VER >= 900) && (_INTEGRAL_MAX_BITS >= 64)
+#    define USE_WIN32_LARGE_FILES
+#  else
+#    define USE_WIN32_SMALL_FILES
+#  endif
+#endif
+
+#if defined(__MINGW32__) && !defined(USE_WIN32_LARGE_FILES)
+#  define USE_WIN32_LARGE_FILES
+#endif
+
+#if !defined(USE_WIN32_LARGE_FILES) && !defined(USE_WIN32_SMALL_FILES)
+#  define USE_WIN32_SMALL_FILES
 #endif    
 
 #if defined(CURL_HAS_NOVELL_LDAPSDK) || defined(CURL_HAS_MOZILLA_LDAPSDK)

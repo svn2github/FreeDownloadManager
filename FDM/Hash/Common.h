@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
+*/
+
+    
 
 #ifndef _COMMON_H_
 #define _COMMON_H_

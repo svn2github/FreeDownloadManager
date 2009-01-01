@@ -30,8 +30,6 @@ vmsAnimatedGIF::~vmsAnimatedGIF()
 
 BOOL vmsAnimatedGIF::Load(LPCSTR pszFile)
 {
-	LOG ("GIF: 1st point" << nl);
-	
 	HANDLE hFile = CreateFile (pszFile, GENERIC_READ, FILE_SHARE_READ,
 		NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -111,15 +109,9 @@ BOOL vmsAnimatedGIF::SkipNextGraphicBlock()
 		   (nBlock != BLOCK_UNKNOWN) &&
 		   (nBlock != BLOCK_TRAILER) )
 	{
-		LOG ("GIF: m_nCurrOffset = " << (DWORD)m_nCurrOffset << nl);
-		
 		if (!SkipNextBlock()) return NULL;
 		
-		LOG ("GIF: m_nCurrOffset = " << (DWORD)m_nCurrOffset << nl);
-		
 		nBlock = GetNextBlock();
-		
-		LOG ("GIF: m_nCurrOffset = " << (DWORD)m_nCurrOffset << nl);
 	};
 
 	if ((nBlock == BLOCK_UNKNOWN) ||
@@ -129,11 +121,6 @@ BOOL vmsAnimatedGIF::SkipNextGraphicBlock()
 	
 
 	if (GetNextBlockLen() <= 0) return FALSE;
-
-	LOG ("m_nDataSize = "  << (DWORD)m_nDataSize << nl);
-	LOG ("m_nGlobalCTSize = " << (DWORD)m_nGlobalCTSize << nl);
-
-	LOG ("GIF: m_nCurrOffset = " << (DWORD)m_nCurrOffset << nl);
 
 	if (nBlock == BLOCK_CONTROLEXT)
 	{

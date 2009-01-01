@@ -12,7 +12,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif        
 
-CDlgProgramOptions::CDlgProgramOptions(CWnd* pParent, LPCSTR pszStartPage)
+CProgramOptions::CProgramOptions(CWnd* pParent, LPCSTR pszStartPage)
 	: CDlg_Options(pParent, pszStartPage)
 {
 	//{{AFX_DATA_INIT(CDlgProgramOptions)
@@ -20,7 +20,7 @@ CDlgProgramOptions::CDlgProgramOptions(CWnd* pParent, LPCSTR pszStartPage)
 	//}}AFX_DATA_INIT
 }  
 
-void CDlgProgramOptions::DoDataExchange(CDataExchange* pDX)
+void CProgramOptions::DoDataExchange(CDataExchange* pDX)
 {
 	CDlg_Options::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgProgramOptions)
@@ -28,19 +28,23 @@ void CDlgProgramOptions::DoDataExchange(CDataExchange* pDX)
 	//}}AFX_DATA_MAP
 }  
 
-BEGIN_MESSAGE_MAP(CDlgProgramOptions, CDlg_Options)
+BEGIN_MESSAGE_MAP(CProgramOptions, CDlg_Options)
 	//{{AFX_MSG_MAP(CDlgProgramOptions)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()      
 
-void CDlgProgramOptions::InitializeData()
+void CProgramOptions::InitializeData()
 {
-	OPTIONS_PAGES_TREE *pt = m_tPages.AddLeaf (&m_general);
+	OPTIONS_PAGES_TREE *pt = m_tPages.AddLeaf (LS (L_GENERAL));
+	pt->AddLeaf (&m_general);
 	pt->AddLeaf (&m_general_history);
-	OPTIONS_PAGES_TREE *ptGenMisc = pt->AddLeaf (&m_general_misc);
+	OPTIONS_PAGES_TREE *ptGenMisc = pt->AddLeaf (LS (L_MISC));
+	ptGenMisc->AddLeaf (&m_general_misc);
 	ptGenMisc->AddLeaf (&m_general_misc_adv);
 
-	pt = m_tPages.AddLeaf (&m_downloads);
+	pt = m_tPages.AddLeaf (LS (L_DOWNLOADS));
+	pt->AddLeaf (&m_downloads);
+	pt->AddLeaf (&m_downloads_timelimit);
 	pt->AddLeaf (&m_downloads_newdld);
 	pt->AddLeaf (&m_downloads_network);
 	if (_AppMgr.IsBtInstalled ())
@@ -52,7 +56,7 @@ void CDlgProgramOptions::InitializeData()
 	m_tPages.AddLeaf (&m_notifications);
 }
 
-BOOL CDlgProgramOptions::OnInitDialog() 
+BOOL CProgramOptions::OnInitDialog() 
 {
 	CDlg_Options::OnInitDialog();
 	

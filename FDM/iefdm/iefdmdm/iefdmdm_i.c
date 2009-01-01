@@ -5,7 +5,7 @@
 
 
 /* File created by MIDL compiler version 5.01.0164 */
-/* at Sat Dec 01 01:39:06 2007
+/* at Mon Nov 03 23:17:58 2008
  */
 /* Compiler settings for D:\VCW\FDM\FDM\iefdm\iefdmdm\iefdmdm.idl:
     Oicf (OptLev=i2), W1, Zp8, env=Win32, ms_ext, c_ext

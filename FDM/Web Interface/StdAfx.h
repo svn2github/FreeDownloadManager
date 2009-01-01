@@ -1,6 +1,6 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+*/    
 
           
 
@@ -21,7 +21,7 @@
 #include <afxcmn.h>			
 #endif   
 
-//{{AFX_INSERT_LOCATION}//}//}}  
+//{{AFX_INSERT_LOCATION}//}//}//}}  
 
 #include "fsTrayIconMgr.h"
 extern fsTrayIconMgr _TrayMgr;

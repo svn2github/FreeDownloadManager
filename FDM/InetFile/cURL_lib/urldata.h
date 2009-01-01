@@ -26,7 +26,9 @@
 #define DICT_DEFINE3 "/LOOKUP:"
 
 #define CURL_DEFAULT_USER "anonymous"
-#define CURL_DEFAULT_PASSWORD "ftp@example.com"
+#define CURL_DEFAULT_PASSWORD "ftp@example.com" 
+
+#define MAX_IPADR_LEN sizeof("ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255")
 
 #include "cookie.h"
 #include "formdata.h"
@@ -52,6 +54,12 @@
 #include "pem.h"
 #include "ssl.h"
 #include "err.h"
+#ifdef HAVE_OPENSSL_ENGINE_H
+#include <engine.h>
+#endif
+#ifdef HAVE_OPENSSL_PKCS12_H
+#include <pkcs12.h>
+#endif
 #endif 
 #ifdef USE_GNUTLS
 #error Configuration error; cannot use GnuTLS *and* OpenSSL.
@@ -78,6 +86,10 @@
 
 #ifdef HAVE_ZLIB_H
 #include <zlib.h>               
+#ifdef __SYMBIAN32__
+
+#undef WIN32
+#endif
 #endif
 
 #ifdef USE_ARES
@@ -179,6 +191,8 @@ struct ssl_config_data {
   long verifyhost;       
   char *CApath;          
   char *CAfile;          
+  const char *CRLfile;   
+  const char *issuercert;
   char *random_file;     
   char *egdsocket;       
   char *cipher_list;     
@@ -186,6 +200,7 @@ struct ssl_config_data {
   curl_ssl_ctx_callback fsslctx; 
   void *fsslctxp;        
   bool sessionid;        
+  bool certinfo;         
 }; 
 
 struct curl_ssl_session {
@@ -259,7 +274,7 @@ struct negotiatedata {
 struct HTTP {
   struct FormData *sendit;
   curl_off_t postsize; 
-  char *postdata;
+  const char *postdata;
 
   const char *p_pragma;      
   const char *p_accept;      
@@ -272,7 +287,7 @@ struct HTTP {
   struct back {
     curl_read_callback fread_func; 
     void *fread_in;           
-    char *postdata;
+    const char *postdata;
     curl_off_t postsize;
   } backup;
 
@@ -509,7 +524,7 @@ struct hostname {
   char *rawalloc; 
   char *encalloc; 
   char *name;     
-  char *dispname; 
+  const char *dispname; 
 };  
 
 #define KEEP_NONE  0
@@ -589,7 +604,6 @@ struct SingleRequest {
   bool content_range;           
   curl_off_t offset;            
   int httpcode;                 
-  int httpversion;              
   struct timeval start100;      
   enum expect100 exp100;        
 
@@ -708,7 +722,9 @@ struct connectdata {
   Curl_addrinfo *ip_addr;
 
   
-  char *ip_addr_str;
+  char ip_addr_str[MAX_IPADR_LEN];
+
+  unsigned int scope;    
 
   char protostr[16];  
   int socktype;  
@@ -725,6 +741,8 @@ struct connectdata {
   char *proxyuser;    
   char *proxypasswd;  
   curl_proxytype proxytype; 
+
+  int httpversion;              
 
   struct timeval now;     
   struct timeval created; 
@@ -825,6 +843,8 @@ struct PureInfo {
   long numconnects; 
   char *contenttype; 
   char *wouldredirect; 
+  char ip[MAX_IPADR_LEN]; 
+  struct curl_certinfo certs; 
 }; 
 
 struct Progress {
@@ -847,6 +867,7 @@ struct Progress {
 
   double t_nslookup;
   double t_connect;
+  double t_appconnect;
   double t_pretransfer;
   double t_starttransfer;
   double t_redirect;
@@ -960,11 +981,13 @@ struct UrlState {
   
   bool ftp_trying_alternative;
 
+  int httpversion;       
   bool expect100header;  
 
   bool pipe_broke; 
 
-#ifndef WIN32
+#if !defined(WIN32) && !defined(MSDOS) && !defined(__EMX__) && \
+    !defined(__SYMBIAN32__)
 
 #define CURL_DO_LINEEND_CONV
   
@@ -1028,7 +1051,6 @@ enum dupstring {
   STRING_NETRC_FILE,      
   STRING_COPYPOSTFIELDS,  
   STRING_PROXY,           
-  STRING_PROXYUSERPWD,    
   STRING_SET_RANGE,       
   STRING_SET_REFERER,     
   STRING_SET_URL,         
@@ -1040,8 +1062,13 @@ enum dupstring {
   STRING_SSL_EGDSOCKET,   
   STRING_SSL_RANDOM_FILE, 
   STRING_USERAGENT,       
-  STRING_USERPWD,         
   STRING_SSH_HOST_PUBLIC_KEY_MD5, 
+  STRING_SSL_CRLFILE,     
+  STRING_SSL_ISSUERCERT,  
+  STRING_USERNAME,        
+  STRING_PASSWORD,        
+  STRING_PROXYUSERNAME,   
+  STRING_PROXYPASSWORD,   
 
   
   STRING_LAST 
@@ -1061,6 +1088,7 @@ struct UserDefined {
   long followlocation; 
   long maxredirs;    
   bool post301;      
+  bool post302;      
   bool free_referer; 
   void *postfields;  
   curl_seek_callback seek_func;      
@@ -1172,6 +1200,7 @@ struct UserDefined {
   long new_directory_perms; 
   bool proxy_transfer_mode; 
   char *str[STRING_LAST]; 
+  unsigned int scope;    
 };
 
 struct Names {

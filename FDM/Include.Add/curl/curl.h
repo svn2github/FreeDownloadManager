@@ -5,7 +5,9 @@
 #ifndef __CURL_CURL_H
 #define __CURL_CURL_H   
 
-#include "curlver.h"   
+#include "curlver.h"         
+#include "curl/curlbuild.h"  
+#include "curlrules.h"         
 
 #if (defined(_WIN32) || defined(__WIN32__)) && \
      !defined(WIN32) && !defined(__SYMBIAN32__)
@@ -33,14 +35,14 @@
 #else 
 
 #if defined(_AIX) || defined(__NOVELL_LIBC__) || defined(__NetBSD__) || \
-    defined(__minix) || defined(__SYMBIAN32__)
+    defined(__minix) || defined(__SYMBIAN32__) || defined(__INTEGRITY)
 #include <sys/select.h>
 #endif
 
 #ifndef _WIN32_WCE
 #include <sys/socket.h>
 #endif
-#ifndef __WATCOMC__
+#if !defined(WIN32) && !defined(__WATCOMC__)
 #include <sys/time.h>
 #endif
 #include <sys/types.h>
@@ -71,60 +73,6 @@ typedef void CURL;
 #else
 #define CURL_EXTERN
 #endif
-#endif  
-
-#if (defined(_MSC_VER) && !defined(__POCC__)) || (defined(__LCC__) && \
-     defined(WIN32))
-
-#ifdef _WIN32_WCE
-  typedef long curl_off_t;
-#define CURL_FORMAT_OFF_T "%ld"
-#else
-  typedef signed __int64 curl_off_t;
-#define CURL_FORMAT_OFF_T "%I64d"
-#endif
-#else 
-#if (defined(__GNUC__) && defined(WIN32)) || defined(__WATCOMC__)
-
-  typedef long long curl_off_t;
-#define CURL_FORMAT_OFF_T "%I64d"
-#else 
-#if defined(__ILEC400__)
-
-  typedef long long curl_off_t;
-#define CURL_FORMAT_OFF_T "%lld"
-#else  
-
-  typedef off_t curl_off_t; 
-
-#ifndef _FILE_OFFSET_BITS
-#define _FILE_OFFSET_BITS 0 
-#define UNDEF_FILE_OFFSET_BITS
-#endif
-#ifndef FILESIZEBITS
-#define FILESIZEBITS 0 
-#define UNDEF_FILESIZEBITS
-#endif
-
-#if defined(_LARGE_FILES) || (_FILE_OFFSET_BITS > 32) || (FILESIZEBITS > 32) \
-   || defined(_LARGEFILE_SOURCE) || defined(_LARGEFILE64_SOURCE)
-  
-#define CURL_FORMAT_OFF_T "%lld"
-#else 
-#define CURL_FORMAT_OFF_T "%ld"
-#endif
-#endif 
-#endif 
-#endif 
-
-#ifdef UNDEF_FILE_OFFSET_BITS
-
-#undef _FILE_OFFSET_BITS
-#endif
-
-#ifdef UNDEF_FILESIZEBITS
-
-#undef FILESIZEBITS
 #endif
 
 #ifndef curl_socket_typedef
@@ -348,6 +296,8 @@ typedef enum {
 
   CURLE_SSL_SHUTDOWN_FAILED,     
   CURLE_AGAIN,                   
+  CURLE_SSL_CRL_BADFILE,         
+  CURLE_SSL_ISSUER_ERROR,        
   CURL_LAST 
 } CURLcode;
 
@@ -469,17 +419,6 @@ typedef enum {
 
 #ifdef CINIT
 #undef CINIT
-#endif
-
-#if defined(__STDC__) || defined(_MSC_VER) || defined(__cplusplus) || \
-  defined(__HP_aCC) || defined(__BORLANDC__) || defined(__LCC__) || \
-  defined(__POCC__) || defined(__SALFORDC__) || defined(__HIGHC__) || \
-  defined(__ILEC400__)
-  
-#define CURL_ISOCPP
-#else
-  
-#undef CURL_ISOCPP
 #endif
 
 #ifdef CURL_ISOCPP
@@ -913,7 +852,7 @@ typedef enum {
   CINIT(NEW_DIRECTORY_PERMS, LONG, 160),
 
   
-  CINIT(POST301, LONG, 161),
+  CINIT(POSTREDIR, LONG, 161),
 
   
   CINIT(SSH_HOST_PUBLIC_KEY_MD5, OBJECTPOINT, 162),
@@ -932,10 +871,32 @@ typedef enum {
   CINIT(SEEKFUNCTION, FUNCTIONPOINT, 167),
   CINIT(SEEKDATA, OBJECTPOINT, 168),
 
+  
+  CINIT(CRLFILE, OBJECTPOINT, 169),
+
+  
+  CINIT(ISSUERCERT, OBJECTPOINT, 170),
+
+  
+  CINIT(ADDRESS_SCOPE, LONG, 171),
+
+  
+  CINIT(CERTINFO, LONG, 172),
+
+  
+  CINIT(USERNAME, OBJECTPOINT, 173),
+  CINIT(PASSWORD, OBJECTPOINT, 174),
+
+    
+  CINIT(PROXYUSERNAME, OBJECTPOINT, 175),
+  CINIT(PROXYPASSWORD, OBJECTPOINT, 176),
+
   CURLOPT_LASTENTRY 
 } CURLoption;
 
 #ifndef CURL_NO_OLDIES     
+
+#define CURLOPT_POST301 CURLOPT_POSTREDIR   
 
 #define CURLOPT_SSLKEYPASSWD CURLOPT_KEYPASSWD
 #define CURLOPT_FTPAPPEND CURLOPT_APPEND
@@ -984,7 +945,12 @@ enum {
   CURL_SSLVERSION_SSLv3,
 
   CURL_SSLVERSION_LAST 
-}; 
+};  
+
+#define CURL_REDIR_GET_ALL  0
+#define CURL_REDIR_POST_301 1
+#define CURL_REDIR_POST_302 2
+#define CURL_REDIR_POST_ALL (CURL_REDIR_POST_301|CURL_REDIR_POST_302)
 
 typedef enum {
   CURL_TIMECOND_NONE,
@@ -1114,7 +1080,12 @@ CURL_EXTERN struct curl_slist *curl_slist_append(struct curl_slist *,
 
 CURL_EXTERN void curl_slist_free_all(struct curl_slist *); 
 
-CURL_EXTERN time_t curl_getdate(const char *p, const time_t *unused);
+CURL_EXTERN time_t curl_getdate(const char *p, const time_t *unused); 
+
+struct curl_certinfo {
+  int num_of_certs;             
+  struct curl_slist **certinfo; 
+};
 
 #define CURLINFO_STRING   0x100000
 #define CURLINFO_LONG     0x200000
@@ -1156,9 +1127,12 @@ typedef enum {
   CURLINFO_LASTSOCKET       = CURLINFO_LONG   + 29,
   CURLINFO_FTP_ENTRY_PATH   = CURLINFO_STRING + 30,
   CURLINFO_REDIRECT_URL     = CURLINFO_STRING + 31,
+  CURLINFO_PRIMARY_IP       = CURLINFO_STRING + 32,
+  CURLINFO_APPCONNECT_TIME  = CURLINFO_DOUBLE + 33,
+  CURLINFO_CERTINFO         = CURLINFO_SLIST  + 34,
   
 
-  CURLINFO_LASTONE          = 31
+  CURLINFO_LASTONE          = 34
 } CURLINFO; 
 
 #define CURLINFO_HTTP_CODE CURLINFO_RESPONSE_CODE
@@ -1308,7 +1282,8 @@ CURL_EXTERN CURLcode curl_easy_pause(CURL *handle, int bitmask);
 #include "easy.h" 
 #include "multi.h" 
 
-#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3)) && \
+#if defined(__GNUC__) && defined(__GNUC_MINOR__) && \
+    ((__GNUC__ > 4) || (__GNUC__ == 4 && __GNUC_MINOR__ >= 3)) && \
     !defined(__cplusplus) && !defined(CURL_DISABLE_TYPECHECK)
 #include "typecheck-gcc.h"
 #else

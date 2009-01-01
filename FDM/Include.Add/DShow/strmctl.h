@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/                  
+*/
+
+                  
 
 #ifndef __strmctl_h__
 #define __strmctl_h__

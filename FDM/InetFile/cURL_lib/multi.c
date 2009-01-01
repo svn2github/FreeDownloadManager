@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: multi.c,v 1.172 2008-05-28 20:56:19 bagder Exp $
+ * $Id: multi.c,v 1.187 2008-10-30 13:45:26 yangtse Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -37,13 +37,16 @@
 #include "url.h"
 #include "connect.h"
 #include "progress.h"
-#include "memory.h"
 #include "easyif.h"
 #include "multiif.h"
 #include "sendf.h"
 #include "timeval.h"
 #include "http.h"
 
+#define _MPRINTF_REPLACE /* use our functions only */
+#include <curl/mprintf.h>
+
+#include "memory.h"
 /* The last #include file should be: */
 #include "memdebug.h"
 
@@ -213,8 +216,6 @@ static const char * const statename[]={
   "DONE",
   "COMPLETED",
 };
-
-void curl_multi_dump(CURLM *multi_handle);
 #endif
 
 /* always use this function to change state, to make debugging easier */
@@ -314,14 +315,15 @@ static void sh_freeentry(void *freethis)
 {
   struct Curl_sh_entry *p = (struct Curl_sh_entry *) freethis;
 
-  free(p);
+  if(p)
+    free(p);
 }
 
 static size_t fd_key_compare(void*k1, size_t k1_len, void*k2, size_t k2_len)
 {
   (void) k1_len; (void) k2_len;
 
-  return ((*((int* ) k1)) == (*((int* ) k2))) ? 1 : 0;
+  return (*((int* ) k1)) == (*((int* ) k2));
 }
 
 static size_t hash_fd(void* key, size_t key_length, size_t slots_num)
@@ -358,7 +360,7 @@ static struct curl_hash *sh_init(void)
 
 CURLM *curl_multi_init(void)
 {
-  struct Curl_multi *multi = (void *)calloc(sizeof(struct Curl_multi), 1);
+  struct Curl_multi *multi = calloc(sizeof(struct Curl_multi), 1);
 
   if(!multi)
     return NULL;
@@ -419,7 +421,7 @@ CURLMcode curl_multi_add_handle(CURLM *multi_handle,
     return CURLM_BAD_EASY_HANDLE;
 
   /* Now, time to add an easy handle to the multi stack */
-  easy = (struct Curl_one_easy *)calloc(sizeof(struct Curl_one_easy), 1);
+  easy = calloc(sizeof(struct Curl_one_easy), 1);
   if(!easy)
     return CURLM_OUT_OF_MEMORY;
 
@@ -533,6 +535,18 @@ CURLMcode curl_multi_add_handle(CURLM *multi_handle,
 
   /* increase the alive-counter */
   multi->num_alive++;
+
+  /* A somewhat crude work-around for a little glitch in update_timer() that
+     happens if the lastcall time is set to the same time when the handle is
+     removed as when the next handle is added, as then the check in
+     update_timer() that prevents calling the application multiple times with
+     the same timer infor will not trigger and then the new handle's timeout
+     will not be notified to the app.
+
+     The work-around is thus simply to clear the 'lastcall' variable to force
+     update_timer() to always trigger a callback to the app when a new easy
+     handle is added */
+  memset(&multi->timer_lastcall, 0, sizeof(multi->timer_lastcall));
 
   update_timer(multi);
   return CURLM_OK;
@@ -871,7 +885,7 @@ static CURLMcode multi_runsingle(struct Curl_multi *multi,
   bool async;
   bool protocol_connect = FALSE;
   bool dophase_done;
-  bool done;
+  bool done = FALSE;
   CURLMcode result = CURLM_OK;
   struct SingleRequest *k;
 
@@ -965,6 +979,11 @@ static CURLMcode multi_runsingle(struct Curl_multi *multi,
       easy->result = Curl_is_resolved(easy->easy_conn, &dns);
 
       if(dns) {
+        /* Update sockets here. Mainly because the socket(s) may have been
+           closed and the application thus needs to be told, even if it is
+           likely that the same socket(s) will again be used further down. */
+        singlesocket(multi, easy);
+
         /* Perform the next step in the connection phase, and then move on
            to the WAITCONNECT state */
         easy->result = Curl_async_resolved(easy->easy_conn,
@@ -1004,7 +1023,17 @@ static CURLMcode multi_runsingle(struct Curl_multi *multi,
       /* this is HTTP-specific, but sending CONNECT to a proxy is HTTP... */
       easy->result = Curl_http_connect(easy->easy_conn, &protocol_connect);
 
-      if(CURLE_OK == easy->result) {
+      if(easy->easy_conn->bits.proxy_connect_closed) {
+        /* reset the error buffer */
+        if(easy->easy_handle->set.errorbuffer)
+          easy->easy_handle->set.errorbuffer[0] = '\0';
+        easy->easy_handle->state.errorbuf = FALSE;
+
+        easy->result = CURLE_OK;
+        result = CURLM_CALL_MULTI_PERFORM;
+        multistate(easy, CURLM_STATE_CONNECT);
+      }
+      else if (CURLE_OK == easy->result) {
         if(!easy->easy_conn->bits.tunnel_connecting)
           multistate(easy, CURLM_STATE_WAITCONNECT);
       }
@@ -1297,7 +1326,8 @@ static CURLMcode multi_runsingle(struct Curl_multi *multi,
         /* Check if we can move pending requests to send pipe */
         checkPendPipeline(easy->easy_conn);
 
-        /* When we follow redirects, must to go back to the CONNECT state */
+        /* When we follow redirects or is set to retry the connection, we must
+           to go back to the CONNECT state */
         if(easy->easy_handle->req.newurl || retry) {
           if(!retry) {
             /* if the URL is a follow-location and not just a retried request
@@ -1322,6 +1352,18 @@ static CURLMcode multi_runsingle(struct Curl_multi *multi,
         }
         else {
           /* after the transfer is done, go DONE */
+
+          /* but first check to see if we got a location info even though we're
+             not following redirects */
+          if (easy->easy_handle->req.location) {
+            newurl = easy->easy_handle->req.location;
+            easy->easy_handle->req.location = NULL;
+            easy->result = Curl_follow(easy->easy_handle, newurl, FOLLOW_FAKE);
+            if (easy->result)
+              free(newurl);
+            break;
+          }
+
           multistate(easy, CURLM_STATE_DONE);
           result = CURLM_CALL_MULTI_PERFORM;
         }
@@ -1412,7 +1454,7 @@ static CURLMcode multi_runsingle(struct Curl_multi *multi,
     }
 
     /* now add a node to the Curl_message linked list with this info */
-    msg = (struct Curl_message *)malloc(sizeof(struct Curl_message));
+    msg = malloc(sizeof(struct Curl_message));
 
     if(!msg)
       return CURLM_OUT_OF_MEMORY;
@@ -1513,6 +1555,8 @@ CURLMcode curl_multi_cleanup(CURLM *multi_handle)
     multi->type = 0; /* not good anymore */
     Curl_hash_destroy(multi->hostcache);
     Curl_hash_destroy(multi->sockhash);
+    multi->hostcache = NULL;
+    multi->sockhash = NULL;
 
     /* go over all connections that have close actions */
     for(i=0; i< multi->connc->num; i++) {
@@ -1973,23 +2017,24 @@ static int checkPendPipeline(struct connectdata *conn)
   int result = 0;
   struct curl_llist_element *sendhead = conn->send_pipe->head;
 
-  if (conn->server_supports_pipelining) {
-    size_t pipeLen = conn->send_pipe->size + conn->recv_pipe->size;
+  size_t pipeLen = conn->send_pipe->size + conn->recv_pipe->size;
+  if (conn->server_supports_pipelining || pipeLen == 0) {
     struct curl_llist_element *curr = conn->pend_pipe->head;
+    const size_t maxPipeLen =
+      conn->server_supports_pipelining ? MAX_PIPELINE_LENGTH : 1;
 
-    while(pipeLen < MAX_PIPELINE_LENGTH && curr) {
+    while(pipeLen < maxPipeLen && curr) {
       Curl_llist_move(conn->pend_pipe, curr,
                       conn->send_pipe, conn->send_pipe->tail);
-      Curl_pgrsTime(curr->ptr, TIMER_CONNECT);
+      Curl_pgrsTime(curr->ptr, TIMER_PRETRANSFER);
       ++result; /* count how many handles we moved */
       curr = conn->pend_pipe->head;
       ++pipeLen;
     }
-    if (result > 0)
-      conn->now = Curl_tvnow();
   }
 
-  if(result) {
+  if (result) {
+    conn->now = Curl_tvnow();
     /* something moved, check for a new send pipeline leader */
     if(sendhead != conn->send_pipe->head) {
       /* this is a new one as head, expire it */
@@ -2166,7 +2211,7 @@ static void add_closure(struct Curl_multi *multi,
                         struct SessionHandle *data)
 {
   int i;
-  struct closure *cl = (struct closure *)calloc(sizeof(struct closure), 1);
+  struct closure *cl = calloc(sizeof(struct closure), 1);
   struct closure *p=NULL;
   struct closure *n;
   if(cl) {
@@ -2216,7 +2261,7 @@ static void add_closure(struct Curl_multi *multi,
 }
 
 #ifdef CURLDEBUG
-void curl_multi_dump(CURLM *multi_handle)
+void Curl_multi_dump(const struct Curl_multi *multi_handle)
 {
   struct Curl_multi *multi=(struct Curl_multi *)multi_handle;
   struct Curl_one_easy *easy;

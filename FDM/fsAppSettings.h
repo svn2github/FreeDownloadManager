@@ -34,6 +34,8 @@ enum vmsAutoUpdateType
 #define MONITOR_USERSWITCHEDON_OPERA		4
 #define MONITOR_USERSWITCHEDON_NETSCAPE		8
 #define MONITOR_USERSWITCHEDON_SEAMONKEY	16
+#define MONITOR_USERSWITCHEDON_SAFARI		32
+#define MONITOR_USERSWITCHEDON_CHROME		64
 
 enum vmsNewGroupSelectWay
 {
@@ -45,6 +47,12 @@ enum vmsNewGroupSelectWay
 class fsAppSettings  
 {
 public:
+	void DldsMgrPDTimeLimit (DWORD dw);
+	DWORD DldsMgrPDTimeLimit();
+	void Monitor_ChromePDInstalledTo (LPCSTR psz);
+	CString Monitor_ChromePDInstalledTo();
+	void Monitor_SafariPDInstalledTo (LPCSTR psz);
+	CString Monitor_SafariPDInstalledTo();
 	void Firefox_PortableVersionPath (LPCSTR psz);
 	CString Firefox_PortableVersionPath();
 	void Bittorrent_RequiredRatio (float f);

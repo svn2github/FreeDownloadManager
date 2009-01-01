@@ -1,6 +1,6 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+*/    
 
         
 
@@ -24,6 +24,6 @@ typedef void SHANDLE_PTR;
 extern CComModule _Module;
 #include <atlcom.h>
 
-//{{AFX_INSERT_LOCATION}//}//}}  
+//{{AFX_INSERT_LOCATION}//}//}//}}  
 
 #endif 

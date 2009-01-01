@@ -35,6 +35,7 @@ public:
 
 	
 protected:
+	void ApplyLanguageToMenuBtFiles (CMenu* pmenu);
 	void ShowContextMenu(HTREEITEM hItem);
 	afx_msg void OnRclick (NMHDR* , LRESULT* pResult);
 	void AddFiles (fs::ListTree <vmsBtDownloadManager::vmsFile>* pTree, CColumnTreeCtrl *pTreeCtrl, HTREEITEM hRoot);
@@ -44,6 +45,7 @@ protected:
 	afx_msg void OnBtfilesDontdownload();
 	afx_msg void OnBtfilesHighpiority();
 	afx_msg void OnBtfilesNormalpriority();
+	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()

@@ -26,8 +26,6 @@ fsLangMgr::~fsLangMgr()
 
 BOOL fsLangMgr::Initialize()
 {
-	LOG ("fsLM::I: start" << nl);
-
 	LoadBuiltInLngStrings ();
 
 	WIN32_FIND_DATA wfd;
@@ -38,8 +36,6 @@ BOOL fsLangMgr::Initialize()
 	CString strMask = m_strLngFolder;
 	strMask += "*.lng";
 
-	LOG ("fsLM::I: searching for " << strMask << nl);
-
 	HANDLE hFind = FindFirstFile (strMask, &wfd);
 	BOOL bFind = hFind != INVALID_HANDLE_VALUE;
 
@@ -49,34 +45,25 @@ BOOL fsLangMgr::Initialize()
 		fsLngFileInfo info;
 		info.strFileName = wfd.cFileName;
 
-		LOG ("fsLM::I: found " << wfd.cFileName << nl);
-
 		CStdioFile file (m_strLngFolder + info.strFileName, CFile::modeRead | CFile::typeText | CFile::shareDenyNone);
-
-		LOG ("fsLM::I: was opened ok." << nl);
 
 		
 		while (file.ReadString (info.strLngName))
 		{
 			if (info.strLngName.GetLength () && info.strLngName [0] != LNG_COMMENT_CHAR)
 			{
-				LOG ("fsLM::I: it's a valid lng file. add it." << nl);
 				AddLngFileInfo (info);
 				break;
 			}
 		}
 		}
-		catch (...){
-			LOG ("fsLM::I: some file error occurred." << nl);
-		}
+		catch (...){}
 
 		bFind = FindNextFile (hFind, &wfd);
 	}
 
 	if (hFind != INVALID_HANDLE_VALUE)
 		FindClose (hFind);
-
-	LOG ("fsLM::I: there are " << m_vLngFiles.size () << " languages found" << nl);
 
 	return m_vLngFiles.size () != 0;
 }
@@ -138,19 +125,15 @@ BOOL fsLangMgr::LoadLng(int iIndex)
 
 int fsLangMgr::FindLngByName(LPCSTR pszName)
 {
-	LOG ("fsLM::FLbN: find for " << pszName << nl);
-
 	for (int i = 0; i < m_vLngFiles.size (); i++)
 	{
 		if (m_vLngFiles [i].strLngName == pszName || 
 				lstrcmpi (m_vLngFiles [i].strFileName, pszName) == 0)
 		{
-			LOG ("fsLM::FLbN: was found." << nl);
 			return i;
 		}
 	}
 
-	LOG ("fsLM::FLbN: was not found." << nl);
 	return -1;
 }
 

@@ -58,6 +58,8 @@ CDownloadsWnd::CDownloadsWnd()
 	m_cCheckDldHasOpinionsThreads = 0;
 
 	m_bDeletingManyDownloads = false;
+
+	m_bCreatingLotOfDownloads = false;
 }
 
 CDownloadsWnd::~CDownloadsWnd()
@@ -147,8 +149,6 @@ BOOL CDownloadsWnd::Create(CWnd *pParent)
 
 int CDownloadsWnd::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
-	LOG ("downloadswnd created ok." << nl);
-
 	if (CWnd::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
@@ -156,32 +156,20 @@ int CDownloadsWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_enDWWN = DWWN_LISTOFDOWNLOADS; 
 
-	LOG ("loading groups" << nl);
-
 	if (!_DldsGrps.LoadFromDisk ())
 		MessageBox (LS (L_ERRLOADGRPS), LS (L_ERR), MB_ICONERROR);
-
-	LOG ("groups loaded ok." << nl);
 	
 	if (FALSE == m_wndDownloads.Create (this))
 		return -1;
 
-	LOG ("downloads frame created ok." << nl);
-
 	if (FALSE == m_wndHistory.Create (this))
 		return -1;
-
-	LOG ("history wnd created ok." << nl);
 
 	if (FALSE == m_wndDeleted.Create (this))
 		return -1;
 
-	LOG ("recycle bin wnd created ok." << nl);
-
 	if (FALSE == m_wndGroups.Create (this))
 		return -1;
-
-	LOG ("groups wnd created ok." << nl);
 
 	if (m_splitter.Create (AfxGetInstanceHandle (), m_hWnd) == FALSE)
 		return -1;
@@ -189,8 +177,6 @@ int CDownloadsWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_splitter.SetWnd1 (m_wndGroups.m_hWnd);
 
 	m_wndDownloads.m_tasks.m_bSizesInBytes = _App.View_SizesInBytes ();
-
-	LOG ("loading downloads" << nl);
 
 	do
 	{
@@ -204,8 +190,6 @@ int CDownloadsWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	}
 	while (TRUE);
 
-	LOG ("downloads loaded ok" << nl);
-
 	ApplyDWWN ();
 
 	SetTimer (1, 1000, NULL);
@@ -215,8 +199,6 @@ int CDownloadsWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	ShowAllGroups (m_bShowGroups);
 	UpdateNumbersOfDownloadsInGroups ();
-
-    LOG ("showallgroups ok." << nl);
 
 	return 0;
 }
@@ -367,26 +349,15 @@ void CDownloadsWnd::OnDownloadProperties(DLDS_LIST &vDlds, CWnd* pwndParent)
 
 BOOL CDownloadsWnd::LoadDownloads()
 {
-	LOG ("DW::LoadDownloads" << nl);
-
 	if (!_DldsMgr.LoadDownloads ())
-	{
-		LOG ("DW::LoadDownloads failed" << nl);
 		return FALSE;
-	}
 
 	_MediaConvertMgr.LoadState ();
-
-	LOG ("DW::LoadDownloads: form Recycle Bin list" << nl);
 
 	for (int i = _DldsMgr.Get_DeletedDownloadCount ()-1; i >= 0; i--)
 		m_wndDeleted.AddDownload (_DldsMgr.Get_DeletedDownload (i));
 
-	LOG ("DW::LoadDownloads: Recycle Bin list formed ok." << nl);
-
 	m_wndGroups.UpdateDeletedIcon ();
-
-    LOG ("DW::LoadDownloads: done ok." << nl);
 
 	return TRUE;
 }  
@@ -398,8 +369,18 @@ LRESULT CDownloadsWnd::OnAppExit(WPARAM, LPARAM)
 	KillTimer (1);
 
 	_DldsMgr.AllowStartNewDownloads (FALSE);
+	_pwndSpider->m_mgr.StopAll ();
 
-	LOG ("DLWnd::OnAppExit: stopping downloads" << nl);
+	for (int k = 0; k < 3*60*1000 && _pwndSpider->m_mgr.IsDownloadsMgrRequired (); k += 50)
+	{
+		MSG msg;
+		while (PeekMessage (&msg, 0, 0, 0, PM_REMOVE))
+		{
+			if (msg.message != WM_TIMER)
+				DispatchMessage (&msg);
+		}
+		Sleep (50);
+	}
 
 	for (size_t i = 0; i < _DldsMgr.GetCount (); i++)
 	{
@@ -425,8 +406,6 @@ LRESULT CDownloadsWnd::OnAppExit(WPARAM, LPARAM)
 		dld->pMgr->StopDownloading ();
 	}
 
-	LOG ("DLWnd::OnAppExit: waiting downloads" << nl);
-
 	MSG msg;
 
 	for (i = 0; i < _DldsMgr.GetCount (); i++)
@@ -447,8 +426,6 @@ LRESULT CDownloadsWnd::OnAppExit(WPARAM, LPARAM)
 		}
 	}
 
-	LOG ("DLWnd::OnAppExit: messages" << nl);
-
 	
 	
 	
@@ -458,14 +435,10 @@ LRESULT CDownloadsWnd::OnAppExit(WPARAM, LPARAM)
 			DispatchMessage (&msg);
 	}
 
-	LOG ("DLWnd::OnAppExit: saving" << nl);
-
 	while (m_cCheckDldHasOpinionsThreads)
 		Sleep (10);
 
 	SaveAll (TRUE);
-
-	LOG ("DLWnd::OnAppExit: detach IE" << nl);
 
 	_IECatchMgr.Detach ();
 	
@@ -548,7 +521,6 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDownloadsMgrEvent ev, LPVOID lp)
 
 		case DME_DOWNLOADWILLBEDELETED:
 			ASSERT (dld != NULL);
-			LOG ("DLDSWND::WillbeDeleted..." << nl);
 			
 			if (pThis->m_bDeletingManyDownloads == false)
 			{
@@ -558,8 +530,6 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDownloadsMgrEvent ev, LPVOID lp)
 				if (_pwndTorrents && dld->isTorrent ())
 					_pwndTorrents->m_wndTasks.WillBeDeleted (dld);
 			}
-			
-			LOG ("DLDSWND::WillbeDeleted processed" << nl);
 			
 			dld = NULL;
 			bUpdateTIPO = FALSE;
@@ -1031,21 +1001,10 @@ void CDownloadsWnd::OnDldstop()
 	m_wndDownloads.m_tasks.OnDldstop ();	
 }
 
-BOOL CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, LPCSTR pszComment, LPCSTR pszReferer, BOOL bSilent, DWORD dwForceAutoLaunch, BOOL *pbAutoStart, vmsDWCD_AdditionalParameters* pParams, UINT* pRes)
+UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, LPCSTR pszComment, LPCSTR pszReferer, BOOL bSilent, DWORD dwForceAutoLaunch, BOOL *pbAutoStart, vmsDWCD_AdditionalParameters* pParams, UINT* pRes)
 {
 	vmsDownloadSmartPtr dld;
 	Download_CreateInstance (dld);
-
-	#ifdef _USELOGGING
-	LOG ("creating new download..." << nl);
-
-	if (pszStartUrl)
-		LOG ("url is \"" << pszStartUrl << "\"" << nl);
-	if (pszReferer)
-		LOG ("referer is \"" << pszReferer << "\"" << nl);
-	if (pszComment)
-		LOG ("comment is \"" << pszComment << "\"" << nl);
-	#endif
 
 	UINT res = IDOK;
 	bool bPlaceToTop = false;
@@ -1077,7 +1036,7 @@ BOOL CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 	else
 	{
 		if (FALSE == CreateDownloadWithDefSettings (dld, pszStartUrl))
-			return FALSE;
+			return UINT_MAX;
 
 		if (pbAutoStart)
 			dld->bAutoStart = *pbAutoStart;
@@ -1135,7 +1094,7 @@ BOOL CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 		if (pRes)
 			*pRes = res;
 
-		return FALSE;
+		return UINT_MAX;
 	}
 
 	if (pParams)
@@ -1237,8 +1196,6 @@ BOOL CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 		}
 	}
 
-	LOG ("user approved download creation" << nl);
-
 	CreateDownload (dld, bScheduled ? &task : NULL, FALSE, bPlaceToTop);
 
 	if (dld->dwFlags & DLD_FLASH_VIDEO)
@@ -1247,7 +1204,7 @@ BOOL CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 	if (_pwndTorrents && (dld->dwFlags & DLD_TORRENT_DOWNLOAD))
 		_pwndTorrents->AddDownload (dld, bPlaceToTop);
 
-	return TRUE;
+	return dld->nID;
 }
 
 void CDownloadsWnd::StartDownloadsInList()
@@ -1352,7 +1309,6 @@ void CDownloadsWnd::CreateDownloads(DLDS_LIST &vDlds, fsSchedule *task, BOOL bDo
 {	
 	if (vDlds.size () == 0)
 		return;
-	
 
 	if (task)
 	{
@@ -1364,7 +1320,6 @@ void CDownloadsWnd::CreateDownloads(DLDS_LIST &vDlds, fsSchedule *task, BOOL bDo
 	int sz = vDlds.size ();
 
 	_DldsMgr.LockList ();
-	m_wndDownloads.m_tasks.LockList ();
 
 	for (int i = 0; i < sz; i++)
 	{
@@ -1378,62 +1333,24 @@ void CDownloadsWnd::CreateDownloads(DLDS_LIST &vDlds, fsSchedule *task, BOOL bDo
 	if (task)
 		_pwndScheduler->AddTask (task);
 
-	fsDldFilter *filter = m_wndGroups.GetCurrentFilter ();
-	
-	
-	BOOL bNeedAdd = filter != NULL && filter->IsSatisfies (vDlds [0]);
-	
-	BOOL bNeedShow = (vDlds [0]->dwFlags & (DLD_USEDBYHTMLSPIDER | DLD_NOAUTOCHANGECURGRPFILTER)) == 0;
-
-	if (bNeedAdd == FALSE)
+	if (m_bCreatingLotOfDownloads == false)
 	{
-		if (bNeedShow)
-		{			
-			m_wndDownloads.m_tasks.UnlockList ();
-			m_wndGroups.SetGroupFilter (vDlds [0]->pGroup);
-			m_wndDownloads.m_tasks.LockList ();
-			vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (_DldsMgr.GetCount ()-1);
-			m_wndDownloads.m_tasks.SelectDownload (dld);
-		}
+		onDownloadsHasBeenAdded (vDlds, bPlaceToTop, bDontUseSounds != 0);
 	}
 	else
 	{
-		LOG ("createdld: adding " << (DWORD)vDlds.size () << " downloads to list" << nl);
-
-		
-		int start = bPlaceToTop ? 0 : _DldsMgr.GetCount () - vDlds.size ();
-
-		LOG ("createdld: start = " << start << nl);
-		
-		sz = bPlaceToTop ? vDlds.size () : _DldsMgr.GetCount ();	
-
-		LOG ("createdld: sz = " << sz << nl);
-		
-		m_wndDownloads.m_tasks.BeginAddDownloads ();
-
-		for (i = start; i < sz; i++)
+		for (size_t i = 0; i < vDlds.size (); i++)
 		{
-			vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);
-			m_wndDownloads.m_tasks.AddDownloadToList (dld, FALSE, bPlaceToTop);	
+			if (bPlaceToTop)
+				m_vDownloadsHasBeenAdded.insert (m_vDownloadsHasBeenAdded.begin ()+i, vDlds [i]);
+			else
+				m_vDownloadsHasBeenAdded.push_back (vDlds [i]);
 		}
-
-		m_wndDownloads.m_tasks.EndAddDownloads ();
-
-		if (bNeedShow)
-			m_wndDownloads.m_tasks.SelectDownload (_DldsMgr.GetDownload (bPlaceToTop ? start : sz-1));
+		m_bDownloadsHasBeenAddedToTop = bPlaceToTop;
+		m_bDontUseSoundsForDownloadsHasBeenJustAdded = bDontUseSounds;
 	}
 
-	
-
 	_DldsMgr.UnlockList ();
-	m_wndDownloads.m_tasks.UnlockList ();
-
-    if (bDontUseSounds == FALSE)
-      	_Snds.Event (SME_DOWNLOADADDED);
-
-	_DldsMgr.ProcessDownloads ();
-
-	UpdateNumbersOfDownloadsInGroups ();
 }
 
 void CDownloadsWnd::SaveAll(BOOL )
@@ -1582,11 +1499,11 @@ void CDownloadsWnd::OnDownloadsGroupChanged()
 		ApplyCurrentFilter ();
 }
 
-void CDownloadsWnd::DeleteDownload(vmsDownloadSmartPtr dld, BOOL bByUser)
+void CDownloadsWnd::DeleteDownload(vmsDownloadSmartPtr dld, BOOL bByUser, BOOL bDontConfirmFileDeleting)
 {
 	DLDS_LIST vpDlds;
 	vpDlds.push_back (dld);
-	DeleteDownloads (vpDlds, bByUser, FALSE);
+	DeleteDownloads (vpDlds, bByUser, bDontConfirmFileDeleting);
 }
 
 void CDownloadsWnd::OnSetFocus(CWnd* pOldWnd) 
@@ -2557,4 +2474,79 @@ void CDownloadsWnd::OnBtDownloadDefProperties()
 	_App.Bittorrent_RequiredRatio (dld->pMgr->GetBtDownloadMgr ()->getRequiredRatio ());
 	_App.Bittorrent_DisableSeedingByDef (
 		dld->pMgr->GetBtDownloadMgr ()->get_Flags () & BTDF_DISABLE_SEEDING);
+}
+
+void CDownloadsWnd::BeginCreateDownloads()
+{
+	m_bCreatingLotOfDownloads = true;
+}
+
+void CDownloadsWnd::EndCreateDownloads()
+{
+	if (m_vDownloadsHasBeenAdded.size ())
+	{
+		_DldsMgr.LockList ();
+		DLDS_LIST v = m_vDownloadsHasBeenAdded;
+		bool bPlaceToTop = m_bDownloadsHasBeenAddedToTop;
+		BOOL bDontUseSounds = m_bDontUseSoundsForDownloadsHasBeenJustAdded;
+		m_vDownloadsHasBeenAdded.clear ();
+		_DldsMgr.UnlockList ();
+		m_bCreatingLotOfDownloads = false;
+		onDownloadsHasBeenAdded (m_vDownloadsHasBeenAdded, bPlaceToTop, bDontUseSounds);
+	}
+}
+
+void CDownloadsWnd::onDownloadsHasBeenAdded(DLDS_LIST &vDlds, bool bPlaceToTop, BOOL bDontUseSounds)
+{
+	m_wndDownloads.m_tasks.LockList ();
+
+	fsDldFilter *filter = m_wndGroups.GetCurrentFilter ();
+	
+	
+	BOOL bNeedAdd = filter != NULL && filter->IsSatisfies (vDlds [0]);
+	
+	BOOL bNeedShow = (vDlds [0]->dwFlags & (DLD_USEDBYHTMLSPIDER | DLD_NOAUTOCHANGECURGRPFILTER)) == 0;
+
+	if (bNeedAdd == FALSE)
+	{
+		if (bNeedShow)
+		{			
+			m_wndDownloads.m_tasks.UnlockList ();
+			m_wndGroups.SetGroupFilter (vDlds [0]->pGroup);
+			m_wndDownloads.m_tasks.LockList ();
+			vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (_DldsMgr.GetCount ()-1);
+			m_wndDownloads.m_tasks.SelectDownload (dld);
+		}
+	}
+	else
+	{
+		
+		int start = bPlaceToTop ? 0 : _DldsMgr.GetCount () - vDlds.size ();
+		
+		int sz = bPlaceToTop ? vDlds.size () : _DldsMgr.GetCount ();	
+		
+		m_wndDownloads.m_tasks.BeginAddDownloads ();
+
+		for (int i = start; i < sz; i++)
+		{
+			vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);
+			m_wndDownloads.m_tasks.AddDownloadToList (dld, FALSE, bPlaceToTop);	
+		}
+
+		m_wndDownloads.m_tasks.EndAddDownloads ();
+
+		if (bNeedShow)
+			m_wndDownloads.m_tasks.SelectDownload (_DldsMgr.GetDownload (bPlaceToTop ? start : sz-1));
+	}
+
+	
+
+	m_wndDownloads.m_tasks.UnlockList ();
+
+    if (bDontUseSounds == FALSE)
+      	_Snds.Event (SME_DOWNLOADADDED);
+
+	_DldsMgr.ProcessDownloads ();
+
+	UpdateNumbersOfDownloadsInGroups ();
 }

@@ -12,10 +12,19 @@
 #include "Dlg_Options_Page.h"
 #include "resource.h"      
 
-typedef fs::ListTree <CDlg_Options_Page*> OPTIONS_PAGES_TREE;
-
 class CDlg_Options : public CDialog
 {
+protected:
+	struct OptionsTreeItem
+	{
+		CDlg_Options_Page *page;
+		CString strJustCaption; 
+
+		OptionsTreeItem (CDlg_Options_Page* p) {page = p;}
+		OptionsTreeItem (LPCSTR psz) {page = NULL; strJustCaption = psz;}
+		OptionsTreeItem () {page = NULL;}
+	};
+	typedef fs::ListTree <OptionsTreeItem> OPTIONS_PAGES_TREE;  
 
 public:
 	void set_CurPage (OPTIONS_PAGES_TREE* ptPage);

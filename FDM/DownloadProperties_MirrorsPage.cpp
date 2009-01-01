@@ -201,18 +201,12 @@ void CDownloadProperties_MirrorsPage::OnAddmirror()
 	if (nRet == IDCANCEL)
 		return;
 
-	LOG ("DP_MP:adding mirror..." << nl);
-
 	m_dld->pMgr->GetDownloadMgr ()->GetDownloader ()->AddMirrorURL (dlg.m_strUrl, 
 		dlg.m_strUser, dlg.m_strPassword);
 
 	
 
-	LOG ("DP_MP:clone settings..." << nl);
-
 	
-
-	LOG ("DP_MP:cloned" << nl);
 
 	FullUpdateMirrList ();
 	CancelToClose ();
@@ -386,8 +380,6 @@ DWORD WINAPI CDownloadProperties_MirrorsPage::_threadCalcMirrSpeed2(LPVOID lp)
 
 void CDownloadProperties_MirrorsPage::FullUpdateMirrList()
 {
-	LOG ("Entering DP_MP::FUML..." << nl);
-
 	FillMirrsList ();
 	UpdateMirrSpeed ();
 	UpdateMirrUsing ();
@@ -396,8 +388,6 @@ void CDownloadProperties_MirrorsPage::FullUpdateMirrList()
 		GetDlgItem (IDC_CALCMIRRSPEED)->EnableWindow (TRUE);
 
 	UpdateEnabled ();
-
-	LOG ("Exit DP_MP::FUML" << nl);
 }
 
 void CDownloadProperties_MirrorsPage::UpdateEnabled()

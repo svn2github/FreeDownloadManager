@@ -87,7 +87,7 @@ BOOL CTorrents_Tasks::Create(CWnd *pwndParent)
 	InsertColumn (1, "", LVCFMT_LEFT, 50, 0);
 	InsertColumn (2, "", LVCFMT_LEFT, 100, 0);
 	InsertColumn (3, "", LVCFMT_LEFT, 60, 0);
-	InsertColumn (4, "", LVCFMT_LEFT, 40, 0);
+	InsertColumn (4, "", LVCFMT_LEFT, 50, 0);
 	InsertColumn (5, "", LVCFMT_LEFT, 58, 0);
 	InsertColumn (6, "", LVCFMT_LEFT, 70, 0);
 	InsertColumn (7, "", LVCFMT_LEFT, 200, 0);

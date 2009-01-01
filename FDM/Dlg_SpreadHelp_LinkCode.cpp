@@ -141,9 +141,7 @@ DWORD WINAPI CDlg_SpreadHelp_LinkCode::_threadImage(LPVOID lp)
 		Sleep (50);
 	}
 
-	LOG ("releasing img...");
 	pThis->m_img.Free ();
-	LOG ("ok." << nl);
 	pThis->m_dwThrJob &= ~IMGT_EXIT;
 	pThis->m_bRunning = FALSE;
 

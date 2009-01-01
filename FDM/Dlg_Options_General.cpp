@@ -74,12 +74,12 @@ BOOL CDlg_Options_General::OnInitDialog()
 
 CString CDlg_Options_General::get_PageTitle()
 {
-	return LS (L_GENERAL);
+	return LS (L_ESSENTIAL);
 }
 
 CString CDlg_Options_General::get_PageShortTitle()
 {
-	return LS (L_GENERAL);
+	return LS (L_ESSENTIAL);
 }
 
 BOOL CDlg_Options_General::Apply()

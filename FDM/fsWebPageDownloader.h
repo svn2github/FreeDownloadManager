@@ -143,6 +143,7 @@ class fsWebPageDownloader
 {
 	friend class fsWebPageDownloadsMgr;
 public:
+	bool isDownloadsMgrRequired () const;
 	
 	void GetDownloadingSiteName (LPSTR psz);
 	
@@ -204,6 +205,14 @@ public:
 	virtual ~fsWebPageDownloader();
 
 protected:
+	void MakeSureProcessDoneAndRedirEventsThreadStarted();
+	static DWORD WINAPI _threadProcessDoneAndRedirEvents (LPVOID lp);
+	DLDS_LIST m__threadProcessDoneAndRedirEvents__FinishedDownloads;
+	DLDS_LIST m__threadProcessDoneAndRedirEvents__RedirDownloads;
+	DLDS_LIST m__threadProcessDoneAndRedirEvents__RcvdEventDownloads;
+	DLDS_LIST m__threadProcessDoneAndRedirEvents__WillBeDeletedDownloads;
+	bool m__threadProcessDoneAndRedirEvents__NeedCheckDoneOrStopped;
+	bool m_bthreadProcessDoneAndRedirEvents_Running;
 	
 	BOOL IsURLShouldBeIgnored (fsURL& url);
 	
@@ -239,7 +248,7 @@ protected:
 	
 	BOOL IsUrlsEqual (fsURL& url1, LPCSTR pszUrl2);
 	UINT m_nMaxID;		
-	CRITICAL_SECTION m_cs_Done_Redir_Events;
+	CRITICAL_SECTION m_csthreadProcessDoneAndRedirEventsAccLists;
 	
 	BOOL Load (HANDLE hFile, t_wptree root, WORD wVer);
 	BOOL Save (HANDLE hFile, t_wptree root);

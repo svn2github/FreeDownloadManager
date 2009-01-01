@@ -22,9 +22,6 @@ fsSitesMgr _SitesMgr;
 fsIEContextMenuMgr _IECMM;
 fsOpNetIntegrationMgr _NOMgr;
 fsIECatchMgr _IECatchMgr;
-#ifdef _USELOGGING
-fsProgramLogMgr _Log;
-#endif
 fsSoundsMgr _Snds;
 fsHistoriesMgr _HsMgr;
 

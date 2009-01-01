@@ -1,8 +1,10 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
+*/
 
-//{{NO_DEPENDENCIES}//}//}}    
+    
+
+//{{NO_DEPENDENCIES}//}//}//}}    
 
 #define IDI_FDM                       101    
 

@@ -20,12 +20,8 @@ vmsFirefoxExtensionInstaller::~vmsFirefoxExtensionInstaller()
 
 bool vmsFirefoxExtensionInstaller::Do(LPCSTR pszCID, LPCSTR pszExtPath, bool bInstall)
 {
-	LOG ("vmsFEI::Do: in" << nl);
-
 	FU_STRINGLIST v; int nDefProf;
 	vmsFirefoxUtil::GetProfilesPathes (v, nDefProf);
-
-	LOG ("vmsFEI::Do: " << v.size () << " profiles found" << nl);
 
 	CString str = _App.Firefox_PortableVersionPath ();
 	if (!str.IsEmpty ())
@@ -54,16 +50,11 @@ bool vmsFirefoxExtensionInstaller::Do(LPCSTR pszCID, LPCSTR pszExtPath, bool bIn
 			try{
 
 			vmsFile file;
-			LOG ("vmsFEI::Do: creating file: " << sz << nl);
 			file.Create (sz, GENERIC_WRITE, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL);
-			LOG ("vmsFEI::Do: writing to it" << nl);
 			file.Write (pszExtPath, lstrlen (pszExtPath));
-			LOG ("vmsFEI::Do: closing it" << nl);
 			file.Close ();
-			LOG ("vmsFEI::Do: done" << nl);
-
+			
 			}catch (...) {
-				LOG ("vmsFEI::Do: failed write ext ptr file" << nl);
 				return false;
 			}
 		}
@@ -73,15 +64,11 @@ bool vmsFirefoxExtensionInstaller::Do(LPCSTR pszCID, LPCSTR pszExtPath, bool bIn
 		}
 	}
 
-	LOG ("vmsFEI::Do: ok" << nl);
-
 	return true;
 }
 
 bool vmsFirefoxExtensionInstaller::IsInstalled(LPCSTR pszCID, bool bInDefaultProfileOnly)
 {
-	LOG ("vmsFEI::IsInst: in" << nl);
-
 	FU_STRINGLIST v; int nDefaultProfile;
 	vmsFirefoxUtil::GetProfilesPathes (v, nDefaultProfile);
 
@@ -94,8 +81,6 @@ bool vmsFirefoxExtensionInstaller::IsInstalled(LPCSTR pszCID, bool bInDefaultPro
 		str2 [0] = sz [0];
 		v.add (str2);
 	}
-
-	LOG ("vmsFEI::IsInst: " << v.size () << " profiles found" << nl);
 
 	if (v.size () == 0)	
 		return false;
@@ -113,15 +98,9 @@ bool vmsFirefoxExtensionInstaller::IsInstalled(LPCSTR pszCID, bool bInDefaultPro
 		lstrcat (sz, "\\extensions\\");
 		lstrcat (sz, pszCID);
 
-		LOG ("vmsFEI::IsInst: checking file presense: " << sz << nl);
-
 		if (GetFileAttributes (sz) != DWORD (-1))
-		{
-			LOG ("vmsFEI::IsInst: ok (yes)" << nl);
 			return true;
-		}
 	}
 
-	LOG ("vmsFEI::IsInst: ok (no)" << nl);
 	return false;
 }

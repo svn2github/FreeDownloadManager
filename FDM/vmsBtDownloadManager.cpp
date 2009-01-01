@@ -19,9 +19,8 @@ LONG vmsBtDownloadManager::m_cStatDataRefs = 0;
 
 vmsBtDownloadManager::vmsBtDownloadManager()
 {
-	if (m_cStatDataRefs == 0)
+	if (InterlockedIncrement (&m_cStatDataRefs) == 1)
 	{
-		InterlockedIncrement (&m_cStatDataRefs);
 		m_pcsvpDlds = new CRITICAL_SECTION;
 		m_pvpDlds = new std::vector <vmsBtDownloadManager*>;
 		InitializeCriticalSection (m_pcsvpDlds);
@@ -72,9 +71,9 @@ vmsBtDownloadManager::~vmsBtDownloadManager()
     SAFE_RELEASE (m_pTorrent);
 	SAFE_DELETE_ARRAY (m_info.pbFastResumeData);
 	SAFE_DELETE_ARRAY (m_info.pfProgress);
-	InterlockedDecrement (&m_cStatDataRefs);
-	if (!m_cStatDataRefs)
+	if (0 == InterlockedDecrement (&m_cStatDataRefs))
 	{
+		Shutdown ();
 		SAFE_DELETE (m_pvpDlds);
 		DeleteCriticalSection (m_pcsvpDlds);
 		SAFE_DELETE (m_pcsvpDlds);
@@ -700,8 +699,6 @@ BOOL vmsBtDownloadManager::DeleteFile()
 	if (m_info.dwFlags & BTDF_NEVER_DELETE_FILES_ON_DISK)
 		return TRUE;
 
-	LOG ("vmsBtDM::DeleteFile: start." << nl);
-
 	bool bMaySleep = false;
 
 	if (m_pDownload)
@@ -720,8 +717,6 @@ BOOL vmsBtDownloadManager::DeleteFile()
 
 		bMaySleep = true;
 	}
-
-	LOG ("vmsBtDM::DeleteFile: 0." << nl);
 
 	USES_CONVERSION;
 
@@ -749,11 +744,7 @@ BOOL vmsBtDownloadManager::DeleteFile()
 		}
 	}
 
-	LOG ("vmsBtDM::DeleteFile: 1." << nl);
-
 	RemoveBtDownloadDirectory ();
-
-	LOG ("vmsBtDM::DeleteFile: done." << nl);
 
 	return bAllDeletedOk;
 }
@@ -783,6 +774,10 @@ fsInternetResult vmsBtDownloadManager::StartDownloading()
 void vmsBtDownloadManager::StopDownloading()
 {
 	m_bDlThreadNeedStop = true;
+	if (isSeeding ())
+		StopSeeding ();
+	else if (m_pDownload && IsDone ())
+		DeleteBtDownload ();
 }
 
 void vmsBtDownloadManager::LimitTraffic(UINT uLimit)
@@ -913,6 +908,7 @@ BOOL vmsBtDownloadManager::SaveState(LPBYTE pb, LPDWORD pdwSize)
 
 	
 	CHECK_SIZE (get_FileCount () * sizeof (float));
+	ASSERT (m_info.pfProgress != NULL);
 	CopyMemory (pb, m_info.pfProgress, get_FileCount () * sizeof (float));
 	pb += get_FileCount () * sizeof (float);
 
@@ -1112,6 +1108,10 @@ BOOL vmsBtDownloadManager::LoadState(LPBYTE lpBuffer, LPDWORD pdwSize, WORD wVer
 	}
 	else
 	{
+		m_info.pfProgress = new float [get_FileCount () * sizeof (float)];
+		for (int i = get_FileCount () - 1; i >= 0; i--)
+			m_info.pfProgress [i] = 0;
+
 		PostCreateTorrentObject ();
 	}
 
@@ -1141,7 +1141,8 @@ BOOL vmsBtDownloadManager::LoadState(LPBYTE lpBuffer, LPDWORD pdwSize, WORD wVer
 		{
 			SAFE_DELETE_ARRAY (m_info.pbFastResumeData);
 			m_info.dwFastResumeDataSize = 0;
-			SAFE_DELETE_ARRAY (m_info.pfProgress);
+			for (int i = get_FileCount () - 1; i >= 0; i--)
+				m_info.pfProgress [i] = 0;
 			m_info.nUploadedBytes = 0;
 			m_info.fShareRating = 0;
 			m_info.nWastedBytes = 0;
@@ -1170,8 +1171,6 @@ BOOL vmsBtDownloadManager::IsStoppedByUser()
 
 DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 {
-#define LOG_local(x) LOG("vmsBTDM::_tBTDM(" << (DWORD)lp << "): " << x << nl)
-
 	vmsBtDownloadManager *pthis = (vmsBtDownloadManager*)lp;
 	vmsBtDownloadStateEx enPrevState = BTDSE_QUEUED;
 
@@ -1180,13 +1179,9 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 
 	pthis->RaiseEvent (BTDME_DOWNLOAD_STARTED);
 
-	LOG_local ("start");
-
 	while (pthis->get_State () == BTDSE_QUEUED && pthis->m_bDlThreadNeedStop == false)
 		Sleep (100);
 
-	LOG_local ("1");
-	
 	bool bDownloading = false;
 	bool bMayFilesEvent = true;
 	fsTicksMgr time0Speed;
@@ -1201,21 +1196,18 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 				switch (enCurrState)
 				{
 				case BTDSE_CHECKING_FILES:
-					LOG_local ("CF.");
 					if (bMayFilesEvent)
 						pthis->RaiseEvent (BTDME_CHECKING_FILES);
 					bMayFilesEvent = false;
 					break;
 
 				case BTDSE_ALLOCATING:
-					LOG_local ("ALLOC");
 					if (bMayFilesEvent)
 						pthis->RaiseEvent (BTDME_ALLOCATING);
 					bMayFilesEvent = false;
 					break;
 
 				case BTDSE_DOWNLOADING:
-					LOG_local ("DLDING");
 					_DldsMgr.ProcessDownloads ();
 					break;
 				}
@@ -1230,7 +1222,6 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 			if (pthis->GetSpeed ())
 			{
 				bDownloading = true;
-				LOG_local ("DLDING2");
 				pthis->RaiseEvent (BTDME_DOWNLOADING);
 			}
 		}
@@ -1249,7 +1240,6 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 				
 				if (now - time0Speed > 120 * 1000)
 				{
-					LOG_local ("RESTART");
 					
 					pthis->m_pDownload->Pause ();
 					pthis->SaveBtDownloadState ();
@@ -1270,13 +1260,9 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 		}
 	}
 
-	LOG_local ("1.5");
-
 	
 	pthis->m_cache.nDownloadingSectionCount = 0;
 	pthis->GetDownloadedBytesCount (false);
-
-	LOG_local ("2");
 
 	if (pthis->m_pDownload != NULL &&
 			(pthis->m_bDlThreadNeedStop || 
@@ -1284,38 +1270,24 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 				(pthis->m_info.dwFlags & BTDF_DISABLE_SEEDING) != 0 ||
 				_DldsMgr.AllowStartNewDownloads () == FALSE))
 	{
-		LOG_local ("need delete bt download");
 		pthis->m_pDownload->Pause ();
-		LOG_local ("saving state");
 		pthis->SaveBtDownloadState ();
-		LOG_local ("deleting");
 		pthis->DeleteBtDownload ();
 	}
 	else
 	{
-		#ifdef _USELOGGING
-		if (pthis->m_pDownload != NULL)
-			LOG_local ("download was not deleted for some reason");
-		#endif
-
 		pthis->SaveBtDownloadState ();
 	}
-
-	LOG_local ("3");
 
 	pthis->m_bDlThreadDoJob = false;
 
 	try{pthis->RaiseEvent (BTDME_DOWNLOAD_STOPPED_OR_DONE);}catch(...){}
-
-	LOG_local ("4");
 
 	if (pthis->get_State () == BTDSE_SEEDING || pthis->get_State () == BTDSE_FINISHED)
 	{
 		pthis->AddToDldsList ();
 		pthis->RaiseEvent (BTDME_SEEDING);
 	}
-
-	LOG_local ("done");
 
 	pthis->m_bDlThreadRunning = false;
 
@@ -1484,16 +1456,33 @@ DWORD WINAPI vmsBtDownloadManager::_threadCheckStartSeeding(LPVOID lp)
 {
 	vmsBtDownloadManager *pthis = (vmsBtDownloadManager*)lp;
 
+	bool bNeedSaveFRD = false;
+	
 	while (pthis->m_bDlThreadNeedStop == false && pthis->m_pDownload != NULL)
 	{
 		vmsBtDownloadStateEx s = pthis->get_State ();
+
+		if (s == BTDSE_CHECKING_FILES)
+		{
+			if (!bNeedSaveFRD)
+			{
+				bNeedSaveFRD = true;
+				pthis->RaiseEvent (BTDME_CHECKING_FILES);
+			}
+		}
+
 		if (s != BTDSE_QUEUED && s != BTDSE_CHECKING_FILES && s != BTDSE_CONNECTING_TRACKER)
 			break;
+
 		if (s == BTDSE_CONNECTING_TRACKER && 
 				(pthis->m_info.bDone == FALSE && pthis->GetPercentDone () != 100.0f))
 			break;
+
 		Sleep (5);
 	}
+
+	if (bNeedSaveFRD)
+		pthis->SaveBtDownloadState ();
 
 	if (pthis->m_bDlThreadNeedStop == false && pthis->m_pDownload != NULL)
 	{

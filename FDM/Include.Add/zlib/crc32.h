@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
+*/
+
+    
 
 local const unsigned long FAR crc_table[TBLS][256] =
 {

@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: easy.c,v 1.120 2008-05-12 21:43:29 bagder Exp $
+ * $Id: easy.c,v 1.130 2008-10-19 20:17:16 yangtse Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -61,7 +61,6 @@
 #ifdef HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
 #endif
-#include <signal.h>
 
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
@@ -83,6 +82,7 @@
 #include "easyif.h"
 #include "select.h"
 #include "sendf.h" /* for failf function prototype */
+#include "http_ntlm.h"
 #include "connect.h" /* for Curl_getconnectinfo */
 
 #define _MPRINTF_REPLACE /* use our functions only */
@@ -103,21 +103,26 @@
 /* The last #include file should be: */
 #include "memdebug.h"
 
-#ifdef USE_WINSOCK
 /* win32_cleanup() is for win32 socket cleanup functionality, the opposite
    of win32_init() */
 static void win32_cleanup(void)
 {
+#ifdef USE_WINSOCK
   WSACleanup();
+#endif
+#ifdef USE_WINDOWS_SSPI
+  Curl_ntlm_global_cleanup();
+#endif
 }
 
 /* win32_init() performs win32 socket initialization to properly setup the
    stack to allow networking */
 static CURLcode win32_init(void)
 {
+#ifdef USE_WINSOCK
   WORD wVersionRequested;
   WSADATA wsaData;
-  int err;
+  int res;
 
 #if defined(ENABLE_IPV6) && (USE_WINSOCK < 2)
   Error IPV6_requires_winsock2
@@ -125,9 +130,9 @@ static CURLcode win32_init(void)
 
   wVersionRequested = MAKEWORD(USE_WINSOCK, USE_WINSOCK);
 
-  err = WSAStartup(wVersionRequested, &wsaData);
+  res = WSAStartup(wVersionRequested, &wsaData);
 
-  if(err != 0)
+  if(res != 0)
     /* Tell the user that we couldn't find a useable */
     /* winsock.dll.     */
     return CURLE_FAILED_INIT;
@@ -147,14 +152,18 @@ static CURLcode win32_init(void)
     return CURLE_FAILED_INIT;
   }
   /* The Windows Sockets DLL is acceptable. Proceed. */
+#endif
+
+#ifdef USE_WINDOWS_SSPI
+  {
+    CURLcode err = Curl_ntlm_global_init();
+    if (err != CURLE_OK)
+      return err;
+  }
+#endif
+
   return CURLE_OK;
 }
-
-#else
-/* These functions exist merely to prevent compiler warnings */
-static CURLcode win32_init(void) { return CURLE_OK; }
-static void win32_cleanup(void) { }
-#endif
 
 #ifdef USE_LIBIDN
 /*
@@ -195,6 +204,10 @@ static long          init_flags;
 #define system_strdup strdup
 #endif
 
+#if defined(_MSC_VER) && defined(_DLL)
+#  pragma warning(disable:4232) /* MSVC extension, dllimport identity */
+#endif
+
 #ifndef __SYMBIAN32__
 /*
  * If a memory-using function (like curl_getenv) is used before
@@ -215,6 +228,10 @@ curl_free_callback Curl_cfree;
 curl_realloc_callback Curl_crealloc;
 curl_strdup_callback Curl_cstrdup;
 curl_calloc_callback Curl_ccalloc;
+#endif
+
+#if defined(_MSC_VER) && defined(_DLL)
+#  pragma warning(default:4232) /* MSVC extension, dllimport identity */
 #endif
 
 /**
@@ -485,9 +502,12 @@ CURLcode curl_easy_perform(CURL *curl)
       /* global dns cache was requested but still isn't */
       struct curl_hash *ptr;
 
-      if(data->dns.hostcachetype == HCACHE_PRIVATE)
+      if(data->dns.hostcachetype == HCACHE_PRIVATE) {
         /* if the current cache is private, kill it first */
         Curl_hash_destroy(data->dns.hostcache);
+        data->dns.hostcachetype = HCACHE_NONE;
+        data->dns.hostcache = NULL;
+      }
 
       ptr = Curl_global_host_cache_init();
       if(ptr) {
@@ -582,8 +602,7 @@ CURL *curl_easy_duphandle(CURL *incurl)
   bool fail = TRUE;
   struct SessionHandle *data=(struct SessionHandle *)incurl;
 
-  struct SessionHandle *outcurl = (struct SessionHandle *)
-    calloc(sizeof(struct SessionHandle), 1);
+  struct SessionHandle *outcurl = calloc(sizeof(struct SessionHandle), 1);
 
   if(NULL == outcurl)
     return NULL; /* failure */
@@ -595,7 +614,7 @@ CURL *curl_easy_duphandle(CURL *incurl)
      * get setup on-demand in the code, as that would probably decrease
      * the likeliness of us forgetting to init a buffer here in the future.
      */
-    outcurl->state.headerbuff=(char*)malloc(HEADERSIZE);
+    outcurl->state.headerbuff = malloc(HEADERSIZE);
     if(!outcurl->state.headerbuff) {
       break;
     }
@@ -803,6 +822,7 @@ CURLcode curl_easy_pause(CURL *curl, int action)
        return PAUSE again and then we'll get a new copy allocted and stored in
        the tempwrite variables */
     char *tempwrite = data->state.tempwrite;
+    char *freewrite = tempwrite; /* store this pointer to free it later */
     size_t tempsize = data->state.tempwritesize;
     int temptype = data->state.tempwritetype;
     size_t chunklen;
@@ -827,26 +847,26 @@ CURLcode curl_easy_pause(CURL *curl, int action)
 
       result = Curl_client_write(data->state.current_conn,
                                  temptype, tempwrite, chunklen);
-      if(!result)
+      if(result)
         /* failures abort the loop at once */
         break;
 
       if(data->state.tempwrite && (tempsize - chunklen)) {
         /* Ouch, the reading is again paused and the block we send is now
            "cached". If this is the final chunk we can leave it like this, but
-           if we have more chunks that is cached after this, we need to free
+           if we have more chunks that are cached after this, we need to free
            the newly cached one and put back a version that is truly the entire
            contents that is saved for later
         */
         char *newptr;
 
-        free(data->state.tempwrite); /* free the one just cached as it isn't
-                                        enough */
-
         /* note that tempsize is still the size as before the callback was
            used, and thus the whole piece of data to keep */
-        newptr = malloc(tempsize);
+        newptr = realloc(data->state.tempwrite, tempsize);
+
         if(!newptr) {
+          free(data->state.tempwrite); /* free old area */
+          data->state.tempwrite = NULL;
           result = CURLE_OUT_OF_MEMORY;
           /* tempwrite will be freed further down */
           break;
@@ -864,7 +884,7 @@ CURLcode curl_easy_pause(CURL *curl, int action)
 
     } while((result == CURLE_OK) && tempsize);
 
-    free(tempwrite); /* this is unconditionally no longer used */
+    free(freewrite); /* this is unconditionally no longer used */
   }
 
   return result;
@@ -949,7 +969,8 @@ CURLcode Curl_convert_from_network(struct SessionHandle *data,
             rc, curl_easy_strerror(rc));
     }
     return(rc);
-  } else {
+  }
+  else {
 #ifdef HAVE_ICONV
     /* do the translation ourselves */
     char *input_ptr, *output_ptr;
@@ -964,9 +985,9 @@ CURLcode Curl_convert_from_network(struct SessionHandle *data,
         error = ERRNO;
         failf(data,
               "The iconv_open(\"%s\", \"%s\") call failed with errno %i: %s",
-               CURL_ICONV_CODESET_OF_HOST,
-               CURL_ICONV_CODESET_OF_NETWORK,
-               error, strerror(error));
+              CURL_ICONV_CODESET_OF_HOST,
+              CURL_ICONV_CODESET_OF_NETWORK,
+              error, strerror(error));
         return CURLE_CONV_FAILED;
       }
     }
@@ -978,8 +999,8 @@ CURLcode Curl_convert_from_network(struct SessionHandle *data,
     if((rc == ICONV_ERROR) || (in_bytes != 0)) {
       error = ERRNO;
       failf(data,
-        "The Curl_convert_from_network iconv call failed with errno %i: %s",
-             error, strerror(error));
+            "The Curl_convert_from_network iconv call failed with errno %i: %s",
+            error, strerror(error));
       return CURLE_CONV_FAILED;
     }
 #else
@@ -1025,9 +1046,9 @@ CURLcode Curl_convert_from_utf8(struct SessionHandle *data,
         error = ERRNO;
         failf(data,
               "The iconv_open(\"%s\", \"%s\") call failed with errno %i: %s",
-               CURL_ICONV_CODESET_OF_HOST,
-               CURL_ICONV_CODESET_FOR_UTF8,
-               error, strerror(error));
+              CURL_ICONV_CODESET_OF_HOST,
+              CURL_ICONV_CODESET_FOR_UTF8,
+              error, strerror(error));
         return CURLE_CONV_FAILED;
       }
     }
@@ -1039,8 +1060,8 @@ CURLcode Curl_convert_from_utf8(struct SessionHandle *data,
     if((rc == ICONV_ERROR) || (in_bytes != 0)) {
       error = ERRNO;
       failf(data,
-        "The Curl_convert_from_utf8 iconv call failed with errno %i: %s",
-             error, strerror(error));
+            "The Curl_convert_from_utf8 iconv call failed with errno %i: %s",
+            error, strerror(error));
       return CURLE_CONV_FAILED;
     }
     if(output_ptr < input_ptr) {

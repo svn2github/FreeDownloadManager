@@ -270,7 +270,7 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 					(pThis->m_dldr.IsResumeSupported () == RST_PRESENT || pThis->m_dldr.GetNumberOfSections () > 1))
 			{
 				fsTicksMgr tickNow; tickNow.Now ();
-				if (tickNow - tick0SpeedStart > 30*1000)
+				if (tickNow - tick0SpeedStart > 120*1000)
 				{
 					pThis->m_bNeedStartAgain = TRUE;
 					pThis->StopDownload ();
@@ -745,13 +745,8 @@ void fsDownloadMgr::Event(LPCSTR pszEvent, fsDownloadMgr_EventDescType enType)
 
 void fsDownloadMgr::AddSection(BOOL bCheckAdm)
 {
-	LOG ("Entering DLM::AddSection..." << nl);
-
 	if (m_bDontCreateNewSections || m_dldr.IsSectionCreatingNow ())
-	{
-		LOG ("Exit DLM::AddSection" << nl);
 		return;
-	}
 
 	
 	if (bCheckAdm == FALSE || IsSectionCanBeAdded ())
@@ -774,8 +769,6 @@ void fsDownloadMgr::AddSection(BOOL bCheckAdm)
 			}
 		}
 	}
-
-	LOG ("Exit DLM::AddSection" << nl);
 }
 
 BOOL fsDownloadMgr::IsDone()
@@ -2221,11 +2214,23 @@ void fsDownloadMgr::AppendCommentToFileName(BOOL bMoveFile)
 
 	m_dp.pszFileName = new char [strlen (szOldName) + m_dld->strComment.GetLength () + 10 + 1];
 
+	std::string strComment = m_dld->strComment;
+	while (strComment.empty () == false && strComment [0] == ' ')
+		strComment.erase (strComment.begin ());
+	while (strComment.empty () == false && strComment [strComment.length ()-1] == ' ')
+		strComment.erase (strComment.end ()-1);
+	LPCSTR pszInvChars = ":*?\"<>|";
+	for (size_t i = 0; i < strComment.length (); i++)
+	{
+		if (strchr (pszInvChars, strComment [i]))
+			strComment [i] = ' ';
+	}
+
 	strcpy (m_dp.pszFileName, szOldName);
 	if (pszExt)
 	{
 		strcpy (m_dp.pszFileName + (pszExt - szOldName), " (");
-		strcat (m_dp.pszFileName, m_dld->strComment);
+		strcat (m_dp.pszFileName, strComment.c_str ());
 		strcat (m_dp.pszFileName, ")");
 		strcat (m_dp.pszFileName, pszExt);
 	}

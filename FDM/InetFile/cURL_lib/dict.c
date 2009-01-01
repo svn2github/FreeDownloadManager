@@ -5,7 +5,7 @@
  *                            | (__| |_| |  _ <| |___
  *                             \___|\___/|_| \_\_____|
  *
- * Copyright (C) 1998 - 2007, Daniel Stenberg, <daniel@haxx.se>, et al.
+ * Copyright (C) 1998 - 2008, Daniel Stenberg, <daniel@haxx.se>, et al.
  *
  * This software is licensed as described in the file COPYING, which
  * you should have received as part of this distribution. The terms
@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: dict.c,v 1.55 2007-12-08 22:50:55 bagder Exp $
+ * $Id: dict.c,v 1.58 2008-10-23 11:49:19 bagder Exp $
  ***************************************************************************/
 
 #include "setup.h"
@@ -54,7 +54,6 @@
 #include <net/if.h>
 #endif
 #include <sys/ioctl.h>
-#include <signal.h>
 
 #ifdef HAVE_SYS_PARAM_H
 #include <sys/param.h>
@@ -75,6 +74,7 @@
 #include "progress.h"
 #include "strequal.h"
 #include "dict.h"
+#include "rawstr.h"
 
 #define _MPRINTF_REPLACE /* use our functions only */
 #include <curl/mprintf.h>
@@ -164,9 +164,9 @@ static CURLcode dict_do(struct connectdata *conn, bool *done)
     /* AUTH is missing */
   }
 
-  if(strnequal(path, DICT_MATCH, sizeof(DICT_MATCH)-1) ||
-      strnequal(path, DICT_MATCH2, sizeof(DICT_MATCH2)-1) ||
-      strnequal(path, DICT_MATCH3, sizeof(DICT_MATCH3)-1)) {
+  if(Curl_raw_nequal(path, DICT_MATCH, sizeof(DICT_MATCH)-1) ||
+      Curl_raw_nequal(path, DICT_MATCH2, sizeof(DICT_MATCH2)-1) ||
+      Curl_raw_nequal(path, DICT_MATCH3, sizeof(DICT_MATCH3)-1)) {
 
     word = strchr(path, ':');
     if(word) {
@@ -223,9 +223,9 @@ static CURLcode dict_do(struct connectdata *conn, bool *done)
     if(result)
       return result;
   }
-  else if(strnequal(path, DICT_DEFINE, sizeof(DICT_DEFINE)-1) ||
-           strnequal(path, DICT_DEFINE2, sizeof(DICT_DEFINE2)-1) ||
-           strnequal(path, DICT_DEFINE3, sizeof(DICT_DEFINE3)-1)) {
+  else if(Curl_raw_nequal(path, DICT_DEFINE, sizeof(DICT_DEFINE)-1) ||
+           Curl_raw_nequal(path, DICT_DEFINE2, sizeof(DICT_DEFINE2)-1) ||
+           Curl_raw_nequal(path, DICT_DEFINE3, sizeof(DICT_DEFINE3)-1)) {
 
     word = strchr(path, ':');
     if(word) {

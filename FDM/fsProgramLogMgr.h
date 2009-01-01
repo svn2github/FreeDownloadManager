@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
+*/
+
+    
 
 #if !defined(AFX_FSPROGRAMLOGMGR_H__DBE5A2AB_BCCB_4AA0_A615_DED3AD7C078E__INCLUDED_)
 #define AFX_FSPROGRAMLOGMGR_H__DBE5A2AB_BCCB_4AA0_A615_DED3AD7C078E__INCLUDED_

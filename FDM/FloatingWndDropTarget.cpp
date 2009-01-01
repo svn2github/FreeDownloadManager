@@ -102,7 +102,7 @@ BOOL CFloatingWndDropTarget::OnDrop(CWnd*, COleDataObject *pData, DROPEFFECT, CP
 			for (size_t i = 0; i < vUrls.size (); i++)
 			{
 				LPCSTR pszUrl = vUrls [i];
-				BOOL bAdded = _pwndDownloads->CreateDownload (pszUrl, TRUE, NULL, NULL, bSilent);
+				BOOL bAdded = UINT_MAX != _pwndDownloads->CreateDownload (pszUrl, TRUE, NULL, NULL, bSilent);
 				if (bAdded && bSilent)
 					CMainFrame::ShowTimeoutBalloon (pszUrl, "Download added", NIIF_INFO, TRUE);
 			}

@@ -14,6 +14,7 @@
 #include "mfchelp.h"
 #include "FlashVideoDownloadsWnd.h"
 #include "TorrentsWnd.h"
+#include "vmsPluginSupport.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -42,15 +43,14 @@ BOOL fsPluginMgr::LoadPlugins(CWnd *pPluginsFrame)
 {
 	m_pPluginsFrame = pPluginsFrame;
 
-	LOG ("loading plugins..." << nl);
-
 	if (FALSE == LoadBuiltIn ())
 		return FALSE;
 
-	LOG ("plugins was loaded" << nl);
-
 	for (int i = m_vWndPlugs.size () - 1; i; i--)
 		ShowWindow (m_vWndPlugs [i].hWnd, SW_HIDE);
+
+	
+	vmsPluginSupport::o ().Initialize ();
 
 	return TRUE;
 }
@@ -60,8 +60,6 @@ BOOL fsPluginMgr::LoadBuiltIn()
 	fsPluginInfo plug;
 
 	plug.hLib = NULL;
-
-	LOG ("loading built-in plugins..." << nl);
 
 	m_images.Create (_TB_SIZE_X, _TB_SIZE_Y, ILC_COLOR32 | ILC_MASK, 5, 1);
 	
@@ -169,35 +167,23 @@ BOOL fsPluginMgr::LoadBuiltIn()
 	};
 	
 
-	LOG (cPlugins << " built-in plugins found" << nl);
-
 	for (int i = 0; i < cPlugins; i++)
 	{
 		LPCSTR pszPlug, psz;
 		afnGPN [i] (&psz, &pszPlug);
-		
-		LOG ("loading plugin " << i << " (\"" << pszPlug << "\")..." << nl);
-				
-		LOG ("loading plugin menus...");
 	
 		
-		LOG ("creating plugin main window..." << nl);
-		
+				
 		plug.hWnd = afnCMW [i] (m_pPluginsFrame->m_hWnd);
 		if (plug.hWnd == NULL)
 			continue;
 		
-		LOG ("plugin main window was created" << nl);
-
 		
 		plug.hMenuMain = afnGMM [i] ();
 		plug.hMenuView = afnGVM [i] ();
 		
-		LOG ("ok." << nl);
 		
-		
-		LOG ("loading menu images...");
-		
+				
 		fsnew1 (plug.pbmpMenuImages, CBitmap);
 		plug.pbmpMenuImages->Attach (SBMP (aIDBmps [i]));
 		fsnew1 (plug.pbmpMenuDImages, CBitmap);
@@ -206,9 +192,7 @@ BOOL fsPluginMgr::LoadBuiltIn()
 		
 		afnGMI [i] (&plug.pMenuMainImages, &plug.cMenuMainImages);
 		plug.pMenuViewImages = NULL; plug.cMenuViewImages = 0;
-		
-		LOG ("ok." << nl);
-		
+			
 		
 		plug.pfnGPN = afnGPN [i];
 		plug.pfnGTBI = afnGTBI [i];
@@ -222,8 +206,6 @@ BOOL fsPluginMgr::LoadBuiltIn()
 
 		m_vWndPlugs.add (plug);
 
-		LOG ("loading plugin toolbar...");
-		
 		
 		wgTButtonInfo* pButtons;
 		int cButtons;
@@ -240,11 +222,7 @@ BOOL fsPluginMgr::LoadBuiltIn()
 		}
 
 		_TBMgr.InsertGroup (pButtons, &bmp1, &bmp2, cButtons);
-
-		LOG ("ok." << nl);
 	}
-
-	LOG ("built-in plugins was loaded" << nl);
 
 	return TRUE;
 }
@@ -271,29 +249,18 @@ BOOL fsPluginMgr::OnAppExit(BOOL bQueryForExit)
 
 	if (bQueryForExit)
 	{
-		LOG ("quering exit..." << nl);
-
 		if (FALSE == QueryExit ())
-		{
-			LOG ("exit quired (but not permitted)" << nl);
 			return FALSE;
-		}
-
-		LOG ("exit quired" << nl);
 	}
 		
 	m_bWasExit = TRUE;
 
 	for (int i = 0; i < m_vWndPlugs.size (); i++)
 	{
-		LOG ("shutdowning plugin " << i << nl);
-		
 		if (m_vWndPlugs [i].pfnShutdown)
 			m_vWndPlugs [i].pfnShutdown ();
 		else
 			SendMessage (m_vWndPlugs [i].hWnd, WM_WGP_SHUTDOWN, 0, 0);
-		
-		LOG ("plugin " << i << " shutted down" << nl);
 	}
 
 	return TRUE;

@@ -191,3 +191,14 @@ void fsWebPageDownloadsMgr::StopAll()
 		wpd->StopDownloading ();
 	}
 }
+
+bool fsWebPageDownloadsMgr::IsDownloadsMgrRequired()
+{
+	for (int i = m_vWPDs.size () - 1; i >= 0; i--)
+	{
+		if (m_vWPDs [i]->isDownloadsMgrRequired ())
+			return true;
+	}
+
+	return false;
+}

@@ -100,27 +100,17 @@ void CHFEWnd::OnDestroy()
 
 LRESULT CHFEWnd::OnAppExit(WPARAM, LPARAM)
 {
-	LOG ("Shutting down Site Explorer..." << nl);
-
 	m_mgr.SetEventsFunc (NULL, 0);
 	m_mgr.Stop (FALSE);
-
-	LOG ("waiting filelistmgr..." << nl);
 	
 	MSG msg;
 	while (m_mgr.IsRunning ())
 	{
-		LOG ("processing messages...");
-		
 		while (PeekMessage (&msg, NULL, 0, 0,  PM_REMOVE))
 			DispatchMessage (&msg);
 		
-		LOG ("ok" << nl);
-		
 		Sleep (10);
 	}
-
-	LOG ("filelistmgr shutted down" << nl);
 
 	int cMax = 100;
 
@@ -131,11 +121,7 @@ LRESULT CHFEWnd::OnAppExit(WPARAM, LPARAM)
 			break;
 	}
 
-	LOG ("saving all..." << nl);
-
 	SaveAll ();
-
-	LOG ("Site Explorer shutted down" << nl);
 
 	return 0;
 }

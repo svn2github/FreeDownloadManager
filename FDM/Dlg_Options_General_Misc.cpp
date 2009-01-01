@@ -118,12 +118,12 @@ BOOL CDlg_Options_General_Misc::OnInitDialog()
 
 CString CDlg_Options_General_Misc::get_PageTitle()
 {
-	return LS (L_MISC);
+	return LS (L_ESSENTIAL);
 }
 
 CString CDlg_Options_General_Misc::get_PageShortTitle()
 {
-	return LS (L_MISC);
+	return LS (L_ESSENTIAL);
 }
 
 BOOL CDlg_Options_General_Misc::Apply()

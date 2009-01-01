@@ -21,6 +21,7 @@
 class fsInternetURLFile : public fsSpeaking  
 {
 public:
+	void SetInterface (LPCSTR psz);
 	void set_Charset (LPCSTR psz);
 	void set_EnableAutoRedirect (BOOL b);
 	fsString GetCookiesFromResponse();
@@ -80,6 +81,7 @@ public:
 	virtual ~fsInternetURLFile();
 
 protected:
+	fsString m_strInterface;
 	bool isProxySpecified();
 	fsString m_strRespFromServer;
 	BOOL m_bCatchFromServerResponse;

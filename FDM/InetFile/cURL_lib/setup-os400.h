@@ -5,11 +5,6 @@
 #ifndef __SETUP_OS400_H
 #define __SETUP_OS400_H   
 
-#define __ptr128                        
-#define qadrt_use_fputc_inline          
-#define qadrt_use_fread_inline          
-#define qadrt_use_fwrite_inline           
-
 #define NI_MAXHOST      1025 
 
 #define NI_MAXSERV      32 
@@ -33,11 +28,6 @@ extern int      Curl_getnameinfo_a(const struct sockaddr * sa, socklen_t salen,
                                    char * servname, socklen_t servnamelen,
                                    int flags);
 #define getnameinfo             Curl_getnameinfo_a   
-
-extern int      Curl_inet_ntoa_r_a(struct in_addr internet_address,
-                                   char * output_buffer,
-                                   int output_buffer_length);
-#define inet_ntoa_r             Curl_inet_ntoa_r_a 
 
 extern int      Curl_SSL_Init_Application_a(SSLInitApp * init_app);
 #define SSL_Init_Application    Curl_SSL_Init_Application_a 

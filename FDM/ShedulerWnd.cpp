@@ -92,18 +92,8 @@ void CShedulerWnd::OnDestroy()
 
 LRESULT CShedulerWnd::OnAppExit(WPARAM, LPARAM)
 {
-	LOG ("Shutting down Scheduler..." << nl);
-
-	LOG ("saving all..." << nl);
-
 	SaveAll ();
-
-	LOG ("stopping ScheduleMgr..." << nl);
-
 	m_mgr.Stop ();
-
-	LOG ("Scheduler shutted down" << nl);
-
 	return 0;
 }
 

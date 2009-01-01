@@ -63,8 +63,6 @@ void CWnd_Banner::OnPaint()
 
 void CWnd_Banner::SetBanner(LPCSTR pszFile, LPCSTR pszURL)
 {
-	LOG ("CWB: SB: enter" << nl);
-
 	KillTimer (1);
 
 	if (m_bRunning == FALSE)
@@ -72,8 +70,6 @@ void CWnd_Banner::SetBanner(LPCSTR pszFile, LPCSTR pszURL)
 
 	m_strImgFile = pszFile;
 	m_strURL = pszURL;
-
-	LOG ("CWB: SB: load..." << nl);
 
 	m_dwThrJob |= IMGT_LOAD;
 	while (m_dwThrJob & IMGT_LOAD)
@@ -89,8 +85,6 @@ void CWnd_Banner::SetBanner(LPCSTR pszFile, LPCSTR pszURL)
 	}
 
 	Invalidate ();
-
-	LOG ("CWB: SB: done." << nl);
 }
 
 DWORD WINAPI CWnd_Banner::_threadImage(LPVOID lp)
@@ -142,11 +136,7 @@ DWORD WINAPI CWnd_Banner::_threadImage(LPVOID lp)
 		Sleep (50);
 	}
 
-	LOG ("releasing img...");
-
 	pThis->m_img.Free ();
-
-	LOG ("ok." << nl);
 
 	pThis->m_bRunning = FALSE;
 	pThis->m_dwThrJob &= ~IMGT_EXIT;

@@ -20,4 +20,9 @@ void Curl_multi_handlePipeBreak(struct SessionHandle *data);
 
 #define GETSOCK_READSOCK(x) (1 << (x))
 
+#ifdef CURLDEBUG
+ 
+void Curl_multi_dump(const struct Curl_multi *multi_handle);
+#endif
+
 #endif 

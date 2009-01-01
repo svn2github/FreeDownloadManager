@@ -5,6 +5,8 @@
 #ifndef __LIBCONFIGTPF_H
 #define __LIBCONFIGTPF_H                                                                          
 
+#define HAVE_ALARM 1 
+
 #define HAVE_ARPA_INET_H 1    
 
 #define HAVE_ASSERT_H 1 
@@ -47,9 +49,7 @@
 
 #define HAVE_ICONV 1          
 
-#define HAVE_INET_ADDR 1 
-
-#define HAVE_INET_NTOA 1          
+#define HAVE_INET_ADDR 1       
 
 #define HAVE_INTTYPES_H 1                                   
 
@@ -71,7 +71,7 @@
 
 #define HAVE_NETINET_IN_H 1    
 
-#define HAVE_NET_IF_H 1           
+#define HAVE_NET_IF_H 1        
 
 #define HAVE_OPENSSL_CRYPTO_H 1  
 
@@ -197,10 +197,6 @@
 
 #define SELECT_TYPE_ARG5 (struct timeval *) 
 
-#define SIZEOF_CURL_OFF_T 8 
-
-#define SIZEOF_LONG 8 
-
 #define SIZEOF_SIZE_T 8 
 
 #define SIZEOF_TIME_T 8 
@@ -227,6 +223,22 @@
 
 #define RECV_TYPE_RETV int 
 
+#define HAVE_RECVFROM 1 
+
+#define RECVFROM_TYPE_ARG1 int 
+
+#define RECVFROM_TYPE_ARG2 char 
+
+#define RECVFROM_TYPE_ARG3 int 
+
+#define RECVFROM_TYPE_ARG4 int 
+
+#define RECVFROM_TYPE_ARG5 struct sockaddr 
+
+#define RECVFROM_TYPE_ARG6 int 
+
+#define RECVFROM_TYPE_RETV int 
+
 #define HAVE_SEND 1 
 
 #define SEND_TYPE_ARG1 int 
@@ -244,13 +256,6 @@
 #define CURL_DOES_CONVERSIONS
 #ifndef CURL_ICONV_CODESET_OF_HOST
 #define CURL_ICONV_CODESET_OF_HOST "IBM-1047"
-#endif    
-
-#include <strings.h>    
-#include <string.h>     
-#include <stdlib.h>     
-#include <sys/socket.h> 
-#include <netdb.h>      
-#include <tpf/sysapi.h> 
+#endif 
 
 #endif 

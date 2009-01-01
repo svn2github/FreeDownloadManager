@@ -3,16 +3,7 @@
 */
 
 #ifndef __LIB_CURL_SETUP_H
-#define __LIB_CURL_SETUP_H 
-
-#ifdef HTTP_ONLY
-#define CURL_DISABLE_TFTP
-#define CURL_DISABLE_FTP
-#define CURL_DISABLE_LDAP
-#define CURL_DISABLE_TELNET
-#define CURL_DISABLE_DICT
-#define CURL_DISABLE_FILE
-#endif   
+#define __LIB_CURL_SETUP_H   
 
 #if (defined(_WIN32) || defined(__WIN32__)) && !defined(WIN32) && !defined(__SYMBIAN32__)
 #define WIN32
@@ -30,8 +21,8 @@
 #endif
 #endif
 
-#ifdef macintosh
-#include "config-mac.h"
+#if defined(macintosh) && defined(__MRC__)
+#  include "config-mac.h"
 #endif
 
 #ifdef __AMIGA__
@@ -43,8 +34,7 @@
 #endif
 
 #ifdef __OS400__
-#include "config-os400.h"
-#include "setup-os400.h"
+#  include "config-os400.h"
 #endif
 
 #ifdef TPF
@@ -53,7 +43,53 @@
 #define select(a,b,c,d,e) tpf_select_libcurl(a,b,c,d,e)
 #endif
 
-#endif   
+#endif            
+
+#ifdef NEED_REENTRANT
+#  ifndef _REENTRANT
+#    define _REENTRANT
+#  endif
+#endif       
+
+#include <curl/curlbuild.h>  
+
+#include <curl/curlrules.h>  
+
+#ifdef SIZEOF_CURL_OFF_T
+#  error "SIZEOF_CURL_OFF_T shall not be defined!"
+   Error Compilation_aborted_SIZEOF_CURL_OFF_T_shall_not_be_defined
+#endif  
+
+#ifdef FORMAT_OFF_T
+#  error "FORMAT_OFF_T shall not be defined before this point!"
+   Error Compilation_aborted_FORMAT_OFF_T_already_defined
+#endif
+
+#ifdef FORMAT_OFF_TU
+#  error "FORMAT_OFF_TU shall not be defined before this point!"
+   Error Compilation_aborted_FORMAT_OFF_TU_already_defined
+#endif
+
+#if (CURL_SIZEOF_CURL_OFF_T > CURL_SIZEOF_LONG)
+#  define FORMAT_OFF_T  "lld"
+#  define FORMAT_OFF_TU "llu"
+#else
+#  define FORMAT_OFF_T  "ld"
+#  define FORMAT_OFF_TU "lu"
+#endif  
+
+#ifdef HTTP_ONLY
+#  define CURL_DISABLE_TFTP
+#  define CURL_DISABLE_FTP
+#  define CURL_DISABLE_LDAP
+#  define CURL_DISABLE_TELNET
+#  define CURL_DISABLE_DICT
+#  define CURL_DISABLE_FILE
+#endif       
+
+#ifdef __OS400__
+#  include "setup-os400.h"
+#endif  
 
 #ifdef HAVE_WINDOWS_H
 #  ifndef WIN32_LEAN_AND_MEAN
@@ -80,32 +116,23 @@
 #  ifdef HAVE_WINSOCK_H
 #    define USE_WINSOCK 1
 #  endif
-#endif 
+#endif
 
-#ifdef HAVE_LONGLONG
-#define LONG_LONG long long
-#define ENABLE_64BIT
-#else
-#ifdef _MSC_VER
-#define LONG_LONG __int64
-#define ENABLE_64BIT
-#endif 
-#endif 
+#ifdef HAVE_EXTRA_STRICMP_H
+#  include <extra/stricmp.h>
+#endif
 
-#ifndef SIZEOF_CURL_OFF_T
+#ifdef HAVE_EXTRA_STRDUP_H
+#  include <extra/strdup.h>
+#endif
 
-#define SIZEOF_CURL_OFF_T 4
-#endif 
-
-#if SIZEOF_CURL_OFF_T > 4
-#define FORMAT_OFF_T "lld"
-#else
-#define FORMAT_OFF_T "ld"
-#endif 
-
-#ifndef _REENTRANT
-
-#define _REENTRANT
+#ifdef TPF
+#  include <strings.h>    
+#  include <string.h>     
+#  include <stdlib.h>     
+#  include <sys/socket.h> 
+#  include <netdb.h>      
+#  include <tpf/sysapi.h> 
 #endif
 
 #include <stdio.h>
@@ -139,86 +166,115 @@
   #include <clib.h>
 #endif  
 
-#if defined(WIN32) && (SIZEOF_CURL_OFF_T > 4)
-#include <sys/stat.h>   
-#include <io.h>
-#define lseek(x,y,z) _lseeki64(x, y, z)
-#define struct_stat struct _stati64
-#define stat(file,st) _stati64(file,st)
-#define fstat(fd,st) _fstati64(fd,st)
-#else
-#define struct_stat struct stat
-#endif    
+#ifdef USE_WIN32_LARGE_FILES
+#  include <io.h>
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#  define lseek(fdes,offset,whence)  _lseeki64(fdes, offset, whence)
+#  define fstat(fdes,stp)            _fstati64(fdes, stp)
+#  define stat(fname,stp)            _stati64(fname, stp)
+#  define struct_stat                struct _stati64
+#endif  
+
+#ifdef USE_WIN32_SMALL_FILES
+#  include <io.h>
+#  include <sys/types.h>
+#  include <sys/stat.h>
+#  define lseek(fdes,offset,whence)  _lseek(fdes, (long)offset, whence)
+#  define fstat(fdes,stp)            _fstat(fdes, stp)
+#  define stat(fname,stp)            _stat(fname, stp)
+#  define struct_stat                struct _stat
+#endif
+
+#ifndef struct_stat
+#  define struct_stat struct stat
+#endif  
+
+#ifndef SIZEOF_OFF_T
+#  if defined(__VMS) && (defined(__alpha) || defined(__ia64))
+#    if defined(_LARGEFILE)
+#      define SIZEOF_OFF_T 8
+#    endif
+#  elif defined(__OS400__) && defined(__ILEC400__)
+#    if defined(_LARGE_FILES)
+#      define SIZEOF_OFF_T 8
+#    endif
+#  elif defined(__MVS__) && defined(__IBMC__)
+#    if defined(_LP64) || defined(_LARGE_FILES)
+#      define SIZEOF_OFF_T 8
+#    endif
+#  elif defined(__370__) && defined(__IBMC__)
+#    if defined(_LP64) || defined(_LARGE_FILES)
+#      define SIZEOF_OFF_T 8
+#    endif
+#  endif
+#  ifndef SIZEOF_OFF_T
+#    define SIZEOF_OFF_T 4
+#  endif
+#endif  
 
 #ifdef WIN32
 
-#if !defined(__CYGWIN__)
-#define sclose(x) closesocket(x)
+#  if !defined(__CYGWIN__)
+#    define sclose(x) closesocket(x)
+#  else
+#    define sclose(x) close(x)
+#  endif
 
-#undef HAVE_ALARM
-#else
+#  define DIR_CHAR      "\\"
+#  define DOT_CHAR      "_"
+
+#else 
+
+#  ifdef MSDOS  
+
+#    include <sys/ioctl.h>
+#    define sclose(x)         close_s(x)
+#    define select(n,r,w,x,t) select_s(n,r,w,x,t)
+#    define ioctl(x,y,z) ioctlsocket(x,y,(char *)(z))
+#    define IOCTL_3_ARGS
+#    include <tcp.h>
+#    ifdef word
+#      undef word
+#    endif
+#    ifdef byte
+#      undef byte
+#    endif
+
+#  else 
+
+#    ifdef __BEOS__
+#      define sclose(x) closesocket(x)
+#    else 
+#      define sclose(x) close(x)
+#    endif 
+
+#  endif 
+
+#  ifdef _AMIGASF
+#    undef sclose
+#    define sclose(x) CloseSocket(x)
+#  endif
+
+#  ifdef __minix
      
-#define sclose(x) close(x)
-#define HAVE_ALARM
-#endif 
+     extern char * strtok_r(char *s, const char *delim, char **last);
+     extern struct tm * gmtime_r(const time_t * const timep, struct tm *tmp);
+#  endif
 
-#define DIR_CHAR      "\\"
-#define DOT_CHAR      "_"
+#  define DIR_CHAR      "/"
+#  ifndef DOT_CHAR
+#    define DOT_CHAR      "."
+#  endif
 
-#else 
+#  ifdef MSDOS
+#    undef DOT_CHAR
+#    define DOT_CHAR      "_"
+#  endif
 
-#ifdef MSDOS  
-#include <sys/ioctl.h>
-#define sclose(x)         close_s(x)
-#define select(n,r,w,x,t) select_s(n,r,w,x,t)
-#define ioctl(x,y,z) ioctlsocket(x,y,(char *)(z))
-#define IOCTL_3_ARGS
-#include <tcp.h>
-#ifdef word
-#undef word
-#endif
-
-#else 
-
-#ifdef __BEOS__
-#define sclose(x) closesocket(x)
-#else 
-#define sclose(x) close(x)
-#endif 
-
-#define HAVE_ALARM
-
-#endif 
-
-#ifdef _AMIGASF
-#undef HAVE_ALARM
-#undef sclose
-#define sclose(x) CloseSocket(x)
-#endif
-
-#ifdef __minix
-
-extern char * strtok_r(char *s, const char *delim, char **last);
-extern struct tm * gmtime_r(const time_t * const timep, struct tm *tmp);
-#endif
-
-#ifdef __SYMBIAN32__
-#undef HAVE_ALARM
-#endif
-
-#define DIR_CHAR      "/"
-#ifndef DOT_CHAR
-#define DOT_CHAR      "."
-#endif
-
-#ifdef MSDOS
-#undef DOT_CHAR
-#define DOT_CHAR      "_"
-#endif
-
-#ifndef fileno 
-int fileno( FILE *stream);
-#endif
+#  ifndef fileno 
+     int fileno( FILE *stream);
+#  endif
 
 #endif 
 
@@ -253,7 +309,6 @@ int netware_init(void);
 #include <sys/bsdskt.h>
 #include <sys/timeval.h>
 #endif
-#undef HAVE_ALARM
 #endif
 
 #if defined(HAVE_LIBIDN) && defined(HAVE_TLD_H)
@@ -267,10 +322,6 @@ int netware_init(void);
 #endif
 
 #define LIBIDN_REQUIRED_VERSION "0.4.1"
-
-#ifdef __UCLIBC__
-#define HAVE_INET_NTOA_R_2_ARGS 1
-#endif
 
 #if defined(USE_GNUTLS) || defined(USE_SSLEAY) || defined(USE_NSS) || defined(USE_QSOSSL)
 #define USE_SSL    

@@ -1,6 +1,8 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
+*/
+
+    
 
 #ifndef __WINDOWS_PROPVARIANT_H
 #define __WINDOWS_PROPVARIANT_H

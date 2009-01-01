@@ -25,7 +25,6 @@ STDMETHODIMP CWGUrlReceiver::get_Url(BSTR *pVal)
 
 STDMETHODIMP CWGUrlReceiver::put_Url(BSTR newVal)
 {
-	LOG ("monitor: put_Url" << nl);
 	m_dlInfo.bstrUrl = newVal;
 	return S_OK;
 }
@@ -37,8 +36,6 @@ STDMETHODIMP CWGUrlReceiver::ShowAddDownloadDialog()
 
 STDMETHODIMP CWGUrlReceiver::AddDownload()
 {
-	LOG ("monitor: Adddownload" << nl);
-
 	
 	if (m_bCheckExt && is_ExtToSkip ())
 		return E_NOTIMPL;	
@@ -93,19 +90,11 @@ HRESULT CWGUrlReceiver::AddDownload_imp(_ic_DownloadInfo* dlinfo)
 {
 	USES_CONVERSION;
 
-	LOG ("monitor: adddownload_imp" << nl);
-	LOG ("monitor: waiting for frame initializated" << nl);
-
 	while (((CFdmApp*)AfxGetApp ())->Is_Starting ())
 		Sleep (100); 
 
-	LOG ("monitor: initialized ok." << nl);
-	LOG ("monitor: checking silent flag" << nl);
-
 	UINT res;
 	BOOL bSilent = dlinfo->bForceSilent ? TRUE : _App.Monitor_Silent ();
-
-	LOG ("monitor: calling createdownload" << nl);
 
 	vmsDWCD_AdditionalParameters ap;
 	ap.dwMask = 0;
@@ -148,16 +137,12 @@ HRESULT CWGUrlReceiver::AddDownload_imp(_ic_DownloadInfo* dlinfo)
 		
 	}
 
-	BOOL bAdded = _pwndDownloads->CreateDownload (W2A (dlinfo->bstrUrl), TRUE, 
+	BOOL bAdded = UINT_MAX != _pwndDownloads->CreateDownload (W2A (dlinfo->bstrUrl), TRUE, 
 			W2A (dlinfo->bstrComment), W2A (dlinfo->bstrReferer), bSilent, 
 			DWCD_NOFORCEAUTOLAUNCH, NULL, &ap, &res);
 
-	LOG ("monitor: create download called ok" << nl);
-
 	if (bAdded && bSilent)
 		CMainFrame::ShowTimeoutBalloon (W2A (dlinfo->bstrUrl), "Download added", NIIF_INFO, TRUE);
-
-	LOG ("monitor: do exit from _imp" << nl);
 
 	
 	if (res == ID_DLNOTADDED)

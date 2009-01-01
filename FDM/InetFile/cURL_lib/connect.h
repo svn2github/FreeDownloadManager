@@ -16,9 +16,7 @@ CURLcode Curl_connecthost(struct connectdata *conn,
                           const struct Curl_dns_entry *host, 
                           curl_socket_t *sockconn, 
                           Curl_addrinfo **addr, 
-                          bool *connected); 
-
-CURLcode Curl_store_ip_addr(struct connectdata *conn); 
+                          bool *connected);  
 
 long Curl_timeleft(struct connectdata *conn,
                    struct timeval *nowp,

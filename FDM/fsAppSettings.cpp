@@ -600,9 +600,8 @@ void fsAppSettings::Prg_MinToTray(BOOL b)
 
 CString fsAppSettings::Update_URL()
 {
-	CString str = m_stgs.GetProfileString (_T ("Settings\\Update"), _T ("URL"), 
-		_T ("http://www.freedownloadmanager.org/update/"));
-	return str;
+	
+	return _T ("http://www.freedownloadmanager.org/update/");
 }
 
 void fsAppSettings::Update_URL(LPCSTR psz)
@@ -3132,4 +3131,34 @@ CString fsAppSettings::Firefox_PortableVersionPath()
 void fsAppSettings::Firefox_PortableVersionPath(LPCSTR psz)
 {
 	m_stgs.WriteProfileString ("FirefoxSettings", "PortableVersionPath", psz);
+}
+
+CString fsAppSettings::Monitor_SafariPDInstalledTo()
+{
+	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("SafariPDI"), "");
+}
+
+void fsAppSettings::Monitor_SafariPDInstalledTo(LPCSTR psz)
+{
+	m_stgs.WriteProfileString (_T ("Settings\\Monitor"), _T ("SafariPDI"), psz);
+}
+
+CString fsAppSettings::Monitor_ChromePDInstalledTo()
+{
+	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("ChromePDI"), "");
+}
+
+void fsAppSettings::Monitor_ChromePDInstalledTo(LPCSTR psz)
+{
+	m_stgs.WriteProfileString (_T ("Settings\\Monitor"), _T ("ChromePDI"), psz);
+}
+
+DWORD fsAppSettings::DldsMgrPDTimeLimit()
+{
+	return m_stgs.GetProfileInt (_T ("Settings"), _T ("DldsMgrPDTimeLimit"), 0);
+}
+
+void fsAppSettings::DldsMgrPDTimeLimit(DWORD dw)
+{
+	m_stgs.WriteProfileInt (_T ("Settings"), _T ("DldsMgrPDTimeLimit"), dw);
 }

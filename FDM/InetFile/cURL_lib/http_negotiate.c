@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: http_negotiate.c,v 1.29 2008-05-26 03:10:34 yangtse Exp $
+ * $Id: http_negotiate.c,v 1.33 2008-10-23 11:49:19 bagder Exp $
  ***************************************************************************/
 #include "setup.h"
 
@@ -37,18 +37,22 @@
 
 #include "urldata.h"
 #include "sendf.h"
-#include "strequal.h"
-#include "base64.h"
+#include "rawstr.h"
+#include "curl_base64.h"
 #include "http_negotiate.h"
 #include "memory.h"
 
 #ifdef HAVE_SPNEGO
-# include <spnegohelp.h>
-# if defined(USE_OPENSSL) && !defined(USE_YASSLEMUL)
-#  include <openssl/objects.h>
-# else
-#  error "Can't compile SPNEGO support without OpenSSL."
-# endif
+#  include <spnegohelp.h>
+#  ifdef USE_SSLEAY
+#    ifdef USE_OPENSSL
+#      include <openssl/objects.h>
+#    else
+#      include <objects.h>
+#    endif
+#  else
+#    error "Can't compile SPNEGO support without OpenSSL."
+#  endif
 #endif
 
 #define _MPRINTF_REPLACE /* use our functions only */
@@ -97,7 +101,7 @@ get_gss_name(struct connectdata *conn, bool proxy, gss_name_t *server)
 }
 
 static void
-log_gss_error(struct connectdata *conn, OM_uint32 error_status, char *prefix)
+log_gss_error(struct connectdata *conn, OM_uint32 error_status, const char *prefix)
 {
   OM_uint32 maj_stat, min_stat;
   OM_uint32 msg_ctx = 0;
@@ -253,7 +257,7 @@ int Curl_input_negotiate(struct connectdata *conn, bool proxy,
   if(GSS_ERROR(major_status)) {
     /* Curl_cleanup_negotiate(conn->data) ??? */
     log_gss_error(conn, minor_status,
-                  (char *)"gss_init_sec_context() failed: ");
+                  "gss_init_sec_context() failed: ");
     return -1;
   }
 

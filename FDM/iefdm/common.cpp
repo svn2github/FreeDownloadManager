@@ -6,7 +6,115 @@
 
 #include "..\FDM.h"
 #include <comdef.h>
-#include <inetfile/inetfile.h>
+#include "../InetFile/fsURL.h"
+#include "../InetFile/fsURL.cpp"
+#include "../InetFile/system.cpp"
+#include <fsString.h>
+
+fsInternetResult fsWinInetErrorToIR (DWORD dwErr)
+{
+	switch (dwErr)
+	{
+	case ERROR_SUCCESS:
+		return IR_SUCCESS;
+		
+	case ERROR_INTERNET_LOGIN_FAILURE:
+		return IR_LOGINFAILURE;
+		
+	case ERROR_INTERNET_INCORRECT_USER_NAME:
+		return IR_INVALIDUSERNAME;
+		
+	case ERROR_INTERNET_INCORRECT_PASSWORD:
+		return IR_INVALIDPASSWORD;
+		
+	case ERROR_INTERNET_CLIENT_AUTH_CERT_NEEDED:
+		return IR_LOGINFAILURE;
+		
+	case ERROR_INTERNET_UNRECOGNIZED_SCHEME:
+	case ERROR_INTERNET_INVALID_URL:
+		return IR_BADURL;
+		
+	case ERROR_INTERNET_CANNOT_CONNECT:
+		return IR_CANTCONNECT;
+		
+	case ERROR_INTERNET_CONNECTION_RESET:
+		return IR_LOSTCONNECTION;
+		
+	case ERROR_INTERNET_TIMEOUT:
+		return IR_TIMEOUT;
+		
+	case ERROR_INTERNET_NAME_NOT_RESOLVED:
+		return IR_NAMENOTRESOLVED;
+		
+	case ERROR_INTERNET_EXTENDED_ERROR:
+		return IR_EXTERROR;
+		
+	case ERROR_INTERNET_CONNECTION_ABORTED:
+	case ERROR_INTERNET_OPERATION_CANCELLED:
+	case ERROR_FTP_DROPPED:
+		return IR_CONNECTIONABORTED;
+		
+	case ERROR_INTERNET_NO_DIRECT_ACCESS:
+		return IR_NODIRECTACCESS;
+		
+	case ERROR_INTERNET_ITEM_NOT_FOUND:
+		return IR_FILENOTFOUND;
+		
+	case ERROR_INTERNET_DISCONNECTED:
+		return IR_NOINTERNETCONNECTION;
+		
+	case ERROR_INVALID_PARAMETER:
+		return IR_INVALIDPARAM;
+		
+	case ERROR_HTTP_INVALID_SERVER_RESPONSE:
+		return IR_SERVERUNKERROR;
+		
+	case ERROR_HTTP_INVALID_HEADER:
+		return IR_E_WININET_UNSUPP_RESOURCE;
+		
+	default:
+	
+		return IR_WININETUNKERROR;
+	}
+}
+
+fsInternetResult fsWinInetErrorToIR ()
+{
+	return fsWinInetErrorToIR (GetLastError ());
+}  
+
+BOOL fsIsServersEqual (LPCSTR pszServ1, LPCSTR pszServ2, BOOL bExcludeSubDomainNameFrom2Site)
+{
+	if (pszServ1 == NULL || pszServ2 == NULL)
+		return FALSE;
+	
+	UINT n1 = 0, n2 = 0;
+	
+	
+	
+	if (strnicmp (pszServ1, "www.", 4) == 0)
+		n1 = 4;
+	
+	if (strnicmp (pszServ2, "www.", 4) == 0)
+		n2 = 4;
+	
+	if (bExcludeSubDomainNameFrom2Site)
+	{
+		int l1 = strlen (pszServ1);
+		int l2 = strlen (pszServ2);
+		
+		
+		
+		if (l1-n1 < l2-n2)
+		{
+			
+			if (pszServ2 [l2 - (l1 - n1) - 1] == '.')
+				n2 = l2 - (l1 - n1);	
+		}
+	}
+	
+	return stricmp (pszServ1 + n1, pszServ2 + n2) == 0;
+}  
 
 BOOL fsOnNavigateUrl (LPCSTR pszUrl)
 {
@@ -253,8 +361,11 @@ BOOL is_ServerToSkip (LPCSTR psz)
 {
 	fsURL url;
 	if (IR_SUCCESS != url.Crack (psz))
+	{
+		if (stricmp (psz, "about:blank") == 0)
+			return FALSE;
 		return TRUE;
-
+	}
 	return IsServerInServersStr (Monitor_SkipServers (), url.GetHostName ());
 }
 
@@ -268,6 +379,16 @@ BOOL fsUrlToFdm (LPCSTR pszUrl, LPCSTR pszReferer, LPCSTR pszCookies, LPCSTR psz
 
 	if (is_ExtToSkip (pszUrl, bUseSkipExtsList))
 		return FALSE;
+
+	fsURL urlH;
+	if (IR_SUCCESS != urlH.Crack (pszUrl))
+		return FALSE;
+	LPCSTR pszHost = urlH.GetHostName ();
+	if (stricmp (pszHost, "megashares.com") == 0 ||
+		(strlen (pszHost) > sizeof ("megashares.com") && stricmp (pszHost+strlen (pszHost)-sizeof("megashares.com"), ".megashares.com") == 0))
+	{
+		pszReferer = "";
+	}  
 
 	IWGUrlReceiver* wg;
 	HRESULT hr;

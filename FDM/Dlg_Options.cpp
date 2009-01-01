@@ -60,17 +60,34 @@ BOOL CDlg_Options::OnInitDialog()
 
 void CDlg_Options::set_CurPage(OPTIONS_PAGES_TREE* ptPage)
 {
+	if (ptPage->GetData ().page == NULL)
+	{
+		if (ptPage->GetLeafCount ())
+		{
+			HTREEITEM hItem = m_wndPagesList.GetSelectedItem ();
+			hItem = m_wndPagesList.GetChildItem (hItem);
+			ASSERT (hItem != NULL);
+			m_wndPagesList.SelectItem (hItem);
+			set_CurPage (ptPage->GetLeaf (0));
+		}
+		else
+		{
+			m_ptCurPage = ptPage;
+		}
+		return;
+	}
+
 	if (m_ptCurPage == ptPage)
 		return;
 
-	if (m_ptCurPage)
-		m_ptCurPage->GetData ()->ShowWindow (SW_HIDE);
+	if (m_ptCurPage && m_ptCurPage->GetData ().page)
+		m_ptCurPage->GetData ().page->ShowWindow (SW_HIDE);
 
-	if (IsWindow (ptPage->GetData ()->m_hWnd) == FALSE)
-		CreatePageDialog (ptPage->GetData ());
+	if (IsWindow (ptPage->GetData ().page->m_hWnd) == FALSE)
+		CreatePageDialog (ptPage->GetData ().page);
 
-	ptPage->GetData ()->ShowWindow (SW_SHOW);
-	ptPage->GetData ()->SetFocus ();
+	ptPage->GetData ().page->ShowWindow (SW_SHOW);
+	ptPage->GetData ().page->SetFocus ();
 	m_ptCurPage = ptPage;
 
 	CRect rc; GetDlgItem (IDC__DLGCAPTION)->GetWindowRect (&rc);
@@ -109,8 +126,9 @@ void CDlg_Options::OnPaint()
 	rc.left += 5;
 	dc.SetBkMode (TRANSPARENT);
 	dc.SetTextColor (RGB (255,255,255));
-	dc.DrawText (m_ptCurPage->GetData ()->get_PageTitle (), &rc,
-		DT_LEFT | DT_VCENTER | DT_SINGLELINE);
+	CString str = m_ptCurPage->GetData ().page ? m_ptCurPage->GetData ().page->get_PageTitle () : 
+		m_ptCurPage->GetData ().strJustCaption;
+	dc.DrawText (str, &rc, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
 
 	dc.SelectObject (fntOld);
 	dc.SelectObject (penOld);
@@ -132,10 +150,12 @@ void CDlg_Options::FillPagesList(OPTIONS_PAGES_TREE* ptRoot, HTREEITEM htRoot)
 	for (int i = 0; i < ptRoot->GetLeafCount (); i++)
 	{
 		OPTIONS_PAGES_TREE *ptPage = ptRoot->GetLeaf (i);
+		CString str = ptPage->GetData ().page ? ptPage->GetData ().page->get_PageShortTitle () : 
+			ptPage->GetData ().strJustCaption;
 		HTREEITEM hPage = m_wndPagesList.InsertItem (TVIF_TEXT | TVIF_PARAM | TVIF_STATE, 
-				ptPage->GetData ()->get_PageShortTitle (), 0, 0, TVIS_EXPANDED, TVIS_EXPANDED, 
+				str, 0, 0, TVIS_EXPANDED, TVIS_EXPANDED, 
 				(DWORD_PTR)ptPage, htRoot, TVI_LAST);
-		if (!m_strStartPage.IsEmpty () && m_strStartPage == ptPage->GetData ()->get_PageShortTitle ())
+		if (!m_strStartPage.IsEmpty () && m_strStartPage == str)
 			m_wndPagesList.Select (hPage, TVGN_CARET);
 		if (ptPage->GetLeafCount ())
 			FillPagesList (ptPage, hPage);
@@ -157,9 +177,9 @@ BOOL CDlg_Options::OptionsTree_Apply(OPTIONS_PAGES_TREE *ptRoot)
 	for (int i = 0; i < ptRoot->GetLeafCount (); i++)
 	{
 		OPTIONS_PAGES_TREE *ptPage = ptRoot->GetLeaf (i);
-		CDlg_Options_Page *page = ptPage->GetData ();
-
-		if (IsWindow (page->m_hWnd))
+		CDlg_Options_Page *page = ptPage->GetData ().page;
+		
+		if (page && IsWindow (page->m_hWnd))
 		{
 			if (FALSE == page->Apply ())
 			{

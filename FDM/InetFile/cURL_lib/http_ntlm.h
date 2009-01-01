@@ -22,7 +22,12 @@ CURLcode Curl_output_ntlm(struct connectdata *conn, bool proxy);
 void Curl_ntlm_cleanup(struct connectdata *conn);
 #ifndef USE_NTLM
 #define Curl_ntlm_cleanup(x)
-#endif   
+#endif
+
+#ifdef USE_WINDOWS_SSPI
+CURLcode Curl_ntlm_global_init(void);
+void Curl_ntlm_global_cleanup(void);
+#endif  
 
 #define NTLMFLAG_NEGOTIATE_UNICODE               (1<<0) 
 

@@ -86,10 +86,7 @@ BOOL CDlg_Options_Downloads_Bittorrent::OnInitDialog()
 	
 	CheckDlgButton (IDC_ASSOCWITHTORRENT, 
 		vmsTorrentExtension::IsAssociatedWithUs () ? BST_CHECKED : BST_UNCHECKED);
-	
-	CheckDlgButton (IDC_DISABLE_SEEDING, 
-		_App.Bittorrent_DisableSeedingByDef () ? BST_CHECKED : BST_UNCHECKED);
-	
+		
 	ApplyLanguage ();
 	
 	UpdateEnabled ();
@@ -157,8 +154,6 @@ BOOL CDlg_Options_Downloads_Bittorrent::Apply()
 	
 	_App.Bittorrent_EnableDHT (IsDlgButtonChecked (IDC_USE_DHT) == BST_CHECKED);
 	_BT.ApplyDHTSettings ();
-	
-	_App.Bittorrent_DisableSeedingByDef (IsDlgButtonChecked (IDC_DISABLE_SEEDING) == BST_CHECKED);
 	
 	return TRUE;
 }
@@ -259,7 +254,6 @@ void CDlg_Options_Downloads_Bittorrent::ApplyLanguage()
 		fsDlgLngInfo (IDC__TO, L_TO, TRUE),
 		fsDlgLngInfo (IDC_USE_DHT, L_ENABLE_DHT),
 		fsDlgLngInfo (IDC_ASSOCWITHTORRENT, L_ASSOCWITHTORRENT),
-		fsDlgLngInfo (IDC_DISABLE_SEEDING, L_DISABLE_SEEDING_BYDEF),
 		fsDlgLngInfo (IDC__MAXHALFS, L_MAXHALFCONNS, TRUE),
 	};
 	

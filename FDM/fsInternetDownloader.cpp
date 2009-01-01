@@ -266,8 +266,6 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 		return IR_S_FALSE;
 	}
 
-	LOG ("creating new section in " << iSection << " section" << nl);
-
 	EnterCriticalSection (&m_csSections);
 	
 	sect.uStart = sect.uCurrent = m_vSections [iSection].uCurrent + uMaxSection / 2;
@@ -529,12 +527,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 
 	TSECT (sect);
 
-	LOG ("fsID::_thrDL [" << sect->iSection << "] enter in..." << nl);
-	LOG ("fsID::_thrDL [" << sect->iSection << "] section info" << nl);
-	LOG ("fsID::_thrDL [" << sect->iSection << "] start = " << sect->uStart << nl);
-	LOG ("fsID::_thrDL [" << sect->iSection << "] current = " << sect->uCurrent << nl);
-	LOG ("fsID::_thrDL [" << sect->iSection << "] end = " << sect->uEnd << nl);
-
 	DWORD dwBufSize = 2000;				
 	BYTE *pBuffer = new BYTE [dwBufSize];	
 	ZeroMemory (pBuffer, dwBufSize);
@@ -556,8 +548,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 	else
 		st.set_LowSpeedDuration (INT_MAX);	
 
-	LOG ("fsID::_thrDL [" << sect->iSection << "] buf size is 1000" << nl);
-
 	timeOld.Now ();
 	timeNew.Now ();
 
@@ -569,13 +559,9 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 
 	if (sect->file)
 	{
-		LOG ("fsID::_thrDL [" << sect->iSection << "] prepairing dl..." << nl);
-
 		sect->file->SetDialogFunc (_InetFileDialogFunc, sect->pThis, LPVOID (sect->iSection));
 		sect->state = SS_DOWNLOADING;
 		sect->pThis->Event (DE_SECTDOWNLOADING, sect->iSection);
-
-		LOG ("fsID::_thrDL [" << sect->iSection << "] r 0-size" << nl);
 
 		
 		
@@ -590,11 +576,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 		sect->pThis->IsMayZIP (TRUE) && sect->pThis->m_vSections.size () == 1;
 	UINT32 uLast3BytesRead;	
 	uLast3BytesRead = 0;
-
-	#ifdef _USELOGGING
-	if (bMayZIP)
-		LOG ("fsID::_thrDL [" << sect->iSection << "] probably is ZIP" << nl);
-	#endif
 
 	
 	#define CURRENT_DL_POS (sect->uCurrent + sect->dwCacheLen)
@@ -642,8 +623,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 		}
 		else
 		{
-			LOG ("fsID::_thrDL [" << sect->iSection << "] read error " << sect->lastErr << nl);
-
 			
 			if (sect->lastErr == IR_SUCCESS || sect->lastErr == IR_S_FALSE)
 				sect->lastErr = IR_ERROR; 
@@ -652,9 +631,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 		
 		if (dwRead == 0 && sect->lastErr == IR_SUCCESS)
 		{
-			LOG ("fsID::_thrDL [" << sect->iSection << "] 0 read. count is " << cZeroReads << nl);
-			LOG ("fsID::_thrDL [" << sect->iSection << "] to read is " << dwRead << nl);
-
 			if (cZeroReads == 0)
 				tickZRStart.Now ();
 			else
@@ -665,8 +641,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 				{
 					
 					
-
-					LOG ("fsID::_thrDL [" << sect->iSection << "] 0 read (2)" << nl);
 
 					
 					
@@ -681,7 +655,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 						goto _exit;
 					}
 					
-					LOG ("fsID::_thrDL [" << sect->iSection << "] 0 read (4)" << nl);
 					cZeroReads = 101;	
 				}
 			}
@@ -705,7 +678,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 				}
 				else
 				{
-					LOG ("fsID::_thrDL [" << sect->iSection << "] 0 read (5)" << nl);
 					sect->lastErr = IR_LOSTCONNECTION;
 				}
 			}
@@ -720,6 +692,28 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 		
 		cZeroReads = 0;
 
+		if (sect->lastErr == IR_LOSTCONNECTION)
+		{
+			if (sect->pThis->GetNumberOfSections () == 1)
+			{
+				LPCSTR pszHost = sect->pThis->DNP (0)->pszServerName;
+				bool bDone = false;
+
+				if (strlen (pszHost) > sizeof ("mail.yahoo.com") &&
+						stricmp (pszHost+strlen (pszHost)-sizeof ("mail.yahoo.com"), ".mail.yahoo.com") == 0)
+					bDone = true;
+				else if (strstr (sect->pThis->DNP (0)->pszPathName, ".mail.yahoo.com/"))
+					bDone = true;
+
+				if (bDone)
+				{
+					sect->uDEnd = sect->uEnd = CURRENT_DL_POS;
+					sect->lastErr = IR_SUCCESS;
+					continue;
+				}
+			}
+		}
+
 		
 		if (sect->lastErr != IR_SUCCESS)
 		{
@@ -729,8 +723,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 
 			if (sect->file)
 			{
-				LOG ("fsID::_thrDL [" << sect->iSection << "] performing rollback" << nl);
-
 				
 				
 				DWORD dw = sect->pThis->DNP (sect->iSection)->wRollBackSize;
@@ -768,8 +760,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 			sect->state = SS_ERROR;
 			if (sect->file)
 				sect->pThis->Event (DE_ERROROCCURED, sect->iSection);
-
-			LOG ("fsID::_thrDL [" << sect->iSection << "] del file" << nl);
 			
 			SAFE_DELETE (sect->file);
 
@@ -789,8 +779,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 
 			UINT cAttempts = sect->pThis->m_uMaxAttempts;
 
-			LOG ("fsID::_thrDL [" << sect->iSection << "] reconnecting..." << nl);
-
 			
 			do 
 			{
@@ -802,8 +790,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 						sect->state = SS_ERRSTOPPED;
 	
 					sect->pThis->m_bErrDownloading = FALSE;
-					
-					LOG ("fsID::_thrDL [" << sect->iSection << "] failed to reconnect" << nl);
 
 					goto _exit;
 				}
@@ -818,10 +804,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 					if (sect->lastErr == IR_RANGESNOTAVAIL || sect->lastErr == IR_DOUBTFUL_RANGESRESPONSE)
 					{
 						sect->state = SS_ERRSTOPPED;
-						sect->pThis->m_bErrDownloading = FALSE;
-
-						LOG ("fsID::_thrDL [" << sect->iSection << "] failed to reconnect (2)" << nl);
-						
+						sect->pThis->m_bErrDownloading = FALSE;						
 						goto _exit;
 					}
 
@@ -836,8 +819,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 
 			} while (sect->lastErr != IR_SUCCESS);
 
-			LOG ("fsID::_thrDL [" << sect->iSection << "] connected ok." << nl);
-			
 			sect->pThis->m_bErrDownloading = FALSE;
 			CHECK_NEED_STOP;
 			sect->state = SS_DOWNLOADING;
@@ -916,7 +897,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 					UINT32* p = (UINT32*)(buf+i);
 					if (*p == ZIP_BEGIN_SIG)
 					{
-						LOG ("fsID::_thrDL [" << sect->iSection << "] ZIP detected" << nl);
 						bZIP = TRUE; 
 						uZIPStart = CURRENT_DL_POS - dwRead - i + 3;
 						break;
@@ -1049,7 +1029,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 			if (dwBufSize < dwMaxRead)
 			{
 				
-				LOG ("fsID::_thrDL [" << sect->iSection << "] buf size is " << dwMaxRead << nl);
 				delete [] pBuffer;
 				pBuffer = new BYTE [dwMaxRead];
 				dwBufSize = dwMaxRead;
@@ -1084,7 +1063,6 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 	sect->state = SS_DONE;
 
 _exit:
-	LOG ("fsID::_thrDL [" << sect->iSection << "] del file (2)" << nl);
 	fsInternetURLFile *file = sect->file;
 	sect->file = NULL;
 	delete file;
@@ -1141,8 +1119,6 @@ _exit:
 
 	LeaveCriticalSection (&sect->pThis->m_csDone);
 
-	LOG ("fsID::_thrDL [" << sect->iSection << "] exit." << nl);
-
 	return 0;
 }
 
@@ -1155,9 +1131,6 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 {
 	fsInternetResult ir;
 	fsDownload_NetworkProperties* dnp;
-
-	LOG ("fsID::OU_i: opening url..." << nl);
-	LOG ("fsID::OU_i: mirror: " << (DWORD)nMirror << nl);
 	
 	*ppFile = NULL;
 
@@ -1183,7 +1156,6 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 	ir  = pSession->Create (dnp->pszAgent, dnp->enAccType, szProxy, dnp->enProtocol);
 	if (ir != IR_SUCCESS)
 	{
-		LOG ("fsID::OU_i: openurl failed" << nl);
 		delete pSession;
 		SAFE_DELETE (m_pOpeningFile);
 		LeaveCriticalSection (&m_csOpenUrl);
@@ -1231,8 +1203,6 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 
 		delete [] pszExt;
 	}
-	
-	LOG ("fsID::OU_i(" << (DWORD)this << "): opening url (" << (DWORD)m_pOpeningFile << ")" << nl);
 
 	_inc_tOU_param *p = new _inc_tOU_param;
 	p->pthis = this;
@@ -1251,13 +1221,10 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 
 	ir =  (fsInternetResult)dw; 
 
-	LOG ("fsID::OU_i(" << (DWORD)this << "): opened ok." << nl);
-
 	
 
 	if (m_bNeedStop)
 	{
-		LOG ("fsID::OU_i: openurl failed" << nl);
 		SAFE_DELETE (m_pOpeningFile);
 		LeaveCriticalSection (&m_csOpenUrl);
 		return IR_S_FALSE;
@@ -1280,7 +1247,6 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 			{
 				SAFE_DELETE (m_pOpeningFile);
 				LeaveCriticalSection (&m_csOpenUrl);
-				LOG ("fsID::OU_i: openurl failed" << nl);
 				return IR_SERVERUNKERROR;
 			}
 
@@ -1289,8 +1255,6 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 			fsURL url;
 			LPSTR pszUrl = new char [10000];
 			DWORD dwLen = 10000;
-
-			LOG ("fsID::OU_i: Redirecting to: " << pszUrlTo << nl);
 
 			if (url.Crack (pszUrlTo) != IR_SUCCESS) 
 			{
@@ -1348,7 +1312,6 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 				
 				SAFE_DELETE (m_pOpeningFile);
 				LeaveCriticalSection (&m_csOpenUrl);
-				LOG ("fsID::OU_i: openurl failed" << nl);
 				return ir;
 			}
 
@@ -1369,7 +1332,6 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 
 			SAFE_DELETE (m_pOpeningFile);
 			LeaveCriticalSection (&m_csOpenUrl);
-			LOG ("fsID::OU_i: calling openurl again..." << nl);
 			if (m_bNeedStop == FALSE)
 				return OpenUrl_imp (uStartPos, ppFile, iSectIndex, nMirror, bCheckFileSize, ++iAttempt);
 			else
@@ -1409,7 +1371,6 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 							Event (DE_BADFILESIZE);
 						Event (DE_TRYINGANOTHERMIRROR);
 						LeaveCriticalSection (&m_csOpenUrl);
-						LOG ("fsID::OU_i: calling openurl again..." << nl);
 						return OpenUrl_imp (uStartPos, ppFile, iSectIndex, nMirror, bCheckFileSize, ++iAttempt);
 					}
 				}
@@ -1426,7 +1387,6 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 		{
 			SAFE_DELETE (m_pOpeningFile);
 			LeaveCriticalSection (&m_csOpenUrl);
-			LOG ("fsID::OU_i: openurl failed" << nl);
 			return ir;
 		}
 	}
@@ -1461,7 +1421,6 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 	(*ppFile)->GetLastModifiedDate (&m_fileDate);
 
 	LeaveCriticalSection (&m_csOpenUrl);
-	LOG ("fsID::OU_i: openurl succeded" << nl);
 	return IR_SUCCESS;
 }
 
@@ -1518,7 +1477,6 @@ void fsInternetDownloader::StopDownloading()
 	try {
 	if (m_pOpeningFile)
 	{
-		LOG ("fsID::SD: closing opening file (" << (DWORD)m_pOpeningFile << ")" << nl);
 		m_pOpeningFile->CloseHandle ();
 	}
 	}catch (...) {}
@@ -2688,15 +2646,11 @@ fsInternetResult fsInternetDownloader::FindMirrors()
 
 	m_dwState |= IDS_MIRRSEARCHPERFORMED;
 
-	LOG ("adding mirrors to ID..." << nl);
-
 	for (int i = 0; i < mirrors.Get_MirrorURLCount () && UINT (i) < m_cMaxMirrs; i++)
 	{
 		AddMirrorURL (mirrors.Get_MirrorURL (i), NULL, NULL, TRUE);
 		m_cMirrsFound++;
 	}
-
-	LOG ("ok." << nl);
 
 	if (m_cMirrsFound && m_bNeedStop == FALSE)
 	{
@@ -2798,11 +2752,8 @@ BOOL fsInternetDownloader::MeasureMirrorsSpeed()
 
 	m_bNeedStop = FALSE;
 
-	LOG ("measuring mirrors speed..." << nl);
-
 	if (pinger.TestState () == FALSE)
 	{
-		LOG ("failed to measure." << nl);
 		return FALSE;
 	}
 
@@ -2813,11 +2764,7 @@ BOOL fsInternetDownloader::MeasureMirrorsSpeed()
 		if (m_bNeedStop)
 			return FALSE;
 
-		LOG ("measuring mirror : " << i << nl);
-
 		m_vMirrs [i].dwPingTime = pinger.Ping (m_vMirrs [i].dnp.pszServerName);
-
-		LOG ("measured." << nl);
 	}
 
 	return TRUE;
@@ -2915,11 +2862,7 @@ void fsInternetDownloader::AddMirror(fsDownload_NetworkProperties *dnp, BOOL bIs
 	mirr.dnp = *dnp;
 	mirr.bIsGood = bIsGood;
 	
-	LOG ("adding mirror...");
-
 	m_vMirrs.add (mirr);
-
-	LOG ("ok." << nl);
 }
 
 DWORD fsInternetDownloader::Get_BaseServerPingTime()

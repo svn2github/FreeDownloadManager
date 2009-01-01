@@ -43,6 +43,7 @@ public:
 	STDMETHOD(GetSite)(REFIID riid, void **ppvSite);
 	STDMETHOD(SetSite )(IUnknown *pSite);
 protected:
+	void AnalyzePageAndWriteInfo();
 	void DeleteFile();
 	static long _cIEDownloads;
 	void WalkThroughForm (IHTMLElement* pElement, fsString& str);

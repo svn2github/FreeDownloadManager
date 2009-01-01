@@ -24,36 +24,21 @@ fsZipArchiveFastRebuilder::~fsZipArchiveFastRebuilder()
 
 DWORD fsZipArchiveFastRebuilder::RetreiveArchiveContent()
 {
-	LOG ("ZAFR: starting retreiving zip content" << nl);
-	
 	if (m_dwFileSize == 0)
-	{
-		LOG ("ZAFR: err: file size is 0" << nl);
 		return ARR_STREAMERROR;
-	}
 
 	UINT32 uSig;
 
 	
 	int iPosReq = m_dwFileSize - sizeof (fsZipEndOfCentralDirHdr) - 4;
 
-	LOG ("ZAFR: seek to eocd label" << nl);
-
 	
 	if (FALSE == m_in->Seek (iPosReq, ST_BEGIN))
-	{
-		LOG ("ZAFR: err: failed" << nl);
 		return ARR_STREAMERROR;
-	}
-
-	LOG ("ZAFR: reading label" << nl);
 
 	
 	if (m_in->Read (&uSig, sizeof (uSig)) != sizeof (uSig))
-	{
-		LOG ("ZAFR: err: failed to read" << nl);
 		return ARR_STREAMERROR;
-	}
 
 	fsZipEndOfCentralDirHdr ecd;
 
@@ -61,11 +46,8 @@ DWORD fsZipArchiveFastRebuilder::RetreiveArchiveContent()
 	{
 		
 
-		LOG ("ZAFR: label not found. Do searching for label" << nl);
-
 		if (m_dwFileSize < 65536)
 		{
-			LOG ("ZAFR: err: file size is less than 65536" << nl);
 			m_in->Seek (0, ST_BEGIN);
 			
 			
@@ -75,25 +57,13 @@ DWORD fsZipArchiveFastRebuilder::RetreiveArchiveContent()
 		
 		iPosReq = m_dwFileSize - (65536+sizeof (ecd)+4);
 
-		LOG ("ZAFR: seeking to region start" << nl);
-
 		if (FALSE == m_in->Seek (iPosReq, ST_BEGIN))
-		{
-			LOG ("ZAFR: err: failed to seek" << nl);
 			return ARR_STREAMERROR;
-		}
 
 		BYTE arbBuf [65536+sizeof (ecd)+4];
 
-		LOG ("ZAFR: reading region" << nl);
-
 		if (sizeof (arbBuf) != m_in->Read (arbBuf, sizeof (arbBuf)))
-		{
-			LOG ("ZAFR: failed to read" << nl);
 			return ARR_STREAMERROR;
-		}
-
-		LOG ("ZAFR: performing searching" << nl);
 			
 		LPBYTE pS = arbBuf, pE = pS + sizeof (arbBuf) - 4 - sizeof (ecd);
 		
@@ -107,12 +77,9 @@ DWORD fsZipArchiveFastRebuilder::RetreiveArchiveContent()
 
 		if (pS == pE)
 		{
-			LOG ("ZAFR: err: label was not found" << nl);
 			m_in->Seek (0, ST_BEGIN);
 			return fsZipArchiveRebuilder::RetreiveArchiveContent ();
 		}
-
-		LOG ("ZAFR: label was found" << nl);
 
 		pS += 4;
 		CopyMemory (&ecd, pS, sizeof (ecd));
@@ -123,42 +90,19 @@ DWORD fsZipArchiveFastRebuilder::RetreiveArchiveContent()
 	}
 	else
 	{
-		LOG ("ZAFR: reading eocdr" << nl);
-
 		if (m_in->Read (&ecd, sizeof (ecd)) != sizeof (ecd))
-		{
-			LOG ("ZAFR: err: failed to read" << nl);
 			return ARR_STREAMERROR;
-		}
-
-		LOG ("ZAFR: reading ZIP comment" << nl);
 
 		m_strZipComment.alloc (ecd.wZipCommentLen);
 		if (m_in->Read (m_strZipComment, ecd.wZipCommentLen) != ecd.wZipCommentLen)
-		{
-			LOG ("ZAFR: err: failed to read" << nl);
 			return m_in->GetLastError () != ASE_NOMOREDATA ? ARR_STREAMERROR : ARR_BADARCHIVE;;
-		}
 	}
-
-	LOG ("ZAFR: files total: " << (int)ecd.wcFilesTotal << nl);
-	LOG ("ZAFR: cdir size: " << (int)ecd.uCDirSize << nl);
 
 	m_hdrEndOfCDir = ecd;
 
-	LOG ("ZAFR: ZIP size is: " << m_dwFileSize << nl);
-	LOG ("ZAFR: CDir start is: " << (int)ecd.uStartCDirOffsetWithRespectToStartingDiskNumber << nl);
-
-	LOG ("ZAFR: seek to cdir start" << nl);
-
 	
 	if (FALSE == m_in->Seek (ecd.uStartCDirOffsetWithRespectToStartingDiskNumber, ST_BEGIN))
-	{
-		LOG ("ZAFR: err: failed to seek" << nl);
 		return ARR_STREAMERROR;
-	}
-
-	LOG ("ZAFR: do main loop" << nl);
 
 	
 
@@ -167,35 +111,21 @@ DWORD fsZipArchiveFastRebuilder::RetreiveArchiveContent()
 		
 
 		if (m_in->Read (&uSig, sizeof (uSig)) != sizeof (uSig))
-		{
-			LOG ("ZAFR: loop: err: failed to read label" << nl);
 			return m_in->GetLastError () != ASE_NOMOREDATA ? ARR_STREAMERROR : ARR_BADARCHIVE;;
-		}
 
 		if (uSig != ZIP_FILEHEADER_SIG)
-		{
-			LOG ("ZAFR: loop: err: unknown label" << nl);
 			return ARR_BADARCHIVE;
-		}
 
 		fsZipFileHeader hdr;
 
 		if (m_in->Read (&hdr, sizeof (hdr)) != sizeof (hdr))
-		{
-			LOG ("ZAFR: loop: err: failed to read header" << nl);
 			return m_in->GetLastError () != ASE_NOMOREDATA ? ARR_STREAMERROR : ARR_BADARCHIVE;;
-		}
 
 		fsString strFileName;
 		strFileName.alloc (hdr.wFileNameLen);
 
 		if (m_in->Read (strFileName, hdr.wFileNameLen) != hdr.wFileNameLen)
-		{
-			LOG ("ZAFR: loop: err: failed to read file name" << nl);
 			return m_in->GetLastError () != ASE_NOMOREDATA ? ARR_STREAMERROR : ARR_BADARCHIVE;;
-		}
-
-		LOG ("ZAFR: loop: File found: " << strFileName << nl);
 
 		BYTE *pbExtra = NULL;
 		
@@ -204,20 +134,14 @@ DWORD fsZipArchiveFastRebuilder::RetreiveArchiveContent()
 			pbExtra = new BYTE [hdr.wExtraLen];
 
 			if (m_in->Read (pbExtra, hdr.wExtraLen) != hdr.wExtraLen)
-			{
-				LOG ("ZAFR: loop: err: failed to read extra info" << nl);
 				return m_in->GetLastError () != ASE_NOMOREDATA ? ARR_STREAMERROR : ARR_BADARCHIVE;;
-			}
 		}
 
 		fsString strComment;
 		strComment.alloc (hdr.wFileCommentLen);
 		
 		if (m_in->Read (strComment, hdr.wFileCommentLen) != hdr.wFileCommentLen)
-		{
-			LOG ("ZAFR: loop: err: failed to read comment" << nl);
 			return m_in->GetLastError () != ASE_NOMOREDATA ? ARR_STREAMERROR : ARR_BADARCHIVE;
-		}
 
 		fsZipFile file;
 		file.hdr = hdr;
@@ -240,8 +164,6 @@ DWORD fsZipArchiveFastRebuilder::RetreiveArchiveContent()
 
 	fsZipLocalFile* lf = &m_vLocalFiles [m_vLocalFiles.size ()-1];
 	lf->position.dwSrcEnd = lf->position.dwDstEnd = ecd.uStartCDirOffsetWithRespectToStartingDiskNumber;
-
-	LOG ("ZAFR: ZIP content was retreived with no errors." << nl);
 
 	return NOERROR;
 }

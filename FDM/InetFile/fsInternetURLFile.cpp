@@ -301,6 +301,12 @@ fsInternetResult fsInternetURLFile::OpenEx(INTERNET_SCHEME scheme, LPCSTR pszHos
 {
 	fsInternetResult ir;
 
+	if (m_strInterface.IsEmpty () == false)
+	{
+		m_bUseFile2 = true;
+		goto _lUseFile2;
+	}
+
 	if (scheme == INTERNET_SCHEME_FTP && isProxySpecified ())
 	{
 		m_bUseFile2 = true;
@@ -423,6 +429,8 @@ _lUseFile2:
 		DWORD dw = sizeof (szUrl);
 		url.Create (scheme, pszHostName, port, NULL, NULL, pszPath, szUrl, &dw);
 		m_ifile2.Initialize ();
+		if (m_strInterface.IsEmpty () == false)
+			m_ifile2.setInterface (m_strInterface);
 		m_ifile2.set_URL (szUrl);
 		m_ifile2.set_ResumeFrom (uStartPosition);
 		m_ifile2.set_UserAgent (m_pSession->get_UserAgent ());
@@ -601,4 +609,9 @@ bool fsInternetURLFile::isProxySpecified()
 	}
 
 	return psz1 != NULL && *psz1 != 0;
+}
+
+void fsInternetURLFile::SetInterface(LPCSTR psz)
+{
+	m_strInterface = psz;
 }

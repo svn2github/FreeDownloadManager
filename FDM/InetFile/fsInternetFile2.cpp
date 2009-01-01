@@ -335,9 +335,9 @@ void fsInternetFile2::set_Proxy(LPCSTR pszProxy, LPCSTR pszUser, LPCSTR pszPwd)
 
 	if (pszUser && *pszUser)
 	{
-		char sz [1000];
-		sprintf (sz, "%s:%s", pszUser, pszPwd);
-		curl_easy_setopt (m_curl, CURLOPT_PROXYUSERPWD, sz);
+		curl_easy_setopt (m_curl, CURLOPT_PROXYUSERNAME, pszUser);
+		curl_easy_setopt (m_curl, CURLOPT_PROXYPASSWORD, pszPwd);
+				
 	}
 }
 
@@ -364,8 +364,8 @@ void fsInternetFile2::ExtractFileInfoFromResponse()
 
 		double f;
 		curl_easy_getinfo (m_curl, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &f);
-		m_uFileSize = (UINT64)f + m_uStartPos;
-
+		m_uFileSize = f != 0 ? (UINT64)f + m_uStartPos : _UI64_MAX;
+	
 		if (m_uStartPos != 0)
 			m_enRST = RST_PRESENT;
 	}
@@ -428,4 +428,9 @@ UINT64 fsInternetFile2::GetFileSize()
 void fsInternetFile2::setUseFtpAsciiMode(bool bUse)
 {
 	curl_easy_setopt (m_curl, CURLOPT_TRANSFERTEXT, bUse);
+}
+
+void fsInternetFile2::setInterface(LPCSTR psz)
+{
+	curl_easy_setopt (m_curl, CURLOPT_INTERFACE, psz);
 }

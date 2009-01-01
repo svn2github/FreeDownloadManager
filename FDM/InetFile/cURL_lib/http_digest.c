@@ -18,7 +18,7 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: http_digest.c,v 1.34 2008-01-10 09:17:07 bagder Exp $
+ * $Id: http_digest.c,v 1.44 2008-10-23 11:49:19 bagder Exp $
  ***************************************************************************/
 #include "setup.h"
 
@@ -32,9 +32,9 @@
 
 #include "urldata.h"
 #include "sendf.h"
-#include "strequal.h"
-#include "base64.h"
-#include "md5.h"
+#include "rawstr.h"
+#include "curl_base64.h"
+#include "curl_md5.h"
 #include "http_digest.h"
 #include "strtok.h"
 #include "url.h" /* for Curl_safefree() */
@@ -104,28 +104,34 @@ CURLdigest Curl_input_digest(struct connectdata *conn,
             include the possibly trailing comma, newline or carriage return */
          (2 ==  sscanf(header, "%255[^=]=%1023[^\r\n,]",
                        value, content)) ) {
-        if(strequal(value, "nonce")) {
+        if(!strcmp("\"\"", content)) {
+          /* for the name="" case where we get only the "" in the content variable,
+           * simply clear the content then
+           */
+          content[0]=0;
+        }
+        if(Curl_raw_equal(value, "nonce")) {
           d->nonce = strdup(content);
           if(!d->nonce)
             return CURLDIGEST_NOMEM;
         }
-        else if(strequal(value, "stale")) {
-          if(strequal(content, "true")) {
+        else if(Curl_raw_equal(value, "stale")) {
+          if(Curl_raw_equal(content, "true")) {
             d->stale = TRUE;
             d->nc = 1; /* we make a new nonce now */
           }
         }
-        else if(strequal(value, "realm")) {
+        else if(Curl_raw_equal(value, "realm")) {
           d->realm = strdup(content);
           if(!d->realm)
             return CURLDIGEST_NOMEM;
         }
-        else if(strequal(value, "opaque")) {
+        else if(Curl_raw_equal(value, "opaque")) {
           d->opaque = strdup(content);
           if(!d->opaque)
             return CURLDIGEST_NOMEM;
         }
-        else if(strequal(value, "qop")) {
+        else if(Curl_raw_equal(value, "qop")) {
           char *tok_buf;
           /* tokenize the list and choose auth if possible, use a temporary
              clone of the buffer since strtok_r() ruins it */
@@ -134,10 +140,10 @@ CURLdigest Curl_input_digest(struct connectdata *conn,
             return CURLDIGEST_NOMEM;
           token = strtok_r(tmp, ",", &tok_buf);
           while(token != NULL) {
-            if(strequal(token, "auth")) {
+            if(Curl_raw_equal(token, "auth")) {
               foundAuth = TRUE;
             }
-            else if(strequal(token, "auth-int")) {
+            else if(Curl_raw_equal(token, "auth-int")) {
               foundAuthInt = TRUE;
             }
             token = strtok_r(NULL, ",", &tok_buf);
@@ -155,13 +161,13 @@ CURLdigest Curl_input_digest(struct connectdata *conn,
               return CURLDIGEST_NOMEM;
           }
         }
-        else if(strequal(value, "algorithm")) {
+        else if(Curl_raw_equal(value, "algorithm")) {
           d->algorithm = strdup(content);
           if(!d->algorithm)
             return CURLDIGEST_NOMEM;
-          if(strequal(content, "MD5-sess"))
+          if(Curl_raw_equal(content, "MD5-sess"))
             d->algo = CURLDIGESTALGO_MD5SESS;
-          else if(strequal(content, "MD5"))
+          else if(Curl_raw_equal(content, "MD5"))
             d->algo = CURLDIGESTALGO_MD5;
           else
             return CURLDIGEST_BADALGO;
@@ -232,8 +238,8 @@ CURLcode Curl_output_digest(struct connectdata *conn,
   struct timeval now;
 
   char **allocuserpwd;
-  char *userp;
-  char *passwdp;
+  const char *userp;
+  const char *passwdp;
   struct auth *authp;
 
   struct SessionHandle *data = conn->data;
@@ -276,10 +282,10 @@ CURLcode Curl_output_digest(struct connectdata *conn,
 
   /* not set means empty */
   if(!userp)
-    userp=(char *)"";
+    userp="";
 
   if(!passwdp)
-    passwdp=(char *)"";
+    passwdp="";
 
   if(!d->nonce) {
     authp->done = FALSE;
@@ -293,7 +299,7 @@ CURLcode Curl_output_digest(struct connectdata *conn,
   if(!d->cnonce) {
     /* Generate a cnonce */
     now = Curl_tvnow();
-    snprintf(cnoncebuf, sizeof(cnoncebuf), "%06ld", now.tv_sec);
+    snprintf(cnoncebuf, sizeof(cnoncebuf), "%06ld", (long)now.tv_sec);
     if(Curl_base64_encode(data, cnoncebuf, strlen(cnoncebuf), &cnonce))
       d->cnonce = cnonce;
     else
@@ -320,7 +326,7 @@ CURLcode Curl_output_digest(struct connectdata *conn,
   Curl_md5it(md5buf, md5this);
   free(md5this); /* free this again */
 
-  ha1 = (unsigned char *)malloc(33); /* 32 digits and 1 zero byte */
+  ha1 = malloc(33); /* 32 digits and 1 zero byte */
   if(!ha1)
     return CURLE_OUT_OF_MEMORY;
 
@@ -356,7 +362,7 @@ CURLcode Curl_output_digest(struct connectdata *conn,
     return CURLE_OUT_OF_MEMORY;
   }
 
-  if(d->qop && strequal(d->qop, "auth-int")) {
+  if(d->qop && Curl_raw_equal(d->qop, "auth-int")) {
     /* We don't support auth-int at the moment. I can't see a easy way to get
        entity-body here */
     /* TODO: Append H(entity-body)*/
@@ -417,7 +423,7 @@ CURLcode Curl_output_digest(struct connectdata *conn,
                d->qop,
                request_digest);
 
-    if(strequal(d->qop, "auth"))
+    if(Curl_raw_equal(d->qop, "auth"))
       d->nc++; /* The nc (from RFC) has to be a 8 hex digit number 0 padded
                   which tells to the server how many times you are using the
                   same nonce in the qop=auth mode. */
@@ -460,7 +466,7 @@ CURLcode Curl_output_digest(struct connectdata *conn,
   }
 
   /* append CRLF to the userpwd header */
-  tmp = (char*) realloc(*allocuserpwd, strlen(*allocuserpwd) + 3 + 1);
+  tmp = realloc(*allocuserpwd, strlen(*allocuserpwd) + 3 + 1);
   if(!tmp)
     return CURLE_OUT_OF_MEMORY;
   strcat(tmp, "\r\n");

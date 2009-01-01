@@ -18,11 +18,12 @@
  * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
  * KIND, either express or implied.
  *
- * $Id: socks.c,v 1.24 2008-02-11 22:03:31 bagder Exp $
+ * $Id: socks.c,v 1.27 2008-09-29 21:46:04 bagder Exp $
  ***************************************************************************/
 
 #include "setup.h"
 
+#ifndef CURL_DISABLE_PROXY
 #include <string.h>
 
 #ifdef NEED_MALLOC_H
@@ -88,7 +89,7 @@ static int blockread_all(struct connectdata *conn, /* connection data */
       result = ~CURLE_OK;
       break;
     }
-    result = Curl_read(conn, sockfd, buf, buffersize, &nread);
+    result = Curl_read_plain(sockfd, buf, buffersize, &nread);
     if(result)
       break;
 
@@ -242,8 +243,9 @@ CURLcode Curl_SOCKS4(const char *proxy_name,
     }
 
     /* Send request */
-    code = Curl_write(conn, sock, (char *)socksreq, packetsize + hostnamelen,
-                      &written);
+    code = Curl_write_plain(conn, sock, (char *)socksreq,
+                            packetsize + hostnamelen,
+                            &written);
     if((code != CURLE_OK) || (written != packetsize + hostnamelen)) {
       failf(data, "Failed to send SOCKS4 connect request.");
       return CURLE_COULDNT_CONNECT;
@@ -251,7 +253,8 @@ CURLcode Curl_SOCKS4(const char *proxy_name,
     if (protocol4a && hostnamelen == 0) {
       /* SOCKS4a with very long hostname - send that name separately */
       hostnamelen = (ssize_t)strlen(hostname) + 1;
-      code = Curl_write(conn, sock, (char *)hostname, hostnamelen, &written);
+      code = Curl_write_plain(conn, sock, (char *)hostname, hostnamelen,
+                              &written);
       if((code != CURLE_OK) || (written != hostnamelen)) {
         failf(data, "Failed to send SOCKS4 connect request.");
         return CURLE_COULDNT_CONNECT;
@@ -432,8 +435,8 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
 
   Curl_nonblock(sock, FALSE);
 
-  code = Curl_write(conn, sock, (char *)socksreq, (2 + (int)socksreq[1]),
-                      &written);
+  code = Curl_write_plain(conn, sock, (char *)socksreq, (2 + (int)socksreq[1]),
+                          &written);
   if((code != CURLE_OK) || (written != (2 + (int)socksreq[1]))) {
     failf(data, "Unable to send initial SOCKS5 request.");
     return CURLE_COULDNT_CONNECT;
@@ -502,7 +505,7 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
     memcpy(socksreq + len, proxy_password, (int) pwlen);
     len += pwlen;
 
-    code = Curl_write(conn, sock, (char *)socksreq, len, &written);
+    code = Curl_write_plain(conn, sock, (char *)socksreq, len, &written);
     if((code != CURLE_OK) || (len != written)) {
       failf(data, "Failed to send SOCKS5 sub-negotiation request.");
       return CURLE_COULDNT_CONNECT;
@@ -613,7 +616,7 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
     *((unsigned short*)&socksreq[8]) = htons((unsigned short)remote_port);
   }
 
-  code = Curl_write(conn, sock, (char *)socksreq, packetsize, &written);
+  code = Curl_write_plain(conn, sock, (char *)socksreq, packetsize, &written);
   if((code != CURLE_OK) || (written != packetsize)) {
     failf(data, "Failed to send SOCKS5 connect request.");
     return CURLE_COULDNT_CONNECT;
@@ -684,3 +687,6 @@ CURLcode Curl_SOCKS5(const char *proxy_name,
   Curl_nonblock(sock, TRUE);
   return CURLE_OK; /* Proxy was successful! */
 }
+
+#endif /* CURL_DISABLE_PROXY */
+

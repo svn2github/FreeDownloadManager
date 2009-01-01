@@ -24,24 +24,15 @@ fsMirrorURLsMgr::~fsMirrorURLsMgr()
 
 void fsMirrorURLsMgr::Initialize(LPCSTR pszFileName, UINT64 uSize, LPCSTR pszBaseServer, fsInternetSession* pSession)
 {
-	LOG ("initializing MirrorURLsMgr..." << nl);
-	LOG ("file: " << pszFileName << nl);
-	LOG ("size: " << uSize << nl);
-	LOG ("base server: " << pszBaseServer << nl);
-	LOG ("session: " << LONG (pSession) << nl);
-
 	m_strFile = pszFileName;
 	m_uSize = uSize;
 	m_strBaseServer = pszBaseServer;
 	m_dldr.Initialize (pSession);
-
-	LOG ("ok." << nl);
 }  
 
 void fsMirrorURLsMgr::Set_SearchURL(LPCSTR pszUrl)
 {
 	m_strSearchURL = pszUrl;
-	LOG ("search url was set: " << pszUrl << nl);
 }
 
 int fsMirrorURLsMgr::Get_MirrorURLCount()
@@ -58,8 +49,6 @@ fsInternetResult fsMirrorURLsMgr::SearchForMirrors()
 {
 	fsInternetResult ir;
 
-	LOG ("starting searching for mirrors..." << nl);
-
 	CString strURL = m_strSearchURL;
 
 	strURL.Replace ("%file%", m_strFile);
@@ -73,21 +62,11 @@ fsInternetResult fsMirrorURLsMgr::SearchForMirrors()
 	else
 		strURL.Replace ("%size%", "");
 
-	LOG ("resulting url for script is: " << strURL << nl);
-
 	m_bAbort = FALSE;
-
-	LOG ("calling script on server..." << nl);
 
 	ir = m_dldr.Download (strURL);
 	if (ir != IR_SUCCESS)
-	{
-		LOG ("error occured while retreiving search results: " << LONG (ir)
-			 << "; GetLastError is: " << GetLastError () << nl);
 		return ir;
-	}
-
-	LOG ("script called successfully" << nl);
 
 	return OnSearchScriptResultsReceived ();
 }
@@ -99,12 +78,10 @@ void fsMirrorURLsMgr::_DldrEvents(fsInternetURLFileDownloaderEvent ev, LPVOID lp
 	switch (ev)
 	{
 		case UFDE_CONNECTING:
-			LOG ("connecting to search server..." << nl);
 			pThis->Event (MUME_CONNECTINGSEARCHSERVER);
 			break;
 
 		case UFDE_DOWNLOADING:
-			LOG ("downloading search results..." << nl);
 			pThis->Event (MUME_RETREIVINGSEARCHRESULTS);
 			break;
 	}
@@ -126,22 +103,10 @@ fsInternetResult fsMirrorURLsMgr::OnSearchScriptResultsReceived()
 {
 	fsHTMLParser parser;
 
-	LOG ("processing search results..." << nl);
-
 	parser.SetKillDupes (TRUE);
-
-	LOG ("parsing HTML...");
-
 	parser.ParseHTML (LPSTR (m_dldr.Get_FileBuffer ()));
 
-	LOG ("ok." << nl);
-
-	LOG ("initializing list of mirrors...");
-
 	m_vMirrorURLs.clear ();
-
-	LOG ("ok." << nl);
-	LOG ("adding mirrors..." << nl);
 
 	for (int i = 0; i < parser.GetUrlCount () && m_bAbort == FALSE; i++)
 	{
@@ -166,17 +131,11 @@ fsInternetResult fsMirrorURLsMgr::OnSearchScriptResultsReceived()
 			if (IsMirrorURLGood (pszUrl) == FALSE)
 				continue;
 
-			LOG ("adding mirror: " << pszUrl << nl);
-
 			m_vMirrorURLs.add (pszUrl);
 		}
 	}
 
-	LOG ("done adding mirrors. freing resources...");
-
 	m_dldr.Free_FileBuffer ();
-
-	LOG ("ok." << nl);
 
 	if (m_bAbort)
 		return IR_S_FALSE;

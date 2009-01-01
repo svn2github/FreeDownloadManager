@@ -7,6 +7,11 @@
 
 #include "setup.h"
 #include "hash.h"
+#include "curl_addrinfo.h"
+
+#ifdef HAVE_SETJMP_H
+#include <setjmp.h>
+#endif
 
 #ifdef NETWARE
 #undef in_addr_t
@@ -67,23 +72,6 @@
 #define CURL_ASYNC_SUCCESS CURLE_OK
 #define ares_cancel(x) do {} while(0)
 #define ares_destroy(x) do {} while(0)
-#endif 
-
-#ifdef CURLRES_IPV6
-typedef struct addrinfo Curl_addrinfo;
-#else
-
-struct Curl_addrinfo {
-  int                   ai_flags;
-  int                   ai_family;
-  int                   ai_socktype;
-  int                   ai_protocol;
-  socklen_t             ai_addrlen;   
-  char                 *ai_canonname;
-  struct sockaddr      *ai_addr;
-  struct Curl_addrinfo *ai_next;
-};
-typedef struct Curl_addrinfo Curl_addrinfo;
 #endif
 
 struct addrinfo;
@@ -100,11 +88,15 @@ struct Curl_dns_entry {
   long inuse;      
 };  
 
+#define CURLRESOLV_TIMEDOUT -2
 #define CURLRESOLV_ERROR    -1
 #define CURLRESOLV_RESOLVED  0
 #define CURLRESOLV_PENDING   1
 int Curl_resolv(struct connectdata *conn, const char *hostname,
-                int port, struct Curl_dns_entry **dnsentry); 
+                int port, struct Curl_dns_entry **dnsentry);
+int Curl_resolv_timeout(struct connectdata *conn, const char *hostname,
+                        int port, struct Curl_dns_entry **dnsentry,
+                        long timeoutms); 
 
 bool Curl_ipvalid(struct SessionHandle *data); 
 
@@ -126,29 +118,19 @@ void Curl_resolv_unlock(struct SessionHandle *data,
 
 void Curl_scan_cache_used(void *user, void *ptr); 
 
-void Curl_freeaddrinfo(Curl_addrinfo *freeaddr); 
-
 struct curl_hash *Curl_mk_dnscache(void); 
 
 void Curl_hostcache_prune(struct SessionHandle *data); 
 
 int Curl_num_addresses (const Curl_addrinfo *addr);
 
-#ifdef CURLDEBUG
-void curl_dofreeaddrinfo(struct addrinfo *freethis,
-                         int line, const char *source);
-int curl_dogetaddrinfo(const char *hostname, const char *service,
-                       struct addrinfo *hints,
-                       struct addrinfo **result,
-                       int line, const char *source);
-#ifdef HAVE_GETNAMEINFO
+#if defined(CURLDEBUG) && defined(HAVE_GETNAMEINFO)
 int curl_dogetnameinfo(GETNAMEINFO_QUAL_ARG1 GETNAMEINFO_TYPE_ARG1 sa,
                        GETNAMEINFO_TYPE_ARG2 salen,
                        char *host, GETNAMEINFO_TYPE_ARG46 hostlen,
                        char *serv, GETNAMEINFO_TYPE_ARG46 servlen,
                        GETNAMEINFO_TYPE_ARG7 flags,
                        int line, const char *source);
-#endif
 #endif 
 
 CURLcode Curl_addrinfo4_callback(void *arg,
@@ -163,11 +145,7 @@ CURLcode Curl_addrinfo6_callback(void *arg,
 #ifdef HAVE_CARES_CALLBACK_TIMEOUTS
                                  int timeouts,
 #endif
-                                 struct addrinfo *ai);  
-
-Curl_addrinfo *Curl_ip2addr(in_addr_t num, const char *hostname, int port); 
-
-Curl_addrinfo *Curl_he2ai(const struct hostent *, int port); 
+                                 Curl_addrinfo *ai);  
 
 Curl_addrinfo *Curl_addrinfo_copy(const void *orig, int port); 
 
@@ -185,6 +163,11 @@ void Curl_destroy_thread_data(struct Curl_async *async);
 #define CURL_INADDR_NONE (in_addr_t) ~0
 #else
 #define CURL_INADDR_NONE INADDR_NONE
-#endif   
+#endif
+
+#ifdef HAVE_SIGSETJMP
+
+extern sigjmp_buf curl_jmpenv;
+#endif
 
 #endif

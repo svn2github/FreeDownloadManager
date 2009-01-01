@@ -88,12 +88,12 @@ BOOL CDlg_Options_Downloads::OnInitDialog()
 
 CString CDlg_Options_Downloads::get_PageTitle()
 {
-	return LS (L_DOWNLOADS);
+	return LS (L_ESSENTIAL);
 }
 
 CString CDlg_Options_Downloads::get_PageShortTitle()
 {
-	return LS (L_DOWNLOADS);
+	return LS (L_ESSENTIAL);
 }
 
 BOOL CDlg_Options_Downloads::Apply()

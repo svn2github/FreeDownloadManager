@@ -33,13 +33,9 @@ void vmsSpeedTracker::CurrentSpeedIs(int nSpeed)
 		m_nAvrSpeedAtStart = (m_nAvrSpeedAtStart * m_cAvrSpeedsAtStart + nSpeed) / 
 			(m_cAvrSpeedsAtStart + 1);
 		m_cAvrSpeedsAtStart++;
-
-		LOG ("[speed] [measure " << (DWORD)m_cAvrSpeedsAtStart << "] avg: " << (DWORD)m_nAvrSpeedAtStart << nl);
 	}
 	else
 	{
-		LOG ("[speed] avg: " << (DWORD)m_nAvrSpeedAtStart << " current: " << (DWORD)nSpeed << nl);
-		
 		
 
 		if (nSpeed == 0 || m_nAvrSpeedAtStart / nSpeed >= (UINT)m_nLowSpeedFactor)

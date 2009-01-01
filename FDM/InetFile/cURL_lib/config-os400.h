@@ -25,10 +25,6 @@
 
 #undef HAVE_GETHOSTBYNAME_R_6 
 
-#define HAVE_INET_NTOA_R_DECL 
-
-#define HAVE_INT_INET_NTOA_R 
-
 #undef NEED_REENTRANT 
 
 #undef HAVE_KRB4 
@@ -44,6 +40,8 @@
 #undef EGD_SOCKET 
 
 #undef DISABLED_THREADSAFE 
+
+#define HAVE_ALARM 1 
 
 #undef HAVE_ALLOCA_H 
 
@@ -84,10 +82,6 @@
 #define HAVE_STRUCT_TIMEVAL 
 
 #define HAVE_INET_ADDR 
-
-#define HAVE_INET_NTOA 
-
-#define HAVE_INET_NTOA_R 
 
 #define HAVE_INTTYPES_H 
 
@@ -247,13 +241,7 @@
 
 #define SIZEOF_LONG_LONG        8  
 
-#define HAVE_LL  
-
-#ifndef _LARGE_FILES
-#define _LARGE_FILES
-#endif
-
-#define SIZEOF_CURL_OFF_T 8 
+#define HAVE_LL 
 
 #define HAVE_STRUCT_SOCKADDR_STORAGE 
 
@@ -265,7 +253,7 @@
 
 #undef _FILE_OFFSET_BITS 
 
-#undef _LARGE_FILES 
+#define _LARGE_FILES 
 
 #undef const 
 
@@ -305,6 +293,22 @@
 
 #define RECV_TYPE_RETV int 
 
+#define HAVE_RECVFROM 
+
+#define RECVFROM_TYPE_ARG1 int 
+
+#define RECVFROM_TYPE_ARG2 char 
+
+#define RECVFROM_TYPE_ARG3 int 
+
+#define RECVFROM_TYPE_ARG4 int 
+
+#define RECVFROM_TYPE_ARG5 struct sockaddr 
+
+#define RECVFROM_TYPE_ARG6 int 
+
+#define RECVFROM_TYPE_RETV int 
+
 #define HAVE_SEND 
 
 #define SEND_TYPE_ARG1 int 
@@ -321,4 +325,10 @@
 
 #define USE_QSOSSL 
 
-#define CURL_CA_BUNDLE  "/QIBM/UserData/ICSS/Cert/Server/DEFAULT.KDB"
+#define CURL_CA_BUNDLE  "/QIBM/UserData/ICSS/Cert/Server/DEFAULT.KDB"      
+
+#define __ptr128                       
+#define qadrt_use_fputc_inline         
+#define qadrt_use_fread_inline         
+#define qadrt_use_fwrite_inline        
+

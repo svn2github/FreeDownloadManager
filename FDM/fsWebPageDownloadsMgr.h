@@ -29,6 +29,7 @@ struct fsSpiderFileHdr
 class fsWebPageDownloadsMgr  
 {
 public:
+	bool IsDownloadsMgrRequired();
 	
 	void StopAll();
 	

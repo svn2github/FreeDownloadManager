@@ -1110,8 +1110,6 @@ BEGIN
                     WS_TABSTOP,0,120,270,9
     CONTROL         ".torrent",IDC_ASSOCWITHTORRENT,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,0,135,295,10
-    CONTROL         "dis seeding",IDC_DISABLE_SEEDING,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,0,151,295,9
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,14,313,1
     CONTROL         "Spin1",IDC_PORT_FROM_SPIN,"msctls_updown32",
                     UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | 
@@ -1159,9 +1157,9 @@ END
 
 IDD_OPTIONS_DOWNLOADS_MONITORING DIALOGEX 0, 0, 313, 228
 STYLE DS_CONTROL | WS_CHILD
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Monitor for",IDC__MONITORFOR,0,0,313,157
+    GROUPBOX        "Monitor for",IDC__MONITORFOR,0,0,313,171
     CONTROL         "Clipboard",IDC_CLIPBOARD,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,7,12,240,9
     GROUPBOX        "",IDC_STATIC,5,25,302,94
@@ -1187,9 +1185,13 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,79,127,77,8
     CONTROL         "SeaMonkey (Mozilla Suite)",IDC_MOZILLA,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,169,127,128,8
+    CONTROL         "Apple Safari",IDC_SAFARI,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,7,140,68,8
+    CONTROL         "Google Chrome",IDC_CHROME,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,79,140,77,8
     CONTROL         "Silent",IDC_SILENT,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,7,141,277,8
-    PUSHBUTTON      "I have Firefox portable",IDC_FFPORTVER,193,165,120,16,
+                    WS_TABSTOP,7,154,277,8
+    PUSHBUTTON      "I have Firefox portable",IDC_FFPORTVER,193,177,120,16,
                     NOT WS_VISIBLE
 END
 
@@ -1226,6 +1228,21 @@ BEGIN
     LTEXT           "Seed until ratio will be",IDC_STATIC0,24,55,107,10
     COMBOBOX        IDC_RATIO_LIST,134,52,76,80,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_OPTIONS_DOWNLOADS_TIMELIMIT DIALOG DISCARDABLE  0, 0, 313, 229
+STYLE WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "Limit time when FDM may start the downloads",
+                    IDC_SETLIMIT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,0,
+                    253,9
+    LTEXT           "Allow to start only from",IDC__S0,7,19,97,10
+    COMBOBOX        IDC_FROM,111,18,51,94,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "to",IDC__S1,172,19,16,9
+    COMBOBOX        IDC_TO,196,18,51,97,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP
 END
 
 
@@ -1666,7 +1683,7 @@ BEGIN
     POPUP "-"
     BEGIN
         MENUITEM "Normal priority",             ID_BTFILES_NORMALPRIORITY
-        MENUITEM "High piority",                ID_BTFILES_HIGHPIORITY
+        MENUITEM "High priority",               ID_BTFILES_HIGHPIORITY
         MENUITEM SEPARATOR
         MENUITEM "Don't download",              ID_BTFILES_DONTDOWNLOAD
     END
@@ -2285,7 +2302,7 @@ IDD_SCHEDULE_WHATTOSTART DIALOGEX 0, 0, 246, 218
 STYLE DS_MODALFRAME | DS_CONTEXTHELP | WS_POPUP | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_CONTEXTHELP
 CAPTION "What to schedule"
-FONT 8, "MS Shell Dlg"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
 BEGIN
     COMBOBOX        IDC_WTS,7,7,208,130,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
@@ -2579,7 +2596,7 @@ BEGIN
     LTEXT           "Copyright (c)",IDC_STATIC,36,31,40,9
     LTEXT           "Version",IDC__VER,36,18,153,9
     LTEXT           "FreeDownloadManager.ORG",IDC__FIRM,78,31,92,9,SS_NOTIFY
-    LTEXT           ", 2003-2008",IDC_STATIC,173,31,39,8
+    LTEXT           ", 2003-2009",IDC_STATIC,173,31,39,8
     LTEXT           "-",IDC__WARN,7,80,266,31
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,6,73,266,1
     LTEXT           "Click here to contact us",IDC__SUPPORT,36,45,180,8,
@@ -2814,7 +2831,7 @@ BEGIN
     LTEXT           "2. -",IDC__MSG6,40,90,278,34
     LTEXT           "3. Make the subject of your letter ""Bug in FDM build %d found"".",
                     IDC__MSG7,40,124,252,9
-    LTEXT           "4. Send the letter to support@freedownloadmanager.org.",
+    LTEXT           "4. Send the letter to bugs@freedownloadmanager.org.",
                     IDC__MSG8,40,134,252,9
 END
 
@@ -3718,8 +3735,8 @@ IDR_FDMFLASHVIDEODOWNLOADS REGISTRY DISCARDABLE    "FDMFlashVideoDownloads.rgs"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,6,808,0
- PRODUCTVERSION 2,6,808,0
+ FILEVERSION 3,0,843,0
+ PRODUCTVERSION 3,0,843,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -3737,14 +3754,14 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "FreeDownloadManager.ORG\0"
             VALUE "FileDescription", "Free Download Manager\0"
-            VALUE "FileVersion", "2, 6, 808, 0\0"
+            VALUE "FileVersion", "3, 0, 843, 0\0"
             VALUE "InternalName", "\0"
-            VALUE "LegalCopyright", "Copyright © 2003-2008\0"
+            VALUE "LegalCopyright", "Copyright © 2003-2009\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "\0"
             VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "Free Download Manager\0"
-            VALUE "ProductVersion", "2.6 BETA\0"
+            VALUE "ProductVersion", "3.0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
