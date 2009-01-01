@@ -12,135 +12,135 @@
 ;
 ;
 ;
-; Translator - FreeDownloadManager.ORG, 2004
+; Translator - WhiteHayabusa, first released at 28/12/2008, ผมได้ทำการแปลให้เป็นภาษาไทยในระดับหนึ่ง (ยังไม่สมบูรณ์เท่าไรนัก - ผมไม่มีความรู้ด้านคอมพิวเตอร์เท่าไรนักและไม่ได้จบสายนี้มา สาเหตุหนึ่งที่ทำการแปลเนื่องจากขัดใจที่เห็นโปรแกรมนี้ถูกแปลเป็นภาษาเวียดนามแล้วแต่ยังไม่มีภาษาไทย ใครที่มีความรู้มากกว่าผมถ้าขยันช่วยแปลต่อจากผมด้วย ..ผมใช้โปรแกรม Notepad2 ในการแก้ไขภาษาแทน Notepad ที่ติดมากับ Windows ครับ :-P) เป้าหมายหลักในการแปลเป็นภาษาไทยนั้นเพื่อให้ง่ายต่อการใช้งานสำหรับคนไทยและส่งเสริมให้คนไทยได้ใช้โปรแกรม Freeware ที่ทั้งฟรีและไม่ละเมิดลิขสิทธิ์กันให้มากขึ้น ซึ่ง FDM เป็นโปรแกรมช่วยดาวน์โหลดอีกตัวหนึ่งที่มีคุณสมบัติที่มากจนใช้แทบไม่หมดและมีการพัฒนาเพื่อเพิ่มประสิทธิภาพในการทำงานอย่างต่อเนื่อง ท่านสามารถทำการแก้ไขไฟล์ภาษาโดยแก้ไขข้อผิดพลาดและแปลต่อจากผมได้เองจากไฟล์ tha.lng ซึ่งอยู่ใน C:\Program Files\Free Download Manager\Language และสามารถส่งไปยังทีมงานของ FDM ที่ support@freedownloadmanager.org ได้เลย ขอบคุณครับ
 ;
 
 ; Your language name. Please keep it in English
 ;
-English
+Thai
 ;
 ;
 ; Below are the strings to translate:
 ;
-Save all
-Cut
-Copy
-Paste
-Light mode
-Medium mode
-Heavy mode
-Download options
-Dial-up connection
-About FDM
-Exit
-File
-Edit
-View
-Options
-Tools
-Help
-Toolbar
-Status Bar
-Optimization master
-Default download settings 
-General settings
-Dial-up connection
-Hang up when done
-Shutdown computer when done
-Open Help References Window
-FDM homepage
-Tell a friend
-Send e-mail to support group
-Automatically check for updates
-Check for update now
+บันทึกทั้งหมด
+ตัด
+คัดลอก
+วาง
+ไลท์โหมด
+มีเดียมโหมด
+เฮฟวี่โหมด
+ตัวเลือกการดาวน์โหลด
+การเชื่อมต่อแบบหมุนโทรศัพท์
+เกี่ยวกับ FDM
+ออก
+ไฟล์
+แก้ไข
+มุมมอง
+ตัวเลือก
+เครื่องมือ
+ช่วยเหลือ
+แถบเครื่องมือ
+แถบแสดงสถานะ
+เพิ่มประสิทธิภาพการดาวน์โหลด
+การตั้งค่าเริ่มต้น
+การตั้งค่าทั้วไป
+การเชื่อมต่อแบบหมุนโทรศัพท์
+Hang up เมื่องานเสร็จ
+ปิดเครื่องเมื่องานเสร็จ
+เปิดหน้าต่างช่วยเหลือ
+โฮมเพจ FDM
+ฝากบอกเพื่อน
+ติดต่อเรา
+ตรวจสอบการอัพเดตอัตโนมัติ
+ตรวจสอบการอัพเดตเดี๋ยวนี้
 -
 -
-Switch to
-Traffic usage mode
-Registration
-Downloads
-Scheduler
-Site Explorer
+ไปยัง
+กำหนด Traffic usage mode
+ลงทะเบียน
+ดาวน์โหลด
+แผนงาน
+สำรวจไซต์
 HTTP//FTP Explorer
-Site Manager
-Add download
-Start download
-Stop download
-Schedule download
-Add task
-Task properties
-Download selected files
-Stop
-Refresh
-Add site
-Site properties
-Groups of downloads
-Download info
-Scheduler log
-Site Explorer log
-Side bar
-Create new download
-Delete download
-Launch file
-Open folder
-Start download automatically
-Download properties
-Enable task
-Disable task
-Delete task
-Open parent folder
-Disconnect
-Download
-Site Explorer settings
-Delete site
+ตัวจัดการไซต์
+เพิ่มการดาวน์โหลด
+เริ่มการดาวน์โหลด
+หยุดการดาวน์โหลด
+วางแผนการดาวน์โหลด
+เพิ่มงาน
+รายละเอียดของงาน
+ดาวน์โหลดไฟล์ที่เลือก
+หยุด
+รีเฟรช
+เพิ่มไซต์
+รายละเอียดของไซต์
+กลุ่มของงานดาวน์โหลด
+ข้อมูลการดาวน์โหลด
+บันทึกการวางแผนงาน
+บันทึกการสำรวจไซต์
+ไซด์บาร์
+สร้างงานดาวน์โหลดใหม่
+ลบการดาวน์โหลด
+เปิดไฟล์
+เปิดโฟลเดอร์
+เริ่มการดาวน์โหลดอัตโนมัติ
+รายละเอียดการดาวน์โหลด
+เปิดงาน
+ปิดงาน
+ลบงาน
+เปิดโฟลเดอร์แม่
+หยุดการเชื่อมต่อ
+ดาวน์โหลด
+ตั้งค่าการสำรวจไซต์
+ลบไซต์
 Temporary entry
-Sites
-Show main window
+ไซต์
+เปิดหน้าต่างหลัก
 Browser monitoring
 Clipboard monitoring
-Start all downloads
-Stop all downloads
+เริ่มการดาวน์โหลดทั้งหมด
+หยุดการดาวน์โหลดทั้งหมด
 -
-Continue
--
--
+ทำต่อ
 -
 -
 -
-Cancel
+-
+-
+ยกเลิก
 -
 -
 -
-All groups
-Filters
-Complete
-In progress
-Scheduled
-Stopped
-Other
-Create new group
-Delete group
-Delete all downloads
-Delete all completed downloads
-Open group folder
-Group properties
-Group name:
-Default folder:
-File extensions (space separated):
-Default download priority
-Very low
-Low
-Average
-High
-Very high
-Please enter group name
-Input error
+ดาวน์โหลดทั้งหมด
+ประเภท
+เสร็จสมบูรณ์
+ยังไม่เสร็จ
+แผนงาน
+หยุด
+อื่นๆ
+สร้างกลุ่มใหม่
+ลบกลุ่ม
+ลบการดาวน์โหลดทั้งหมด
+ลบการดาวน์โหลดที่เสร็จแล้วทั้งหมด
+เปิดโฟลเดอร์ของกลุ่ม
+รายละเอียดของกลุ่ม
+ชื่อกลุ่ม:
+โฟลเดอร์เริ่มต้น:
+ชนิดของไฟล์ (เว้นว่างเมื่อต้องการเพิ่มชนิดของไฟล์ใหม่):
+ตามลำดับความสำคัญเริ่มต้น
+ต่ำมาก
+ต่ำ
+โดยเฉลี่ย
+สูง
+สูงมาก
+กรุณากรอกชื่อกลุ่ม
+Input ผิดพลาด
 Group with the same name already exists. Please enter another name
-Please enter folder name
+กรุณากรอกชื่อโฟลเดอร์
 Choose default group folder
 Enter group name here
 Default folder to save downloads of this group to
-Browse
+ค้นหา
 File extension for this group. Used to detect the group of download automatically
 Default download priority for this group
 Cancel changes and close the dialog
@@ -152,109 +152,109 @@ Can't load a list of downloads. Possibly it was damaged or is being used by anot
 Failed to initialize Internet Explorer integration
 Are you sure?
 This will delete all group downloads
-Confirmation
-File name
-Size
-Downloaded
-Time remaining
-Sections
-Speed
-Comment
-Log
-Progress
-Time
-Date
-Information
-Clear
+การยืนยัน
+ชื่อไฟล์
+ขนาด
+ดาวน์โหลดแล้ว
+เวลาที่เหลือ
+ส่วน
+ความเร็ว
+ข้อคิดเห็น
+บันทึกการดาวน์โหลด
+ความคืบหน้า
+เวลา
+วันที่
+รายละเอียด
+ล้าง
 Auto scroll
-Unknown network error
-Access denied. Invalid user name or password
-Access denied. Invalid password
-Succeeded
-Can't connect to the server
-File not found on the server
-Connection with the server was lost
-Server does not respond
-Unable to resolve the server name
-Server does not support download resuming. Don't stop this download; otherwise you'll have to start it from the beginning
+เครือข่ายเกิดความผิดพลาดโดยไม่ทราบสาเหตุ
+ดำเนินการต่อไม่ได้  ชื่อผู้ใช้หรือพาสเวิร์ดผิด
+ดำเนินการต่อไม่ได้ พาสเวิร์ดผิด
+สำเร็จ
+ไม่สามารถเชื่อมต่อกับเซิฟเวอร์ได้
+ไม่พบไฟล์บนเซิฟเวอร์
+การเชื่อมต่อไปยังเซิฟเวอร์ขาดหาย
+เซิฟเวอร์ไม่ตอบสนอง
+ไม่สามารถยืนยันชื่อเซิฟเวอร์ได้
+เซิฟเวอร์ไม่รองรับ resume download  อย่าหยุดระหว่างโหลด ไม่เช่นนั้นคุณจะต้องดาวน์โหลดใหม่ตั้งแต่เริ่มต้น
 Proxy user name and password are required
 Extended error
 Bad request. Possibly this is a bad URL
-Unknown server error
+เซิฟเวอร์เกิดความผิดพลาดโดยไม่ทราบสาเหตุ
 Connection aborted
-Bad URL
-No Internet connection
+URL เสีย
+ไม่มีการเชื่อมต่ออินเตอร์เน็ต
 Selected HTTP version is not supported by this server
-Unknown error
-Can't delete file from the disk
+เกิดความผิดพลาดโดยไม่ทราบสาเหตุ
+ไม่สามารถลบไฟล์บนดิสค์ได้
 Limit of connections to this server is reached
 Limit of connections was reached
 Pause %d sec.
-Section
-Started
-Done
-Download complete
-Connecting...
-Connection succeeded
-Redirecting...
-Redirection succeeded. Opening new URL
-Starting download...
-Stopped
-Creating new section...
-Cancelled
-Restarting download...
-Opening file on the disk...
-File name is too long
-File already exists. Rename to
-Rename to
-Output file was deleted. Impossible to continue
-File already exists. Rewrite
-File already exists. Resuming download
-File already exists
-Failed to open file on the disk
-File size was changed on server!
-Adjusting for new size...
-Can't overwrite file
-File will be renamed
-Can't rename file back to its original name
-Can't save groups
-Can't save downloads
-Dial-up connection
+ส่วน
+เริ่ม
+เสร็จ
+การดาวน์โหลดเสร็จสมบูรณ์
+กำลังเชื่อมต่อ...
+เชื่อมต่อสำเร็จ
+กำลังรีไดเรคชั่น...
+รีไดเรคชั่นเสร็จสมบูรณ์. เปิด URL ใหม่
+กำลังเริ่มการดาวน์โหลด...
+หยุด
+สร้างส่วนใหม่...
+ยกเลิก
+เริ่มการดาวน์โหลดใหม่...
+กำลังเปิดไฟล์บนดิสค์...
+ชื่อไฟล์ยาวเกินไป
+มีไฟล์นี้อยู่แล้ว. เปลี่ยนชื่อเป็น
+เปลี่ยนชื่อเป็น
+ไฟล์ส่งออกถูกลบ. ดำเนินการต่อไม่ได้
+มีไฟล์นี้อยู่แล้ว. เขียนทับ
+มีไฟล์นี้อยู่แล้ว. ต่อการดาวน์โหลด
+มีไฟล์นี้อยู่แล้ว.
+ล้มเหลวในการเปิดไฟล์บนดิสค์
+ขนาดของไฟล์บนเซิฟเวอร์เปลี่ยน!
+ปรับปรุงขนาดไฟล์ใหม่...
+ไม่สามารถเขียนทับไฟล์ได้
+ไฟล์ถูกเปลี่ยนชื่อ
+ไม่สามารถเปลี่ยนชื่อไฟล์ได้ กลับสู่ชื่อเดิม
+ไม่สามารถบันทึกกลุ่มได้
+ไม่สามารถบันทึกการดาวน์โหลดได้
+การเชื่อมต่อแบบหมุนโทรศัพท์
 Connect to:
-Dial-up automatically 
-Connect
+หมุนโทรศัพท์อัตโนมัติ
+เชื่อมต่อ
 Choose dial-up entry here
 Check this box if you want dial-up to be started automatically next time
-Dial-up now
+หมุนโทรศัพท์เดี๋ยวนี้
 Don't dial-up and close this dialog
 No dial-up entries found on this computer
-Line is busy
-Hardware failure
+สายไม่ว่าง
+ฮาร์ดแวร์ล้มเหลว
 No dial tone
-Dialing
+กำลังหมุนโทรศัพท์
 Attempt
-Opening port...
+กำลังเปิดพอร์ต...
 Dialing to provider...
 Connected to remote computer
 Verifying user name and password...
 Connection speed is %d BPS
-Disconnect
+หยุดการเชื่อมต่อ
 Repetition
-User name and password are required
-User:
-Password:
-Group:
-Save to folder:
-Save as:
-Start
-Automatically
-Manually
-Schedule
-Priority of download
-Advanced
+ชื่อผู้ใช้และรหัสผ่าน
+ชื่อผู้ใช้:
+รหัสผ่าน:
+กลุ่ม:
+บันทึกลงโฟลเดอร์:
+บันทึกเป็น:
+เริ่ม
+อัตโนมัติ
+กำหนดเอง
+วางแผนงาน
+ลำดับความสำคัญ
+ขั้นสูง
 Address of the file you want to download
-Enter user name here
-Enter password here
+กรอก user name ที่นี่
+กรอก password ที่นี่
 Check this box if the server requires authorization
 Name of the group to place download into. Groups help you to manage your downloads
 Folder to save downloads in
@@ -262,20 +262,20 @@ New name for the downloaded file. Leave this field empty if you want to save fil
 Short description of download
 This download will be started automatically as soon as possible
 FDM will not try to start this download automatically
-Schedule this download
+วางแผนงานการดาวน์โหลดนี้
 Configure download schedule
 Download priority. Downloads with higher priority will be started first. Downloads with less priority will be postponed
 View advanced settings for this download
 Entered URL is incorrect. Please check it
-Please enter user name
+กรุณากรอก user name
 Choose output folder
-General
-General information
+ทั่วไป
+รายละเอียดทั่วไป
 Download currently saved to the file:
 Name of the downloaded file
 URL of this download can't be changed
 This download is in the progress. Can't change file name
-Can't rename file
+ไม่สามารถเปลี่ยนชื่อไฟล์ได้
 File not found
 Path not found
 Invalid .exe format
@@ -285,9 +285,9 @@ Device is not ready
 Disk is full
 File name is invalid
 Login is required
-Connection
-Network
-Errors
+การเชื่อมต่อ
+เครือข่าย
+ข้อผิดพลาด
 Pause between the connection attempts (in sec):
 Maximum number of attempts
 Timeout (in sec):
@@ -333,7 +333,7 @@ Get proxy settings
 From Microsoft Internet Explorer
 Specify manually
 Don't use any proxy
-Settings
+ตั้งค่า
 Address:
 Port:
 Please enter proxy address
@@ -345,7 +345,7 @@ Choose type of servers for which you want to specify the proxy
 Enter address of the proxy you want to use
 Enter proxy port here. As a rule, it is 3128, 1080 or 8080
 Check this box if proxy server requires authorization
-Miscellaneous
+เบ็ดเตล็ด
 Local file
 If the file already exists:
 Reserve disk space for downloading file
@@ -373,13 +373,13 @@ Select mode to configure:
 Maximum number of connections:
 Maximum number of connections per one server:
 Restriction of traffic:
-unlimited
+ไม่จำกัด
 Select traffic usage mode which you wish to configure here
 Check this box to limit the maximum number of connections
 Check this box to limit the maximum number of connections per one server
 Specify here FDM traffic (maximum) for downloading files
-All downloads
-List of downloads
+ดาวน์โหลดทั้งหมด
+รายชื่องานดาวน์โหลด
 Auto save every
 min.
 When deleting an incomplete download
@@ -403,57 +403,57 @@ Monitor for files with specified extensions only
 Don't monitor for files with the specified extensions 
 Monitor only if ALT is not pressed
 Monitor only if ALT is pressed
-Startup
-Load on startup
-Start minimized
-System
-Minimize to tray
-Close button minimizes window
-FDM will be started automatically when Windows starts
-FDM will be minimized after start
-When you click the Minimize button FDM will be minimized to tray
-If checked, clicking on the Close button will be similar to clicking on the Minimize button
-Update
-Address of update server
-FDM will check for a new version automatically
-Network usage optimization master
-Welcome to network usage optimization master!
+เมื่อเปิดเครื่อง
+เริ่มทำงานตอนเปิดเครื่อง
+เริ่มทำงานตอนเปิดเครื่องโดยซ่อนลงที่ tray
+ระบบ
+ทำงานโดยซ่อนที่ tray
+กำหนดให้กดปิดแล้วซ่อนโปรแกรมที่ tray
+เริ่ม FDM โดยอัตโนมัติเมื่อเปิดเครื่อง
+ซ่อน FDM ลงสู่ tray โดยอัตโนมัติเมื่อเริ่มทำงาน
+เมื่อคุณกดปุ่มย่อหน้าต่าง FDM จะถูกซ่อนลง tray
+ถ้าเลือกข้อนี้ การกดปุ่มปิดจะเปรียบเสมือนการกดปุ่มย่อหน้าต่าง
+การอัพเดต
+ที่อยู่ของอัพเดตเซิฟเวอร์
+FDM จะตรวจสอบเวอร์ชั่นใหม่โดยอัตโนมัติ
+เพิ่มประสิทธิภาพการดาวน์โหลด
+ยินดีต้อนรับเข้าสู่ตัวจัดการเพิ่มประสิทธิภาพการดาวน์โหลด
 This master will help you to set up optimal settings for your type of connection. It will set the Downloader properties and default properties for the download.
-Please select connection type
-Finish
-Specify type of your Internet connection here
-Configure FDM for optimal working with your connection
-Task
-Start time
-Next start time
-Last start time
+กรุณาเลือกประเภทการเชื่อมต่อ
+เสร็จ
+ระบุประเภทการเชื่อมต่ออินเตอร์เน็ตของคุณที่นี่
+ตั้งค่า FDM ให้ทำงานกับการเชื่อมต่อของคุณอย่างมีประสิทธิภาพสูงสุด
+งาน
+เวลาเริ่มต้น
+เวลาเริ่มต้นถัดไป
+เวลาเริ่มต้นที่ผ่านมา
 Can't load the list of schedules. Possibly it was damaged or is being used by another application
 Can't load the Scheduler log
 Can't save the list of schedules
 Task "%s" was scheduled. Start it?
 Changing traffic usage mode to "%s"
 Hang up
-All connections
-Change traffic usage mode to
-Shutdown
-Restart
-Logoff
-Once
-Sun
-Mon
-Tue
-Wed
-Thu
-Fri
-Sat
+การเชื่อมต่อทั้งหมด
+เปลี่ยน traffic usage mode เป็น
+ปิดเครื่อง
+รีสตาร์ต
+ล็อกออฟ
+ครั้งเดียว
+อาทิตย์
+จันทร์
+อังคาร
+พุธ
+พฤหัสบดี
+ศุกร์
+เสาร์
 On days:
 Every
-days
-hours
-At FDM startup
-When dialing succeeded
-When dialing failed
-When no active downloads
+วัน
+ชั่วโมง
+เมื่อ FDM เริ่มทำงาน
+เมื่อการเรียกสำเร็จ
+เมื่อการเรียกล้มเหลว
+เมื่อไม่การดาวน์โหลดที่กำลังทำงานอยู่
 When speed less than or equal to %d BPS during %d
 When all downloads are in the error state during
 Never
@@ -482,15 +482,15 @@ Launch program
 Establish dial-up connection
 Hang up connection
 Change traffic usage mode
-Exit FDM
-Shutdown computer
+ออกจาก FDM
+ปิดเครื่อง
 Downloads to start
 Downloads to stop
 Applications
-All files
+ไฟล์ทั้งหมด
 Sorry, this feature is available only in Windows 2000, XP and above
-Please enter program name
-Please select downloads
+โปรดกรอกชื่อโปรแกรม
+โปรดเลือกการดาวน์โหลด
 Select traffic usage mode you want to be set at the task start
 Check this box if you want to limit the maximum number of unsuccessful dialing attempts 
 Time between the unsuccessful attempts
@@ -511,23 +511,23 @@ Specify scheduled action here
 Check this box if you want FDM to hang up all active connections
 Specify connection to hang up here
 On certain days
-Sunday
-Monday
-Tuesday
-Wednesday
-Thursday
-Friday
-Saturday
+อาทิตย์
+จันทร์
+อังคาร
+พุธ
+พฤหัสบดี
+ศุกร์
+เสาร์
 On event
 During
 Low speed:
 min.
 Minutes
-Hours
-Days
-When downloading speed is too low
-When all downloads are in error state
-Please specify days
+ชั่วโมง
+วัน
+เมื่อความเร็วในการดาวน์โหลดช้ามาก
+เมื่อการดาวน์โหลดทั้งหมดเกิดความผิดพลาด
+โปรดกรอกวัน
 Start the task at specified time
 Set the time to start task here
 Start the task at specified date
@@ -598,18 +598,18 @@ The size of "%s" was changed on the server. What to do?
 Restart download from the beginning
 Adjust download for the new file size. Not recommended
 Please wait
-Update
+อัพเดต
 Description
 Update using:
-Checking for update
-You are already using the newest version
-Downloading
+ตรวจสอบการอัพเดต
+คุณกำลังใช้งานเวอร์ชั่นล่าสุด
+กำลังดาวน์โหลด
 Version %s build %s is available
 Full distributive of version %s (%s)
 Upgrade to version %s
 Upgrade to version %s (%s)
-Free Download Manager should be restarted. Restart now?
-Update done
+Free Download Manager จำเป็นต้องเริ่มการทำงานใหม่ รีสตาร์ตเดี๋ยวนี้?
+การอัพเดตเสร็จสมบูร์
 Can't find updater
 Specify the update's type here
 Update FDM using full distributive
@@ -632,17 +632,17 @@ Already updated. Restart is required
 Invalid user name or password
 Can't load history file
 Can't save history file
-HTML Spider default settings
-HTML Spider
+การตั้งค่าเริ่มต้นของ HTML spider
+HTML spider
 Web pages tree
-Download web site
-Web page downloading settings
-Start downloading
-Stop downloading
-Schedule downloading
-Delete
-Open web page in browser
-Start downloading automatically
+ดาวโหลดเว็บไซต์
+ตั้งค่าการดาวน์โหลดเว็บไซต์
+เริ่มการดาวน์โหลด
+หยุดการดาวน์โหลด
+วางแผนงานการดาวน์โหลด
+ลบ
+เปิดเว็บเพจในบราวเซอร์
+เริ่มการดาวน์โหลดอัตโนมัติ
 Web site (page) URL
 Files
 Delete downloads also?
@@ -657,10 +657,10 @@ Pages
 Extensions of web pages’ files with HTML code:
 Download CSS files
 Download web pages from other sites
-Images
-Download images
-Download images that link to other sites
-Depth of downloading:
+รูปภาพ
+ดาวน์โหลดรูปภาพ
+ดาวน์โหลดรูปภาพที่ลิงค์ไปยังไซต์อื่น
+ความลึกของการดาวน์โหลด:
 Extensions of web pages' files with HTML code. Web pages will be scanned for links of images and other pages to download
 If checked, CSS files will be downloaded also. Recommended
 If unchecked, web pages of other sites will not be downloaded. For example, if this box is unchecked and you started downloading from http://example.com/, then http://othersite.com/some.html will not be downloaded, but http://example.com/some.html will be downloaded
@@ -679,11 +679,11 @@ Check this box to download files from other sites
 Check this box to ignore files with the specified extensions
 Files with the extensions specified below will be downloaded if checked
 Files with the extensions specified below will NOT be downloaded if checked
-Export settings
-Import settings
+ตั้งค่าการส่งออก
+ตั้งค่าการนำเข้า
 Failed to launch Regedit.exe
-An error occurred while trying to export settings
-An error occurred while trying to import settings
+เกิดความผิดพลาดขณะกำลังตั้งค่าการส่งออก
+เกิดความผิดพลาดขณะกำลังตั้งค่าการนำเข้า
 FDM registry files
 Elimination of images by extension
 images with the extensions:
@@ -692,15 +692,15 @@ Images with the extensions specified below will be downloaded if checked
 Images with the extensions specified below will NOT be downloaded if checked
 Don't download this and delete
 Server doesn't support download resuming. Restart from the beginning
-Failed to open URL
+ล้มเหลวในการเปิด URL
 Sorry, unexpected error occurred while trying to write to the registry
-Thank you for registration! Please restart FDM
-Download with Free Download Manager
+ขอบคุณสำหรับการลงทะเบียน! กรุณารีสตาร์ต FDM
+ดาวน์โหลดด้วย Free Download Manager
 Download web site with Free Download Manager
 Add FDM to the browser context menu
 Check this box to add items "Download with Free Download Manager" and "Download web site with Free Download Manager" to the browser context menu (menu appears when you right click)
 Decrease traffic usage on browser activity
-Decrease by one level
+ลดลงหนึ่งระดับ
 Set the Light mode
 Check this box to decrease the traffic usage automatically when you are browsing the Internet. This allows you to browse much faster when FDM is downloading something
 Traffic usage mode will be decreased by one level. Heavy->Medium, Medium->Light
@@ -714,13 +714,13 @@ Check this box to use this record for downloads from sub domain servers. For exa
 Please select one protocol at least
 Maximum number of running downloads
 Check this box if you want to limit the maximum number of downloads running at the same time
-Restart download
-Create one more section
-Stop one section
+เริ่มการดาวน์โหลดใหม่
+เพิ่มอีกหนึ่งส่วน
+หยุดหนึ่งส่วน
 ; context: [section x] - Stopped
-Stopped
+หยุด
 ; tray menu
-Drop box
+แสดงกล่อง "ลากและวาง"
 ;
 Can't find Opera Plugin directory. Do you wish to specify it manually?
 Can't find Netscape Plugin directory. Do you wish to specify it manually?
@@ -740,19 +740,19 @@ No to all
 Detailed log
 If checked, FDM will show responses from the server
 Changes will take effect after you restart browser.
-List of tasks
-List of files
-List of sites
-List of pages
-Deleting downloads
-Building the list of downloads
-Create batch download
-From:
-To:
+รายชื่องาน
+รายชื่อไฟล์
+รายชื่อไซต์
+รายชื่อของเพจ
+ลบการดาวน์โหลด
+สร้างรายชื่อการดาวน์โหลด
+เพิ่มการดาวน์โหลดเป็นชุด
+จาก:
+ถึง:
 Step:
 Wildcard bytes:
-Results
-Sample:
+ผลลัพธ์
+ตัวอย่าง:
 Sequence start number
 Sequence finish number
 Sequence step. For example, if it is 10, then sequence will be 0, 10, 20, ...
@@ -766,7 +766,7 @@ Create an extension if a file doesn’t have one
 Check this box to create a specified extension for a file which doesn’t have it. For example if the file name is "file" and you specify "txt", the result will be "file.txt"
 Show sizes in bytes only
 Check this box to show all sizes in bytes instead of kilobytes or megabytes
-Perform virus check
+ทำการแสกนไวรัส
 Arguments:
 Extensions:
 Check this box to check downloaded files with antivirus automatically
@@ -811,17 +811,17 @@ Check this box if you want FDM to catch clicks in Mozilla Firefox browser
 Download selected with Free Download Manager
 Starting
 Websites
-Active downloads
+การดาวน์โหลดที่กำลังทำงาน
 There are no active downloads currently
-Notifications
-Use tray "balloons"
+การแจ้งเตือน
+ใช้ tray "balloons"
 Timeout
 Check this box to enable tray "balloon" notifications when a download has stopped or finished. Note: this feature works only on Windows 2000/XP and above
 A "balloon" will be closed automatically after the expiration of this time
 Mirrors
-Automatically search for mirror URLs
-Maximum number of mirrors
-Calculate mirrors' speed
+ค้นหา URL mirrors อัตโนมัติ
+จำนวน mirrors สูงสุด
+คำนวณความเร็วของ mirrors
 Recalculate speed every
 Check this box to get FDM to search for mirror URLs for each download automatically
 Limit the number of mirror URLs per download. This allows you to reduce the mirrors' speed calculation time
@@ -839,7 +839,7 @@ Server speed
 In use
 Measure mirrors speed
 Measure mirror servers' speed
-Downloads Info
+แสดงข้อมูลการดาวน์โหลด
 Waiting...
 Mirror URL for download
 File size exceeds 2GB. Such downloads are supported via FTP only
@@ -849,7 +849,7 @@ File size exceeds 2GB. Such downloads are supported via FTP only
 ;
 ;
 ; BEGIN: New Download page
-New Download
+การดาวน์โหลดใหม่
 Determine group for download automatically
 Group:
 Save download to its group's appropriate folder
@@ -866,7 +866,7 @@ Select menu items to display in the browser context menu
 ; END
 Choose menu items to show
 At least one menu item must be chosen
-Use sounds
+ใช้เสียง
 Check this box if you want FDM to play sounds on some events (e.g. when download is completed)
 Choose sound for each event
 ; BEGIN : Customize sounds dialog
@@ -905,33 +905,33 @@ There are no mirrors found
 Failed
 Mirrors' speed was measured
 ; BEGIN: History page
-History
+ประวัติการดาวน์โหลด
 Save history of links and folders
 Save history of folders only
 Keep records within
 Maximum number of records
-Clear history
+ล้างประวัติ
 FDM will save history of links and typed folder names
 FDM will save history of folders only
 FDM will delete records that have existed in the history more than the specified period of time
 Maximum number of records in the history. When the number of records exceeds this value, FDM will delete oldest records
 Delete all records from the history
 ; END
-Import
-Export
-Import list of downloads
-Export list of downloads
+นำเข้า
+ส่งออก
+นำเข้ารายชื่อการดาวน์โหลด
+ส่งออกรายชื่อการดาวน์โหลด
 Text files
-Can't open a file
-Export all downloads
+ไม่สามารถเปิดไฟล์ได้
+ส่งออกการดาวน์โหลดทั้งหมด
 Export all downloads on the list
 Export selected downloads
 Don't export completed downloads
 Append if the file already exists
 Invalid group name. Please don't use / or \ symbols.
-Exit when done
+ออกจากโปรแกรมเมื่องานเสร็จ
 ; BEGIN : Downloads History window
-Added
+เพิ่มเติม
 Saved to
 ; END
 Recycle Bin
@@ -961,7 +961,7 @@ One week
 One month
 Custom...
 ; end
-Clear History
+ล้างประวัติ
 Save history of downloads
 Save history of completed downloads only
 Check this box if you want to save history of your downloads
@@ -971,8 +971,8 @@ Building list of History's records...
 ; Download was deleted
 Was deleted
 Choose time range
-Find
-Find Next
+ค้นหา
+ค้นหาถัดไป
 Find what
 ; BEGIN : Find dialog
 Search in
@@ -991,8 +991,8 @@ Search with specified time
 Set
 Search in Recycle Bin
 Search with specified file size
-Minimum
-Maximum
+ต่ำสุด
+สูงสุด
 Search in List of Downloads
 Search in History of Downloads
 Search only for downloads that satisfy the specified time range
@@ -1008,21 +1008,21 @@ Searching download...
 There are no items found
 There are no more items found
 Find done
-URL to clipboard
-ZIP Preview
-At least one file should be selected.
-It is possible that the file you are downloading is ZIP archive. Do you want to preview it?
-Audio/Video Preview
-Failed to open the file.
-Unknown media type.
+บันทึก URL ไปยังคลิปบอร์ด
+พรีวิวไฟล์ใน ZIP
+ต้องเลือกอย่างน้อยหนึงไฟล์
+เป็นไปได้ว่างานดาวน์โหลดของคุณอยู่ในไฟล์ ZIP คุณต้องการพรีวิวดูไฟล์ข้างในก่อนหรือไม่?
+พรีวิว Audio/Video
+ไม่สามารถเปิดไฟล์ได้
+ไม่ทราบประเภทของมีเดีย
 Please install DirectX 8.0 or higher to use this feature. You can download the latest DirectX from microsoft.com.
 Media Info
-Size:
+ขนาด:
 Available:
-Duration:
-Mute
-Play
-Pause
+ความยาว:
+ปิดเสียง
+เล่น
+หยุดชั่วขณะ
 Filter
 Extensions (divided by spaces, e.g. zip rar arj):
 Remove files with such extensions
@@ -1034,7 +1034,7 @@ Use hidden attribute for uncompleted download
 Append comment to the file name when done
 Do not store server's pages
 Check this box if you do not want to store server pages on your computer, but store only files and images
-Use ZIP preview
+ใช้พรีวิว ZIP
 Check this box if you want to preview the contents of ZIP archive at the beginning of downloading to download only part of the archive.
 Volume:
 Start download automatically
@@ -1064,19 +1064,19 @@ Warning! History of Downloads is too large. This may slow performance dramatical
 Server can not guarantee its resuming capabilities. Response is invalid.
 Copy to clipboard
 ; general settings | skins page
-Skins
-Skin
-Allow skin to use its own icons
-Allow skin to use its own bitmaps
-; default skin
+สกิน
+สกิน
+อนุญาตให้แต่ละสกินแสดงผลเป็นไอคอนของสกินนั้นๆ เอง
+อนุญาตให้แต่ละสกินแสดงผลเป็นไฟล์รูปภาพ bitmaps ของสกินนั้นๆ เอง
+; สกินเริ่มต้น
 <default>
-NOTE: Any changes will take effect only after restart of Free Download Manager.
-Show downloads info while in progress
+หมายเหตุ: การเปลี่ยนแปลงจะแสดงผลเมื่อเริ่ม Free Download Manager ใหม่
+แสดงข้อมูลการดาวน์โหลดขณะทำงาน
 Skip files with extensions:
 List of extensions of files to skip
 No active downloads
 Play sound file when all downloads are completed
-Import list of URLs from clipboard
+นำเข้ารายชื่อ URL จากคลิปบอร์ด
 Passwords
 Site Manager options
 ; Save password dialog
@@ -1089,8 +1089,8 @@ Use Site Manager to store my passwords
 Ask me whether to save password or not
 Don't suggest saving passwords
 Delete all passwords on exit
-Delete all passwords
-; create new HTML Spider task
+ลบพาสเวิร์ดทั้งหมด
+; สร้างงาน HTML spider ใหม่
 Remove completed downloads from the list (recommended)
 Check this box if you want HTML Spider's downloads to be deleted automatically. This speeds up downloading of large sites.
 Changes will take effect after restart of Free Download Manager
@@ -1106,14 +1106,14 @@ Please use (*), (*A) or (*a) in the URL to specify template for URL
 Mirrors search server:
 Hibernate
 Stand By
-Remember my choice
+จดจำการเลือกของฉัน
 Suggest changing group's default folder
-Save file
-Open file
-Save file and open it
-Download type:
-Link to FDM
-Link to Free Download Manager
+บันทึกไฟล์
+เปิดไฟล์
+บันทึกและเปิดไฟล์
+ประเภทการดาวน์โหลด:
+สร้างลิ้งค์มายัง FDM
+สร้างลิ้งค์มายัง Free Download Manager
 Dear user!
 Free Download Manager is a program provided to you free of charge. You can use it as long as you like for free.
 However, if you find Free Download Manager useful, we ask you to help us spread it by placing the link to it on your web site. This will let more people know about Free Download Manager.
@@ -1133,13 +1133,13 @@ In this mode Free Download Manager will download at the maximum speed possible. 
 In this mode Free Download Manager will download at average speed. This mode allows you to browse the Internet and keep the high speed of downloading at the same time.
 In this mode Free Download Manager will download at low speed. This mode allows you to download without the dramatic slowing-down of the network.
 ;
-Rename at Restart
+เปลี่ยนชื่อเมื่อเริ่มโปรแกรมใหม่
 Enter a value less than %d
 ; export/import downloads
 URL List Files
 Downloads Information List Files
 ;
-Export options
+ตัวเลือกการส่งออก
 ;
 Set the date of a file identical to the date specified by the server
 Set the same date of a downloaded file as the one on the server
@@ -1151,7 +1151,7 @@ This option allows you to increase the speed of starting an FTP download. Free D
 Don't save logs of downloads
 Enabling this option will make Free Download Manager start and shut down faster and will decrease memory usage.
 ;
-Export history of downloads
+ส่งออกประวัติการดาวน์โหลด
 Export all entries
 Export all entries on the list
 Export selected entries
@@ -1174,14 +1174,14 @@ Open
 Do you want to see this window again?
 Yes, but temporarily hide progress window for this download
 No, don't show such progress windows for any download
-Yes, but don't show progress window for this download
+Yes, but don't show me progress window for this download
 Using the SHIFT key means that this download will be deleted from disk and you will not be able to restore it.\nAre you sure?
 Choose group
 Set groups' root folder
 Select groups' root folder.\nChanges will be applied to new downloads only.
 Recent downloads
 (empty)
-Pause all downloads
+หยุดการดาวน์โหลดทั้งหมดชั่วขณะ
 Show downloading progress window
 If checked, FDM will create a special window with information about downloading for each running download
 ; general settings | misc page
@@ -1220,7 +1220,7 @@ Extract
 Extraction
 Destination folder
 Failed to extract. File format is unknown.
-Traffic downloaded this month\n(%s was downloaded in the previous month)
+Traffic downloaded in this month\n(%s was downloaded in the previous month)
 Total speed of downloading
 Disable Tools | "when done" task after execution
 When enabled, any Tools | "when done" task will be automatically disabled after execution. Therefore, it will be launched only once.
@@ -1236,19 +1236,19 @@ Visit web site
 Install pack
 By default, FDM supports ZIP, RAR and ARJ archives only.\nYou can extend the list of supported archives by installing additional archive support pack for Free Download Manager (Internet connection is required).
 FDM archive support pack
-Move up
-Move down
-Move selected download(s) up
-Move selected download(s) down
-Check file integrity
+เลื่อนขึ้น
+เลื่อนลง
+เลื่อนงานดาวน์โหลดที่เลือกขึ้น
+เลื่อนงานดาวน์โหลดที่เลือกลง
+ตรวจสอบความถูกต้องของไฟล์
 Some web sites provide special checksums for files available to download in order to allow users to make sure that the downloaded file is not damaged. You can enter this checksum here and FDM will check the file integrity.
 Algorithm
 Checksum
 Paste from clipboard
-Check
+ตรวจสอบ
 Calculating downloaded file's checksum...
-File integrity check succeeded
-File integrity check failed
+ตรวจสอบความถูกต้องของไฟล์สำเร็จ
+ตรวจสอบความถูกต้องของไฟล์ล้มเหลว
 File integrity check has been completed successfully.\nThere are no errors found in the downloaded file.
 File integrity check has been completed.\nThere are errors found: the file was damaged during the downloading process. It is required to restart the downloading from the beginning.
 Don't show this window again if check succeeds
@@ -1260,13 +1260,13 @@ When done
 When done (all completed or in error)
 Applications
 What's This?
-Opinions
+ความคิดเห็น
 ;
 Dear all!
 Free Download Manager (FDM) is one of the most popular downloading applications in the world, having millions of active users, but now, when it has become social, we want more!
 If you find it as useful and must-have tool as we do, we kindly ask you to help us spread the word by posting a link to it in your blog, website or personal space, such as Myspace/MSN.
 ; %s will be replaced with "FDM buzz" 
-Official %s has been started on August 16, 2006. Our goal is to make FDM the fastest-spreading Internet utility after FireFox!
+Official %s has been started on August 16, 2006. Our  goal is to make FDM the fastest-spreading Internet utility after FireFox!
 FDM buzz
 ; %s will be replaced with "blog" 
 You can track FDM's progress in our %s.
@@ -1274,11 +1274,11 @@ blog
 Thanks for your help in advance,\nthe Free Download Manager development team
 Don't show me this window again, I have a good memory.
 Join the buzz
-No, thank you
-FDM Community
-Switch to "Opinions" after download
+ไม่ยินยอม, ขอบคุณ
+ชุมชนคนใช้งาน FDM
+ไปยัง "ความคิดเห็น" หลังจากดาวน์โหลด
 If enabled, "Opinions" tab will be automatically activated when download is finished.
-Modify Internet Explorer's network identification
+ปรับแต่งคุณลักษณะเครือข่ายของ Internet Explorer
 If enabled, this will instruct web sites you browse that Free Download Manager is installed on your program. However, using this option may result in blocking of some sites.
 Malicious?
 Check if any of Free Download Manager's users reported this download as containing virus/adware/spyware/etc.
@@ -1292,8 +1292,8 @@ If enabled, FDM will activate "Opinions" tab automatically and show opinions abo
 Checking if download is malicious (see options to disable this)
 OK, nobody reported that it is malicious
 Warning! Somebody reported that this download is malicious
-Close
-Loading
+ปิด
+กำลังโหลด
 Don't download this
 Cache the operations of writing the downloaded data to disk
 If enabled, FDM will use internal cache buffer with the size you specified for operations of writing the downloaded data. This will reduce the number of times your HDD is used. This may increase the speed of downloading for high-speed connections.\nHowever, because downloaded data is not written to HDD immediately, it will be required to re-download this data again if a computer failure occurs (at worst, you will have to re-download as much data as you specified for the cache size).\nRecommended for high-speed connections.
@@ -1304,33 +1304,33 @@ Check this box if you want FDM to catch clicks in SeaMonkey (Mozilla Suite) brow
 Allow the browser to download if you press Cancel
 Check this box if you want your browser to download file when you press Cancel in the "Create download" dialog
 Add FDM to the browser context menu
-Check this box to add items "Download with Free Download Manager" and "Download web site with Free Download Manager" to the browser context menu (menu appears at right click)
+Check this box to add items "Download with Free Download Manager" and "Download web site with Free Download Manager" to the browser context menu (menu appears when you right click)
 Select menu items to display in browser context menu
 Can't install Firefox monitoring
 Move files to folder
 Speed is too low. Restarting section...
 Restart if speed is too low during (in min):
-Restart section if downloading speed decreases dramatically.
+Restart section at the dramatic decrease of downloading speed.
 Would you like to see such download progress windows again?
 Sorry, this service is currently unavailable. Please try again later.
-Move top
-Move bottom
-Place download at the top of the list
+เลื่อนขึ้นบนสุด
+เลื่อนลงล่างสุด
+ให้การดาวน์โหลดนี้อยู่ลำดับแรกสุด
 Check this option if you would like the download to be placed at the top of the list of downloads.
 Monitoring in Firefox browser can't be enabled because FlashGot extension is installed.\nYou should uninstall FlashGot first.
 Enable
 Disable
 Switch
 If the Pause all downloads mode is enabled, it will be disabled, otherwise it will be enabled.
-Official %s will be started on August 16, 2006. Our goal is to make FDM the fastest-spreading Internet utility after FireFox!
-Automatically download and install updates
-Notify me only when update is available
-Turn off automatic updates
+Official %s will be started on August 16, 2006. Our  goal is to make FDM the fastest-spreading Internet utility after FireFox!
+ดาวน์โหลดและติดตั้งอัพเดตอัตโนมัติ
+แจ้งเตือนเมื่อมีการอัพเดตใหม่เท่านั้น
+ปิดการอัพเดตอัตโนมัติ
 Now monitoring is enabled in %s.
-Delete record
-OK to delete?
-There is no write access to Free Download Manager's folder.\nYou should grant write access in order to allow Free Download Manager to save its data files, otherwise all data will be lost after the restart of Free Download Manager.
-This small box allows you to drag&drop links from your browser into Free Download Manager.\nIt allows to quickly show or hide Free Download Manager's window with a left button double click.\n\nIn order to hide it, right click on it and uncheck "Drop box" menu item.
+ลบข้อมูลที่บันทึก
+ตกลงที่จะลบ?
+There is no write access to Free Download Manager's folder.\nYou should grant write access in order to allow Free Download Manager to save its data files, othewise all data will be lost after the restart of Free Download Manager.
+This small box allows you to drag&drop links from your browser into Free Download Manager.\nIt allows to quickly show or hide Free Download Manager's window with a left button double-click.\n\nIn order to hide it, right click on it and uncheck "Drop box" menu item.
 Free Download Manager's Drop box
 Disable all notifications for batch downloads
 Check this options in order to disable all (balloon, sounds) notifications for downloads created by "%s" command.
@@ -1339,16 +1339,16 @@ Specify the list of files extensions and the list of sites that should not be mo
 Don't catch download from these sites (space separated):
 Free Download Manager will not monitor downloads from the sites specified in this list. Specify domain names here (e.g. "site.com"). You may use '*' symbols.
 Warning!\nAn error occurred while trying to perform virus check.\nWould you like to launch downloaded file anyway?
-Integrity
+ความถูกต้อง
 Perform the integrity check when file is downloaded
 In order to perform the integrity check Free Download Manager should know the valid checksum of the file. In most cases you should provide it for each download.
 If the check failed
 Valid checksum of this file
 Do nothing
 Specify here what FDM should do when the integrity check fails.\nAsk - FDM will ask you what to do.\nRestart - FDM will restart this download from the beginning.\nDo nothing - FDM will add the record about fail check to the downloading log file and will not do anything more.
-Performing integrity check...
-Integrity check succeeded.
-Integrity check failed!
+ทำการตรวจสอบความถูกต้อง...
+ตรวจสอบความถูกต้องสำเร็จ
+ตรวจสอบความถูกต้องล้มเหลว
 Specify integrity check algorithm.
 Valid checksum
 Result checksum
@@ -1369,13 +1369,13 @@ FDM will take proxy settings from Firefox
 ; new download settings
 Use this group
 ; Downloads -> Schedule ->
-Start
-Stop
-Schedule download start
-Schedule download stop
+เริ่ม
+หยุด
+วางแผนเริ่มการดาวน์โหลด
+วางแผนหยุดการดาวน์โหลด
 ;
 ; downloads that are not completed or have been completed recently
-Not completed+Recent
+ยังไม่เสร็จ+งานที่เพิ่งผ่านมา
 Parent group
 ;
 ; create new download dialog -> set output folder as default dialog
@@ -1385,34 +1385,34 @@ OK to set this folder as the default output folder for the "%s" group?
 ;
 ;
 Clean up the list of the downloads
-Uploads
-Upload files
-Start uploading
-Stop uploading
-Schedule uploading
-Move selected upload(s) up
-Move selected upload(s) down
-Uploaded
-List of uploads
+อัพโหลด
+อัพโหลดไฟล์
+เริ่มการอัพโหลด
+หยุดการอัพโหลด
+วางแผนการอัพโหลด
+เลื่อนการอัพโหลดที่เลือกขึ้น
+เลื่อนการอัพโหลดที่เลือกลง
+อัพโหลดแล้ว
+รายชื่อการอัพโหลด
 Retrieving destination upload URL from the base server...
 Abort
 ; outlook express: view | insert file | ...
 As attachment
 As link (upload)
-Folder
+โฟลเดอร์
 ;
 Add files
 Add folder
 BitTorrent
-Enable BitTorrent protocol support
+เปิดการใช้งาน BitTorrent protocol
 Limit upload traffic
 Limit the number of upload connections
 Use ports in the range from
 to
-Enable DHT
-Enable/disable BitTorrent protocol support. However, if there are any BitTorrent downloads in the list or in FDM Recycle Bin, BitTorrent protocol will not be disabled completely.
+เปิดการใช้งาน DHT
+Enable/disable BitTorrent protocol support. However if there are any BitTorrent downloads in the list or in the Recycle Bin of FDM, BitTorrent protocol will not be disabled completely.
 Limit the maximum total speed of upload connections. This is not recommended for BitTorrent protocol and may reduce your download speed.
-Limit the maximum number of total upload connections. Setting a too low number may result in decreasing of your downloading speed.
+Limit the maximum number of total upload connections. Setting the too low number may result in decreasing of your downloading speed.
 Specify here the range of ports that FDM will use for upload connections.
 Enable DHT extension (download without using the tracker). Enabling this option will affect the increase of network traffic usage.
 Name
@@ -1431,7 +1431,7 @@ Connecting tracker...
 Failed to receive the valid response from the tracker.
 Response has been received from the tracker successfully.
 Hash check of the part of download has failed. Redownloading it...
-Grant all bandwidth for this download
+Grant the all bandwidth for this download
 Disable Free Download Manager automatic loading at Windows startup?
 Sorry, FDM Community service is currently unavailable. Please try again later.
 Name of the file should not contain any of \ / : * ? " < > | symbols. Please enter another name.
@@ -1443,69 +1443,69 @@ Keep all data files in the current user's folder
 Keep files in this folder
 Changes will be applied after the restart of Free Download Manager.
 Show download progress window
-Create portable version
+สร้างเวอร์ชั่นพกพา
 Portable version of Free Download Manager can be used on different computers without the need to install and configure it on each computer.\n\nIt can be conveniently placed on a flash disk, for example.\n\nOnce launched, it registers itself in the computer's system and integrates to browsers. At exit it will unregister itself automatically.\n\nSpecify here the path where you would like to create this version. It should be a folder on some removable drive.\n\nE.g. "I:\My portable programs\".
 Integration
 Associate Free Download Manager with .torrent files
 Always use this group for new downloads
 Always use this group and remember the last output folder each time
-Flash video downloads
+ดาวน์โหลด Flash video
 Download video with Free Download Manager
 This site is not supported. See the list of supported sites.
 View in Downloads window
 This is the page with flash video. Downloading flash video...
-Converting...
-Convert
-Convert options
+กำลังแปลงไฟล์...
+แปลงไฟล์
+ตัวเลือกในการแปลงไฟล์
 File format
-Video size
+ขนาดของ Video
 ; video quality
-Quality
-Very low
-Low
-Normal
-Average
-High
-Very high
+คุณภาพ
+ต่ำมาก
+ต่ำ
+ปกติ
+โดยเฉลี่ย
+สูง
+สูงมาก
 ;
 AVI using MPEG-4 (*.avi)
 AVI using XVID (*.avi)
 Don't change
-Video bitrate
-Audio bitrate
-Remember settings as default
+Video บิทเรท
+Audio บิทเรท
+จดจำการตั้งค่านี้เป็นค่าเริ่มต้น
 ;
-Create flash video download
-Automatically convert downloaded video to the specified format
-Setup advanced options
-View list of supported sites
+สร้างการดาวน์โหลด flash video
+ทำการแปลงไฟล์ Video ให้เป็นชนิดของไฟล์ที่เลือกไว้โดยอัตโนมัติ
+ตั้งค่าตัวเลือกขั้นสูง
+ดูรายชื่อเว็บไซต์ที่ดาวน์โหลดได้
 ; used in "create flash video download" window
 e.g.
 Next attempt to connect to tracker in %d seconds
-Preparing files on the disk... This may take several minutes
+กำลังจัดเตรียมไฟล์บนดิสค์... อาจใช้เวลาพอสมควร
 State
-Preparing files on the disk...
+กำลังจัดเตรียมไฟล์บนดิสค์...
 MP4 for iPod/PSP (MPEG4 + AAC, *.mp4)
-Media preview/convert
-Convert media file
-Switch to this tab automatically
+พรีวิว/แปลงไฟล์ Media 
+แปลงไฟล์ Media
+เปลี่ยนมาแท็บนี้โดยอัตโนมัติ
 ;keep "\n\n%s\n" as is
 Media file has been converted successfully and stored in\n\n%s\n.
 Failed to convert media file\n\n%s.
 Group for new download
 Info hash
-Peers
-Client
+เพียร์
+ไคลเอ็นท์
 Pieces
-Tracker
-Tracker status
+แทร็กเกอร์
+สถานะของแทร็กเกอร์
 Upload speed
 Bytes uploaded
 Share ratio
 Wasted byte count
 Torrent file URL
 Are you sure?\nThis will restart the download from the beginning.
-Traffic used ("downloaded"; "uploaded") this month\n(%s was used in the previous month)
+Traffic used ("downloaded"; "uploaded") in this month\n(%s was used in the previous month)
 Total speed ("download"; "upload")
 Files to upload
 Package name
@@ -1518,15 +1518,15 @@ Add link to these files in our catalogue
 Include advanced information (all fields are optional)
 Description
 Tags
-Your name
-Your email
-Receiver's email
-Less than 10
-From 10 to 100
-More than 100
-2 days
-7 days
-1 month
+ชื่อของคุณ
+อีเมล์ของคุณ
+อีเมล์ของผู้รับ
+น้อยกว่า 10
+จาก 10 ถึง 100
+มากกว่า 100
+2 วัน
+7 วัน
+1 เดือน
 ;compression methods
 None
 Fast
@@ -1555,18 +1555,18 @@ Failed to send information about this upload to server
 Activating upload...
 Upload has been activated successfully
 Failed to activate upload
-Upload file was changed on the disk
+Upload file was changed on a disk
 Unexpected error
 Calculating checksum...
 ; "I agree to terms" string in two lines
 I agree to
 terms
-You must agree to terms.
+You should agree to terms.
 Failed to check for updates
-New version is available. It is required to update your version.\nWould you like to update now?
+New version is available. It's required to update.\nWould you like to update now?
 Update of Free Download Manager is required
 Restart of Free Download Manager is required
-Prompt me to upload attachments
+Suggest me to upload attachments
 Attach to the letter (slow)...
 Upload and insert link (lightning fast)...
 An error occurred while trying to start uploading. Check your connection or try again later.
@@ -1585,7 +1585,7 @@ Upload
 Downloading update...
 Enable seeding
 Disable seeding by default
-Consider download malicious if minimum
+Consider download as malicious if minimum
 % of users marked it as malicious
 OK, Free Download Manager's users did not report this download as malicious.\n\nHowever, this does not guarantee that this download is not malicious and it is recommended to check it using some antivirus program.
 OK, FDM's users did not report that this download is malicious
@@ -1593,48 +1593,48 @@ drive letter FDM was started from. E.g. "C:". Is useful for portable version.
 You should install Video Conversion plugin in order to use this feature.
 You should install BitTorrent plugin in order to download via BitTorrent protocol.
 Note: these files (*.sav) are Free Download Manager's service files (not the files you download).
-Would you like to copy current data files to a new folder (existing files will be overwritten)?
+Would you like to copy current data files to the new folder (existing files will be overwritten) ?
 Default download folders of all groups will be set to this folder.\nOK to continue?
 Set default download folder
 Prevent computer from stand by while downloading
 Maximum number of half-open connections
-Torrents
-Failed to access the files on the disk. Check if disk is full or write protected.
+Torrent
+Failed to access the files on the disk. Check if disk is not full or write protected.
 Ratio
-List of torrents
-Add torrent download from web
-Add torrent download from file
-Create new torrent
+รายชื่อ Torrent
+เพิ่มการดาวน์โหลด Torrent จากเว็บ
+เพิ่มการดาวน์โหลด Torrent จากไฟล์
+สร้าง Torrent ใหม่
 (auto)
 Source
 Piece size
 Trackers
 Add tracker
 Remove tracker
-Start seeding this torrent
+เริ่ม seed Torrent นี้
 Save
-Create new torrent
-Torrent files
-Priority
+สร้าง Torrent ใหม่
+ไฟล์ Torrent
+ลำดับความสำคัญ
 ;normal/high priority
-skip
-normal
-high
+ข้าม
+ปกติ
+สูง
 Floating windows
 Service files (list of downloads, history, etc.)
-Default settings for site downloads
-You have paused all downloads. This means all downloads will download at a very low speed (1B/s usually).\nThis allows to "pause" even downloads with no resume support.\n\nYou should call this command again or restart FDM in order to return to normal state.
-Seeding
+Default settings of site downloads
+You have paused all downloads. This means all downloads will download in the very restricted speed (1B/s usually).\nThis allows to "pause" even the downloads with no resume support.\n\nYou should call this command again or restart FDM in order to return to normal state.
+กำลัง Seed
 Enable seeding (highly recommended)
 Unlimited seeding
-Limit by ratio
+จำกัดโดยเรโช
 Seed until ratio will be
-Limit by time
+จำกัดโดยเวลา
 Seed during
 Check if download with the same URL already exists
-Save history of downloads
+บันทึกประวัติการดาวน์โหลด
 List my most recently downloaded files
-Default settings of BitTorrent downloads
+Default settings of Bittorrent downloads
 Restart completed downloads
 Specify Firefox's portable version folder.
 Can't find Apple Safari Plugin directory. Do you wish to specify it manually?
@@ -1643,11 +1643,10 @@ Can't install Apple Safari monitoring
 Can't uninstall Apple Safari monitoring
 Can't install Google Chrome monitoring
 Can't uninstall Google Chrome monitoring
-Time limit
+จำกัดเวลา
 ;hours, for shprt
 hr.
-Limit time when FDM can start downloads
+Limit time when FDM may start the downloads
 Allow to start only from
 Normal priority
 High priority
-Essential

@@ -1585,8 +1585,8 @@ Upload
 Baixando atualização...
 Ativar seeding
 Desativar o seeding por padrão
-Considerar o download como malicioso se o mínimo
-% de usuários marcados como maliciosos
+Considerar download como malicioso se no mín
+% de usuários o marcou como malicioso
 OK, os usuários do Free Download Manager não reportaram que este download é malicioso.\n\nContudo, isto não garante que este download não é malicioso e é recomendado verificá-lo usando algum programa anti-vírus.
 OK, Os usuários do FDM não reportaram que este download é malicioso
 A letra do drive FDM foi iniciada de. Ex: "C:". É útil para a versão portátil.
@@ -1598,3 +1598,41 @@ As pastas de download padrão de todos os grupos serão definidas nesta pasta.\nOK
 Definir a pasta padrão de download
 Impedir o computador de entrar em modo de espera enquanto baixa
 Número máximo de conexões half-open
+Torrents
+Falhou em acessar os arquivos no disco. Verifique se o disco não está ou protegido contra gravação.
+Proporção
+Lista de torrents
+Adicionar o download do torrent da web
+Adicionar o download do torrent do arquivo
+Criar novo torrent
+(auto)
+Fonte
+Tamanho do pedaço
+Trackers
+Adicionar tracker
+Remover tracker
+Iniciar o seeding deste torrent
+Salvar
+Criar novo torrent
+Arquivos do torrent
+Prioridade
+;prioridade normal/alta
+pular
+normal
+alta
+Janelas flutuantes
+Arquivos do serviço (lista de downloads, histórico, etc.)
+Configurações padrão dos downloads do site
+Você pausou todos os downloads. Isto significa que todos os downloads baixarão na mesma velocidade restrita (geralmente 1B/s).\nIsto permite "pausar" os downloads sem suporte a resumo.\n\nVocê deve chamar este comando de novo ou reiniciar o FDM para retornar ao estado normal.
+Seeding
+Ativar seeding (altamente recomendado)
+Seeding ilimitado
+Limitar pela proporção
+Fazer seed até que a proporção seja de
+Limitar pelo tempo
+Fazer seed durante
+Verificar se um download com a mesma URL já existe
+Salvar o histórico dos downloads
+Listar a maioria dos meus arquivos baixados recentemente
+Configurações padrão dos downloads do Bittorrent
+Reiniciar os downloads completados

@@ -1,4 +1,4 @@
-; This is the German language file by User_99 (user_99@gmx.at) v2.6.0 for 2.6.792
+; This is the German language file by User_99 (user_99@gmx.at) v3.0.1 for 3.0.843
 ; You can translate it into your native language
 ; To do this, follow instructions:
 ; - PLEASE make sure FDM hasn't already been translated into your language 
@@ -1623,3 +1623,31 @@ Hoch
 Schwebendes Fenster
 Service-Dateien (Liste der Downloads, Verlauf, usw.)
 Standardeinstellungen für Webseitendownloads
+Sie haben alle Downloads angehalten. Die einzelnen Dateien werden nun mit einer sehr begrenzten Downloadgeschwindikeit (mit ca. 1B/s) heruntergeladen.\nDiese Vorgehensweise erlaubt es Dateien wieder weiter herunterzuladen, auch wenn der Server keine Wiederaufnahme nach einer Unterbrechung unterstützt.\n\nSie müssen diesen Befehl nochmals ausführen, um die Standardeinstellung wierderherzustellen.
+Seeding
+Seeding aktivieren (sehr empfohlen)
+Unbegrenztes seeding
+Verhältnislimitiert
+Seeden bis zum Verhältnis von
+Zeitlimitiert
+Seeden fortsetzen
+Pürfen, ob ein Download von dieser selben Webseite schon existiert
+Downloadverlauf speichern
+Liste der am häufigsten heruntergeladenen Dateien
+Standardeinstellungen für Bittorrent-Downloads
+Abgeschlossene Downloads neu starten
+Ordner für portable Firefox-Version:
+Apple Safari Plugin Verzeichnis nicht gefunden. Möchten Sie den Ordner selbst angeben?
+Google Chrome Plugin directory nicht gefunden. Möchten Sie den Ordner selbst angeben?
+Apple Safari Überwachung nicht installierbar
+Apple Safari Überwachung nicht deinstallierbar
+Google Chrome Überwachung nicht installierbar
+Google Chrome Überwachung nicht deinstallierbar
+Zeitlimit
+;hours, for shprt
+Std.
+Zeitbegrenzung, wenn FDM das Herunterladen beginnt
+Erlaube den Start nur von
+Normale Priorität
+Hohe Priorität
+Essentiell

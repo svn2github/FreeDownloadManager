@@ -383,19 +383,19 @@ Lista de Descãrcãri
 Autosalveazã la fiecare
 min.
 Cînd se ºterge o descãrcare neterminatã
-ªterge automat descãrcãrile terminate
+ªterge automat din listã descãrcãrile terminate
 Nu ºterge fiºierul
 ªterge fiºierul
 FDM salveazã automat lista de descãrcãri la intervalul de timp specificat. Acest lucru protejeazã lista în caz de blocare a calculatorului sau de apariþie a unei pene de curent
-Specificaþi aici ce ar trebui sã facã FDM cu fiºierul de pe disc atunci cînd ºtergeþi o descãrcare neterminatã
-Bifaþi aceastã cãsuþã dacã doriþi sã ºtergeþi automat descãrcarea din listã atunci cînd s-a terminat
+Specificaþi aici ce ar trebui sã facã FDM cu fiºierul de pe disc atunci cînd ºtergeþi din listã o descãrcare neterminatã
+Bifaþi aceastã cãsuþã dacã doriþi sã ºtergeþi automat din listã descãrcarea atunci cînd s-a terminat
 Monitorizare
 Monitorizeazã
 Cliplanºeta [clipboard]
 Monitorizeazã fiºierele cu extensiile
 Ignorã fiºierele cu extensiile
 Tasta Alt nu trebuie sã fie apãsatã
-Tasta Alt trebuie sã fie apãsatã
+Doar dacã tasta Alt e apãsatã
 Specificaþi extensiile
 Bifaþi aceastã cãsuþã dacã doriþi ca FDM sã intercepteze clicurile din Internet Explorer
 Bifaþi aceastã cãsuþã dacã doriþi ca FDM sã monitorizeze cliplanºeta
@@ -432,10 +432,10 @@ Nu pot încãrca jurnalul Planificatorului
 Nu pot salva lista de planificãri
 Sarcina "%s" a fost planificatã. O pornesc?
 Schimb modul de folosire a traficului la "%s"
-Închidere Conexiune
+Închiderea Conexiunii
 Toate Conexiunile
 Schimb modul de folosire a traficului la
-Închidere PC
+Închiderea PC-ului
 Repornire
 Dezautentificare
 O singurã datã
@@ -660,7 +660,7 @@ Descarcã paginile web de pe alte situri
 Imagini
 Descarcã imaginile
 Descarcã imaginile cu legãturi cãtre alte situri
-Profunzimea Descãrcãrii:
+Profunzime (nivel legãturi desc.):
 Extensii ale fiºierelor (pagini web) ce conþin cod Html. Paginile web vor fi scanate pentru legãturi cãtre imagini ºi alte pagini de descãrcat
 Dacã e bifatã, fiºierele CSS vor fi ºi ele descãrcate. Recomandat
 Dacã e nebifatã, paginile web ale altor situri nu vor fi descãrcate. De exemplu dacã aceastã cãsuþã este nebifatã ºi se începe descãrcarea de pe http://example.com/, atunci http://othersite.com/some.html nu va fi descãrcatã, dar http://example.com/some.html va fi descãrcatã
@@ -673,7 +673,7 @@ Eliminarea fiºierelor pe baza extensiei lor
 Activeazã
 Descarcã
 Nu descãrca
-fiºierele cu extensiile:
+Fiºierele cu extensiile:
 Bifaþi aceastã cãsuþã pentru a descãrca fiºiere din paginile web
 Bifaþi aceastã cãsuþã pentru a descãrca fiºiere de pe alte situri
 Bifaþi aceastã cãsuþã pentru a ignora fiºierele cu extensiile specificate
@@ -700,8 +700,8 @@ Descarcã Situl cu FDM
 Adaugã FDM în meniul contextual al exploratorului [browser]
 Bifaþi aceastã cãsuþã pentru a adãuga opþiunile "Descarcã cu FDM" ºi "Descarcã Situl cu FDM" la meniul contextual al exploratorului (meniul apare la efectuarea clic-dreapta)
 Diminueazã utilizarea traficului în caz de activitate a exploratorului [browser]
-Diminueazã cu un nivel
-Seteazã modul Uºor
+Scade cu un nivel
+Seteazã la modul Uºor
 Bifaþi aceastã cãsuþã pentru a scãdea automat utilizarea traficului atunci cînd exploraþi internetul. Acest lucru vã permite sã exploraþi mai rapid atunci cînd FDM descarcã ceva
 Modul de utilizare a traficului va fi scazut cu un nivel. Greu->Mediu, Mediu->Uºor
 Modul de utilizare a traficului va fi schimbat la cel Uºor.
@@ -758,7 +758,7 @@ Numãrul de terminare a seriei
 Pasul seriei. De exemplu dacã e 10, atunci seria va fi 0, 10, 20, ...
 Contorul de metacaractere. De exemplu dacã e 1, atunci seria va fi 1, 2, 3. Dacã e 2, atunci seria va fi 01, 02, 03.
 Faceþi clic aici pentru a vedea seria generatã.
-Permiteþi exploratorului sã descarce dacã apãsaþi Anuleazã
+Exploratorul de internet va descãrca dacã se apãsã în FDM pe Anuleazã
 Bifaþi aceastã cãsuþã dacã doriþi ca exploratorul sã descarce fiºierul cînd apãsaþi Anuleazã în dialogul "Creeazã Descãrcare"
 Numãrul de la sfîrºitul seriei trebuie sã fie mai mare decît cel de la începutul ei
 Folosiþi (*) în URL pentru a specifica ºablonul URL
@@ -1186,11 +1186,11 @@ Aratã fereastra cu progresul descãrcãrii
 În caz de bifare, FDM va crea o fereastrã specialã cu informaþii pentru fiecare descãrcare aflatã în curs
 ; general settings | misc page
 Timpi de Aºteptare pentru Confirmãri
-Lanseazã descãrcarea
+Pornirea Descãrcãrii
 Întreabã-mã despre tipul de închidere a calculatorului
-Timpul de aºteptare pentru confirmarea comenzii "Unelte > Închide conexiunea la terminare".
-Timpul de aºteptare pentru confirmarea comenzii "Unelte > Închide FDM la terminare". 
-Timpul de aºteptare pentru confirmarea comenzii "Unelte > Închide calculatorul la terminare".
+Timpul de aºteptare pentru confirmarea comenzii "Unelte > Închide Conexiunea la Terminare".
+Timpul de aºteptare pentru confirmarea comenzii "Unelte > Închide FDM la Terminare". 
+Timpul de aºteptare pentru confirmarea comenzii "Unelte > Închide Calculatorul la Terminare".
 Timpul de aºteptare pentru lansarea fiºierului descãrcat cînd descãrcarea e terminatã.
 În caz de bifare, FDM va întreba despre tipul de închidere din comanda "Unelte > Închide calculatorul la terminare".
 Nu cere confirmare
@@ -1301,7 +1301,7 @@ Nu pot instala monitorizarea pentru SeaMonkey (Suita Mozilla)
 Nu pot dezinstala monitorizarea pentru SeaMonkey (Suita Mozilla)
 Bifaþi aceastã cãsuþã dacã doriþi ca FDM sã intercepteze clicurile din Firefox
 Bifaþi aceastã cãsuþã dacã doriþi ca FDM sã intercepteze clicurile din SeaMonkey (Suita Mozilla)
-Permiteþi exploratorului sã descarce dacã apãsaþi Anuleazã
+Exploratorul de internet va descãrca dacã se apãsã în FDM pe Anuleazã
 Bifaþi aceastã cãsuþã dacã doriþi ca exploratorul sã descarce fiºierul cînd apãsaþi Anuleazã în dialogul "Creeazã Descãrcare"
 Adaugã FDM în meniul contextual al exploratorului [browser]
 Bifaþi aceastã cãsuþã pentru a adãuga opþiunile "Descarcã cu FDM" ºi "Descarcã Situl cu FDM" la meniul contextual al exploratorului (meniul apare la efectuarea clic-dreapta)
@@ -1492,7 +1492,7 @@ Comutã automat la acest tab
 ;keep "\n\n%s\n" as is
 Fiºierul media a fost convertit cu succes ºi e stocat în\n\n%s\n.
 Convertire eºuatã a fiºierului media\n\n%s.
-Grup Pentru Descãrcare Nouã
+Grupul Unei Descãrcãri Noi
 Informaþii despre haº
 Parteneri
 Client
@@ -1622,7 +1622,7 @@ normalã
 crescutã
 Ferestre Flotante
 Fiºiere de Serviciu (listã de descãrcãri, istoric, etc.)
-Setãrile implicite pentru descãrcarea de situri
+Setãrile Implicite ale Descãrcãrii de Situri
 Aþi pauzat toate descãrcãrile. Aceasta înseamnã cã toate descãrcãrile vor continua cu o vitezã foarte redusã (de obicei 1B/s).\nAceasta permite "pauzarea" inclusiv a descãrcãrilor care nu au suport pentru reluare.\n\nVa trebui sã daþi din nou aceastã comandã sau sã reporniþi FDM pentru revenirea la starea normalã.
 Donare
 Activeazã donarea (recomandat)
@@ -1634,3 +1634,19 @@ Doneazã timp de
 Verificã dacã existã deja o descãrcare cu acelaºi URL
 Salveazã istoricul descãrcãrilor
 Listeazã fiºierele descãrcate cel mai recent
+Setãrile Implicite ale Descãrcãrilor BitTorrent
+Reporneºte descãrcãrile terminate
+Specificaþi dosarul versiunii portabile de Firefox.
+Nu pot gãsi dosarul extensiilor pentru Apple Safari. Doriþi sã-l specificaþi manual?
+Nu pot gãsi dosarul extensiilor pentru Google Chrome. Doriþi sã-l specificaþi manual?
+Nu pot instala monitorizarea pentru Apple Safari
+Nu pot dezinstala monitorizarea pentru Apple Safari
+Nu pot instala monitorizarea pentru Google Chrome
+Nu pot dezinstala monitorizarea pentru Google Chrome
+Limitã de Timp
+;hours, for shprt
+ore
+Limiteazã intervalul de timp în care FDM poate porni descãrcãrile
+Permite pornirea doar de la
+Prioritate Normalã
+Prioritate Înaltã

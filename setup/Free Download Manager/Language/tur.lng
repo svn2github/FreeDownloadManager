@@ -12,7 +12,7 @@
 ;
 ;
 ;
-; Translator -Translated for v2.6 BETA build 800 by Nedim Çelik , Sep 2008
+; Translator -Translated for v3.0 build 841 by Nedim Çelik , Dec 2008
 ;
 
 ; Your language name. Please keep it in English
@@ -722,8 +722,8 @@ Durduruldu
 ; tray menu
 Sürükle-Býrak kutusu
 ;
-Opera eklenti (Plugin) klasörü bulunamýyor. Kendiniz belirlemek ister misiniz?
-Netscape eklenti (Plugin) klasörü bulunamýyor. Kendiniz belirlemek ister misiniz?
+Opera eklenti klasörü bulunamýyor. Kendiniz belirlemek ister misiniz?
+Netscape eklenti klasörü bulunamýyor. Kendiniz belirlemek ister misiniz?
 Opera için izleme yüklenemiyor
 Opera için izleme kaldýrýlamýyor
 Netscape için izleme yüklenemiyor
@@ -797,14 +797,14 @@ Aç
 Sürüm
 Bizimle baðlantýya geçmek için burayý týklayýnýz
 En yeni sürümü indirmek için burayý týklayýnýz
-Uyarý: Bu bilgisayar programý telif hakký yasalarý ve uluslararasý yaptýrýmlar tarafýndan korunmaktadýr. Bu ürünün, ya da bir kýsmýnýn izinsiz çoðaltýlmasý veya daðýtýlmasý suçtur ve bunu yapanlar hakkýnda kanunun yasal ve cezai hükümleri geçerli olacaktýr.\n2.6 BETA build 800 sürümü Türkçe güncellemesi: Nedim Çelik (nedim.celik@gmail.com)
+Uyarý: Bu bilgisayar programý telif hakký yasalarý ve uluslararasý yaptýrýmlar tarafýndan korunmaktadýr. Bu ürünün, ya da bir kýsmýnýn izinsiz çoðaltýlmasý veya daðýtýlmasý suçtur ve bunu yapanlar hakkýnda kanunun yasal ve cezai hükümleri geçerli olacaktýr.\n3.0 build 841 sürümü Türkçe güncellemesi: Nedim Çelik 
 ; === new version ===
 Free Download Manager ile tümünü indir
 Ýndirme listesi ekle
 Seçili olaný sil
 Bu eklenecek URL listesi
 Seçili URL'lerin tümünü listeden silmek için bu düðmeye basýnýz
-Firefox eklenti (Plugin) klasörü bulunamýyor. Kendiniz belirlemek ister misiniz?
+Firefox eklenti klasörü bulunamýyor. Kendiniz belirlemek ister misiniz?
 Firefox için izleme yüklenemiyor
 Firefox için izleme kaldýrýlamýyor
 FDM'nin Mozilla Firefox'da týklamalara duyarlý olmasýný istiyorsanýz bu kutuyu iþaretleyiniz
@@ -1634,3 +1634,15 @@ Süresince gönder
 Eðer ayný URL'li indirme zaten varsa denetle
 Ýndirme geçmiþini sakla
 En son indirdiðim dosyalarýmý listele
+Bittorrent indirmelerinin varsayýlan ayarlarý
+Tamamlanmýþ indirmeleri yeniden baþlat
+Firefox taþýnabilir sürüm klasörünü belirtiniz.
+Apple Safari eklenti klasörü bulunamýyor. Kendiniz belirlemek ister misiniz?
+Google Chrome eklenti klasörü bulunamýyor. Kendiniz belirlemek ister misiniz?
+Apple Safari izlemesi kurulamýyor
+Apple Safari izlemesi kaldýrýlamýyor
+Google Chrome izlemesi kurulamýyor
+Google Chrome izlemesi kaldýrýlamýyor
+Zaman sýnýrlamasý
+;hours, for shprt
+sa.

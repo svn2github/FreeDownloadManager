@@ -1,0 +1,1646 @@
+; This is a language file
+; You can translate it into your native language
+; To do this, follow instructions:
+; - PLEASE make sure FDM hasn't already been translated into your language 
+;   You should go to FDM web site (http://freedownloadmanager.org) and 
+;   check the list of available languages
+;   or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
+;   of your language. For English it is eng
+; - translate all strings of xxx.lng into your language
+; - send the translated file to support@freedownloadmanager.org 
+;
+; Free Download Manager language file
+; www.freedownloadmanager.org
+;
+; Language Name: Valencià
+; Intended application version: 2.5 build 738
+;
+; Translator: Software Valencià (info@softwarevalencia.com)
+; Last Updated: 04-09-2008
+;
+;******************************************************************************
+
+; Your language name. Please keep it in English
+;
+Valencian (RACV)
+;
+;
+; Below are the strings to translate:
+;
+Guardar-ho tot
+Retallar
+Copiar
+Pegar
+Modo llauger
+Modo mig
+Modo pesat
+Opcions de descàrrega
+Conexió telefònica
+Al voltant de FDM
+Eixir
+Archiu
+Edició
+Vore
+Opcions
+Ferramentes
+Ajuda
+Barra de ferramentes
+Barra d'estat
+Assistent d'optimisació
+Configuració predeterminada de descarregues
+Configuració general
+Conexió telefònica
+Penjar al finalisar
+Apagar PC al acabar
+Consulta d'ajuda
+Pàgina Web de FDM
+Notificar a un amic
+Enviar e-mail al grup de soport
+Verificar actualisacions automàticament
+Buscar actualisacions ara
+-
+-
+Canviar a
+Modo d'us de tràfic
+Registre
+Descarregues
+Programador
+Explorador de llocs
+Explorador HTTP//FTP
+Administrador de llocs
+Afegir descarrega
+Iniciar descarrega
+Parar descarrega
+Programar descarrega
+Afegir tasca
+Propietats de la tasca
+Descarregar archius seleccionats
+Detindre
+Actualisar
+Afegir lloc
+Propietats del lloc
+Grups de descarregues
+Detalls de la descarrega
+Registre del programador
+Registre del explorador de llocs
+Barra lateral
+Crear nova descarrega
+Eliminar descarrega
+Eixecutar archiu
+Obrir carpeta
+Iniciar descarrega automàticament
+Propietats de la descarrega
+Activar tasca
+Desactivar tasca
+Eliminar tasca
+Obrir carpeta superior
+Desconectar
+Descarregar
+Configuració de l'explorador de llocs
+Eliminar lloc
+Entrada temporal
+Llocs
+Mostrar finestra principal
+Monitorejar navegador
+Monitorejar portapapers
+Iniciar totes ls descarregues
+Detindre totes les descarregues
+-
+Continuar
+-
+-
+-
+-
+-
+Cancelar
+-
+-
+-
+Tots els grups
+Filtres
+Complet
+En progrés
+Programat
+Detingut
+Atre
+Crear nou grup
+Eliminar grup
+Eliminar totes les descarregues
+Eliminar totes les descarregues completes
+Obrir carpeta de grup
+Propietats del grup
+Nom del grup:
+Carpeta predeterminada:
+Extensions d'archius (separades per espais):
+Prioritat predeterminada de descarrega
+Molt baixa
+Baixa
+Mija
+Alta
+Molt alta
+Per favor introduïxca el nom del grup
+Erro de entrada
+Ya existix un grup en el mateix nom. Per favor, introduïxca un atre nom
+Per favor introduïxca el nom de la carpeta
+Escullga la carpeta de grup predeterminada
+Introduïxca el nom del grup ací
+Carpeta predeterminada per a guardar les descàrregues d'este grup
+Navegar
+Extensió d'archiu per a este grup. Utilisada per a detectar el grup de descarrega automàticament
+Prioritat de descarrega predeterminada per a este grup
+Cancelar canvis i tancar la finestra
+Aplicar canvis i tancar la finestra
+Erro en grups de descarrega
+Per favor reinstale Free Download Manager
+Erro
+Impossible carregar la llista de descàrregues. Possiblement està danyada o està sent utilisada per una atra aplicació
+Erro a l'iniciar l'integració en Internet Explorer
+¿Està segur?
+Açò eliminarà totes les descarregues del grup
+Confirmació
+Nom d'archiu
+Tamany
+Descarregat
+Temps restant
+Seccions
+Velocitat
+Comentari
+Registre
+Progrés
+Hora
+Data
+Informació
+Netejar
+Auto desplaçar
+Erro de ret desconegut
+Accés denegat. Nom d'usuari o contrasenya no vàlits
+Accés denegat. Contrasenya no vàlida
+Operació exitosa
+Impossible conectar al servidor
+Archiu no trobat en el servidor
+S'ha perdut la conexió en el servidor
+El servidor no respon
+Impossible resoldre el nom del servidor
+El servidor no soporte la reanudació de descarregues. No detinga esta descàrrega; si ho fa, tindrà que iniciar-la des de'l principi
+Se requerix el nom d'usuari i la contrasenya del Proxy
+Erro estés
+Mala petició. Possiblement siga una direcció incorrecta
+Erro de servidor desconegut
+Conexió abortada
+Direcció incorrecta
+No n'hi ha conexió a Internet
+Versió HTTP seleccionada no soportada per el servidor
+Erro desconegut
+Impossible eliminar l'archiu del disc
+S'ha alcançat el llímit de conexions en este servidor
+S'ha alcançat el llímit de conexions
+Pausa %d seg.
+Secció
+Iniciada
+Acabada
+Descàrrega completa
+Conectant...
+Conexió exitosa
+Redireccionant...
+Redirecció exitosa. Obrint nova direcció
+Iniciant descàrrega...
+Detinguda
+Creant nova secció...
+Cancelada
+Reiniciant descàrrega...
+Obrint archiu en disc...
+Nom d'archiu massa llarc
+L'archiu ya existix. Renomene'l a
+Renomenar a
+L'archiu de destí ha sigut eliminat. Impossible continuar
+L'archiu ya existix. Sobreescriure
+L'archiu ya existix. Reanudar descàrrega
+L'archiu ya existix
+Erro a l'obrir archiu en disc
+¡El tamany de l'archiu ha canviat en el servidor!
+Ajustant el nou tamany...
+Impossible sobreescriure l'archiu
+L'archiu serà renomenat
+Impossible renomenar l'archiu al seu nom original
+Impossible guardar els grups
+Impossible guardar les descarregues
+Conexió telefònica
+Conectar a:
+Marcar automàticament 
+Conectar
+Elegir la conexió ací
+Marque esta casella si vol que la conexió s'inicie automàticament la pròxima volta
+Marcar ara
+No marcar i tancar esta finestra
+No s'han trobat per a marcar
+Línea ocupada
+Erro de hardware
+No n'hi ha tono
+Marcant
+Intent
+Obrint port...
+Marcant al proveïdor...
+Conectant a computadora remota
+Verificant usuari i contrasenya...
+Velocitat de conexió %d BPS
+Desconectat
+Repetició
+El servidor requerix autentificació
+Usuari:
+Contrasenya:
+Grup:
+Guardar en la carpeta:
+Guardar com:
+Iniciar
+Automàticament
+Manualment
+Programar
+Prioritat de descàrrega
+Alvançat
+Direcció de l'archiu que vol descarregar
+Entre usuari ací
+Entre contrasenya ací
+Marque esta casella si el servidor requerix autenticació
+Nom del grup per a ubicar les descàrregues. Els grups li ajuden a ordenar les seues descàrregues
+Carpeta per a guardar les descàrregues
+Nou nom per a l'archiu descarregat. Dixe este camp buit si vol guardar l'archiu en el seu nom original
+Descripció curta de descàrrega
+Esta descàrrega s'iniciarà automàticament nomes siga possible
+FDM no intentarà iniciar esta descàrrega automàticament
+Programar esta descàrrega
+Configurar programador de descàrrega
+Prioritat de descàrrega. Les descàrregues en prioritat mes alta s'iniciaran primer. Les descàrregues en menor prioritat seran pospostes
+Vore configuració alvançada per a esta descàrrega
+Direcció incorrecta. Per favor verifique-la
+Per favor entre usuari
+Elegixca la carpeta de destí
+General
+Informació general
+Guardar la descàrrega en l'archiu:
+Nom de l'archiu descarregat
+La direcció d'esta descàrrega no se pot canviar
+Descàrrega en progrés. Impossible canviar el nom
+Impossible renomenar l'archiu
+Archiu no trobat
+Ruta no trobada
+Format .exe no vàlit
+L'archiu s'està utilisant per una atra aplicació
+Accés denegat
+El dispositiu no està preparat
+Disc ple
+Nom d'archiu no vàlit
+Requerix inici de sessió
+Conexió
+Ret
+Erros
+Pausa entre intents de conexió (en segons):
+Número màxim d'intents
+Temps d'espera (en segons):
+Tamany mínim:
+Cantitat màxima:
+Restricció del tràfic per a la descarrega
+Llimitar el tràfic a
+Ignorar totes les restriccions
+B
+KB
+MB
+; segon. e.g. KB/s
+s
+Entrar valor major a %d
+Per favor seleccione dimensió
+Temps d'espera de conexió del servidor en cas d'erro
+Marque esta casella si vol llimitar el número màxim d'intents de descàrregues no exitoses
+Temps d'espera per a la resposta del servidor
+Tamany mínim de secció. La descàrrega no se dividirà en seccions mes chicotetes
+Número màxim de seccions. La descàrrega no se dividirà en el número major de seccions
+Especifique el tràfic (màxim) que FDM utilisarà per a la descàrrega
+Ignorar restriccions de tràfic i restriccions per al número màxim de conexions per a esta descarrega
+Pot indicar el valor en bytes (B), kilobytes (KB) o megabytes (MB) en este camp
+Protocol
+Identificar-se en el servidor com:
+Remitent:
+Utilisar HTTP 1.1
+Utilisar cookies
+Utilisar modo passiu
+Modo de transferència
+Binari
+Utilisar ASCII per a archius en les extensions:
+Especificar com FDM s'identificarà en el servidor HTTP
+Esta cadena s'enviarà com el camp Remitent al servidor HTTP. Com regla, no se requerix
+Marque esta casella si vol que FDM utilise HTTP versió 1.1
+Marque esta casella si vol que FDM utilise cookies
+Marque esta casella si vol que FDM utilise modo passiu per a servidors FTP. A vegades es necessari quan accedix per mig de firewalls
+Utilisar modo binari pera transferències FTP. Establixca este modo si l'archiu que està descarregant no es de text
+Utilisar modo ASCII per a transferències FTP. Establixca este modo si l'archiu que està descarregant es de text
+FDM utilisarà el modo ASCII per a archius en extensions especificades. Per a atres archius FDM utilisarà el modo binari
+Proxy
+Obtindre configuració proxy
+De Microsoft Internet Explorer
+Especificar manualment
+No utilisar proxy
+Configuració
+Direcció:
+Port:
+Entre la direcció del proxy
+Entre el port del proxy
+FDM obtindrà la configuració del proxy d'Internet Explorer
+Especifique la configuració proxy vosté mateix
+FDM no utilisarà proxy
+Elegixca el tipo de servidors per als que vol indicar el proxy
+Entre la direcció del proxy que vol utilisar
+Entre el port del proxy. Sol ser 3128, 1080 o 8080
+Marque esta casella si el servidor proxy requerix autenticació
+Varis
+Archiu local
+Si l'archiu ya existix:
+Reservar espai en el disc per a descarregar l'archiu
+Extensió adicional d'archiu per a descarregues incompletes:
+Servidor d'Internet
+No reiniciar la descàrrega si el servidor no permitix reanudar
+Si el tamany de l'archiu ha canviat en el servidor:
+Detindre en erros
+Preguntar
+Sobreescriure
+Renomenar
+Reanudar
+Reiniciar
+Ajustar
+Especifique l'extensió de l'archiu
+Ací pot especificar lo que farà FDM si l'archiu ya existix en el disc
+Marque esta casella si vol que se reserve espai en disc quan s'inicie la descarrega
+Si se marque, FDM afegirà l'extensió especificada a l'archiu mentres se descarregue. Quan la descarrega acabe FDM renomenarà l'archiu al seu nom original
+FDM no reiniciarà la descàrrega si el servidor remot no ho admitix
+Pot especificar lo que farà FDM si el tamany de l'archiu ha sigut canviat en el servidor
+Marque esta casella per a detindre la descarrega quan l'archiu no se trobe en el servidor
+Marque esta casella per a detindre la descarrega quan l'usuari i contrasenya no siguen vàlits
+Modos de tràfic
+Seleccione el modo a configurar:
+Número màxim de conexions:
+Número màxim de conexions per servidor:
+Restriccions de tràfic:
+illimitat
+Seleccione el modo de tràfic que vol configurar
+Marque esta casella per a llimitar el número màxim de conexions
+Marque esta casella per a llimitar el número màxim de conexions per servidor
+Especifique ací el tràfic (màxim) de FDM per a descarregar archius
+Totes
+Llistat de descarregues
+Auto-guardar cada
+min.
+Al eliminar una descàrrega incompleta
+Eliminar automàticament de la llista les descàrregues completes
+No eliminar l'archiu
+Eliminar l'archiu
+FDM guarde la llista de les descàrregues automàticament després de l'interval de temps especificat. Protegix la llista de possibles erros del seu PC o faltes d'energia
+Especifique ací lo que farà FDM en l'archiu en el disc quan se eliminen les descarregues incompletes
+Marque esta casella si vol eliminar automàticament les descàrregues de la llista quan s'hagen acabat
+Monitoreig
+Monitorejar
+Portapapers
+Monitorejar archius en extensions
+Ignorar archius en extensions
+No deu pressionar-se ALT
+Deu pressionar-se ALT
+Per favor especifique les extensions
+Marque esta casella si vol que FDM se registre en el Internet Explorer
+Marque esta casella si vol que FDM monitorege el seu portapapers
+Monitorejar nomes archius en extensions especificades
+No monitorejar archius en extensions especificades 
+Monitorejar nomes si la tecla ALT no està pressionada
+Monitorejar nomes si la tecla ALT està pressionada
+Inici
+Carregar a l'inici
+Iniciar minimisat
+Sistema
+Minimisar cap a la bandeja
+El botó Tancar minimisa la finestra
+FDM s'iniciarà automàticament quan inicie Windows
+FDM se minimisarà després d'iniciar
+Quan faça clic en el botó Minimisar FDM se minimisarà cap a la bandeja del sistema
+Si està marcat, fer clic en el botó Tancar serà similar al botó Minimisar
+Actualisar
+Direcció del servidor d'actualisació
+FDM verificarà automàticament si n'hi ha una nova versió
+Assistent d'optimisació de l'us de ret
+¡Benvingut a l'assistent d'optimisació de l'us de ret!
+Este assistent li ajudarà a establir els valors òptims per al seu tipo de conexió. Configurarà les propietats del administrador de descàrregues i les propietats predeterminades per a la descàrrega.
+Seleccione el tipo de conexió
+Acabar
+Especifique el tipo de conexió a Internet
+Configurar FDM per a treball òptim en la seua conexió
+Tasca
+Hora d'inici
+Següent hora d'inici
+Última hora d'inici
+Impossible carregar la llista de programacions. Possiblement estiga feta malbé o estiga sent utilisada per una atra aplicació
+Impossible carregar el registre del Programador
+Impossible guardar la llista de programacions
+Tasca "%s" programada. ¿Iniciar-la?
+Canviar el modo de tràfic a "%s"
+Penjar
+Totes les conexions
+Canviar el modo de tràfic a
+Apagar
+Reiniciar
+Tancar sessió
+Una volta
+Dum
+Dil
+Dim
+Dcr
+Dij
+Div
+Dis
+Tots els dies:
+Tots
+dies
+hores
+A l'inici de FDM
+Quant se faça el marcat
+Quant falle el marcat
+Quant no n'hi hagen descarregues actives
+Quant la velocitat siga menor o igual a %d BPS durant %d
+Quant totes las descarregues tinguen estat d'erro
+Mai
+Desconegut
+Conectat correctament a "%s"
+Erro al conectar a "%s"
+Eixecució exitosa
+Fora de memòria
+Impossible eixecutar
+L'eixecució programada ocasionarà la eixida del programa al començament. La programació serà ignorada
+Màxims intents de marcat
+Pausa entre intents
+Penjar si la velocitat de conexió es menor que:
+Intentar de nou
+No mes que
+Utilisar la conexió
+Si es exitosa
+voltes
+Tallar totes les conexions actives
+Conexió a tallar
+Nom del programa:
+Arguments:
+Tipo de apagat:
+Forçar aplicacions a tancar
+Eixecutar programa
+Establir conexió telefònica
+Tallar conexió
+Canviar modo de tràfic
+Eixir de FDM
+Apagar PC
+Descarregues a iniciar
+Descarregues a detindre
+Aplicacions
+Tots els archius
+Ho sent, esta característica està disponible nomes en Windows 2000, XP i superior
+Per favor, entre nom de programa
+Per favor, seleccionar descarregues
+Seleccione el modo de tràfic que vullga que siga establit al iniciar la tasca
+Marque esta casella si vol llimitar el número màxim de intents de marcats erròneus 
+Temps entre intents erròneus
+Marque esta casella per a establir conexió en velocitat no menor al valor que ha especificat
+Especifique el valor mínim de velocitat de conexió requerida
+FDM intentarà establir novament la conexió requerida si marca esta casella
+Marque esta casella per a llimitar el número màxim de intents erròneus per a establir la conexió
+Especifique ací les descarregues requerides
+Llista de totes las descarregues disponibles
+Afegir la descarrega seleccionada a la llista de tasca de descarregues
+Eliminar la descarrega seleccionada de la llista de tasca de descarregues
+Especifique el programa que vullga eixecutar ací
+Buscar el programa en la seua computadora
+Especifique arguments del programa ací
+Especifique el tipo de fi de sessió ací
+Marque esta casella para forçar a finalisar la seua sessió. Es útil si n'hi han aplicacions penjades en el sistema. Pero en este cas, les senyes no guardades se pedran
+Especifique la acció programada ací
+Marque esta casella si vol que FDM talle totes les conexions actives
+Especifique la conexió a tallar ací
+En certs dies
+Dumenge
+Dilluns
+Dimarts
+Dimecres
+Dijous
+Divendres
+Dissabte
+En events
+Duració
+Velocitat baixa:
+min.
+Minuts
+Hores
+Dies
+Quant la velocitat de descarrega siga massa baixa
+Quant totes les descarregues estiguen en estat d'erro
+Per favor especifique els dies
+Iniciar la tasca a l'hora especificada
+Establixca l'hora per a iniciar la tasca ací
+Iniciar la tasca en la data especificada
+Establixca la data per a iniciar la tasca ací
+Iniciar la tasca en certs dies de la semana
+Iniciar la tasca tots els Dumenges
+Iniciar la tasca tots els Dilluns
+Iniciar la tasca tots els Dimarts
+Iniciar la tasca tots els Dimecres
+Iniciar la tasca tots els Dijous
+Iniciar la tasca tots els Divendres
+Iniciar la tasca tots els Dissabte
+Iniciar la tasca periòdicament
+Este camp li permitix especificar l'interval de temps en minuts, hores o dies
+Iniciar la tasca quant passe algun event
+Especifique ací el tipo d'event
+Introduïxca ací el interval de temps
+Introduïxca ací la velocitat mínima requerida
+Mostrar confirmació para eixecutar la tasca
+Esperar confirmació durant
+seg.
+Si està marcat, FDM li demanarà confirmar l'eixecució d'esta tasca
+Si està marcat, FDM esperarà que confirme durant l'interval de temps especificat. Si no reacciona durant este temps la tasca s'iniciarà
+Direcció:
+Construcció de la llista d'archius a descarregar
+Conectant al servidor
+Intentant usar l'usuari i contrasenya almagasenats en l'Administrador de Lloc
+Recuperant llista d'archius del servidor
+La conexió en el servidor s'ha perdut. Intentant restaurar-la
+Construint llista
+Recuperar tamany i data d'última modificació
+(Esta opció pot disminuir dràsticament la velocitat)
+Marque esta casella si vol que FDM pregunte el tamany i la data dels archius en els servidors HTTP
+Nom del lloc
+Conexions
+Inici de sessió
+Grup
+Impossible carregar la llista de llocs. Possiblement estiga danyada o sent usada per una atra aplicació
+Impossible guardar la llista de llocs
+Màximes conexions simultànees:
+Grup por defecte para una nova descarrega de este lloc
+Usar modo passiu FTP
+Per favor entre el nom del lloc
+Ya existix un lloc con el mateix nom. Per favor, entre un atre nom
+El número de màximes conexions deu ser major a 0
+Per favor seleccione el grup
+Especifique el nom del lloc ací
+Marque esta casella per a llimitar el número màxim de conexions simultànees a este servidor
+Marque esta casella para afegir descarregues des d'este servidor al grup seleccionat automàticament 
+Demanar usuari
+No preguntar-me una atra volta
+Erro d'escritura en disc
+L'archiu "%s" ya existix en el disc. ¿Qué vol fer?
+No preguntar-li açò una atra volta. La seua elecció serà acceptada per defecte
+Sobrescriure l'archiu existent
+Renomenar este archiu
+Reanudar descarrega. (La descarrega se iniciarà en la mateixa posició del tamany de l'archiu existent)
+Detindre esta descarrega
+Sí
+No
+Descarregar
+S'ha eliminat. ¿Eliminar tamé l'archiu del disc?
+Por favor, entre usuari i contrasenya
+Inici a "%s"
+Enviar l'usuari i contrasenya com ho va especificar el servidor
+No conectar a este servidor
+El tamany de "%s" ha canviat en el servidor. ¿Qué vol fer?
+Reiniciar la descarrega des del començament
+Ajustar la descarrega per al nou tamany. No recomanat
+Per favor espere
+Actualisar
+Descripció
+Actualisar utilisant:
+Verificar actualisacions
+Vosté ya està utilisant la nova versió
+Descarregant
+La versió %s construïda %s està disponible
+Distribució completa de la versió %s (%s)
+Actualisar a versió %s
+Actualisar a versió %s (%s)
+Free Download Manager deu reiniciar-se. ¿Reiniciar ara?
+Actualisació completa
+Impossible trobar l'actualisació
+Especifique el tipo d'actualisació ací
+Actualisar FDM utilisant la distribució completa
+Actualisar FDM utilisant la distribució d'actualisació
+Buscar mes informació sobre el procés d'actualisació
+¿Qué es lo nou en esta versió?
+Iniciar l'actualisació de FDM ara
+Cancelar l'actualisació i tancar esta finestra
+Crear descarregues
+Seleccionar contingut
+Desmarcar contingut
+Llista de descarregues a afegir
+Marcar els elements de la carpeta seleccionada para afegir-los a la llista de descarrega
+Desmarcar els elements de la carpeta seleccionada per a no afegir-los a la llista de descarrega
+Al voltant de FDM
+Copyright (c)
+Tots els drets reservats
+Registrat a:
+Ya està actualisat. Se requerix reiniciar
+Nom d'usuari o contrasenya no vàlits
+Impossible carregar l'archiu d'historial
+Impossible guardar l'archiu d'historial
+Configuració predeterminada de la aranya HTML
+Aranya HTML
+Abre de pàgines Web
+Descarregar lloc Web
+Configuració descarregues pàgines Web
+Iniciar descarrega
+Detindre descarrega
+Programar descarrega
+Eliminar
+Obrir pàgina Web en el navegador
+Iniciar la descarrega automàticament
+Direcció del lloc Web
+Archius
+¿Eliminar tamé les descarregues?
+Impossible carregar la llista de pàgines Web
+Impossible guardar la llista de pàgines Web
+Direcció de la pàgina Web o servidor HTTP d'on se vol descarregar
+Direcció de la pàgina Web o servidor HTTP des del que s'inicie la descarrega
+Nom de la carpeta a on guardar les descarregues
+Carpeta de destí:
+Pàgines Web
+Pàgines
+Extensions d'archius de pàgines Web en còdic HTML:
+Descarregar archius CSS
+Descarregar pàgines Web des d'atres llocs
+Imàgens
+Descarregar imàgens
+Descarregar imàgens que vinculen a atres llocs
+Profunditat de la descarrega:
+Extensions d'archius de pàgines Web en còdic HTML. Les pàgines Web s'examinaran buscant enllaços d'imàgens i d'atres pàgines a descarregar
+Si està marcat, els archius de estil se descarregaran tamé. Recomanat
+Si no se marque, no se descarregaràn pàgines Web d'atres llocs. Per eixemple, si esta casella se dixe sense marcar i s'escomence a descarregar de http://eixemple.com, entonces http://otrositio.com/algo.html no se descarregarà, pero http://eixemple.com/algo.html si se descarregarà.
+Si està marcat, les imàgens de les pàgines Web se descarregaran tamé
+Si està desmarcat, les imàgens de les pàgines Web que vinculen a atres llocs no se descarregaran
+Profunditat de la descarrega. Per eixemple, s'escomence descarregant de http://ex.com/index.html. Des d'esta pàgina n'hi ha un enllaç a http://ex.com/algo.html. Entonces la profunditat de http://ex.com/algo.html serà 1. Establir la profunditat en 0 farà que nomes se descarregue la pàgina de contingut.
+Descarregar archius de pàgines Web
+Descarregar archius d'atres llocs
+Eliminació de archius per extensió
+Activar
+Descarregar
+No descarregar
+Archius en extensions:
+Marque esta casella per a descarregar archius de pàgines Web
+Marque esta casella per a descarregar archius d'atres llocs
+Marque esta casella per a ignorar archius en extensions especificades
+Els archius en extensions, especificades avall, se descarregaran si està marcat
+Els archius en extensions, especificades avall, no se descarregaran si està marcat
+Exportar configuració
+Importar configuració
+Erro al eixecutar Regedit.exe
+Ha ocorregut un erro mentres s'intentava exportar la configuració
+Ha ocorregut un erro mentres s'intentava importar la configuració
+Archius de registre de FDM
+Eliminació d'imàgens per extensió
+Imàgens en extensions:
+Marque esta casella per a ignorar imàgens en extensions especificades
+Les imàgens en extensions, especificades avall, se descarregaran si està marcat
+Les imàgens en extensions, especificades avall, NO se descarregaran si està marcat
+No descarregar açò i eliminar
+El servidor no soporta descarrega reanudada. Reiniciar des del començament
+Erro al obrir la direcció
+Ho senc, ha ocorregut un erro inesperat mentres s'intentava escriure en el registre
+¡Gràcies per registrar-se! Per favor reinicie FDM
+Descarregar en Free Download Manager
+Descarregar lloc web en Free Download Manager
+Agregar FDM al menú contextual de IExplorer
+Marque esta casella per a afegir els elements "Descarregar en Free Download Manager" i "Descarregar lloc Web en Free Download Manager" al menú contextual del navegador (el menú apareixerà quan faça clic en el botó dret)
+Disminuir l'us del tràfic en l'activitat del navegador
+Disminuir un nivell
+Establir el modo llauger
+Marque esta casella per a disminuir automàticament l'us de tràfic quan navegue en Internet. Açò li permitix navegar mes ràpit quan FDM està descarregant algo
+El modo d'us de tràfic se disminuirà en un nivell. Pesat->Mig, Mig->Llauger
+El modo d'us de tràfic se canviarà a Llauger
+Vàlit per a
+Vàlit per a subdominis
+Marque esta casella per a utilisar este registre per a descarregues via HTTP
+Marque esta casella per a utilisar este registre per a descarregues via HTTPS
+Marque esta casella per a utilisar este registre per a descarregues via FTP
+Marque esta casella per a utilisar este registre per a descarregues des de servidores de subdominis. Per eixemple, per al lloc http://lloc.com serà http://algun.lloc.com
+Per favor seleccione al menys un protocol
+Número màxim de descarregues eixecutant-se
+Marque esta casella si vol eliminar el número màxim de descarregues eixecutant-se a la vegada
+Reiniciar descarrega
+Crear una secció mes
+Detindre una secció
+; context: [section x] - Parat
+Detinguda
+; tray menu
+Caixa d'arrastre
+;
+Impossible encontrar el directori del plugin d'Opera. ¿Vol especificar-lo manualment?
+Impossible encontrar el directori del plugin Netscape. ¿Vol especificar-lo manualment?
+Impossible instalar el monitoreig d'Opera
+Impossible desinstalar el monitoreig d'Opera
+Impossible instalar el monitoreig de Netscape
+Impossible desinstalar el monitoreig de Netscape
+Marque esta casella si vol que FDM capture els clics en Opera
+Marque esta casella si vol que FDM capture els clics en Netscape
+; create download dlg
+Tamany de la coa
+; solicitar el tamany de la descarrega
+Solicitar...
+Tamany de coa d'una descarrega des de'l servidor
+Si a tot
+No a tot
+Registre detallat
+Si se marque, FDM mostrarà les respostes del servidor
+Los canvis tindran efecte després de reiniciar el navegador
+Llistat de tasques
+Llistat d'archius
+Llistat de llocs
+Llistat de pàgines
+Eliminant descarregues
+Construint la llista de descarregues
+Crear descarrega per lots
+De:
+A:
+Pas:
+Bytes comodins:
+Resultats
+Mostra:
+Número inicial de la seqüencia
+Número final de la seqüencia
+Pas de la seqüencia. Per eixemple, si es 10, llavors la seqüencia serà 0, 10, 20, ...
+Cantitat de bytes comodins. Per eixemple, si es 1, llavors la seqüencia serà 1, 2, 3. Si es 2, llavors la seqüencia serà 01, 02, 03.
+Faça clic ací para ver la seqüencia generada
+Permetre que el navegador descarregue si pressiona Cancelar
+Marque açò si vol que el seu navegador descarregue l'archiu quant pressione Cancelar en la finestra "Crear descarrega"
+El número de seqüencia final deu ser major que el inicial
+Per favor use (*) en la direcció per a especificar la plantilla
+Agregar una extensió si el archiu no la te
+Marque esta casella per a crear l'extensió especificada per a l'archiu que no la tinga. Per eixemple si el nom d'archiu es "archiu" i ha especificat "txt", el resultat serà "archiu.txt"
+Mostrar tamanys nomes en bytes
+Marque esta casella per a mostrar tots els tamanys en bytes en lloc de kilobytes o megabytes
+Realisar busca de virus
+Arguments:
+Extensions:
+Marque esta casella per a verificar els archius descarregats en l'antivirus automàticament
+Especifique el nom del programa antivirus ací
+Especifique els arguments per a l'antivirus ací
+Especifique les extensions d'archius descarregats per a la seua verificació ací
+Per favor entre el nom de l'antivirus
+Nom no vàlit. Per favor verifique-ho
+Eixecució de antivirus
+Desactivar la tasca després de l'eixecució
+Eliminar la tasca després de la eixecució
+Marque esta casella per a desactivar automàticament la tasca després de l'eixecució
+Marque esta casella per a eliminar automàticament la tasca després de l'eixecució
+Anar
+Arrere
+Generar nom automàticament
+Marque esta casella per a generar un nom d'archiu de descarrega automàticament 
+Guardar en l'extensió "htm"
+Marque esta casella per a guardar totes les pàgines Web en extensió "htm"
+Faça clic en este botó per a calcular el tamany aproximat de totes les descarregues
+Mantinga l'estructura de carpetes del servidor
+Marque este botó per a mantindre l'estructura original de carpetes del servidor. D'atra forma tots els archius del servidor se guardaran en nomes una carpeta
+Vosté ha seleccionat una atra carpeta. ¿Establir esta carpeta per defecte per a este grup? Tamé pot canviar la carpeta per defecte en las propietats del grup.
+; === ADDED LINES ===
+La descarrega d'esta direcció ya existix. ¿Qué vol fer?
+Eixecutar
+Eixecutar l'archiu descarregat
+Versió
+Faça clic ací para contactar-mos
+Faça clic ací para descarregar l'última versió
+Advertència: Este programa està protegit per las lleis de dret d'autor i tractats internacionals. La reproducció o distribució no autorisada d'este programa, o qualsevol part d'ell, pot resultar en penes civils i criminals, i se procedirà al màxim alcanç possible baix la llei.
+; === new version ===
+Descarregar tot en Free Download Manager
+Afegir llista de descarregues
+Llevar seleccionats
+Esta es la llista de direccions a ser afegides
+Faça clic en este botó per a llevar totes les direccions seleccionades de la llista
+Impossible trobar el directori Firefox Plugin. ¿Vol especificar-lo manualment?
+Impossible instalar el monitoreig de Firefox
+Impossible desinstalar el monitoreig de Firefox
+Marque esta casella si vol que FDM capture en Mozilla Firefox
+Descarregar la selecció en Free Download Manager
+Iniciar
+Llocs Web
+Descarregues actives
+No n'hi han descarregues actives actualment
+Notificacions
+Utilisar "globos" en la bandeja de sistema
+Temps d'espera
+Marque esta casella per a habilitar les notificacions "globo" en la bandeja quan una descarrega se detinga o acabe. Nota: esta característica nomes treballe en Windows 2000/XP y superior
+Tancar automàticament el "globo" després de que este temps acabe
+Espills
+Buscar automàticament direccions espill
+Número màxim d'espills
+Calcular velocitat d'espills
+Recalcular velocitat cada
+Marque este botó per a que FDM busque direccions d'espill per a cada descarrega automàticament
+Llimitar el número de direccions espill per descarrega. Açò permitix reduir el temps de càlcul de la velocitat d'espills
+Marque este botó per a que FDM calcule la velocitat de cada servidor espill
+Recalcular automàticament la velocitat d'espills a través del interval de temps especificat
+No buscar si el tamany del archiu es inferior a
+FDM no buscarà espills si el tamany de l'archiu es menor que el tamany especificat
+No buscar si el tamany de l'archiu es desconegut (recomanat)
+Afegir espill
+Buscar espills
+Afegir direcció espill per a esta descarrega automàticament
+Buscar direccions espill per a esta descarrega en FileSearching.COM
+Llista de direccions espill
+Velocitat del servidor
+En us
+Medir velocitat
+Medir velocitat de servidors
+Informació de descarregues
+Esperant...
+Direcció espill per a descarrega
+El tamany de l'archiu excedix 2GB. Eixes descarregues son soportades nomes via FTP
+;
+;
+; #NEW LINES (BUILDS NEWER THAN 195)#
+;
+;
+; BEGIN: New Download page
+Nou
+Determinar automàticament el grup de descarrega 
+Grup:
+Guardar descarrega en la carpeta del grup apropiat
+Marque esta casella si vol que el grup de descarrega siga determinat per la extensió de l'archiu o els valors de l'Administrador de Lloc
+Establir manualment el grup predeterminat
+Marque esta casella si vol que la descarrega se guarde en la seua carpeta de grup (veja Propietats del Grup)
+Establixca la carpeta de destí manualment
+; END
+; BEGIN: Monitoring page
+Monitoreig silenciós
+Si està marcat, no se mostrarà la finestra "Crear descarrega" quan s'agregue una descarrega des del navegador
+Configurar
+Seleccionar elements de menú per a mostrar en el menú contextual del navegador
+; END
+Elegir elements de menú a mostrar
+Deu elegir al menys un element de menú
+Utilisar sons
+Marque este botó si vol que FDM reproduïxca sons o algún event (eix. quan la descarrega se complete)
+Elegixca el so per a cada event
+; BEGIN : Customize sounds dialog
+Configurar sons
+Establir so
+Llevar
+Provar
+Llista de sons apropiats i events de FDM. Ací pot ajustar FDM per a que reproduïxca un so quan ocorrixca un event
+Descarrega afegida – reproduïx un so quan una o mes descarregues son afegides a la llista de descarregues
+Descarrega completa - reproduïx un so quan la descarrega se complete exitosament.
+Descarrega fallida - reproduïx un so quan ocorre un erro mentres s'intenta descarregar un archiu.
+Marcat establit - reproduïx un so quan la tasca del Programador "Establir conexió telefònica" se eixecute en èxit.
+Marcat fallit - reproduïx un so quan la tasca del Programador "Establir conexió telefònica" falla per alguna raó.
+Establir un so per a events seleccionats
+No reproduir cap so quan ocorrixca un event seleccionat
+Provar so seleccionat
+Event
+Archiu de so
+Sense so
+Descarrega agregada
+Descarrega completa
+Descarrega fallida
+Marcat exitòs
+Marcat fallit
+Archius de so
+; END
+Buscant espills...
+Medint velocitat d'espills...
+La busca d'espills ya s'ha eixecutat
+Conectant en servidor de busca...
+Obtenint resultats...
+N'hi han %d espills trobats
+Busca d'espill acabada
+Intentant un atre espill...
+No s'han trobat espills
+Erro
+S'ha medit la velocitat dels espills
+; BEGIN: History page
+Historial
+Guardar historial d'enllaços i carpetes
+Guardar historial nomes de carpetes
+Mantindre els registres durant
+Número màxim de registres
+Limpiar historial
+FDM guardará el historial de enllaços y nombres de carpeta introducidos
+FDM guardará el historial de carpetas solamente
+FDM eliminará los registres existentes en el historial que superen el periodo de tiempo especificat
+Número màxim de registres en el historial. Cuando el número de registres exceda este valor, FDM eliminará los registres más viejos
+Eliminar tots els registres de l'historial
+; END
+Importar
+Exportar
+Importar llista de direccions
+Exportar llista de descarregues
+Archius de text
+Impossible obrir l'archiu
+Exportar totes les descarregues
+Exportar totes les descarregues en la llista
+Exportar las descarregues seleccionades
+No exportar las descarregues completes
+Agregar si el archiu ya existix
+Nom de grup no vàlit. Per favor no utilise els símbols / o \.
+Eixir al finalisar
+; BEGIN : Downloads History window
+Afegit
+Guardat en
+; END
+Paperera de reciclage
+; BEGIN: Recycle Bin
+Propietats
+Netejar Paperera de reciclage
+;END
+;BEGIN: Recycle Bin properties
+No posar les descarregues eliminades en la Paperera
+Mantindre màxim
+descarregues
+No mantindre descarregues completades
+Demanar confirmació al eliminar descarregues
+Propietats de la Paperera de reciclage
+Marque este botó si no vol almagasenar las descarregues eliminades en la Paperera
+Marque este botó si vol llimitar el número de descarregues eliminades almagasenades en la Paperera
+Número màxim de descarregues per a almagasenar en la Paperera
+Marque este botó si vol que les descarregues completes no s'almagasenen en la Paperera després de eliminar-les
+Marque este botó si vol que FDM li demane confirmació quan intente eliminar una descarrega
+;END
+Restaurar
+Restaurant descarregues...
+; History subitems
+Hui
+Ahir
+Una semana
+Un mes
+Configurar...
+; end
+Limpiar historial
+Guardar historial de descarregues
+Guardar nomes l'historial de descarregues completes
+Marque este botó si vol guardar l'historial de les seues descarregues
+Marque este botó si vol almagasenar nomes l'historial de descarregues completes
+Configuració de l'historial de descarregues
+Construint llista de registres de l'historial...
+; Download was deleted
+S'ha eliminat
+Elegir interval de temps
+Buscar
+Buscar següent
+Qué buscar
+; BEGIN : Find dialog
+Buscar en
+Nom d'archiu local
+Especifique lo que vullga buscar ací
+Buscar en part del archiu de direcció
+Buscar en direcció completa
+Buscar en comentari de descarrega
+Buscar en el nom i ruta de l'archiu de descarrega en el disc local
+Establir configuració de busca alvançada
+; ADVANCED settings
+A on buscar
+Buscar en llista de descarregues
+Buscar en historial de descarregues
+Buscar en temps especificat
+Establir
+Buscar en Paperera de reciclage
+Buscar per tamany d'archiu especificat
+Mínim
+Màxim
+Buscar en llista de descarregues
+Buscar en historial de descarregues
+Buscar nomes descarregues que satisfaguen els llímits de temps especificats
+Establir ranc de temps
+Buscar en Paperera de reciclage
+Buscar nomes archius que satisfaguen els llímits de tamany de archiu especificats
+Tamany mínim requerit
+Tamany màxim requerit
+Buscar en grup
+Elegir el grup a on se realisarà la busca
+; END
+Buscant descarrega...
+No s'han trobat elements
+No s'han trobat mes elements
+Busca terminada
+Copiar direcció al portapapers
+Vista prèvia ZIP
+Deuria seleccionar al menys un archiu.
+Es possible que l'archiu que està descarregant siga un archiu ZIP. ¿Vol vore el seu contingut?
+Vista prèvia d'Àudio i Vídeo
+Erro a l'obrir l'archiu.
+Tipo de mig desconegut.
+Per favor, instale DirectX 8.0 o superior per a utilisar esta característica. Vosté pot descarregar l'últim DirectX des de microsoft.com.
+Informació de mijos
+Tamany:
+Disponibilitat:
+Duració:
+Silenci
+Reproduir
+Pausar
+Filtrar
+Extensions (dividides per espais, eix. zip rar arj):
+Llevar els archius en estes extensions
+Nomes dixar archius en estes extensions
+La cadena d'arguments no conté la macro %file%. Esta macro es necessària per a indicar al seu programa antivirus l'archiu a verificar.
+¿Continuar de qualsevol forma?
+Advertència
+Utilisar atribut ocult per a les descarregues incompletes
+Afegir comentari al nom del archiu al finalisar
+No almagasenar pàgines del servidor
+Marque este botó si no vol almagasenar pàgines de servidor en el seu ordenador,  nomes archius i imàgens
+Utilisar vista prèvia ZIP
+Marque este botó si vol vore el contingut de l'archiu ZIP al començament de la descarrega per a descarregar nomes una part de l'archiu.
+Volum:
+Iniciar la descarrega automàticament
+Marque este botó si vol que FDM inicie cada nova descarrega automàticament
+Per favor marque l'archiu a descarregar
+Establixca ubicacions alternatives de direccions para esta descarrega
+No mostrar vista prèvia en el futur
+Vosté ha desactivat la vista prèvia ZIP. Si vol activar-la, per favor vaja a Opcions -> Opcions de descarrega (Ctrl+O) -> pestanya Nova, i marque el botó "Utilisar vista prèvia ZIP".
+Llista de ignorats
+Llista de pàgines Web que deuen ignorar-se mentres descarregue un lloc.
+Subcarpetes
+Afegir
+Ignorar totes les subcarpetes tamé
+; Proxy tab new settings
+Utilisar retrocés en conexions interrompudes
+Tamany del retrocés
+bytes
+Marque esta opció si vol habilitar la funció de retrocés. Esta opció li ajudarà a protegir la seua descarrega contra possibles danys.
+Tamany del retrocés. Un major tamany permetrà que el retrocés treballe en mes seguritat. El tamany recomanat es de 3000 bytes. Pot aumentar este valor si la seua descarrega encara permaneix danyada.
+; downloader options -> monitor tab
+No monitorejar archius inferiors a
+Use esta opció si vol que FDM salte els archius inferiors al tamany especificat
+KBytes
+¡Advertència! La Paperera de reciclage es massa gran. Açò pot retardar dramàticament el rendiment. Se recomana buidar la Paperera de reciclage. ¿Vol fer-ho?
+No verifique açò de nou
+¡Advertència! L'historial de descarregues es massa gran. Açò pot disminuir el rendiment dramàticament. Se recomana limpiar l'historial. ¿Li agradaria fer açò?
+El servidor no pot garantisar la seua capacitat de resumir. La contestació no vàlida.
+Copiar al portapapers
+; general settings | skins page
+Temes
+Tema
+Permetre al tema utilisar els seus propis icons  
+Permetre al tema utilisar els seus propis gràfics
+; default skin
+<predeterminat>
+NOTA: Qualsevol canvi s'efectuarà nomes després de reiniciar Free Download Manager.
+Mostrar informació de les descarregues en progrés
+Saltar archius en extensions:
+Llista d'extensions d'archius per a saltar
+Cap descarrega activa 
+Tocar l'archiu de so quan totes les descarregues se completen
+Importar llista del portapapers
+Contrasenya
+Opcions de l'administrador de llocs
+; Save password dialog
+¿Guardar contrasenyes?
+Free Download Manager pot guardar la contrasenya de este servidor per a evitar la necessitat d'introduir-la cada volta que vosté descarregue d'eixe servidor.
+¿Guardar esta contrasenya?
+No me sugerixca guardar cada contrasenya
+; Site Manager options | Passwords tab
+Utilisar l'administrador de llocs per a almagasenar les meues contrasenyes  
+Preguntar si se guarda la contrasenya o no
+No sugerir guardar las contrasenyes  
+Borrar totes las contrasenyes abans d'eixir
+Borrar totes las contrasenyes
+; create new HTML Spider task
+Borrar descarregues completes automàticament (recomanat)
+Marque ací si vol que la descarrega de l'explorador Web siga borrada automàticament. Açò accelera la descarrega de llocs grans.
+Els canvis s'efectuaràn després de reiniciar Free Download Manager
+Estil nou
+Estil vell
+El nom del directori no es vàlit
+Ocultar finestres flotants en el modo de pantalla completa
+Marque esta casella si vol ocultar les finestres flotants automàticament durant el modo de pantalla completa.
+ha sigut programat per a eixecutar-se.
+¿Vol eixecutar-lo?
+Eixecutar la descarrega quan estiga completa
+Per favor use (*), (*A) o (*a) en la direcció per a especificar plantilla
+Servidor de busca d'espills:
+Hivernar
+Suspendre
+Recordar la meua elecció
+Sugerir canviar la carpeta predeterminada del grup
+Guardar archiu
+Obrir archiu
+Guardar i obrir archiu
+Tipo de descarrega:
+Enllaç a FDM
+Enllaç a Free Download Manager
+¡Estimat usuari!
+Free Download Manager es un programa que se li proporciona debades. Pot utilisar-lo gratuïtament durant el temps que vullga.
+Pero, si trobe Free Download Manager útil, li demanem que mos ajude a divulgar-lo colocant un enllaç a este en el seu lloc Web. Açò permetrà que mes persones coneguen Free Download Manager.
+Gràcies anticipades por la seua ajuda,\nel equip de desenroll de Free Download Manager.
+Recordar d'ací a 3 dies  
+Recordar la pròxima volta que eixecute Free Download Manager
+No mostrar esta finestra una atra volta
+Vore el còdic HTML del enllaç
+Còdic HTML de l'enllaç
+Mes eixemples
+Copiar al portapapers
+Amagar
+; "Traffic usage mode has been changed" window
+El modo d'us del tràfic ha canviat
+Vosté ha canviat el modo d'us de tràfic de la ret.\nFree Download Manager té tres modos:
+En este modo Free Download Manager descarregarà a la màxima velocitat possible. Este es el modo mes agressiu.
+En este modo Free Download Manager descarregarà a velocitat mija. Este modo li permitix navegar Internet i mantindre una alta velocitat de descarrega al  mateix temps.
+En este modo Free Download Manager descarregarà a baixa velocitat. Este modo li permitix descarregar sense un retràs dramàtic de la ret.
+;
+Renomenar al reiniciar
+Introduïxca un valor menor que %d
+; export/import downloads
+Llista d'archius de direcció
+Informació Descarregues llista d'archius
+;
+Opcions d'exportació
+;
+Establir la data del archius per el servidor
+Fa que la data de l'archiu descarregat siga idèntica a l'existent en el servidor
+Generar un archiu de descripció
+Generar un archiu en el nom "*.dsc.txt" (* - nom de l'archiu descarregat) que contindrà una chicoteta descripció de l'archiu descarregat (comentari + direcció + data). Est archiu serà generat nomes per a una descarrega que tinga comentaris.
+Este archiu ha sigut descarregat des de
+No recuperar la data de l'archiu des del servidor
+Esta opció li permitix incrementar la velocitat de començar una descarrega FTP. Free Download Manager utilisarà l'orde SIZE en lloc de LIST.
+No guardar registres de las descarregues
+Activar esta opció farà que Free Download Manager arranque i s'apague mes ràpit, i reduirà l'us de memòria.
+;
+Exportar historial de descarregues
+Exportar totes les entrades
+Exportar totes les entrades en la llista
+Exportar las entrades seleccionades
+Exportar nomes les entrades de les descarregues completes
+;
+Archius HTML
+;
+Historial de descarregues de Free Download Manager
+Direcció de descarregues
+Descarregat a l'archiu
+Tamany d'archiu
+La descarrega s'ha completat
+La descarrega ha sigut eliminada
+;
+Guardat en
+Tamany de l'archiu
+Reanudar soport
+Tancar esta finestra quan la descàrrega estiga acabada o detinguda
+Obrir
+¿Vol vore esta finestra una atra volta?
+Si, vullc vore esta finestra per a cada descarrega
+No, no mostrar-me mes esta finestra
+Si, pero no per a esta descarrega
+Utilisar la tecla SHIFT signifique que esta descarrega serà eliminada del disc i no podrà recuperar-la.\n¿Està segur?
+Elegir grup
+Establir la carpeta raïl dels grups
+Seleccione la carpeta raïl dels grups.\nEls canvis s'aplicaràn nomes a les noves descarregues.
+Últims archius descarregats
+(buit)
+Pausar totes les descàrregues
+Mostrar finestra de progrés de les descàrregues
+Si se marque, FDM crearà una finestra especial en informació al voltant de les descàrregues per a cada descàrrega activa
+; general settings | misc page
+Fora de temps per a confirmacions
+Eixecutar descàrrega
+Preguntar el tipo d'apagat
+Confirmació de temps de espera per a "Ferramentes | Penjar al finalisar".
+Confirmació de temps de espera per a "Ferramentes | Eixir al acabar".
+Confirmació de temps de espera per a "Ferramentes | Apagar PC al finalisar".
+Confirmació de temps de espera per a eixecutar l'archiu descarregat quan estiga complet.
+Si se marca, FDM preguntarà el tipo d'apagat per a "Ferramentes | Apagar PC al finalisar".
+No demanar confirmacions
+; 5 seconds, 10 seconds, ...
+%d segons
+Esperar la meua confirmació
+Ignorar pàgines des d'esta carpeta
+Descarregar pàgines nomes des d'esta carpeta
+Incloure subcarpetes
+Ignorar totes las pàgines Web ubicades en esta carpeta.
+Totes les pàgines localizades nomes en esta carpeta i ignorar atres pàgines Web.
+Marque esta opció si vol que l'explorador Web ignore (o nomes descarregue) pàgines localisades en totes les subcarpetes de l'especificada.
+Ací deuria especificar una direcció de la carpeta.\nEixemple: "http://server.com/docs/".
+Tipo
+Ignorar
+Nomes
+Conjunt de números
+Assignar
+Ací deuria especificar el conjunt de números per a la llista de lots.\nEixemple: 1-100, ó 1-100s2w3.
+Faça clic en este botó per a assignar el conjunt de números gastats utilisant la finestra de diàlec.
+Número simple
+Número
+Assignar conjunt de números
+Erro de sintaxis
+Extraure archiu
+Extraure
+Extracció
+Carpeta de destí
+Erro al extraure. El format de l'archiu es desconegut.
+Tràfic descarregat en este mes\n(%s ha sigut descarregat en el mes anterior)
+Total velocitat de descarrega
+Desactivar Ferramentes després de l'eixecució de la tasca
+Quan active, alguna Ferramentes | "quan faça" la tasca serà automàticament desactivada després d'eixecutar. Aixina que se llançarà nomes una volta.
+; %s
+; 1st - name of a file
+; 2nd, 3rd - file info (size + date).
+L'archiu "%s" encara existix.\n\n¿Vol reemplaçar-lo\n(%s)\n\nper un nou\n(%s)?
+Si a tot
+Saltar
+Saltar tot
+El format de l'archiu es desconegut
+Visitar el lloc Web
+Instalar paquet
+Per defecte, FDM soporta nomes archius ZIP, RAR y ARJ.\nPot estendre la llista d'archius soportats instalant el paquet adicional de soport d'archius per a Free Download Manager (se requerix conexió a Internet).
+Paquet de soporte d'archius de FDM
+Pujar
+Baixar
+Moure descarregues seleccionades amunt
+Moure descarregues seleccionades avall
+Verificar archiu
+Alguns llocs Web proporcionen firmes especials per als archius disponibles a fi de permetre que els usuaris s'asseguren de que l'archiu descarregat no està danyat. Pot introduir eixa firma ací i FDM verificarà l'archiu.
+Algoritme
+Checksum
+Pegar des del portapapers
+Verificar
+Calculant el checksum de l'archiu descarregat...
+Verificació de l'archiu exitosa
+Verificació de l'archiu errònea
+La verificació de l'archiu ha sigut completada en èxit.\nNo s'han trobat erros en l'archiu descarregat.
+La verificació de l'archiu s'ha completat.\nS'han trobat erros: est archiu s'ha danyat durant el procés de descarrega. Se requerix reiniciar la descarrega des del principi.
+No mostrar esta finestra una atra volta si la verificació es exitosa
+Incapaç de trobar l'archiu eixecutable del antivirus que ha escollit.\nPer favor, especifique'l vosté mateix.
+El tamany dels archius no es el mateix
+Guardar com:\n(Mostra: archiu(*)(*A)(*a).txt)
+No vàlit al guardar com plantilla especificada.\nEstà segur que correspon a esta plantilla de direccions.
+Al finalisar
+Al finalisar (tot completat o en erros)
+Aplicacions
+¿Qué es açò?
+Opinions
+;
+¡Benvolgut amic!
+Free Download Manager (FDM) es una de les aplicacions de descarrega mes populars del mon, en millons d'usuaris actius, pero ara després de popularisar-se, ¡volem mes!
+Si trobe el programa tan útil i imprescindible com mosatros, amablement li demanem que mos ajude a esparcir la noticia colocant un enllaç al programa en el seu bloc, lloc Web o espai personal, com Myspace/MSN.
+; %s will be replaced with "FDM buzz" 
+S'ha iniciat el %s oficial el 16 d'agost de 2006. ¡La nostra meta es fer de FDM l'utilitat d'Internet de mes ràpida difusió després de Firefox!
+Rumor sobre FDM
+; %s will be replaced with "blog" 
+Pot seguir el progrés de FDM en el nostre %s.
+blog
+Gràcies anticipades per la seua ajuda,\nl'equip de desenroll de Free Download Manager.
+No mostrar mes esta finestra, tinc bona memòria.
+Unir-se al rumor
+No, gràcies
+Comunitat FDM
+Canviar a "Opinions" després de descarregar
+Si s'habilita, la pestanya "Opinions" s'activarà automàticament quan acabe la descarrega.
+Modificar l'identificació de ret del Internet Explorer
+Si s'habilita, s'informarà als llocs que navegue que Free Download Manager està instalat en el seu programa. Pero si utilise esta opció pot resultar en el bloqueig d'alguns llocs.
+¿Roïn?
+Verificar si algú usuari de Free Download Manager ha reportat que esta descarrega conté virus/adware/spyware/etc.
+Be, cap usuari de Free Download Manager ha reportat que esta descarrega siga maliciosa.\n\nSin embargo, esto no garantiza que la descarrega no siga roïn i se recomana verificar-la utilisant algún programa antivirus.
+; keep all %xxx, \n as is.
+N'hi han %d de %d d'usuaris de Free Download Manager que han reportat esta descarrega com roïn.\nLa calificació promig per a esta descarrega es %.*g.\n\n¿Mostrar opinions al voltant d'esta descarrega?
+Verificar cada nova descarrega per a determinar si es roïn
+Utilise esta opció per a que FDM verifique automàticament, abans de descarregar, si algú usuari ha reportat que esta descarrega es roïn.
+Mostrar opinions al descarregar
+Si s'habilita, FDM activarà la pestanya "Opcions" automàticament i mostrarà opinions sobre la descarrega mentres transcórrega.
+Verificant si la descarrega es maliciosa (veja les opcions per a desactivar açò)
+Be, ningú ha reportat que siga roïn
+¡Advertència! Algú ha reportat que esta descarrega es roïn
+Tancar
+Carregant
+No descarregar açò
+Caché per a les operacions d'escritura de senyes
+Si s'habilita, FDM utilisarà un búfer de caché intern del tamany especificat per a les operacions d'escritura de les senyes descarregades. Açò reduirà l'us del seu disc dur, i pot incrementar la velocitat de la descarrega per a les conexions ràpides.\nCom les senyes descarregades no s'escriuen immediatament al disc duro, serà necessari tornar a descarregar-los si se produïx qualsevol erro de l'ordenador (en el pijor cas seran del tamany que ha especificat).\nRecomanat per a les conexions d'alta velocitat.
+Impossible instalar monitoreig en SeaMonkey (Mozilla Suite)
+Impossible desinstalar monitoreig en SeaMonkey (Mozilla Suite)
+Marque esta casella si vol que FDM capture els clics en el navegador Mozilla Firefox
+Marque esta casella si vol que FDM capture els clics en el navegador SeaMonkey (Mozilla Suite)
+Permetre que el navegador descarregue si punche Cancelar
+Marque esta casella si vol que el seu navegador descarregue un archiu quan punche Cancelar en la finestra "Crear descarrega"
+Afegir FDM al menú contextual de navegador
+Marque esta casella per a afegir les opcions "Descarregar en Free Download Manager" i "Descargar lloc Web en Free Download Manager" al menú contextual del seu navegador (el menú que apareix quan fa clic en el botó de la dreta)
+Seleccione les opcions a mostrar en el menú contextual del navegador
+Impossible instalar monitoreig de Firefox
+Moure archius a la carpeta
+La velocitat es massa lenta. Reiniciant secció...
+Reiniciar si la velocitat es molt baixa durant (en min.):
+Reiniciar la secció si se produix una disminució important de la velocitat de descarrega.
+¿Vol vore la finestra de progrés de descarrega novament?
+El servici no està disponible ara. Per favor, intente-ho mes tart.
+Moure al inici
+Moure al final
+Colocar descarrega a l'inici de la llista
+Marque esta opció si vol que la descarrega se coloque a l'inici de la llisa de descarregues.
+Impossible habilitar el monitoreig en Firefox perque l'extensió FlashGot està instalada.\nPrimer deu desinstalar FlashGot.
+Habilitar
+Desactivar
+Canviar
+Si s'habilita el modo Pausar totes les descarregues se desactivarà, de lo contrari s'habilitarà.
+El %s oficial iniciarà el 16 d'agost de 2006. ¡La nostra meta es fer de FDM la utilitat d'Internet de mes ràpida difusió després de Firefox!
+Descarregar automàticament i instalar actualisacions
+Nomes notifique'm quan una actualisació estiga disponible
+Desactivar les actualisacions automàtiques
+Ara el monitoreig està activat en %s.
+Eliminar registre
+¿Accepta eliminar?
+No n'hi ha accés d'escritura a la carpeta del Free Download Manager.\nDeu donar accés d'escritura per a permetre que Free Download Manager guarde els seus archius de senyes, d'atra forma totes les senyes se pedran al reiniciar Free Download Manager.
+Esta caixa li permitix arrastrar&&soltar enllaços des del seu navegador en Free Download Manager.\nLi permitix ràpidament mostrar o ocultar la finestra de Free Download Manager fent doble clic en el botó esquerre.\n\nPer a ocultar-la faça clic en el botó dret i desmarque "Caixa d'arrastre".
+"Caixa d'arrastre" de Free Download Manager
+Desactivar totes les notificacions per al grup de descarregues
+Active esta opció per a desactivar totes les (globos, sons) notificacions de descarregues creades per l'orde "%s".
+Omitir llista
+Especificar la llista de extensions d'archius i la llista de llocs que no deuen ser monitorejats.
+No descarregar d'estos llocs (espai separat):
+Free Download Manager no monitorejarà descarregues dels llocs especificats en esta llista. Especifique els noms de domini ací (ej. "site.com"). Pot usar '*' asteriscs.
+¡Advertència!\nHa ocorregut un erro mentres se tractava d'eixecutar la revisió de virus.\n¿Li agradaria eixecutar l'archiu descarregat de totes formes?
+Integritat
+Eixecutar la verificació quan l'archiu se descarregue
+Para eixecutar la verificació comprobe que Free Download Manager coneix el checksum llegítim de l'archiu. En la majoria dels casos pot suministrar-lo en cada descarrega.
+Si la verificació falle
+Verificació vàlida d'este archiu
+No fer res
+Especifique ací que farà FDM quan la verificació falle.\nPreguntar - FDM  li preguntarà qué fer.\nReiniciar - FDM reiniciarà esta descarrega des del començament.\nNo fer res - FDM afegirà el registre al voltant de l'erro en el registre de descarregues i no farà res mes.
+Realizant verificació...
+Verificació exitosa.
+¡Verificación fallida!
+Especificar algoritme de integritat.
+Checksum vàlit
+Resultat de checksum
+; zip preview window
+Seleccionar/Deseleccionar tot
+; group's properties dialog
+Macroses
+nom d'un servidor (ej. "freedownloadmanager.org")
+ruta de l'archiu a descarregar del servidor
+any actual
+mes actual (números de 1 a 12)
+dia actual
+; don't translate "%year%-%month%-%day%" here
+equivalent a "%year%-%month%-%day%"
+;
+De Mozilla Firefox
+FDM obtindrà opcions de proxy de Firefox
+; new download settings
+Usar este grup
+; Downloads -> Schedule ->
+Iniciar
+Detindre
+Programar inici de descarrega
+Programar detenció de descarrega
+;
+; downloads that not completed or were completed recently
+No completats+Recents
+Grup principal
+;
+; create new download dialog -> set output folder as default dialog
+Predeterminar tamé per a tots els grups de descarregues
+; %s - place of name of the group. don't change this
+¿Accepta predeterminar esta carpeta per al grup "%s"?
+;
+;
+Borrar la llista de descarregues
+Pujades
+Archius pujats
+Iniciar pujada
+Detindre pujada
+Programar pujada
+Moure les pujades seleccionades amunt
+Moure les pujades seleccionades avall
+Pujat
+Llista de pujades
+Recuperar l'URL destí de pujada del servidor...
+Cancelar
+; outlook express: view | insert file | ...
+Com adjunt
+Com enllaç (pujada)
+Carpeta
+;
+Afegir archius
+Afegir carpetes
+Bittorrent
+Acceptar el protocol Bittorrent
+Llimitar el tràfic de pujada
+Llimitar les conexions de pujada
+Usar ports de
+a
+Habilitar DHT
+Habilitar/Desactivar el protocol Bittorrent. Sin embargo si hay alguna descarrega de Bittorrent en Paperera de reciclage de FDM, el protocol de Bittorrent no estarà deshabilitat totalment.
+Limitar la velocitat total màxima de conexions de pujada. Açò no es recomanable para el protocol Bittorrent i pot reduir la seua velocitat de descarrega.
+Llimitar el número màxim de conexions de pujades totals. Colocar un número massa baix pot resultar en la disminució de velocitat de sus descarregues.
+Especificar ací el ranc de ports que FDM utilisarà per a conexions de pujada.
+Habilitar extensió DHT
+Nom
+Iniciar sessió es requerit per el tracker
+Afegir descarrega Bittorrent
+Ha ocorregut un erro quan se tractava processar est archiu torrent.
+Archiu Torrent
+Pareix que vol descarregar un archiu .torrent. Es necessari que habilite Bittorrent en Free Download Manager.\n\n¿Vol habilitar Bittorrent?
+Reescriga la seua contrasenya: la contrasenya entrada no coincidix.
+Especifique els archius que vol pujar.
+Propietats de pujada
+El archiu d'informació de Metalink ha sigut detectat. Continuar descarregant.
+El archiu d'informació de Bittorrent ha sigut detectat. Continuar descarregant.
+Ha fallat l'accés als archius en el disc.
+Conectant al tracker...
+Erro al rebre una resposta vàlida del tracker.
+La resposta ha sigut rebuda exitosament del tracker.
+La verificació Hash de la part descarregada ha fallat. Tornant a descarregar-lo...
+Donar tot l'ample de banda per a esta descarrega
+¿Desactivar l'inici automàtic de Free Download Manager al inici de Windows?
+Ho sentim, el servici de la Comunitat FDM no està disponible actualment. Per favor, intente-ho mes tart.
+Els noms d'archiu no poden contindre els caràcters següents \ / : * ? " < > |. Per favor, entre un atre nom.
+Els noms d'archiu no poden contindre els caràcters següents : * ? " < > |. Per favor, entre un atre nom.
+Personalisar finestra flotant...
+Transparència
+Senyes
+Mantindre tots els archius de senyes en la carpeta de l'usuari actual
+Mantindre archius en esta carpeta
+Els canvis seran aplicats després del reinici de Free Download Manager.
+Mostrar la finestra de progrés de descarrega
+Crear versió portable
+La versió Portable de Free Download Manager es per a utilisar-la en diversos ordenadors sense necessitat d'instalar-lo i configurar-lo en cada ordenador.\n\nPot colocar-lo per eixemple en un disc flash (USB).\n\nUna volta eixecutat se registrarà en el sistema i se integrarà en els navegadors. I al eixir s'eliminen automàticament.\n\nElegixca ací la ruta a on vol crear esta versió. Deu ser una carpeta en una unitat removible.\n\nEix. "I:\Els meus programes portables\".
+Integració
+Associar Free Download Manager en archius .torrent
+Utilisar sempre este grup per a noves descarregues
+Utilisar sempre este grup i recordar l'última carpeta utilisada
+Descarregar vídeos Flash
+Descarregar vídeo ab Free Download Manager
+Este lloc no està soportat. Veja la llista de llocs soportats.
+Vore en la finestra de descarregues
+Esta pàgina té vídeos flash. Descarregant vídeos flash...
+Convertint...
+Convertir
+Opcions de conversió
+Format d'archiu
+Tamany Vídeo
+; video quality
+Calitat
+Molt baix
+Baix
+Normal
+Promig
+Alt
+Molt alt
+;
+AVI utilisant MPEG-4 (*.avi)
+AVI utilisant XVID (*.avi)
+No canviar
+Bitrate Vídeo
+Bitrate Àudio
+Recordar las opcions por defecte
+;
+Crear descarrega de vídeo flash
+Convertir automàticament el vídeo descarregat al format especificat
+Configurar les opcions alvançades
+Vore la llista de llocs soportats
+; used in "create flash video download" window
+eix.
+Següent intent para conectar-se al tracker en %d segons
+Preparant archius en el disc... Açò pot tardar alguns minuts
+Estat
+Preparant archius en el disc...
+MP4 per a iPod/PSP (MPEG4 + AAC, *.mp4)
+Vista prèvia/convertir
+Convertir archius
+Canviar a esta pestanya automàticament
+;keep "\n\n%s\n" as is
+L'archiu s'ha convertit exitosament i s'ha almagasenat en\n\n%s\n.
+Ha fallat la conversió de l'archiu\n\n%s.
+Grup per a noves descarregues
+Info hash
+Peers
+Client
+Peces
+Tracker
+Estat Tracker
+Velocitat pujada
+Bytes pujats
+Nivell de compartició
+Bytes perduts
+URL archiu Torrent
+¿Està segur?\nAçò reiniciarà la descarrega des del començament.
+Tràfic utilisat ("descarregat"; "pujat") en este mes\n(%s ha sigut utilisat el mes anterior)
+Velocitat Total ("descarrega"; "pujada")
+Archius a pujar
+Nom del paquet
+Comprimir
+Colocar contrasenya para esta descarrega
+Reentrar
+Guardar estos archius
+Número supost de descarregues
+Afegir enllaç a estos archius en el nostre catàlec
+Incloure informació alvançada (tots els camps son opcionals)
+Descripció
+Etiquetes
+Nom
+Email
+Email del receptor
+Menys de 10
+De 10 a 100
+Mes de 100
+2 dies
+7 dies
+1 mes
+;compression methods
+Cap
+Ràpit
+Promig
+Millor
+Opcions pujada
+Integrar pujades en
+Menú contextual del Explorador
+Menú "Enviar a..." del Explorador
+Utilisar menú simple de pujades
+Tamany mínim de archiu a pujar
+Opcions de proxy HTTP
+Activació de pujada
+Les pujades requerixen activació. Açò se requerix per a protegir el nostre servidor contra pujades automàtiques. Entre el còdic d'activació.
+Conectant al servidor de pujades
+Conectat ab èxit al servidor de pujades
+L'archiu ha sigut pujat al servidor exitosament
+La pujada ha sigut detinguda
+Creant archiu zip dels archius a pujar...
+Erro en la creació de l'archiu zip
+L'archiu zip ha sigut creat exitosament
+Enviant la petició al servidor
+Enviant informació de la pujada al servidor
+L'informació ha sigut enviada
+Erro en el enviament de l'informació al servidor
+Activant pujada...
+La pujada ha sigut activada exitosament
+Ha fallat la activació de la pujada
+L'archiu pujat ha canviat
+Erro inesperat
+Calculant comprovació...
+; "I agree to terms" string in two lines
+Accepte
+els térmens
+Deu acceptar els térmens.
+Ha fallat la comprovació de las actualisacions
+Una nova versió està disponible. Es necessari actualisar.\nVol actualisar ara?
+Se requerix actualisar Free Download Manager
+Se requerix reiniciar Free Download Manager
+Sugerir-me pujar adjunts
+Adjuntar a la lletra (lent)...
+Pujar i insertar enllaç (ràpidament)...
+Ha ocorregut un erro mentres s'iniciava la pujada. Comprove la seua conexió o intente-ho una atra volta mes avant.
+Ha adjuntat un(s) archiu(s) gran(s).\nDegut a varies raons, se recomane no enviar archius grans com adjunts, sino pujar els archius i enviar-los com enllaços a ells.\n\nLi agradaria pujar-lo?
+Se recomana pujar
+Opcions d'integració
+La pujada de %s ha sigut completada.\nUtilise la següent URL per a descarregar-lo:
+Tamany total
+Obrir en el navegador
+La versió actual del Free Download Manager no pot ser utilisat per a pujar archius. Deu actualisar-lo.
+La versió actual del Free Upload Manager no pot ser usada. Deu actualisar-la. Per favor visite el lloc freedownloadmanager.org.
+Ingrés molt gran.
+Opcions de integració del administrador de subidas
+Opcions de integració del Free Upload Manager
+Pujada
+Descarregant actualisació...
+Habilitar seeding
+Desactivar seeding
+Considerar la descarrega roïn si un
+% usuaris l'han marcat roïn
+Està be, els usuaris de Free Download Manager no han informat que esta descarrega es maliciosa.\n\nSin embargo, esto no garantiza que esta descarrega no siga maliciosa y es recomanable verificar-la utilisant algún programa antivirus.
+Està be, els usuaris de FDM no han informat que esta descarrega siga roïn
+la lletra de unitat FDM deu començar des de. Eix. "C:". Es útil per a la versió portable.
+Deu instalar un plugin de conversió de vídeo para usar esta característica.
+Deu instalar el plugin Bittorrent para descarregar por el protocol Bittorrent.
+Nota: estos archius son archius de servici del Free Download Manager (no son els archius que vosté descarrega).
+¿Li agradaria copiar els archius actuals a la nova carpeta (els archius existents seràn sobrescrits)?
+La carpeta de descarregues de tots els grups se canviarà a esta carpeta.\nAcceptar per a continuar
+Configurar carpeta de descarregues
+Previndre que'l ordenador hiverne mentres s'està descarregant
+Maximum number of half-open connections
+Torrents
+Failed to access the files on the disk. Check disk is not full or write protected.
+Ratio
+Llista de torrents
+Add torrent download from the web
+Afegir torrent download from a file
+Crear nou torrent
+(auto)
+Orige
+Piece size
+Trackers
+Add tracker
+Remove tracker
+Start seeding this torrent
+Guardar
+Crear nou torrent
+Archius torrent
+Prioritat
+;normal/high priority
+descartar
+normal
+alta
+Finestres flotants
+Archius de servici (llista de descarregues, història, etc.)
+Configuració per defecte dels llocs de descarrega
+Ha pausat totes les descarregues. Aixo signifique que totes les descarregues se descarregaran a una velocitat molt reduida (normalment 1B/s).\nAixo permitix pausar totes les descarregues inclús les que no tenen soport per a resumir-se.\nDeu cridar esta orde una atra volta o reiniciar FDM per a tornar a l'estat normal.
+Seeding
+Activar compartició (recomanat)
+Compartició unllimitada
+Llimitar per ràtio
+Compartir fins que el ràtio siga
+Llimitar per temps
+Compartir durant
+Verificar si ya existix una descarrega en la mateixa URL
+Guardar historial de descarregues
+Llistar els archius descarregats mes recentment
+Configuració predeterminada de les descarregues Bittorrent
+Reiniciar descarregues completades
+Especificar la carpeta de la versió portable de Firefox
+

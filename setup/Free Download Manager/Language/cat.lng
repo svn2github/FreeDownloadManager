@@ -1,13 +1,28 @@
 ;******************************************************************************
 ;
+; Això és un fitxer de llengua
+; Pots traduir-lo a la teva llengua
+; Per fer-ho, seguiu les instruccions:
+; - SI US PLAU, mireu que el FDM no està traduït a la vosta llengua
+;   Has d'anar al web de FDM (http://freedownloadmanager.org) i
+;   i comprovar la llista de llengües disponibles
+;   o enviar un e-mail a support@freedownloadmanager.org
+; - copia aquest fitxer de llengua a xxx.lng, on les xxx serà el nom de la llengua reduït.
+;   Pel català és cat.
+; - tradueix totes les cadenes del fitxer xxx.lng a la teva llengua
+; - envia el fitxer traduït a support@freedownloadmanager.org 
+;
 ; Free Download Manager language file
 ; www.freedownloadmanager.org
 ;
 ; Language Name: Catalan
-; Intended application version: 2.1 build 494
+; Intended application version: 2.5 build 738
 ;
-; Translator: Catalanoic
-; Last Updated: 2008-05-28
+; Translator: Catalanoic (catalanoic@gmail.com)
+; Last Updated: 2008-11-19
+;
+; Previous translations:
+; (Version 2.1 build 494) -> Catalanoic (2008-05-28)
 ;
 ;******************************************************************************
 
@@ -124,7 +139,7 @@ Nom del grup:
 Carpeta predefinida:
 Extensions de fitxers (separats per espais):
 Prioritat predefinida de descàrrega
-Mol baixa
+Molt baixa
 Baixa
 Mitjana
 Alta
@@ -198,12 +213,12 @@ S'està iniciant descàrrega...
 Aturada
 S'està creant nova secció...
 Cancel·lada
-S'està reiniciant descàrrega...
+S'està reiniciant la descàrrega...
 S'està obrint fitxer en disc...
 Nom de fitxer massa llarg
 El fitxer ja existeix. Canvieu-li de nom a
 Canviar de de nom a
-El fitxer de destinació ha sigut eliminat. Impossible continuar
+El fitxer de destinació ha sigut eliminat. No es pot continuar
 El fitxer ja existeix. Sobreescriure
 El fitxer ja existeix. Continua descàrrega
 El fitxer ja existeix
@@ -1318,3 +1333,276 @@ Deshabilita
 Canvia
 Si s'habilita el mode Refrena totes les descàrregues es deshabilitarà, del contrari s'habilitarà.
 El %s oficial iniciarà el 16 d'agost de 2006. El nostre objectiu és fer de FDM la utilitat d'Internet de més ràpida difusió després de FireFox!
+Descarrega automàticament i instal·la actualitzacions
+Només notifica'm quan una actualització estigui disponible
+Desactiva les actualitzacions automàtiques
+Ara el monitoreig està activat en %s.
+Suprimeix registre
+Accepteu eliminar-ho?
+No hi ha accés d'escriptura per la carpeta del Free Download Manager.\nHeu de concedir l'accés d'escriptura per permetre que Free Download Manager guardi els vostres arxius de dades, sinó les dades es perdran en reiniciar el Free Download Manager.
+Aquesta caixa us permet arrossegar&&deixar enllaços des del vostre navegador a Free Download Manager.\nUs permet ràpidament mostrar o ocultar la finestra de Free Download Manager fent doble clic amb el botó esquerre del ratolí.\n\nPer ocultar-la feu clic amb el botó dret del ratolí i desactiva la "Caixa d'arrossegament".
+"Caixa d'arrossegament" de Free Download Manager
+Desactiva totes les notificacions pel grup de descàrregues
+Activeu aquesta opció per desactivar totes les (globus, sons) notificacions de descàrregues creades per la comanda "%s".
+Omet la llista
+Especifica la llista d'extensions d'arxius i la llista de llocs que no han de ser monitorejats.
+No descarreguis d'aquells llocs (espai separat):
+Free Download Manager no monitorejarà descàrregues dels llocs especificats en aquesta llista. Especifiqueu els noms de dominio aquí (ex. "web.com"). Es pot utilitzar '*' asteriscs.
+Avís!\nS'ha produït un error mentre es tractava de realitzar la revisió de virus.\nVoleu executar el fitxer descarregat de totes maneres?
+Integritat
+Realitza la verificació quan el fitxer s'hagi descarregat
+Per realitzar la verificació comproveu que Free Download Manager coneix el checksum legítim del fitxer. En la majoria dels casos es pot subministrar en cada descàrrega.
+Si la verificació falla
+Verificació vàlida d'aquest arxiu
+No fer res
+Especifiqueu aquí que farà FDM quand la verificació falli.\nPregunta - FDM  li preguntarà què ha de fer.\nReinicia - FDM reiniciarà aquesta descàrrega des del principi.\nNo fer res - FDM afegirà el registre sobre l'error en el registre de descàrregues i no farà res més.
+S'està realitzant la verificació...
+Verificació amb èxit.
+La verificació ha fracassat!
+Especifica algoritme de integritat.
+Checksum vàlid
+Resultat de checksum
+; zip preview window
+Selecciona/Deselecciona-ho tot
+; group's properties dialog
+Macroses
+nom d'un servidor (ex. "freedownloadmanager.org")
+ruta del fitxer per descarregar del servidor
+any actual
+mes actual (números de l'1 a 12)
+dia actual
+; don't translate "%year%-%month%-%day%" here
+equivalent a "%year%-%month%-%day%"
+;
+De Mozilla Firefox
+FDM agafarà opcions de proxy del Firefox
+; new download settings
+Utilitza aquest grup
+; Downloads -> Schedule ->
+Inicia
+Atura
+Programa inici de descàrrega
+Programa detenció de descàrrega
+;
+; downloads that not completed or were completed recently
+No completats+Recents
+Grup principal
+;
+; create new download dialog -> set output folder as default dialog
+Predetermina també per tots els grups de descàrregues
+; %s - place of name of the group. don't change this
+Accepta predeterminar aquesta carpeta pel grup "%s"?
+;
+;
+Esborra la llista de descàrregues
+Pujades
+Fitxers pujats
+Inicia pujada
+Atura pujada
+Programa pujada
+Mou les pujades seleccionades cap amunt
+Mou les pujades seleccionades cap avall
+Pujat
+Llista de pujades
+Recupera la URL de destinació de pujada del servidor...
+Cancel·la
+; outlook express: view | insert file | ...
+Com adjunt
+Com enllaç (pujada)
+Carpeta
+;
+Afegeix arxius
+Afegeix carpetes
+Bittorrent
+Accepta el protocol Bittorrent
+Limita el trànsit de pujada
+Limita les connexions de pujada
+Utilitza ports de
+a
+Habilita DHT
+Habilita/Desactiva el protocol Bittorrent. No obstant, si hi ha alguna descàrrega de Bittorrent a la Paperera de reciclatge de FDM, el protocol de Bittorrent no estarà deshabilitat totalment.
+Limita la velocitat total màxima de connexions de pujada. Això no és recomanable pel protocol Bittorrent i pot reduir la vostra velocitat de descàrrega.
+Limita el número màxim de connexions de pujades totals. Col·locar un número massa baix pot resultar en la disminució de velocitat de les seves descàrregues.
+Especifica aquí el rang de ports que FDM usarà per les connexions de pujada.
+Habilita extensió DHT
+Nom
+Inicia sessió és requerit pel tracker
+Afegeix descàrrega Bittorrent
+S'ha produït un error quan es tractava de processar aquest arxiu torrent.
+Arxiu Torrent
+Sembla que voleu descarregar un arxiu .torrent. És necessari habilitar el Bittorrent en el Free Download Manager.\n\nVoleu habilitar el Bittorrent?
+Reescriviu la vostra contrasenya: la contrasenya inscrita no coincideix.
+Especifiqueu els arxius que voleu pujar.
+Propietats de pujada
+El arxiu de informació de Metalink ha sigut detectat. Continua descarregant.
+El arxiu de informació de Bittorrent ha sigut detectat. Continua descarregant.
+S'ha produït un error en l'accés als arxius en el disc.
+S'està connectant al tracker...
+S'ha produït un error en rebre una resposta vàlida del tracker.
+La resposta ha sigut rebuda amb èxit del tracker.
+La verificació Hash de la part descarregada ha fallat. S'està tornant a descarregar...
+Dona tot l'ample de banda per aquesta descàrrega
+Desactiva l'inici automàtic del Free Download Manager a l'inici del Windows?
+Ho sentim, el servei de la Comunitat FDM no està disponible actualment. Si us plau, intenteu-ho més tard.
+Els noms d'arxiu no poden contenir els caràcters següents \ / : * ? " < > |. Si us plau, introduïu un altre nom.
+Els noms d'arxiu no poden contenir els caràcters següents : * ? " < > |. Si us plau, introduïu un altre nom.
+Personalitza finestra emergent...
+Transparència
+Dades
+Mantenir tots els arxius de dades en la carpeta de l'usuari actual
+Mantenir arxius en aquesta carpeta
+Els canvis seran aplicats després del reinici de Free Download Manager.
+Mostra la finestra de progrés de la descàrrega
+Crea versión portable
+La versió Portable del Free Download Manager és per usar-la en diversos ordinador sense necessitat d'instal·lar-lo i configurar-lo a cada ordinador.\n\nPodeu col·locar-lo per exemple en un disc flash (USB).\n\nUna vegada executat es registrarà en el sistema i s'integrarà en els navegadors. I en sortir s'eliminen automàticament.\n\nTrieu aquí la camí on voleu crear aquesta versió. Ha de ser una carpeta en una unitat removible.\n\nEx. "I:\Els meus programes portables\".
+Integració
+Associa Free Download Manager amb arxius .torrent
+Usa sempre aquest grup per a noves descàrregues
+Usa sempre aquest grup i recorda la última carpeta usada
+Descarrega videos Flash
+Descarrega vídeo amb Free Download Manager
+Aquest lloc no està suportat. Vegeu la llista de llocs suportats.
+Visulitza en la finestra de descàrregues
+Aquesta pàgina té vídeos flash. S'està descarregant vídeos flash...
+S'està convertint...
+Converteix
+Opcions de conversió
+Format d'arxiu
+Mida Video
+; video quality
+Qualitat
+Molt baix
+Baix
+Normal
+Promig
+Alt
+Molt alt
+;
+AVI utilitzant MPEG-4 (*.avi)
+AVI utilitzant XVID (*.avi)
+No canviïs
+Bitrate Video
+Bitrate Audio
+Recorda les opcions per defecte
+;
+Crea descàrrega de vídeo flash
+Converteix automàticament el vídeo descarregat al format especificat
+Configura les opcions avançades
+Visualitza la llista de llocs suportats
+; used in "create flash video download" window
+ex.
+Següent intent per connectar-se al tracker en %d segons
+S'està preparant arxius en el disc... Això pot durar alguns minuts
+Estat
+S'està preparant arxius en el disc...
+MP4 per iPod/PSP (MPEG4 + AAC, *.mp4)
+Vista prèvia/converteix
+Converteix arxius
+Canvia a aquesta pestanya automàticament
+;keep "\n\n%s\n" as is
+L'arxiu s'ha convertit amb èxit i s'ha emmagatzemat a\n\n%s\n.
+S'ha produït un error en la conversió de l'arxiu\n\n%s.
+Grup per a noves descàrregues
+Info hash
+Peers
+Client
+Peces
+Tracker
+Estat del Tracker
+Velocitat de pujada
+Bytes pujats
+Nivell de compartits
+Bytes perduts
+URL arxiu Torrent
+N'esteu segur?\nAixò reiniciarà la descàrrega des del principi.
+Trànsit usat ("descarregat"; "pujat") en aquest mes\n(%s ha sigut utilitzat el mes anterior)
+Velocitat Total ("descàrrega"; "pujada")
+Arxius per pujar
+Nom del paquet
+Comprimeix
+Col·loca contrasenya per aquesta descàrrega
+Retipeja
+Desa aquests arxius
+Nombre suposat de descàrregues
+Afegeix enllaç a aquests arxius en el nostre catàleg
+Inclou informació avançada (tots els camps són opcionals)
+Descripció
+Etiquetes
+Nom
+Email
+Email del receptor
+Menys de 10
+De 10 a 100
+Més de 100
+2 dies
+7 dies
+1 mes
+;compression methods
+Cap
+Ràpid
+Promig
+Millor
+Opcions de pujada
+Integra pujades en
+Menú contextual de l'Explorador
+Menú "Envia a..." de l'Explorador
+Utilitza menú simple de pujades
+Mida mínima d'arxiu a pujar
+Opcions de proxy HTTP
+Activació de pujada
+Les pujades requereixen activació. Això es requereix per protegir el nostre servidor contra pujades automàtiques. Introduïu el codi d'activació.
+S'està connectant al servidor de pujades
+Connectat amb èxit al servidor de puades
+L'arxiu ha sigut pujat al servidor amb èxit
+La pujada ha sigut aturada
+S'està creant arxiu zip dels arxius per pujar...
+S'ha produït un error en la creació de l'arxiu zip
+L'arxiu zip ha sigut creat amb èxit
+S'està enviant la petició al servidor
+S'està enviant informació de la pujada al servidor
+La informació ha sigut enviada
+S'ha produït un error en l'enviament de la informació al servidor
+S'està activant la pujada...
+La pujada ha sigut activada amb èxit
+S'ha produït un error en l'activació de la pujada
+L'arxiu pujat ha canviat
+S'ha produït un error inesperat
+S'està calculant la comprovació...
+; "I agree to terms" string in two lines
+Accepto
+l'acord
+Heu d'acceptar l'acord.
+S'ha produït un error en la comprovació de les actualitzacions
+Hi ha una nova versió disponible. Es necessita actualitzar.\nVoleu actualizar ara?
+Es requereix actualitzar Free Download Manager
+Es requereix reiniciar Free Download Manager
+Suggerir pujar adjunts
+Adjunta a la lletra (lent)...
+Puja i insereix enllaç (ràpidament)...
+S'ha produït un error un mentre s'iniciava la pujada. Comproveu la vostra connexió o intenteu-ho una altra vegada més endavant.
+Ha adjuntat un(s) arxiu(s) gran(s).\nPer aquesta raó, es recomna no enviar arxius adjunts grans, però si que es pot pujar fitxers i enviar-los enllaços.\n\nVoleu pujar?
+Es recomana pujar
+Opcions de integració
+La pujada de %s ha sigut completada.\nUtilitzeu la següent URL per descarregar-lo:
+Mida total
+Obre en el navegador
+La versió actual del Free Download Manager no pot ser utilitzada per pujar arxius. S'ha d'actualitzar.
+La versió actual del Free Upload Manager no pot ser utilitzada. S'ha d'actualitzar. Si us plau, visiteu el lloc web freedownloadmanager.org.
+Introducció molt gran.
+Opcions de integració de l'administrador de pujades
+Opcions de integració del Free Upload Manager
+Pujada
+S'està descarregant actualització...
+Habilita seeding
+Desactiva seeding
+Considera la descàrrega maliciosa si un
+% d'usuaris la va marcar com a maliciosa
+Està bé, els usuaris del Free Download Manager no han informat que aquesta descàrrega és maliciosa.\n\nNo obstant, això no garantitza que aquesta descàrrega no sigui maliciosa i és recomanable verificar-la usant algun programa antivirus.
+Està bé, els usuaris del FDM no han informat que aquesta descàrrega és maliciosa
+la lletra de unitat FDM ha de començar des de. Ex. "C:". És útil per la versió portable.
+S'ha d'instal·lar un plugin de conversió de video per utilitzar aquesta característica.
+S'ha d'instal·lar el plugin Bittorrent per descarregar pel protocol Bittorrent.
+Nota: aquests arxius són arxius de servei del Free Download Manager (no són els arxius que descarregueu).
+Voleu copiar els arxius actuals a la nova carpeta (els arxius existents seran sobreescrits)?
+La carpeta de descàrregues de tots els grups es canviarà a aquesta carpeta.\nAccepta per continuar
+Configura carpeta de descàrregues

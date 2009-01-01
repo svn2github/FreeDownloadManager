@@ -1,8 +1,8 @@
-; Translate for: Free Download Manager 2.5 build 755
+; Translate for: Free Download Manager 2.6 build 792
 ; Translator   : Geralt, 2008
 ; Source       : Ondøej Josefus, June 2005
 ;
-; Translator - Geralt, 2007
+; Translator - Geralt, 2008
 ;
 
 ; Your language name. Please keep it in English
@@ -22,7 +22,7 @@ Tìkı mód
 Nastavení stahování
 Dial-up pøipojení
 O programu FDM
-Konec
+Ukonèit
 Soubor
 Úpravy
 Zobrazit
@@ -37,10 +37,10 @@ Obecné nastavení
 Vytáèené pøipojení
 Zavìsit po dokonèení
 Vypnout poèítaè po dokonèení
-Otevøít okno s nápovìdou
+Nápovìda programu
 Domovská stránka FDM
 Doporuèit pøátelùm
-Poslat e-mail na podporu
+Poslat e-mail na technickou podporu
 Automaticky ovìøit aktualizace
 Ovìøit aktualizace
 -
@@ -387,8 +387,8 @@ Ignorovat soubory s pøíponou
 Klávesa ALT nesmí bıt stisknuta
 Pouze pøi stisku klávesy ALT
 Zadejte prosím pøípony
-Zvolte, jestlie si pøejete, aby FDM zachytil kliknutí v Internet Exploreru
-Zvolte, jestlie si pøejete, aby FDM sledoval obsah schránky
+Zvolte, pokud si pøejete, aby FDM zachytil kliknutí v Internet Exploreru
+Zvolte, pokud si pøejete, aby FDM sledoval obsah schránky
 Sledovat jen soubory se zadanou pøíponou
 Nesledovat soubory se zadanou pøíponou 
 Sledovat jen pokud není stisknuta klávesa ALT
@@ -404,12 +404,12 @@ FDM bude pøi spuštìní minimalizován
 Pøi stisku tlaèítka Minimalizovat, bude FDM minimalizováno do systémové lišty
 Pokud nebude aktivováno, pak klepnutí na tlaèítko Zavøít bude stejné jako klepnutí jako na tlaèítko Minimalizovat
 Aktualizace
-Adresa serveru pro aktualizaci
+Adresa aktualizaèního serveru
 FDM ovìøí, zda není dostupná novìjší verze programu
 Prùvodce optimalizací pouití sítì
 Vítejte v prùvodci pro optimalizaci sítì!
 Prùvodce Vám pomùe nastavit optimální nastavení pro Váš typ pøipojení. Nastaví vıchozí nastavení pro stahování.
-Prosím vyberte typ pøipojení
+Zvolte prosím typ vašeho pøipojení
 Ukonèit
 Zvolte typ Vašeho pøipojení na Internet
 Nastavit FDM pro optimální práci s Vaším pøipojením
@@ -450,7 +450,7 @@ Nikdy
 Neznámı
 Úspìšnì pøipojen k "%s"
 Selhalo pøipojení k "%s"
-Spuštìní úspìšné
+Spuštìní bylo úspìšné
 Nedostatek pamìti
 Nelze spustit
 Spuštìní plánovaèe bude zpùsobovat ukonèení programu pøi startu. Plánovaè bude ignorován
@@ -740,7 +740,7 @@ Vytvoøit dávku stahování
 Od:
 Do:
 Krok:
-Zástupné bajty:
+Zástupné bity:
 Vısledky
 Pøíklad:
 Poèáteèní èíslo sekvence
@@ -1049,7 +1049,7 @@ Nesledovat soubory menši ne
 Zvolte, jestlie chcete aby FDM pøeskakoval soubory menší ne uvedené velikosti
 KBytù
 Upozornìní! Koš je pøíliš velkı. To mùe vıraznì sníit vıkon. Dopoèujeme vyprázdnit koš. Pøejete si to provést?
-Pøíštì ji nekontrolovat
+Pøíštì ji neovìøovat
 Upozornìní! Historie stahování je pøíliš velká. To mùe vıraznì sníit vıkon. Doporuèujeme vyèistit Historii. Pøejete si to provést?
 Server nemùe zaruèit svou schopnost navazování. Chybná odpovìï
 Kopírovat do schránky
@@ -1588,3 +1588,41 @@ Tato sloka bude nastavena jako vıchozí sloka pro stahování u všech skupin.\nSt
 Nastavit vıchozí sloku stahování
 Zabránit poèítaèi pøejít do reimu stand by pøi stahování
 Maximální poèet napùl-otevøenıch pøipojení
+Torrenty
+Selhal pøístup k souborùm na disku. Ovìøte rposím zda disk není plnı nebo dza není chránìn proti zápisu.
+Pomìr
+Seznam torrentù
+Pøidat torrent z webu
+Pøidat torrent ze souboru
+Vytvoøit novı torrent
+(automaticky)
+Zdroj
+Velkost dílce
+Trackery
+Pøidat tracker
+Odebrat tracker
+Spustit umisování tohoto torrentu
+Uloit
+Vytvoøit novı torrent
+Soubory torrentù
+Priorita
+;normal/high priority
+pøeskoèit
+normalní
+vysoká
+Plovoucí okna
+Soubory slueb (seznam staení, historie, atd.)
+Vıchozí nastavení místa stahování
+Pozastavili jste všechna stahování. To znamená, e všechna stahování budou stahována velmi nízkou rychlostí (obvykle 1B/s).\nToto umoòuje "pozastavit" všechna stahování, které nepodporují obnovení stahovaní.\n\nPro návrat do normálního stavu spuste tento pøíkaz znovu nebo restartujte FDM.
+Umisování
+Zapnout umisování (doporuèeno)
+Neomezené umisování
+Omezit dle pomìru
+Umísovat dokud pomìr nebude
+Omezit èasovì
+Umisovat bìhem
+Ovìøit zda staení s podobnou URL ji neexistuje
+Uloit historii stahování
+Seznam naposled staenıch souborù
+Vıchozí nastavení pro stahování Bittorrentu
+Restartovat dokonèená stahování

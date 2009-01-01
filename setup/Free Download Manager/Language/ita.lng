@@ -1,18 +1,20 @@
 ; This is a language file
 ; You can translate it into your native language
 ; To do this, follow instructions:
-; - PLEASE make sure FDM haven't already translated to your language
-;   You should go to FDM web site  (http://freedownloadmanager.org) or e-mail to support@freedownloadmanager.org and ;   check the list of available languages
-; - copy this language file to xxx.lng, where xxx is the reduced name
+; - PLEASE make sure FDM hasn't already been translated into your language 
+;   You should go to FDM web site (http://freedownloadmanager.org) and 
+;   check the list of available languages
+;   or e-mail to support@freedownloadmanager.org
+; - copy this language file to xxx.lng, where xxx is the reduced name 
 ;   of your language. For English it is eng
 ; - translate all strings of xxx.lng into your language
-; - send the translated file to support@freedownloadmanager.org
+; - send the translated file to support@freedownloadmanager.org 
 ;
 ;
 ;
 ; Translator - Giuseppe Bogetti, 2004 - revised by Mattepiu'.
 ; Simple revision by DanielIT at the end of November 2005. He also translates "builds never than 195" and 
-; after.                                                                                     VERSION 2.5 BUILD 753 
+; after.                                          VERSION 3.0 BUILD 843 
 ;
 ; Your language name. Please keep it in English
 ;
@@ -403,7 +405,7 @@ Non controlla i files per le estensioni specificate
 Controlla solo se il tasto ALT non è premuto
 Controlla solo se il tasto ALT è premuto
 Avvio
-Carica all'avvio
+Carica FDM all'avvio
 Avvia ridotto a icona
 Sistema
 Riduci a icona nella barra di Windows
@@ -1070,7 +1072,7 @@ Consenti allo skin di usare la sua propria bitmaps
 ; default skin
 <default>
 NOTA: Ogni cambiamento sarà effettivo solo dopo il riavvio di Free Download Manager.
-Mostra info sul downloads mentre è in esecuzione
+Mostra info sul download mentre è in esecuzione
 Salta i files con le estensioni:
 Elenco delle estensioni dei files da saltare
 Nessun download in esecuzione
@@ -1100,7 +1102,7 @@ Nascondi le finestre in primo piano in modalità schermo pieno
 Seleziona questa casella, se vuoi che le finestre in primo piano siano nascoste automaticamente in modalità tutto schermo.
 era programmato per essere eseguito.
 Vuoi sia eseguito?
-Avvia il download quando sarà completo
+Attiva questo download quando sarà completo
 Per favore, usa (*), (*A) o (*a) nell'URL per specificare un formato di URL
 Cerca server per indirizzi alternativi:
 Congela
@@ -1170,7 +1172,7 @@ Il download è stato cancellato
 ;
 Salvato in
 Dimensione File
-Riprendi il supporto
+Ripristino download
 Chiudi questo dialogo quando il download è completato o fermato
 Apri
 Vuoi vedere questa finestra in futuro?
@@ -1227,7 +1229,7 @@ Velocità totale durante il download
 Disabilita Strumenti | "quando finito" dopo l'esecuzione
 Quando abilitato, ogni Strumento | "quando finito" sarà automaticamente disabilitato dopo l'esecuzione. Così esso sarà lanciato solo una volta.
 ; %s
-; 1st - name of a file
+; 1st - file name
 ; 2nd, 3rd - file info (size + date).
 "%s" il file già esiste.\n\nVuoi sovrascriverlo\n(%s)\n\ncon il nuovo\n(%s)?
 Si a tutti
@@ -1240,8 +1242,8 @@ Per default, FDM supporta solo archivi ZIP, RAR e ARJ.\nPuoi estendere la lista 
 Pack FDM supporto archivi
 Muovi su
 Muovi giù
-Muove i download selezionati in alto
-Muove i download selezionati in basso
+Muovi i download selezionati in alto
+Muovi i download selezionati in basso
 Verifica integrità file
 Alcuni siti web forniscono speciali checksum per i files disponibili per il download per consentire agli utenti di essere sicuri che il file scaricato non sia danneggiato. Potete scrivere questo checksum qui e FDM controllerà l'integrità del file.
 Algoritmo
@@ -1255,7 +1257,7 @@ La verifica della integrità del file è stata completata con successo.\nNon sono 
 La verifica dell'integrità del è stata completata.\nSono stati trovati errori: il file risulta danneggiato durante il download. E' necessario rifare nuovamente il download.
 Non mostrare nuovamente questa finestra se la verifica è andata a buon fine
 Non trovo il file eseguibile del programma antivirus scelto.\nPer favore specificalo.
-La dimensione del files non è uguale
+La dimensione dei files non è uguale
 Salva come:\n(Esempio: file(*)(*A)(*a).txt)
 Salvataggio non corrispondente al modello specificato.\nAssicuratevi esso corrisponda al modello di URL.
 Quando finito
@@ -1354,7 +1356,7 @@ Verifica integrità riuscita.
 Verifica integrità fallita!
 Specificare l'algoritmo di verifica integrità.
 Checksum valido
-Checksum risultato
+Risultato checksum
 ; zip preview window
 Verificare/non verificare tutto
 ; group's properties dialog
@@ -1601,3 +1603,56 @@ Le cartelle predefinite per i download di tutti i gruppi saranno spostate a ques
 Indica cartella download predefinita
 Impedisci al computer di andare in stand by durante un download
 Numero massimo di semi connessioni
+Torrents
+Non posso accedere al file sul disco. Verifica che il disco non sia pieno o protetto in scrittura.
+Rapporto
+Elenco dei torrents
+Nuovo download torrent dal web
+Nuovo download torrent da file
+Crea un nuovo torrent
+(auto)
+Origine
+Dimensione pezzo
+Trackers
+Nuovo tracker
+Rimuovi tracker
+Avvia diffusione di questo torrent
+Salva
+Crea un nuovo torrent
+Files torrent
+Precedenza
+; normal/high priority
+salta
+normale
+alta
+Finestra flottante
+Files di servizio (elenco dei download, storia, ecc.)
+Impostazioni predefinite del sito di download
+Hai messo in pausa i downloads. Ciò significa che tutti i downloads saranno scaricati ad una velocità molto bassa (di solito 1 B/s).\nCiò permette di "mettere in pausa" anche lo scarico senza supporto al recupero.\n\nDovrai usare questo comando di nuovo o riavviare FDM per ritornare allo stato normale.
+Seeding
+Consenti seeding (fortemente raccomandato) 
+Seeding illimitato
+Limitato dal rapporto
+Diffondi finché il rapporto sarà
+Limitato dal tempo
+Diffondi durante
+Verifica se esiste già un download con lo stesso URL
+Salva storia dei downloads
+Elenca i miei files scaricati più recentemente
+Impostazioni predefinite dei download di Bittorrent
+Riavvia i downloads completati
+Specifica cartella di Firefox portatile
+Non trovo la cartella Plugin di Apple Safari. Vuoi specificarla manualmente?
+Non trovo la cartella Plugin di Google Chrome. Vuoi specificarla manualmente?
+Non posso installare il controllo di Apple Safari
+Non posso disinstallre il controllo di Apple Safari
+Non posso installare il controllo di Google Chrome
+Non posso disinstallare il controllo di Google Chrome
+Orario
+;hours, for shprt
+ora
+Ore in cui FDM può iniziare i downloads
+Abilita avvio solo dalle
+Priorità normale
+Priorità alta
+Di base
