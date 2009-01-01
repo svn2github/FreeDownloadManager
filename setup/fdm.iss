@@ -3,7 +3,7 @@
 [Setup]
 AppName=Free Download Manager
 AppId=Free Download Manager
-AppVerName=Free Download Manager 2.6 BETA
+AppVerName=Free Download Manager 3.0
 AppPublisher=FreeDownloadManager.ORG
 AppPublisherURL=http://www.freedownloadmanager.org/
 AppSupportURL=http://www.freedownloadmanager.org/
@@ -19,11 +19,13 @@ SolidCompression=yes
 OutputDir=#Output
 OutputBaseFilename=fdminst
 PrivilegesRequired=none
+UninstallDisplayIcon={app}\fdm.exe
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}";
 Name: "quicklaunchicon"; Description: "{cm:CreateQuickLaunchIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 Name: "autorun"; Description: "Launch FDM automatically at Windows startup";
+Name: "autorun_fsm"; Description: "Launch Software Informer automatically at Windows startup";
 
 [Files]
 ; all exe files
@@ -52,6 +54,8 @@ Source: "Free Download Manager\license.txt"; DestDir: "{app}"; Flags: ignorevers
 Source: "Free Download Manager\fdmcs.dat"; DestDir: "{app}"; Flags: ignoreversion onlyifdoesntexist
 ; skins
 Source: "Free Download Manager\Skins\*"; DestDir: "{app}\Skins"; Flags: recursesubdirs
+; plugins
+Source: "Free Download Manager\Plugins\*"; DestDir: "{app}\Plugins"; Flags: recursesubdirs
 ; msvcp60.dll
 Source: "Free Download Manager\msvcp60.dll"; DestDir: "{app}"; Flags: restartreplace
 ; vs2005 runtime
@@ -80,23 +84,26 @@ Source: "Free Download Manager\player.swf"; DestDir: "{app}"; Flags: restartrepl
 Source: "Free Upload Manager\fumcore.dll"; DestDir: "{app}\FUM"; Flags: restartreplace
 ;Source: "Free Upload Manager\fumoei.exe"; DestDir: "{app}\FUM"; Flags: restartreplace
 ;Source: "Free Upload Manager\fumoei.dll"; DestDir: "{app}\FUM"; Flags: restartreplace
-Source: "Free Upload Manager\fum.exe"; DestDir: "{app}\FUM"; Flags: restartreplace
+;Source: "Free Upload Manager\fum.exe"; DestDir: "{app}\FUM"; Flags: restartreplace
 Source: "Free Upload Manager\fum.tlb"; DestDir: "{app}\FUM"; Flags: ignoreversion restartreplace
-Source: "Free Download Manager\msvcp60.dll"; DestDir: "{app}\FUM"; Flags: restartreplace
-Source: "Free Download Manager\Updater.exe"; DestDir: "{app}\FUM"; Flags: restartreplace
+;Source: "Free Download Manager\msvcp60.dll"; DestDir: "{app}\FUM"; Flags: restartreplace
+;Source: "Free Download Manager\Updater.exe"; DestDir: "{app}\FUM"; Flags: restartreplace
 ; ----------------
 ;
 ; helper functions for vista
 Source: "Free Download Manager\vistafx.dll"; DestDir: "{app}"; Flags: restartreplace
 ; helper functions for installer
 Source: "Free Download Manager\fdminno.dll"; Flags: dontcopy
+; Software Informer as the bundle
+Source: "#output\siinst.exe"; DestDir: "{app}"; Flags: ignoreversion deleteafterinstall
 
 [INI]
 Filename: "{app}\fdm.url"; Section: "InternetShortcut"; Key: "URL"; String: "http://www.freedownloadmanager.org/"
 
 [Icons]
 Name: "{group}\Free Download Manager"; Filename: "{app}\fdm.exe"
-Name: "{group}\Free Upload Manager"; Filename: "{app}\FUM\fum.exe";
+Name: "{group}\Software Informer (beta)"; Filename: "{pf}\Software Informer\softinfo.exe"; Check: IsInstallSi
+;Name: "{group}\Free Upload Manager"; Filename: "{app}\FUM\fum.exe";
 Name: "{group}\FDM remote control server"; Filename: "{app}\fdmwi.exe"
 Name: "{group}\Documentation"; Filename: "{app}\Help\Free Download Manager.chm"
 Name: "{group}\{cm:ProgramOnTheWeb,Free Download Manager}"; Filename: "{app}\fdm.url"
@@ -114,7 +121,12 @@ Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Upload Manager"; Valu
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Upload Manager"; Valuetype: string; Valuename: "Path"; Valuedata: "{app}\FUM";
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Upload Manager"; Valuetype: string; Valuename: "lngsroot"; Valuedata: "{app}"; Flags: uninsdeletevalue;
 Root: HKCU; Subkey: "Software\FreeDownloadManager.ORG\Free Upload Manager"; Valuetype: string; Valuename: "force_data_folder"; Valuedata: "{userappdata}\Free Download Manager\"; Flags: uninsdeletevalue;
-Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; Valuetype: string; Valuename: "Free Upload Manager"; Valuedata: """{app}\fum\fum.exe"" -autorun"; Check: FumAutostart; Flags: uninsdeletevalue;
+;Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; Valuetype: string; Valuename: "Free Upload Manager"; Valuedata: """{app}\fum\fum.exe"" -autorun"; Check: FumAutostart; Flags: uninsdeletevalue;
+;SI bundle
+Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; Valuetype: string; Valuename: "Software Informer"; Valuedata: """{pf}\Software Informer\softinfo.exe"" -autorun"; tasks: autorun_fsm; Check:IsInstallSi
+Root: HKCU; Subkey: "Software\Informer Technologies, Inc.\Software Informer"; Valuetype: string; Valuename: "BundledWithSN"; Valuedata: "FDM"; Check:IsInstallSi
+Root: HKCU; Subkey: "Software\Informer Technologies, Inc.\Software Informer"; Valuetype: string; Valuename: "BundledWithLN"; Valuedata: "Free Download Manager"; Check:IsInstallSi
+;////////////////////////
 
 [CustomMessages]
 FDM_CommunityCaption=FDM Community options
@@ -125,7 +137,15 @@ FDM_FUMCaption=Free Upload Manager
 FDM_FUMDescription=Easy way to share your files
 FDM_LanguageCaption=Language of interface
 FDM_LanguageDescription=
-
+; SI bundle
+FDM_SI_Caption=Software Informer installation
+FDM_SI_Description=Would you like to install Software Informer?
+FDM_SI_si_Label1_Caption0=Software Informer is the easiest way to keep all your software up to date.
+FDM_SI_si_Label2_Caption0=It automatically checks for updates for your installed applications and shows you the list of available updates, so that you can easily update your software to the latest version.
+FDM_SI_si_Label3_Caption0=We recommend you to try new BETA version of Software Informer.
+FDM_SI_si_cbInstall_Caption0=Yes, install Software Informer
+FDM_SI_si_cbEnableLog_Caption0=I would like SI to report how I use it so it could be more convient and intuitive
+;/////////////////////////
 
 [Code]
 var
@@ -155,6 +175,37 @@ vLngNames, vLngFiles : array [1..100] of String;
 vLngIds : array [1..100] of Integer;
 nEngIndex : Integer;
 nSelectedLanguage : Integer;
+// SI bundle
+si_Label1: TLabel;
+si_Label2: TLabel;
+si_Label3: TLabel;
+si_cbInstall: TCheckBox;
+si_cbEnableLog: TCheckBox;
+si_bWasNotInstalledBefore : Boolean;
+/////////////////////////////////////
+
+
+function isSiInstalled () : Boolean;
+var
+  strPath : String;
+begin
+  if False = RegQueryStringValue (HKEY_CURRENT_USER, 'Software\Informer Technologies, Inc.\Software Informer', 'Path', strPath) then begin
+    Result := False;
+    exit;
+  end;
+  strPath := AddBackslash (strPath) + 'softinfo.exe';
+  Result := FileExists (strPath);
+end;
+
+function IsInstallSi () : Boolean;
+begin
+  Result := (isSiInstalled () = False) and si_cbInstall.Checked;
+end;
+
+function IsSiHasBeenInstalled () : Boolean;
+begin
+  Result := si_bWasNotInstalledBefore and isSiInstalled ();
+end;
 
 function DoesNeedSaveOldFumPath () : Boolean;
 var
@@ -214,9 +265,11 @@ begin
   vLngNames [iLng] := 'Slovenian'; vLngIds [iLng] := $24; vLngFiles [iLng] := 'slo.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Spanish'; vLngIds [iLng] := $0A; vLngFiles [iLng] := 'spn.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Swedish'; vLngIds [iLng] := $1D; vLngFiles [iLng] := 'swe.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Thai'; vLngIds [iLng] := $1E; vLngFiles [iLng] := 'tha.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Turkish'; vLngIds [iLng] := $1F; vLngFiles [iLng] := 'tur.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Ukrainian'; vLngIds [iLng] := $22; vLngFiles [iLng] := 'ukr.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Uzbek'; vLngIds [iLng] := $43; vLngFiles [iLng] := 'uzb.lng'; iLng := iLng + 1;
+  vLngNames [iLng] := 'Valencian (RACV)'; vLngIds [iLng] := 0; vLngFiles [iLng] := 'val.lng'; iLng := iLng + 1;
   vLngNames [iLng] := 'Vietnamese'; vLngIds [iLng] := $2A; vLngFiles [iLng] := 'vie.lng'; iLng := iLng + 1;
   vLngNames [iLng] := '';
   
@@ -566,6 +619,11 @@ procedure FDM_Bittorrent_CancelButtonClick(Page: TWizardPage; var Cancel, Confir
 begin
 end;
 
+function isHavingAnyTorrentAssoc () : Boolean;
+begin
+ Result := RegKeyExists (HKEY_CLASSES_ROOT, '.torrent');
+end;
+
 function FDM_Bittorrent_CreatePage(PreviousPageId: Integer): Integer;
 var
   Page: TWizardPage;
@@ -639,6 +697,7 @@ begin
       Height := ScaleY(17);
       Caption := 'Enable Bittorrent protocol support now';
       TabOrder := 0;
+      Checked := isHavingAnyTorrentAssoc () = False;
     end;
 
 
@@ -774,6 +833,182 @@ _lSearch:
   Result := Page.ID;
 end;
 
+procedure FDM_SI_Activate(Page: TWizardPage);
+begin
+  // enter code here...
+end;
+
+{ FDM_SI_ShouldSkipPage }
+
+function FDM_SI_ShouldSkipPage(Page: TWizardPage): Boolean;
+begin
+  Result := isSiInstalled ();
+end;
+
+{ FDM_SI_BackButtonClick }
+
+function FDM_SI_BackButtonClick(Page: TWizardPage): Boolean;
+begin
+  Result := True;
+end;
+
+{ FDM_SI_NextkButtonClick }
+
+function FDM_SI_NextButtonClick(Page: TWizardPage): Boolean;
+begin
+  Result := True;
+end;
+
+procedure CurPageChanged(CurPageID: Integer);
+var
+ i : Integer;
+begin
+  if CurPageID = wpSelectTasks then begin
+    for i := 0 to WizardForm.TasksList.Items.Count-1 do
+    begin
+     if WizardForm.TasksList.ITEMS [i] = 'Launch Software Informer automatically at Windows startup' then
+       WizardForm.TasksList.ItemEnabled [i] := isInstallSi ();
+    end;
+  end;
+
+  if CurPageID = wpFinished then begin
+    if isInstallSi then begin
+      i := 1;
+      if si_cbEnableLog.Checked then
+        i := 0;
+      RegWriteDWordValue (HKEY_CURRENT_USER, 'Software\Informer Technologies, Inc.\Software Informer\Settings', 'DisablePUL', i);
+    end;
+  end;
+end;
+
+{ FDM_SI_CancelButtonClick }
+
+procedure FDM_SI_CancelButtonClick(Page: TWizardPage; var Cancel, Confirm: Boolean);
+begin
+  // enter code here...
+end;
+
+procedure FDM_SI_oncbInsall_Clicked (Sender : TObject);
+begin
+  si_cbEnableLog.Enabled := si_cbInstall.Checked;
+end;
+
+{ FDM_SI_CreatePage }
+
+function FDM_SI_CreatePage(PreviousPageId: Integer): Integer;
+var
+  Page: TWizardPage;
+  //strSiHdrBmp : String;
+begin
+  Page := CreateCustomPage(
+    PreviousPageId,
+    ExpandConstant('{cm:FDM_SI_Caption}'),
+    ExpandConstant('{cm:FDM_SI_Description}')
+  );
+
+  //strSiHdrBmp := ExpandConstant('{tmp}\sihdr.bmp');
+  //if not FileExists (strSiHdrBmp) then
+  //  ExtractTemporaryFile (ExtractFileName (strSiHdrBmp));
+
+  { bmpHeader }
+  //bmpSiHdr := TBitmapImage.Create(Page);
+  //with bmpSiHdr do
+  //begin
+  //  Parent := Page.Surface;
+  //  Left := ScaleX(5);
+  //  Top := ScaleY(0);
+  //  Width := ScaleX(403);
+  //  Height := ScaleY(82);
+  //  ReplaceColor := 16711935;
+  //  ReplaceWithColor := 16777215;
+  //  Bitmap.LoadFromFile(strSiHdrBmp);
+  //end;
+
+{ si_Label1 }
+  si_Label1 := TLabel.Create(Page);
+  with si_Label1 do
+  begin
+    Parent := Page.Surface;
+    Caption := ExpandConstant('{cm:FDM_SI_si_Label1_Caption0}');
+    Left := ScaleX(8);
+    Top := ScaleY(32+{82+8}0);
+    Width := ScaleX(396);
+    Height := ScaleY(18);
+    AutoSize := False;
+    WordWrap := True;
+  end;
+
+  { si_Label2 }
+  si_Label2 := TLabel.Create(Page);
+  with si_Label2 do
+  begin
+    Parent := Page.Surface;
+    Caption := ExpandConstant('{cm:FDM_SI_si_Label2_Caption0}');
+    Left := ScaleX(8);
+    Top := ScaleY(56+{82+8}0);
+    Width := ScaleX(396);
+    Height := ScaleY(42);
+    AutoSize := False;
+    WordWrap := True;
+  end;
+
+  { si_Label3 }
+  si_Label3 := TLabel.Create(Page);
+  with si_Label3 do
+  begin
+    Parent := Page.Surface;
+    Caption := ExpandConstant('{cm:FDM_SI_si_Label3_Caption0}');
+    Left := ScaleX(8);
+    Top := ScaleY(8+{82+8}0);
+    Width := ScaleX(391);
+    Height := ScaleY(21);
+    AutoSize := False;
+  end;
+
+  { si_cbInstall }
+  si_cbInstall := TCheckBox.Create(Page);
+  with si_cbInstall do
+  begin
+    Parent := Page.Surface;
+    Caption := ExpandConstant('{cm:FDM_SI_si_cbInstall_Caption0}');
+    Left := ScaleX(8);
+    Top := ScaleY(112+{82+8}0);
+    Width := ScaleX(393);
+    Height := ScaleY(17);
+    Checked := True;
+    State := cbChecked;
+    TabOrder := 0;
+    OnClick := @FDM_SI_oncbInsall_Clicked;
+  end;
+
+  { si_cbEnableLog }
+  si_cbEnableLog := TCheckBox.Create(Page);
+  with si_cbEnableLog do
+  begin
+    Parent := Page.Surface;
+    Caption := ExpandConstant('{cm:FDM_SI_si_cbEnableLog_Caption0}');
+    Left := ScaleX(13);
+    Top := ScaleY(128);
+    Width := ScaleX(393);
+    Height := ScaleY(25);
+    Checked := True;
+    State := cbChecked;
+    TabOrder := 1;
+  end;
+
+
+  with Page do
+  begin
+    OnActivate := @FDM_SI_Activate;
+    OnShouldSkipPage := @FDM_SI_ShouldSkipPage;
+    OnBackButtonClick := @FDM_SI_BackButtonClick;
+    OnNextButtonClick := @FDM_SI_NextButtonClick;
+    OnCancelButtonClick := @FDM_SI_CancelButtonClick;
+  end;
+
+  Result := Page.ID;
+end;
+
 
 procedure InitializeWizard();
 var
@@ -783,6 +1018,7 @@ begin
   nPage := FDM_Bittorrent_CreatePage (nPage);
   //nPage := FDM_FUM_CreatePage(nPage);
   nPage := FDM_Language_CreatePage(nPage);
+  nPage := FDM_SI_CreatePage (nPage);
   ApplyFDMCommunitySettingsToForm ();
   ApplyBittorrentSettingsToForm ();
 end;
@@ -847,6 +1083,7 @@ end;
 function InitializeSetup(): Boolean;
 begin
 bWasFumNotInstalled := IsFumInstalled (False) = False;
+si_bWasNotInstalledBefore := IsSiInstalled () = False;
 if CheckForMutexes ('Free Download Manager,Free Upload Manager') then
 begin
   // ask user
@@ -957,6 +1194,11 @@ begin
     ApplyEnableBittorrent ();
     ApplySelectedLanguage ();
   end;
+  
+  DeleteFile (ExpandConstant ('{app}\fsm.exe'));
+  DeleteFile (ExpandConstant ('{app}\si.exe'));
+  DeleteFile (ExpandConstant ('{userprograms}\Free Download Manager\Free Software Manager (beta).lnk'));
+  DeleteFile (ExpandConstant ('{commonprograms}\Free Download Manager\Free Software Manager (beta).lnk'));
 end;
 
 procedure RegisterOldFumInstallation ();
@@ -1031,10 +1273,12 @@ end;
 
 [Run]
 Filename: "{app}\fdm.exe"; Parameters: "-regserver"; StatusMsg: "Registering..."
-Filename: "{app}\FUM\fum.exe"; Parameters: "-regserver"; StatusMsg: "Registering...";
+Filename: "{app}\siinst.exe"; Parameters: "/VERYSILENT /NORESTART /SUPPRESSMSGBOXES /TASKS=""!autorun,!desktopicon,!quicklaunchicon,!enablepul"""; StatusMsg: "Installing Software Informer..."; Check:IsInstallSi
+;Filename: "{app}\FUM\fum.exe"; Parameters: "-regserver"; StatusMsg: "Registering...";
 ;Filename: "{app}\FUM\fum.exe"; Parameters: "{code:FUMIntegrationCmdLine}"; StatusMsg: "Registering...";
 ;Filename: "{app}\FUM\fum.exe"; Parameters: "-stui"; Check: IsFumIntegrationEnabled;
 Filename: "{app}\fdm.exe"; Description: "{cm:LaunchProgram,Free Download Manager}"; Flags: nowait postinstall skipifsilent
+Filename: "{pf}\Software Informer\softinfo.exe"; Description: "{cm:LaunchProgram,beta version of Software Informer}"; Flags: nowait postinstall skipifsilent; Check:IsSiHasBeenInstalled
 
 [UninstallRun]
 Filename: "{app}\fum\fum.exe"; Parameters: "-duis";
