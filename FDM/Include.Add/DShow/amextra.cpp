@@ -1,17 +1,22 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: AMExtra.cpp
+//
+// Desc: DirectShow base classes - implements CRenderedInputPin class.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                  
 
-#include <streams.h>        
-#include <mmsystem.h>       
-#include <limits.h>         
-#include <measure.h>        
+#include <streams.h>        // DirectShow base class definitions
+#include <mmsystem.h>       // Needed for definition of timeGetTime
+#include <limits.h>         // Standard data type limit definitions
+#include <measure.h>        // Used for time critical log functions
 
 #include "amextra.h"
 
-#pragma warning(disable:4355)    
+#pragma warning(disable:4355)
+
+//  Implements CRenderedInputPin class
 
 CRenderedInputPin::CRenderedInputPin(TCHAR *pObjectName,
                                      CBaseFilter *pFilter,
@@ -34,13 +39,16 @@ CRenderedInputPin::CRenderedInputPin(CHAR *pObjectName,
     m_bCompleteNotified(FALSE)
 {
 }
-#endif      
+#endif
+
+// Flush end of stream condition - caller should do any
+// necessary stream level locking before calling this
 
 STDMETHODIMP CRenderedInputPin::EndOfStream()
 {
     HRESULT hr = CheckStreaming();
 
-    
+    //  Do EC_COMPLETE handling for rendered pins
     if (S_OK == hr  && !m_bAtEndOfStream) {
         m_bAtEndOfStream = TRUE;
         FILTER_STATE fs;
@@ -50,18 +58,24 @@ STDMETHODIMP CRenderedInputPin::EndOfStream()
         }
     }
     return hr;
-}      
+}
+
+
+// Called to complete the flush
 
 STDMETHODIMP CRenderedInputPin::EndFlush()
 {
     CAutoLock lck(m_pLock);
 
-    
+    // Clean up renderer state
     m_bAtEndOfStream = FALSE;
     m_bCompleteNotified = FALSE;
 
     return CBaseInputPin::EndFlush();
-}      
+}
+
+
+// Notify of Run() from filter
 
 HRESULT CRenderedInputPin::Run(REFERENCE_TIME tStart)
 {
@@ -71,14 +85,20 @@ HRESULT CRenderedInputPin::Run(REFERENCE_TIME tStart)
         DoCompleteHandling();
     }
     return S_OK;
-}      
+}
+
+
+//  Clear status on going into paused state
 
 HRESULT CRenderedInputPin::Active()
 {
     m_bAtEndOfStream = FALSE;
     m_bCompleteNotified = FALSE;
     return CBaseInputPin::Active();
-}      
+}
+
+
+//  Do stuff to deliver end of stream
 
 void CRenderedInputPin::DoCompleteHandling()
 {

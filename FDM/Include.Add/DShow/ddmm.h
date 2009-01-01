@@ -1,13 +1,18 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: DDMM.h
+//
+// Desc: DirectShow base classes - efines routines for using DirectDraw 
+//       on a multimonitor system.
+//
+// Copyright (c) 1995 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                    
 
 #ifdef __cplusplus
-extern "C" {            
-#endif    
+extern "C" {            /* Assume C declarations for C++ */
+#endif  /* __cplusplus */
 
+// DDRAW.H might not include these
 #ifndef DDENUM_ATTACHEDSECONDARYDEVICES
 #define DDENUM_ATTACHEDSECONDARYDEVICES     0x00000001L
 #endif
@@ -20,4 +25,4 @@ IDirectDraw * DirectDrawCreateFromDeviceEx(LPSTR, PDRAWCREATE, LPDIRECTDRAWENUME
 
 #ifdef __cplusplus
 }
-#endif	
+#endif	/* __cplusplus */

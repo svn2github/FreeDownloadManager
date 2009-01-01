@@ -1,8 +1,60 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/  
-
-   
+/* pkcs12.h */
+/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL
+ * project 1999.
+ */
+/* ====================================================================
+ * Copyright (c) 1999 The OpenSSL Project.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. All advertising materials mentioning features or use of this
+ *    software must display the following acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"
+ *
+ * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
+ *    endorse or promote products derived from this software without
+ *    prior written permission. For written permission, please contact
+ *    licensing@OpenSSL.org.
+ *
+ * 5. Products derived from this software may not be called "OpenSSL"
+ *    nor may "OpenSSL" appear in their names without prior written
+ *    permission of the OpenSSL Project.
+ *
+ * 6. Redistributions of any form whatsoever must retain the following
+ *    acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
+ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This product includes cryptographic software written by Eric Young
+ * (eay@cryptsoft.com).  This product includes software written by Tim
+ * Hudson (tjh@cryptsoft.com).
+ *
+ */
 
 #ifndef HEADER_PKCS12_H
 #define HEADER_PKCS12_H
@@ -16,15 +68,20 @@ extern "C" {
 
 #define PKCS12_KEY_ID	1
 #define PKCS12_IV_ID	2
-#define PKCS12_MAC_ID	3 
+#define PKCS12_MAC_ID	3
 
+/* Default iteration count */
 #ifndef PKCS12_DEFAULT_ITER
 #define PKCS12_DEFAULT_ITER	PKCS5_DEFAULT_ITER
 #endif
 
 #define PKCS12_MAC_KEY_LENGTH 20
 
-#define PKCS12_SALT_LEN	8    
+#define PKCS12_SALT_LEN	8
+
+/* Uncomment out next line for unicode password and names, otherwise ASCII */
+
+/*#define PBE_UNICODE*/
 
 #ifdef PBE_UNICODE
 #define PKCS12_key_gen PKCS12_key_gen_uni
@@ -32,7 +89,9 @@ extern "C" {
 #else
 #define PKCS12_key_gen PKCS12_key_gen_asc
 #define PKCS12_add_friendlyname PKCS12_add_friendlyname_asc
-#endif  
+#endif
+
+/* MS key usage constants */
 
 #define KEY_EX	0x10
 #define KEY_SIG 0x80
@@ -40,7 +99,7 @@ extern "C" {
 typedef struct {
 X509_SIG *dinfo;
 ASN1_OCTET_STRING *salt;
-ASN1_INTEGER *iter;	
+ASN1_INTEGER *iter;	/* defaults to 1 */
 } PKCS12_MAC_DATA;
 
 typedef struct {
@@ -54,9 +113,9 @@ PREDECLARE_STACK_OF(PKCS12_SAFEBAG)
 typedef struct {
 ASN1_OBJECT *type;
 union {
-	struct pkcs12_bag_st *bag; 
-	struct pkcs8_priv_key_info_st	*keybag; 
-	X509_SIG *shkeybag; 
+	struct pkcs12_bag_st *bag; /* secret, crl and certbag */
+	struct pkcs8_priv_key_info_st	*keybag; /* keybag */
+	X509_SIG *shkeybag; /* shrouded key bag */
 	STACK_OF(PKCS12_SAFEBAG) *safes;
 	ASN1_TYPE *other;
 }value;
@@ -74,12 +133,14 @@ union {
 	ASN1_OCTET_STRING *x509crl;
 	ASN1_OCTET_STRING *octet;
 	ASN1_IA5STRING *sdsicert;
-	ASN1_TYPE *other; 
+	ASN1_TYPE *other; /* Secret or other bag */
 }value;
 } PKCS12_BAGS;
 
 #define PKCS12_ERROR	0
-#define PKCS12_OK	1  
+#define PKCS12_OK	1
+
+/* Compatibility macros */
 
 #define M_PKCS12_x5092certbag PKCS12_x5092certbag
 #define M_PKCS12_x509crl2certbag PKCS12_x509crl2certbag
@@ -105,7 +166,8 @@ union {
 #define PKCS8_get_attr(p8, attr_nid) \
 		PKCS12_get_attr_gen(p8->attributes, attr_nid)
 
-#define PKCS12_mac_present(p12) ((p12)->mac ? 1 : 0) 
+#define PKCS12_mac_present(p12) ((p12)->mac ? 1 : 0)
+
 
 PKCS12_SAFEBAG *PKCS12_x5092certbag(X509 *x509);
 PKCS12_SAFEBAG *PKCS12_x509crl2certbag(X509_CRL *crl);
@@ -200,10 +262,17 @@ int i2d_PKCS12_bio(BIO *bp, PKCS12 *p12);
 int i2d_PKCS12_fp(FILE *fp, PKCS12 *p12);
 PKCS12 *d2i_PKCS12_bio(BIO *bp, PKCS12 **p12);
 PKCS12 *d2i_PKCS12_fp(FILE *fp, PKCS12 **p12);
-int PKCS12_newpass(PKCS12 *p12, char *oldpass, char *newpass);  
+int PKCS12_newpass(PKCS12 *p12, char *oldpass, char *newpass);
 
-void ERR_load_PKCS12_strings(void);   
+/* BEGIN ERROR CODES */
+/* The following lines are auto generated by the script mkerr.pl. Any changes
+ * made after this point may be overwritten when the script is next run.
+ */
+void ERR_load_PKCS12_strings(void);
 
+/* Error codes for the PKCS12 functions. */
+
+/* Function codes. */
 #define PKCS12_F_PARSE_BAG				 129
 #define PKCS12_F_PARSE_BAGS				 103
 #define PKCS12_F_PKCS12_ADD_FRIENDLYNAME		 100
@@ -232,8 +301,9 @@ void ERR_load_PKCS12_strings(void);
 #define PKCS12_F_PKCS12_UNPACK_P7DATA			 131
 #define PKCS12_F_PKCS12_VERIFY_MAC			 126
 #define PKCS12_F_PKCS8_ADD_KEYUSAGE			 124
-#define PKCS12_F_PKCS8_ENCRYPT				 125 
+#define PKCS12_F_PKCS8_ENCRYPT				 125
 
+/* Reason codes. */
 #define PKCS12_R_CANT_PACK_STRUCTURE			 100
 #define PKCS12_R_CONTENT_TYPE_NOT_DATA			 121
 #define PKCS12_R_DECODE_ERROR				 101

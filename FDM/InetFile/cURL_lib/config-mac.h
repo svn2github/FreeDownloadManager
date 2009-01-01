@@ -1,9 +1,11 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
-
 #ifndef __LIB_CONFIG_MAC_H
-#define __LIB_CONFIG_MAC_H      
+#define __LIB_CONFIG_MAC_H
+
+/* ================================================================ */
+/*    lib/config-mac.h - Hand crafted config file for Mac OS 9      */
+/* ================================================================ */
+/*   On Mac OS X you must run configure to generate config.h file   */
+/* ================================================================ */
 
 #define OS "mac"
 
@@ -35,8 +37,9 @@
 #define HAVE_MEMCPY             1
 #define HAVE_SELECT             1
 #define HAVE_SOCKET             1
-#define HAVE_STRUCT_TIMEVAL     1 
+#define HAVE_STRUCT_TIMEVAL     1
 
+//#define HAVE_STRICMP          1
 #define HAVE_SIGACTION          1
 #define HAVE_SIGNAL_H           1
 #define HAVE_SIG_ATOMIC_T       1
@@ -90,4 +93,4 @@
 #define HAVE_EXTRA_STRICMP_H 1
 #define HAVE_EXTRA_STRDUP_H  1
 
-#endif 
+#endif /* __LIB_CONFIG_MAC_H */

@@ -1,12 +1,20 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: AsyncRdr.cpp
+//
+// Desc: DirectShow sample code - base library with I/O functionality.
+//       This file implements I/O source filter methods and output pin 
+//       methods for CAsyncReader and CAsyncOutputPin.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                      
 
 #include <streams.h>
 #include "asyncio.h"
-#include "asyncrdr.h"      
+#include "asyncrdr.h"
+
+
+// --- CAsyncOutputPin implementation ---
 
 CAsyncOutputPin::CAsyncOutputPin(
     HRESULT * phr,
@@ -60,7 +68,7 @@ CAsyncOutputPin::CheckMediaType(const CMediaType* pType)
 {
     CAutoLock lck(m_pLock);
 
-    
+    /*  We treat MEDIASUBTYPE_NULL subtype as a wild card */
     if ((m_pReader->LoadType()->majortype == pType->majortype) &&
 	(m_pReader->LoadType()->subtype == MEDIASUBTYPE_NULL ||
          m_pReader->LoadType()->subtype == pType->subtype)) {
@@ -76,7 +84,7 @@ CAsyncOutputPin::InitAllocator(IMemAllocator **ppAlloc)
     *ppAlloc = NULL;
     CMemAllocator *pMemObject = NULL;
 
-    
+    /* Create a default memory allocator */
 
     pMemObject = new CMemAllocator(NAME("Base memory allocator"),NULL, &hr);
     if (pMemObject == NULL) {
@@ -88,7 +96,7 @@ CAsyncOutputPin::InitAllocator(IMemAllocator **ppAlloc)
 	return hr;
     }
 
-    
+    /* Get a reference counted IID_IMemAllocator interface */
 
     hr = pMemObject->QueryInterface(IID_IMemAllocator,(void **)ppAlloc);
     if (FAILED(hr)) {
@@ -97,15 +105,17 @@ CAsyncOutputPin::InitAllocator(IMemAllocator **ppAlloc)
     }
     ASSERT(*ppAlloc != NULL);
     return NOERROR;
-}    
+}
 
+// we need to return an addrefed allocator, even if it is the preferred
+// one, since he doesn't know whether it is the preferred one or not.
 STDMETHODIMP
 CAsyncOutputPin::RequestAllocator(
     IMemAllocator* pPreferred,
     ALLOCATOR_PROPERTIES* pProps,
     IMemAllocator ** ppActual)
 {
-    
+    // we care about alignment but nothing else
     if (!pProps->cbAlign || !m_pIo->IsAligned(pProps->cbAlign)) {
        m_pIo->Alignment(&pProps->cbAlign);
     }
@@ -120,37 +130,40 @@ CAsyncOutputPin::RequestAllocator(
         }
     }
 
-    
+    // create our own allocator
     IMemAllocator* pAlloc;
     hr = InitAllocator(&pAlloc);
     if (FAILED(hr)) {
         return hr;
     }
 
-    
+    //...and see if we can make it suitable
     hr = pAlloc->SetProperties(pProps, &Actual);
     if (SUCCEEDED(hr) && m_pIo->IsAligned(Actual.cbAlign)) {
-        
-        
+        // we need to release our refcount on pAlloc, and addref
+        // it to pass a refcount to the caller - this is a net nothing.
         *ppActual = pAlloc;
         return S_OK;
     }
 
-    
+    // failed to find a suitable allocator
     pAlloc->Release();
 
-    
-    
+    // if we failed because of the IsAligned test, the error code will
+    // not be failure
     if (SUCCEEDED(hr)) {
         hr = VFW_E_BADALIGN;
     }
     return hr;
-}      
+}
 
+
+// queue an aligned read request. call WaitForNext to get
+// completion.
 STDMETHODIMP
 CAsyncOutputPin::Request(
     IMediaSample* pSample,
-    DWORD dwUser)	        
+    DWORD dwUser)	        // user context
 {
     REFERENCE_TIME tStart, tStop;
     HRESULT hr = pSample->GetTime(&tStart, &tStop);
@@ -166,8 +179,8 @@ CAsyncOutputPin::Request(
     hr = m_pIo->Length(&llTotal, &llAvailable);
     if (llPos + lLength > llTotal) {
 
-        
-        
+        // the end needs to be aligned, but may have been aligned
+        // on a coarser alignment.
         LONG lAlign;
         m_pIo->Alignment(&lAlign);
         llTotal = (llTotal + lAlign -1) & ~(lAlign-1);
@@ -175,12 +188,15 @@ CAsyncOutputPin::Request(
         if (llPos + lLength > llTotal) {
             lLength = (LONG) (llTotal - llPos);
 
-            
+            // must be reducing this!
             ASSERT((llTotal * UNITS) <= tStop);
             tStop = llTotal * UNITS;
             pSample->SetTime(&tStart, &tStop);
         }
-    }      
+    }
+
+
+
 
     BYTE* pBuffer;
     hr = pSample->GetPointer(&pBuffer);
@@ -195,8 +211,9 @@ CAsyncOutputPin::Request(
 			pBuffer,
 			(LPVOID)pSample,
 			dwUser);
-}  
+}
 
+// sync-aligned request. just like a request/waitfornext pair.
 STDMETHODIMP
 CAsyncOutputPin::SyncReadAligned(
                   IMediaSample* pSample)
@@ -215,8 +232,8 @@ CAsyncOutputPin::SyncReadAligned(
     hr = m_pIo->Length(&llTotal, &llAvailable);
     if (llPos + lLength > llTotal) {
 
-        
-        
+        // the end needs to be aligned, but may have been aligned
+        // on a coarser alignment.
         LONG lAlign;
         m_pIo->Alignment(&lAlign);
         llTotal = (llTotal + lAlign -1) & ~(lAlign-1);
@@ -224,12 +241,15 @@ CAsyncOutputPin::SyncReadAligned(
         if (llPos + lLength > llTotal) {
             lLength = (LONG) (llTotal - llPos);
 
-            
+            // must be reducing this!
             ASSERT((llTotal * UNITS) <= tStop);
             tStop = llTotal * UNITS;
             pSample->SetTime(&tStart, &tStop);
         }
-    }      
+    }
+
+
+
 
     BYTE* pBuffer;
     hr = pSample->GetPointer(&pBuffer);
@@ -249,13 +269,16 @@ CAsyncOutputPin::SyncReadAligned(
     pSample->SetActualDataLength(cbActual);
 
     return hr;
-}      
+}
 
+
+//
+// collect the next ready sample
 STDMETHODIMP
 CAsyncOutputPin::WaitForNext(
     DWORD dwTimeout,
-    IMediaSample** ppSample,  
-    DWORD * pdwUser)		
+    IMediaSample** ppSample,  // completed sample
+    DWORD * pdwUser)		// user context
 {
     LONG cbActual;
 
@@ -272,17 +295,23 @@ CAsyncOutputPin::WaitForNext(
     *ppSample = pSample;
 
     return hr;
-}      
+}
 
+
+//
+// synchronous read that need not be aligned.
 STDMETHODIMP
 CAsyncOutputPin::SyncRead(
-    LONGLONG llPosition,	
-    LONG lLength,		
-    BYTE* pBuffer)		
+    LONGLONG llPosition,	// absolute Io position
+    LONG lLength,		// nr bytes required
+    BYTE* pBuffer)		// write data here
 {
     return m_pIo->SyncRead(llPosition, lLength, pBuffer);
-}      
+}
 
+// return the length of the file, and the length currently
+// available locally. We only support locally accessible files,
+// so they are always the same
 STDMETHODIMP
 CAsyncOutputPin::Length(
     LONGLONG* pTotal,
@@ -302,16 +331,20 @@ STDMETHODIMP
 CAsyncOutputPin::EndFlush(void)
 {
     return m_pIo->EndFlush();
-}  
+}
+
 
 STDMETHODIMP
 CAsyncOutputPin::Connect(
     IPin * pReceivePin,
-    const AM_MEDIA_TYPE *pmt   
+    const AM_MEDIA_TYPE *pmt   // optional media type
 )
 {
     return m_pReader->Connect(pReceivePin, pmt);
-}      
+}
+
+
+// --- CAsyncReader implementation ---
 
 #pragma warning(disable:4355)
 
@@ -356,5 +389,6 @@ CAsyncReader::GetPin(int n)
     } else {
 	return NULL;
     }
-}  
+}
+
 

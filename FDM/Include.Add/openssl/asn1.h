@@ -1,8 +1,60 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/  
-
-  
+/* crypto/asn1/asn1.h */
+/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
+ * All rights reserved.
+ *
+ * This package is an SSL implementation written
+ * by Eric Young (eay@cryptsoft.com).
+ * The implementation was written so as to conform with Netscapes SSL.
+ * 
+ * This library is free for commercial and non-commercial use as long as
+ * the following conditions are aheared to.  The following conditions
+ * apply to all code found in this distribution, be it the RC4, RSA,
+ * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
+ * included with this distribution is covered by the same copyright terms
+ * except that the holder is Tim Hudson (tjh@cryptsoft.com).
+ * 
+ * Copyright remains Eric Young's, and as such any Copyright notices in
+ * the code are not to be removed.
+ * If this package is used in a product, Eric Young should be given attribution
+ * as the author of the parts of the library used.
+ * This can be in the form of a textual message at program startup or
+ * in documentation (online or textual) provided with the package.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *    "This product includes cryptographic software written by
+ *     Eric Young (eay@cryptsoft.com)"
+ *    The word 'cryptographic' can be left out if the rouines from the library
+ *    being used are not cryptographic related :-).
+ * 4. If you include any Windows specific code (or a derivative thereof) from 
+ *    the apps directory (application code) you must include an acknowledgement:
+ *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"
+ * 
+ * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * The licence and distribution terms for any publically available version or
+ * derivative of this code cannot be changed.  i.e. this code cannot simply be
+ * copied and put under another distribution licence
+ * [including the GNU Public Licence.]
+ */
 
 #ifndef HEADER_ASN1_H
 #define HEADER_ASN1_H
@@ -40,15 +92,15 @@ extern "C" {
 #define V_ASN1_PRIMITIVE_TAG		0x1f
 #define V_ASN1_PRIMATIVE_TAG		0x1f
 
-#define V_ASN1_APP_CHOOSE		-2	
-#define V_ASN1_OTHER			-3	
-#define V_ASN1_ANY			-4	
+#define V_ASN1_APP_CHOOSE		-2	/* let the recipient choose */
+#define V_ASN1_OTHER			-3	/* used in ASN1_TYPE */
+#define V_ASN1_ANY			-4	/* used in ASN1 template code */
 
-#define V_ASN1_NEG			0x100	
+#define V_ASN1_NEG			0x100	/* negative flag */
 
 #define V_ASN1_UNDEF			-1
 #define V_ASN1_EOC			0
-#define V_ASN1_BOOLEAN			1	
+#define V_ASN1_BOOLEAN			1	/**/
 #define V_ASN1_INTEGER			2
 #define V_ASN1_NEG_INTEGER		(2 | V_ASN1_NEG)
 #define V_ASN1_BIT_STRING		3
@@ -63,21 +115,22 @@ extern "C" {
 #define V_ASN1_UTF8STRING		12
 #define V_ASN1_SEQUENCE			16
 #define V_ASN1_SET			17
-#define V_ASN1_NUMERICSTRING		18	
+#define V_ASN1_NUMERICSTRING		18	/**/
 #define V_ASN1_PRINTABLESTRING		19
 #define V_ASN1_T61STRING		20
-#define V_ASN1_TELETEXSTRING		20	
-#define V_ASN1_VIDEOTEXSTRING		21	
+#define V_ASN1_TELETEXSTRING		20	/* alias */
+#define V_ASN1_VIDEOTEXSTRING		21	/**/
 #define V_ASN1_IA5STRING		22
 #define V_ASN1_UTCTIME			23
-#define V_ASN1_GENERALIZEDTIME		24	
-#define V_ASN1_GRAPHICSTRING		25	
-#define V_ASN1_ISO64STRING		26	
-#define V_ASN1_VISIBLESTRING		26	
-#define V_ASN1_GENERALSTRING		27	
-#define V_ASN1_UNIVERSALSTRING		28	
-#define V_ASN1_BMPSTRING		30 
+#define V_ASN1_GENERALIZEDTIME		24	/**/
+#define V_ASN1_GRAPHICSTRING		25	/**/
+#define V_ASN1_ISO64STRING		26	/**/
+#define V_ASN1_VISIBLESTRING		26	/* alias */
+#define V_ASN1_GENERALSTRING		27	/**/
+#define V_ASN1_UNIVERSALSTRING		28	/**/
+#define V_ASN1_BMPSTRING		30
 
+/* For use with d2i_ASN1_type_bytes() */
 #define B_ASN1_NUMERICSTRING	0x0001
 #define B_ASN1_PRINTABLESTRING	0x0002
 #define B_ASN1_T61STRING	0x0004
@@ -96,8 +149,9 @@ extern "C" {
 #define B_ASN1_UTF8STRING	0x2000
 #define B_ASN1_UTCTIME		0x4000
 #define B_ASN1_GENERALIZEDTIME	0x8000
-#define B_ASN1_SEQUENCE		0x10000 
+#define B_ASN1_SEQUENCE		0x10000
 
+/* For use with ASN1_mbstring_copy() */
 #define MBSTRING_FLAG		0x1000
 #define MBSTRING_UTF8		(MBSTRING_FLAG)
 #define MBSTRING_ASC		(MBSTRING_FLAG|1)
@@ -106,72 +160,90 @@ extern "C" {
 
 struct X509_algor_st;
 
-#define DECLARE_ASN1_SET_OF(type) 
-#define IMPLEMENT_ASN1_SET_OF(type)  
+#define DECLARE_ASN1_SET_OF(type) /* filled in by mkstack.pl */
+#define IMPLEMENT_ASN1_SET_OF(type) /* nothing, no longer needed */
 
+/* We MUST make sure that, except for constness, asn1_ctx_st and
+   asn1_const_ctx are exactly the same.  Fortunately, as soon as
+   the old ASN1 parsing macros are gone, we can throw this away
+   as well... */
 typedef struct asn1_ctx_st
 	{
-	unsigned char *p;
-	int eos;	
-	int error;	
-	int inf;	
-	int tag;	
-	int xclass;	
-	long slen;	
-	unsigned char *max; 
-	unsigned char *q;
-	unsigned char **pp;
-	int line;	
+	unsigned char *p;/* work char pointer */
+	int eos;	/* end of sequence read for indefinite encoding */
+	int error;	/* error code to use when returning an error */
+	int inf;	/* constructed if 0x20, indefinite is 0x21 */
+	int tag;	/* tag from last 'get object' */
+	int xclass;	/* class from last 'get object' */
+	long slen;	/* length of last 'get object' */
+	unsigned char *max; /* largest value of p allowed */
+	unsigned char *q;/* temporary variable */
+	unsigned char **pp;/* variable */
+	int line;	/* used in error processing */
 	} ASN1_CTX;
 
 typedef struct asn1_const_ctx_st
 	{
-	const unsigned char *p;
-	int eos;	
-	int error;	
-	int inf;	
-	int tag;	
-	int xclass;	
-	long slen;	
-	const unsigned char *max; 
-	const unsigned char *q;
-	const unsigned char **pp;
-	int line;	
-	} ASN1_const_CTX; 
+	const unsigned char *p;/* work char pointer */
+	int eos;	/* end of sequence read for indefinite encoding */
+	int error;	/* error code to use when returning an error */
+	int inf;	/* constructed if 0x20, indefinite is 0x21 */
+	int tag;	/* tag from last 'get object' */
+	int xclass;	/* class from last 'get object' */
+	long slen;	/* length of last 'get object' */
+	const unsigned char *max; /* largest value of p allowed */
+	const unsigned char *q;/* temporary variable */
+	const unsigned char **pp;/* variable */
+	int line;	/* used in error processing */
+	} ASN1_const_CTX;
 
-#define ASN1_OBJECT_FLAG_DYNAMIC	 0x01	
-#define ASN1_OBJECT_FLAG_CRITICAL	 0x02	
-#define ASN1_OBJECT_FLAG_DYNAMIC_STRINGS 0x04	
-#define ASN1_OBJECT_FLAG_DYNAMIC_DATA 	 0x08	
+/* These are used internally in the ASN1_OBJECT to keep track of
+ * whether the names and data need to be free()ed */
+#define ASN1_OBJECT_FLAG_DYNAMIC	 0x01	/* internal use */
+#define ASN1_OBJECT_FLAG_CRITICAL	 0x02	/* critical x509v3 object id */
+#define ASN1_OBJECT_FLAG_DYNAMIC_STRINGS 0x04	/* internal use */
+#define ASN1_OBJECT_FLAG_DYNAMIC_DATA 	 0x08	/* internal use */
 typedef struct asn1_object_st
 	{
 	const char *sn,*ln;
 	int nid;
 	int length;
 	unsigned char *data;
-	int flags;	
+	int flags;	/* Should we free this one */
 	} ASN1_OBJECT;
 
-#define ASN1_STRING_FLAG_BITS_LEFT 0x08 
-
+#define ASN1_STRING_FLAG_BITS_LEFT 0x08 /* Set if 0x07 has bits left value */
+/* This indicates that the ASN1_STRING is not a real value but just a place
+ * holder for the location where indefinite length constructed data should
+ * be inserted in the memory buffer 
+ */
 #define ASN1_STRING_FLAG_NDEF 0x010 
-
+/* This is the base type that holds just about everything :-) */
 typedef struct asn1_string_st
 	{
 	int length;
 	int type;
 	unsigned char *data;
-	
+	/* The value of the following field depends on the type being
+	 * held.  It is mostly being used for BIT_STRING so if the
+	 * input data has a non-zero 'unused bits' value, it will be
+	 * handled correctly */
 	long flags;
-	} ASN1_STRING;  
+	} ASN1_STRING;
+
+/* ASN1_ENCODING structure: this is used to save the received
+ * encoding of an ASN1 type. This is useful to get round
+ * problems with invalid encodings which can break signatures.
+ */
 
 typedef struct ASN1_ENCODING_st
 	{
-	unsigned char *enc;	
-	long len;		
-	int modified;		 
-	} ASN1_ENCODING; 
+	unsigned char *enc;	/* DER encoding */
+	long len;		/* Length of encoding */
+	int modified;		 /* set to 1 if 'enc' is invalid */
+	} ASN1_ENCODING;
 
+/* Used with ASN1 LONG type: if a long is set to this it is omitted */
 #define ASN1_LONG_UNDEF	0x7fffffffL
 
 #define STABLE_FLAGS_MALLOC	0x01
@@ -188,7 +260,9 @@ typedef struct asn1_string_table_st {
 	unsigned long flags;
 } ASN1_STRING_TABLE;
 
-DECLARE_STACK_OF(ASN1_STRING_TABLE)  
+DECLARE_STACK_OF(ASN1_STRING_TABLE)
+
+/* size limits: this stuff is taken straight from RFC2459 */
 
 #define ub_name				32768
 #define ub_common_name			64
@@ -197,13 +271,18 @@ DECLARE_STACK_OF(ASN1_STRING_TABLE)
 #define ub_organization_name		64
 #define ub_organization_unit_name	64
 #define ub_title			64
-#define ub_email_address		128 
+#define ub_email_address		128
 
+/* Declarations for template structures: for full definitions
+ * see asn1t.h
+ */
 typedef struct ASN1_TEMPLATE_st ASN1_TEMPLATE;
 typedef struct ASN1_ITEM_st ASN1_ITEM;
 typedef struct ASN1_TLC_st ASN1_TLC;
+/* This is just an opaque pointer */
+typedef struct ASN1_VALUE_st ASN1_VALUE;
 
-typedef struct ASN1_VALUE_st ASN1_VALUE;  
+/* Declare ASN1 functions: the implement macro in in asn1t.h */
 
 #define DECLARE_ASN1_FUNCTIONS(type) DECLARE_ASN1_FUNCTIONS_name(type, type)
 
@@ -258,14 +337,52 @@ typedef struct ASN1_VALUE_st ASN1_VALUE;
 #define TYPEDEF_I2D_OF(type) typedef int i2d_of_##type(type *,unsigned char **)
 #define TYPEDEF_D2I2D_OF(type) TYPEDEF_D2I_OF(type); TYPEDEF_I2D_OF(type)
 
-TYPEDEF_D2I2D_OF(void);  
+TYPEDEF_D2I2D_OF(void);
 
-#ifndef OPENSSL_EXPORT_VAR_AS_FUNCTION 
+/* The following macros and typedefs allow an ASN1_ITEM
+ * to be embedded in a structure and referenced. Since
+ * the ASN1_ITEM pointers need to be globally accessible
+ * (possibly from shared libraries) they may exist in
+ * different forms. On platforms that support it the
+ * ASN1_ITEM structure itself will be globally exported.
+ * Other platforms will export a function that returns
+ * an ASN1_ITEM pointer.
+ *
+ * To handle both cases transparently the macros below
+ * should be used instead of hard coding an ASN1_ITEM
+ * pointer in a structure.
+ *
+ * The structure will look like this:
+ *
+ * typedef struct SOMETHING_st {
+ *      ...
+ *      ASN1_ITEM_EXP *iptr;
+ *      ...
+ * } SOMETHING; 
+ *
+ * It would be initialised as e.g.:
+ *
+ * SOMETHING somevar = {...,ASN1_ITEM_ref(X509),...};
+ *
+ * and the actual pointer extracted with:
+ *
+ * const ASN1_ITEM *it = ASN1_ITEM_ptr(somevar.iptr);
+ *
+ * Finally an ASN1_ITEM pointer can be extracted from an
+ * appropriate reference with: ASN1_ITEM_rptr(X509). This
+ * would be used when a function takes an ASN1_ITEM * argument.
+ *
+ */
 
-typedef const ASN1_ITEM ASN1_ITEM_EXP; 
+#ifndef OPENSSL_EXPORT_VAR_AS_FUNCTION
 
-#define ASN1_ITEM_ptr(iptr) (iptr) 
+/* ASN1_ITEM pointer exported type */
+typedef const ASN1_ITEM ASN1_ITEM_EXP;
 
+/* Macro to obtain ASN1_ITEM pointer from exported type */
+#define ASN1_ITEM_ptr(iptr) (iptr)
+
+/* Macro to include ASN1_ITEM pointer from base type */
 #define ASN1_ITEM_ref(iptr) (&(iptr##_it))
 
 #define ASN1_ITEM_rptr(ref) (&(ref##_it))
@@ -273,12 +390,19 @@ typedef const ASN1_ITEM ASN1_ITEM_EXP;
 #define DECLARE_ASN1_ITEM(name) \
 	OPENSSL_EXTERN const ASN1_ITEM name##_it;
 
-#else   
+#else
 
-typedef const ASN1_ITEM * ASN1_ITEM_EXP(void); 
+/* Platforms that can't easily handle shared global variables are declared
+ * as functions returning ASN1_ITEM pointers.
+ */
 
-#define ASN1_ITEM_ptr(iptr) (iptr()) 
+/* ASN1_ITEM pointer exported type */
+typedef const ASN1_ITEM * ASN1_ITEM_EXP(void);
 
+/* Macro to obtain ASN1_ITEM pointer from exported type */
+#define ASN1_ITEM_ptr(iptr) (iptr())
+
+/* Macro to include ASN1_ITEM pointer from base type */
 #define ASN1_ITEM_ref(iptr) (iptr##_it)
 
 #define ASN1_ITEM_rptr(ref) (ref##_it())
@@ -286,30 +410,79 @@ typedef const ASN1_ITEM * ASN1_ITEM_EXP(void);
 #define DECLARE_ASN1_ITEM(name) \
 	const ASN1_ITEM * name##_it(void);
 
-#endif    
+#endif
+
+/* Parameters used by ASN1_STRING_print_ex() */
+
+/* These determine which characters to escape:
+ * RFC2253 special characters, control characters and
+ * MSB set characters
+ */
 
 #define ASN1_STRFLGS_ESC_2253		1
 #define ASN1_STRFLGS_ESC_CTRL		2
-#define ASN1_STRFLGS_ESC_MSB		4   
+#define ASN1_STRFLGS_ESC_MSB		4
 
-#define ASN1_STRFLGS_ESC_QUOTE		8    
 
+/* This flag determines how we do escaping: normally
+ * RC2253 backslash only, set this to use backslash and
+ * quote.
+ */
+
+#define ASN1_STRFLGS_ESC_QUOTE		8
+
+
+/* These three flags are internal use only. */
+
+/* Character is a valid PrintableString character */
 #define CHARTYPE_PRINTABLESTRING	0x10
-
+/* Character needs escaping if it is the first character */
 #define CHARTYPE_FIRST_ESC_2253		0x20
+/* Character needs escaping if it is the last character */
+#define CHARTYPE_LAST_ESC_2253		0x40
 
-#define CHARTYPE_LAST_ESC_2253		0x40    
+/* NB the internal flags are safely reused below by flags
+ * handled at the top level.
+ */
 
-#define ASN1_STRFLGS_UTF8_CONVERT	0x10  
+/* If this is set we convert all character strings
+ * to UTF8 first 
+ */
 
-#define ASN1_STRFLGS_IGNORE_TYPE	0x20 
+#define ASN1_STRFLGS_UTF8_CONVERT	0x10
 
-#define ASN1_STRFLGS_SHOW_TYPE		0x40  
+/* If this is set we don't attempt to interpret content:
+ * just assume all strings are 1 byte per character. This
+ * will produce some pretty odd looking output!
+ */
+
+#define ASN1_STRFLGS_IGNORE_TYPE	0x20
+
+/* If this is set we include the string type in the output */
+#define ASN1_STRFLGS_SHOW_TYPE		0x40
+
+/* This determines which strings to display and which to
+ * 'dump' (hex dump of content octets or DER encoding). We can
+ * only dump non character strings or everything. If we
+ * don't dump 'unknown' they are interpreted as character
+ * strings with 1 octet per character and are subject to
+ * the usual escaping options.
+ */
 
 #define ASN1_STRFLGS_DUMP_ALL		0x80
-#define ASN1_STRFLGS_DUMP_UNKNOWN	0x100  
+#define ASN1_STRFLGS_DUMP_UNKNOWN	0x100
 
-#define ASN1_STRFLGS_DUMP_DER		0x200  
+/* These determine what 'dumping' does, we can dump the
+ * content octets or the DER encoding: both use the
+ * RFC2253 #XXXXX notation.
+ */
+
+#define ASN1_STRFLGS_DUMP_DER		0x200
+
+/* All the string flags consistent with RFC2253,
+ * escaping control characters isn't essential in
+ * RFC2253 but it is advisable anyway.
+ */
 
 #define ASN1_STRFLGS_RFC2253	(ASN1_STRFLGS_ESC_2253 | \
 				ASN1_STRFLGS_ESC_CTRL | \
@@ -345,7 +518,8 @@ typedef struct asn1_type_st
 		ASN1_GENERALIZEDTIME *	generalizedtime;
 		ASN1_VISIBLESTRING *	visiblestring;
 		ASN1_UTF8STRING *	utf8string;
-		
+		/* set and sequence are left complete and still
+		 * contain the set or sequence bytes */
 		ASN1_STRING *		set;
 		ASN1_STRING *		sequence;
 		} value;
@@ -360,26 +534,30 @@ typedef struct asn1_method_st
 	d2i_of_void *d2i;
 	void *(*create)(void);
 	void (*destroy)(void *);
-	} ASN1_METHOD; 
+	} ASN1_METHOD;
 
+/* This is used when parsing some Netscape objects */
 typedef struct asn1_header_st
 	{
 	ASN1_OCTET_STRING *header;
 	void *data;
 	ASN1_METHOD *meth;
-	} ASN1_HEADER; 
+	} ASN1_HEADER;
 
+/* This is used to contain a list of bit names */
 typedef struct BIT_STRING_BITNAME_st {
 	int bitnum;
 	const char *lname;
 	const char *sname;
-} BIT_STRING_BITNAME; 
+} BIT_STRING_BITNAME;
+
 
 #define M_ASN1_STRING_length(x)	((x)->length)
 #define M_ASN1_STRING_length_set(x, n)	((x)->length = (n))
 #define M_ASN1_STRING_type(x)	((x)->type)
-#define M_ASN1_STRING_data(x)	((x)->data) 
+#define M_ASN1_STRING_data(x)	((x)->data)
 
+/* Macros for string operations */
 #define M_ASN1_BIT_STRING_new()	(ASN1_BIT_STRING *)\
 		ASN1_STRING_type_new(V_ASN1_BIT_STRING)
 #define M_ASN1_BIT_STRING_free(a)	ASN1_STRING_free((ASN1_STRING *)a)
@@ -566,7 +744,7 @@ typedef struct BIT_STRING_BITNAME_st {
 		(ASN1_UTF8STRING *)d2i_ASN1_type_bytes\
 		((ASN1_STRING **)a,pp,l,B_ASN1_UTF8STRING)
 
-  
+  /* for the is_set parameter to i2d_ASN1_SET */
 #define IS_SEQUENCE	0
 #define IS_SET		1
 
@@ -593,7 +771,8 @@ void		ASN1_STRING_free(ASN1_STRING *a);
 ASN1_STRING *	ASN1_STRING_dup(ASN1_STRING *a);
 ASN1_STRING *	ASN1_STRING_type_new(int type );
 int 		ASN1_STRING_cmp(ASN1_STRING *a, ASN1_STRING *b);
-  
+  /* Since this is used to store all sorts of things, via macros, for now, make
+     its data void * */
 int 		ASN1_STRING_set(ASN1_STRING *str, const void *data, int len);
 int ASN1_STRING_length(ASN1_STRING *x);
 void ASN1_STRING_length_set(ASN1_STRING *x, int n);
@@ -704,21 +883,25 @@ BIGNUM *ASN1_INTEGER_to_BN(ASN1_INTEGER *ai,BIGNUM *bn);
 int ASN1_ENUMERATED_set(ASN1_ENUMERATED *a, long v);
 long ASN1_ENUMERATED_get(ASN1_ENUMERATED *a);
 ASN1_ENUMERATED *BN_to_ASN1_ENUMERATED(BIGNUM *bn, ASN1_ENUMERATED *ai);
-BIGNUM *ASN1_ENUMERATED_to_BN(ASN1_ENUMERATED *ai,BIGNUM *bn);  
+BIGNUM *ASN1_ENUMERATED_to_BN(ASN1_ENUMERATED *ai,BIGNUM *bn);
 
+/* General */
+/* given a string, return the correct type, max is the maximum length */
 int ASN1_PRINTABLE_type(const unsigned char *s, int max);
 
 int i2d_ASN1_bytes(ASN1_STRING *a, unsigned char **pp, int tag, int xclass);
 ASN1_STRING *d2i_ASN1_bytes(ASN1_STRING **a, const unsigned char **pp,
 	long length, int Ptag, int Pclass);
 unsigned long ASN1_tag2bit(int tag);
-
+/* type is one or more of the B_ASN1_ values. */
 ASN1_STRING *d2i_ASN1_type_bytes(ASN1_STRING **a,const unsigned char **pp,
-		long length,int type); 
+		long length,int type);
 
+/* PARSING */
 int asn1_Finish(ASN1_CTX *c);
-int asn1_const_Finish(ASN1_const_CTX *c); 
+int asn1_const_Finish(ASN1_const_CTX *c);
 
+/* SPECIALS */
 int ASN1_get_object(const unsigned char **pp, long *plength, int *ptag,
 	int *pclass, long omax);
 int ASN1_check_infinite_end(unsigned char **p,long len);
@@ -726,8 +909,9 @@ int ASN1_const_check_infinite_end(const unsigned char **p,long len);
 void ASN1_put_object(unsigned char **pp, int constructed, int length,
 	int tag, int xclass);
 int ASN1_put_eoc(unsigned char **pp);
-int ASN1_object_size(int constructed, int length, int tag); 
+int ASN1_object_size(int constructed, int length, int tag);
 
+/* Used to implement other functions */
 void *ASN1_dup(i2d_of_void *i2d, d2i_of_void *d2i, char *x);
 
 #define ASN1_dup_of(type,i2d,d2i,x) \
@@ -801,15 +985,17 @@ int ASN1_STRING_print_ex(BIO *out, ASN1_STRING *str, unsigned long flags);
 int ASN1_parse(BIO *bp,const unsigned char *pp,long len,int indent);
 int ASN1_parse_dump(BIO *bp,const unsigned char *pp,long len,int indent,int dump);
 #endif
-const char *ASN1_tag2str(int tag); 
+const char *ASN1_tag2str(int tag);
 
+/* Used to load and write netscape format cert/key */
 int i2d_ASN1_HEADER(ASN1_HEADER *a,unsigned char **pp);
 ASN1_HEADER *d2i_ASN1_HEADER(ASN1_HEADER **a,const unsigned char **pp, long length);
 ASN1_HEADER *ASN1_HEADER_new(void );
 void ASN1_HEADER_free(ASN1_HEADER *a);
 
-int ASN1_UNIVERSALSTRING_to_string(ASN1_UNIVERSALSTRING *s); 
+int ASN1_UNIVERSALSTRING_to_string(ASN1_UNIVERSALSTRING *s);
 
+/* Not used that much at this point, except for the first two */
 ASN1_METHOD *X509_asn1_meth(void);
 ASN1_METHOD *RSAPrivateKey_asn1_meth(void);
 ASN1_METHOD *ASN1_IA5STRING_asn1_meth(void);
@@ -853,8 +1039,11 @@ ASN1_STRING *ASN1_STRING_set_by_NID(ASN1_STRING **out,
 		const unsigned char *in, int inlen, int inform, int nid);
 ASN1_STRING_TABLE *ASN1_STRING_TABLE_get(int nid);
 int ASN1_STRING_TABLE_add(int, long, long, unsigned long, unsigned long);
-void ASN1_STRING_TABLE_cleanup(void);   
+void ASN1_STRING_TABLE_cleanup(void);
 
+/* ASN1 template functions */
+
+/* Old API compatible functions */
 ASN1_VALUE *ASN1_item_new(const ASN1_ITEM *it);
 void ASN1_item_free(ASN1_VALUE *val, const ASN1_ITEM *it);
 ASN1_VALUE * ASN1_item_d2i(ASN1_VALUE **val, const unsigned char **in, long len, const ASN1_ITEM *it);
@@ -865,10 +1054,16 @@ void ASN1_add_oid_module(void);
 
 ASN1_TYPE *ASN1_generate_nconf(char *str, CONF *nconf);
 ASN1_TYPE *ASN1_generate_v3(char *str, X509V3_CTX *cnf);
-	 
+	
+/* BEGIN ERROR CODES */
+/* The following lines are auto generated by the script mkerr.pl. Any changes
+ * made after this point may be overwritten when the script is next run.
+ */
+void ERR_load_ASN1_strings(void);
 
-void ERR_load_ASN1_strings(void);   
+/* Error codes for the ASN1 functions. */
 
+/* Function codes. */
 #define ASN1_F_A2D_ASN1_OBJECT				 100
 #define ASN1_F_A2I_ASN1_ENUMERATED			 101
 #define ASN1_F_A2I_ASN1_INTEGER				 102
@@ -975,8 +1170,9 @@ void ERR_load_ASN1_strings(void);
 #define ASN1_F_X509_NAME_EX_D2I				 158
 #define ASN1_F_X509_NAME_EX_NEW				 171
 #define ASN1_F_X509_NEW					 172
-#define ASN1_F_X509_PKEY_NEW				 173 
+#define ASN1_F_X509_PKEY_NEW				 173
 
+/* Reason codes. */
 #define ASN1_R_ADDING_OBJECT				 171
 #define ASN1_R_AUX_ERROR				 100
 #define ASN1_R_BAD_CLASS				 101

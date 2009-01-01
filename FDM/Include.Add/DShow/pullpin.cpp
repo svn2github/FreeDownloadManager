@@ -1,11 +1,17 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: PullPin.cpp
+//
+// Desc: DirectShow base classes - implements CPullPin class that pulls data
+//       from IAsyncReader.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                    
 
 #include <streams.h>
-#include "pullpin.h"    
+#include "pullpin.h"
+
+
 
 CPullPin::CPullPin()
   : m_pReader(NULL),
@@ -17,10 +23,15 @@ CPullPin::CPullPin()
 
 CPullPin::~CPullPin()
 {
-    Disconnect();  
+    Disconnect();
 
-}        
 
+}
+
+// returns S_OK if successfully connected to an IAsyncReader interface
+// from this object
+// Optional allocator should be proposed as a preferred allocator if
+// necessary
 HRESULT
 CPullPin::Connect(IUnknown* pUnk, IMemAllocator* pAlloc, BOOL bSync)
 {
@@ -31,14 +42,16 @@ CPullPin::Connect(IUnknown* pUnk, IMemAllocator* pAlloc, BOOL bSync)
     }
 
     HRESULT hr = pUnk->QueryInterface(IID_IAsyncReader, (void**)&m_pReader);
-    if (FAILED(hr)) {  
+    if (FAILED(hr)) {
+
 
 	return(hr);
     }
 
     hr = DecideAllocator(pAlloc, NULL);
     if (FAILED(hr)) {
-	Disconnect();  
+	Disconnect();
+
 
 	return hr;
     }
@@ -46,27 +59,31 @@ CPullPin::Connect(IUnknown* pUnk, IMemAllocator* pAlloc, BOOL bSync)
     LONGLONG llTotal, llAvail;
     hr = m_pReader->Length(&llTotal, &llAvail);
     if (FAILED(hr)) {
-	Disconnect();  
+	Disconnect();
+
 
 	return hr;
     }
 
-    
+    // convert from file position to reference time
     m_tDuration = llTotal * UNITS;
     m_tStop = m_tDuration;
     m_tStart = 0;
 
-    m_bSync = bSync;  
+    m_bSync = bSync;
+
 
     return S_OK;
-}  
+}
 
+// disconnect any connection made in Connect
 HRESULT
 CPullPin::Disconnect()
 {
     CAutoLock lock(&m_AccessLock);
 
-    StopThread();  
+    StopThread();
+
 
     if (m_pReader) {
 	m_pReader->Release();
@@ -79,8 +96,13 @@ CPullPin::Disconnect()
     }
 
     return S_OK;
-}          
+}
 
+// agree an allocator using RequestAllocator - optional
+// props param specifies your requirements (non-zero fields).
+// returns an error code if fail to match requirements.
+// optional IMemAllocator interface is offered as a preferred allocator
+// but no error occurs if it can't be met.
 HRESULT
 CPullPin::DecideAllocator(
     IMemAllocator * pAlloc,
@@ -102,15 +124,17 @@ CPullPin::DecideAllocator(
 		    pRequest,
 		    &m_pAlloc);
     return hr;
-}  
+}
 
+// start pulling data
 HRESULT
 CPullPin::Active(void)
 {
     ASSERT(!ThreadExists());
     return StartThread();
-}  
+}
 
+// stop pulling data
 HRESULT
 CPullPin::Inactive(void)
 {
@@ -148,7 +172,8 @@ CPullPin::Duration(REFERENCE_TIME* ptDuration)
 {
     *ptDuration = m_tDuration;
     return S_OK;
-}  
+}
+
 
 HRESULT
 CPullPin::StartThread()
@@ -162,13 +187,13 @@ CPullPin::StartThread()
     HRESULT hr;
     if (!ThreadExists()) {
 
-	
+	// commit allocator
 	hr = m_pAlloc->Commit();
 	if (FAILED(hr)) {
 	    return hr;
 	}
 
-	
+	// start thread
 	if (!Create()) {
 	    return E_FAIL;
 	}
@@ -188,8 +213,8 @@ CPullPin::PauseThread()
 	return E_UNEXPECTED;
     }
 
-    
-    
+    // need to flush to ensure the thread is not blocked
+    // in WaitForNext
     HRESULT hr = m_pReader->BeginFlush();
     if (FAILED(hr)) {
 	return hr;
@@ -211,8 +236,8 @@ CPullPin::StopThread()
 	return S_FALSE;
     }
 
-    
-    
+    // need to flush to ensure the thread is not blocked
+    // in WaitForNext
     HRESULT hr = m_pReader->BeginFlush();
     if (FAILED(hr)) {
 	return hr;
@@ -223,16 +248,17 @@ CPullPin::StopThread()
 
     m_pReader->EndFlush();
 
-    
+    // wait for thread to completely exit
     Close();
 
-    
+    // decommit allocator
     if (m_pAlloc) {
 	m_pAlloc->Decommit();
     }
 
     return S_OK;
-}  
+}
+
 
 DWORD
 CPullPin::ThreadProc(void)
@@ -245,7 +271,7 @@ CPullPin::ThreadProc(void)
 	    return 0;
 
 	case TM_Pause:
-	    
+	    // we are paused already
 	    Reply(S_OK);
 	    break;
 
@@ -255,12 +281,12 @@ CPullPin::ThreadProc(void)
 	    break;
 	}
 
-	
-	
-	
-	
-	
-	
+	// at this point, there should be no outstanding requests on the
+	// upstream filter.
+	// We should force begin/endflush to ensure that this is true.
+	// !!!Note that we may currently be inside a BeginFlush/EndFlush pair
+	// on another thread, but the premature EndFlush will do no harm now
+	// that we are idle.
 	m_pReader->BeginFlush();
 	CleanupCancelled();
 	m_pReader->EndFlush();
@@ -307,7 +333,7 @@ CPullPin::CollectAndDeliver(
     REFERENCE_TIME tStart,
     REFERENCE_TIME tStop)
 {
-    IMediaSample* pSample = NULL;   
+    IMediaSample* pSample = NULL;   // better be sure pSample is set
     DWORD_PTR dwUnused;
     HRESULT hr = m_pReader->WaitForNext(
 			INFINITE,
@@ -335,17 +361,18 @@ CPullPin::DeliverSample(
     REFERENCE_TIME tStop
     )
 {
-    
+    // fix up sample if past actual stop (for sector alignment)
     REFERENCE_TIME t1, t2;
     pSample->GetTime(&t1, &t2);
     if (t2 > tStop) {
 	t2 = tStop;
     }
 
-    
+    // adjust times to be relative to (aligned) start time
     t1 -= tStart;
     t2 -= tStart;
-    pSample->SetTime(&t1, &t2);  
+    pSample->SetTime(&t1, &t2);
+
 
     HRESULT hr = Receive(pSample);
     pSample->Release();
@@ -355,7 +382,7 @@ CPullPin::DeliverSample(
 void
 CPullPin::Process(void)
 {
-    
+    // is there anything to do?
     if (m_tStop <= m_tStart) {
 	EndOfStream();
 	return;
@@ -363,13 +390,13 @@ CPullPin::Process(void)
 
     BOOL bDiscontinuity = TRUE;
 
-    
-    
-    
+    // if there is more than one sample at the allocator,
+    // then try to queue 2 at once in order to overlap.
+    // -- get buffer count and required alignment
     ALLOCATOR_PROPERTIES Actual;
     HRESULT hr = m_pAlloc->GetProperties(&Actual);
 
-    
+    // align the start position downwards
     REFERENCE_TIME tStart = AlignDown(m_tStart / UNITS, Actual.cbAlign) * UNITS;
     REFERENCE_TIME tCurrent = tStart;
 
@@ -378,25 +405,26 @@ CPullPin::Process(void)
 	tStop = m_tDuration;
     }
 
-    
-    
-    REFERENCE_TIME tAlignStop = AlignUp(tStop / UNITS, Actual.cbAlign) * UNITS;  
+    // align the stop position - may be past stop, but that
+    // doesn't matter
+    REFERENCE_TIME tAlignStop = AlignUp(tStop / UNITS, Actual.cbAlign) * UNITS;
+
 
     DWORD dwRequest;
 
     if (!m_bSync) {
 
-	
-	
+	//  Break out of the loop either if we get to the end or we're asked
+	//  to do something else
 	while (tCurrent < tAlignStop) {
 
-	    
-	    
+	    // Break out without calling EndOfStream if we're asked to
+	    // do something different
 	    if (CheckRequest(&dwRequest)) {
 		return;
 	    }
 
-	    
+	    // queue a first sample
 	    if (Actual.cBuffers > 1) {
 
 		hr = QueueSample(tCurrent, tAlignStop, TRUE);
@@ -405,9 +433,11 @@ CPullPin::Process(void)
 		if (FAILED(hr)) {
 		    return;
 		}
-	    }    
+	    }
 
-	    
+
+
+	    // loop queueing second and waiting for first..
 	    while (tCurrent < tAlignStop) {
 
 		hr = QueueSample(tCurrent, tAlignStop, bDiscontinuity);
@@ -420,8 +450,8 @@ CPullPin::Process(void)
 		hr = CollectAndDeliver(tStart, tStop);
 		if (S_OK != hr) {
 
-		    
-		    
+		    // stop if error, or if downstream filter said
+		    // to stop.
 		    return;
 		}
 	    }
@@ -435,11 +465,11 @@ CPullPin::Process(void)
 	}
     } else {
 
-	
+	// sync version of above loop
 	while (tCurrent < tAlignStop) {
 
-	    
-	    
+	    // Break out without calling EndOfStream if we're asked to
+	    // do something different
 	    if (CheckRequest(&dwRequest)) {
 		return;
 	    }
@@ -483,8 +513,10 @@ CPullPin::Process(void)
     }
 
     EndOfStream();
-}    
+}
 
+// after a flush, cancelled i/o will be waiting for collection
+// and release
 void
 CPullPin::CleanupCancelled(void)
 {
@@ -493,13 +525,13 @@ CPullPin::CleanupCancelled(void)
 	DWORD_PTR dwUnused;
 
 	HRESULT hr = m_pReader->WaitForNext(
-			    0,          
+			    0,          // no wait
 			    &pSample,
 			    &dwUnused);
 	if(pSample) {
 	    pSample->Release();
 	} else {
-	    
+	    // no more samples
 	    return;
 	}
     }

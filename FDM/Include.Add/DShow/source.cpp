@@ -1,11 +1,31 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: Source.cpp
+//
+// Desc: DirectShow  base classes - implements CSource, which is a Quartz
+//       source filter 'template.'
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                                        
 
-#include <streams.h>            
+// Locking Strategy.
+//
+// Hold the filter critical section (m_pFilter->pStateLock()) to serialise
+// access to functions. Note that, in general, this lock may be held
+// by a function when the worker thread may want to hold it. Therefore
+// if you wish to access shared state from the worker thread you will
+// need to add another critical section object. The execption is during
+// the threads processing loop, when it is safe to get the filter critical
+// section from within FillBuffer().
 
+#include <streams.h>
+
+
+//
+// CSource::Constructor
+//
+// Initialise the pin count for the filter. The user will create the pins in
+// the derived class.
 CSource::CSource(TCHAR *pName, LPUNKNOWN lpunk, CLSID clsid)
     : CBaseFilter(pName, lpunk, &m_cStateLock, clsid),
       m_iPins(0),
@@ -36,24 +56,31 @@ CSource::CSource(CHAR *pName, LPUNKNOWN lpunk, CLSID clsid, HRESULT *phr)
 {
     UNREFERENCED_PARAMETER(phr);
 }
-#endif      
+#endif
 
+//
+// CSource::Destructor
+//
 CSource::~CSource()
 {
-    
+    /*  Free our pins and pin array */
     while (m_iPins != 0) {
-	
+	// deleting the pins causes them to be removed from the array...
 	delete m_paStreams[m_iPins - 1];
     }
 
     ASSERT(m_paStreams == NULL);
-}        
+}
 
+
+//
+//  Add a new pin
+//
 HRESULT CSource::AddPin(CSourceStream *pStream)
 {
     CAutoLock lock(&m_cStateLock);
 
-    
+    /*  Allocate space for this pin and the old ones */
     CSourceStream **paStreams = new CSourceStream *[m_iPins + 1];
     if (paStreams == NULL) {
         return E_OUTOFMEMORY;
@@ -68,8 +95,11 @@ HRESULT CSource::AddPin(CSourceStream *pStream)
     m_paStreams[m_iPins] = pStream;
     m_iPins++;
     return S_OK;
-}      
+}
 
+//
+//  Remove a pin - pStream is NOT deleted
+//
 HRESULT CSource::RemovePin(CSourceStream *pStream)
 {
     int i;
@@ -79,7 +109,7 @@ HRESULT CSource::RemovePin(CSourceStream *pStream)
                 delete [] m_paStreams;
                 m_paStreams = NULL;
             } else {
-                
+                /*  no need to reallocate */
 		while (++i < m_iPins)
 		    m_paStreams[i - 1] = m_paStreams[i];
             }
@@ -88,14 +118,19 @@ HRESULT CSource::RemovePin(CSourceStream *pStream)
         }
     }
     return S_FALSE;
-}          
+}
 
+//
+// FindPin
+//
+// Set *ppPin to the IPin* that has the id Id.
+// or to NULL if the Id cannot be matched.
 STDMETHODIMP CSource::FindPin(LPCWSTR Id, IPin **ppPin)
 {
     CheckPointer(ppPin,E_POINTER);
     ValidateReadWritePtr(ppPin,sizeof(IPin *));
-    
-    
+    // The -1 undoes the +1 in QueryId and ensures that totally invalid
+    // strings (for which WstrToInt delivers 0) give a deliver a NULL pin.
     int i = WstrToInt(Id) -1;
     *ppPin = GetPin(i);
     if (*ppPin!=NULL){
@@ -104,8 +139,12 @@ STDMETHODIMP CSource::FindPin(LPCWSTR Id, IPin **ppPin)
     } else {
         return VFW_E_NOT_FOUND;
     }
-}        
+}
 
+//
+// FindPinNumber
+//
+// return the number of the pin with this IPin* or -1 if none
 int CSource::FindPinNumber(IPin *iPin) {
     int i;
     for (i=0; i<m_iPins; ++i) {
@@ -114,35 +153,55 @@ int CSource::FindPinNumber(IPin *iPin) {
         }
     }
     return -1;
-}        
+}
 
+//
+// GetPinCount
+//
+// Returns the number of pins this filter has
 int CSource::GetPinCount(void) {
 
     CAutoLock lock(&m_cStateLock);
     return m_iPins;
-}            
+}
 
+
+//
+// GetPin
+//
+// Return a non-addref'd pointer to pin n
+// needed by CBaseFilter
 CBasePin *CSource::GetPin(int n) {
 
     CAutoLock lock(&m_cStateLock);
 
-    
-    
-    
+    // n must be in the range 0..m_iPins-1
+    // if m_iPins>n  && n>=0 it follows that m_iPins>0
+    // which is what used to be checked (i.e. checking that we have a pin)
     if ((n >= 0) && (n < m_iPins)) {
 
         ASSERT(m_paStreams[n]);
 	return m_paStreams[n];
     }
     return NULL;
-}                    
+}
 
+
+//
+
+
+// *
+// * --- CSourceStream ----
+// *
+
+//
+// Set Id to point to a CoTaskMemAlloc'd
 STDMETHODIMP CSourceStream::QueryId(LPWSTR *Id) {
     CheckPointer(Id,E_POINTER);
     ValidateReadWritePtr(Id,sizeof(LPWSTR));
 
-    
-    
+    // We give the pins id's which are 1,2,...
+    // FindPinNumber returns -1 for an invalid pin
     int i = 1+ m_pFilter->FindPinNumber(this);
     if (i<1) return VFW_E_NOT_FOUND;
     *Id = (LPWSTR)CoTaskMemAlloc(8);
@@ -151,8 +210,14 @@ STDMETHODIMP CSourceStream::QueryId(LPWSTR *Id) {
     }
     IntToWstr(i, *Id);
     return NOERROR;
-}            
+}
 
+
+
+//
+// CSourceStream::Constructor
+//
+// increments the number of pins present on the filter
 CSourceStream::CSourceStream(
     TCHAR *pObjectName,
     HRESULT *phr,
@@ -175,13 +240,21 @@ CSourceStream::CSourceStream(
 
      *phr = m_pFilter->AddPin(this);
 }
-#endif      
-
+#endif
+//
+// CSourceStream::Destructor
+//
+// Decrements the number of pins on this filter
 CSourceStream::~CSourceStream(void) {
 
      m_pFilter->RemovePin(this);
-}          
+}
 
+
+//
+// CheckMediaType
+//
+// Do we support this type? Provides the default support for 1 type.
 HRESULT CSourceStream::CheckMediaType(const CMediaType *pMediaType) {
 
     CAutoLock lock(m_pFilter->pStateLock());
@@ -194,8 +267,14 @@ HRESULT CSourceStream::CheckMediaType(const CMediaType *pMediaType) {
     }
 
     return E_FAIL;
-}            
+}
 
+
+//
+// GetMediaType/3
+//
+// By default we support only one type
+// iPosition indexes are 0-n
 HRESULT CSourceStream::GetMediaType(int iPosition, CMediaType *pMediaType) {
 
     CAutoLock lock(m_pFilter->pStateLock());
@@ -207,8 +286,13 @@ HRESULT CSourceStream::GetMediaType(int iPosition, CMediaType *pMediaType) {
         return VFW_S_NO_MORE_ITEMS;
     }
     return GetMediaType(pMediaType);
-}          
+}
 
+
+//
+// Active
+//
+// The pin is active - start up the worker thread
 HRESULT CSourceStream::Active(void) {
 
     CAutoLock lock(m_pFilter->pStateLock());
@@ -216,11 +300,11 @@ HRESULT CSourceStream::Active(void) {
     HRESULT hr;
 
     if (m_pFilter->IsActive()) {
-	return S_FALSE;	
+	return S_FALSE;	// succeeded, but did not allocate resources (they already exist...)
     }
 
-    
-    
+    // do nothing if not connected - its ok not to connect to
+    // all pins of a source filter
     if (!IsConnected()) {
         return NOERROR;
     }
@@ -232,35 +316,41 @@ HRESULT CSourceStream::Active(void) {
 
     ASSERT(!ThreadExists());
 
-    
+    // start the thread
     if (!Create()) {
         return E_FAIL;
     }
 
-    
+    // Tell thread to initialize. If OnThreadCreate Fails, so does this.
     hr = Init();
     if (FAILED(hr))
 	return hr;
 
     return Pause();
-}            
+}
 
+
+//
+// Inactive
+//
+// Pin is inactive - shut down the worker thread
+// Waits for the worker to exit before returning.
 HRESULT CSourceStream::Inactive(void) {
 
     CAutoLock lock(m_pFilter->pStateLock());
 
     HRESULT hr;
 
-    
-    
+    // do nothing if not connected - its ok not to connect to
+    // all pins of a source filter
     if (!IsConnected()) {
         return NOERROR;
     }
 
-    
-    
+    // !!! need to do this before trying to stop the thread, because
+    // we may be stuck waiting for our own allocator!!!
 
-    hr = CBaseOutputPin::Inactive();  
+    hr = CBaseOutputPin::Inactive();  // call this first to Decommit the allocator
     if (FAILED(hr)) {
 	return hr;
     }
@@ -277,20 +367,26 @@ HRESULT CSourceStream::Inactive(void) {
 	    return hr;
 	}
 
-	Close();	
+	Close();	// Wait for the thread to exit, then tidy up.
     }
 
-    
-    
-    
-    
+    // hr = CBaseOutputPin::Inactive();  // call this first to Decommit the allocator
+    //if (FAILED(hr)) {
+    //	return hr;
+    //}
 
     return NOERROR;
-}            
+}
 
+
+//
+// ThreadProc
+//
+// When this returns the thread exits
+// Return codes > 0 indicate an error occured
 DWORD CSourceStream::ThreadProc(void) {
 
-    HRESULT hr;  
+    HRESULT hr;  // the return code from calls
     Command com;
 
     do {
@@ -303,15 +399,15 @@ DWORD CSourceStream::ThreadProc(void) {
 
     DbgLog((LOG_TRACE, 1, TEXT("CSourceStream worker thread initializing")));
 
-    hr = OnThreadCreate(); 
+    hr = OnThreadCreate(); // perform set up tasks
     if (FAILED(hr)) {
         DbgLog((LOG_ERROR, 1, TEXT("CSourceStream::OnThreadCreate failed. Aborting thread.")));
         OnThreadDestroy();
-	Reply(hr);	
+	Reply(hr);	// send failed return code from OnThreadCreate
         return 1;
     }
 
-    
+    // Initialisation suceeded
     Reply(NOERROR);
 
     Command cmd;
@@ -326,7 +422,7 @@ DWORD CSourceStream::ThreadProc(void) {
 
 	case CMD_RUN:
 	    DbgLog((LOG_ERROR, 1, TEXT("CMD_RUN received before a CMD_PAUSE???")));
-	    
+	    // !!! fall through???
 	
 	case CMD_PAUSE:
 	    Reply(NOERROR);
@@ -344,7 +440,7 @@ DWORD CSourceStream::ThreadProc(void) {
 	}
     } while (cmd != CMD_EXIT);
 
-    hr = OnThreadDestroy();	
+    hr = OnThreadDestroy();	// tidy up.
     if (FAILED(hr)) {
         DbgLog((LOG_ERROR, 1, TEXT("CSourceStream::OnThreadDestroy failed. Exiting thread.")));
         return 1;
@@ -352,8 +448,14 @@ DWORD CSourceStream::ThreadProc(void) {
 
     DbgLog((LOG_TRACE, 1, TEXT("CSourceStream worker thread exiting")));
     return 0;
-}            
+}
 
+
+//
+// DoBufferProcessingLoop
+//
+// Grabs a buffer and calls the users processing function.
+// Overridable, so that different delivery styles can be catered for.
 HRESULT CSourceStream::DoBufferProcessingLoop(void) {
 
     Command com;
@@ -368,20 +470,20 @@ HRESULT CSourceStream::DoBufferProcessingLoop(void) {
 	    HRESULT hr = GetDeliveryBuffer(&pSample,NULL,NULL,0);
 	    if (FAILED(hr)) {
                 Sleep(1);
-		continue;	
-			    
-			    
+		continue;	// go round again. Perhaps the error will go away
+			    // or the allocator is decommited & we will be asked to
+			    // exit soon.
 	    }
 
-	    
+	    // Virtual function user will override.
 	    hr = FillBuffer(pSample);
 
 	    if (hr == S_OK) {
 		hr = Deliver(pSample);
                 pSample->Release();
 
-                
-                
+                // downstream filter returns S_FALSE if it wants us to
+                // stop or an error if it's reporting an error.
                 if(hr != S_OK)
                 {
                   DbgLog((LOG_TRACE, 2, TEXT("Deliver() returned %08x; stopping"), hr));
@@ -389,12 +491,12 @@ HRESULT CSourceStream::DoBufferProcessingLoop(void) {
                 }
 
 	    } else if (hr == S_FALSE) {
-                
+                // derived class wants us to stop pushing data
 		pSample->Release();
 		DeliverEndOfStream();
 		return S_OK;
 	    } else {
-                
+                // derived class encountered an error
                 pSample->Release();
 		DbgLog((LOG_ERROR, 1, TEXT("Error %08lX from FillBuffer!!!"), hr));
                 DeliverEndOfStream();
@@ -402,10 +504,10 @@ HRESULT CSourceStream::DoBufferProcessingLoop(void) {
                 return hr;
 	    }
 
-            
+            // all paths release the sample
 	}
 
-        
+        // For all commands sent to us there must be a Reply call!
 
 	if (com == CMD_RUN || com == CMD_PAUSE) {
 	    Reply(NOERROR);

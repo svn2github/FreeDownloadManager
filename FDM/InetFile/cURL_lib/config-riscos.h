@@ -1,318 +1,473 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
- 
+/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+/* Name of this package! */
+#undef PACKAGE
 
-#undef PACKAGE 
+/* Version number of this archive. */
+#undef VERSION
 
-#undef VERSION 
+/* Define if you have the getpass function.  */
+#undef HAVE_GETPASS
 
-#undef HAVE_GETPASS 
+/* Define cpu-machine-OS */
+#define OS "ARM-RISC OS"
 
-#define OS "ARM-RISC OS" 
+/* Define if you have the gethostbyaddr_r() function with 5 arguments */
+#undef HAVE_GETHOSTBYADDR_R_5
 
-#undef HAVE_GETHOSTBYADDR_R_5 
+/* Define if you have the gethostbyaddr_r() function with 7 arguments */
+#undef HAVE_GETHOSTBYADDR_R_7
 
-#undef HAVE_GETHOSTBYADDR_R_7 
+/* Define if you have the gethostbyaddr_r() function with 8 arguments */
+#undef HAVE_GETHOSTBYADDR_R_8
 
-#undef HAVE_GETHOSTBYADDR_R_8 
+/* Define if you have the gethostbyname_r() function with 3 arguments */
+#undef HAVE_GETHOSTBYNAME_R_3
 
-#undef HAVE_GETHOSTBYNAME_R_3 
+/* Define if you have the gethostbyname_r() function with 5 arguments */
+#undef HAVE_GETHOSTBYNAME_R_5
 
-#undef HAVE_GETHOSTBYNAME_R_5 
+/* Define if you have the gethostbyname_r() function with 6 arguments */
+#undef HAVE_GETHOSTBYNAME_R_6
 
-#undef HAVE_GETHOSTBYNAME_R_6 
+/* Define if you need the _REENTRANT define for some functions */
+#undef NEED_REENTRANT
 
-#undef NEED_REENTRANT 
+/* Define if you have the Kerberos4 libraries (including -ldes) */
+#undef HAVE_KRB4
 
-#undef HAVE_KRB4 
+/* Define if you want to enable IPv6 support */
+#undef ENABLE_IPV6
 
-#undef ENABLE_IPV6 
+/* Define this to 'int' if ssize_t is not an available typedefed type */
+#undef ssize_t
 
-#undef ssize_t 
+/* Type to use in place of socklen_t when system does not provide it. */
+#undef socklen_t
 
-#undef socklen_t 
+/* Define this as a suitable file to read random data from */
+#undef RANDOM_FILE
 
-#undef RANDOM_FILE 
+/* Define this to your Entropy Gathering Daemon socket pathname */
+#undef EGD_SOCKET
 
-#undef EGD_SOCKET 
+/* Set to explicitly specify we don't want to use thread-safe functions */
+#define DISABLED_THREADSAFE
 
-#define DISABLED_THREADSAFE 
+/* Define if you want to enable IPv6 support */
+#undef ENABLE_IPV6
 
-#undef ENABLE_IPV6 
+/* Define to 1 if you have the alarm function. */
+#define HAVE_ALARM 1
 
-#define HAVE_ALARM 1 
+/* Define if you have the <alloca.h> header file. */
+#define HAVE_ALLOCA_H
 
-#define HAVE_ALLOCA_H 
+/* Define if you have the <arpa/inet.h> header file. */
+#define HAVE_ARPA_INET_H
 
-#define HAVE_ARPA_INET_H 
+/* Define if you have the `closesocket' function. */
+#undef HAVE_CLOSESOCKET
 
-#undef HAVE_CLOSESOCKET 
+/* Define if you have the <crypto.h> header file. */
+#undef HAVE_CRYPTO_H
 
-#undef HAVE_CRYPTO_H 
+/* Define if you have the <des.h> header file. */
+#undef HAVE_DES_H
 
-#undef HAVE_DES_H 
+/* Define if you have the <err.h> header file. */
+#undef HAVE_ERR_H
 
-#undef HAVE_ERR_H 
+/* Define if you have the <fcntl.h> header file. */
+#define HAVE_FCNTL_H
 
-#define HAVE_FCNTL_H 
+/* Define if getaddrinfo exists and works */
+#define HAVE_GETADDRINFO
 
-#define HAVE_GETADDRINFO 
+/* Define if you have the `geteuid' function. */
+#undef HAVE_GETEUID
 
-#undef HAVE_GETEUID 
+/* Define if you have the `gethostbyaddr' function. */
+#define HAVE_GETHOSTBYADDR
 
-#define HAVE_GETHOSTBYADDR 
+/* Define if you have the `gethostbyaddr_r' function. */
+#undef HAVE_GETHOSTBYADDR_R
 
-#undef HAVE_GETHOSTBYADDR_R 
+/* Define if you have the `gethostbyname_r' function. */
+#undef HAVE_GETHOSTBYNAME_R
 
-#undef HAVE_GETHOSTBYNAME_R 
+/* Define if you have the `gethostname' function. */
+#define HAVE_GETHOSTNAME
 
-#define HAVE_GETHOSTNAME 
+/* Define if you have the <getopt.h> header file. */
+#define HAVE_GETOPT_H
 
-#define HAVE_GETOPT_H 
+/* Define if you have the `getpass_r' function. */
+#undef HAVE_GETPASS_R
 
-#undef HAVE_GETPASS_R 
+/* Define if you have the `getpwuid' function. */
+#undef HAVE_GETPWUID
 
-#undef HAVE_GETPWUID 
+/* Define if you have the `getservbyname' function. */
+#undef HAVE_GETSERVBYNAME
 
-#undef HAVE_GETSERVBYNAME 
+/* Define if you have the `gettimeofday' function. */
+#define HAVE_GETTIMEOFDAY
 
-#define HAVE_GETTIMEOFDAY 
+/* Define if you have the `timeval' struct. */
+#define HAVE_STRUCT_TIMEVAL
 
-#define HAVE_STRUCT_TIMEVAL 
+/* Define if you have the `inet_addr' function. */
+#undef HAVE_INET_ADDR
 
-#undef HAVE_INET_ADDR 
+/* Define if you have the <inttypes.h> header file. */
+#define HAVE_INTTYPES_H
 
-#define HAVE_INTTYPES_H 
+/* Define if you have the <io.h> header file. */
+#define HAVE_IO_H
 
-#define HAVE_IO_H 
+/* Define if you have the `krb_get_our_ip_for_realm' function. */
+#undef HAVE_KRB_GET_OUR_IP_FOR_REALM
 
-#undef HAVE_KRB_GET_OUR_IP_FOR_REALM 
+/* Define if you have the <krb.h> header file. */
+#undef HAVE_KRB_H
 
-#undef HAVE_KRB_H 
+/* Define if you have the `crypto' library (-lcrypto). */
+#undef HAVE_LIBCRYPTO
 
-#undef HAVE_LIBCRYPTO 
+/* Define if you have the `nsl' library (-lnsl). */
+#undef HAVE_LIBNSL
 
-#undef HAVE_LIBNSL 
+/* Define if you have the `resolv' library (-lresolv). */
+#undef HAVE_LIBRESOLV
 
-#undef HAVE_LIBRESOLV 
+/* Define if you have the `resolve' library (-lresolve). */
+#undef HAVE_LIBRESOLVE
 
-#undef HAVE_LIBRESOLVE 
+/* Define if you have the `socket' library (-lsocket). */
+#undef HAVE_LIBSOCKET
 
-#undef HAVE_LIBSOCKET 
+/* Define if you have the `ssl' library (-lssl). */
+#undef HAVE_LIBSSL
 
-#undef HAVE_LIBSSL 
+/* Define if you have the `ucb' library (-lucb). */
+#undef HAVE_LIBUCB
 
-#undef HAVE_LIBUCB 
+/* Define if you have the `localtime_r' function. */
+#undef HAVE_LOCALTIME_R
 
-#undef HAVE_LOCALTIME_R 
+/* Define if you have the <malloc.h> header file. */
+#define HAVE_MALLOC_H
 
-#define HAVE_MALLOC_H    
+/* Define if you need the malloc.h header file even with stdlib.h  */
+/* #define NEED_MALLOC_H 1 */
 
-#undef HAVE_MEMORY_H 
+/* Define if you have the <memory.h> header file. */
+#undef HAVE_MEMORY_H
 
-#define HAVE_NETDB_H 
+/* Define if you have the <netdb.h> header file. */
+#define HAVE_NETDB_H
 
-#undef HAVE_NETINET_IF_ETHER_H 
+/* Define if you have the <netinet/if_ether.h> header file. */
+#undef HAVE_NETINET_IF_ETHER_H
 
-#define HAVE_NETINET_IN_H 
+/* Define if you have the <netinet/in.h> header file. */
+#define HAVE_NETINET_IN_H
 
-#define HAVE_NET_IF_H 
+/* Define if you have the <net/if.h> header file. */
+#define HAVE_NET_IF_H
 
-#undef HAVE_OPENSSL_CRYPTO_H 
+/* Define if you have the <openssl/crypto.h> header file. */
+#undef HAVE_OPENSSL_CRYPTO_H
 
-#undef HAVE_OPENSSL_ERR_H 
+/* Define if you have the <openssl/err.h> header file. */
+#undef HAVE_OPENSSL_ERR_H
 
-#undef HAVE_OPENSSL_PEM_H 
+/* Define if you have the <openssl/pem.h> header file. */
+#undef HAVE_OPENSSL_PEM_H
 
-#undef HAVE_OPENSSL_RSA_H 
+/* Define if you have the <openssl/rsa.h> header file. */
+#undef HAVE_OPENSSL_RSA_H
 
-#undef HAVE_OPENSSL_SSL_H 
+/* Define if you have the <openssl/ssl.h> header file. */
+#undef HAVE_OPENSSL_SSL_H
 
-#undef HAVE_OPENSSL_X509_H 
+/* Define if you have the <openssl/x509.h> header file. */
+#undef HAVE_OPENSSL_X509_H
 
-#undef HAVE_PEM_H 
+/* Define if you have the <pem.h> header file. */
+#undef HAVE_PEM_H
 
-#undef HAVE_PERROR 
+/* Define if you have the `perror' function. */
+#undef HAVE_PERROR
 
-#undef HAVE_PWD_H 
+/* Define if you have the <pwd.h> header file. */
+#undef HAVE_PWD_H
 
-#undef HAVE_RAND_EGD 
+/* Define if you have the `RAND_egd' function. */
+#undef HAVE_RAND_EGD
 
-#undef HAVE_RAND_SCREEN 
+/* Define if you have the `RAND_screen' function. */
+#undef HAVE_RAND_SCREEN
 
-#undef HAVE_RAND_STATUS 
+/* Define if you have the `RAND_status' function. */
+#undef HAVE_RAND_STATUS
 
-#undef HAVE_RSA_H 
+/* Define if you have the <rsa.h> header file. */
+#undef HAVE_RSA_H
 
-#define HAVE_SELECT 
+/* Define if you have the `select' function. */
+#define HAVE_SELECT
 
-#undef HAVE_SETVBUF 
+/* Define if you have the `setvbuf' function. */
+#undef HAVE_SETVBUF
 
-#define HAVE_SGTTY_H 
+/* Define if you have the <sgtty.h> header file. */
+#define HAVE_SGTTY_H
 
-#undef HAVE_SIGACTION 
+/* Define if you have the `sigaction' function. */
+#undef HAVE_SIGACTION
 
-#define HAVE_SIGNAL 
+/* Define if you have the `signal' function. */
+#define HAVE_SIGNAL
 
-#define HAVE_SIGNAL_H 
+/* Define if you have the <signal.h> header file. */
+#define HAVE_SIGNAL_H
 
-#define HAVE_SIG_ATOMIC_T 
+/* Define if sig_atomic_t is an available typedef. */
+#define HAVE_SIG_ATOMIC_T
 
-#undef HAVE_SIG_ATOMIC_T_VOLATILE 
+/* Define if sig_atomic_t is already defined as volatile. */
+#undef HAVE_SIG_ATOMIC_T_VOLATILE
 
-#define HAVE_SOCKET 
+/* Define if you have the `socket' function. */
+#define HAVE_SOCKET
 
-#undef HAVE_SSL_H 
+/* Define if you have the <ssl.h> header file. */
+#undef HAVE_SSL_H
 
-#undef HAVE_STDINT_H 
+/* Define if you have the <stdint.h> header file. */
+#undef HAVE_STDINT_H
 
-#define HAVE_STDLIB_H 
+/* Define if you have the <stdlib.h> header file. */
+#define HAVE_STDLIB_H
 
-#undef HAVE_STRCASECMP 
+/* Define if you have the `strcasecmp' function. */
+#undef HAVE_STRCASECMP
 
-#undef HAVE_STRCMPI 
+/* Define if you have the `strcmpi' function. */
+#undef HAVE_STRCMPI
 
-#define HAVE_STRDUP 
+/* Define if you have the `strdup' function. */
+#define HAVE_STRDUP
 
-#define HAVE_STRFTIME 
+/* Define if you have the `strftime' function. */
+#define HAVE_STRFTIME
 
-#define HAVE_STRICMP 
+/* Define if you have the `stricmp' function. */
+#define HAVE_STRICMP
 
-#undef HAVE_STRINGS_H 
+/* Define if you have the <strings.h> header file. */
+#undef HAVE_STRINGS_H
 
-#define HAVE_STRING_H 
+/* Define if you have the <string.h> header file. */
+#define HAVE_STRING_H
 
-#undef HAVE_STRLCAT 
+/* Define if you have the `strlcat' function. */
+#undef HAVE_STRLCAT
 
-#undef HAVE_STRLCPY 
+/* Define if you have the `strlcpy' function. */
+#undef HAVE_STRLCPY
 
-#define HAVE_STRSTR 
+/* Define if you have the `strstr' function. */
+#define HAVE_STRSTR
 
-#undef HAVE_STRTOK_R 
+/* Define if you have the `strtok_r' function. */
+#undef HAVE_STRTOK_R
 
-#undef HAVE_STRTOLL 
+/* Define if you have the `strtoll' function. */
+#undef HAVE_STRTOLL
 
-#undef HAVE_SYS_PARAM_H 
+/* Define if you have the <sys/param.h> header file. */
+#undef HAVE_SYS_PARAM_H
 
-#undef HAVE_SYS_SELECT_H 
+/* Define if you have the <sys/select.h> header file. */
+#undef HAVE_SYS_SELECT_H
 
-#define HAVE_SYS_SOCKET_H 
+/* Define if you have the <sys/socket.h> header file. */
+#define HAVE_SYS_SOCKET_H
 
-#undef HAVE_SYS_SOCKIO_H 
+/* Define if you have the <sys/sockio.h> header file. */
+#undef HAVE_SYS_SOCKIO_H
 
-#undef HAVE_SYS_STAT_H 
+/* Define if you have the <sys/stat.h> header file. */
+#undef HAVE_SYS_STAT_H
 
-#define HAVE_SYS_TIME_H 
+/* Define if you have the <sys/time.h> header file. */
+#define HAVE_SYS_TIME_H
 
-#define HAVE_SYS_TYPES_H 
+/* Define if you have the <sys/types.h> header file. */
+#define HAVE_SYS_TYPES_H
 
-#define HAVE_TCGETATTR 
+/* Define if you have the `tcgetattr' function. */
+#define HAVE_TCGETATTR
 
-#define HAVE_TCSETATTR 
+/* Define if you have the `tcsetattr' function. */
+#define HAVE_TCSETATTR
 
-#define HAVE_TERMIOS_H 
+/* Define if you have the <termios.h> header file. */
+#define HAVE_TERMIOS_H
 
-#undef HAVE_TERMIO_H 
+/* Define if you have the <termio.h> header file. */
+#undef HAVE_TERMIO_H
 
-#undef HAVE_TIME_H 
+/* Define if you have the <time.h> header file. */
+#undef HAVE_TIME_H
 
-#define HAVE_UNAME 
+/* Define if you have the `uname' function. */
+#define HAVE_UNAME
 
-#define HAVE_UNISTD_H 
+/* Define if you have the <unistd.h> header file. */
+#define HAVE_UNISTD_H
 
-#undef HAVE_WINSOCK_H 
+/* Define if you have the <winsock.h> header file. */
+#undef HAVE_WINSOCK_H
 
-#undef HAVE_X509_H 
+/* Define if you have the <x509.h> header file. */
+#undef HAVE_X509_H
 
-#undef PACKAGE 
+/* Name of package */
+#undef PACKAGE
 
-#define RETSIGTYPE void 
+/* Define as the return type of signal handlers (`int' or `void'). */
+#define RETSIGTYPE void
 
-#undef SIZEOF_LONG_DOUBLE 
+/* The size of a `long double', as computed by sizeof. */
+#undef SIZEOF_LONG_DOUBLE
 
-#undef SIZEOF_LONG_LONG 
+/* The size of a `long long', as computed by sizeof. */
+#undef SIZEOF_LONG_LONG
 
-#undef STDC_HEADERS 
+/* Define if you have the ANSI C header files. */
+#undef STDC_HEADERS
 
-#undef TIME_WITH_SYS_TIME 
+/* Define if you can safely include both <sys/time.h> and <time.h>. */
+#undef TIME_WITH_SYS_TIME
 
-#undef VERSION 
+/* Version number of package */
+#undef VERSION
 
+/* Define if on AIX 3.
+   System headers sometimes define this.
+   We just want to avoid a redefinition error message.  */
 #ifndef _ALL_SOURCE
 # undef _ALL_SOURCE
-#endif 
+#endif
 
-#undef _FILE_OFFSET_BITS 
+/* Number of bits in a file offset, on hosts where this is settable. */
+#undef _FILE_OFFSET_BITS
 
-#undef _LARGE_FILES 
+/* Define for large files, on AIX-style hosts. */
+#undef _LARGE_FILES
 
-#undef const 
+/* Define to empty if `const' does not conform to ANSI C. */
+#undef const
 
-#undef size_t 
+/* Define to `unsigned' if <sys/types.h> does not define. */
+#undef size_t
 
-#undef ssize_t 
+/* Define to `int' if <sys/types.h> does not define. */
+#undef ssize_t
 
+/* this is a quick hack.  I hope it's correct. */
 #define ifr_dstaddr ifr_addr
 
 #define IOCTL_3_ARGS
 
-#define HAVE_FIONBIO 
+#define HAVE_FIONBIO
 
-#define CURL_DISABLE_LDAP 
+/* to disable LDAP */
+#define CURL_DISABLE_LDAP
 
-#define HAVE_GETNAMEINFO 1 
+/* Define if you have the getnameinfo function. */
+#define HAVE_GETNAMEINFO 1
 
-#define GETNAMEINFO_QUAL_ARG1 const 
+/* Define to the type qualifier of arg 1 for getnameinfo. */
+#define GETNAMEINFO_QUAL_ARG1 const
 
-#define GETNAMEINFO_TYPE_ARG1 struct sockaddr * 
+/* Define to the type of arg 1 for getnameinfo. */
+#define GETNAMEINFO_TYPE_ARG1 struct sockaddr *
 
-#define GETNAMEINFO_TYPE_ARG2 socklen_t 
+/* Define to the type of arg 2 for getnameinfo. */
+#define GETNAMEINFO_TYPE_ARG2 socklen_t
 
-#define GETNAMEINFO_TYPE_ARG46 size_t 
+/* Define to the type of args 4 and 6 for getnameinfo. */
+#define GETNAMEINFO_TYPE_ARG46 size_t
 
-#define GETNAMEINFO_TYPE_ARG7 int 
+/* Define to the type of arg 7 for getnameinfo. */
+#define GETNAMEINFO_TYPE_ARG7 int
 
-#define HAVE_RECV 1 
+/* Define if you have the recv function. */
+#define HAVE_RECV 1
 
-#define RECV_TYPE_ARG1 int 
+/* Define to the type of arg 1 for recv. */
+#define RECV_TYPE_ARG1 int
 
-#define RECV_TYPE_ARG2 void * 
+/* Define to the type of arg 2 for recv. */
+#define RECV_TYPE_ARG2 void *
 
-#define RECV_TYPE_ARG3 size_t 
+/* Define to the type of arg 3 for recv. */
+#define RECV_TYPE_ARG3 size_t
 
-#define RECV_TYPE_ARG4 int 
+/* Define to the type of arg 4 for recv. */
+#define RECV_TYPE_ARG4 int
 
-#define RECV_TYPE_RETV ssize_t 
+/* Define to the function return type for recv. */
+#define RECV_TYPE_RETV ssize_t
 
-#define HAVE_RECVFROM 1 
+/* Define 1 if you have the recvfrom function. */
+#define HAVE_RECVFROM 1
 
-#define RECVFROM_TYPE_ARG1 int 
+/* Define to the type of arg 1 for recvfrom. */
+#define RECVFROM_TYPE_ARG1 int
 
-#define RECVFROM_TYPE_ARG2 void 
+/* Define to the type pointed by arg 2 for recvfrom. */
+#define RECVFROM_TYPE_ARG2 void
 
-#define RECVFROM_TYPE_ARG2_IS_VOID 1 
+/* Define to 1 if the type pointed by arg 2 for recvfrom is void. */
+#define RECVFROM_TYPE_ARG2_IS_VOID 1
 
-#define RECVFROM_TYPE_ARG3 size_t 
+/* Define to the type of arg 3 for recvfrom. */
+#define RECVFROM_TYPE_ARG3 size_t
 
-#define RECVFROM_TYPE_ARG4 int 
+/* Define to the type of arg 4 for recvfrom. */
+#define RECVFROM_TYPE_ARG4 int
 
-#define RECVFROM_TYPE_ARG5 struct sockaddr 
+/* Define to the type pointed by arg 5 for recvfrom. */
+#define RECVFROM_TYPE_ARG5 struct sockaddr
 
-#define RECVFROM_TYPE_ARG6 int 
+/* Define to the type pointed by arg 6 for recvfrom. */
+#define RECVFROM_TYPE_ARG6 int
 
-#define RECVFROM_TYPE_RETV ssize_t 
+/* Define to the function return type for recvfrom. */
+#define RECVFROM_TYPE_RETV ssize_t
 
-#define HAVE_SEND 1 
+/* Define if you have the send function. */
+#define HAVE_SEND 1
 
-#define SEND_TYPE_ARG1 int 
+/* Define to the type of arg 1 for send. */
+#define SEND_TYPE_ARG1 int
 
-#define SEND_QUAL_ARG2 const 
+/* Define to the type qualifier of arg 2 for send. */
+#define SEND_QUAL_ARG2 const
 
-#define SEND_TYPE_ARG2 void * 
+/* Define to the type of arg 2 for send. */
+#define SEND_TYPE_ARG2 void *
 
-#define SEND_TYPE_ARG3 size_t 
+/* Define to the type of arg 3 for send. */
+#define SEND_TYPE_ARG3 size_t
 
-#define SEND_TYPE_ARG4 int 
+/* Define to the type of arg 4 for send. */
+#define SEND_TYPE_ARG4 int
 
+/* Define to the function return type for send. */
 #define SEND_TYPE_RETV ssize_t

@@ -1,8 +1,60 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/  
-
-   
+/* crypto/store/store.h -*- mode:C; c-file-style: "eay" -*- */
+/* Written by Richard Levitte (richard@levitte.org) for the OpenSSL
+ * project 2003.
+ */
+/* ====================================================================
+ * Copyright (c) 2003 The OpenSSL Project.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. All advertising materials mentioning features or use of this
+ *    software must display the following acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"
+ *
+ * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
+ *    endorse or promote products derived from this software without
+ *    prior written permission. For written permission, please contact
+ *    openssl-core@openssl.org.
+ *
+ * 5. Products derived from this software may not be called "OpenSSL"
+ *    nor may "OpenSSL" appear in their names without prior written
+ *    permission of the OpenSSL Project.
+ *
+ * 6. Redistributions of any form whatsoever must retain the following
+ *    acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
+ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This product includes cryptographic software written by Eric Young
+ * (eay@cryptsoft.com).  This product includes software written by Tim
+ * Hudson (tjh@cryptsoft.com).
+ *
+ */
 
 #ifndef HEADER_STORE_H
 #define HEADER_STORE_H
@@ -16,84 +68,126 @@
 
 #ifdef  __cplusplus
 extern "C" {
-#endif        
+#endif
 
+/* Already defined in ossl_typ.h */
+/* typedef struct store_st STORE; */
+/* typedef struct store_method_st STORE_METHOD; */
+
+
+/* All the following functions return 0, a negative number or NULL on error.
+   When everything is fine, they return a positive value or a non-NULL
+   pointer, all depending on their purpose. */
+
+/* Creators and destructor.   */
 STORE *STORE_new_method(const STORE_METHOD *method);
 STORE *STORE_new_engine(ENGINE *engine);
-void STORE_free(STORE *ui);  
+void STORE_free(STORE *ui);
 
-int STORE_ctrl(STORE *store, int cmd, long i, void *p, void (*f)(void)); 
 
+/* Give a user interface parametrised control commands.  This can be used to
+   send down an integer, a data pointer or a function pointer, as well as
+   be used to get information from a STORE. */
+int STORE_ctrl(STORE *store, int cmd, long i, void *p, void (*f)(void));
+
+/* A control to set the directory with keys and certificates.  Used by the
+   built-in directory level method. */
 #define STORE_CTRL_SET_DIRECTORY	0x0001
-
+/* A control to set a file to load.  Used by the built-in file level method. */
 #define STORE_CTRL_SET_FILE		0x0002
-
+/* A control to set a configuration file to load.  Can be used by any method
+   that wishes to load a configuration file. */
 #define STORE_CTRL_SET_CONF_FILE	0x0003
+/* A control to set a the section of the loaded configuration file.  Can be
+   used by any method that wishes to load a configuration file. */
+#define STORE_CTRL_SET_CONF_SECTION	0x0004
 
-#define STORE_CTRL_SET_CONF_SECTION	0x0004  
 
+/* Some methods may use extra data */
 #define STORE_set_app_data(s,arg)	STORE_set_ex_data(s,0,arg)
 #define STORE_get_app_data(s)		STORE_get_ex_data(s,0)
 int STORE_get_ex_new_index(long argl, void *argp, CRYPTO_EX_new *new_func,
 	CRYPTO_EX_dup *dup_func, CRYPTO_EX_free *free_func);
 int STORE_set_ex_data(STORE *r,int idx,void *arg);
-void *STORE_get_ex_data(STORE *r, int idx); 
+void *STORE_get_ex_data(STORE *r, int idx);
 
+/* Use specific methods instead of the built-in one */
 const STORE_METHOD *STORE_get_method(STORE *store);
-const STORE_METHOD *STORE_set_method(STORE *store, const STORE_METHOD *meth);  
+const STORE_METHOD *STORE_set_method(STORE *store, const STORE_METHOD *meth);
 
+/* The standard OpenSSL methods. */
+/* This is the in-memory method.  It does everything except revoking and updating,
+   and is of course volatile.  It's used by other methods that have an in-memory
+   cache. */
 const STORE_METHOD *STORE_Memory(void);
-#if 0 
-
+#if 0 /* Not yet implemented */
+/* This is the directory store.  It does everything except revoking and updating,
+   and uses STORE_Memory() to cache things in memory. */
 const STORE_METHOD *STORE_Directory(void);
-
+/* This is the file store.  It does everything except revoking and updating,
+   and uses STORE_Memory() to cache things in memory.  Certificates are added
+   to it with the store operation, and it will only get cached certificates. */
 const STORE_METHOD *STORE_File(void);
-#endif 
+#endif
 
+/* Store functions take a type code for the type of data they should store
+   or fetch */
 typedef enum STORE_object_types
 	{
-	STORE_OBJECT_TYPE_X509_CERTIFICATE=	0x01, 
-	STORE_OBJECT_TYPE_X509_CRL=		0x02, 
-	STORE_OBJECT_TYPE_PRIVATE_KEY=		0x03, 
-	STORE_OBJECT_TYPE_PUBLIC_KEY=		0x04, 
-	STORE_OBJECT_TYPE_NUMBER=		0x05, 
-	STORE_OBJECT_TYPE_ARBITRARY=		0x06, 
-	STORE_OBJECT_TYPE_NUM=			0x06  
+	STORE_OBJECT_TYPE_X509_CERTIFICATE=	0x01, /* X509 * */
+	STORE_OBJECT_TYPE_X509_CRL=		0x02, /* X509_CRL * */
+	STORE_OBJECT_TYPE_PRIVATE_KEY=		0x03, /* EVP_PKEY * */
+	STORE_OBJECT_TYPE_PUBLIC_KEY=		0x04, /* EVP_PKEY * */
+	STORE_OBJECT_TYPE_NUMBER=		0x05, /* BIGNUM * */
+	STORE_OBJECT_TYPE_ARBITRARY=		0x06, /* BUF_MEM * */
+	STORE_OBJECT_TYPE_NUM=			0x06  /* The amount of known
+							 object types */
 	} STORE_OBJECT_TYPES;
+/* List of text strings corresponding to the object types. */
+extern const char * const STORE_object_type_string[STORE_OBJECT_TYPE_NUM+1];
 
-extern const char * const STORE_object_type_string[STORE_OBJECT_TYPE_NUM+1]; 
-
+/* Some store functions take a parameter list.  Those parameters come with
+   one of the following codes. The comments following the codes below indicate
+   what type the value should be a pointer to. */
 typedef enum STORE_params
 	{
-	STORE_PARAM_EVP_TYPE=			0x01, 
-	STORE_PARAM_BITS=			0x02, 
-	STORE_PARAM_KEY_PARAMETERS=		0x03, 
-	STORE_PARAM_KEY_NO_PARAMETERS=		0x04, 
-	STORE_PARAM_AUTH_PASSPHRASE=		0x05, 
-	STORE_PARAM_AUTH_KRB5_TICKET=		0x06, 
-	STORE_PARAM_TYPE_NUM=			0x06  
+	STORE_PARAM_EVP_TYPE=			0x01, /* int */
+	STORE_PARAM_BITS=			0x02, /* size_t */
+	STORE_PARAM_KEY_PARAMETERS=		0x03, /* ??? */
+	STORE_PARAM_KEY_NO_PARAMETERS=		0x04, /* N/A */
+	STORE_PARAM_AUTH_PASSPHRASE=		0x05, /* char * */
+	STORE_PARAM_AUTH_KRB5_TICKET=		0x06, /* void * */
+	STORE_PARAM_TYPE_NUM=			0x06  /* The amount of known
+							 parameter types */
 	} STORE_PARAM_TYPES;
+/* Parameter value sizes.  -1 means unknown, anything else is the required size. */
+extern const int STORE_param_sizes[STORE_PARAM_TYPE_NUM+1];
 
-extern const int STORE_param_sizes[STORE_PARAM_TYPE_NUM+1]; 
-
+/* Store functions take attribute lists.  Those attributes come with codes.
+   The comments following the codes below indicate what type the value should
+   be a pointer to. */
 typedef enum STORE_attribs
 	{
 	STORE_ATTR_END=				0x00,
-	STORE_ATTR_FRIENDLYNAME=		0x01, 
-	STORE_ATTR_KEYID=			0x02, 
-	STORE_ATTR_ISSUERKEYID=			0x03, 
-	STORE_ATTR_SUBJECTKEYID=		0x04, 
-	STORE_ATTR_ISSUERSERIALHASH=		0x05, 
-	STORE_ATTR_ISSUER=			0x06, 
-	STORE_ATTR_SERIAL=			0x07, 
-	STORE_ATTR_SUBJECT=			0x08, 
-	STORE_ATTR_CERTHASH=			0x09, 
-	STORE_ATTR_EMAIL=			0x0a, 
-	STORE_ATTR_FILENAME=			0x0b, 
-	STORE_ATTR_TYPE_NUM=			0x0b, 
-	STORE_ATTR_OR=				0xff  
+	STORE_ATTR_FRIENDLYNAME=		0x01, /* C string */
+	STORE_ATTR_KEYID=			0x02, /* 160 bit string (SHA1) */
+	STORE_ATTR_ISSUERKEYID=			0x03, /* 160 bit string (SHA1) */
+	STORE_ATTR_SUBJECTKEYID=		0x04, /* 160 bit string (SHA1) */
+	STORE_ATTR_ISSUERSERIALHASH=		0x05, /* 160 bit string (SHA1) */
+	STORE_ATTR_ISSUER=			0x06, /* X509_NAME * */
+	STORE_ATTR_SERIAL=			0x07, /* BIGNUM * */
+	STORE_ATTR_SUBJECT=			0x08, /* X509_NAME * */
+	STORE_ATTR_CERTHASH=			0x09, /* 160 bit string (SHA1) */
+	STORE_ATTR_EMAIL=			0x0a, /* C string */
+	STORE_ATTR_FILENAME=			0x0b, /* C string */
+	STORE_ATTR_TYPE_NUM=			0x0b, /* The amount of known
+							 attribute types */
+	STORE_ATTR_OR=				0xff  /* This is a special
+							 separator, which
+							 expresses the OR
+							 operation.  */
 	} STORE_ATTR_TYPES;
-
+/* Attribute value sizes.  -1 means unknown, anything else is the required size. */
 extern const int STORE_attr_sizes[STORE_ATTR_TYPE_NUM+1];
 
 typedef enum STORE_certificate_status
@@ -102,8 +196,13 @@ typedef enum STORE_certificate_status
 	STORE_X509_EXPIRED=			0x01,
 	STORE_X509_SUSPENDED=			0x02,
 	STORE_X509_REVOKED=			0x03
-	} STORE_CERTIFICATE_STATUS; 
+	} STORE_CERTIFICATE_STATUS;
 
+/* Engine store functions will return a structure that contains all the necessary
+ * information, including revokation status for certificates.  This is really not
+ * needed for application authors, as the ENGINE framework functions will extract
+ * the OpenSSL-specific information when at all possible.  However, for engine
+ * authors, it's crucial to know this structure.  */
 typedef struct STORE_OBJECT_st
 	{
 	STORE_OBJECT_TYPES type;
@@ -122,8 +221,12 @@ typedef struct STORE_OBJECT_st
 	} STORE_OBJECT;
 DECLARE_STACK_OF(STORE_OBJECT)
 STORE_OBJECT *STORE_OBJECT_new(void);
-void STORE_OBJECT_free(STORE_OBJECT *data);   
+void STORE_OBJECT_free(STORE_OBJECT *data);
 
+
+
+/* The following functions handle the storage. They return 0, a negative number
+   or NULL on error, anything else on success. */
 X509 *STORE_get_certificate(STORE *e, OPENSSL_ITEM attributes[],
 	OPENSSL_ITEM parameters[]);
 int STORE_store_certificate(STORE *e, X509 *data, OPENSSL_ITEM attributes[],
@@ -207,11 +310,14 @@ int STORE_modify_arbitrary(STORE *e, OPENSSL_ITEM search_attributes[],
 BUF_MEM *STORE_get_arbitrary(STORE *e, OPENSSL_ITEM attributes[],
 	OPENSSL_ITEM parameters[]);
 int STORE_delete_arbitrary(STORE *e, OPENSSL_ITEM attributes[],
-	OPENSSL_ITEM parameters[]);  
+	OPENSSL_ITEM parameters[]);
 
+
+/* Create and manipulate methods */
 STORE_METHOD *STORE_create_method(char *name);
-void STORE_destroy_method(STORE_METHOD *store_method); 
+void STORE_destroy_method(STORE_METHOD *store_method);
 
+/* These callback types are use for store handlers */
 typedef int (*STORE_INITIALISE_FUNC_PTR)(STORE *);
 typedef void (*STORE_CLEANUP_FUNC_PTR)(STORE *);
 typedef STORE_OBJECT *(*STORE_GENERATE_OBJECT_FUNC_PTR)(STORE *, STORE_OBJECT_TYPES type, OPENSSL_ITEM attributes[], OPENSSL_ITEM parameters[]);
@@ -255,18 +361,29 @@ STORE_END_OBJECT_FUNC_PTR STORE_method_get_list_end_function(STORE_METHOD *sm);
 STORE_GENERIC_FUNC_PTR STORE_method_get_update_store_function(STORE_METHOD *sm);
 STORE_GENERIC_FUNC_PTR STORE_method_get_lock_store_function(STORE_METHOD *sm);
 STORE_GENERIC_FUNC_PTR STORE_method_get_unlock_store_function(STORE_METHOD *sm);
-STORE_CTRL_FUNC_PTR STORE_method_get_ctrl_function(STORE_METHOD *sm);   
+STORE_CTRL_FUNC_PTR STORE_method_get_ctrl_function(STORE_METHOD *sm);
 
-typedef struct STORE_attr_info_st STORE_ATTR_INFO; 
+/* Method helper structures and functions. */
 
+/* This structure is the result of parsing through the information in a list
+   of OPENSSL_ITEMs.  It stores all the necessary information in a structured
+   way.*/
+typedef struct STORE_attr_info_st STORE_ATTR_INFO;
+
+/* Parse a list of OPENSSL_ITEMs and return a pointer to a STORE_ATTR_INFO.
+   Note that we do this in the list form, since the list of OPENSSL_ITEMs can
+   come in blocks separated with STORE_ATTR_OR.  Note that the value returned
+   by STORE_parse_attrs_next() must be freed with STORE_ATTR_INFO_free(). */
 void *STORE_parse_attrs_start(OPENSSL_ITEM *attributes);
 STORE_ATTR_INFO *STORE_parse_attrs_next(void *handle);
 int STORE_parse_attrs_end(void *handle);
-int STORE_parse_attrs_endp(void *handle); 
+int STORE_parse_attrs_endp(void *handle);
 
+/* Creator and destructor */
 STORE_ATTR_INFO *STORE_ATTR_INFO_new(void);
-int STORE_ATTR_INFO_free(STORE_ATTR_INFO *attrs); 
+int STORE_ATTR_INFO_free(STORE_ATTR_INFO *attrs);
 
+/* Manipulators */
 char *STORE_ATTR_INFO_get0_cstr(STORE_ATTR_INFO *attrs, STORE_ATTR_TYPES code);
 unsigned char *STORE_ATTR_INFO_get0_sha1str(STORE_ATTR_INFO *attrs,
 	STORE_ATTR_TYPES code);
@@ -287,18 +404,29 @@ int STORE_ATTR_INFO_modify_sha1str(STORE_ATTR_INFO *attrs, STORE_ATTR_TYPES code
 int STORE_ATTR_INFO_modify_dn(STORE_ATTR_INFO *attrs, STORE_ATTR_TYPES code,
 	X509_NAME *dn);
 int STORE_ATTR_INFO_modify_number(STORE_ATTR_INFO *attrs, STORE_ATTR_TYPES code,
-	BIGNUM *number); 
+	BIGNUM *number);
 
+/* Compare on basis of a bit pattern formed by the STORE_ATTR_TYPES values
+   in each contained attribute. */
 int STORE_ATTR_INFO_compare(STORE_ATTR_INFO *a, STORE_ATTR_INFO *b);
-
+/* Check if the set of attributes in a is within the range of attributes
+   set in b. */
 int STORE_ATTR_INFO_in_range(STORE_ATTR_INFO *a, STORE_ATTR_INFO *b);
-
+/* Check if the set of attributes in a are also set in b. */
 int STORE_ATTR_INFO_in(STORE_ATTR_INFO *a, STORE_ATTR_INFO *b);
+/* Same as STORE_ATTR_INFO_in(), but also checks the attribute values. */
+int STORE_ATTR_INFO_in_ex(STORE_ATTR_INFO *a, STORE_ATTR_INFO *b);
 
-int STORE_ATTR_INFO_in_ex(STORE_ATTR_INFO *a, STORE_ATTR_INFO *b);   
 
-void ERR_load_STORE_strings(void);   
+/* BEGIN ERROR CODES */
+/* The following lines are auto generated by the script mkerr.pl. Any changes
+ * made after this point may be overwritten when the script is next run.
+ */
+void ERR_load_STORE_strings(void);
 
+/* Error codes for the STORE functions. */
+
+/* Function codes. */
 #define STORE_F_MEM_DELETE				 134
 #define STORE_F_MEM_GENERATE				 135
 #define STORE_F_MEM_LIST_END				 168
@@ -370,8 +498,9 @@ void ERR_load_STORE_strings(void);
 #define STORE_F_STORE_STORE_CRL				 101
 #define STORE_F_STORE_STORE_NUMBER			 126
 #define STORE_F_STORE_STORE_PRIVATE_KEY			 127
-#define STORE_F_STORE_STORE_PUBLIC_KEY			 128 
+#define STORE_F_STORE_STORE_PUBLIC_KEY			 128
 
+/* Reason codes. */
 #define STORE_R_ALREADY_HAS_A_VALUE			 127
 #define STORE_R_FAILED_DELETING_ARBITRARY		 132
 #define STORE_R_FAILED_DELETING_CERTIFICATE		 100

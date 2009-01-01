@@ -1,11 +1,15 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: SeekPT.h
+//
+// Desc: DirectShow base classes.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                  
 
 #ifndef __seekpt_h__
-#define __seekpt_h__  
+#define __seekpt_h__
+
 
 class CSeekingPassThru : public ISeekingPassThru, public CUnknown
 {

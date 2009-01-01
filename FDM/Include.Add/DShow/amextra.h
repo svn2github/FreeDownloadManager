@@ -1,11 +1,22 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: AMExtra.h
+//
+// Desc: DirectShow base classes.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                  
 
 #ifndef __AMEXTRA__
-#define __AMEXTRA__                
+#define __AMEXTRA__
+
+// Simple rendered input pin
+//
+// NOTE if your filter queues stuff before rendering then it may not be
+// appropriate to use this class
+//
+// In that case queue the end of stream condition until the last sample
+// is actually rendered and flush the condition appropriately
 
 class CRenderedInputPin : public CBaseInputPin
 {
@@ -24,7 +35,7 @@ public:
                       LPCWSTR pName);
 #endif
     
-    
+    // Override methods to track end of stream state
     STDMETHODIMP EndOfStream();
     STDMETHODIMP EndFlush();
 
@@ -33,13 +44,13 @@ public:
 
 protected:
 
-    
-    BOOL m_bAtEndOfStream;      
-    BOOL m_bCompleteNotified;   
+    // Member variables to track state
+    BOOL m_bAtEndOfStream;      // Set by EndOfStream
+    BOOL m_bCompleteNotified;   // Set when we notify for EC_COMPLETE
 
 private:
     void DoCompleteHandling();
 };
 
-#endif 
+#endif // __AMEXTRA__
 

@@ -1,0 +1,91 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: cURL_lib - Win32 Release--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "E:\DOCUME~1\USER~1.VIC\LOCALS~1\Temp\RSP1AD.tmp" with contents
+[
+/nologo /MD /W3 /GX /O2 /I "../../include.add/" /I "../../include.add/openssl" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "CURL_STATICLIB" /D "USE_SSLEAY" /Fp"Release/cURL_lib.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
+"D:\VCW\FDM\FDM\InetFile\cURL_lib\connect.c"
+]
+Creating command line "cl.exe @E:\DOCUME~1\USER~1.VIC\LOCALS~1\Temp\RSP1AD.tmp" 
+Creating temporary file "E:\DOCUME~1\USER~1.VIC\LOCALS~1\Temp\RSP1AE.tmp" with contents
+[
+/nologo /out:"Release\cURL_lib.lib" 
+.\Release\base64.obj
+.\Release\connect.obj
+.\Release\content_encoding.obj
+.\Release\cookie.obj
+.\Release\curl_addrinfo.obj
+.\Release\dict.obj
+.\Release\easy.obj
+.\Release\escape.obj
+.\Release\file.obj
+.\Release\formdata.obj
+.\Release\ftp.obj
+.\Release\getenv.obj
+.\Release\getinfo.obj
+.\Release\gtls.obj
+.\Release\hash.obj
+.\Release\hostares.obj
+.\Release\hostasyn.obj
+.\Release\hostip.obj
+.\Release\hostip4.obj
+.\Release\hostip6.obj
+.\Release\hostsyn.obj
+.\Release\hostthre.obj
+.\Release\http.obj
+.\Release\http_chunks.obj
+.\Release\http_digest.obj
+.\Release\http_negotiate.obj
+.\Release\http_ntlm.obj
+.\Release\if2ip.obj
+.\Release\inet_ntop.obj
+.\Release\inet_pton.obj
+.\Release\krb4.obj
+.\Release\ldap.obj
+.\Release\llist.obj
+.\Release\md5.obj
+.\Release\memdebug.obj
+.\Release\mprintf.obj
+.\Release\multi.obj
+.\Release\netrc.obj
+.\Release\parsedate.obj
+.\Release\progress.obj
+.\Release\rawstr.obj
+.\Release\security.obj
+.\Release\select.obj
+.\Release\sendf.obj
+.\Release\share.obj
+.\Release\socks.obj
+.\Release\speedcheck.obj
+.\Release\splay.obj
+.\Release\sslgen.obj
+.\Release\ssluse.obj
+.\Release\strequal.obj
+.\Release\strerror.obj
+.\Release\strtok.obj
+.\Release\strtoofft.obj
+.\Release\telnet.obj
+.\Release\tftp.obj
+.\Release\timeval.obj
+.\Release\transfer.obj
+.\Release\url.obj
+.\Release\version.obj
+]
+Creating command line "link.exe -lib @E:\DOCUME~1\USER~1.VIC\LOCALS~1\Temp\RSP1AE.tmp"
+<h3>Output Window</h3>
+Compiling...
+connect.c
+Creating library...
+
+
+
+<h3>Results</h3>
+cURL_lib.lib - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

@@ -1,8 +1,64 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/  
+/* ssl/kssl.h -*- mode: C; c-file-style: "eay" -*- */
+/* Written by Vern Staats <staatsvr@asc.hpc.mil> for the OpenSSL project 2000.
+ * project 2000.
+ */
+/* ====================================================================
+ * Copyright (c) 2000 The OpenSSL Project.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. All advertising materials mentioning features or use of this
+ *    software must display the following acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"
+ *
+ * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
+ *    endorse or promote products derived from this software without
+ *    prior written permission. For written permission, please contact
+ *    licensing@OpenSSL.org.
+ *
+ * 5. Products derived from this software may not be called "OpenSSL"
+ *    nor may "OpenSSL" appear in their names without prior written
+ *    permission of the OpenSSL Project.
+ *
+ * 6. Redistributions of any form whatsoever must retain the following
+ *    acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
+ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This product includes cryptographic software written by Eric Young
+ * (eay@cryptsoft.com).  This product includes software written by Tim
+ * Hudson (tjh@cryptsoft.com).
+ *
+ */
 
-     
+/*
+**	19990701	VRS 	Started.
+*/
 
 #ifndef	KSSL_H
 #define	KSSL_H
@@ -17,8 +73,12 @@
 
 #ifdef  __cplusplus
 extern "C" {
-#endif 
+#endif
 
+/*
+**	Depending on which KRB5 implementation used, some types from
+**	the other may be missing.  Resolve that here and now
+*/
 #ifdef KRB5_HEIMDAL
 typedef unsigned char krb5_octet;
 #define FAR
@@ -28,7 +88,13 @@ typedef unsigned char krb5_octet;
 #define FAR
 #endif
 
-#endif  
+#endif
+
+/*	Uncomment this to debug kssl problems or
+**	to trace usage of the Kerberos session key
+**
+**	#define		KSSL_DEBUG
+*/
 
 #ifndef	KRB5SVC
 #define KRB5SVC	"host"
@@ -54,16 +120,21 @@ typedef unsigned char krb5_octet;
 typedef struct kssl_err_st  {
 	int  reason;
 	char text[KSSL_ERR_MAX+1];
-	} KSSL_ERR;  
+	} KSSL_ERR;
 
+
+/*	Context for passing
+**		(1) Kerberos session key to SSL, and
+**		(2)	Config data between application and SSL lib
+*/
 typedef struct kssl_ctx_st
         {
-                                
-	char *service_name;	
-	char *service_host;	
-	char *client_princ;	
-	char *keytab_file;	
-	char *cred_cache;	
+                                /*	used by:    disposition:            */
+	char *service_name;	/*	C,S	    default ok (kssl)       */
+	char *service_host;	/*	C	    input, REQUIRED         */
+	char *client_princ;	/*	S	    output from krb5 ticket */
+	char *keytab_file;	/*      S	    NULL (/etc/krb5.keytab) */
+	char *cred_cache;	/*	C	    NULL (default)          */
 	krb5_enctype enctype;
 	int length;
 	krb5_octet FAR *key;
@@ -76,8 +147,9 @@ typedef struct kssl_ctx_st
 
 #define KSSL_CTX_OK 	0
 #define KSSL_CTX_ERR	1
-#define KSSL_NOMEM	2 
+#define KSSL_NOMEM	2
 
+/* Public (for use by applications that use OpenSSL with Kerberos 5 support */
 krb5_error_code kssl_ctx_setstring(KSSL_CTX *kssl_ctx, int which, char *text);
 KSSL_CTX *kssl_ctx_new(void);
 KSSL_CTX *kssl_ctx_free(KSSL_CTX *kssl_ctx);
@@ -103,5 +175,5 @@ unsigned char	*kssl_skip_confound(krb5_enctype enctype, unsigned char *authn);
 #ifdef  __cplusplus
 }
 #endif
-#endif	
-#endif	
+#endif	/* OPENSSL_NO_KRB5	*/
+#endif	/* KSSL_H 	*/

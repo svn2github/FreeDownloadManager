@@ -1,8 +1,60 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/  
-
-  
+/* crypto/pkcs7/pkcs7.h */
+/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
+ * All rights reserved.
+ *
+ * This package is an SSL implementation written
+ * by Eric Young (eay@cryptsoft.com).
+ * The implementation was written so as to conform with Netscapes SSL.
+ * 
+ * This library is free for commercial and non-commercial use as long as
+ * the following conditions are aheared to.  The following conditions
+ * apply to all code found in this distribution, be it the RC4, RSA,
+ * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
+ * included with this distribution is covered by the same copyright terms
+ * except that the holder is Tim Hudson (tjh@cryptsoft.com).
+ * 
+ * Copyright remains Eric Young's, and as such any Copyright notices in
+ * the code are not to be removed.
+ * If this package is used in a product, Eric Young should be given attribution
+ * as the author of the parts of the library used.
+ * This can be in the form of a textual message at program startup or
+ * in documentation (online or textual) provided with the package.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *    "This product includes cryptographic software written by
+ *     Eric Young (eay@cryptsoft.com)"
+ *    The word 'cryptographic' can be left out if the rouines from the library
+ *    being used are not cryptographic related :-).
+ * 4. If you include any Windows specific code (or a derivative thereof) from 
+ *    the apps directory (application code) you must include an acknowledgement:
+ *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"
+ * 
+ * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * The licence and distribution terms for any publically available version or
+ * derivative of this code cannot be changed.  i.e. this code cannot simply be
+ * copied and put under another distribution licence
+ * [including the GNU Public Licence.]
+ */
 
 #ifndef HEADER_PKCS7_H
 #define HEADER_PKCS7_H
@@ -19,10 +71,17 @@ extern "C" {
 #endif
 
 #ifdef OPENSSL_SYS_WIN32
-
+/* Under Win32 thes are defined in wincrypt.h */
 #undef PKCS7_ISSUER_AND_SERIAL
 #undef PKCS7_SIGNER_INFO
-#endif  
+#endif
+
+/*
+Encryption_ID		DES-CBC
+Digest_ID		MD5
+Digest_Encryption_ID	rsaEncryption
+Key_Encryption_ID	rsaEncryption
+*/
 
 typedef struct pkcs7_issuer_and_serial_st
 	{
@@ -32,15 +91,15 @@ typedef struct pkcs7_issuer_and_serial_st
 
 typedef struct pkcs7_signer_info_st
 	{
-	ASN1_INTEGER 			*version;	
+	ASN1_INTEGER 			*version;	/* version 1 */
 	PKCS7_ISSUER_AND_SERIAL		*issuer_and_serial;
 	X509_ALGOR			*digest_alg;
-	STACK_OF(X509_ATTRIBUTE)	*auth_attr;	
+	STACK_OF(X509_ATTRIBUTE)	*auth_attr;	/* [ 0 ] */
 	X509_ALGOR			*digest_enc_alg;
 	ASN1_OCTET_STRING		*enc_digest;
-	STACK_OF(X509_ATTRIBUTE)	*unauth_attr;	
+	STACK_OF(X509_ATTRIBUTE)	*unauth_attr;	/* [ 1 ] */
 
-	
+	/* The private key to sign with */
 	EVP_PKEY			*pkey;
 	} PKCS7_SIGNER_INFO;
 
@@ -49,11 +108,11 @@ DECLARE_ASN1_SET_OF(PKCS7_SIGNER_INFO)
 
 typedef struct pkcs7_recip_info_st
 	{
-	ASN1_INTEGER			*version;	
+	ASN1_INTEGER			*version;	/* version 0 */
 	PKCS7_ISSUER_AND_SERIAL		*issuer_and_serial;
 	X509_ALGOR			*key_enc_algor;
 	ASN1_OCTET_STRING		*enc_key;
-	X509				*cert; 
+	X509				*cert; /* get the pub-key from this */
 	} PKCS7_RECIP_INFO;
 
 DECLARE_STACK_OF(PKCS7_RECIP_INFO)
@@ -61,36 +120,38 @@ DECLARE_ASN1_SET_OF(PKCS7_RECIP_INFO)
 
 typedef struct pkcs7_signed_st
 	{
-	ASN1_INTEGER			*version;	
-	STACK_OF(X509_ALGOR)		*md_algs;	
-	STACK_OF(X509)			*cert;		
-	STACK_OF(X509_CRL)		*crl;		
+	ASN1_INTEGER			*version;	/* version 1 */
+	STACK_OF(X509_ALGOR)		*md_algs;	/* md used */
+	STACK_OF(X509)			*cert;		/* [ 0 ] */
+	STACK_OF(X509_CRL)		*crl;		/* [ 1 ] */
 	STACK_OF(PKCS7_SIGNER_INFO)	*signer_info;
 
 	struct pkcs7_st			*contents;
-	} PKCS7_SIGNED; 
+	} PKCS7_SIGNED;
+/* The above structure is very very similar to PKCS7_SIGN_ENVELOPE.
+ * How about merging the two */
 
 typedef struct pkcs7_enc_content_st
 	{
 	ASN1_OBJECT			*content_type;
 	X509_ALGOR			*algorithm;
-	ASN1_OCTET_STRING		*enc_data;	
+	ASN1_OCTET_STRING		*enc_data;	/* [ 0 ] */
 	const EVP_CIPHER		*cipher;
 	} PKCS7_ENC_CONTENT;
 
 typedef struct pkcs7_enveloped_st
 	{
-	ASN1_INTEGER			*version;	
+	ASN1_INTEGER			*version;	/* version 0 */
 	STACK_OF(PKCS7_RECIP_INFO)	*recipientinfo;
 	PKCS7_ENC_CONTENT		*enc_data;
 	} PKCS7_ENVELOPE;
 
 typedef struct pkcs7_signedandenveloped_st
 	{
-	ASN1_INTEGER			*version;	
-	STACK_OF(X509_ALGOR)		*md_algs;	
-	STACK_OF(X509)			*cert;		
-	STACK_OF(X509_CRL)		*crl;		
+	ASN1_INTEGER			*version;	/* version 1 */
+	STACK_OF(X509_ALGOR)		*md_algs;	/* md used */
+	STACK_OF(X509)			*cert;		/* [ 0 ] */
+	STACK_OF(X509_CRL)		*crl;		/* [ 1 ] */
 	STACK_OF(PKCS7_SIGNER_INFO)	*signer_info;
 
 	PKCS7_ENC_CONTENT		*enc_data;
@@ -99,56 +160,58 @@ typedef struct pkcs7_signedandenveloped_st
 
 typedef struct pkcs7_digest_st
 	{
-	ASN1_INTEGER			*version;	
-	X509_ALGOR			*md;		
+	ASN1_INTEGER			*version;	/* version 0 */
+	X509_ALGOR			*md;		/* md used */
 	struct pkcs7_st 		*contents;
 	ASN1_OCTET_STRING		*digest;
 	} PKCS7_DIGEST;
 
 typedef struct pkcs7_encrypted_st
 	{
-	ASN1_INTEGER			*version;	
+	ASN1_INTEGER			*version;	/* version 0 */
 	PKCS7_ENC_CONTENT		*enc_data;
 	} PKCS7_ENCRYPT;
 
 typedef struct pkcs7_st
 	{
-	
+	/* The following is non NULL if it contains ASN1 encoding of
+	 * this structure */
 	unsigned char *asn1;
 	long length;
 
 #define PKCS7_S_HEADER	0
 #define PKCS7_S_BODY	1
 #define PKCS7_S_TAIL	2
-	int state; 
+	int state; /* used during processing */
 
 	int detached;
 
 	ASN1_OBJECT *type;
-	
-	
+	/* content as defined by the type */
+	/* all encryption/message digests are applied to the 'contents',
+	 * leaving out the 'type' field. */
 	union	{
 		char *ptr;
 
-		
+		/* NID_pkcs7_data */
 		ASN1_OCTET_STRING *data;
 
-		
+		/* NID_pkcs7_signed */
 		PKCS7_SIGNED *sign;
 
-		
+		/* NID_pkcs7_enveloped */
 		PKCS7_ENVELOPE *enveloped;
 
-		
+		/* NID_pkcs7_signedAndEnveloped */
 		PKCS7_SIGN_ENVELOPE *signed_and_enveloped;
 
-		
+		/* NID_pkcs7_digest */
 		PKCS7_DIGEST *digest;
 
-		
+		/* NID_pkcs7_encrypted */
 		PKCS7_ENCRYPT *encrypted;
 
-		
+		/* Anything else */
 		ASN1_TYPE *other;
 		} d;
 	} PKCS7;
@@ -185,7 +248,9 @@ DECLARE_PKCS12_STACK_OF(PKCS7)
         ASN1_digest((int (*)())i2d_PKCS7_ISSUER_AND_SERIAL,type,\
 	                (char *)data,md,len)
 #endif
-#endif  
+#endif
+
+/* S/MIME related flags */
 
 #define PKCS7_TEXT		0x1
 #define PKCS7_NOCERTS		0x2
@@ -200,7 +265,9 @@ DECLARE_PKCS12_STACK_OF(PKCS7)
 #define PKCS7_NOOLDMIMETYPE	0x400
 #define PKCS7_CRLFEOL		0x800
 #define PKCS7_STREAM		0x1000
-#define PKCS7_NOCRL		0x2000  
+#define PKCS7_NOCRL		0x2000
+
+/* Flags: for compatibility with older code */
 
 #define SMIME_TEXT	PKCS7_TEXT
 #define SMIME_NOCERTS	PKCS7_NOCERTS
@@ -259,7 +326,8 @@ int PKCS7_signatureVerify(BIO *bio, PKCS7 *p7, PKCS7_SIGNER_INFO *si,
 
 BIO *PKCS7_dataInit(PKCS7 *p7, BIO *bio);
 int PKCS7_dataFinal(PKCS7 *p7, BIO *bio);
-BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert); 
+BIO *PKCS7_dataDecode(PKCS7 *p7, EVP_PKEY *pkey, BIO *in_bio, X509 *pcert);
+
 
 PKCS7_SIGNER_INFO *PKCS7_add_signature(PKCS7 *p7, X509 *x509,
 	EVP_PKEY *pkey, const EVP_MD *dgst);
@@ -282,7 +350,8 @@ ASN1_TYPE *PKCS7_get_attribute(PKCS7_SIGNER_INFO *si, int nid);
 ASN1_TYPE *PKCS7_get_signed_attribute(PKCS7_SIGNER_INFO *si, int nid);
 int PKCS7_set_signed_attributes(PKCS7_SIGNER_INFO *p7si,
 				STACK_OF(X509_ATTRIBUTE) *sk);
-int PKCS7_set_attributes(PKCS7_SIGNER_INFO *p7si,STACK_OF(X509_ATTRIBUTE) *sk); 
+int PKCS7_set_attributes(PKCS7_SIGNER_INFO *p7si,STACK_OF(X509_ATTRIBUTE) *sk);
+
 
 PKCS7 *PKCS7_sign(X509 *signcert, EVP_PKEY *pkey, STACK_OF(X509) *certs,
 							BIO *data, int flags);
@@ -301,10 +370,17 @@ int PKCS7_simple_smimecap(STACK_OF(X509_ALGOR) *sk, int nid, int arg);
 int SMIME_write_PKCS7(BIO *bio, PKCS7 *p7, BIO *data, int flags);
 PKCS7 *SMIME_read_PKCS7(BIO *bio, BIO **bcont);
 int SMIME_crlf_copy(BIO *in, BIO *out, int flags);
-int SMIME_text(BIO *in, BIO *out);  
+int SMIME_text(BIO *in, BIO *out);
 
-void ERR_load_PKCS7_strings(void);   
+/* BEGIN ERROR CODES */
+/* The following lines are auto generated by the script mkerr.pl. Any changes
+ * made after this point may be overwritten when the script is next run.
+ */
+void ERR_load_PKCS7_strings(void);
 
+/* Error codes for the PKCS7 functions. */
+
+/* Function codes. */
 #define PKCS7_F_B64_READ_PKCS7				 120
 #define PKCS7_F_B64_WRITE_PKCS7				 121
 #define PKCS7_F_PKCS7_ADD_ATTRIB_SMIMECAP		 118
@@ -332,8 +408,9 @@ void ERR_load_PKCS7_strings(void);
 #define PKCS7_F_PKCS7_SIMPLE_SMIMECAP			 119
 #define PKCS7_F_PKCS7_VERIFY				 117
 #define PKCS7_F_SMIME_READ_PKCS7			 122
-#define PKCS7_F_SMIME_TEXT				 123 
+#define PKCS7_F_SMIME_TEXT				 123
 
+/* Reason codes. */
 #define PKCS7_R_CERTIFICATE_VERIFY_ERROR		 117
 #define PKCS7_R_CIPHER_HAS_NO_OBJECT_IDENTIFIER		 144
 #define PKCS7_R_CIPHER_NOT_INITIALIZED			 116

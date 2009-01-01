@@ -1,26 +1,30 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: Streams.h
+//
+// Desc: DirectShow base classes - defines overall streams architecture.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                  
 
 #ifndef __STREAMS__
 #define __STREAMS__
 
 #ifdef	_MSC_VER
-
-#pragma warning(disable:4100) 
-#pragma warning(disable:4201) 
-#pragma warning(disable:4511) 
-#pragma warning(disable:4512) 
-#pragma warning(disable:4514) 
+// disable some level-4 warnings, use #pragma warning(enable:###) to re-enable
+#pragma warning(disable:4100) // warning C4100: unreferenced formal parameter
+#pragma warning(disable:4201) // warning C4201: nonstandard extension used : nameless struct/union
+#pragma warning(disable:4511) // warning C4511: copy constructor could not be generated
+#pragma warning(disable:4512) // warning C4512: assignment operator could not be generated
+#pragma warning(disable:4514) // warning C4514: "unreferenced inline function has been removed"
 
 #if _MSC_VER>=1100
 #define AM_NOVTABLE __declspec(novtable)
 #else
 #define AM_NOVTABLE
 #endif
-#endif	  
+#endif	// MSC_VER
+
 
 #include <windows.h>
 #include <windowsx.h>
@@ -30,8 +34,12 @@
 
 #ifndef NUMELMS
    #define NUMELMS(aa) (sizeof(aa)/sizeof((aa)[0]))
-#endif        
+#endif
 
+///////////////////////////////////////////////////////////////////////////
+// The following definitions come from the Platform SDK and are required if
+// the applicaiton is being compiled with the headers from Visual C++ 6.0.
+///////////////////////////////////////////////////////////////////////////
 #ifndef InterlockedExchangePointer
 	#define InterlockedExchangePointer(Target, Value) \
    (PVOID)InterlockedExchange((PLONG)(Target), (LONG)(Value))
@@ -42,19 +50,19 @@
 typedef struct {
     WAVEFORMATEX    Format;
     union {
-        WORD wValidBitsPerSample;       
-        WORD wSamplesPerBlock;          
-        WORD wReserved;                 
+        WORD wValidBitsPerSample;       /* bits of precision  */
+        WORD wSamplesPerBlock;          /* valid if wBitsPerSample==0 */
+        WORD wReserved;                 /* If neither applies, set to zero. */
     } Samples;
-    DWORD           dwChannelMask;      
-                                        
+    DWORD           dwChannelMask;      /* which channels are */
+                                        /* present in stream  */
     GUID            SubFormat;
 } WAVEFORMATEXTENSIBLE, *PWAVEFORMATEXTENSIBLE;
-#endif 
+#endif // !_WAVEFORMATEXTENSIBLE_
 
 #if !defined(WAVE_FORMAT_EXTENSIBLE)
 #define  WAVE_FORMAT_EXTENSIBLE                 0xFFFE
-#endif 
+#endif // !defined(WAVE_FORMAT_EXTENSIBLE)
 
 #ifndef GetWindowLongPtr
   #define GetWindowLongPtrA   GetWindowLongA
@@ -63,8 +71,8 @@ typedef struct {
     #define GetWindowLongPtr  GetWindowLongPtrW
   #else
     #define GetWindowLongPtr  GetWindowLongPtrA
-  #endif 
-#endif 
+  #endif // !UNICODE
+#endif // !GetWindowLongPtr
 
 #ifndef SetWindowLongPtr
   #define SetWindowLongPtrA   SetWindowLongA
@@ -73,8 +81,8 @@ typedef struct {
     #define SetWindowLongPtr  SetWindowLongPtrW
   #else
     #define SetWindowLongPtr  SetWindowLongPtrA
-  #endif 
-#endif 
+  #endif // !UNICODE
+#endif // !SetWindowLongPtr
 
 #ifndef GWLP_WNDPROC
   #define GWLP_WNDPROC        (-4)
@@ -99,52 +107,57 @@ typedef struct {
 #endif
 #ifndef DWLP_USER
   #define DWLP_USER       DWLP_DLGPROC + sizeof(DLGPROC)
-#endif        
+#endif
+///////////////////////////////////////////////////////////////////////////
+// End Platform SDK definitions
+///////////////////////////////////////////////////////////////////////////
 
-#include <strmif.h>     
 
-#include <reftime.h>    
-#include <wxdebug.h>    
-#include <amvideo.h>      
+#include <strmif.h>     // Generated IDL header file for streams interfaces
 
-#include <wxutil.h>     
-#include <combase.h>    
-#include <dllsetup.h>   
-#include <measure.h>    
-#include <comlite.h>    
+#include <reftime.h>    // Helper class for REFERENCE_TIME management
+#include <wxdebug.h>    // Debug support for logging and ASSERTs
+#include <amvideo.h>    // ActiveMovie video interfaces and definitions
+//include amaudio.h explicitly if you need it.  it requires the DX SDK.
+//#include <amaudio.h>    // ActiveMovie audio interfaces and definitions
+#include <wxutil.h>     // General helper classes for threads etc
+#include <combase.h>    // Base COM classes to support IUnknown
+#include <dllsetup.h>   // Filter registration support functions
+#include <measure.h>    // Performance measurement
+#include <comlite.h>    // Light weight com function prototypes
 
-#include <cache.h>      
-#include <wxlist.h>     
-#include <msgthrd.h>	
-#include <mtype.h>      
-#include <fourcc.h>     
-#include <control.h>    
-#include <ctlutil.h>    
-#include <evcode.h>     
-#include <amfilter.h>   
-#include <transfrm.h>   
-#include <transip.h>    
-#include <uuids.h>      
-#include <source.h>	
-#include <outputq.h>    
-#include <errors.h>     
-#include <renbase.h>    
-#include <winutil.h>    
-#include <winctrl.h>    
-#include <videoctl.h>   
-#include <refclock.h>	
-#include <sysclock.h>	
-#include <pstream.h>    
-#include <vtrans.h>     
+#include <cache.h>      // Simple cache container class
+#include <wxlist.h>     // Non MFC generic list class
+#include <msgthrd.h>	// CMsgThread
+#include <mtype.h>      // Helper class for managing media types
+#include <fourcc.h>     // conversions between FOURCCs and GUIDs
+#include <control.h>    // generated from control.odl
+#include <ctlutil.h>    // control interface utility classes
+#include <evcode.h>     // event code definitions
+#include <amfilter.h>   // Main streams architecture class hierachy
+#include <transfrm.h>   // Generic transform filter
+#include <transip.h>    // Generic transform-in-place filter
+#include <uuids.h>      // declaration of type GUIDs and well-known clsids
+#include <source.h>	// Generic source filter
+#include <outputq.h>    // Output pin queueing
+#include <errors.h>     // HRESULT status and error definitions
+#include <renbase.h>    // Base class for writing ActiveX renderers
+#include <winutil.h>    // Helps with filters that manage windows
+#include <winctrl.h>    // Implements the IVideoWindow interface
+#include <videoctl.h>   // Specifically video related classes
+#include <refclock.h>	// Base clock class
+#include <sysclock.h>	// System clock
+#include <pstream.h>    // IPersistStream helper class
+#include <vtrans.h>     // Video Transform Filter base class
 #include <amextra.h>
-#include <cprop.h>      
-#include <strmctl.h>    
-#include <edevdefs.h>   
-#include <audevcod.h>   
+#include <cprop.h>      // Base property page class
+#include <strmctl.h>    // IAMStreamControl support
+#include <edevdefs.h>   // External device control interface defines
+#include <audevcod.h>   // audio filter device error event codes
 
 #else
     #ifdef DEBUG
     #pragma message("STREAMS.H included TWICE")
     #endif
-#endif 
+#endif // __STREAMS__
 

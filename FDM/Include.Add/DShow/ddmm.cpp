@@ -1,13 +1,20 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: DDMM.cpp
+//
+// Desc: DirectShow base classes - implements routines for using DirectDraw
+//       on a multimonitor system.
+//
+// Copyright (c) 1995 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                    
 
 #include <streams.h>
 #include <ddraw.h>
-#include "ddmm.h"  
+#include "ddmm.h"
 
+/*
+ * FindDeviceCallback
+ */
 typedef struct {
 	LPSTR   szDevice;
 	GUID*   lpGUID;
@@ -30,7 +37,8 @@ BOOL CALLBACK FindDeviceCallback(GUID* lpGUID, LPSTR szName, LPSTR szDevice, LPV
 	    return FALSE;
 	}
 	return TRUE;
-}  
+}
+
 
 BOOL CALLBACK FindDeviceCallbackEx(GUID* lpGUID, LPSTR szName, LPSTR szDevice, LPVOID lParam, HMONITOR hMonitor)
 {
@@ -47,8 +55,14 @@ BOOL CALLBACK FindDeviceCallbackEx(GUID* lpGUID, LPSTR szName, LPSTR szDevice, L
 	    return FALSE;
 	}
 	return TRUE;
-}    
+}
 
+
+/*
+ * DirectDrawCreateFromDevice
+ *
+ * create a DirectDraw object for a particular device
+ */
 IDirectDraw * DirectDrawCreateFromDevice(LPSTR szDevice, PDRAWCREATE DirectDrawCreateP, PDRAWENUM DirectDrawEnumerateP)
 {
 	IDirectDraw*    pdd = NULL;
@@ -65,19 +79,25 @@ IDirectDraw * DirectDrawCreateFromDevice(LPSTR szDevice, PDRAWCREATE DirectDrawC
 
 	if (find.fFound)
 	{
-		
-		
-		
-		
-		
+		//
+		// In 4bpp mode the following DDraw call causes a message box to be popped
+		// up by DDraw (!?!).  It's DDraw's fault, but we don't like it.  So we
+		// make sure it doesn't happen.
+		//
 		UINT ErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
 		DirectDrawCreateP(find.lpGUID, &pdd, NULL);
 		SetErrorMode(ErrorMode);
 	}
 
 	return pdd;
-}    
+}
 
+
+/*
+ * DirectDrawCreateFromDeviceEx
+ *
+ * create a DirectDraw object for a particular device
+ */
 IDirectDraw * DirectDrawCreateFromDeviceEx(LPSTR szDevice, PDRAWCREATE DirectDrawCreateP, LPDIRECTDRAWENUMERATEEXA DirectDrawEnumerateExP)
 {
 	IDirectDraw*    pdd = NULL;
@@ -95,11 +115,11 @@ IDirectDraw * DirectDrawCreateFromDeviceEx(LPSTR szDevice, PDRAWCREATE DirectDra
 
 	if (find.fFound)
 	{
-		
-		
-		
-		
-		
+		//
+		// In 4bpp mode the following DDraw call causes a message box to be popped
+		// up by DDraw (!?!).  It's DDraw's fault, but we don't like it.  So we
+		// make sure it doesn't happen.
+		//
 		UINT ErrorMode = SetErrorMode(SEM_FAILCRITICALERRORS);
 		DirectDrawCreateP(find.lpGUID, &pdd, NULL);
 		SetErrorMode(ErrorMode);

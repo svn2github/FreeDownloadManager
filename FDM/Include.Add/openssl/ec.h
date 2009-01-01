@@ -1,8 +1,73 @@
+/* crypto/ec/ec.h */
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/  
-
-    
+ * Originally written by Bodo Moeller for the OpenSSL project.
+ */
+/* ====================================================================
+ * Copyright (c) 1998-2003 The OpenSSL Project.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. All advertising materials mentioning features or use of this
+ *    software must display the following acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"
+ *
+ * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
+ *    endorse or promote products derived from this software without
+ *    prior written permission. For written permission, please contact
+ *    openssl-core@openssl.org.
+ *
+ * 5. Products derived from this software may not be called "OpenSSL"
+ *    nor may "OpenSSL" appear in their names without prior written
+ *    permission of the OpenSSL Project.
+ *
+ * 6. Redistributions of any form whatsoever must retain the following
+ *    acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
+ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This product includes cryptographic software written by Eric Young
+ * (eay@cryptsoft.com).  This product includes software written by Tim
+ * Hudson (tjh@cryptsoft.com).
+ *
+ */
+/* ====================================================================
+ * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.
+ *
+ * Portions of the attached software ("Contribution") are developed by 
+ * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.
+ *
+ * The Contribution is licensed pursuant to the OpenSSL open source
+ * license provided above.
+ *
+ * The elliptic curve binary polynomial software is originally written by 
+ * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.
+ *
+ */
 
 #ifndef HEADER_EC_H
 #define HEADER_EC_H
@@ -25,32 +90,48 @@ extern "C" {
 # if __SUNPRO_C >= 0x520
 # pragma error_messages (off,E_ARRAY_OF_INCOMPLETE_NONAME,E_ARRAY_OF_INCOMPLETE)
 # endif
-#endif 
+#endif
+
 
 #ifndef OPENSSL_ECC_MAX_FIELD_BITS
 # define OPENSSL_ECC_MAX_FIELD_BITS 661
 #endif
 
 typedef enum {
-	
+	/* values as defined in X9.62 (ECDSA) and elsewhere */
 	POINT_CONVERSION_COMPRESSED = 2,
 	POINT_CONVERSION_UNCOMPRESSED = 4,
 	POINT_CONVERSION_HYBRID = 6
-} point_conversion_form_t; 
+} point_conversion_form_t;
+
 
 typedef struct ec_method_st EC_METHOD;
 
 typedef struct ec_group_st
-	
+	/*
+	 EC_METHOD *meth;
+	 -- field definition
+	 -- curve coefficients
+	 -- optional generator with associated information (order, cofactor)
+	 -- optional extra data (precomputed table for fast computation of multiples of generator)
+	 -- ASN1 stuff
+	*/
 	EC_GROUP;
 
-typedef struct ec_point_st EC_POINT;  
+typedef struct ec_point_st EC_POINT;
 
+
+/* EC_METHODs for curves over GF(p).
+ * EC_GFp_simple_method provides the basis for the optimized methods.
+ */
 const EC_METHOD *EC_GFp_simple_method(void);
 const EC_METHOD *EC_GFp_mont_method(void);
-const EC_METHOD *EC_GFp_nist_method(void); 
+const EC_METHOD *EC_GFp_nist_method(void);
 
-const EC_METHOD *EC_GF2m_simple_method(void); 
+/* EC_METHOD for curves over GF(2^m).
+ */
+const EC_METHOD *EC_GF2m_simple_method(void);
+
 
 EC_GROUP *EC_GROUP_new(const EC_METHOD *);
 void EC_GROUP_free(EC_GROUP *);
@@ -82,27 +163,41 @@ size_t EC_GROUP_set_seed(EC_GROUP *, const unsigned char *, size_t len);
 int EC_GROUP_set_curve_GFp(EC_GROUP *, const BIGNUM *p, const BIGNUM *a, const BIGNUM *b, BN_CTX *);
 int EC_GROUP_get_curve_GFp(const EC_GROUP *, BIGNUM *p, BIGNUM *a, BIGNUM *b, BN_CTX *);
 int EC_GROUP_set_curve_GF2m(EC_GROUP *, const BIGNUM *p, const BIGNUM *a, const BIGNUM *b, BN_CTX *);
-int EC_GROUP_get_curve_GF2m(const EC_GROUP *, BIGNUM *p, BIGNUM *a, BIGNUM *b, BN_CTX *); 
+int EC_GROUP_get_curve_GF2m(const EC_GROUP *, BIGNUM *p, BIGNUM *a, BIGNUM *b, BN_CTX *);
 
-int EC_GROUP_get_degree(const EC_GROUP *); 
+/* returns the number of bits needed to represent a field element */
+int EC_GROUP_get_degree(const EC_GROUP *);
 
+/* EC_GROUP_check() returns 1 if 'group' defines a valid group, 0 otherwise */
 int EC_GROUP_check(const EC_GROUP *group, BN_CTX *ctx);
+/* EC_GROUP_check_discriminant() returns 1 if the discriminant of the
+ * elliptic curve is not zero, 0 otherwise */
+int EC_GROUP_check_discriminant(const EC_GROUP *, BN_CTX *);
 
-int EC_GROUP_check_discriminant(const EC_GROUP *, BN_CTX *); 
+/* EC_GROUP_cmp() returns 0 if both groups are equal and 1 otherwise */
+int EC_GROUP_cmp(const EC_GROUP *, const EC_GROUP *, BN_CTX *);
 
-int EC_GROUP_cmp(const EC_GROUP *, const EC_GROUP *, BN_CTX *); 
-
+/* EC_GROUP_new_GF*() calls EC_GROUP_new() and EC_GROUP_set_GF*()
+ * after choosing an appropriate EC_METHOD */
 EC_GROUP *EC_GROUP_new_curve_GFp(const BIGNUM *p, const BIGNUM *a, const BIGNUM *b, BN_CTX *);
-EC_GROUP *EC_GROUP_new_curve_GF2m(const BIGNUM *p, const BIGNUM *a, const BIGNUM *b, BN_CTX *); 
+EC_GROUP *EC_GROUP_new_curve_GF2m(const BIGNUM *p, const BIGNUM *a, const BIGNUM *b, BN_CTX *);
 
+/* EC_GROUP_new_by_curve_name() creates a EC_GROUP structure
+ * specified by a curve name (in form of a NID) */
 EC_GROUP *EC_GROUP_new_by_curve_name(int nid);
-
+/* handling of internal curves */
 typedef struct { 
 	int nid;
 	const char *comment;
 	} EC_builtin_curve;
+/* EC_builtin_curves(EC_builtin_curve *r, size_t size) returns number 
+ * of all available curves or zero if a error occurred. 
+ * In case r ist not zero nitems EC_builtin_curve structures 
+ * are filled with the data of the first nitems internal groups */
+size_t EC_get_builtin_curves(EC_builtin_curve *r, size_t nitems);
 
-size_t EC_get_builtin_curves(EC_builtin_curve *r, size_t nitems);   
+
+/* EC_POINT functions */
 
 EC_POINT *EC_POINT_new(const EC_GROUP *);
 void EC_POINT_free(EC_POINT *);
@@ -134,8 +229,9 @@ int EC_POINT_set_compressed_coordinates_GF2m(const EC_GROUP *, EC_POINT *,
 size_t EC_POINT_point2oct(const EC_GROUP *, const EC_POINT *, point_conversion_form_t form,
         unsigned char *buf, size_t len, BN_CTX *);
 int EC_POINT_oct2point(const EC_GROUP *, EC_POINT *,
-        const unsigned char *buf, size_t len, BN_CTX *); 
+        const unsigned char *buf, size_t len, BN_CTX *);
 
+/* other interfaces to point2oct/oct2point: */
 BIGNUM *EC_POINT_point2bn(const EC_GROUP *, const EC_POINT *,
 	point_conversion_form_t form, BIGNUM *, BN_CTX *);
 EC_POINT *EC_POINT_bn2point(const EC_GROUP *, const BIGNUM *,
@@ -154,15 +250,23 @@ int EC_POINT_is_on_curve(const EC_GROUP *, const EC_POINT *, BN_CTX *);
 int EC_POINT_cmp(const EC_GROUP *, const EC_POINT *a, const EC_POINT *b, BN_CTX *);
 
 int EC_POINT_make_affine(const EC_GROUP *, EC_POINT *, BN_CTX *);
-int EC_POINTs_make_affine(const EC_GROUP *, size_t num, EC_POINT *[], BN_CTX *); 
+int EC_POINTs_make_affine(const EC_GROUP *, size_t num, EC_POINT *[], BN_CTX *);
+
 
 int EC_POINTs_mul(const EC_GROUP *, EC_POINT *r, const BIGNUM *, size_t num, const EC_POINT *[], const BIGNUM *[], BN_CTX *);
-int EC_POINT_mul(const EC_GROUP *, EC_POINT *r, const BIGNUM *, const EC_POINT *, const BIGNUM *, BN_CTX *); 
+int EC_POINT_mul(const EC_GROUP *, EC_POINT *r, const BIGNUM *, const EC_POINT *, const BIGNUM *, BN_CTX *);
 
+/* EC_GROUP_precompute_mult() stores multiples of generator for faster point multiplication */
 int EC_GROUP_precompute_mult(EC_GROUP *, BN_CTX *);
+/* EC_GROUP_have_precompute_mult() reports whether such precomputation has been done */
+int EC_GROUP_have_precompute_mult(const EC_GROUP *);
 
-int EC_GROUP_have_precompute_mult(const EC_GROUP *);     
 
+
+/* ASN1 stuff */
+
+/* EC_GROUP_get_basis_type() returns the NID of the basis type
+ * used to represent the field elements */
 int EC_GROUP_get_basis_type(const EC_GROUP *);
 int EC_GROUP_get_trinomial_basis(const EC_GROUP *, unsigned int *k);
 int EC_GROUP_get_pentanomial_basis(const EC_GROUP *, unsigned int *k1, 
@@ -187,10 +291,12 @@ int     ECPKParameters_print(BIO *bp, const EC_GROUP *x, int off);
 #endif
 #ifndef OPENSSL_NO_FP_API
 int     ECPKParameters_print_fp(FILE *fp, const EC_GROUP *x, int off);
-#endif 
+#endif
 
-typedef struct ec_key_st EC_KEY; 
+/* the EC_KEY stuff */
+typedef struct ec_key_st EC_KEY;
 
+/* some values for the encoding_flag */
 #define EC_PKEY_NO_PARAMETERS	0x001
 #define EC_PKEY_NO_PUBKEY	0x002
 
@@ -212,25 +318,28 @@ unsigned EC_KEY_get_enc_flags(const EC_KEY *);
 void EC_KEY_set_enc_flags(EC_KEY *, unsigned int);
 point_conversion_form_t EC_KEY_get_conv_form(const EC_KEY *);
 void EC_KEY_set_conv_form(EC_KEY *, point_conversion_form_t);
-
+/* functions to set/get method specific data  */
 void *EC_KEY_get_key_method_data(EC_KEY *, 
 	void *(*dup_func)(void *), void (*free_func)(void *), void (*clear_free_func)(void *));
 void EC_KEY_insert_key_method_data(EC_KEY *, void *data,
 	void *(*dup_func)(void *), void (*free_func)(void *), void (*clear_free_func)(void *));
-
+/* wrapper functions for the underlying EC_GROUP object */
 void EC_KEY_set_asn1_flag(EC_KEY *, int);
-int EC_KEY_precompute_mult(EC_KEY *, BN_CTX *ctx); 
+int EC_KEY_precompute_mult(EC_KEY *, BN_CTX *ctx);
 
+/* EC_KEY_generate_key() creates a ec private (public) key */
 int EC_KEY_generate_key(EC_KEY *);
+/* EC_KEY_check_key() */
+int EC_KEY_check_key(const EC_KEY *);
 
-int EC_KEY_check_key(const EC_KEY *); 
-
+/* de- and encoding functions for SEC1 ECPrivateKey */
 EC_KEY *d2i_ECPrivateKey(EC_KEY **a, const unsigned char **in, long len);
 int i2d_ECPrivateKey(EC_KEY *a, unsigned char **out);
-
+/* de- and encoding functions for EC parameters */
 EC_KEY *d2i_ECParameters(EC_KEY **a, const unsigned char **in, long len);
 int i2d_ECParameters(EC_KEY *a, unsigned char **out);
-
+/* de- and encoding functions for EC public key
+ * (octet string, not DER -- hence 'o2i' and 'i2o') */
 EC_KEY *o2i_ECPublicKey(EC_KEY **a, const unsigned char **in, long len);
 int i2o_ECPublicKey(EC_KEY *a, unsigned char **out);
 
@@ -251,10 +360,17 @@ int	EC_KEY_print_fp(FILE *fp, const EC_KEY *x, int off);
 # pragma error_messages (default,E_ARRAY_OF_INCOMPLETE_NONAME,E_ARRAY_OF_INCOMPLETE)
 #  endif
 # endif
-#endif  
+#endif
 
-void ERR_load_EC_strings(void);   
+/* BEGIN ERROR CODES */
+/* The following lines are auto generated by the script mkerr.pl. Any changes
+ * made after this point may be overwritten when the script is next run.
+ */
+void ERR_load_EC_strings(void);
 
+/* Error codes for the EC functions. */
+
+/* Function codes. */
 #define EC_F_COMPUTE_WNAF				 143
 #define EC_F_D2I_ECPARAMETERS				 144
 #define EC_F_D2I_ECPKPARAMETERS				 145
@@ -362,8 +478,9 @@ void ERR_load_EC_strings(void);
 #define EC_F_I2D_ECPKPARAMETERS				 191
 #define EC_F_I2D_ECPRIVATEKEY				 192
 #define EC_F_I2O_ECPUBLICKEY				 151
-#define EC_F_O2I_ECPUBLICKEY				 152 
+#define EC_F_O2I_ECPUBLICKEY				 152
 
+/* Reason codes. */
 #define EC_R_ASN1_ERROR					 115
 #define EC_R_ASN1_UNKNOWN_FIELD				 116
 #define EC_R_BUFFER_TOO_SMALL				 100

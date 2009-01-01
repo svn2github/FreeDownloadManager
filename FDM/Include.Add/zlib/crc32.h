@@ -1,8 +1,6 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
-
-    
+/* crc32.h -- tables for rapid CRC calculation
+ * Generated automatically by crc32.c
+ */
 
 local const unsigned long FAR crc_table[TBLS][256] =
 {

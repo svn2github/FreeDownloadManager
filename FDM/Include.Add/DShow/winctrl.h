@@ -1,33 +1,38 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: WinCtrl.h
+//
+// Desc: DirectShow base classes - defines classes for video control 
+//       interfaces.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                    
 
 #ifndef __WINCTRL__
 #define __WINCTRL__
 
 #define ABSOL(x) (x < 0 ? -x : x)
-#define NEGAT(x) (x > 0 ? -x : x)  
+#define NEGAT(x) (x > 0 ? -x : x)
 
+//  Helper
 BOOL WINAPI PossiblyEatMessage(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 class CBaseControlWindow : public CBaseVideoWindow, public CBaseWindow
 {
 protected:
 
-    CBaseFilter *m_pFilter;            
-    CBasePin *m_pPin;                  
-    CCritSec *m_pInterfaceLock;        
-    COLORREF m_BorderColour;           
-    BOOL m_bAutoShow;                  
-    HWND m_hwndOwner;                  
-    HWND m_hwndDrain;                  
-    BOOL m_bCursorHidden;              
+    CBaseFilter *m_pFilter;            // Pointer to owning media filter
+    CBasePin *m_pPin;                  // Controls media types for connection
+    CCritSec *m_pInterfaceLock;        // Externally defined critical section
+    COLORREF m_BorderColour;           // Current window border colour
+    BOOL m_bAutoShow;                  // What happens when the state changes
+    HWND m_hwndOwner;                  // Owner window that we optionally have
+    HWND m_hwndDrain;                  // HWND to post any messages received
+    BOOL m_bCursorHidden;              // Should we hide the window cursor
 
 public:
 
-    
+    // Internal methods for other objects to get information out
 
     HRESULT DoSetWindowStyle(long Style,long WindowLong);
     HRESULT DoGetWindowStyle(long *pStyle,long WindowLong);
@@ -41,11 +46,11 @@ public:
         return ::PossiblyEatMessage(m_hwndDrain, uMsg, wParam, lParam);
     }
 
-    
-    
-    
-    
-    
+    // Derived classes must call this to set the pin the filter is using
+    // We don't have the pin passed in to the constructor (as we do with
+    // the CBaseFilter object) because filters typically create the
+    // pins dynamically when requested in CBaseFilter::GetPin. This can
+    // not be called from our constructor because is is a virtual method
 
     void SetControlWindowPin(CBasePin *pPin) {
         m_pPin = pPin;
@@ -53,13 +58,13 @@ public:
 
 public:
 
-    CBaseControlWindow(CBaseFilter *pFilter,   
-                       CCritSec *pInterfaceLock,    
-                       TCHAR *pName,                
-                       LPUNKNOWN pUnk,              
-                       HRESULT *phr);               
+    CBaseControlWindow(CBaseFilter *pFilter,   // Owning media filter
+                       CCritSec *pInterfaceLock,    // Locking object
+                       TCHAR *pName,                // Object description
+                       LPUNKNOWN pUnk,              // Normal COM ownership
+                       HRESULT *phr);               // OLE return code
 
-    
+    // These are the properties we support
 
     STDMETHODIMP put_Caption(BSTR strCaption);
     STDMETHODIMP get_Caption(BSTR *pstrCaption);
@@ -92,7 +97,7 @@ public:
     STDMETHODIMP get_FullScreenMode(long *FullScreenMode);
     STDMETHODIMP put_FullScreenMode(long FullScreenMode);
 
-    
+    // And these are the methods
 
     STDMETHODIMP SetWindowForeground(long Focus);
     STDMETHODIMP NotifyOwnerMessage(OAHWND hwnd,long uMsg,LONG_PTR wParam,LONG_PTR lParam);
@@ -103,19 +108,21 @@ public:
     STDMETHODIMP GetRestorePosition(long *pLeft,long *pTop,long *pWidth,long *pHeight);
 	STDMETHODIMP HideCursor(long HideCursor);
     STDMETHODIMP IsCursorHidden(long *CursorHidden);
-};    
+};
+
+// This class implements the IBasicVideo interface
 
 class CBaseControlVideo : public CBaseBasicVideo
 {
 protected:
 
-    CBaseFilter *m_pFilter;   
-    CBasePin *m_pPin;                   
-    CCritSec *m_pInterfaceLock;         
+    CBaseFilter *m_pFilter;   // Pointer to owning media filter
+    CBasePin *m_pPin;                   // Controls media types for connection
+    CCritSec *m_pInterfaceLock;         // Externally defined critical section
 
 public:
 
-    
+    // Derived classes must provide these for the implementation
 
     virtual HRESULT IsDefaultTargetRect() PURE;
     virtual HRESULT SetDefaultTargetRect() PURE;
@@ -127,16 +134,16 @@ public:
     virtual HRESULT GetSourceRect(RECT *pSourceRect) PURE;
     virtual HRESULT GetStaticImage(long *pBufferSize,long *pDIBImage) PURE;
 
-    
-    
-    
-    
-    
-    
+    // Derived classes must override this to return a VIDEOINFO representing
+    // the video format. We cannot call IPin ConnectionMediaType to get this
+    // format because various filters dynamically change the type when using
+    // DirectDraw such that the format shows the position of the logical
+    // bitmap in a frame buffer surface, so the size might be returned as
+    // 1024x768 pixels instead of 320x240 which is the real video dimensions
 
     virtual VIDEOINFOHEADER *GetVideoFormat() PURE;
 
-    
+    // Helper functions for creating memory renderings of a DIB image
 
     HRESULT GetImageSize(VIDEOINFOHEADER *pVideoInfo,
                          LONG *pBufferSize,
@@ -148,33 +155,33 @@ public:
                       BYTE *pVideoImage,
                       RECT *pSourceRect);
 
-    
+    // Override this if you want notifying when the rectangles change
     virtual HRESULT OnUpdateRectangles() { return NOERROR; };
     virtual HRESULT OnVideoSizeChange();
 
-    
-    
-    
-    
-    
+    // Derived classes must call this to set the pin the filter is using
+    // We don't have the pin passed in to the constructor (as we do with
+    // the CBaseFilter object) because filters typically create the
+    // pins dynamically when requested in CBaseFilter::GetPin. This can
+    // not be called from our constructor because is is a virtual method
 
     void SetControlVideoPin(CBasePin *pPin) {
         m_pPin = pPin;
     }
 
-    
+    // Helper methods for checking rectangles
     virtual HRESULT CheckSourceRect(RECT *pSourceRect);
     virtual HRESULT CheckTargetRect(RECT *pTargetRect);
 
 public:
 
-    CBaseControlVideo(CBaseFilter *pFilter,    
-                      CCritSec *pInterfaceLock,     
-                      TCHAR *pName,                 
-                      LPUNKNOWN pUnk,               
-                      HRESULT *phr);                
+    CBaseControlVideo(CBaseFilter *pFilter,    // Owning media filter
+                      CCritSec *pInterfaceLock,     // Serialise interface
+                      TCHAR *pName,                 // Object description
+                      LPUNKNOWN pUnk,               // Normal COM ownership
+                      HRESULT *phr);                // OLE return code
 
-    
+    // These are the properties we support
 
     STDMETHODIMP get_AvgTimePerFrame(REFTIME *pAvgTimePerFrame);
     STDMETHODIMP get_BitRate(long *pBitRate);
@@ -198,7 +205,7 @@ public:
     STDMETHODIMP put_DestinationHeight(long DestinationHeight);
     STDMETHODIMP get_DestinationHeight(long *pDestinationHeight);
 
-    
+    // And these are the methods
 
     STDMETHODIMP GetVideoSize(long *pWidth,long *pHeight);
     STDMETHODIMP SetSourcePosition(long Left,long Top,long Width,long Height);
@@ -213,5 +220,5 @@ public:
     STDMETHODIMP GetCurrentImage(long *pBufferSize,long *pVideoImage);
 };
 
-#endif 
+#endif // __WINCTRL__
 

@@ -1,8 +1,12 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: WXDebug.cpp
+//
+// Desc: DirectShow base classes - implements ActiveX system debugging
+//       facilities.    
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                    
 
 #define _WINDLL
 
@@ -14,22 +18,31 @@
 #ifdef UNICODE
 #ifndef _UNICODE
 #define _UNICODE
-#endif 
-#endif 
-#endif 
+#endif // _UNICODE
+#endif // UNICODE
+#endif // DEBUG
 
 #include <tchar.h>
 
-#ifdef DEBUG    
+#ifdef DEBUG
 
-const INT iDEBUGINFO = 1024;                     
+// The Win32 wsprintf() function writes a maximum of 1024 characters to it's output buffer.
+// See the documentation for wsprintf()'s lpOut parameter for more information.
+const INT iDEBUGINFO = 1024;                 // Used to format strings
+
+/* For every module and executable we store a debugging level for each of
+   the five categories (eg LOG_ERROR and LOG_TIMING). This makes it easy
+   to isolate and debug individual modules without seeing everybody elses
+   spurious debug output. The keys are stored in the registry under the
+   HKEY_LOCAL_MACHINE\SOFTWARE\Debug\<Module Name>\<KeyName> key values
+   NOTE these must be in the same order as their enumeration definition */
 
 TCHAR *pKeyNames[] = {
-    TEXT("TIMING"),      
-    TEXT("TRACE"),       
-    TEXT("MEMORY"),      
-    TEXT("LOCKING"),     
-    TEXT("ERROR"),       
+    TEXT("TIMING"),      // Timing and performance measurements
+    TEXT("TRACE"),       // General step point call tracing
+    TEXT("MEMORY"),      // Memory and object allocation/destruction
+    TEXT("LOCKING"),     // Locking/unlocking of critical sections
+    TEXT("ERROR"),       // Debug error notification
     TEXT("CUSTOM1"),
     TEXT("CUSTOM2"),
     TEXT("CUSTOM3"),
@@ -40,20 +53,20 @@ TCHAR *pKeyNames[] = {
 const TCHAR CAutoTrace::_szEntering[] = TEXT("Entering: %s");
 const TCHAR CAutoTrace::_szLeaving[]  = TEXT("Leaving: %s");
 
-const INT iMAXLEVELS = NUMELMS(pKeyNames);  
+const INT iMAXLEVELS = NUMELMS(pKeyNames);  // Maximum debug categories
 
-HINSTANCE m_hInst;                          
-TCHAR m_ModuleName[iDEBUGINFO];             
-DWORD m_Levels[iMAXLEVELS];                 
-CRITICAL_SECTION m_CSDebug;                 
-DWORD m_dwNextCookie;                       
-ObjectDesc *pListHead = NULL;               
-DWORD m_dwObjectCount;                      
-BOOL m_bInit = FALSE;                       
-HANDLE m_hOutput = INVALID_HANDLE_VALUE;    
-DWORD dwWaitTimeout = INFINITE;             
-DWORD dwTimeOffset;			    
-bool g_fUseKASSERT = false;                 
+HINSTANCE m_hInst;                          // Module instance handle
+TCHAR m_ModuleName[iDEBUGINFO];             // Cut down module name
+DWORD m_Levels[iMAXLEVELS];                 // Debug level per category
+CRITICAL_SECTION m_CSDebug;                 // Controls access to list
+DWORD m_dwNextCookie;                       // Next active object ID
+ObjectDesc *pListHead = NULL;               // First active object
+DWORD m_dwObjectCount;                      // Active object count
+BOOL m_bInit = FALSE;                       // Have we been initialised
+HANDLE m_hOutput = INVALID_HANDLE_VALUE;    // Optional output written here
+DWORD dwWaitTimeout = INFINITE;             // Default timeout value
+DWORD dwTimeOffset;			    // Time of first DbgLog call
+bool g_fUseKASSERT = false;                 // don't create messagebox
 bool g_fDbgInDllEntryPoint = false;
 bool g_fAutoRefreshLevels = false;
 
@@ -61,7 +74,10 @@ const TCHAR *pBaseKey = TEXT("SOFTWARE\\Debug");
 const TCHAR *pGlobalKey = TEXT("GLOBAL");
 static CHAR *pUnknownName = "UNKNOWN";
 
-TCHAR *TimeoutName = TEXT("TIMEOUT");    
+TCHAR *TimeoutName = TEXT("TIMEOUT");
+
+/* This sets the instance handle that the debug library uses to find
+   the module's file name from the Win32 GetModuleFileName function */
 
 void WINAPI DbgInitialise(HINSTANCE hInst)
 {
@@ -75,7 +91,14 @@ void WINAPI DbgInitialise(HINSTANCE hInst)
     DbgInitModuleSettings(false);
     DbgInitGlobalSettings(true);
     dwTimeOffset = timeGetTime();
-}      
+}
+
+
+/* This is called to clear up any resources the debug library uses - at the
+   moment we delete our critical section and the object list. The values we
+   retrieve from the registry are all done during initialisation but we don't
+   go looking for update notifications while we are running, if the values
+   are changed then the application has to be restarted to pick them up */
 
 void WINAPI DbgTerminate()
 {
@@ -85,40 +108,46 @@ void WINAPI DbgTerminate()
     }
     DeleteCriticalSection(&m_CSDebug);
     m_bInit = FALSE;
-}      
+}
+
+
+/* This is called by DbgInitLogLevels to read the debug settings
+   for each logging category for this module from the registry */
 
 void WINAPI DbgInitKeyLevels(HKEY hKey, bool fTakeMax)
 {
-    LONG lReturn;               
-    LONG lKeyPos;               
-    DWORD dwKeySize;            
-    DWORD dwKeyType;            
-    DWORD dwKeyValue;           
+    LONG lReturn;               // Create key return value
+    LONG lKeyPos;               // Current key category
+    DWORD dwKeySize;            // Size of the key value
+    DWORD dwKeyType;            // Receives it's type
+    DWORD dwKeyValue;           // This fields value
 
-    
+    /* Try and read a value for each key position in turn */
     for (lKeyPos = 0;lKeyPos < iMAXLEVELS;lKeyPos++) {
 
         dwKeySize = sizeof(DWORD);
         lReturn = RegQueryValueEx(
-            hKey,                       
-            pKeyNames[lKeyPos],         
-            NULL,                       
-            &dwKeyType,                 
-            (LPBYTE) &dwKeyValue,       
-            &dwKeySize );               
+            hKey,                       // Handle to an open key
+            pKeyNames[lKeyPos],         // Subkey name derivation
+            NULL,                       // Reserved field
+            &dwKeyType,                 // Returns the field type
+            (LPBYTE) &dwKeyValue,       // Returns the field's value
+            &dwKeySize );               // Number of bytes transferred
 
-        
+        /* If either the key was not available or it was not a DWORD value
+           then we ensure only the high priority debug logging is output
+           but we try and update the field to a zero filled DWORD value */
 
         if (lReturn != ERROR_SUCCESS || dwKeyType != REG_DWORD)  {
 
             dwKeyValue = 0;
             lReturn = RegSetValueEx(
-                hKey,                   
-                pKeyNames[lKeyPos],     
-                (DWORD) 0,              
-                REG_DWORD,              
-                (PBYTE) &dwKeyValue,    
-                sizeof(DWORD));         
+                hKey,                   // Handle of an open key
+                pKeyNames[lKeyPos],     // Address of subkey name
+                (DWORD) 0,              // Reserved field
+                REG_DWORD,              // Type of the key field
+                (PBYTE) &dwKeyValue,    // Value for the field
+                sizeof(DWORD));         // Size of the field buffer
 
             if (lReturn != ERROR_SUCCESS) {
                 DbgLog((LOG_ERROR,0,TEXT("Could not create subkey %s"),pKeyNames[lKeyPos]));
@@ -137,28 +166,30 @@ void WINAPI DbgInitKeyLevels(HKEY hKey, bool fTakeMax)
         }
     }
 
-    
+    /*  Read the timeout value for catching hangs */
     dwKeySize = sizeof(DWORD);
     lReturn = RegQueryValueEx(
-        hKey,                       
-        TimeoutName,                
-        NULL,                       
-        &dwKeyType,                 
-        (LPBYTE) &dwWaitTimeout,    
-        &dwKeySize );               
+        hKey,                       // Handle to an open key
+        TimeoutName,                // Subkey name derivation
+        NULL,                       // Reserved field
+        &dwKeyType,                 // Returns the field type
+        (LPBYTE) &dwWaitTimeout,    // Returns the field's value
+        &dwKeySize );               // Number of bytes transferred
 
-    
+    /* If either the key was not available or it was not a DWORD value
+       then we ensure only the high priority debug logging is output
+       but we try and update the field to a zero filled DWORD value */
 
     if (lReturn != ERROR_SUCCESS || dwKeyType != REG_DWORD)  {
 
         dwWaitTimeout = INFINITE;
         lReturn = RegSetValueEx(
-            hKey,                   
-            TimeoutName,            
-            (DWORD) 0,              
-            REG_DWORD,              
-            (PBYTE) &dwWaitTimeout, 
-            sizeof(DWORD));         
+            hKey,                   // Handle of an open key
+            TimeoutName,            // Address of subkey name
+            (DWORD) 0,              // Reserved field
+            REG_DWORD,              // Type of the key field
+            (PBYTE) &dwWaitTimeout, // Value for the field
+            sizeof(DWORD));         // Size of the field buffer
 
         if (lReturn != ERROR_SUCCESS) {
             DbgLog((LOG_ERROR,0,TEXT("Could not create subkey %s"),pKeyNames[lKeyPos]));
@@ -182,7 +213,10 @@ void WINAPI DbgOutString(LPCTSTR psz)
     } else {
         OutputDebugString (psz);
     }
-}    
+}
+
+/* Called by DbgInitGlobalSettings to setup alternate logging destinations
+ */
 
 void WINAPI DbgInitLogTo (
     HKEY hKey)
@@ -195,29 +229,29 @@ void WINAPI DbgInitLogTo (
 
     dwKeySize = MAX_PATH;
     lReturn = RegQueryValueEx(
-        hKey,                       
-        cszKey,                     
-        NULL,                       
-        &dwKeyType,                 
-        (LPBYTE) szFile,            
-        &dwKeySize);                
+        hKey,                       // Handle to an open key
+        cszKey,                     // Subkey name derivation
+        NULL,                       // Reserved field
+        &dwKeyType,                 // Returns the field type
+        (LPBYTE) szFile,            // Returns the field's value
+        &dwKeySize);                // Number of bytes transferred
 
-    
-    
+    // create an empty key if it does not already exist
+    //
     if (lReturn != ERROR_SUCCESS || dwKeyType != REG_SZ)
        {
        dwKeySize = 1;
        lReturn = RegSetValueEx(
-            hKey,                   
-            cszKey,                 
-            (DWORD) 0,              
-            REG_SZ,                 
-            (PBYTE)szFile,          
-            dwKeySize);            
+            hKey,                   // Handle of an open key
+            cszKey,                 // Address of subkey name
+            (DWORD) 0,              // Reserved field
+            REG_SZ,                 // Type of the key field
+            (PBYTE)szFile,          // Value for the field
+            dwKeySize);            // Size of the field buffer
        }
 
-    
-    
+    // if an output-to was specified.  try to open it.
+    //
     if (m_hOutput != INVALID_HANDLE_VALUE) {
        EXECUTE_ASSERT(CloseHandle (m_hOutput));
        m_hOutput = INVALID_HANDLE_VALUE;
@@ -249,27 +283,34 @@ void WINAPI DbgInitLogTo (
               }
           }
        }
-}        
+}
+
+
+
+/* This is called by DbgInitLogLevels to read the global debug settings for
+   each logging category for this module from the registry. Normally each
+   module has it's own values set for it's different debug categories but
+   setting the global SOFTWARE\Debug\Global applies them to ALL modules */
 
 void WINAPI DbgInitGlobalSettings(bool fTakeMax)
 {
-    LONG lReturn;               
-    TCHAR szInfo[iDEBUGINFO];   
-    HKEY hGlobalKey;            
+    LONG lReturn;               // Create key return value
+    TCHAR szInfo[iDEBUGINFO];   // Constructs key names
+    HKEY hGlobalKey;            // Global override key
 
-    
+    /* Construct the global base key name */
     wsprintf(szInfo,TEXT("%s\\%s"),pBaseKey,pGlobalKey);
 
-    
-    lReturn = RegCreateKeyEx(HKEY_LOCAL_MACHINE,   
-                             szInfo,               
-                             (DWORD) 0,            
-                             NULL,                 
-                             (DWORD) 0,            
-                             KEY_ALL_ACCESS,       
-                             NULL,                 
-                             &hGlobalKey,          
-                             NULL);                
+    /* Create or open the key for this module */
+    lReturn = RegCreateKeyEx(HKEY_LOCAL_MACHINE,   // Handle of an open key
+                             szInfo,               // Address of subkey name
+                             (DWORD) 0,            // Reserved value
+                             NULL,                 // Address of class name
+                             (DWORD) 0,            // Special options flags
+                             KEY_ALL_ACCESS,       // Desired security access
+                             NULL,                 // Key security descriptor
+                             &hGlobalKey,          // Opened handle buffer
+                             NULL);                // What really happened
 
     if (lReturn != ERROR_SUCCESS) {
         DbgLog((LOG_ERROR,0,TEXT("Could not access GLOBAL module key")));
@@ -278,27 +319,34 @@ void WINAPI DbgInitGlobalSettings(bool fTakeMax)
 
     DbgInitKeyLevels(hGlobalKey, fTakeMax);
     RegCloseKey(hGlobalKey);
-}      
+}
+
+
+/* This sets the debugging log levels for the different categories. We start
+   by opening (or creating if not already available) the SOFTWARE\Debug key
+   that all these settings live under. We then look at the global values
+   set under SOFTWARE\Debug\Global which apply on top of the individual
+   module settings. We then load the individual module registry settings */
 
 void WINAPI DbgInitModuleSettings(bool fTakeMax)
 {
-    LONG lReturn;               
-    TCHAR szInfo[iDEBUGINFO];   
-    HKEY hModuleKey;            
+    LONG lReturn;               // Create key return value
+    TCHAR szInfo[iDEBUGINFO];   // Constructs key names
+    HKEY hModuleKey;            // Module key handle
 
-    
+    /* Construct the base key name */
     wsprintf(szInfo,TEXT("%s\\%s"),pBaseKey,m_ModuleName);
 
-    
-    lReturn = RegCreateKeyEx(HKEY_LOCAL_MACHINE,   
-                             szInfo,               
-                             (DWORD) 0,            
-                             NULL,                 
-                             (DWORD) 0,            
-                             KEY_ALL_ACCESS,       
-                             NULL,                 
-                             &hModuleKey,          
-                             NULL);                
+    /* Create or open the key for this module */
+    lReturn = RegCreateKeyEx(HKEY_LOCAL_MACHINE,   // Handle of an open key
+                             szInfo,               // Address of subkey name
+                             (DWORD) 0,            // Reserved value
+                             NULL,                 // Address of class name
+                             (DWORD) 0,            // Special options flags
+                             KEY_ALL_ACCESS,       // Desired security access
+                             NULL,                 // Key security descriptor
+                             &hModuleKey,          // Opened handle buffer
+                             NULL);                // What really happened
 
     if (lReturn != ERROR_SUCCESS) {
         DbgLog((LOG_ERROR,0,TEXT("Could not access module key")));
@@ -308,12 +356,15 @@ void WINAPI DbgInitModuleSettings(bool fTakeMax)
     DbgInitLogTo(hModuleKey);
     DbgInitKeyLevels(hModuleKey, fTakeMax);
     RegCloseKey(hModuleKey);
-}      
+}
+
+
+/* Initialise the module file name */
 
 void WINAPI DbgInitModuleName()
 {
-    TCHAR FullName[iDEBUGINFO];     
-    TCHAR *pName;                   
+    TCHAR FullName[iDEBUGINFO];     // Load the full path and module name
+    TCHAR *pName;                   // Searches from the end for a backslash
 
     GetModuleFileName(m_hInst,FullName,iDEBUGINFO);
     pName = _tcsrchr(FullName,'\\');
@@ -332,10 +383,14 @@ struct MsgBoxMsg
     TCHAR *szMessage;
     DWORD dwFlags;
     INT iResult;
-};        
+};
 
+//
+// create a thread to call MessageBox(). calling MessageBox() on
+// random threads at bad times can confuse the host (eg IE).
+//
 DWORD WINAPI MsgBoxThread(
-  LPVOID lpParameter   
+  LPVOID lpParameter   // thread data
   )
 {
     MsgBoxMsg *pmsg = (MsgBoxMsg *)lpParameter;
@@ -356,8 +411,8 @@ INT MessageBoxOtherThread(
 {
     if(g_fDbgInDllEntryPoint)
     {
-        
-        
+        // can't wait on another thread because we have the loader
+        // lock held in the dll entry point.
         return MessageBox(hwnd, szTitle, szMessage, dwFlags);
     }
     else
@@ -365,11 +420,11 @@ INT MessageBoxOtherThread(
         MsgBoxMsg msg = {hwnd, szTitle, szMessage, dwFlags, 0};
         DWORD dwid;
         HANDLE hThread = CreateThread(
-            0,                      
-            0,                      
+            0,                      // security
+            0,                      // stack size
             MsgBoxThread,
-            (void *)&msg,           
-            0,                      
+            (void *)&msg,           // arg
+            0,                      // flags
             &dwid);
         if(hThread)
         {
@@ -378,10 +433,12 @@ INT MessageBoxOtherThread(
             return msg.iResult;
         }
 
-        
+        // break into debugger on failure.
         return IDCANCEL;
     }
-}    
+}
+
+/* Displays a message box if the condition evaluated to FALSE */
 
 void WINAPI DbgAssert(const TCHAR *pCondition,const TCHAR *pFileName,INT iLine)
 {
@@ -404,21 +461,23 @@ void WINAPI DbgAssert(const TCHAR *pCondition,const TCHAR *pFileName,INT iLine)
                                           MB_SETFOREGROUND);
         switch (MsgId)
         {
-          case IDNO:              
+          case IDNO:              /* Kill the application */
 
               FatalAppExit(FALSE, TEXT("Application terminated"));
               break;
 
-          case IDCANCEL:          
+          case IDCANCEL:          /* Break into the debugger */
 
               DebugBreak();
               break;
 
-          case IDYES:             
+          case IDYES:             /* Ignore assertion continue execution */
               break;
         }
     }
-}    
+}
+
+/* Displays a message box at a break point */
 
 void WINAPI DbgBreakPoint(const TCHAR *pCondition,const TCHAR *pFileName,INT iLine)
 {
@@ -440,17 +499,17 @@ void WINAPI DbgBreakPoint(const TCHAR *pCondition,const TCHAR *pFileName,INT iLi
                                           MB_SETFOREGROUND);
         switch (MsgId)
         {
-          case IDNO:              
+          case IDNO:              /* Kill the application */
 
               FatalAppExit(FALSE, TEXT("Application terminated"));
               break;
 
-          case IDCANCEL:          
+          case IDCANCEL:          /* Break into the debugger */
 
               DebugBreak();
               break;
 
-          case IDYES:             
+          case IDYES:             /* Ignore break point continue execution */
               break;
         }
     }
@@ -458,11 +517,11 @@ void WINAPI DbgBreakPoint(const TCHAR *pCondition,const TCHAR *pFileName,INT iLi
 
 void WINAPI DbgBreakPoint(const TCHAR *pFileName,INT iLine,const TCHAR* szFormatString,...)
 {
-    
-    
-    
-    
-    
+    // A debug break point message can have at most 2000 characters if 
+    // ANSI or UNICODE characters are being used.  A debug break point message
+    // can have between 1000 and 2000 double byte characters in it.  If a 
+    // particular message needs more characters, then the value of this constant
+    // should be increased.
     const DWORD MAX_BREAK_POINT_MESSAGE_SIZE = 2000;
 
     TCHAR szBreakPointMessage[MAX_BREAK_POINT_MESSAGE_SIZE];
@@ -476,39 +535,54 @@ void WINAPI DbgBreakPoint(const TCHAR *pFileName,INT iLine,const TCHAR* szFormat
 
     va_end(va);
     
-    
+    // _vsnprintf() returns -1 if an error occurs.
     if( -1 == nReturnValue ) {
         DbgBreak( "ERROR in DbgBreakPoint().  The variable length debug message could not be displayed because _vsnprintf() failed." );
         return;
     }
 
     ::DbgBreakPoint( szBreakPointMessage, pFileName, iLine );
-}        
+}
+
+
+/* When we initialised the library we stored in the m_Levels array the current
+   debug output level for this module for each of the five categories. When
+   some debug logging is sent to us it can be sent with a combination of the
+   categories (if it is applicable to many for example) in which case we map
+   the type's categories into their current debug levels and see if any of
+   them can be accepted. The function looks at each bit position in turn from
+   the input type field and then compares it's debug level with the modules.
+
+   A level of 0 means that output is always sent to the debugger.  This is
+   due to producing output if the input level is <= m_Levels.
+*/
+
 
 BOOL WINAPI DbgCheckModuleLevel(DWORD Type,DWORD Level)
 {
     if(g_fAutoRefreshLevels)
     {
-        
-        
+        // re-read the registry every second. We cannot use RegNotify() to
+        // notice registry changes because it's not available on win9x.
         static g_dwLastRefresh = 0;
         DWORD dwTime = timeGetTime();
         if(dwTime - g_dwLastRefresh > 1000) {
             g_dwLastRefresh = dwTime;
 
-            
-            
-            
+            // there's a race condition: multiple threads could update the
+            // values. plus read and write not synchronized. no harm
+            // though.
             DbgInitModuleSettings(false);
         }
-    }  
+    }
+
 
     DWORD Mask = 0x01;
 
-    
+    // If no valid bits are set return FALSE
     if ((Type & ((1<<iMAXLEVELS)-1))) {
 
-	
+	// speed up unconditional output.
 	if (0==Level)
 	    return(TRUE);
 	
@@ -522,7 +596,10 @@ BOOL WINAPI DbgCheckModuleLevel(DWORD Type,DWORD Level)
         }
     }
     return FALSE;
-}      
+}
+
+
+/* Set debug levels to a given value */
 
 void WINAPI DbgSetModuleLevel(DWORD Type, DWORD Level)
 {
@@ -534,18 +611,23 @@ void WINAPI DbgSetModuleLevel(DWORD Type, DWORD Level)
         }
         Mask <<= 1;
     }
-}  
+}
 
+/* whether to check registry values periodically. this isn't turned
+   automatically because of the potential performance hit. */
 void WINAPI DbgSetAutoRefreshLevels(bool fAuto)
 {
     g_fAutoRefreshLevels = fAuto;
 }
 
-#ifdef UNICODE      
-
+#ifdef UNICODE
+// 
+// warning -- this function is implemented twice for ansi applications
+// linking to the unicode library
+// 
 void WINAPI DbgLogInfo(DWORD Type,DWORD Level,const CHAR *pFormat,...)
 {
-    
+    /* Check the current level for this type combination */
 
     BOOL bAccept = DbgCheckModuleLevel(Type,Level);
     if (bAccept == FALSE) {
@@ -554,7 +636,7 @@ void WINAPI DbgLogInfo(DWORD Type,DWORD Level,const CHAR *pFormat,...)
 
     TCHAR szInfo[2000];
 
-    
+    /* Format the variable length parameter list */
 
     va_list va;
     va_start(va, pFormat);
@@ -598,21 +680,23 @@ void DbgAssert(const CHAR *pCondition,const CHAR *pFileName,INT iLine)
                                           MB_SETFOREGROUND);
         switch (MsgId)
         {
-          case IDNO:              
+          case IDNO:              /* Kill the application */
 
               FatalAppExit(FALSE, TEXT("Application terminated"));
               break;
 
-          case IDCANCEL:          
+          case IDCANCEL:          /* Break into the debugger */
 
               DebugBreak();
               break;
 
-          case IDYES:             
+          case IDYES:             /* Ignore assertion continue execution */
               break;
         }
     }
-}    
+}
+
+/* Displays a message box at a break point */
 
 void WINAPI DbgBreakPoint(const CHAR *pCondition,const CHAR *pFileName,INT iLine)
 {
@@ -634,17 +718,17 @@ void WINAPI DbgBreakPoint(const CHAR *pCondition,const CHAR *pFileName,INT iLine
                                           MB_SETFOREGROUND);
         switch (MsgId)
         {
-          case IDNO:              
+          case IDNO:              /* Kill the application */
 
               FatalAppExit(FALSE, TEXT("Application terminated"));
               break;
 
-          case IDCANCEL:          
+          case IDCANCEL:          /* Break into the debugger */
 
               DebugBreak();
               break;
 
-          case IDYES:             
+          case IDYES:             /* Ignore break point continue execution */
               break;
         }
     }
@@ -657,12 +741,21 @@ void WINAPI DbgKernelAssert(const CHAR *pCondition,const CHAR *pFileName,INT iLi
     DebugBreak();
 }
 
-#endif            
+#endif
 
+/* Print a formatted string to the debugger prefixed with this module's name
+   Because the COMBASE classes are linked statically every module loaded will
+   have their own copy of this code. It therefore helps if the module name is
+   included on the output so that the offending code can be easily found */
+
+// 
+// warning -- this function is implemented twice for ansi applications
+// linking to the unicode library
+// 
 void WINAPI DbgLogInfo(DWORD Type,DWORD Level,const TCHAR *pFormat,...)
 {
     
-    
+    /* Check the current level for this type combination */
 
     BOOL bAccept = DbgCheckModuleLevel(Type,Level);
     if (bAccept == FALSE) {
@@ -671,7 +764,7 @@ void WINAPI DbgLogInfo(DWORD Type,DWORD Level,const TCHAR *pFormat,...)
 
     TCHAR szInfo[2000];
 
-    
+    /* Format the variable length parameter list */
 
     va_list va;
     va_start(va, pFormat);
@@ -686,47 +779,62 @@ void WINAPI DbgLogInfo(DWORD Type,DWORD Level,const TCHAR *pFormat,...)
     DbgOutString(szInfo);
 
     va_end(va);
-}      
+}
+
+
+/* If we are executing as a pure kernel filter we cannot display message
+   boxes to the user, this provides an alternative which puts the error
+   condition on the debugger output with a suitable eye catching message */
 
 void WINAPI DbgKernelAssert(const TCHAR *pCondition,const TCHAR *pFileName,INT iLine)
 {
     DbgLog((LOG_ERROR,0,TEXT("Assertion FAILED (%s) at line %d in file %s"),
            pCondition, iLine, pFileName));
     DebugBreak();
-}        
+}
+
+
+
+/* Each time we create an object derived from CBaseObject the constructor will
+   call us to register the creation of the new object. We are passed a string
+   description which we store away. We return a cookie that the constructor
+   uses to identify the object when it is destroyed later on. We update the
+   total number of active objects in the DLL mainly for debugging purposes */
 
 DWORD WINAPI DbgRegisterObjectCreation(const CHAR *szObjectName,
                                        const WCHAR *wszObjectName)
 {
-    
+    /* If this fires you have a mixed DEBUG/RETAIL build */
 
     ASSERT(!!szObjectName ^ !!wszObjectName);
 
-    
+    /* Create a place holder for this object description */
 
     ObjectDesc *pObject = new ObjectDesc;
     ASSERT(pObject);
 
-    
+    /* It is valid to pass a NULL object name */
     if (pObject == NULL) {
         return FALSE;
     }
 
-    
+    /* Check we have been initialised - we may not be initialised when we are
+       being pulled in from an executable which has globally defined objects
+       as they are created by the C++ run time before WinMain is called */
 
     if (m_bInit == FALSE) {
         DbgInitialise(GetModuleHandle(NULL));
     }
 
-    
+    /* Grab the list critical section */
     EnterCriticalSection(&m_CSDebug);
 
-    
+    /* If no name then default to UNKNOWN */
     if (!szObjectName && !wszObjectName) {
         szObjectName = pUnknownName;
     }
 
-    
+    /* Put the new description at the head of the list */
 
     pObject->m_szName = szObjectName;
     pObject->m_wszName = wszObjectName;
@@ -749,17 +857,23 @@ DWORD WINAPI DbgRegisterObjectCreation(const CHAR *szObjectName,
 
     LeaveCriticalSection(&m_CSDebug);
     return ObjectCookie;
-}      
+}
+
+
+/* This is called by the CBaseObject destructor when an object is about to be
+   destroyed, we are passed the cookie we returned during construction that
+   identifies this object. We scan the object list for a matching cookie and
+   remove the object if successful. We also update the active object count */
 
 BOOL WINAPI DbgRegisterObjectDestruction(DWORD dwCookie)
 {
-    
+    /* Grab the list critical section */
     EnterCriticalSection(&m_CSDebug);
 
     ObjectDesc *pObject = pListHead;
     ObjectDesc *pPrevious = NULL;
 
-    
+    /* Scan the object list looking for a cookie match */
 
     while (pObject) {
         if (pObject->m_dwCookie == dwCookie) {
@@ -775,7 +889,7 @@ BOOL WINAPI DbgRegisterObjectDestruction(DWORD dwCookie)
         return FALSE;
     }
 
-    
+    /* Is the object at the head of the list */
 
     if (pPrevious == NULL) {
         pListHead = pObject->m_pNext;
@@ -783,7 +897,7 @@ BOOL WINAPI DbgRegisterObjectDestruction(DWORD dwCookie)
         pPrevious->m_pNext = pObject->m_pNext;
     }
 
-    
+    /* Delete the object and update the housekeeping information */
 
     m_dwObjectCount--;
 
@@ -798,18 +912,21 @@ BOOL WINAPI DbgRegisterObjectDestruction(DWORD dwCookie)
     delete pObject;
     LeaveCriticalSection(&m_CSDebug);
     return TRUE;
-}      
+}
+
+
+/* This runs through the active object list displaying their details */
 
 void WINAPI DbgDumpObjectRegister()
 {
     TCHAR szInfo[iDEBUGINFO];
 
-    
+    /* Grab the list critical section */
 
     EnterCriticalSection(&m_CSDebug);
     ObjectDesc *pObject = pListHead;
 
-    
+    /* Scan the object list displaying the name and cookie */
 
     DbgLog((LOG_MEMORY,2,TEXT("")));
     DbgLog((LOG_MEMORY,2,TEXT("   ID             Object Description")));
@@ -829,8 +946,9 @@ void WINAPI DbgDumpObjectRegister()
     DbgLog((LOG_MEMORY,2,TEXT("")));
     DbgLog((LOG_MEMORY,1,szInfo));
     LeaveCriticalSection(&m_CSDebug);
-}  
+}
 
+/*  Debug infinite wait stuff */
 DWORD WINAPI DbgWaitForSingleObject(HANDLE h)
 {
     DWORD dwWaitResult;
@@ -860,11 +978,11 @@ void WINAPI DbgSetWaitTimeout(DWORD dwTimeout)
     dwWaitTimeout = dwTimeout;
 }
 
-#endif 
+#endif /* DEBUG */
 
 #ifdef _OBJBASE_H_
 
-    
+    /*  Stuff for printing out our GUID names */
 
     GUID_STRING_ENTRY g_GuidNames[] = {
     #define OUR_GUID_ENTRY(name, l, w1, w2, b1, b2, b3, b4, b5, b6, b7, b8) \
@@ -886,18 +1004,21 @@ void WINAPI DbgSetWaitTimeout(DWORD dwTimeout)
             return "GUID_NULL";
         }
 
+	// !!! add something to print FOURCC guids?
 	
-	
-	
+	// shouldn't this print the hex CLSID?
         return "Unknown GUID Name";
     }
 
-#endif       
+#endif /* _OBJBASE_H_ */
 
+/*  CDisp class - display our data types */
+
+// clashes with REFERENCE_TIME
 CDisp::CDisp(LONGLONG ll, int Format)
 {
-    
-    
+    // note: this could be combined with CDisp(LONGLONG) by
+    // introducing a default format of CDISP_REFTIME
     LARGE_INTEGER li;
     li.QuadPart = ll;
     switch (Format) {
@@ -907,9 +1028,9 @@ CDisp::CDisp(LONGLONG ll, int Format)
 	    int pos=20;
 	    temp[--pos] = 0;
 	    int digit;
-	    
+	    // always output at least one digit
 	    do {
-		
+		// Get the rightmost digit - we only need the low word
 	        digit = li.LowPart % 10;
 		li.QuadPart /= 10;
 		temp[--pos] = (TCHAR) digit+L'0';
@@ -932,7 +1053,7 @@ CDisp::CDisp(REFCLSID clsid)
 };
 
 #ifdef __STREAMS__
-
+/*  Display stuff */
 CDisp::CDisp(CRefTime llTime)
 {
     LPTSTR lpsz = m_String;
@@ -961,8 +1082,10 @@ CDisp::CDisp(CRefTime llTime)
              (LONG)((llTime % 10000000) / 10000));
 };
 
-#endif     
+#endif // __STREAMS__
 
+
+/*  Display pin */
 CDisp::CDisp(IPin *pPin)
 {
     PIN_INFO pi;
@@ -989,8 +1112,9 @@ CDisp::CDisp(IPin *pPin)
     }
 
     wsprintf(m_pString, TEXT("%hs(%s)"), GuidNames[clsid], str);
-}  
+}
 
+/*  Display filter or pin */
 CDisp::CDisp(IUnknown *pUnk)
 {
     IBaseFilter *pf;
@@ -1023,7 +1147,8 @@ CDisp::CDisp(IUnknown *pUnk)
         pp->Release();
         return;
     }
-}  
+}
+
 
 CDisp::~CDisp()
 {
@@ -1043,13 +1168,20 @@ CDisp::CDisp(double d)
 #else
     wsprintf(m_String, TEXT("%d.%03d"), (int) d, (int) ((d - (int) d) * 1000));
 #endif
-}      
+}
+
+
+/* If built for debug this will display the media type details. We convert the
+   major and subtypes into strings and also ask the base classes for a string
+   description of the subtype, so MEDIASUBTYPE_RGB565 becomes RGB 565 16 bit
+   We also display the fields in the BITMAPINFOHEADER structure, this should
+   succeed as we do not accept input types unless the format is big enough */
 
 #ifdef DEBUG
 void WINAPI DisplayType(LPTSTR label, const AM_MEDIA_TYPE *pmtIn)
 {
 
-    
+    /* Dump the GUID types and a short description */
 
     DbgLog((LOG_TRACE,5,TEXT("")));
     DbgLog((LOG_TRACE,2,TEXT("%s  M type %s  S type %s"), label,
@@ -1057,7 +1189,7 @@ void WINAPI DisplayType(LPTSTR label, const AM_MEDIA_TYPE *pmtIn)
 	    GuidNames[pmtIn->subtype]));
     DbgLog((LOG_TRACE,5,TEXT("Subtype description %s"),GetSubtypeName(&pmtIn->subtype)));
 
-    
+    /* Dump the generic media types */
 
     if (pmtIn->bTemporalCompression) {
 	DbgLog((LOG_TRACE,5,TEXT("Temporally compressed")));
@@ -1072,7 +1204,7 @@ void WINAPI DisplayType(LPTSTR label, const AM_MEDIA_TYPE *pmtIn)
     }
 
     if (pmtIn->formattype == FORMAT_VideoInfo) {
-	
+	/* Dump the contents of the BITMAPINFOHEADER structure */
 	BITMAPINFOHEADER *pbmi = HEADER(pmtIn->pbFormat);
 	VIDEOINFOHEADER *pVideoInfo = (VIDEOINFOHEADER *)pmtIn->pbFormat;
 
@@ -1114,7 +1246,7 @@ void WINAPI DisplayType(LPTSTR label, const AM_MEDIA_TYPE *pmtIn)
 	if ((pmtIn->subtype != MEDIASUBTYPE_MPEG1Packet)
 	  && (pmtIn->cbFormat >= sizeof(PCMWAVEFORMAT)))
 	{
-	    
+	    /* Dump the contents of the WAVEFORMATEX type-specific format structure */
 
 	    WAVEFORMATEX *pwfx = (WAVEFORMATEX *) pmtIn->pbFormat;
             DbgLog((LOG_TRACE,2,TEXT("wFormatTag %u"), pwfx->wFormatTag));
@@ -1124,7 +1256,7 @@ void WINAPI DisplayType(LPTSTR label, const AM_MEDIA_TYPE *pmtIn)
             DbgLog((LOG_TRACE,2,TEXT("nBlockAlign %u"), pwfx->nBlockAlign));
             DbgLog((LOG_TRACE,2,TEXT("wBitsPerSample %u"), pwfx->wBitsPerSample));
 
-            
+            /* PCM uses a WAVEFORMAT and does not have the extra size field */
 
             if (pmtIn->cbFormat >= sizeof(WAVEFORMATEX)) {
                 DbgLog((LOG_TRACE,2,TEXT("cbSize %u"), pwfx->cbSize));
@@ -1135,9 +1267,10 @@ void WINAPI DisplayType(LPTSTR label, const AM_MEDIA_TYPE *pmtIn)
     } else {
 	DbgLog((LOG_TRACE,2,TEXT("     Format type %hs"),
 	    GuidNames[pmtIn->formattype]));
-	
+	// !!!! should add code to dump wave format, others
     }
-}  
+}
+
 
 void WINAPI DumpGraph(IFilterGraph *pGraph, DWORD dwLevel)
 {
@@ -1164,7 +1297,7 @@ void WINAPI DumpGraph(IFilterGraph *pGraph, DWORD dwLevel)
 	} else {
 	    QueryFilterInfoReleaseGraph(info);
 
-	    
+	    // !!! should QueryVendorInfo here!
 	
 	    DbgLog((LOG_TRACE,dwLevel,TEXT("    Filter [%x]  '%ls'"), pFilter, info.achName));
 
@@ -1196,8 +1329,8 @@ void WINAPI DumpGraph(IFilterGraph *pGraph, DWORD dwLevel)
 
 			    pPinConnected->Release();
 
-			    
-			    
+			    // perhaps we should really dump the type both ways as a sanity
+			    // check?
 			    if (info.dir == PINDIR_OUTPUT) {
 				AM_MEDIA_TYPE mt;
 

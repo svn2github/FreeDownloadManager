@@ -1,8 +1,60 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/  
-
-  
+/* crypto/objects/objects.h */
+/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
+ * All rights reserved.
+ *
+ * This package is an SSL implementation written
+ * by Eric Young (eay@cryptsoft.com).
+ * The implementation was written so as to conform with Netscapes SSL.
+ * 
+ * This library is free for commercial and non-commercial use as long as
+ * the following conditions are aheared to.  The following conditions
+ * apply to all code found in this distribution, be it the RC4, RSA,
+ * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
+ * included with this distribution is covered by the same copyright terms
+ * except that the holder is Tim Hudson (tjh@cryptsoft.com).
+ * 
+ * Copyright remains Eric Young's, and as such any Copyright notices in
+ * the code are not to be removed.
+ * If this package is used in a product, Eric Young should be given attribution
+ * as the author of the parts of the library used.
+ * This can be in the form of a textual message at program startup or
+ * in documentation (online or textual) provided with the package.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *    "This product includes cryptographic software written by
+ *     Eric Young (eay@cryptsoft.com)"
+ *    The word 'cryptographic' can be left out if the rouines from the library
+ *    being used are not cryptographic related :-).
+ * 4. If you include any Windows specific code (or a derivative thereof) from 
+ *    the apps directory (application code) you must include an acknowledgement:
+ *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"
+ * 
+ * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * The licence and distribution terms for any publically available version or
+ * derivative of this code cannot be changed.  i.e. this code cannot simply be
+ * copied and put under another distribution licence
+ * [including the GNU Public Licence.]
+ */
 
 #ifndef HEADER_OBJECTS_H
 #define HEADER_OBJECTS_H
@@ -90,8 +142,11 @@
 #define SN_localityName			"L"
 #define LN_localityName			"localityName"
 #define NID_localityName		15
-#define OBJ_localityName		OBJ_X509,7L   
+#define OBJ_localityName		OBJ_X509,7L
 
+/* Postal Address? PA */
+
+/* should be "ST" (rfc1327) but MS uses 'S' */
 #define SN_stateOrProvinceName		"ST"
 #define LN_stateOrProvinceName		"stateOrProvinceName"
 #define NID_stateOrProvinceName		16
@@ -156,19 +211,19 @@
 #define SN_des_cfb64			"DES-CFB"
 #define LN_des_cfb64			"des-cfb"
 #define NID_des_cfb64			30
-
+/* IV + num */
 #define OBJ_des_cfb64			OBJ_algorithm,9L
 
 #define SN_des_cbc			"DES-CBC"
 #define LN_des_cbc			"des-cbc"
 #define NID_des_cbc			31
-
+/* IV */
 #define OBJ_des_cbc			OBJ_algorithm,7L
 
 #define SN_des_ede			"DES-EDE"
 #define LN_des_ede			"des-ede"
 #define NID_des_ede			32
-
+/* ?? */
 #define OBJ_des_ede			OBJ_algorithm,17L
 
 #define SN_des_ede3			"DES-EDE3"
@@ -303,12 +358,15 @@
 
 #define SN_des_ede3_ofb64		"DES-EDE3-OFB"
 #define LN_des_ede3_ofb64		"des-ede3-ofb"
-#define NID_des_ede3_ofb64		63 
+#define NID_des_ede3_ofb64		63
 
+/* I'm not sure about the object ID */
 #define SN_sha1				"SHA1"
 #define LN_sha1				"sha1"
 #define NID_sha1			64
-#define OBJ_sha1			OBJ_algorithm,26L  
+#define OBJ_sha1			OBJ_algorithm,26L
+/* 28 Jun 1996 - eay */
+/* #define OBJ_sha1			1L,3L,14L,2L,26L,05L <- wrong */
 
 #define SN_sha1WithRSAEncryption	"RSA-SHA1"
 #define LN_sha1WithRSAEncryption	"sha1WithRSAEncryption"
@@ -323,13 +381,18 @@
 #define SN_dsa_2			"DSA-old"
 #define LN_dsa_2			"dsaEncryption-old"
 #define NID_dsa_2			67
-#define OBJ_dsa_2			OBJ_algorithm,12L 
+#define OBJ_dsa_2			OBJ_algorithm,12L
 
+/* proposed by microsoft to RSA */
 #define SN_pbeWithSHA1AndRC2_CBC	"PBE-SHA1-RC2-64"
 #define LN_pbeWithSHA1AndRC2_CBC	"pbeWithSHA1AndRC2-CBC"
 #define NID_pbeWithSHA1AndRC2_CBC	68
-#define OBJ_pbeWithSHA1AndRC2_CBC	OBJ_pkcs,5L,11L  
+#define OBJ_pbeWithSHA1AndRC2_CBC	OBJ_pkcs,5L,11L 
 
+/* proposed by microsoft to RSA as pbeWithSHA1AndRC4: it is now
+ * defined explicitly in PKCS#5 v2.0 as id-PBKDF2 which is something
+ * completely different.
+ */
 #define LN_id_pbkdf2			"PBKDF2"
 #define NID_id_pbkdf2			69
 #define OBJ_id_pbkdf2			OBJ_pkcs,5L,12L 
@@ -337,7 +400,7 @@
 #define SN_dsaWithSHA1_2		"DSA-SHA1-old"
 #define LN_dsaWithSHA1_2		"dsaWithSHA1-old"
 #define NID_dsaWithSHA1_2		70
-
+/* Got this one from 'sdn706r20.pdf' which is actually an NSA document :-) */
 #define OBJ_dsaWithSHA1_2		OBJ_algorithm,27L
 
 #define SN_netscape_cert_type		"nsCertType"
@@ -458,7 +521,8 @@
 #define SN_mdc2				"MDC2"
 #define LN_mdc2				"mdc2"
 #define NID_mdc2			95
-#define OBJ_mdc2			2L,5L,8L,3L,101L 
+#define OBJ_mdc2			2L,5L,8L,3L,101L
+/* An alternative?			1L,3L,14L,3L,2L,19L */
 
 #define SN_mdc2WithRSA			"RSA-MDC2"
 #define LN_mdc2WithRSA			"mdc2withRSA"
@@ -516,8 +580,9 @@
 #define SN_description			"D"
 #define LN_description			"description"
 #define NID_description			107
-#define OBJ_description			OBJ_X509,13L 
+#define OBJ_description			OBJ_X509,13L
 
+/* CAST5 is CAST-128, I'm just sticking with the documentation */
 #define SN_cast5_cbc			"CAST5-CBC"
 #define LN_cast5_cbc			"cast5-cbc"
 #define NID_cast5_cbc			108
@@ -537,8 +602,12 @@
 
 #define LN_pbeWithMD5AndCast5_CBC	"pbeWithMD5AndCast5CBC"
 #define NID_pbeWithMD5AndCast5_CBC	112
-#define OBJ_pbeWithMD5AndCast5_CBC	1L,2L,840L,113533L,7L,66L,12L 
+#define OBJ_pbeWithMD5AndCast5_CBC	1L,2L,840L,113533L,7L,66L,12L
 
+/* This is one sun will soon be using :-(
+ * id-dsa-with-sha1 ID  ::= {
+ *   iso(1) member-body(2) us(840) x9-57 (10040) x9cm(4) 3 }
+ */
 #define SN_dsaWithSHA1			"DSA-SHA1"
 #define LN_dsaWithSHA1			"dsaWithSHA1"
 #define NID_dsaWithSHA1			113
@@ -561,13 +630,23 @@
 #define SN_ripemd160			"RIPEMD160"
 #define LN_ripemd160			"ripemd160"
 #define NID_ripemd160			117
-#define OBJ_ripemd160			1L,3L,36L,3L,2L,1L 
+#define OBJ_ripemd160			1L,3L,36L,3L,2L,1L
 
+/* The name should actually be rsaSignatureWithripemd160, but I'm going
+ * to continue using the convention I'm using with the other ciphers */
 #define SN_ripemd160WithRSA		"RSA-RIPEMD160"
 #define LN_ripemd160WithRSA		"ripemd160WithRSA"
 #define NID_ripemd160WithRSA		119
-#define OBJ_ripemd160WithRSA		1L,3L,36L,3L,3L,1L,2L 
+#define OBJ_ripemd160WithRSA		1L,3L,36L,3L,3L,1L,2L
 
+/* Taken from rfc2040
+ *  RC5_CBC_Parameters ::= SEQUENCE {
+ *	version           INTEGER (v1_0(16)),
+ *	rounds            INTEGER (8..127),
+ *	blockSizeInBits   INTEGER (64, 128),
+ *	iv                OCTET STRING OPTIONAL
+ *	}
+ */
 #define SN_rc5_cbc			"RC5-CBC"
 #define LN_rc5_cbc			"rc5-cbc"
 #define NID_rc5_cbc			120
@@ -606,7 +685,9 @@
 
 #define SN_id_kp			"id-kp"
 #define NID_id_kp			128
-#define OBJ_id_kp			OBJ_id_pkix,3L  
+#define OBJ_id_kp			OBJ_id_pkix,3L
+
+/* PKIX extended key usage OIDs */
 
 #define SN_server_auth			"serverAuth"
 #define LN_server_auth			"TLS Web Server Authentication"
@@ -631,7 +712,9 @@
 #define SN_time_stamp			"timeStamping"
 #define LN_time_stamp			"Time Stamping"
 #define NID_time_stamp			133
-#define OBJ_time_stamp			OBJ_id_kp,8L  
+#define OBJ_time_stamp			OBJ_id_kp,8L
+
+/* Additional extended key usage OIDs: Microsoft */
 
 #define SN_ms_code_ind			"msCodeInd"
 #define LN_ms_code_ind			"Microsoft Individual Code Signing"
@@ -656,7 +739,9 @@
 #define SN_ms_efs			"msEFS"
 #define LN_ms_efs			"Microsoft Encrypted File System"
 #define NID_ms_efs			138
-#define OBJ_ms_efs			1L,3L,6L,1L,4L,1L,311L,10L,3L,4L  
+#define OBJ_ms_efs			1L,3L,6L,1L,4L,1L,311L,10L,3L,4L
+
+/* Additional usage: Netscape */
 
 #define SN_ns_sgc			"nsSGC"
 #define LN_ns_sgc			"Netscape Server Gated Crypto"
@@ -681,7 +766,9 @@
 #define SN_sxnet			"SXNetID"
 #define LN_sxnet			"Strong Extranet ID"
 #define NID_sxnet			143
-#define OBJ_sxnet			1L,3L,101L,1L,4L,1L  
+#define OBJ_sxnet			1L,3L,101L,1L,4L,1L
+
+/* PKCS12 and related OBJECT IDENTIFIERS */
 
 #define OBJ_pkcs12			OBJ_pkcs,12L
 #define OBJ_pkcs12_pbeids		OBJ_pkcs12, 1
@@ -766,7 +853,9 @@
 
 #define LN_x509Crl		"x509Crl"
 #define	NID_x509Crl		160
-#define OBJ_x509Crl		OBJ_crlTypes, 1L  
+#define OBJ_x509Crl		OBJ_crlTypes, 1L
+
+/* PKCS#5 v2 OIDs */
 
 #define LN_pbes2		"PBES2"
 #define NID_pbes2		161
@@ -778,7 +867,9 @@
 
 #define LN_hmacWithSHA1		"hmacWithSHA1"
 #define NID_hmacWithSHA1	163
-#define OBJ_hmacWithSHA1	OBJ_rsadsi,2L,7L  
+#define OBJ_hmacWithSHA1	OBJ_rsadsi,2L,7L
+
+/* Policy Qualifier Ids */
 
 #define LN_id_qt_cps		"Policy Qualifier CPS"
 #define SN_id_qt_cps		"id-qt-cps"
@@ -812,7 +903,9 @@
 #define SN_pbeWithSHA1AndDES_CBC	"PBE-SHA1-DES"
 #define LN_pbeWithSHA1AndDES_CBC	"pbeWithSHA1AndDES-CBC"
 #define NID_pbeWithSHA1AndDES_CBC	170
-#define OBJ_pbeWithSHA1AndDES_CBC	OBJ_pkcs,5L,10L  
+#define OBJ_pbeWithSHA1AndDES_CBC	OBJ_pkcs,5L,10L
+
+/* Extension request OIDs */
 
 #define LN_ms_ext_req			"Microsoft Extension Request"
 #define SN_ms_ext_req			"msExtReq"
@@ -861,7 +954,7 @@
 #define LN_OCSP_sign			"OCSP Signing"
 #define NID_OCSP_sign			180
 #define OBJ_OCSP_sign			OBJ_id_kp,9L
-#endif 
+#endif /* USE_OBJ_MAC */
 
 #include <openssl/bio.h>
 #include <openssl/asn1.h>
@@ -876,7 +969,8 @@
 #define	OBJ_NAME_ALIAS			0x8000
 
 #define OBJ_BSEARCH_VALUE_ON_NOMATCH		0x01
-#define OBJ_BSEARCH_FIRST_VALUE_ON_MATCH	0x02 
+#define OBJ_BSEARCH_FIRST_VALUE_ON_MATCH	0x02
+
 
 #ifdef  __cplusplus
 extern "C" {
@@ -890,7 +984,8 @@ typedef struct obj_name_st
 	const char *data;
 	} OBJ_NAME;
 
-#define		OBJ_create_and_add_object(a,b,c) OBJ_create(a,b,c) 
+#define		OBJ_create_and_add_object(a,b,c) OBJ_create(a,b,c)
+
 
 int OBJ_NAME_init(void);
 int OBJ_NAME_new_index(unsigned long (*hash_func)(const char *),
@@ -899,7 +994,7 @@ int OBJ_NAME_new_index(unsigned long (*hash_func)(const char *),
 const char *OBJ_NAME_get(const char *name,int type);
 int OBJ_NAME_add(const char *name,int type,const char *data);
 int OBJ_NAME_remove(const char *name,int type);
-void OBJ_NAME_cleanup(int type); 
+void OBJ_NAME_cleanup(int type); /* -1 for everything */
 void OBJ_NAME_do_all(int type,void (*fn)(const OBJ_NAME *,void *arg),
 		     void *arg);
 void OBJ_NAME_do_all_sorted(int type,void (*fn)(const OBJ_NAME *,void *arg),
@@ -925,18 +1020,26 @@ int		OBJ_new_nid(int num);
 int		OBJ_add_object(const ASN1_OBJECT *obj);
 int		OBJ_create(const char *oid,const char *sn,const char *ln);
 void		OBJ_cleanup(void );
-int		OBJ_create_objects(BIO *in);  
+int		OBJ_create_objects(BIO *in);
 
-void ERR_load_OBJ_strings(void);   
+/* BEGIN ERROR CODES */
+/* The following lines are auto generated by the script mkerr.pl. Any changes
+ * made after this point may be overwritten when the script is next run.
+ */
+void ERR_load_OBJ_strings(void);
 
+/* Error codes for the OBJ functions. */
+
+/* Function codes. */
 #define OBJ_F_OBJ_ADD_OBJECT				 105
 #define OBJ_F_OBJ_CREATE				 100
 #define OBJ_F_OBJ_DUP					 101
 #define OBJ_F_OBJ_NAME_NEW_INDEX			 106
 #define OBJ_F_OBJ_NID2LN				 102
 #define OBJ_F_OBJ_NID2OBJ				 103
-#define OBJ_F_OBJ_NID2SN				 104 
+#define OBJ_F_OBJ_NID2SN				 104
 
+/* Reason codes. */
 #define OBJ_R_MALLOC_FAILURE				 100
 #define OBJ_R_UNKNOWN_NID				 101
 

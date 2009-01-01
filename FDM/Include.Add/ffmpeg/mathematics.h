@@ -1,8 +1,22 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
-
-    
+ * copyright (c) 2005 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef MATHEMATICS_H
 #define MATHEMATICS_H
@@ -10,17 +24,28 @@
 #include "rational.h"
 
 enum AVRounding {
-    AV_ROUND_ZERO     = 0, 
-    AV_ROUND_INF      = 1, 
-    AV_ROUND_DOWN     = 2, 
-    AV_ROUND_UP       = 3, 
-    AV_ROUND_NEAR_INF = 5, 
-};  
+    AV_ROUND_ZERO     = 0, ///< round toward zero
+    AV_ROUND_INF      = 1, ///< round away from zero
+    AV_ROUND_DOWN     = 2, ///< round toward -infinity
+    AV_ROUND_UP       = 3, ///< round toward +infinity
+    AV_ROUND_NEAR_INF = 5, ///< round to nearest and halfway cases away from zero
+};
 
-int64_t av_rescale(int64_t a, int64_t b, int64_t c);  
+/**
+ * rescale a 64bit integer with rounding to nearest.
+ * a simple a*b/c isn't possible as it can overflow
+ */
+int64_t av_rescale(int64_t a, int64_t b, int64_t c);
 
-int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, enum AVRounding);  
+/**
+ * rescale a 64bit integer with specified rounding.
+ * a simple a*b/c isn't possible as it can overflow
+ */
+int64_t av_rescale_rnd(int64_t a, int64_t b, int64_t c, enum AVRounding);
 
+/**
+ * rescale a 64bit integer by 2 rational numbers.
+ */
 int64_t av_rescale_q(int64_t a, AVRational bq, AVRational cq);
 
-#endif 
+#endif /* MATHEMATICS_H */

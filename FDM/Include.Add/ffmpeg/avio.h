@@ -1,24 +1,42 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
-
-  
-
+ * unbuffered io for ffmpeg system
+ * copyright (c) 2001 Fabrice Bellard
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 #ifndef AVIO_H
-#define AVIO_H    
+#define AVIO_H
 
-typedef int64_t offset_t;    
+/* output byte stream handling */
+
+typedef int64_t offset_t;
+
+/* unbuffered I/O */
 
 struct URLContext {
     struct URLProtocol *prot;
     int flags;
-    int is_streamed;  
-    int max_packet_size;  
+    int is_streamed;  /* true if streamed (no seek possible), default = false */
+    int max_packet_size;  /* if non zero, the stream is packetized with this max packet size */
     void *priv_data;
 #if LIBAVFORMAT_VERSION_INT >= (52<<16)
-    char *filename; 
+    char *filename; /* specified filename */
 #else
-    char filename[1]; 
+    char filename[1]; /* specified filename */
 #endif
 };
 
@@ -44,12 +62,22 @@ int url_close(URLContext *h);
 int url_exist(const char *filename);
 offset_t url_filesize(URLContext *h);
 int url_get_max_packet_size(URLContext *h);
-void url_get_filename(URLContext *h, char *buf, int buf_size);  
+void url_get_filename(URLContext *h, char *buf, int buf_size);
 
-void url_set_interrupt_cb(URLInterruptCB *interrupt_cb);  
+/* the callback is called in blocking functions to test regulary if
+   asynchronous interruption is needed. -EINTR is returned in this
+   case by the interrupted function. 'NULL' means no interrupt
+   callback is given. */
+void url_set_interrupt_cb(URLInterruptCB *interrupt_cb);
 
-int url_poll(URLPollEntry *poll_table, int n, int timeout);  
+/* not implemented */
+int url_poll(URLPollEntry *poll_table, int n, int timeout);
 
+/**
+ * passing this as the "whence" parameter to a seek function causes it to
+ * return the filesize without seeking anywhere, supporting this is optional
+ * if its not supprted then the seek function will return <0
+ */
 #define AVSEEK_SIZE 0x10000
 
 typedef struct URLProtocol {
@@ -75,16 +103,16 @@ typedef struct {
     int (*read_packet)(void *opaque, uint8_t *buf, int buf_size);
     int (*write_packet)(void *opaque, uint8_t *buf, int buf_size);
     offset_t (*seek)(void *opaque, offset_t offset, int whence);
-    offset_t pos; 
-    int must_flush; 
-    int eof_reached; 
-    int write_flag;  
+    offset_t pos; /* position in the file of the current buffer */
+    int must_flush; /* true if the next seek should flush */
+    int eof_reached; /* true if eof reached */
+    int write_flag;  /* true if open for writing */
     int is_streamed;
     int max_packet_size;
     unsigned long checksum;
     unsigned char *checksum_ptr;
     unsigned long (*update_checksum)(unsigned long checksum, const uint8_t *buf, unsigned int size);
-    int error;         
+    int error;         ///< contains the error code or 0 if no error happened
 } ByteIOContext;
 
 int init_put_byte(ByteIOContext *s,
@@ -162,18 +190,22 @@ int url_open_dyn_packet_buf(ByteIOContext *s, int max_packet_size);
 int url_close_dyn_buf(ByteIOContext *s, uint8_t **pbuffer);
 
 unsigned long get_checksum(ByteIOContext *s);
-void init_checksum(ByteIOContext *s, unsigned long (*update_checksum)(unsigned long c, const uint8_t *p, unsigned int len), unsigned long checksum);  
+void init_checksum(ByteIOContext *s, unsigned long (*update_checksum)(unsigned long c, const uint8_t *p, unsigned int len), unsigned long checksum);
 
+/* file.c */
 extern URLProtocol file_protocol;
-extern URLProtocol pipe_protocol;  
+extern URLProtocol pipe_protocol;
 
+/* udp.c */
 extern URLProtocol udp_protocol;
 int udp_set_remote_url(URLContext *h, const char *uri);
 int udp_get_local_port(URLContext *h);
-int udp_get_file_handle(URLContext *h);  
+int udp_get_file_handle(URLContext *h);
 
-extern URLProtocol tcp_protocol;  
+/* tcp.c  */
+extern URLProtocol tcp_protocol;
 
+/* http.c */
 extern URLProtocol http_protocol;
 
 #endif

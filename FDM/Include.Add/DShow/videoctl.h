@@ -1,11 +1,20 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: VideoCtl.h
+//
+// Desc: DirectShow base classes.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
-                  
 
 #ifndef __VIDEOCTL__
-#define __VIDEOCTL__            
+#define __VIDEOCTL__
+
+// These help with property page implementations. The first can be used to
+// load any string from a resource file. The buffer to load into is passed
+// as an input parameter. The same buffer is the return value if the string
+// was found otherwise it returns TEXT(""). The GetDialogSize is passed the
+// resource ID of a dialog box and returns the size of it in screen pixels
 
 #define STR_MAX_LENGTH 256
 TCHAR * WINAPI StringFromResource(TCHAR *pBuffer, int iResourceID);
@@ -15,12 +24,15 @@ TCHAR * WINAPI StringFromResource(TCHAR *pBuffer, int iResourceID);
 char* WINAPI StringFromResource(char*pBuffer, int iResourceID);
 #else
 WCHAR * WINAPI WideStringFromResource(WCHAR *pBuffer, int iResourceID);
-#endif  
+#endif
 
-BOOL WINAPI GetDialogSize(int iResourceID,     
-                          DLGPROC pDlgProc,    
-                          LPARAM lParam,       
-                          SIZE *pResult);          
+
+BOOL WINAPI GetDialogSize(int iResourceID,     // Dialog box resource identifier
+                          DLGPROC pDlgProc,    // Pointer to dialog procedure
+                          LPARAM lParam,       // Any user data wanted in pDlgProc
+                          SIZE *pResult);      // Returns the size of dialog box
+
+// Class that aggregates an IDirectDraw interface
 
 class CAggDirectDraw : public IDirectDraw, public CUnknown
 {
@@ -33,7 +45,7 @@ public:
     DECLARE_IUNKNOWN
     STDMETHODIMP NonDelegatingQueryInterface(REFIID riid,void **ppv);
 
-    
+    // Constructor and destructor
 
     CAggDirectDraw(TCHAR *pName,LPUNKNOWN pUnk) :
         CUnknown(pName,pUnk),
@@ -41,12 +53,12 @@ public:
 
     virtual CAggDirectDraw::~CAggDirectDraw() { };
 
-    
+    // Set the object we should be aggregating
     void SetDirectDraw(LPDIRECTDRAW pDirectDraw) {
         m_pDirectDraw = pDirectDraw;
     }
 
-    
+    // IDirectDraw methods
 
     STDMETHODIMP Compact();
     STDMETHODIMP CreateClipper(DWORD dwFlags,LPDIRECTDRAWCLIPPER *lplpDDClipper,IUnknown *pUnkOuter);
@@ -68,7 +80,10 @@ public:
     STDMETHODIMP SetCooperativeLevel(HWND hWnd,DWORD dwFlags);
     STDMETHODIMP SetDisplayMode(DWORD dwWidth,DWORD dwHeight,DWORD dwBpp);
     STDMETHODIMP WaitForVerticalBlank(DWORD dwFlags,HANDLE hEvent);
-};      
+};
+
+
+// Class that aggregates an IDirectDrawSurface interface
 
 class CAggDrawSurface : public IDirectDrawSurface, public CUnknown
 {
@@ -81,7 +96,7 @@ public:
     DECLARE_IUNKNOWN
     STDMETHODIMP NonDelegatingQueryInterface(REFIID riid,void **ppv);
 
-    
+    // Constructor and destructor
 
     CAggDrawSurface(TCHAR *pName,LPUNKNOWN pUnk) :
         CUnknown(pName,pUnk),
@@ -89,12 +104,12 @@ public:
 
     virtual ~CAggDrawSurface() { };
 
-    
+    // Set the object we should be aggregating
     void SetDirectDrawSurface(LPDIRECTDRAWSURFACE pDirectDrawSurface) {
         m_pDirectDrawSurface = pDirectDrawSurface;
     }
 
-    
+    // IDirectDrawSurface methods
 
     STDMETHODIMP AddAttachedSurface(LPDIRECTDRAWSURFACE lpDDSAttachedSurface);
     STDMETHODIMP AddOverlayDirtyRect(LPRECT lpRect);
@@ -129,7 +144,14 @@ public:
     STDMETHODIMP UpdateOverlay(LPRECT lpSrcRect,LPDIRECTDRAWSURFACE lpDDDestSurface,LPRECT lpDestRect,DWORD dwFlags,LPDDOVERLAYFX lpDDOverlayFX);
     STDMETHODIMP UpdateOverlayDisplay(DWORD dwFlags);
     STDMETHODIMP UpdateOverlayZOrder(DWORD dwFlags,LPDIRECTDRAWSURFACE lpDDSReference);
-};              
+};
+
+
+// DirectShow must work on multiple platforms.  In particular, it also runs on
+// Windows NT 3.51 which does not have DirectDraw capabilities. The filters
+// cannot therefore link statically to the DirectDraw library. To make their
+// lives that little bit easier we provide this class that manages loading
+// and unloading the library and creating the initial IDirectDraw interface
 
 typedef DWORD (WINAPI *PGETFILEVERSIONINFOSIZE)(LPTSTR,LPDWORD);
 typedef BOOL (WINAPI *PGETFILEVERSIONINFO)(LPTSTR,DWORD,DWORD,LPVOID);
@@ -137,8 +159,8 @@ typedef BOOL (WINAPI *PVERQUERYVALUE)(LPVOID,LPTSTR,LPVOID,PUINT);
 
 class CLoadDirectDraw
 {
-    LPDIRECTDRAW m_pDirectDraw;     
-    HINSTANCE m_hDirectDraw;        
+    LPDIRECTDRAW m_pDirectDraw;     // The DirectDraw driver instance
+    HINSTANCE m_hDirectDraw;        // Handle to the loaded library
 
 public:
 
@@ -152,5 +174,5 @@ public:
     BOOL IsDirectDrawVersion1();
 };
 
-#endif 
+#endif // __VIDEOCTL__
 
