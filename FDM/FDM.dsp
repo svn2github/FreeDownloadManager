@@ -54,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 PartMediaPreview/Release/PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Release/FDMCustomized_lib.lib inetfile.lib alsfolderbrowser.lib Mswsock.lib Hash\Release\hash.lib inetfile/curl_lib/release/curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib Version.lib Iphlpapi.lib wldap32.lib libeay32.lib ssleay32.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"Lib.add" /OPT:REF /MAPINFO:LINES /MAPINFO:EXPORTS
+# ADD LINK32 PartMediaPreview/Release/PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Release/FDMCustomized_lib.lib inetfile.lib alsfolderbrowser.lib Mswsock.lib Hash\Release\hash.lib inetfile/curl_lib/release/curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib Version.lib Iphlpapi.lib libeay32.lib ssleay32.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"Lib.add" /OPT:REF /MAPINFO:LINES /MAPINFO:EXPORTS
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "FDM - Win32 Debug"
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 PartMediaPreview\Debug\PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Debug/FDMCustomized_lib.lib inetfile_d.lib alsFolderBrowserd.lib Hash\Debug\hash.lib InetFile\curl_lib\debug\curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib Version.lib Iphlpapi.lib libeay32d.lib ssleay32d.lib wldap32.lib /nologo /subsystem:windows /debug /machine:I386 /out:"./debug\fdm.exe" /pdbtype:sept /libpath:"Lib.add"
+# ADD LINK32 PartMediaPreview\Debug\PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Debug/FDMCustomized_lib.lib inetfile_d.lib alsFolderBrowserd.lib Hash\Debug\hash.lib InetFile\curl_lib\debug\curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib Version.lib Iphlpapi.lib libeay32d.lib ssleay32d.lib /nologo /subsystem:windows /debug /machine:I386 /out:"./debug\fdm.exe" /pdbtype:sept /libpath:"Lib.add"
 
 !ENDIF 
 
@@ -1251,6 +1251,10 @@ SOURCE=.\vmsMetalinkFile.cpp
 # Begin Source File
 
 SOURCE=.\vmsMozillaPrefs.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsNotEverywhereSupportedFunctions.cpp
 # End Source File
 # Begin Source File
 
@@ -2547,6 +2551,10 @@ SOURCE=.\vmsMetalinkFile.h
 # Begin Source File
 
 SOURCE=.\vmsMozillaPrefs.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsNotEverywhereSupportedFunctions.h
 # End Source File
 # Begin Source File
 
