@@ -184,7 +184,7 @@ void CCustomTreeChildCtrl::OnMouseMove(UINT nFlags, CPoint point)
     {
         TOOLINFO ti;
 		WPARAM wp = MAKEWPARAM (point.x, point.y);
-		ti.lpszText = (char*)malloc (100);
+		ti.lpszText = (char*)malloc (1000);
 		strcpy (ti.lpszText, "");
 		GetParent ()->SendMessage (ID_CTCC_GETTOOLTIPTEXT, wp, (LPARAM)&ti);
 
@@ -1413,7 +1413,8 @@ LRESULT CColumnTreeCtrl::OnCtccGetToolTipText(WPARAM wp, LPARAM lp)
 		return 0;
 	
 	TOOLINFO *pTI = (TOOLINFO*)lp;
-	strcpy (pTI->lpszText, strText);
+	strncpy (pTI->lpszText, strText, 500-1);
+	pTI->lpszText [500-1] = 0;
 	m_Tree.GetItemRect (hItem, &pTI->rect, FALSE);
 	return 0;
 }

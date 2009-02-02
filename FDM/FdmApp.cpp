@@ -1,5 +1,6 @@
-// FdmApp.cpp : Defines the class behaviors for the application.
-//
+/*
+  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+*/      
 
 #include "stdafx.h"
 
@@ -38,19 +39,13 @@ extern CSpiderWnd *_pwndSpider;
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
-#endif
-
-/////////////////////////////////////////////////////////////////////////////
-// CFdmApp
+#endif      
 
 BEGIN_MESSAGE_MAP(CFdmApp, CWinApp)
 	//{{AFX_MSG_MAP(CFdmApp)
 	ON_COMMAND(ID_APP_ABOUT, OnAppAbout)
 	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-// CFdmApp construction
+END_MESSAGE_MAP()      
 
 CFdmApp::CFdmApp()
 {
@@ -65,22 +60,17 @@ CFdmApp::CFdmApp()
 	SystemTimeToFileTime (&time, &_timeAppHasStarted);
 
 	m_pModuleState;
-}
+}      
 
-/////////////////////////////////////////////////////////////////////////////
-// The one and only CFdmApp object
+CFdmApp theApp;    
 
-CFdmApp theApp;
-
-/////////////////////////////////////////////////////////////////////////////
-// CFdmApp initialization
 BOOL CFdmApp::InitInstance()
 {
 	SetUnhandledExceptionFilter (_UEF);
 
 	AfxEnableControlContainer ();
 
-	// Change the registry key under which our settings are stored.
+	
 	SetRegistryKey (IDS_COMPANY);
 
 	CheckRegistry ();
@@ -89,7 +79,7 @@ BOOL CFdmApp::InitInstance()
 
 	fsIECatchMgr::CleanIEPluginKey ();
 
-	// application working directory
+	
 	CString strPath = GetProfileString ("", "Path", "");
 	BOOL bNeedLocalRegister = FALSE;
 	if (strPath == "")
@@ -107,8 +97,8 @@ BOOL CFdmApp::InitInstance()
 		bNeedLocalRegister = false;
 	}
 
-	// activate portable mode if fdm is not registered on this machine
-	// or it was registered but installation is damaged
+	
+	
 	if (strPath == "" || FALSE == SetCurrentDirectory (strPath))
 		_dwAppState |= APPSTATE_PORTABLE_MODE;
 
@@ -133,13 +123,13 @@ BOOL CFdmApp::InitInstance()
 	if (IS_PORTABLE_MODE == false)
 	{
 		CString strDataFldr = szExeDir; strDataFldr += "Data";
-		// if "Data" folder exists in app's exe folder that
-		// activate portable mode, because this folder is created in portable mode
-		// however fdm is installed on this machine also
+		
+		
+		
 		if (m_strAppPath.CompareNoCase (szExeDir) &&
 			 DWORD (-1) != GetFileAttributes (strDataFldr))
 		{
-			// portable fdm was launched, but there is installed fdm on this machine
+			
 			_dwAppState |= APPSTATE_PORTABLE_MODE;
 			_dwAppState |= APPSTATE_PORTABLE_MODE_NOREG;
 			m_strAppPath = szExeDir;
@@ -148,7 +138,7 @@ BOOL CFdmApp::InitInstance()
 
 	if (IS_PORTABLE_MODE)
 	{
-		// load portable settings
+		
 		vmsAppSettingsStore* pStgs = _App.get_SettingsStore ();
 		CString strStgsFile = m_strAppPath + "Data\\settings.dat";
 		fsBuildPathToFile (strStgsFile);
@@ -170,9 +160,9 @@ BOOL CFdmApp::InitInstance()
 
 	if (IS_PORTABLE_MODE)
 	{
-		// when in portable mode, there is may be the situation that we have no
-		// write access in fdm's exe folder. 
-		// so we should check this here
+		
+		
+		
 		char szTmpFile [MY_MAX_PATH];
 		CString str = m_strAppPath; str += "Data";
 		CreateDirectory (str, NULL);
@@ -188,9 +178,9 @@ BOOL CFdmApp::InitInstance()
 	_NOMgr.Initialize ();
 	_IECMM.ReadState ();
 
-	//HRESULT hRes = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	
 	HRESULT hRes = OleInitialize (NULL);
-	//HRESULT hRes = CoInitialize (0);
+	
 	if (FAILED(hRes))
 		return FALSE;
 	
@@ -200,10 +190,10 @@ BOOL CFdmApp::InitInstance()
 	cmdline.Parse ();
 	m_bForceSilentSpecified = cmdline.is_ForceSilentSpecified ();
 
-	// fix for 2.3 beta 6
+	
 	if (GetVersion () & 0x80000000)
 	{
-		// win 9x
+		
 		CFileFind f; 
 		BOOL b = f.FindFile (m_strAppPath + "*.sav");
 		std::vector <CString> v;
@@ -216,7 +206,7 @@ BOOL CFdmApp::InitInstance()
 			MoveFile (m_strAppPath + v [i], fsGetDataFilePath (v [i]));
 	}
 	MoveFile (fsGetDataFilePath ("uploads.sav"), fsGetDataFilePath ("uploads.1.sav"));
-	//////////////////////////////
+	
 
 	if (!InitATL())
 		return FALSE;
@@ -242,31 +232,26 @@ BOOL CFdmApp::InitInstance()
 		}
 	}
 
-	// register portable fdm in system
-	// at the exit we'll unregister it
+	
+	
 	if (IS_PORTABLE_MODE && (_dwAppState & APPSTATE_PORTABLE_MODE_NOREG) == 0)
 		Install_RegisterServer ();
 
-	// todo: remove this, because vmsFilesToDeleted was replaced
-	//  by vmsDeleteFileAtWinBoot function.
-	// it was kept only in order to get users of older versions (build < 590, 2.1 version)
-	// update correctly (get deleted scheduled to delete files).
+	
+	
+	
+	
 	vmsFilesToDelete::Process ();
 
 	if (bNeedLocalRegister)
 		RegisterServer (FALSE);
 
-	/*if (bNoLng)
-	{
-		CString str;
-		str.Format ("Free Download Manager can't find language files.\nPlease reinstall it.\n\nError code: %d.", m_nNoLngsErrReason);
-		MessageBox (NULL, str, LS (L_ERR), MB_ICONWARNING);
-	}*/
+	
 
 #ifdef _AFXDLL
-	Enable3dControls();			// Call this when using MFC in a shared DLL
+	Enable3dControls();			
 #else
-	Enable3dControlsStatic();	// Call this when linking to MFC statically
+	Enable3dControlsStatic();	
 #endif
 
 	CheckLocked ();
@@ -274,11 +259,11 @@ BOOL CFdmApp::InitInstance()
 	m_bSaveAllOnExit = TRUE;
 
 	_UpdateMgr.ReadSettings ();
-	// was the file with updates downloaded, need we run it ?
+	
 	if (_UpdateMgr.IsStartUpdaterNeeded ())
 	{
-		if (_UpdateMgr.StartUpdater ())	// running ?
-			return FALSE;	// exit and update
+		if (_UpdateMgr.StartUpdater ())	
+			return FALSE;	
 		else
 			::MessageBox (NULL, LS (L_CANTFINDUPDATER), LS (L_ERR), MB_ICONERROR);
 	}
@@ -291,28 +276,28 @@ BOOL CFdmApp::InitInstance()
 	{
 		fsIEUserAgent ua;
 		ua.SetPP (IE_USERAGENT_ADDITION);
-		ua.RemovePP ("Free Download Manager"); // old u-a
+		ua.RemovePP ("Free Download Manager"); 
 	}
 
-	if (FALSE == GetProfileInt ("EnvCheck", "778", FALSE))
+	if (FALSE == GetProfileInt ("EnvCheck", "848", FALSE))
 	{
-		if (vmsBtSupport::getBtDllVersion () < 778)
+		if (vmsBtSupport::getBtDllVersion () < 848)
 			MessageBox (NULL, "Please update Bittorrent module.\nSome functions will be disabled until you update it.", "Warning", MB_ICONEXCLAMATION);
-		WriteProfileInt ("EnvCheck", "778", TRUE);
+		WriteProfileInt ("EnvCheck", "848", TRUE);
 	}
 
 	CMainFrame* pFrame = NULL;
 	fsnew1 (pFrame, CMainFrame);
 	m_pMainWnd = pFrame;
 
-	// creating the main window
+	
 	if (FALSE == pFrame->LoadFrame(IDR_MAINFRAME, WS_OVERLAPPEDWINDOW | FWS_ADDTOTITLE, 
 		NULL, NULL))
 	{
 		return FALSE;
 	}
 
-	// -autorun is used to start fdm at the system startup
+	
 	BOOL bHidden = _tcscmp (m_lpCmdLine, _T ("-autorun")) == 0;
 
 	_App.View_ReadWndPlacement (pFrame, "MainFrm", bHidden);
@@ -334,7 +319,7 @@ BOOL CFdmApp::InitInstance()
 
 	m_bStarting = FALSE;
 
-	// register fdm's COM objects factories in the system
+	
 	hRes = _Module.RegisterClassObjects (CLSCTX_LOCAL_SERVER, 
 				REGCLS_MULTIPLEUSE);
 	if (FAILED (hRes))
@@ -346,48 +331,40 @@ BOOL CFdmApp::InitInstance()
 				FORMAT_MESSAGE_IGNORE_INSERTS,
 				NULL,
 				hRes,
-				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+				MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), 
 				(LPTSTR) &lpMsgBuf,
 				0,
 				NULL 
 				);
-			// Process any inserts in lpMsgBuf.
-			// ...
-			// Display the string.
+			
+			
+			
 			MessageBox( NULL, (LPCTSTR)lpMsgBuf, "Error", MB_OK | MB_ICONINFORMATION );
-			// Free the buffer.
+			
 			LocalFree( lpMsgBuf );
 	}
 	m_bATLInited2 = SUCCEEDED (hRes);
 
 	return TRUE;
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CFdmApp message handlers
-
-////////////////////////////////////////////////////////////////////////////
-// CAboutDlg dialog used for App About
+}            
 
 class CAboutDlg : public CDialog
 {
 public:
-	CAboutDlg();
+	CAboutDlg();  
 
-// Dialog Data
 	//{{AFX_DATA(CAboutDlg)
 	enum { IDD = IDD_ABOUTBOX };
 	CUrlWnd	m_wndDLURL;
 	CUrlWnd	m_wndFirm;
 	//}}AFX_DATA
 
-	// ClassWizard generated virtual function overrides
+	
 	//{{AFX_VIRTUAL(CAboutDlg)
 	protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-	//}}AFX_VIRTUAL
+	virtual void DoDataExchange(CDataExchange* pDX);    
+	//}}AFX_VIRTUAL  
 
-// Implementation
 protected:
 	CFont m_fntUnderline;
 	CFont m_fontRegInfo;
@@ -412,7 +389,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CAboutDlg)
-	//DDX_Control(pDX, IDC__LICTO, m_wndRegUser);
+	
 	//}}AFX_DATA_MAP
 }
 
@@ -420,20 +397,15 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
 	//{{AFX_MSG_MAP(CAboutDlg)
 	ON_WM_CTLCOLOR()
 	//}}AFX_MSG_MAP
-END_MESSAGE_MAP()
+END_MESSAGE_MAP()  
 
-// App command to run the dialog
 void CFdmApp::OnAppAbout()
 {
 	CAboutDlg aboutDlg;
    	_DlgMgr.OnDoModal (&aboutDlg);
 	aboutDlg.DoModal();
     _DlgMgr.OnEndDialog (&aboutDlg);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CFdmApp message handlers
-
+}        
 
 int CFdmApp::ExitInstance() 
 {
@@ -446,7 +418,7 @@ int CFdmApp::ExitInstance()
 	if (m_bATLInited)
 		_Module.Term();
 
-	// need to save history and ... ?
+	
 	if (m_bSaveAllOnExit)
 	{
 		SaveSettings ();
@@ -454,10 +426,9 @@ int CFdmApp::ExitInstance()
 		_UpdateMgr.SaveSettings ();
 	}
 
-	/*if (m_hAppMutex)
-		CloseHandle (m_hAppMutex);*/
+	
 
-	//ScheduleExitProcess (7);
+	
 	
 	return CWinApp::ExitInstance();
 }
@@ -482,12 +453,10 @@ BOOL CAboutDlg::OnInitDialog()
 		vmsFdmAppMgr::getBuildNumber ());
 	SetDlgItemText (IDC__VER, strVer);
 
-	//SetDlgItemText (IDC__LICTO, LS (L_NOTREGISTERED));
+	
 
-	/*CString str;
-	str.Format ("%s 2003-2004, FreeDownloadManager.ORG\n%s", LS (L_COPYRIGHT), LS (L_ALLRIGHTS));
-	SetDlgItemText (IDC__COPYRIGHT, str);*/
-	//SetDlgItemText (IDC__REGTO, LS (L_LICTO));
+	
+	
 
 	m_wndFirm.SubclassDlgItem (IDC__FIRM, this);
 	m_wndFirm.Init ();
@@ -523,7 +492,7 @@ HBRUSH CAboutDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 		 pWnd->m_hWnd == m_wndDLURL.m_hWnd || 
 		 pWnd->m_hWnd == m_wndSupport.m_hWnd)
 	{
-		pDC->SetTextColor (GetSysColor (26/*COLOR_HOTLIGHT*/));
+		pDC->SetTextColor (GetSysColor (26));
         pDC->SelectObject (&m_fntUnderline);
 	}
 
@@ -537,7 +506,7 @@ void CFdmApp::LoadHistory()
 {
 	_HsMgr.ReadSettings ();
 
-	// history file
+	
 	HANDLE hFile = CreateFile (fsGetDataFilePath ("history.sav"), GENERIC_READ, FILE_SHARE_READ, NULL, 
 		OPEN_EXISTING, 0, NULL);
 
@@ -548,23 +517,23 @@ void CFdmApp::LoadHistory()
 		return;
 	}
 
-	// urls
+	
 	if (!_LastUrlFiles.ReadFromFile (hFile))
 		goto _lErr;
 
-	// web-sites
+	
 	if (!_LastUrlPaths.ReadFromFile (hFile))
 		goto _lErr;
 
-	// output directories
+	
 	if (!_LastFolders.ReadFromFile (hFile))
 		goto _lErr;
 
-	// batch downloads templates
+	
 	if (!_LastBatchUrls.ReadFromFile (hFile))
 		goto _lErr;
 
-	// history of "what to search" in find download dialog
+	
 	if (!_LastFind.ReadFromFile (hFile))
 		goto _lErr;
 
@@ -578,8 +547,7 @@ void CFdmApp::LoadHistory()
 _lErr:
 	if (hFile != INVALID_HANDLE_VALUE)
 		CloseHandle (hFile);
-	/*if (IDRETRY == MessageBox (NULL, LS (L_CANTLOADHIST), LS (L_ERR), MB_ICONERROR|MB_RETRYCANCEL))
-		LoadHistory ();*/
+	
 }
 
 void CFdmApp::SaveHistory()
@@ -617,13 +585,10 @@ void CFdmApp::SaveHistory()
 _lErr:
 	if (hFile != INVALID_HANDLE_VALUE)
 		CloseHandle (hFile);
-	/*if (IDRETRY == MessageBox (NULL, LS (L_CANTSAVEHIST), LS (L_ERR), MB_ICONERROR|MB_RETRYCANCEL))
-		SaveHistory ();
-	else*/
+	
 		DeleteFile (fsGetDataFilePath ("history.sav"));
-}
+}  
 
-/* the standard class, derived from CComModule and it's standard implementation */
 	
 CFdmModule _Module;
 
@@ -670,7 +635,7 @@ BOOL CFdmApp::InitATL()
 {
 	m_bEmbedding = FALSE;
 
-	LPTSTR lpCmdLine = GetCommandLine(); //this line necessary for _ATL_MIN_CRT
+	LPTSTR lpCmdLine = GetCommandLine(); 
 	TCHAR szTokens[] = _T("-/");
 
 	BOOL bRun = TRUE;
@@ -680,7 +645,7 @@ BOOL CFdmApp::InitATL()
 	{
 		if (lstrcmpi(lpszToken, _T("Embedding"))==0)
 		{
-			//m_bEmbedding = TRUE;
+			
 		}
 
 		if (lstrcmpi(lpszToken, _T("UnregServer"))==0)
@@ -752,23 +717,23 @@ BOOL CFdmApp::InitLanguage()
 {
 	m_nNoLngsErrReason = 0;
 	
-	// init localization manager
+	
 	if (FALSE == _LngMgr.Initialize ())
 	{
 		m_nNoLngsErrReason = 1;
 		return FALSE;
 	}
 
-	// selected language
+	
 	int iLang = _LngMgr.FindLngByName (_App.View_Language ());
 	if (iLang == -1) 
 		iLang = 0;
 
-	// loading a language file ...
+	
 
 	if (FALSE == _LngMgr.LoadLng (iLang))
 	{
-		// ... error, trying to load the first file
+		
 		if (iLang == 0 || FALSE == _LngMgr.LoadLng (0))
 		{
 			m_nNoLngsErrReason = 2;
@@ -785,7 +750,7 @@ BOOL CFdmApp::CheckFdmStartedAlready(BOOL bSetForIfEx)
 
 	m_hAppMutex = CreateMutex (NULL, TRUE, _pszAppMutex);
 	
-	// application is already running ?
+	
 	if (GetLastError () == ERROR_ALREADY_EXISTS)
 	{
 		CloseHandle (m_hAppMutex);
@@ -793,7 +758,7 @@ BOOL CFdmApp::CheckFdmStartedAlready(BOOL bSetForIfEx)
 
 		if (bSetForIfEx)
 		{
-			// activating the main window
+			
 
 			HWND hWnd = FindWindow (pszMainWnd, NULL);
 
@@ -815,8 +780,7 @@ BOOL CFdmApp::CheckFdmStartedAlready(BOOL bSetForIfEx)
 	}
 
 	return FALSE;
-}
-
+}  
 
 CFdmApp::~CFdmApp()
 {
@@ -841,9 +805,7 @@ LONG CFdmApp::_UEF(_EXCEPTION_POINTERS *info)
 	if (pfnMiniDumpWriteDump == NULL)
 		return EXCEPTION_EXECUTE_HANDLER;
 	
-	/*CMainFrame* pFrame = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
-	if (pFrame)
-		pFrame->OnSaveall ();*/
+	
 	
 	MINIDUMP_EXCEPTION_INFORMATION eInfo;
     eInfo.ThreadId = GetCurrentThreadId();
@@ -857,7 +819,7 @@ LONG CFdmApp::_UEF(_EXCEPTION_POINTERS *info)
 	HANDLE hFile = CreateFile (szFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
 		0, NULL);
 
-    // note:  MiniDumpWithIndirectlyReferencedMemory does not work on Win98
+    
     pfnMiniDumpWriteDump(
         GetCurrentProcess(),
         GetCurrentProcessId(),
@@ -910,42 +872,20 @@ void CFdmApp::UninstallCustomizations()
 	char sz [MY_MAX_PATH];
 	DWORD dw = MY_MAX_PATH;
 	
-	// link to site in start menu
+	
 	key.QueryValue (sz, "CLSM_File", &dw);
 	DeleteFile (sz);
 
-	// link to site in favorites
+	
 	dw = MY_MAX_PATH;
 	key.QueryValue (sz, "CLFM_File", &dw);
 	DeleteFile (sz);
 
-	/*CString str = m_strAppPath;
-	str += "fdmcsiebtn.dll";
+	
 
-	typedef HRESULT (_stdcall *fntDllRegUnregServer)(void);
-	HMODULE hLib = LoadLibrary (str);
-	if (hLib)
-	{
-		fntDllRegUnregServer pfnDll;
-		pfnDll = (fntDllRegUnregServer) GetProcAddress (hLib, "DllUnregisterServer");
+	
 
-		if (pfnDll)
-			pfnDll ();
-
-		FreeLibrary (hLib);
-	}
-
-	DeleteFile (str);
-
-	str = m_strAppPath; str += "fdmcsiebtn.ico";
-	DeleteFile (str);
-
-	str = m_strAppPath; str += "fdmcs.ico";
-	DeleteFile (str);*/
-
-	/**/
-
-	// restore Internet Explorer home page
+	
 
 	char szIEOP [10000] = "about:blank";
 	char szIECP [10000] = "about:blank";
@@ -991,19 +931,19 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 	{
 		fsIEUserAgent ua;
 		ua.SetPP (IE_USERAGENT_ADDITION);
-        ua.RemovePP ("Free Download Manager"); // old user agent
+        ua.RemovePP ("Free Download Manager"); 
 	}
 
 	if (bGlobal)
 	{
 		CRegKey key;
-		// if fdm was installed by admin, for example, and now some user
-		// tries to start fdm, we should copy all info from local machine key
-		// to key of current user in order to get fdm registered properly
+		
+		
+		
 		if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, "Software\\FreeDownloadManager.ORG\\Free Download Manager", KEY_WRITE))
 			vmsSHCopyKey (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Download Manager", key);
 
-		// register COM objects
+		
 		HRESULT hr = _Module.UpdateRegistryFromResource (IDR_FDM, TRUE);
 		LOGRESULT ("UpdateRegistryFromResource", hr);
 	
@@ -1031,11 +971,9 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 			LOGRESULT ("register typelib", hr);
 		}
 		
-		// register type lib
+		
 		ITypeLib *pLib = NULL;
-		/*if (SUCCEEDED (hr = LoadTypeLibEx (L"fuminterfaces.tlb", REGKIND_REGISTER, &pLib)))
-			pLib->Release ();
-		LOGRESULT ("register fuminterfaces.tlb", hr);*/
+		
 		if (SUCCEEDED (hr = LoadTypeLibEx (L"fdm.tlb", REGKIND_REGISTER, &pLib)))
 			pLib->Release ();
 		else
@@ -1044,7 +982,7 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 
 		if (_AppMgr.IsBtInstalled ())
 		{
-			// register .torrent extension to be opened with us
+			
 			if (vmsTorrentExtension::IsAssociatedWithUs () == FALSE)
 			{
 				if (_App.Bittorrent_Enable () || vmsTorrentExtension::IsAssociationExist () == FALSE)
@@ -1060,11 +998,11 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 
 	if (GetProfileInt ("Settings\\Monitor", "IECMInited", 0) == 0)
 		WriteProfileInt ("Settings\\Monitor", "IECMInited", TRUE);
-	_IECMM.DeleteIEMenus (); // remove menus of builds < 460 
+	_IECMM.DeleteIEMenus (); 
 	fsIEContextMenuMgr::DeleteAllFDMsIEMenus ();
 	_IECMM.AddIEMenus ();
 
-	// get list of browser for which user enabled monitoring
+	
 	DWORD dwMUSO = _App.Monitor_UserSwitchedOn ();
 				
 	_IECatchMgr.ActivateIE2 ((dwMUSO & MONITOR_USERSWITCHEDON_IE) != 0);
@@ -1074,7 +1012,7 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 		_App.Monitor_Firefox (FALSE);
 	else
 		_App.Monitor_Firefox ((dwMUSO & MONITOR_USERSWITCHEDON_FIREFOX) != 0);
-	// remove old-method integration (versions of fdm < 2.1)
+	
 	_NOMgr.DeinstallFirefoxPlugin ();
 
 	if (dwMUSO & MONITOR_USERSWITCHEDON_NETSCAPE)
@@ -1133,10 +1071,10 @@ void CFdmApp::Install_UnregisterServer()
 		_Module.dwThreadID = GetCurrentThreadId();
 	}
 			
-	// unregister COM objects and type lib
+	
 	HRESULT hr = _Module.UpdateRegistryFromResource(IDR_FDM, FALSE);
 	LOGRESULT ("_Module.UpdateRegistryFromResource", hr);
-	hr = _Module.UnregisterServer(!bUnregisterForUserOnly); //TRUE means typelib is unreg'd
+	hr = _Module.UnregisterServer(!bUnregisterForUserOnly); 
 	LOGRESULT ("_Module.UnregisterServer", hr);
 	UnRegisterTypeLib (LIBID_FdmLib, 0, 0, LOCALE_SYSTEM_DEFAULT, SYS_WIN32);
 
@@ -1168,13 +1106,13 @@ void CFdmApp::Install_UnregisterServer()
 		LOGRESULT ("unregister typelib", hr);
 	}
 	
-	// if the menu is present, then we need to show it again while installation,
-	// point on it
+	
+	
 	if (_IECMM.IsIEMenusPresent ())
 		WriteProfileInt ("Settings\\Monitor", "IECMInited", 0);
 
 	fsIEContextMenuMgr::DeleteAllFDMsIEMenus ();
-	//_IECMM.DeleteIEMenus ();
+	
 	_NOMgr.DeinstallNetscapePlugin ();
 	_NOMgr.DeinstallOperaPlugin ();
     _NOMgr.DeinstallMozillaSuitePlugin ();
@@ -1184,7 +1122,7 @@ void CFdmApp::Install_UnregisterServer()
 	UninstallCustomizations ();
 	vmsFirefoxMonitoring::Install (false);
 
-	// restore old association with .torrent extension
+	
 	if (vmsTorrentExtension::IsAssociatedWithUs ())
 		vmsTorrentExtension::AssociateWith (_App.Bittorrent_OldTorrentAssociation ());
 
@@ -1196,13 +1134,12 @@ void CFdmApp::SaveSettings()
 {
 	if (IS_PORTABLE_MODE)
 	{
-		// flush settings to file
+		
 		vmsAppSettingsStore* pStgs = _App.get_SettingsStore ();
 		CString strStgsFile = fsGetDataFilePath ("settings.dat");
 		pStgs->SaveSettingsToFile (strStgsFile);
 	}
-}
-
+}  
 
 void CFdmApp::IntegrationSettings()
 {
@@ -1267,7 +1204,7 @@ void CFdmApp::CheckRegistry()
 	CString strOldRKey = strOldKey;
 	strOldKey += "\\Free Download Manager";
 
-	// move registry settings from old key to FreeDownloadManager.ORG key.
+	
 	CRegKey key;
 	if (ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, strOldKey))
 	{
@@ -1284,8 +1221,8 @@ void CFdmApp::CheckRegistry()
 
 				CString strPath = GetProfileString ("", "Path", "");
 				LONG nRes = fsCopyKey (key, key2, "Free Download Manager", "Free Download Manager");
-				nRes; //disable warning
-				WriteProfileString ("", "Path", strPath); // keep Path value unchanged
+				nRes; 
+				WriteProfileString ("", "Path", strPath); 
 				
 				key.RecurseDeleteKey ("Free Download Manager");
 			}

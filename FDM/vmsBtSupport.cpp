@@ -299,6 +299,9 @@ vmsBtFile* vmsBtSupport::CreateTorrentFileObject()
 
 bool vmsBtSupport::LoadBtDll(vmsDLL &dll)
 {
+	if (getBtDllVersion () < BTSUPP_DLL_MINVERREQ)
+		return false;
+
 	CString str = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
 	if (str [str.GetLength () - 1] != '\\')
 		str += '\\';
@@ -335,5 +338,5 @@ int vmsBtSupport::getBtDllVersion()
 	if (FALSE == VerQueryValue (pvVer, _T ("\\"), (LPVOID*)&pFileInfo, &u))
 		return ver = 0;
 	
-	return ver = pFileInfo->dwFileVersionLS >> 32;
+	return ver = pFileInfo->dwFileVersionLS >> 16;
 }

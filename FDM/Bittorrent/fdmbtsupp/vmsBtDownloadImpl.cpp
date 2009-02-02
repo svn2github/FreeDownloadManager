@@ -467,3 +467,25 @@ torrent_status& vmsBtDownloadImpl::status ()
 
 	return m_status;
 }
+
+void vmsBtDownloadImpl::get_CurrentTracker2 (LPSTR pszRes, DWORD dwBuffSize)
+{
+	if (m_handle.is_valid () == false) {
+		*pszRes = 0;
+		return;
+	}
+	
+	torrent_status s = m_handle.status ();
+	LPCSTR pszT = s.current_tracker.c_str ();
+	if ((pszT == NULL || *pszT == 0) && m_handle.get_torrent_info ().trackers ().size ())
+		pszT = m_handle.get_torrent_info ().trackers () [0].url.c_str ();
+	if (pszT)
+	{
+		strncpy (pszRes, pszT, dwBuffSize - 1);
+		pszRes [dwBuffSize - 1] = 0;
+	}
+	else
+	{
+		*pszRes = 0;
+	}
+}

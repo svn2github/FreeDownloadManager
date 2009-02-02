@@ -4,7 +4,8 @@
 
 #include "stdafx.h"
 #include "vmsFdmAppMgr.h"
-#include "FdmApp.h"        
+#include "FdmApp.h"
+#include "MyMessageBox.h"        
 
 vmsFdmAppMgr::vmsFdmAppMgr()
 {
@@ -18,7 +19,19 @@ vmsFdmAppMgr::~vmsFdmAppMgr()
 
 BOOL vmsFdmAppMgr::IsBtInstalled()
 {
-	return GetFileAttributes (((CFdmApp*)AfxGetApp ())->m_strAppPath + "fdmbtsupp.dll") != DWORD (-1);
+	static int _r = -1;
+
+	if (_r == -1)
+	{
+		if (GetFileAttributes (((CFdmApp*)AfxGetApp ())->m_strAppPath + "fdmbtsupp.dll") == DWORD (-1))
+			_r = FALSE;
+		else if (vmsBtSupport::getBtDllVersion () < BTSUPP_DLL_MINVERREQ)
+			_r = FALSE;
+		else
+			_r = TRUE;
+	}
+	
+	return _r;
 }
 
 BOOL vmsFdmAppMgr::IsMediaFeaturesInstalled()
@@ -85,4 +98,45 @@ LPCSTR vmsFdmAppMgr::getAppAgentName()
 LPCSTR vmsFdmAppMgr::getAppName()
 {
 	return getVersion ()->m_strProductName.c_str ();
+}
+
+BOOL vmsFdmAppMgr::MakeSureBtInstalled()
+{
+	if (Is9xME)
+		return FALSE;
+
+	if (_App.Bittorrent_Enable () == FALSE)
+	{
+		if (_App.View_DontAskEnableBittorrent () == FALSE)
+		{
+			CMyMessageBox dlg (_pwndDownloads);
+			dlg.m_hIcon = LoadIcon (NULL, IDI_QUESTION);
+			dlg.m_strBtn1Text = LS (L_YES);
+			dlg.m_strBtn2Text = LS (L_NO);
+			dlg.m_strCheckBoxText = LS (L_DONTASKAGAIN);
+			dlg.m_strText = LS (L_ENABLEBTISREQ);
+			dlg.m_strTitle = LS (L_CONFIRMATION);
+			dlg.m_bChecked = FALSE;
+			if (IDC_BTN1 != _DlgMgr.DoModal (&dlg))
+			{
+				if (dlg.m_bChecked)
+					_App.View_DontAskEnableBittorrent (TRUE);
+				return FALSE;
+			}
+			_App.Bittorrent_Enable (TRUE);
+		}
+		else 
+		{
+			return FALSE;
+		}
+	}
+	
+	if (IsBtInstalled () == FALSE)
+	{
+		ShowInstallBtMessage ();
+		_App.Bittorrent_Enable (FALSE);
+		return FALSE;
+	}
+
+	return TRUE;
 }

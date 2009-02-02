@@ -13,7 +13,7 @@ static char THIS_FILE[]=__FILE__;
 #endif  
 
 std::vector <vmsBtDownloadManager*>* vmsBtDownloadManager::m_pvpDlds;
-LPCRITICAL_SECTION vmsBtDownloadManager::m_pcsvpDlds;
+LPCRITICAL_SECTION vmsBtDownloadManager::m_pcsvpDlds = NULL;
 HANDLE vmsBtDownloadManager::m_htDlds = NULL;
 LONG vmsBtDownloadManager::m_cStatDataRefs = 0;        
 
@@ -159,7 +159,7 @@ void vmsBtDownloadManager::ProcessFilePathMacroses(CString &str)
 		return;	
 
 	char szTracker [10000];
-	m_pTorrent->get_TrackerUrl (szTracker, 0);
+	m_pTorrent->get_TrackerUrl2 (szTracker, 0, sizeof (szTracker));
 	fsURL url;
 	url.Crack (szTracker);
 
@@ -212,7 +212,7 @@ fsString vmsBtDownloadManager::get_TorrentName()
 {
 	ASSERT (m_pTorrent != NULL);
 	char sz [10000] = "";
-	m_pTorrent->get_TorrentName (sz);
+	m_pTorrent->get_TorrentName2 (sz, sizeof (sz));
 	vmsUtf8ToAscii (sz);
 	return sz;
 }
@@ -310,8 +310,8 @@ void vmsBtDownloadManager::set_TrackerLogin(LPCSTR pszUser, LPCSTR pszPassword)
 fsString vmsBtDownloadManager::get_TorrentComment()
 {
 	ASSERT (m_pTorrent != NULL);
-	char sz [100000] = "";
-	m_pTorrent->get_TorrentComment (sz);
+	char sz [3000] = "";
+	m_pTorrent->get_TorrentComment2 (sz, sizeof (sz));
 	vmsUtf8ToAscii (sz);
 	return sz;
 }
@@ -320,7 +320,7 @@ fsString vmsBtDownloadManager::get_FileName(int nIndex)
 {
 	ASSERT (m_pTorrent != NULL);
 	char sz [MY_MAX_PATH] = "";
-	m_pTorrent->get_FileName (nIndex, sz);
+	m_pTorrent->get_FileName2 (nIndex, sz, sizeof (sz));
 	vmsUtf8ToAscii (sz);
 	LPSTR psz = sz;
 	while (*psz)
@@ -372,8 +372,8 @@ fsString vmsBtDownloadManager::get_CurrentTracker()
 		InterlockedDecrement (&m_nUsingBtDownload);
 		return m_info.strCurrentTracker;
 	}
-	char sz [100000] = "";
-	m_pDownload->get_CurrentTracker (sz);
+	char sz [10000] = "";
+	m_pDownload->get_CurrentTracker2 (sz, sizeof (sz));
 	InterlockedDecrement (&m_nUsingBtDownload);
 	return sz;
 }
@@ -1516,7 +1516,7 @@ std::wstring vmsBtDownloadManager::get_FileNameW(int nIndex)
 {
 	ASSERT (m_pTorrent != NULL);
 	char sz [MY_MAX_PATH] = "";
-	m_pTorrent->get_FileName (nIndex, sz);
+	m_pTorrent->get_FileName2 (nIndex, sz, MY_MAX_PATH);
 	std::wstring wstr = vmsUtf8Unicode (sz);
 	LPWSTR pwsz = (LPWSTR)wstr.c_str ();
 	while (*pwsz)
@@ -1722,6 +1722,8 @@ BOOL vmsBtDownloadManager::LoadTorrentFile(LPCSTR pszFile)
 		return TRUE;
 	
 	m_pTorrent = _BT.CreateTorrentFileObject ();
+	if (m_pTorrent == NULL)
+		return FALSE;
 	
 	if (FALSE == m_pTorrent->LoadFromFile (pszFile))
 	{
@@ -1913,6 +1915,7 @@ void vmsBtDownloadManager::Shutdown()
 	{
 		EnterCriticalSection (m_pcsvpDlds);
 		TerminateThread (m_htDlds, 0);
+		m_htDlds = NULL;
 		LeaveCriticalSection (m_pcsvpDlds);
 	}
 }

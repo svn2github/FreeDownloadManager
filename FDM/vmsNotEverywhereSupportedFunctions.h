@@ -1,13 +1,13 @@
-// vmsNotEverywhereSupportedFunctions.h: interface for the vmsNotEverywhereSupportedFunctions class.
-//
-//////////////////////////////////////////////////////////////////////
+/*
+  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+*/        
 
 #if !defined(AFX_VMSNOTEVERYWHERESUPPORTEDFUNCTIONS_H__0FED89AF_F5BC_411C_9AC5_7E54AC78C984__INCLUDED_)
 #define AFX_VMSNOTEVERYWHERESUPPORTEDFUNCTIONS_H__0FED89AF_F5BC_411C_9AC5_7E54AC78C984__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+#endif 
 
 class vmsNotEverywhereSupportedFunctions  
 {
@@ -17,4 +17,4 @@ public:
 	virtual ~vmsNotEverywhereSupportedFunctions();
 };
 
-#endif // !defined(AFX_VMSNOTEVERYWHERESUPPORTEDFUNCTIONS_H__0FED89AF_F5BC_411C_9AC5_7E54AC78C984__INCLUDED_)
+#endif 

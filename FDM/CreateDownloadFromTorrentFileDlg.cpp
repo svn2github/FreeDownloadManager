@@ -56,7 +56,11 @@ BOOL CCreateDownloadFromTorrentFileDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	m_dld->pMgr->GetBtDownloadMgr ()->LoadTorrentFile (m_strTorrentFile);
+	if (FALSE == m_dld->pMgr->GetBtDownloadMgr ()->LoadTorrentFile (m_strTorrentFile))
+	{
+		EndDialog (IDCANCEL);
+		return FALSE;
+	}
 	
 	m_btnChooseFolder.SetIcon (SICO (IDI_CHOOSEFOLDER));
 	m_btnCreateGroup.SetIcon (SICO (IDI_CREATEGROUP));

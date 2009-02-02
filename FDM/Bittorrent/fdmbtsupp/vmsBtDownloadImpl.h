@@ -44,6 +44,7 @@ public:
 	void OnTrackerAlert (LPCSTR pszMsg);
 	int get_CurrentTaskProgress ();
 	void PrioritizeFiles (int* piPriorities);
+	void get_CurrentTracker2 (LPSTR pszRes, DWORD dwBuffSize);
 
 	void AddRef () {InterlockedIncrement (&m_cRefs);}
 	void Release () {if (0 == InterlockedDecrement (&m_cRefs)) delete this;}

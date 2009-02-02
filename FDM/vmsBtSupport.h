@@ -12,6 +12,8 @@
 #include "vmsDll.h"
 #include "Bittorrent\fdmbtsupp\vmsBtSession.h"
 
+#define BTSUPP_DLL_MINVERREQ	848
+
 class vmsBtSupport  
 {
 public:

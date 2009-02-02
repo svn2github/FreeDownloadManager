@@ -1,8 +1,6 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
-
-        
+*/        
 
 #include "stdafx.h"
 #include "vmsHttpRequest.h"
@@ -61,15 +59,15 @@ BOOL vmsHttpRequest::ParseRequest(LPCSTR pszReq)
 	LPCSTR psz = strstr (pszReq, "Authorization: ");
 	if (psz)
 	{
-
 		psz += lstrlen ("Authorization: ");
 		if (strnicmp (psz, "Basic ", 6) == 0)
 		{
 			psz += 6;
-			char sz [1000];
-			ZeroMemory (sz, sizeof (sz));
-			base64_decode (psz, sz);
-			m_strAuth = sz;				
+			char* psz2 = new char [strlen (psz)*3+1];
+			ZeroMemory (psz2, strlen (psz)*3+1);
+			base64_decode (psz, psz2);
+			m_strAuth = psz2;
+			delete [] psz2;
 		}
 	}
 	

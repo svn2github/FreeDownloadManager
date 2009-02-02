@@ -70,13 +70,9 @@ void fsFDMCmdLineParser::Parse()
 
 			if (bTorrent)
 			{
-				if (_App.Bittorrent_Enable () == FALSE)
-				{
-					if (IDYES != MessageBox (NULL, LS (L_ENABLEBTISREQ), LS (L_CONFIRMATION), MB_ICONQUESTION | MB_YESNO))
-						continue;
-					_App.Bittorrent_Enable (TRUE);
-				}
-				AddTorrentFile (pszValue);
+				static BOOL bBtI = vmsFdmAppMgr::MakeSureBtInstalled ();
+				if (bBtI)
+					AddTorrentFile (pszValue);
 				continue;
 			}
 

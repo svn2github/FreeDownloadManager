@@ -15,6 +15,9 @@ STDMETHODIMP CFdmTorrentFilesRcvr::CreateBtDownloadFromFile(BSTR bstrFile)
 	if (Is9xME)
 		return E_NOTIMPL;
 
+	if (FALSE == vmsFdmAppMgr::MakeSureBtInstalled ())
+		return S_FALSE;
+
 	_inc_CBRFF_ctx *p = new _inc_CBRFF_ctx;
 
 	p->strFile = W2A (bstrFile);

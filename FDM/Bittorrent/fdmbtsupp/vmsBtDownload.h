@@ -87,4 +87,6 @@ public:
 	
 	
 	virtual void PrioritizeFiles (int* piPriorities) = NULL;
+
+	virtual void get_CurrentTracker2 (LPSTR pszRes, DWORD dwBuffSize) = NULL;
 };

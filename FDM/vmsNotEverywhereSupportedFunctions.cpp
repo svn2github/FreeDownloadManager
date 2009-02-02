@@ -1,6 +1,6 @@
-// vmsNotEverywhereSupportedFunctions.cpp: implementation of the vmsNotEverywhereSupportedFunctions class.
-//
-//////////////////////////////////////////////////////////////////////
+/*
+  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+*/        
 
 #include "stdafx.h"
 #include "fdm.h"
@@ -10,11 +10,7 @@
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
-#endif
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+#endif        
 
 vmsNotEverywhereSupportedFunctions::vmsNotEverywhereSupportedFunctions()
 {

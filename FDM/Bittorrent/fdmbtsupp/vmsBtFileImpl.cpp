@@ -372,3 +372,28 @@ BOOL vmsBtFileImpl::GenerateFastResumeDataForSeed (LPCSTR pszSrcFolderOrFile, LP
 
 	return TRUE;
 }
+
+void vmsBtFileImpl::get_FileName2 (int nIndex, LPSTR pszRes, DWORD dwBuffSize)
+{
+	strncpy (pszRes, m_torrent->file_at (nIndex).path.string ().c_str (), dwBuffSize - 1);
+	pszRes [dwBuffSize - 1] = 0;
+}
+
+void vmsBtFileImpl::get_TorrentName2 (LPSTR pszRes, DWORD dwBuffSize)
+{
+	strncpy (pszRes, m_torrent->name ().c_str (), dwBuffSize - 1);
+	pszRes [dwBuffSize - 1] = 0;
+}
+
+void vmsBtFileImpl::get_TrackerUrl2 (LPSTR pszRes, int nIndex, DWORD dwBuffSize)
+{
+	const std::vector <announce_entry> &v = m_torrent->trackers ();
+	strncpy (pszRes, size_t(nIndex) < v.size () ? v [nIndex].url.c_str () : "", dwBuffSize - 1);
+	pszRes [dwBuffSize - 1] = 0;
+}
+
+void vmsBtFileImpl::get_TorrentComment2 (LPSTR pszRes, DWORD dwBuffSize)
+{
+	strncpy (pszRes, m_torrent->comment ().c_str (), dwBuffSize - 1);
+	pszRes [dwBuffSize - 1] = 0;
+}

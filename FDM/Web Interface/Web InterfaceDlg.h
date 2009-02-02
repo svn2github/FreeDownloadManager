@@ -1,8 +1,6 @@
 /*
   Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
-
-      
+*/      
 
 #if !defined(AFX_WEBINTERFACEDLG_H__179132A9_F658_4881_8F70_2820D92AF9EB__INCLUDED_)
 #define AFX_WEBINTERFACEDLG_H__179132A9_F658_4881_8F70_2820D92AF9EB__INCLUDED_
@@ -59,6 +57,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-//{{AFX_INSERT_LOCATION}//}//}//}}  
+//{{AFX_INSERT_LOCATION}//}}  
 
 #endif 
