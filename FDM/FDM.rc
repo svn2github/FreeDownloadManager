@@ -1212,6 +1212,8 @@ BEGIN
     PUSHBUTTON      "Customize",IDC_CUSTOMIZE,126,30,46,14
     CONTROL         "Disable for batch downloads",IDC_DISABLEFORBATCHDLDS,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,51,295,9
+    CONTROL         "Show Tips",IDC_SHOWTIPS,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,0,69,260,10
 END
 
 IDD_BTDLD_SEEDING DIALOG DISCARDABLE  0, 0, 258, 214
@@ -1715,6 +1717,8 @@ IDB_TOOL_BT             BITMAP  DISCARDABLE     "res\\tool_bt.bmp"
 IDB_TOOL_BT_D           BITMAP  DISCARDABLE     "res\\tool_bt_d.bmp"
 IDB_TOOL_BT_16          BITMAP  DISCARDABLE     "res\\tool_bt_16.bmp"
 IDB_TOOL_BT_16_D        BITMAP  DISCARDABLE     "res\\tool_bt_16_d.bmp"
+IDB_TIP                 BITMAP  DISCARDABLE     "res\\tip.bmp"
+IDB_CLOSE               BITMAP  DISCARDABLE     "res\\close.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3735,8 +3739,8 @@ IDR_FDMFLASHVIDEODOWNLOADS REGISTRY DISCARDABLE    "FDMFlashVideoDownloads.rgs"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,0,848,0
- PRODUCTVERSION 3,0,848,0
+ FILEVERSION 3,0,852,0
+ PRODUCTVERSION 3,0,852,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -3754,9 +3758,9 @@ BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "FreeDownloadManager.ORG\0"
             VALUE "FileDescription", "Free Download Manager\0"
-            VALUE "FileVersion", "3, 0, 848, 0\0"
+            VALUE "FileVersion", "3, 0, 852, 0\0"
             VALUE "InternalName", "\0"
-            VALUE "LegalCopyright", "Copyright © 2003-2009\0"
+            VALUE "LegalCopyright", "Copyright © 2003-2010\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "\0"
             VALUE "PrivateBuild", "\0"

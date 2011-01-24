@@ -41,7 +41,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /WX /GX /ZI /Od /I "../include.add/" /I "../include.add/openssl" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "CURL_STATICLIB" /D "USE_SSLEAY" /FD /EHa /c
+# ADD CPP /nologo /MD /W3 /WX /GX /ZI /Ot /I "../include.add/" /I "../include.add/openssl" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "CURL_STATICLIB" /D "USE_SSLEAY" /FD /EHa /c
 # SUBTRACT CPP /YX
 # ADD BASE RSC /l 0x419 /d "NDEBUG"
 # ADD RSC /l 0x419 /d "NDEBUG"

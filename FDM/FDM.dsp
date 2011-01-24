@@ -43,7 +43,7 @@ RSC=rc.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_AFXDLL" /Yu"stdafx.h" /FD /c
-# ADD CPP /nologo /MD /W4 /GX /Zi /O2 /I "include.add" /I "include.add\dshow" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "CURL_STATICLIB" /D "USE_SSLEAY" /Yu"stdafx.h" /FD /EHa /c
+# ADD CPP /nologo /MD /W4 /GX /Zi /Ot /I "include.add" /I "include.add\dshow" /D "NDEBUG" /D "WIN32" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /D "_ATL_STATIC_REGISTRY" /D "CURL_STATICLIB" /D "USE_SSLEAY" /Yu"stdafx.h" /FD /EHa /c
 # SUBTRACT CPP /WX
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /I "./uploader/fum/" /D "NDEBUG" /win32
@@ -54,7 +54,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /machine:I386
-# ADD LINK32 PartMediaPreview/Release/PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Release/FDMCustomized_lib.lib inetfile.lib alsfolderbrowser.lib Mswsock.lib Hash\Release\hash.lib inetfile/curl_lib/release/curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib Version.lib Iphlpapi.lib libeay32.lib ssleay32.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"Lib.add" /OPT:REF /MAPINFO:LINES /MAPINFO:EXPORTS
+# ADD LINK32 PartMediaPreview/Release/PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Release/FDMCustomized_lib.lib inetfile.lib alsfolderbrowser.lib Mswsock.lib Hash\Release\hash.lib inetfile/curl_lib/release/curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib Version.lib Iphlpapi.lib libeay32.lib ssleay32.lib Msimg32.lib /nologo /subsystem:windows /debug /machine:I386 /libpath:"Lib.add" /OPT:REF /MAPINFO:LINES /MAPINFO:EXPORTS
 # SUBTRACT LINK32 /pdb:none
 
 !ELSEIF  "$(CFG)" == "FDM - Win32 Debug"
@@ -81,7 +81,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 /nologo /subsystem:windows /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 PartMediaPreview\Debug\PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Debug/FDMCustomized_lib.lib inetfile_d.lib alsFolderBrowserd.lib Hash\Debug\hash.lib InetFile\curl_lib\debug\curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib Version.lib Iphlpapi.lib libeay32d.lib ssleay32d.lib /nologo /subsystem:windows /debug /machine:I386 /out:"./debug\fdm.exe" /pdbtype:sept /libpath:"Lib.add"
+# ADD LINK32 PartMediaPreview\Debug\PartMediaPreview.lib FDMCustomized/FDMCustomized_lib/Debug/FDMCustomized_lib.lib inetfile_d.lib alsFolderBrowserd.lib Hash\Debug\hash.lib InetFile\curl_lib\debug\curl_lib.lib dxguid.lib wininet.lib rasapi32.lib Ws2_32.lib htmlhelp.lib winmm.lib strmiids.lib Version.lib Iphlpapi.lib libeay32d.lib ssleay32d.lib Msimg32.lib /nologo /subsystem:windows /debug /machine:I386 /out:"./debug\fdm.exe" /pdbtype:sept /libpath:"Lib.add"
 
 !ENDIF 
 
@@ -234,6 +234,10 @@ SOURCE=.\Dlg_Options_Downloads_Bittorrent.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Dlg_Options_Downloads_Flv.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Dlg_Options_Downloads_Mirrors.cpp
 # End Source File
 # Begin Source File
@@ -342,11 +346,19 @@ SOURCE=.\Dlg_WPD_IL_Add.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCreateFlvDownloadsByWebPageUrl.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgCustomizeIEMenu.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\DlgDeletedProperties.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgDL.cpp
 # End Source File
 # Begin Source File
 
@@ -371,6 +383,22 @@ SOURCE=.\DlgFind.cpp
 # Begin Source File
 
 SOURCE=.\DlgFindAdvanced.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgPI2.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgPI2_IfRemind.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgPI2_SureToCancel.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgPI2_WbCustomization.cpp
 # End Source File
 # Begin Source File
 
@@ -566,6 +594,22 @@ SOURCE=".\FdmApp.cpp"
 # End Source File
 # Begin Source File
 
+SOURCE=.\FdmBalloon.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\FdmBalloon_Content.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\FdmBalloon_OnDownloadDone.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\FdmBalloonContent.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\FDMDownload.cpp
 # End Source File
 # Begin Source File
@@ -575,6 +619,10 @@ SOURCE=.\FDMDownloadsStat.cpp
 # Begin Source File
 
 SOURCE=.\FDMFlashVideoDownloads.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\FdmFlvDownload.cpp
 # End Source File
 # Begin Source File
 
@@ -901,6 +949,14 @@ SOURCE=.\misc.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\MyBalloon.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\MyBalloon_Content.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\MyMessageBox.cpp
 # End Source File
 # Begin Source File
@@ -1013,6 +1069,10 @@ SOURCE=.\SitesWnd.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\SmallTipWnd.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\SpiderAddPageDlg.cpp
 # End Source File
 # Begin Source File
@@ -1047,6 +1107,10 @@ SOURCE=.\Torrents_Tasks.cpp
 # Begin Source File
 
 SOURCE=.\TorrentsWnd.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\TrayIconPosition.cpp
 # End Source File
 # Begin Source File
 
@@ -1102,6 +1166,14 @@ SOURCE=.\vmsAppSettingsStore.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsAppTipsMgr.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsAppUtil.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsAppVersion.cpp
 # End Source File
 # Begin Source File
@@ -1142,6 +1214,10 @@ SOURCE=.\vmsComDLL.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsCommandLine.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsCriticalSection.cpp
 # End Source File
 # Begin Source File
@@ -1171,6 +1247,10 @@ SOURCE=.\vmsDownloadsGroupsMgr.cpp
 # Begin Source File
 
 SOURCE=.\vmsDownloadsListHelper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsDrawHelper.cpp
 # End Source File
 # Begin Source File
 
@@ -1222,6 +1302,10 @@ SOURCE=.\vmsFirefoxUtil.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsFlvSniffInjector.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsImage.cpp
 # End Source File
 # Begin Source File
@@ -1266,6 +1350,14 @@ SOURCE=.\vmsPluginSupport.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsProcessesInjector.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsProcessList.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsRegisteredApp.cpp
 # End Source File
 # Begin Source File
@@ -1274,7 +1366,19 @@ SOURCE=.\vmsRenderer.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsSecurity.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsSharedData.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsSimpleFileDownloader.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsSingleLineTooltip.cpp
 # End Source File
 # Begin Source File
 
@@ -1294,7 +1398,15 @@ SOURCE=.\vmsStringList.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsStringParser.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsStringRecentList.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsSystem.cpp
 # End Source File
 # Begin Source File
 
@@ -1307,6 +1419,26 @@ SOURCE=.\vmsTorrentExtension.cpp
 # Begin Source File
 
 SOURCE=.\vmsTreeCtrlHelper.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsUiFonts.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsUiLinkWindow.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsUiStaticTextWindow.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsUiWindow.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsUiWindowsHoster.cpp
 # End Source File
 # Begin Source File
 
@@ -1334,6 +1466,14 @@ SOURCE=.\vmsWebBrowserEvents.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsWindowsStatusBar.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsXmlHelper.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\WaitDlg.cpp
 # End Source File
 # Begin Source File
@@ -1343,6 +1483,10 @@ SOURCE=.\WaitForConfirmationDlg.cpp
 # Begin Source File
 
 SOURCE=.\webbrowser2.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\WebBrowser2Customization.cpp
 # End Source File
 # Begin Source File
 
@@ -1550,6 +1694,10 @@ SOURCE=.\Dlg_Options_Downloads_Bittorrent.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\Dlg_Options_Downloads_Flv.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Dlg_Options_Downloads_Mirrors.h
 # End Source File
 # Begin Source File
@@ -1658,11 +1806,23 @@ SOURCE=.\Dlg_WPD_IL_Add.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\DlgCreateFlvDownloads.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgCreateFlvDownloadsByWebPageUrl.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\DlgCustomizeIEMenu.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\DlgDeletedProperties.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgDL.h
 # End Source File
 # Begin Source File
 
@@ -1687,6 +1847,22 @@ SOURCE=.\DlgFind.h
 # Begin Source File
 
 SOURCE=.\DlgFindAdvanced.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgPI2.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgPI2_IfRemind.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgPI2_SureToCancel.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\DlgPI2_WbCustomization.h
 # End Source File
 # Begin Source File
 
@@ -1874,6 +2050,22 @@ SOURCE=".\FdmApp.h"
 # End Source File
 # Begin Source File
 
+SOURCE=.\FdmBalloon.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\FdmBalloon_Content.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\FdmBalloon_OnDownloadDone.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\FdmBalloonContent.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\FDMDownload.h
 # End Source File
 # Begin Source File
@@ -1883,6 +2075,10 @@ SOURCE=.\FDMDownloadsStat.h
 # Begin Source File
 
 SOURCE=.\FDMFlashVideoDownloads.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\FdmFlvDownload.h
 # End Source File
 # Begin Source File
 
@@ -2190,6 +2386,14 @@ SOURCE=.\misc.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\MyBalloon.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\MyBalloon_Content.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\MyMessageBox.h
 # End Source File
 # Begin Source File
@@ -2314,6 +2518,10 @@ SOURCE=.\SitesWnd.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\SmallTipWnd.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\SpiderAddPageDlg.h
 # End Source File
 # Begin Source File
@@ -2402,6 +2610,14 @@ SOURCE=.\vmsAppSettingsStore.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsAppTipsMgr.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsAppUtil.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsAppVersion.h
 # End Source File
 # Begin Source File
@@ -2474,6 +2690,10 @@ SOURCE=.\vmsDownloadsListHelper.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsDrawHelper.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsFdmApiDownloadImpl.h
 # End Source File
 # Begin Source File
@@ -2519,6 +2739,10 @@ SOURCE=.\vmsFirefoxMonitoring.h
 # Begin Source File
 
 SOURCE=.\vmsFirefoxUtil.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsFlvSniffInjector.h
 # End Source File
 # Begin Source File
 
@@ -2570,6 +2794,14 @@ SOURCE=.\vmsPluginSupport.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsProcessesInjector.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsProcessList.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsRegisteredApp.h
 # End Source File
 # Begin Source File
@@ -2578,7 +2810,19 @@ SOURCE=.\vmsRenderer.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsSecurity.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsSharedData.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsSimpleFileDownloader.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsSingleLineTooltip.h
 # End Source File
 # Begin Source File
 
@@ -2598,7 +2842,15 @@ SOURCE=.\vmsStringList.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsStringParser.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsStringRecentList.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsSystem.h
 # End Source File
 # Begin Source File
 
@@ -2611,6 +2863,26 @@ SOURCE=.\vmsTorrentExtension.h
 # Begin Source File
 
 SOURCE=.\vmsTreeCtrlHelper.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsUiFonts.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsUiLinkWindow.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsUiStaticTextWindow.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsUiWindow.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsUiWindowsHoster.h
 # End Source File
 # Begin Source File
 
@@ -2638,6 +2910,10 @@ SOURCE=.\vmsWebBrowserEvents.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsXmlHelper.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\WaitDlg.h
 # End Source File
 # Begin Source File
@@ -2647,6 +2923,10 @@ SOURCE=.\WaitForConfirmationDlg.h
 # Begin Source File
 
 SOURCE=.\webbrowser2.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\WebBrowser2Customization.h
 # End Source File
 # Begin Source File
 
@@ -2667,6 +2947,10 @@ SOURCE=.\Wnd_DownloadProgress.h
 # Begin Source File
 
 SOURCE=.\Wnd_FDMGetCustVer_Btn.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\WndDlDoneNotification.h
 # End Source File
 # Begin Source File
 
@@ -2726,11 +3010,23 @@ SOURCE=.\res\bitmap1.bmp
 # End Source File
 # Begin Source File
 
+SOURCE=.\res\bitmap2.bmp
+# End Source File
+# Begin Source File
+
 SOURCE=.\res\checks.bmp
 # End Source File
 # Begin Source File
 
 SOURCE=.\res\choosefolder.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\close.bmp
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\closebtn.ico
 # End Source File
 # Begin Source File
 
@@ -2799,6 +3095,10 @@ SOURCE=.\FDMDownloadsStat.rgs
 # Begin Source File
 
 SOURCE=.\FDMFlashVideoDownloads.rgs
+# End Source File
+# Begin Source File
+
+SOURCE=.\FdmFlvDownload.rgs
 # End Source File
 # Begin Source File
 
@@ -2923,6 +3223,10 @@ SOURCE=.\res\sortimages.bmp
 # Begin Source File
 
 SOURCE=.\res\test_ok.ico
+# End Source File
+# Begin Source File
+
+SOURCE=.\res\tip.bmp
 # End Source File
 # Begin Source File
 
@@ -3091,15 +3395,6 @@ SOURCE=.\res\phrases.txt
 # End Source File
 # End Target
 # End Project
-# Section Fdm : {D27CDB6E-AE6D-11CF-96B8-444553540000}
-# 	2:21:DefaultSinkHeaderFile:shockwaveflash.h
-# 	2:16:DefaultSinkClass:CShockwaveFlash
-# End Section
-# Section Fdm : {D30C1661-CDAF-11D0-8A3E-00C04FC9E26E}
-# 	2:5:Class:CWebBrowser2
-# 	2:10:HeaderFile:webbrowser2.h
-# 	2:8:ImplFile:webbrowser2.cpp
-# End Section
 # Section Fdm : {D27CDB6C-AE6D-11CF-96B8-444553540000}
 # 	2:5:Class:CShockwaveFlash
 # 	2:10:HeaderFile:shockwaveflash.h
@@ -3111,4 +3406,13 @@ SOURCE=.\res\phrases.txt
 # End Section
 # Section Fdm : {00B19758-C708-00B0-106C-B400F0835601}
 # 	1:10:IDR_FDMAPP:102
+# End Section
+# Section Fdm : {D27CDB6E-AE6D-11CF-96B8-444553540000}
+# 	2:21:DefaultSinkHeaderFile:shockwaveflash.h
+# 	2:16:DefaultSinkClass:CShockwaveFlash
+# End Section
+# Section Fdm : {D30C1661-CDAF-11D0-8A3E-00C04FC9E26E}
+# 	2:5:Class:CWebBrowser2
+# 	2:10:HeaderFile:webbrowser2.h
+# 	2:8:ImplFile:webbrowser2.cpp
 # End Section

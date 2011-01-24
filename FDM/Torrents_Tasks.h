@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_TORRENTS_TASKS_H__3E8AF1A7_ED59_4D0F_8AE0_83351D479065__INCLUDED_)

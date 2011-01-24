@@ -54,13 +54,13 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 623,0,0,0
- PRODUCTVERSION 623,0,0,0
+ FILEVERSION 895,0,0,0
+ PRODUCTVERSION 895,0,0,0
  FILEFLAGSMASK 0x0L
 #ifdef _DEBUG
- FILEFLAGS 0x9L
+ FILEFLAGS 0x1L
 #else
- FILEFLAGS 0x8L
+ FILEFLAGS 0x0L
 #endif
  FILEOS 0x4L
  FILETYPE 0x2L
@@ -75,15 +75,15 @@ BEGIN
             VALUE "FileDescription", "Free Download Manager Click Catcher Plug-In for Netscape, Opera, Mozilla\0"
             VALUE "FileExtents", "nope\0"
             VALUE "FileOpenName", "Not Applicable (*.nope)\0"
-            VALUE "FileVersion", "1.1\0"
+            VALUE "FileVersion", "1.1.2\0"
             VALUE "InternalName", "npfdm\0"
-            VALUE "LegalCopyright", "Copyright (c) 2003-2007, FreeDownloadManager.org\0"
+            VALUE "LegalCopyright", "Copyright (c) 2003-2009, FreeDownloadManager.org\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "MIMEType", "application/x-msdownload|application/x-compressed|application/zip|application/octet-stream|application/x-zip-compressed|application/arj|application/rar|audio/mpeg|audio/x-mpeg|audio/mp3|video/msvideo|video/x-msvideo|video/mpeg|video/x-mpeg|video/quicktim|application/x-msdos-download|application/x-rar-compressed\0"
+            VALUE "MIMEType", "application/x-msdownload|application/x-compressed|application/zip|application/octet-stream|application/x-zip-compressed|application/arj|application/rar|application/x-tar|audio/mpeg|audio/x-mpeg|audio/mp3|video/msvideo|video/x-msvideo|video/mpeg|video/x-mpeg|video/quicktime|application/x-rar-compressed|application/x-msdos-program|audio/x-ms-wma|audio/x-mpeg|video/divx|video/x-ms-wm|video/x-ms-wmv|video/x-ms-wmx|application/x-7z-compressed|application/msi|application/exe|application/x-exe|application/dos-exe|application/x-winexe|application/msdos-windows|application/metalink+xml\0"
             VALUE "OriginalFilename", "npfdm.dll\0"
-            VALUE "PrivateBuild", "623\0"
+            VALUE "PrivateBuild", "\0"
             VALUE "ProductName", "Free Download Manager Click Catcher Plug-In for Netscape, Opera, Mozilla\0"
-            VALUE "ProductVersion", "1.1\0"
+            VALUE "ProductVersion", "1.1.2\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -103,7 +103,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_FDM               ICON    DISCARDABLE     "fdm.ico"
+IDI_FDM                 ICON    DISCARDABLE     "fdm.ico"
 #endif    // Russian resources
 /////////////////////////////////////////////////////////////////////////////
 

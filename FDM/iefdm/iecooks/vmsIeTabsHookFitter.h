@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #if !defined(AFX_VMSIETABSHOOKFITTER_H__D942AC16_4045_470C_B616_7A92291E19C5__INCLUDED_)

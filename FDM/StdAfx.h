@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */          
 
 #if !defined(AFX_STDAFX_H__3DEDF9D7_1A31_481A_8FBD_C2D53CEFE688__INCLUDED_)
@@ -73,6 +73,12 @@ extern CFdmModule _Module;
 #include <string>
 #include <xlocale>
 #pragma warning (pop)
+
+#ifdef UNICODE
+#define tstring std::wstring
+#else
+#define tstring std::string
+#endif
 
 //{{AFX_INSERT_LOCATION}//}}
 

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */    
 
 #if !defined(AFX_FSLOCALFILE_H__1DDB29EB_F880_4374_BF2A_7C3A1A12F898__INCLUDED_)

@@ -1,10 +1,10 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
-
-  
-
-  
+/* podd.h */
+/* Copyright (C) 1995 Eric Young (eay@mincom.oz.au).
+ * All rights reserved.
+ * Copyright remains Eric Young's, and as such any Copyright notices in
+ * the code are not to be removed.
+ * See the COPYRIGHT file in the libdes distribution for more details.
+ */
 
 static const unsigned char odd_parity[256]={
   1,  1,  2,  2,  4,  4,  7,  7,  8,  8, 11, 11, 13, 13, 14, 14,

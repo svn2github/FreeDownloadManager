@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #include "stdafx.h"
@@ -426,13 +426,13 @@ fsInternetResult fsInternetFileListMgr::Refresh()
 	if (m_files == NULL || IsRunning ())
 		return IR_S_FALSE;
 
-	char szUrl [10000];
+	fsString strUrl;
 
-	GetCurrentUrl (szUrl, 10000);
+	GetCurrentUrl (strUrl);
 
 	Free ();
 
-	return GetList (szUrl, NULL, NULL);
+	return GetList (strUrl, NULL, NULL);
 }
 
 fsInternetResult fsInternetFileListMgr::GoParentFolder()
@@ -443,10 +443,10 @@ fsInternetResult fsInternetFileListMgr::GoParentFolder()
 	if (IsRunning ())
 		return IR_S_FALSE;
 
-	char szUrl [10000];
-	GetParentFolderUrl (szUrl);
+	fsString strUrl;
+	GetParentFolderUrl (strUrl);
 
-	return GetList (szUrl, NULL, NULL);
+	return GetList (strUrl, NULL, NULL);
 }
 
 fsInternetResult fsInternetFileListMgr::GoFolder(LPCSTR pszFolder)
@@ -457,12 +457,10 @@ fsInternetResult fsInternetFileListMgr::GoFolder(LPCSTR pszFolder)
 	if (IsRunning ())
 		return IR_S_FALSE;
 
-	char szUrl [10000];
-	*szUrl = 0;
+	fsString strUrl;
+	FolderToUrl (pszFolder, strUrl);
 
-	FolderToUrl (pszFolder, szUrl);
-
-	return GetList (szUrl, NULL, NULL);
+	return GetList (strUrl, NULL, NULL);
 }
 
 fsInternetResult fsInternetFileListMgr::GetFullUrl(LPCSTR pszRelOrNotUrl, fsString &strUrl)
@@ -472,12 +470,12 @@ fsInternetResult fsInternetFileListMgr::GetFullUrl(LPCSTR pszRelOrNotUrl, fsStri
 	if (m_files == NULL)
 		return IR_S_FALSE;
 
-	char szUrl [10000];
-	GetCurrentUrl (szUrl, 10000);
+	fsString strUrlCurrent;
+	GetCurrentUrl (strUrlCurrent);
 
 	char* pszRes;
 
-	fsUrlToFullUrl (szUrl, pszRelOrNotUrl, &pszRes);
+	fsUrlToFullUrl (strUrlCurrent, pszRelOrNotUrl, &pszRes);
 
 	strUrl = pszRes;
 	delete [] pszRes;
@@ -485,15 +483,18 @@ fsInternetResult fsInternetFileListMgr::GetFullUrl(LPCSTR pszRelOrNotUrl, fsStri
 	return IR_SUCCESS;
 }
 
-void fsInternetFileListMgr::GetCurrentUrl(LPSTR pszUrl, DWORD dwLen, BOOL bIncludeUser, BOOL bIncludePassword)
+void fsInternetFileListMgr::GetCurrentUrl(fsString &strUrl, BOOL bIncludeUser, BOOL bIncludePassword)
 {
-	fsURL url;
+	strUrl = "";
 
-	if (m_files == NULL)
-		pszUrl [0] = 0;
-	else
-		url.Create (m_server.GetScheme (), m_server.GetServerName (), m_server.GetServerPort (),
-			bIncludeUser ? m_strUser : NULL, bIncludePassword ? m_strPassword : NULL, m_files->GetCurrentPath (), pszUrl, &dwLen);
+	if (m_files != NULL)
+	{
+		char szUrl [10000] = ""; DWORD dwLen = sizeof (szUrl);
+		fsURL url;
+		if (IR_SUCCESS == url.Create (m_server.GetScheme (), m_server.GetServerName (), m_server.GetServerPort (),
+				bIncludeUser ? m_strUser : NULL, bIncludePassword ? m_strPassword : NULL, m_files->GetCurrentPath (), szUrl, &dwLen))
+			strUrl = szUrl;
+	}
 }
 
 void fsInternetFileListMgr::SleepInterval()
@@ -588,36 +589,36 @@ void fsInternetFileListMgr::ReadSettings()
 	m_bFtpPassiveMode = _App.HFE_FtpPassiveMode ();
 }
 
-void fsInternetFileListMgr::FolderToUrl(LPCSTR pszFolder, LPSTR pszUrl)
+void fsInternetFileListMgr::FolderToUrl(LPCSTR pszFolder, fsString &strUrl)
 {
-	*pszUrl = 0;
+	strUrl = "";
 
 	char* pszRes;
 
-	GetCurrentUrl (pszUrl, 10000);
-	fsUrlToFullUrl (pszUrl, pszFolder, &pszRes);
+	GetCurrentUrl (strUrl);
+	fsUrlToFullUrl (strUrl, pszFolder, &pszRes);
 
-	strcpy (pszUrl, pszRes);
+	strUrl = pszRes;
 	delete [] pszRes;
 
-	int len = strlen (pszUrl);
-	if (pszUrl [len - 1] != '\\' && pszUrl [len - 1] != '/')
-	{
-		pszUrl [len] = '/';
-		pszUrl [len + 1] = 0;
-	}
+	int len = strUrl.Length ();
+	if (len > 0 && strUrl [len - 1] != '\\' && strUrl [len - 1] != '/')
+		strUrl += '/';
 }
 
-void fsInternetFileListMgr::GetParentFolderUrl(LPSTR pszUrl)
+void fsInternetFileListMgr::GetParentFolderUrl(fsString &strUrl)
 {
-	GetCurrentUrl (pszUrl, 10000);
+	GetCurrentUrl (strUrl);
+
+	if (strUrl.IsEmpty ())
+		return;
 
 	
 
-	int pos = strlen (pszUrl) - 2;
+	int pos = strUrl.Length () - 2;
 
-	while (pos > 0 && pszUrl [pos] != '\\' && pszUrl [pos] != '/')
+	while (pos > 0 && strUrl [pos] != '\\' && strUrl [pos] != '/')
 		pos--;
 
-	pszUrl [pos+1] = 0;
+	strUrl [pos+1] = 0;
 }

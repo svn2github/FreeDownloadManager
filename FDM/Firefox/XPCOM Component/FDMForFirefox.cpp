@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #include "FDMForFirefox.h"
@@ -62,9 +62,7 @@ CFDMForFirefox::~CFDMForFirefox()
 {
   
 	CoUninitialize ();
-}
-
-#define M(x) MessageBox (0, #x, 0, 0)  
+}  
 
 NS_IMETHODIMP CFDMForFirefox::GetLngString(const char *strIDString, PRUnichar **_retval)
 {
@@ -126,21 +124,47 @@ NS_IMETHODIMP CFDMForFirefox::IsContextMenuItemShouldBeHidden(const char *strMen
 
 	DWORD dwShow = TRUE;
 
-	key.QueryValue (dwShow, "Enable");
+	HANDLE hmx = CreateMutex (NULL, FALSE, "mx::fdm: brmenu_disable");
+	if (GetLastError () == ERROR_ALREADY_EXISTS)
+		dwShow = FALSE;
+	else
+		key.QueryValue (dwShow, "Enable");
+	CloseHandle (hmx);
 	
 	if (dwShow)
 	{
+		fsString strMxName, strValName;
+
 		if (lstrcmp (strMenuItemID, "dllink") == 0)
-			key.QueryValue (dwShow, "DLThis");
+		{
+			strValName = "DLThis";
+			strMxName = "mx::fdm: dllink_disable";
+		}
 
 		else if (lstrcmp (strMenuItemID, "dlall") == 0)
-			key.QueryValue (dwShow, "DLAll");
+		{
+			strValName = "DLAll";
+			strMxName = "mx::fdm: dlall_disable";
+		}
 
 		else if (lstrcmp (strMenuItemID, "dlselected") == 0)
-			key.QueryValue (dwShow, "DLSelected");
+		{
+			strValName = "DLSelected";
+			strMxName = "mx::fdm: dlselected_disable";
+		}
 
 		else if (lstrcmp (strMenuItemID, "dlvideo") == 0)
-			key.QueryValue (dwShow, "DLFlashVideo");
+		{
+			strValName = "DLFlashVideo";
+			strMxName = "mx::fdm: dlvideo_disable";
+		}
+
+		HANDLE hmx = CreateMutex (NULL, FALSE, strMxName);
+		if (GetLastError () == ERROR_ALREADY_EXISTS)
+			dwShow = FALSE;
+		else
+			key.QueryValue (dwShow, strValName);
+		CloseHandle (hmx);
 	}
 
 	*_retval = !dwShow;

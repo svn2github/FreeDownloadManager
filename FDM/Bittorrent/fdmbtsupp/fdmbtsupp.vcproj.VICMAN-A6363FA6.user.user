@@ -9,7 +9,7 @@
 			Name="Debug|Win32"
 			>
 			<DebugSettings
-				Command="../../debug/fdm.exe"
+				Command=""
 				WorkingDirectory=""
 				CommandArguments=""
 				Attach="false"
@@ -22,7 +22,7 @@
 				SQLDebugging=""
 				Environment=""
 				EnvironmentMerge="true"
-				DebuggerFlavor="0"
+				DebuggerFlavor=""
 				MPIRunCommand=""
 				MPIRunArguments=""
 				MPIRunWorkingDirectory=""

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */      
 
 #include "stdafx.h"
@@ -33,6 +33,7 @@
 #include "FlashVideoDownloadsWnd.h"
 #include "UploadsWnd.h"
 #include "TorrentsWnd.h"
+#include "vmsAppTipsMgr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -1622,6 +1623,8 @@ DWORD WINAPI CMainFrame::_threadUpdate(LPVOID lp)
 		if (_UpdateMgr.IsRunning () == FALSE)
 			
 			pThis->PostMessage (WM_COMMAND, ID_THREAD_UPDATE);
+
+		vmsAppSmallTipsMgr::o ().UpdateTipsFile ();
 	}
 
 	return 0;
@@ -3024,4 +3027,9 @@ DWORD WINAPI CMainFrame::_threadAutosave(LPVOID lp)
 	InterlockedDecrement (&pthis->m_cThreadsRunning);
 
 	return 0;
+}
+
+void CMainFrame::ApplyShowSmallTipsSetting()
+{
+	m_wndView.ApplyShowSmallTipsSetting ();
 }

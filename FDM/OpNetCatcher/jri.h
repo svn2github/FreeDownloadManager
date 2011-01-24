@@ -1,8 +1,8 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
-
-      
+/* -*- Mode: C; tab-width: 4; -*- */
+/*******************************************************************************
+ * Java Runtime Interface
+ * Copyright (c) 1996 Netscape Communications Corporation. All rights reserved.
+ ******************************************************************************/
 
 #ifndef JRI_H
 #define JRI_H
@@ -11,11 +11,21 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif       
+#endif /* __cplusplus */
 
-typedef struct JRIEnvInterface	JRIEnvInterface;  
+/*******************************************************************************
+ * JRIEnv
+ ******************************************************************************/
 
-typedef const JRIEnvInterface*	JRIEnv;    
+/* The type of the JRIEnv interface. */
+typedef struct JRIEnvInterface	JRIEnvInterface;
+
+/* The type of a JRIEnv instance. */
+typedef const JRIEnvInterface*	JRIEnv;
+
+/*******************************************************************************
+ * JRIEnv Operations
+ ******************************************************************************/
 
 #define JRI_DefineClass(env, classLoader, buf, bufLen)	\
 	(((*(env))->DefineClass)(env, JRI_DefineClass_op, classLoader, buf, bufLen))
@@ -339,7 +349,11 @@ typedef const JRIEnvInterface*	JRIEnv;
 	(((*(env))->RegisterNatives)(env, JRI_RegisterNatives_op, clazz, nameAndSigArray, nativeProcArray))
 
 #define JRI_UnregisterNatives(env, clazz)	\
-	(((*(env))->UnregisterNatives)(env, JRI_UnregisterNatives_op, clazz))    
+	(((*(env))->UnregisterNatives)(env, JRI_UnregisterNatives_op, clazz))
+
+/*******************************************************************************
+ * JRIEnv Interface
+ ******************************************************************************/
 
 struct java_lang_ClassLoader;
 struct java_lang_Class;
@@ -479,7 +493,11 @@ struct JRIEnvInterface {
 	void	(*RegisterNatives)(JRIEnv* env, jint op, struct java_lang_Class* a, char** b, void** c);
 	void	(*UnregisterNatives)(JRIEnv* env, jint op, struct java_lang_Class* a);
 	struct java_lang_Class*	(*DefineClass)(JRIEnv* env, jint op, struct java_lang_ClassLoader* a, jbyte* b, jsize bLen);
-};    
+};
+
+/*******************************************************************************
+ * JRIEnv Operation IDs
+ ******************************************************************************/
 
 typedef enum JRIEnvOperations {
 	JRI_Reserved0_op,
@@ -616,8 +634,8 @@ typedef enum JRIEnvOperations {
 } JRIEnvOperations;
 
 #ifdef __cplusplus
-} 
-#endif 
+} /* extern "C" */
+#endif /* __cplusplus */
 
-#endif 
-
+#endif /* JRI_H */
+/******************************************************************************/

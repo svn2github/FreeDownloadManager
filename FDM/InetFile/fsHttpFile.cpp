@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #include "fsHttpFile.h"
@@ -308,8 +308,11 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 	if (m_pszCookies)
 		sprintf (szHdr + lstrlen (szHdr), "Cookie: %s\r\n", m_pszCookies); 
 
+	if (m_pszPostData)
+		strcat (szHdr, "Content-Type: application/x-www-form-urlencoded\r\n");
+
 	if (m_pszAdditionalHeaders)
-		lstrcat (szHdr, m_pszAdditionalHeaders);
+		strcat (szHdr, m_pszAdditionalHeaders);
 
 	if (cTryings == 0)
 	{
@@ -352,8 +355,8 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 
 		if (m_pszPostData)
 		{
-			lstrcat (szReq, "\r\n");
-			lstrcat (szReq, m_pszPostData);
+			strcat (szReq, "\r\n");
+			strcat (szReq, m_pszPostData);
 		}
 
 		Dialog (IFDD_TOSERVER, szReq);	

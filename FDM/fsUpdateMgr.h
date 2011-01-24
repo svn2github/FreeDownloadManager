@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */    
 
 #if !defined(AFX_FSUPDATEMGR_H__287BFC6A_1FC7_42E5_9BC8_9DEAA3381DCC__INCLUDED_)
@@ -25,6 +25,7 @@ enum fsUpdateMgrEvent
 	UME_NEWVERSIONAVAIL,		
 	UME_NEWVERSIONNOTAVAIL,		
 	UME_ERROR,					
+	UME_VERIFYSIGN_ERROR,
 };  
 
 typedef void (*fntUpdateMgrEventsFunc) (fsUpdateMgrEvent ev, LPVOID lp);

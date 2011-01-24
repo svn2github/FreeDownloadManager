@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -9,6 +9,7 @@
 class vmsBtSessionImpl : public vmsBtSession
 {
 public:
+	void SetMaxConnections (int limit);
 	void SetMaxHalfOpenConnections (int limit);
 	void RestoreDownloadHandle (vmsBtDownloadImpl* dld);
 	void ListenOn (int portFrom, int portTo);

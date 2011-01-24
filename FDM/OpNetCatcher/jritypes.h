@@ -1,8 +1,8 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
-
-      
+/* -*- Mode: C; tab-width: 4; -*- */
+/*******************************************************************************
+ * Java Runtime Interface
+ * Copyright (c) 1996 Netscape Communications Corporation. All rights reserved.
+ ******************************************************************************/
 
 #ifndef JRITYPES_H
 #define JRITYPES_H
@@ -14,7 +14,11 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif    
+#endif
+
+/*******************************************************************************
+ * Types
+ ******************************************************************************/
 
 struct JRIEnvInterface;
 
@@ -23,8 +27,9 @@ typedef void*		JRIGlobalRef;
 
 typedef jint		JRIInterfaceID[4];
 typedef jint		JRIFieldID;
-typedef jint		JRIMethodID;  
+typedef jint		JRIMethodID;
 
+/* synonyms: */
 typedef JRIGlobalRef	jglobal;
 typedef JRIRef			jref;
 
@@ -49,8 +54,9 @@ typedef enum JRIBoolean {
 
 typedef enum JRIConstant {
 	JRIUninitialized	= -1
-} JRIConstant;  
+} JRIConstant;
 
+/* convenience types: */
 typedef JRIRef		jbooleanArray;
 typedef JRIRef		jbyteArray;
 typedef JRIRef		jcharArray;
@@ -63,8 +69,27 @@ typedef JRIRef		jobjectArray;
 typedef JRIRef		jstringArray;
 typedef JRIRef		jarrayArray;
 
-#define JRIConstructorMethodName	"<init>"      
+#define JRIConstructorMethodName	"<init>"
 
+/*******************************************************************************
+ * Signature Construction Macros
+ ******************************************************************************/
+
+/*
+** These macros can be used to construct signature strings. Hopefully their names
+** are a little easier to remember than the single character they correspond to.
+** For example, to specify the signature of the method:
+**
+**	public int read(byte b[], int off, int len);
+**
+** you could write something like this in C:
+**
+**	char* readSig = JRISigMethod(JRISigArray(JRISigByte)
+**								 JRISigInt
+**								 JRISigInt) JRISigInt;
+**
+** Of course, don't put commas between the types.
+*/
 #define JRISigArray(T)		"[" T
 #define JRISigByte			"B"
 #define JRISigChar			"C"
@@ -77,10 +102,26 @@ typedef JRIRef		jarrayArray;
 #define JRISigLong			"J"
 #define JRISigShort			"S"
 #define JRISigVoid			"V"
-#define JRISigBoolean		"Z"    
+#define JRISigBoolean		"Z"
+
+/*******************************************************************************
+ * Environments
+ ******************************************************************************/
 
 extern JRI_PUBLIC_API(const struct JRIEnvInterface**)
-JRI_GetCurrentEnv(void);        
+JRI_GetCurrentEnv(void);
+
+/*******************************************************************************
+ * Specific Scalar Array Types
+ ******************************************************************************/
+
+/*
+** The JRI Native Method Interface does not support boolean arrays. This
+** is to allow Java runtime implementations to optimize boolean array
+** storage. Using the ScalarArray operations on boolean arrays is bound
+** to fail, so convert any boolean arrays to byte arrays in Java before
+** passing them to a native method.
+*/
 
 #define JRI_NewByteArray(env, length, initialValues)	\
 	JRI_NewScalarArray(env, length, JRISigByte, (jbyte*)(initialValues))
@@ -129,10 +170,11 @@ JRI_GetCurrentEnv(void);
 #define JRI_GetDoubleArrayLength(env, array)	\
 	JRI_GetScalarArrayLength(env, array)
 #define JRI_GetDoubleArrayElements(env, array)		   \
-	((jdouble*)JRI_GetScalarArrayElements(env, array))  
+	((jdouble*)JRI_GetScalarArrayElements(env, array))
 
+/******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
-#endif 
-
+#endif /* JRITYPES_H */
+/******************************************************************************/

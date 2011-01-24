@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */    
 
 #if !defined(AFX_SPIDERADDPAGEDLG_H__79BC625E_210D_4F12_B127_5C0A95C10E5B__INCLUDED_)

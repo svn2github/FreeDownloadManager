@@ -1,9 +1,8 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
-
-    
-
+/* -*- Mode: C; tab-width: 4; -*- */
+/*******************************************************************************
+ * Java Runtime Interface - Machine Dependent Types
+ * Copyright (c) 1996 Netscape Communications Corporation. All rights reserved.
+ ******************************************************************************/
  
 #ifndef JRI_MD_H
 #define JRI_MD_H
@@ -12,28 +11,48 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif          
+#endif
 
+/*******************************************************************************
+ * WHAT'S UP WITH THIS FILE?
+ * 
+ * This is where we define the mystical JRI_PUBLIC_API macro that works on all
+ * platforms. If you're running with Visual C++, Symantec C, or Borland's 
+ * development environment on the PC, you're all set. Or if you're on the Mac
+ * with Metrowerks, Symantec or MPW with SC you're ok too. For UNIX it shouldn't
+ * matter.
+ *
+ * On UNIX though you probably care about a couple of other symbols though:
+ *	IS_LITTLE_ENDIAN must be defined for little-endian systems
+ *	HAVE_LONG_LONG must be defined on systems that have 'long long' integers
+ *	HAVE_ALIGNED_LONGLONGS must be defined if long-longs must be 8 byte aligned
+ *	HAVE_ALIGNED_DOUBLES must be defined if doubles must be 8 byte aligned
+ *	IS_64 must be defined on 64-bit machines (like Dec Alpha)
+ ******************************************************************************/
+
+/* DLL Entry modifiers... */
+
+/* PC */
 #if defined(XP_PC) || defined(_WINDOWS) || defined(WIN32) || defined(_WIN32)
 #	include <windows.h>
 #	if defined(_MSC_VER)
 #		if defined(WIN32) || defined(_WIN32)
 #			define JRI_PUBLIC_API(ResultType)	_declspec(dllexport) ResultType
 #			define JRI_CALLBACK
-#		else 
+#		else /* !_WIN32 */
 #		    if defined(_WINDLL)
 #			define JRI_PUBLIC_API(ResultType)	ResultType __cdecl __export __loadds 
 #			define JRI_CALLBACK			__loadds
-#		    else 
+#		    else /* !WINDLL */
 #			define JRI_PUBLIC_API(ResultType)	ResultType __cdecl __export
 #			define JRI_CALLBACK			__export
-#                   endif 
-#		endif 
+#                   endif /* !WINDLL */
+#		endif /* !_WIN32 */
 #	elif defined(__BORLANDC__)
 #		if defined(WIN32) || defined(_WIN32)
 #			define JRI_PUBLIC_API(ResultType)	__export ResultType
 #			define JRI_CALLBACK
-#		else 
+#		else /* !_WIN32 */
 #			define JRI_PUBLIC_API(ResultType)	ResultType _cdecl _export _loadds 
 #			define JRI_CALLBACK					_loadds
 #		endif
@@ -42,10 +61,11 @@ extern "C" {
 #	endif
 #	ifndef IS_LITTLE_ENDIAN
 #		define IS_LITTLE_ENDIAN
-#	endif  
+#	endif
 
+/* Mac */
 #elif macintosh || Macintosh || THINK_C
-#	if defined(__MWERKS__)				
+#	if defined(__MWERKS__)				/* Metrowerks */
 #		if !__option(enumsalwaysint)
 #			error You need to define 'Enums Always Int' for your project.
 #		endif
@@ -53,31 +73,36 @@ extern "C" {
 #			if !__option(fourbyteints) 
 #				error You need to define 'Struct Alignment: 68k' for your project.
 #			endif
-#		endif 
-#	elif defined(__SC__)				
+#		endif /* !GENERATINGCFM */
+#	elif defined(__SC__)				/* Symantec */
 #		error What are the Symantec defines? (warren@netscape.com)
-#	elif macintosh && applec			
+#	elif macintosh && applec			/* MPW */
 #		error Please upgrade to the latest MPW compiler (SC).
 #	else
 #		error Unsupported Mac development environment.
 #	endif
 #	define JRI_PUBLIC_API(ResultType)		ResultType
-#	define JRI_CALLBACK  
+#	define JRI_CALLBACK
 
+/* Unix or else */
 #else
 #	define JRI_PUBLIC_API(ResultType)		ResultType
 #	define JRI_CALLBACK
 #endif
 
-#ifndef FAR		
+#ifndef FAR		/* for non-Win16 */
 #define FAR
-#endif        
+#endif
+
+/******************************************************************************/
+
+/* Java Scalar Types */
 
 typedef unsigned char	jbool;
 typedef char			jbyte;
 typedef short			jchar;
 typedef short			jshort;
-#ifdef IS_64 
+#ifdef IS_64 /* XXX ok for alpha, but not right on all 64-bit architectures */
 typedef unsigned int	juint;
 typedef int				jint;
 #else
@@ -87,8 +112,15 @@ typedef long			jint;
 typedef float			jfloat;
 typedef double			jdouble;
 
-typedef juint			jsize;      
+typedef juint			jsize;
 
+/*******************************************************************************
+ * jlong : long long (64-bit signed integer type) support.
+ ******************************************************************************/
+
+/*
+** Bit masking macros.  (n must be <= 31 to be portable)
+*/
 #define JRI_BIT(n)			((juint)1 << (n))
 #define JRI_BITMASK(n)		(JRI_BIT(n) - 1)
 
@@ -151,7 +183,7 @@ typedef DWORDLONG			julong;
     (*(qp) = ((julong)(a) / (b)), \
      *(rp) = ((julong)(a) % (b)))
 
-#else  
+#else  /* !HAVE_LONG_LONG */
 
 typedef struct {
 #ifdef IS_LITTLE_ENDIAN
@@ -167,8 +199,11 @@ extern jlong jlong_MAXINT, jlong_MININT, jlong_ZERO;
 #define jlong_IS_ZERO(a)	(((a).hi == 0) && ((a).lo == 0))
 #define jlong_EQ(a, b)		(((a).hi == (b).hi) && ((a).lo == (b).lo))
 #define jlong_NE(a, b)		(((a).hi != (b).hi) || ((a).lo != (b).lo))
-#define jlong_GE_ZERO(a)	(((a).hi >> 31) == 0)  
+#define jlong_GE_ZERO(a)	(((a).hi >> 31) == 0)
 
+/*
+ * NB: jlong_CMP and jlong_UCMP work only for strict relationals (<, >).
+ */
 #define jlong_CMP(a, op, b)	(((int32)(a).hi op (int32)(b).hi) ||          \
 				 (((a).hi == (b).hi) && ((a).lo op (b).lo)))
 #define jlong_UCMP(a, op, b)	(((a).hi op (b).hi) ||                    \
@@ -199,18 +234,28 @@ extern jlong jlong_MAXINT, jlong_MININT, jlong_ZERO;
     _a = a; _b = b;                                                       \
     (r).lo = _a.lo - _b.lo;                                               \
     (r).hi = _a.hi - _b.hi - (_a.lo < _b.lo);                             \
-}                                                                         \  
+}                                                                         \
 
+/*
+ * Multiply 64-bit operands a and b to get 64-bit result r.
+ * First multiply the low 32 bits of a and b to get a 64-bit result in r.
+ * Then add the outer and inner products to r.hi.
+ */
 #define jlong_MUL(r, a, b) {                                              \
     jlong _a, _b;                                                         \
     _a = a; _b = b;                                                       \
     jlong_MUL32(r, _a.lo, _b.lo);                                         \
     (r).hi += _a.hi * _b.lo + _a.lo * _b.hi;                              \
-}  
+}
 
+/* XXX _jlong_lo16(a) = ((a) << 16 >> 16) is better on some archs (not on mips) */
 #define _jlong_lo16(a)		((a) & JRI_BITMASK(16))
-#define _jlong_hi16(a)		((a) >> 16)  
+#define _jlong_hi16(a)		((a) >> 16)
 
+/*
+ * Multiply 32-bit operands a and b to get 64-bit result r.
+ * Use polynomial expansion based on primitive field element (1 << 16).
+ */
 #define jlong_MUL32(r, a, b) {                                            \
      juint _a1, _a0, _b1, _b0, _y0, _y1, _y2, _y3;                        \
      _a1 = _jlong_hi16(a), _a0 = _jlong_lo16(a);                          \
@@ -219,13 +264,18 @@ extern jlong jlong_MAXINT, jlong_MININT, jlong_ZERO;
      _y1 = _a0 * _b1;                                                     \
      _y2 = _a1 * _b0;                                                     \
      _y3 = _a1 * _b1;                                                     \
-     _y1 += _jlong_hi16(_y0);                            \
-     _y1 += _y2;                                         \
-     if (_y1 < _y2) _y3 += 1 << 16;                        \
+     _y1 += _jlong_hi16(_y0);                   /* can't carry */         \
+     _y1 += _y2;                                /* might carry */         \
+     if (_y1 < _y2) _y3 += 1 << 16;             /* propagate */           \
      (r).lo = (_jlong_lo16(_y1) << 16) + _jlong_lo16(_y0);                \
      (r).hi = _y3 + _jlong_hi16(_y1);                                     \
-}  
+}
 
+/*
+ * Divide 64-bit unsigned operand a by 64-bit unsigned operand b, setting *qp
+ * to the 64-bit unsigned quotient, and *rp to the 64-bit unsigned remainder.
+ * Minimize effort if one of qp and rp is null.
+ */
 #define jlong_UDIVMOD(qp, rp, a, b)	jlong_udivmod(qp, rp, a, b)
 
 extern JRI_PUBLIC_API(void)
@@ -266,8 +316,11 @@ jlong_udivmod(julong *qp, julong *rp, julong a, julong b);
     jlong_UDIVMOD(0, &(r), _a, _b);                                       \
     if (_negative)                                                        \
 	jlong_NEG(r, r);                                                      \
-}  
+}
 
+/*
+ * NB: b is a juint, not jlong or julong, for the shift ops.
+ */
 #define jlong_SHL(r, a, b) {                                              \
     if (b) {                                                              \
 	jlong _a;                                                             \
@@ -282,8 +335,9 @@ jlong_udivmod(julong *qp, julong *rp, julong a, julong b);
     } else {                                                              \
 	(r) = (a);                                                            \
     }                                                                     \
-}  
+}
 
+/* a is an int32, b is int32, r is jlong */
 #define jlong_ISHL(r, a, b) {                                             \
     if (b) {                                                              \
 	jlong _a;                                                             \
@@ -382,20 +436,26 @@ jlong_udivmod(julong *qp, julong *rp, julong a, julong b);
 	jlong_NEG(l, l);                                                      \
 }
 
-#endif       
+#endif /* !HAVE_LONG_LONG */
+
+/******************************************************************************/
+/*
+** JDK Stuff -- This stuff is still needed while we're using the JDK
+** dynamic linking strategy to call native methods.
+*/
 
 typedef union JRI_JDK_stack_item {
-    
+    /* Non pointer items */
     jint           i;
     jfloat         f;
     jint           o;
-    
+    /* Pointer items */
     void          *h;
     void          *p;
     unsigned char *addr;
 #ifdef IS_64
     double         d;
-    long           l;		
+    long           l;		/* == 64bits! */
 #endif
 } JRI_JDK_stack_item;
 
@@ -417,8 +477,9 @@ typedef union JRI_JDK_Java8Str {
 #else
 #define JRI_GET_INT64(_t,_addr) (*(jlong*)(_addr))
 #define JRI_SET_INT64(_t, _addr, _v) (*(jlong*)(_addr) = (_v))
-#endif  
+#endif
 
+/* If double's must be aligned on doubleword boundaries then define this */
 #ifdef HAVE_ALIGNED_DOUBLES
 #define JRI_GET_DOUBLE(_t,_addr) ( ((_t).x[0] = ((jint*)(_addr))[0]), \
                                ((_t).x[1] = ((jint*)(_addr))[1]),      \
@@ -429,10 +490,11 @@ typedef union JRI_JDK_Java8Str {
 #else
 #define JRI_GET_DOUBLE(_t,_addr) (*(jdouble*)(_addr))
 #define JRI_SET_DOUBLE(_t, _addr, _v) (*(jdouble*)(_addr) = (_v))
-#endif  
+#endif
 
+/******************************************************************************/
 #ifdef __cplusplus
 }
 #endif
-#endif 
-
+#endif /* JRI_MD_H */
+/******************************************************************************/

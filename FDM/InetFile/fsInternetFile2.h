@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */            
 
 #if !defined(AFX_FSINTERNETFILE2_H__2F47FA5E_F9B6_4C4C_B002_66C62E904353__INCLUDED_)

@@ -1,8 +1,9 @@
+/* -*- Mode: C; tab-width: 4; -*- */
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
+ *  npupp.h $Revision: 1.37 $
+ *  function call mecahnics needed by platform specific glue code.
+ */
 
-        
 
 #ifndef _NPUPP_H_
 #define _NPUPP_H_
@@ -15,7 +16,19 @@
 #include "npapi.h"
 #endif
 
-#include "jri.h"          
+#include "jri.h"
+
+/******************************************************************************************
+   plug-in function table macros
+ 	        for each function in and out of the plugin API we define
+                    typedef NPP_FooUPP
+					#define NewNPP_FooProc
+					#define CallNPP_FooProc
+			for mac, define the UPP magic for PPC/68K calling
+ *******************************************************************************************/
+
+
+/* NPP_Initialize */
 
 #if GENERATINGCFM
 typedef UniversalProcPtr NPP_InitializeUPP;
@@ -39,7 +52,10 @@ typedef void (*NPP_InitializeUPP)(void);
 #define CallNPP_InitializeProc(FUNC)		\
 		(*(FUNC))()
 
-#endif      
+#endif
+
+
+/* NPP_Shutdown */
 
 #if GENERATINGCFM
 typedef UniversalProcPtr NPP_ShutdownUPP;
@@ -63,7 +79,10 @@ typedef void (*NPP_ShutdownUPP)(void);
 #define CallNPP_ShutdownProc(FUNC)		\
 		(*(FUNC))()
 
-#endif      
+#endif
+
+
+/* NPP_New */
 
 #if GENERATINGCFM
 typedef UniversalProcPtr NPP_NewUPP;
@@ -93,7 +112,10 @@ typedef NPError	(*NPP_NewUPP)(NPMIMEType pluginType, NPP instance, uint16 mode, 
 #define CallNPP_NewProc(FUNC, ARG1, ARG2, ARG3, ARG4, ARG5, ARG6, ARG7)		\
 		(*(FUNC))((ARG1), (ARG2), (ARG3), (ARG4), (ARG5), (ARG6), (ARG7))
 
-#endif      
+#endif
+
+
+/* NPP_Destroy */
 
 #if GENERATINGCFM
 
@@ -116,7 +138,10 @@ typedef NPError	(*NPP_DestroyUPP)(NPP instance, NPSavedData** save);
 #define CallNPP_DestroyProc(FUNC, ARG1, ARG2)		\
 		(*(FUNC))((ARG1), (ARG2))
 
-#endif      
+#endif
+
+
+/* NPP_SetWindow */
 
 #if GENERATINGCFM
 
@@ -140,7 +165,10 @@ typedef NPError	(*NPP_SetWindowUPP)(NPP instance, NPWindow* window);
 #define CallNPP_SetWindowProc(FUNC, ARG1, ARG2)		\
 		(*(FUNC))((ARG1), (ARG2))
 
-#endif      
+#endif
+
+
+/* NPP_NewStream */
 
 #if GENERATINGCFM
 
@@ -165,7 +193,10 @@ typedef NPError	(*NPP_NewStreamUPP)(NPP instance, NPMIMEType type, NPStream* str
 		((NPP_NewStreamUPP) (FUNC))
 #define CallNPP_NewStreamProc(FUNC, ARG1, ARG2, ARG3, ARG4, ARG5) \
 		(*(FUNC))((ARG1), (ARG2), (ARG3), (ARG4), (ARG5))
-#endif      
+#endif
+
+
+/* NPP_DestroyStream */
 
 #if GENERATINGCFM
 
@@ -190,7 +221,10 @@ typedef NPError	(*NPP_DestroyStreamUPP)(NPP instance, NPStream* stream, NPReason
 #define CallNPP_DestroyStreamProc(FUNC,  NPParg, NPStreamPtr, NPReasonArg)		\
 		(*(FUNC))((NPParg), (NPStreamPtr), (NPReasonArg))
 
-#endif      
+#endif
+
+
+/* NPP_WriteReady */
 
 #if GENERATINGCFM
 
@@ -214,7 +248,10 @@ typedef int32 (*NPP_WriteReadyUPP)(NPP instance, NPStream* stream);
 #define CallNPP_WriteReadyProc(FUNC,  NPParg, NPStreamPtr)		\
 		(*(FUNC))((NPParg), (NPStreamPtr))
 
-#endif      
+#endif
+
+
+/* NPP_Write */
 
 #if GENERATINGCFM
 
@@ -241,7 +278,10 @@ typedef int32 (*NPP_WriteUPP)(NPP instance, NPStream* stream, int32 offset, int3
 #define CallNPP_WriteProc(FUNC,  NPParg, NPStreamPtr, offsetArg, lenArg, bufferPtr)		\
 		(*(FUNC))((NPParg), (NPStreamPtr), (offsetArg), (lenArg), (bufferPtr))
 
-#endif      
+#endif
+
+
+/* NPP_StreamAsFile */
 
 #if GENERATINGCFM
 
@@ -265,7 +305,10 @@ typedef void (*NPP_StreamAsFileUPP)(NPP instance, NPStream* stream, const char* 
 		((NPP_StreamAsFileUPP) (FUNC))
 #define CallNPP_StreamAsFileProc(FUNC,  ARG1, ARG2, ARG3)		\
 		(*(FUNC))((ARG1), (ARG2), (ARG3))
-#endif      
+#endif
+
+
+/* NPP_Print */
 
 #if GENERATINGCFM
 
@@ -289,7 +332,10 @@ typedef void (*NPP_PrintUPP)(NPP instance, NPPrint* platformPrint);
 #define CallNPP_PrintProc(FUNC,  NPParg, NPPrintArg)		\
 		(*(FUNC))((NPParg), (NPPrintArg))
 
-#endif      
+#endif
+
+
+/* NPP_HandleEvent */
 
 #if GENERATINGCFM
 
@@ -313,7 +359,10 @@ typedef int16 (*NPP_HandleEventUPP)(NPP instance, void* event);
 #define CallNPP_HandleEventProc(FUNC,  NPParg, voidPtr)		\
 		(*(FUNC))((NPParg), (voidPtr))
 
-#endif      
+#endif
+
+
+/* NPP_URLNotify */
 
 #if GENERATINGCFM
 
@@ -339,9 +388,18 @@ typedef void (*NPP_URLNotifyUPP)(NPP instance, const char* url, NPReason reason,
 #define CallNPP_URLNotifyProc(FUNC,  ARG1, ARG2, ARG3, ARG4)		\
 		(*(FUNC))((ARG1), (ARG2), (ARG3), (ARG4))
 
-#endif          
+#endif
 
-#ifdef XP_UNIX    
+
+
+
+/*
+ *  Netscape entry points
+ */
+
+#ifdef XP_UNIX
+
+/* NPN_GetValue */
 
 #if GENERATINGCFM
 
@@ -366,7 +424,11 @@ typedef NPError	(*NPN_GetValueUPP)(NPP instance, NPNVariable variable, void *ret
 		(*(FUNC))((ARG1), (ARG2), (ARG3))
 #endif
 
-#endif         
+#endif /* XP_UNIX */
+
+
+
+/* NPN_GetUrlNotify */
 
 #if GENERATINGCFM
 
@@ -390,7 +452,10 @@ typedef NPError	(*NPN_GetURLNotifyUPP)(NPP instance, const char* url, const char
 		((NPN_GetURLNotifyUPP) (FUNC))
 #define CallNPN_GetURLNotifyProc(FUNC, ARG1, ARG2, ARG3, ARG4)		\
 		(*(FUNC))((ARG1), (ARG2), (ARG3), (ARG4))
-#endif      
+#endif
+
+
+/* NPN_PostUrlNotify */
 
 #if GENERATINGCFM
 
@@ -417,7 +482,10 @@ typedef NPError (*NPN_PostURLNotifyUPP)(NPP instance, const char* url, const cha
 		((NPN_PostURLNotifyUPP) (FUNC))
 #define CallNPN_PostURLNotifyProc(FUNC, ARG1, ARG2, ARG3, ARG4, ARG5, ARG6, ARG7) \
 		(*(FUNC))((ARG1), (ARG2), (ARG3), (ARG4), (ARG5), (ARG6), (ARG7))
-#endif      
+#endif
+
+
+/* NPN_GetUrl */
 
 #if GENERATINGCFM
 
@@ -440,7 +508,10 @@ typedef NPError	(*NPN_GetURLUPP)(NPP instance, const char* url, const char* wind
 		((NPN_GetURLUPP) (FUNC))
 #define CallNPN_GetURLProc(FUNC, ARG1, ARG2, ARG3)		\
 		(*(FUNC))((ARG1), (ARG2), (ARG3))
-#endif      
+#endif
+
+
+/* NPN_PostUrl */
 
 #if GENERATINGCFM
 
@@ -466,7 +537,10 @@ typedef NPError (*NPN_PostURLUPP)(NPP instance, const char* url, const char* win
 		((NPN_PostURLUPP) (FUNC))
 #define CallNPN_PostURLProc(FUNC, ARG1, ARG2, ARG3, ARG4, ARG5, ARG6) \
 		(*(FUNC))((ARG1), (ARG2), (ARG3), (ARG4), (ARG5), (ARG6))
-#endif      
+#endif
+
+
+/* NPN_RequestRead */
 
 #if GENERATINGCFM
 
@@ -490,7 +564,10 @@ typedef NPError	(*NPN_RequestReadUPP)(NPStream* stream, NPByteRange* rangeList);
 #define CallNPN_RequestReadProc(FUNC, stream, range)		\
 		(*(FUNC))((stream), (range))
 
-#endif      
+#endif
+
+
+/* NPN_NewStream */
 
 #if GENERATINGCFM
 
@@ -516,7 +593,10 @@ typedef NPError	(*NPN_NewStreamUPP)(NPP instance, NPMIMEType type, const char* w
 #define CallNPN_NewStreamProc(FUNC, npp, type, window, stream)		\
 		(*(FUNC))((npp), (type), (window), (stream))
 
-#endif      
+#endif
+
+
+/* NPN_Write */
 
 #if GENERATINGCFM
 
@@ -542,7 +622,10 @@ typedef int32 (*NPN_WriteUPP)(NPP instance, NPStream* stream, int32 len, void* b
 #define CallNPN_WriteProc(FUNC, npp, stream, len, buffer)		\
 		(*(FUNC))((npp), (stream), (len), (buffer))
 
-#endif      
+#endif
+
+
+/* NPN_DestroyStream */
 
 #if GENERATINGCFM
 
@@ -567,7 +650,10 @@ typedef NPError (*NPN_DestroyStreamUPP)(NPP instance, NPStream* stream, NPReason
 #define CallNPN_DestroyStreamProc(FUNC, npp, stream, reason)		\
 		(*(FUNC))((npp), (stream), (reason))
 
-#endif      
+#endif
+
+
+/* NPN_Status */
 
 #if GENERATINGCFM
 
@@ -591,8 +677,10 @@ typedef void (*NPN_StatusUPP)(NPP instance, const char* message);
 #define CallNPN_StatusProc(FUNC, npp, msg)		\
 		(*(FUNC))((npp), (msg))	
 
-#endif    
+#endif
 
+
+/* NPN_UserAgent */
 #if GENERATINGCFM
 
 typedef UniversalProcPtr NPN_UserAgentUPP;
@@ -615,8 +703,10 @@ typedef const char*	(*NPN_UserAgentUPP)(NPP instance);
 #define CallNPN_UserAgentProc(FUNC, ARG1)               \
                 (*(FUNC))((ARG1))
 
-#endif    
+#endif
 
+
+/* NPN_MemAlloc */
 #if GENERATINGCFM
 
 typedef UniversalProcPtr NPN_MemAllocUPP;
@@ -639,7 +729,10 @@ typedef void* (*NPN_MemAllocUPP)(uint32 size);
 #define CallNPN_MemAllocProc(FUNC, ARG1)		\
 		(*(FUNC))((ARG1))	
 
-#endif      
+#endif
+
+
+/* NPN__MemFree */
 
 #if GENERATINGCFM
 
@@ -662,7 +755,10 @@ typedef void (*NPN_MemFreeUPP)(void* ptr);
 #define CallNPN_MemFreeProc(FUNC, ARG1)		\
 		(*(FUNC))((ARG1))	
 
-#endif      
+#endif
+
+
+/* NPN_MemFlush */
 
 #if GENERATINGCFM
 
@@ -686,7 +782,11 @@ typedef uint32 (*NPN_MemFlushUPP)(uint32 size);
 #define CallNPN_MemFlushProc(FUNC, ARG1)		\
 		(*(FUNC))((ARG1))	
 
-#endif        
+#endif
+
+
+
+/* NPN_ReloadPlugins */
 
 #if GENERATINGCFM
 
@@ -710,7 +810,10 @@ typedef void (*NPN_ReloadPluginsUPP)(NPBool reloadPages);
 #define CallNPN_ReloadPluginsProc(FUNC, ARG1)		\
 		(*(FUNC))((ARG1))	
 
-#endif      
+#endif
+
+
+/* NPN_GetJavaEnv */
 
 #if GENERATINGCFM
 
@@ -733,7 +836,10 @@ typedef JRIEnv* (*NPN_GetJavaEnvUPP)(void);
 #define CallNPN_GetJavaEnvProc(FUNC)		\
 		(*(FUNC))()	
 
-#endif      
+#endif
+
+
+/* NPN_GetJavaPeer */
 
 #if GENERATINGCFM
 
@@ -757,7 +863,14 @@ typedef jref (*NPN_GetJavaPeerUPP)(NPP instance);
 #define CallNPN_GetJavaPeerProc(FUNC, ARG1)		\
 		(*(FUNC))((ARG1))	
 
-#endif          
+#endif
+
+
+
+
+/******************************************************************************************
+ * The actual plugin function table definitions
+ *******************************************************************************************/
 
 typedef struct _NPPluginFuncs {
     uint16 size;
@@ -797,10 +910,22 @@ typedef struct _NPNetscapeFuncs {
     NPN_PostURLNotifyUPP posturlnotify;
 #ifdef XP_UNIX
     NPN_GetValueUPP getvalue;
-#endif 
-} NPNetscapeFuncs;    
+#endif /* XP_UNIX */
+} NPNetscapeFuncs;
 
-#ifdef XP_MAC      
+
+
+#ifdef XP_MAC
+/******************************************************************************************
+ * Mac platform-specific plugin glue stuff
+ *******************************************************************************************/
+
+/*
+ * Main entry point of the plugin.
+ * This routine will be called when the plugin is loaded. The function
+ * tables are passed in and the plugin fills in the NPPluginFuncs table
+ * and NPPShutdownUPP for Netscape's use.
+ */
 
 #if GENERATINGCFM
 
@@ -826,13 +951,16 @@ typedef NPError (*NPP_MainEntryUPP)(NPNetscapeFuncs*, NPPluginFuncs*, NPP_Shutdo
 		(*(FUNC))((netscapeFunc), (pluginFunc), (shutdownUPP))
 
 #endif
-#endif   
+#endif /* MAC */
+
 
 #ifdef _WINDOWS
 
 #ifdef __cplusplus
 extern "C" {
-#endif    
+#endif
+
+/* plugin meta member functions */
 
 NPError WINAPI NP_GetEntryPoints(NPPluginFuncs* pFuncs);
 
@@ -844,13 +972,15 @@ NPError WINAPI NP_Shutdown();
 }
 #endif
 
-#endif 
+#endif /* _WINDOWS */
 
 #ifdef XP_UNIX
 
 #ifdef __cplusplus
 extern "C" {
-#endif    
+#endif
+
+/* plugin meta member functions */
 
 char*	NP_GetMIMEDescription(void);
 NPError	NP_Initialize(NPNetscapeFuncs*, NPPluginFuncs*);
@@ -860,6 +990,6 @@ NPError	NP_Shutdown(void);
 }
 #endif
 
-#endif 
+#endif /* XP_UNIX */
 
-#endif 
+#endif /* _NPUPP_H_ */

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #include "fsFtpConnection.h"
@@ -78,9 +78,13 @@ void fsFtpConnection::ReceiveExtError()
 
 fsInternetResult fsFtpConnection::SetCurrentDirectory(LPCSTR pszDir)
 {
-	char szCmd [1000];
-	sprintf (szCmd, "CWD %s", pszDir);
-	Dialog (IFDD_TOSERVER, szCmd);	
+	if (pszDir == NULL || *pszDir == 0)
+		return IR_ERROR;
+
+	fsString strCmd;
+	strCmd = "CWD ";
+	strCmd += pszDir;
+	Dialog (IFDD_TOSERVER, strCmd);	
 									
 
 	if (!FtpSetCurrentDirectory (m_hServer, pszDir))

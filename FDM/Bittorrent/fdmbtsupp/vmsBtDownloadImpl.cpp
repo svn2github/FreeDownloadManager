@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -15,6 +15,8 @@ vmsBtDownloadImpl::vmsBtDownloadImpl(void)
 	m_peerList.m_dld = this;
 	m_cRefs = 0;
 	m_dwDob_status = 0;
+	m_bOnTrackerAlert_IsSeed = false;
+	m_dwAnnounceInterval = 30 * 60 * 1000; 
 }
 
 vmsBtDownloadImpl::~vmsBtDownloadImpl(void)
@@ -373,74 +375,72 @@ BOOL vmsBtDownloadImpl::is_HandleValid ()
 
 void vmsBtDownloadImpl::OnTrackerAlert (LPCSTR pszMsg)
 {
-	if (m_handle.trackers ().size () == 1 && m_pTorrent->m_torrent->trackers ().size () == 1)
+	if (m_pTorrent->m_torrent->trackers ().size () == 1)
 		return;
 
-	std::vector<announce_entry> const& vAllTrackers = m_pTorrent->m_torrent->trackers ();
+	
+	const std::vector<announce_entry> &vAllTrackers = m_pTorrent->m_torrent->trackers ();
 
-	std::vector <announce_entry> v = m_handle.trackers ();
-	int nTracker0 = -1, nTracker1 = -1;
+	if (m_bOnTrackerAlert_IsSeed == false && m_handle.is_seed ())
+	{
+		m_bOnTrackerAlert_IsSeed = true;
+		
+		
+		m_vTicksTrackersConnected.clear (); 
+		
+		m_dwAnnounceInterval = 20 * 60 * 1000; 
+	}
 
+	
+	if (m_vTicksTrackersConnected.size () != vAllTrackers.size ())
+	{
+		m_vTicksTrackersConnected.clear ();
+		for (size_t i = 0; i < vAllTrackers.size (); i++)
+			m_vTicksTrackersConnected.push_back ((DWORD)-1);
+	}
+
+	
+	int nCurTracker = -1;
 	for (size_t i = 0; i < vAllTrackers.size (); i++)
 	{
 		if (strstr (pszMsg, vAllTrackers [i].url.c_str ()) != NULL)
 		{
-			nTracker0 = i;
+			nCurTracker = i;
 			break;
 		}
 	}
 
-	for (size_t i = 0; i < v.size (); i++)
+	assert (nCurTracker != -1);
+	if (nCurTracker == -1)
+		return;
+
+	DWORD dwCurTime = GetTickCount ();
+
+	m_vTicksTrackersConnected [nCurTracker] = dwCurTime;
+
+	DWORD dwAnnounceInterval = (DWORD) m_handle.status ().announce_interval.total_milliseconds ();
+	m_dwAnnounceInterval = max (m_dwAnnounceInterval, dwAnnounceInterval);
+
+	
+
+	int nNextTracker = -1;
+
+	for (size_t i = 0; i < vAllTrackers.size (); i++)
 	{
-		if (strstr (pszMsg, v [i].url.c_str ()) != NULL)
+		if (dwCurTime - m_vTicksTrackersConnected [i] > m_dwAnnounceInterval)
 		{
-			nTracker1 = i;
+			nNextTracker = i;
 			break;
 		}
 	}
 
-	if (nTracker1 == -1)
-		return;
+	if (nNextTracker == -1)
+		return; 
 
-	if (m_vTicksTrackersConnected.size () == 0)
-	{
-		
-		for (size_t i = 0; i < vAllTrackers.size (); i++)
-			m_vTicksTrackersConnected.push_back (DWORD (-1));
-	}
-	
-	v.erase (v.begin () + nTracker1);
-
-	const DWORD RECONNECT_MIN_TIME_INTERVAL	= 10*60*1000;
-
-	
-	for (size_t i = 0; i < v.size (); i++)
-	{
-		for (size_t j = 0; j < vAllTrackers.size (); j++)
-		{
-			if (v [i].url == vAllTrackers [j].url)
-			{
-				if (m_vTicksTrackersConnected [j] != DWORD (-1) &&
-					(GetTickCount () - m_vTicksTrackersConnected [j] < RECONNECT_MIN_TIME_INTERVAL))
-				{
-					v.erase (v.begin () + i);
-					i--;
-					break;
-				}
-			}
-		}
-	}
-
-	if (v.size () != 0)
-	{
-		m_vTicksTrackersConnected [nTracker0] = GetTickCount ();
-		m_handle.replace_trackers (v);
-		m_handle.force_reannounce ();
-		return;
-	}
-
-	if (m_handle.trackers ().size () != vAllTrackers.size ())
-		m_handle.replace_trackers (m_pTorrent->m_torrent->trackers ());
+	std::vector <announce_entry> v;
+	v.push_back (vAllTrackers [nNextTracker]);
+	m_handle.replace_trackers (v);
+	m_handle.force_reannounce ();
 }
 
 int vmsBtDownloadImpl::get_CurrentTaskProgress ()

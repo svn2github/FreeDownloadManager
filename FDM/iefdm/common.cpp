@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -359,6 +359,8 @@ BOOL is_ExtToSkip (LPCSTR pszURL, BOOL bUseSkipExtsList)
 
 BOOL is_ServerToSkip (LPCSTR psz)
 {
+	if (psz == NULL || *psz == 0)
+		return FALSE;
 	fsURL url;
 	if (IR_SUCCESS != url.Crack (psz))
 	{

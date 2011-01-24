@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */    
 
 #if !defined(AFX_FSAPPSETTINGS_H__33EC2FD8_44AF_484F_AC12_A498B479BD50__INCLUDED_)
@@ -47,6 +47,37 @@ enum vmsNewGroupSelectWay
 class fsAppSettings  
 {
 public:
+	void SmallTips_CurrentTip (int n);
+	int SmallTips_CurrentTip();
+	void SmallTips_LastTime (FILETIME ft);
+	FILETIME SmallTips_LastTime();
+	void SmallTips_ForceShow (LPCTSTR ptsz);
+	CString SmallTips_ForceShow ();
+	void SmallTips_Show (BOOL b);
+	BOOL SmallTips_Show();
+	void Bittorrent_MaxConnections(int mode, int max);
+	int Bittorrent_MaxConnections(int mode);
+	void FlvMonitoring_ShowGetItButton (BOOL b);
+	BOOL FlvMonitoring_ShowGetItButton();
+	void FlvMonitoring_ProcessList (DWORD dw);
+	DWORD FlvMonitoring_ProcessList();
+	void FlvMonitoring_Enable (BOOL b);
+	BOOL FlvMonitoring_Enable();
+	void View_AvpWarnWasShown (BOOL b);
+	BOOL View_AvpWarnWasShown();
+	void LastTimePiWindowWasShown (FILETIME *pft);
+	FILETIME LastTimePiWindowWasShown();
+	void DontShowPiWindow (BOOL b);
+	BOOL DontShowPiWindow();
+	void StartCount (int i);
+	int StartCount();
+	void Notif_OnDoneWnds_Timeout (int i);
+	int Notif_OnDoneWnds_Timeout();
+	void Notif_UseOnDoneWnds (BOOL b);
+	BOOL Notif_UseOnDoneWnds();
+	void CheckIfDownloadIsMirror (BOOL b);
+	BOOL CheckIfDownloadIsMirror();
+	void ApplySettingsToMutexes();
 	void DldsMgrPDTimeLimit (DWORD dw);
 	DWORD DldsMgrPDTimeLimit();
 	void Monitor_ChromePDInstalledTo (LPCSTR psz);

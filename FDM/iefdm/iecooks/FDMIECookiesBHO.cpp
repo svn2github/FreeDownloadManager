@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */  
 
 #include "stdafx.h"
@@ -9,6 +9,12 @@
 #include <oleacc.h>
 #include "../../vmsVideoSiteHtmlCodeParser.h"
 #include "vmsIeTabsHookFitter.h"
+#include "HtmlEventSink.h"
+#include "vmsFlashWindowsSubclasser.h"
+#include "vmsComGIT.h"
+#include <shlguid.h>
+#include <vector>
+using namespace std;
 
 _COM_SMARTPTR_TYPEDEF(IHTMLInputElement, __uuidof(IHTMLInputElement));
 
@@ -16,7 +22,7 @@ extern BOOL _bIsWin9x;
 
 #pragma data_seg("shdata")
 
-long CFDMIECookiesBHO::_cIEDownloads = 0;
+long CFDMIEBHO::_cIEDownloads = 0;
 #pragma data_seg()  
 
 #pragma comment(linker, "/section:shdata,rws")  
@@ -186,21 +192,29 @@ HWND find_ie_server (HWND hwnd)
 	}
 }
 
-STDMETHODIMP CFDMIECookiesBHO::SetSite(IUnknown *pSite)
+STDMETHODIMP CFDMIEBHO::SetSite(IUnknown *pSite)
 {
 	if (pSite == NULL)
 		vmsIeTabsHookFitter::o ().RemoveTabHook (m_spWB);
 
 	if (m_spWB != NULL)
+	{
 		Disconnect ();
+		vmsComGIT::RevokeInterfaceFromGlobal (m_dwWbCookie);
+		m_dwWbCookie = 0;
+	}
 
-	if (pSite == NULL)
-		DeleteFile ();
+	#ifndef DISABLE_OLD_MONITORING_HELPER
+		if (pSite == NULL)
+			DeleteFile ();
+	#endif
 
 	m_spWB = pSite;
 
 	if (m_spWB == NULL)
 		return pSite == NULL ? S_OK : E_INVALIDARG;
+
+	vmsComGIT::RegisterInterfaceInGlobal (m_spWB, IID_IWebBrowser2, &m_dwWbCookie);
 
 	_bUseUnicode = (GetVersion () & 0x80000000) == 0;
 	DWORD dw;
@@ -215,7 +229,7 @@ STDMETHODIMP CFDMIECookiesBHO::SetSite(IUnknown *pSite)
 	return Connect ();
 }
 
-STDMETHODIMP CFDMIECookiesBHO::GetSite(REFIID riid, void **ppvSite)
+STDMETHODIMP CFDMIEBHO::GetSite(REFIID riid, void **ppvSite)
 {
 	if (m_spWB == NULL || ppvSite == NULL)
 		return E_INVALIDARG;
@@ -224,7 +238,7 @@ STDMETHODIMP CFDMIECookiesBHO::GetSite(REFIID riid, void **ppvSite)
 	return m_spWB.QueryInterface (riid, (IWebBrowser2**)ppvSite);
 }
 
-STDMETHODIMP CFDMIECookiesBHO::Connect()
+STDMETHODIMP CFDMIEBHO::Connect()
 {
 	HRESULT hr;
 
@@ -236,14 +250,14 @@ STDMETHODIMP CFDMIECookiesBHO::Connect()
 	if (FAILED (hr))
 		return hr;
 
-	IUnknown *pthis = (IUnknown*)(IFDMIECookiesBHO*) this;
+	IUnknown *pthis = (IUnknown*)(IFDMIEBHO*) this;
 
 	hr = m_spWB_CPC_CP->Advise (pthis, &m_dwCookie);
 
 	return hr;
 }
 
-STDMETHODIMP CFDMIECookiesBHO::Disconnect()
+STDMETHODIMP CFDMIEBHO::Disconnect()
 {
 	if (m_spWB_CPC_CP == NULL)
 		return S_FALSE;
@@ -258,13 +272,173 @@ STDMETHODIMP CFDMIECookiesBHO::Disconnect()
 	return S_OK;
 }
 
-STDMETHODIMP CFDMIECookiesBHO::ProgressChange(long Progress, long ProgressMax)
+BOOL CALLBACK FindFlashWindows_EnumProc (HWND hwnd, LPARAM lp)
 {
+	TCHAR tszClass [1000] = _T ("");
+	GetClassName (hwnd, tszClass, 1000);
+
+	if (_tcsicmp (tszClass, _T ("MacromediaFlashPlayerActiveX")) == 0)
+	{
+		vector <HWND> *pv = (vector <HWND>*)lp;
+		pv->push_back (hwnd);
+	}
+	
+	return TRUE;
+}
+
+void FindFlashWindows (HWND hwnd, vector <HWND> &v)
+{
+	EnumChildWindows (hwnd, FindFlashWindows_EnumProc, (LPARAM)&v);
+}
+
+LRESULT CALLBACK CFDMIEBHO::_FlashWindowProc (HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
+{
+	int nWnd = vmsFlashWindowsSubclasser::o ().FindWindow (hwnd);
+	if (nWnd == -1)
+		return DefWindowProc (hwnd, msg, wp, lp);
+	vmsFlashWindowsSubclasser::FlashWindow* wnd = vmsFlashWindowsSubclasser::o ().getWindow (nWnd);
+	CFDMIEBHO *pthis = (CFDMIEBHO*)wnd->pvData;
+
+	if (msg == WM_MOUSEMOVE)
+	{
+		if ((wp & (MK_LBUTTON | MK_MBUTTON | MK_RBUTTON)) == 0 && pthis->m_pGetItBtn == NULL)
+		{
+			wnd->ptMousePos.x = LOWORD (lp);
+			wnd->ptMousePos.y = HIWORD (lp);
+			SetTimer (hwnd, 0x123, 500, NULL);
+		}
+	}
+
+	else if (msg == WM_LBUTTONDOWN || msg == WM_RBUTTONDOWN || msg == WM_MBUTTONDOWN)
+	{
+		KillTimer (hwnd, 0x123);
+	}
+
+	else if (msg == WM_TIMER)
+	{
+		if (wp == 0x123)
+		{
+			KillTimer (hwnd, wp);
+			POINT pt, ptScreen;
+			GetCursorPos (&pt);
+			ptScreen = pt;
+			ScreenToClient (hwnd, &pt);
+			if (wnd->ptMousePos.x == pt.x && wnd->ptMousePos.y == pt.y &&
+					WindowFromPoint (ptScreen) == wnd->hwnd)
+			{
+				pthis->m_hwndGetItBtnParent = hwnd;
+				pthis->ShowGetItButton (true);
+			}
+		}
+	}
+
+	return CallWindowProc (wnd->pfnOldProc, hwnd, msg, wp, lp);
+}
+
+STDMETHODIMP CFDMIEBHO::ProgressChange(long Progress, long ProgressMax)
+{
+#ifndef DISABLE_OLD_MONITORING_HELPER
 	AnalyzePageAndWriteInfo ();
+#endif
+
+	QueryWindow ();
+	SubclassFlashWindows ();	
+
 	return S_OK;
 }
 
-void CFDMIECookiesBHO::SaveInfoToDisk()
+STDMETHODIMP CFDMIEBHO::BeforeNavigate2(IDispatch *pdWB, VARIANT *url, VARIANT *flags, VARIANT *tfn, VARIANT *pd, VARIANT *headers, VARIANT_BOOL *bCancel)
+{
+#ifndef DISABLE_OLD_MONITORING_HELPER
+	USES_CONVERSION;
+	
+	m_strPostData = "";
+	m_strBeforeNavUrl = W2A (url->bstrVal);
+	
+	IWebBrowser2Ptr spWB (pdWB);
+	if (spWB == NULL)
+		return S_OK;
+	
+	IDispatchPtr spdDoc;
+	spWB->get_Document (&spdDoc);
+	if (spdDoc == NULL)
+		return S_OK;
+	
+	IHTMLDocument2Ptr spDoc (spdDoc);
+	if (spDoc == NULL)
+		return S_OK;
+	
+	IHTMLElementCollectionPtr spForms;
+	spDoc->get_forms (&spForms);
+	
+	long cForms = 0;
+	if (spForms != NULL)
+		spForms->get_length (&cForms);
+	
+	bool bFound = false;
+	
+	
+	
+	for (long i = 0; bFound == false && i < cForms; i++)
+	{
+		IDispatchPtr spd;
+		spForms->item (CComVariant (i), CComVariant (i), &spd);
+		if (spd == NULL)
+			continue;
+		
+		IHTMLFormElementPtr spForm (spd);
+		if (spForm == NULL)
+			continue;
+		
+		BSTR bstr = NULL;
+		spForm->get_action (&bstr);
+		
+		bFound = bstr != NULL && wcscmp (url->bstrVal, bstr) == 0;
+		if (bstr)
+		{
+			SysFreeString (bstr);
+			bstr = NULL;
+		}
+		
+		if (bFound == false)
+			continue;
+		
+		spForm->get_method (&bstr);
+		
+		if (bstr == NULL || wcsicmp (bstr, L"post"))
+			break;
+		if (bstr)
+		{
+			SysFreeString (bstr);
+			bstr = NULL;
+		}
+		
+		IHTMLElementPtr spFormElem (spForm);
+		if (spFormElem == NULL)
+		{
+			bFound = false;
+			continue;
+		}
+		
+		
+		WalkThroughForm (spFormElem, m_strPostData);
+		
+		
+		if (m_strPostData != "" && 
+			m_strPostData [m_strPostData.GetLength ()-1] == '&')
+			m_strPostData [m_strPostData.GetLength ()-1] = 0;
+	}
+	
+	m_strUrl = ""; 
+	AnalyzePageAndWriteInfo ();
+#endif
+	
+	return S_OK;
+}
+
+#ifndef DISABLE_OLD_MONITORING_HELPER
+
+void CFDMIEBHO::SaveInfoToDisk()
 {
 	WaitForSingleObject (m_mxFile, INFINITE);
 
@@ -315,94 +489,7 @@ void CFDMIECookiesBHO::SaveInfoToDisk()
 	ReleaseMutex (m_mxFile);
 }
 
-STDMETHODIMP CFDMIECookiesBHO::BeforeNavigate2(IDispatch *pdWB, VARIANT *url, VARIANT *flags, VARIANT *tfn, VARIANT *pd, VARIANT *headers, VARIANT_BOOL *bCancel)
-{
-	USES_CONVERSION;
-
-	m_strPostData = "";
-	m_strBeforeNavUrl = W2A (url->bstrVal);
-
-	IWebBrowser2Ptr spWB (pdWB);
-	if (spWB == NULL)
-		return S_OK;
-
-	IDispatchPtr spdDoc;
-	spWB->get_Document (&spdDoc);
-	if (spdDoc == NULL)
-		return S_OK;
-
-	IHTMLDocument2Ptr spDoc (spdDoc);
-	if (spDoc == NULL)
-		return S_OK;
-
-	IHTMLElementCollectionPtr spForms;
-	spDoc->get_forms (&spForms);
-
-	long cForms = 0;
-	if (spForms != NULL)
-		spForms->get_length (&cForms);
-
-	bool bFound = false;
-
-	
-
-	for (long i = 0; bFound == false && i < cForms; i++)
-	{
-		IDispatchPtr spd;
-		spForms->item (CComVariant (i), CComVariant (i), &spd);
-		if (spd == NULL)
-			continue;
-
-		IHTMLFormElementPtr spForm (spd);
-		if (spForm == NULL)
-			continue;
-
-		BSTR bstr = NULL;
-		spForm->get_action (&bstr);
-		
-		bFound = bstr != NULL && wcscmp (url->bstrVal, bstr) == 0;
-		if (bstr)
-		{
-			SysFreeString (bstr);
-			bstr = NULL;
-		}
-
-		if (bFound == false)
-			continue;
-
-		spForm->get_method (&bstr);
-		
-		if (bstr == NULL || wcsicmp (bstr, L"post"))
-			break;
-		if (bstr)
-		{
-			SysFreeString (bstr);
-			bstr = NULL;
-		}
-
-		IHTMLElementPtr spFormElem (spForm);
-		if (spFormElem == NULL)
-		{
-			bFound = false;
-			continue;
-		}
-
-		
-		WalkThroughForm (spFormElem, m_strPostData);
-
-		
-		if (m_strPostData != "" && 
-				m_strPostData [m_strPostData.GetLength ()-1] == '&')
-			m_strPostData [m_strPostData.GetLength ()-1] = 0;
-	}
-
-	m_strUrl = ""; 
-	AnalyzePageAndWriteInfo ();
-
-	return S_OK;
-}
-
-void CFDMIECookiesBHO::WalkThroughForm(IHTMLElement *pElement, fsString& str)
+void CFDMIEBHO::WalkThroughForm(IHTMLElement *pElement, fsString& str)
 {
 	USES_CONVERSION;
 
@@ -453,24 +540,7 @@ void CFDMIECookiesBHO::WalkThroughForm(IHTMLElement *pElement, fsString& str)
 	}
 }
 
-STDMETHODIMP CFDMIECookiesBHO::DownloadBegin()
-{
-	InterlockedIncrement (&_cIEDownloads);
-	return S_OK;
-}
-
-STDMETHODIMP CFDMIECookiesBHO::DownloadComplete()
-{
-	InterlockedDecrement (&_cIEDownloads);
-	return S_OK;
-}
-
-long CFDMIECookiesBHO::get_IEDownloadsCount()
-{
-	return _cIEDownloads;
-}
-
-void CFDMIECookiesBHO::DeleteFile()
+void CFDMIEBHO::DeleteFile()
 {
 	if (m_hFile != INVALID_HANDLE_VALUE)
 	{
@@ -488,21 +558,7 @@ void CFDMIECookiesBHO::DeleteFile()
 	ReleaseMutex (m_mxFile);
 }
 
-#include "vmsFlashHelper.h"
-#include <mflash.h>
-
-_COM_SMARTPTR_TYPEDEF(IShockwaveFlash, __uuidof(IShockwaveFlash));
-
-STDMETHODIMP CFDMIECookiesBHO::DocumentComplete(IDispatch *pDisp, VARIANT *URL)
-{
-	
-
-	
-
-	return S_OK;
-}
-
-void CFDMIECookiesBHO::AnalyzePageAndWriteInfo()
+void CFDMIEBHO::AnalyzePageAndWriteInfo()
 {
 	USES_CONVERSION;
 	
@@ -543,4 +599,361 @@ void CFDMIECookiesBHO::AnalyzePageAndWriteInfo()
 		m_strCookies = strCookies;
 		SaveInfoToDisk ();
 	}
+}
+
+#endif  
+
+STDMETHODIMP CFDMIEBHO::DownloadBegin()
+{
+	InterlockedIncrement (&_cIEDownloads);
+	return S_OK;
+}
+
+STDMETHODIMP CFDMIEBHO::DownloadComplete()
+{
+	InterlockedDecrement (&_cIEDownloads);
+	return S_OK;
+}
+
+long CFDMIEBHO::get_IEDownloadsCount()
+{
+	return _cIEDownloads;
+}
+
+#include "vmsFlashHelper.h"
+#include <mflash.h>
+
+_COM_SMARTPTR_TYPEDEF(IShockwaveFlash, __uuidof(IShockwaveFlash));
+
+STDMETHODIMP CFDMIEBHO::DocumentComplete(IDispatch *pDisp, VARIANT *URL)
+{
+	QueryWindow ();
+	SubclassFlashWindows ();
+
+	
+
+	
+
+	return S_OK;
+}
+
+STDMETHODIMP CFDMIEBHO::WindowStateChanged(DWORD dwFlags, DWORD dwValidFlagsMask)
+{
+	
+
+	return S_OK;
+}
+
+STDMETHODIMP CFDMIEBHO::NavigateComplete2(IDispatch *pDisp, VARIANT *URL)
+{
+	
+
+	IUnknownPtr spUnk1 (m_spWB);
+	IUnknownPtr spUnk2 (pDisp);
+	if (spUnk1 == spUnk2)
+	{
+		ATLASSERT (URL != NULL);
+		if (URL != NULL)
+		{
+			ATLASSERT (URL->vt == VT_BSTR);
+			if (URL->vt == VT_BSTR && URL->bstrVal != NULL && wcslen (URL->bstrVal) != 0)
+				m_wstrPageUrl = URL->bstrVal;
+		}
+	}
+
+	QueryWindow ();
+
+	if (m_spHtmlEvents == NULL)
+	{
+		m_spHtmlEvents = CHtmlEventSink <CFDMIEBHO>::CreateHandler (this, OnHtmlEvent, 0);
+		IDispatchPtr spDisp;
+		m_spWB->get_Document (&spDisp);
+		IHTMLDocument2Ptr spDoc (spDisp);
+		AtlAdvise (spDoc, m_spHtmlEvents, __uuidof (HTMLDocumentEvents2), &m_dwCookieHtmlEvents);
+	}
+
+	return S_OK;
+}
+
+void CFDMIEBHO::OnHtmlEvent(DWORD dwSource, DISPID idEvent, VARIANT *pVarResult)
+{
+	IDispatchPtr spDisp;
+	m_spWB->get_Document (&spDisp);
+	IHTMLDocument2Ptr spDoc (spDisp); 
+
+	if (spDoc == NULL)
+		return;
+	
+	IHTMLWindow2Ptr spWin;
+	IHTMLEventObjPtr spEvent;
+	spDoc->get_parentWindow (&spWin);
+	spWin->get_event (&spEvent);
+	
+	if (spEvent != NULL)
+	{
+		IHTMLElementPtr spElem;
+		spEvent->get_srcElement (&spElem);
+		if (spElem)
+		{
+			IShockwaveFlashPtr spFlash (spElem);
+			if (spFlash != NULL)
+			{
+				CComBSTR bsType;
+				spEvent->get_type (&bsType);
+
+				if (_wcsicmp (bsType, L"mousemove") == 0)
+				{
+					
+
+					
+					
+					m_ticksFlash_MouseLastMove = GetTickCount ();
+
+					if (m_htFlash_MouseTrack == NULL && m_pGetItBtn == NULL)
+					{
+						
+						DWORD dw;
+						m_htFlash_MouseTrack = CreateThread (NULL, 0, _threadFlash_MouseTrack,
+							this, 0, &dw); 
+					}
+				}
+
+				else if (_wcsicmp (bsType, L"mouseout") == 0)
+				{
+					
+					m_ticksFlash_MouseLastMove = 0;
+					if (m_htFlash_MouseTrack)
+					{
+						TerminateThread (m_htFlash_MouseTrack, 0);
+						CloseHandle (m_htFlash_MouseTrack);
+						m_htFlash_MouseTrack = NULL;
+					}
+					ShowGetItButton (false);
+				}
+
+				
+			}
+		}
+	}
+
+	
+}
+
+DWORD WINAPI CFDMIEBHO::_threadFlash_MouseTrack(LPVOID lp)
+{
+	CFDMIEBHO *pthis = (CFDMIEBHO*) lp;
+
+	CoInitialize (NULL);
+
+	while (true)
+	{
+		if (pthis->m_pGetItBtn == NULL && 
+				pthis->m_ticksFlash_MouseLastMove != 0 &&
+				GetTickCount () - pthis->m_ticksFlash_MouseLastMove >= 1000)
+		{
+			
+			
+			pthis->m_hwndGetItBtnParent = pthis->m_hWndIeServer;
+			pthis->ShowGetItButton (true);
+		}
+
+		Sleep (200);
+		ATLTRACE ("_threadFlash_MouseTrack is running...\n");
+	}
+
+	CoUninitialize ();
+
+	return 0;
+}
+
+DWORD WINAPI CFDMIEBHO::_threadFlash_GetItButton(LPVOID lp)
+{
+	CFDMIEBHO *pthis = (CFDMIEBHO*) lp;
+
+	HRESULT hrCoInit = CoInitialize (NULL);
+
+	HWND hwndIE = pthis->m_hWnd;
+
+	if (pthis->m_pGetItBtn)
+		delete pthis->m_pGetItBtn;
+	pthis->m_pGetItBtn = new vmsGetItButton;
+	USES_CONVERSION;
+	pthis->m_pGetItBtn->m_strHtmlPageUrl = W2CA (pthis->m_wstrPageUrl.c_str ());
+	pthis->m_pGetItBtn->Create (pthis->m_hwndGetItBtnParent);
+
+	MSG msg; int nRes;
+	while (IsWindow (pthis->m_pGetItBtn->getHWND ()))
+	{
+		nRes = GetMessage (&msg, NULL, 0, 0);
+		if (nRes == 0 || nRes == -1)
+			break;
+		TranslateMessage (&msg);
+		DispatchMessage (&msg);
+	}
+
+	std::string strMsg, strTitle;
+
+	switch (pthis->m_pGetItBtn->getResult ())
+	{
+	case vmsGetItButton::E_SNIFF_MODULE_NOT_FOUND:
+		strMsg = "Flash video monitoring module is not loaded. Make sure FDM is running and you've enabled this option in FDM (see Options | Downloads | FLV)";
+		strTitle = "Error";
+		break;
+
+	case vmsGetItButton::E_FAILED:
+		char sz [300];
+		sprintf (sz, "An error occurred while trying to transfer downloads to FDM.\nError: 0x%x.", pthis->m_pGetItBtn->getHResult ());
+		strMsg = sz;
+		strTitle = "Error";
+		break;
+
+	case vmsGetItButton::E_NO_FLV_FOUND:
+		strMsg = "There were no flash videos found on this page. Make sure the videos on this page are playing or try to reload it (refresh page or clear browser's cache).";
+		strTitle = "Error";
+		break;
+
+	case vmsGetItButton::E_URL_NOT_FOUND:
+		strMsg = "Failed found information about this web page. Please force your browser to reload it.";
+		strTitle = "Error";
+		break;		
+	}
+
+	vmsGetItButton* p = pthis->m_pGetItBtn;
+	pthis->m_pGetItBtn = NULL;
+	delete p;
+
+	if (SUCCEEDED (hrCoInit))
+		CoUninitialize ();
+	
+	if (strMsg.empty () == FALSE)
+		MessageBox (hwndIE, strMsg.c_str (), strTitle.c_str (), MB_ICONERROR);
+
+	return 0;
+}
+
+BOOL CALLBACK FindIeServerWindow_EnumProc (HWND hwnd, LPARAM lp)
+{
+	TCHAR tszClass [1000] = _T ("");
+	GetClassName (hwnd, tszClass, 1000);
+
+	if (_tcsicmp (tszClass, _T ("Internet Explorer_Server")) == 0)
+	{
+		HWND *phwndIeServer = (HWND*)lp;
+		*phwndIeServer = hwnd;
+		return FALSE;
+	}
+	
+	return TRUE;
+}
+
+void FindIeServerWindow (HWND hwnd, HWND *phwndIeServer)
+{
+	EnumChildWindows (hwnd, FindIeServerWindow_EnumProc, (LPARAM)phwndIeServer);
+}
+
+void CFDMIEBHO::QueryWindow()
+{
+	if (m_hWnd == NULL)
+	{
+		IServiceProviderPtr spService (m_spWB);
+		IOleWindowPtr spWindow;
+		spService->QueryService (SID_SShellBrowser, IID_IOleWindow, (void**)&spWindow);
+		if (spWindow != NULL)
+			spWindow->GetWindow (&m_hWnd);
+	}
+
+	if (m_hWndIeServer == NULL && m_hWnd != NULL)
+		FindIeServerWindow (m_hWnd, &m_hWndIeServer);
+}
+
+void CFDMIEBHO::ShowGetItButton(bool bShow)
+{
+	if (bShow)
+	{
+		if (m_pGetItBtn == NULL)
+		{
+			CRegKey key;
+			if (ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, 
+					"Software\\FreeDownloadManager.ORG\\Free Download Manager\\Settings\\FlvMonitoring", 
+					KEY_READ))
+			{
+				DWORD dw = TRUE;
+				key.QueryValue (dw, "ShowGetItBtn");
+				if (!dw)
+					return;
+			}
+			
+			RetrieveFlashInfo ();
+			DWORD dw;
+			m_htFlash_GetItButton = CreateThread (NULL, 0, _threadFlash_GetItButton, this, 0, &dw);
+		}
+	}
+	else
+	{
+		if (m_htFlash_GetItButton && m_pGetItBtn && IsWindow (m_pGetItBtn->getHWND ()))
+		{
+			TerminateThread (m_htFlash_GetItButton, 0);
+			CloseHandle (m_htFlash_GetItButton);
+			m_htFlash_GetItButton = NULL;
+			if (m_pGetItBtn)
+			{
+				delete m_pGetItBtn;
+				m_pGetItBtn = NULL;
+			}
+		}
+	}
+}
+
+void CFDMIEBHO::RetrieveFlashInfo()
+{
+	POINT pt; GetCursorPos (&pt);
+	ScreenToClient (m_hWndIeServer, &pt);
+	
+	IWebBrowserPtr spWB;
+	vmsComGIT::GetInterfaceFromGlobal (m_dwWbCookie, IID_IWebBrowser2, (void**)&spWB);
+	if (spWB == NULL)
+		return;
+	
+	IDispatchPtr spDocDisp;
+	spWB->get_Document (&spDocDisp);
+
+	IHTMLDocument2Ptr spDoc (spDocDisp);
+
+	
+	
+	
+	
+	IHTMLElementPtr spElement;
+	spDoc->elementFromPoint (pt.x, pt.y, &spElement);
+	
+	if (spElement == NULL)
+		return;
+	
+	IShockwaveFlashPtr spFlash (spElement);
+	
+	if (spFlash == NULL)
+		return;
+
+	CComBSTR bstr;
+	spFlash->get_Movie (&bstr);
+
+	m_wstrFlashMovie = bstr;
+}
+
+void CFDMIEBHO::SubclassFlashWindows()
+{
+	if (m_hWnd != NULL)
+	{
+		vector <HWND> vFlashWnds;
+		FindFlashWindows (m_hWnd, vFlashWnds);
+		for (size_t i = 0; i < vFlashWnds.size (); i++)
+			vmsFlashWindowsSubclasser::o ().Subclass (vFlashWnds [i], _FlashWindowProc, this);
+	}
+}
+
+STDMETHODIMP CFDMIEBHO::StatusTextChange(BSTR bstrText)
+{
+	QueryWindow ();
+	SubclassFlashWindows ();
+	return S_OK;
 }

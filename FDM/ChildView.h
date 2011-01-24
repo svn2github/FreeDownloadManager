@@ -1,11 +1,12 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */    
 
 #if !defined(AFX_CHILDVIEW_H__41E3821A_FD14_4002_B95D_FB6E2383B71E__INCLUDED_)
 #define AFX_CHILDVIEW_H__41E3821A_FD14_4002_B95D_FB6E2383B71E__INCLUDED_
 
 #include "ClientAreaWnd.h"	
+#include "SmallTipWnd.h"	
 
 #if _MSC_VER > 1000
 #pragma once
@@ -29,10 +30,14 @@ public:
 	//}}AFX_VIRTUAL  
 
 public:
+	void ApplyShowSmallTipsSetting();
 	virtual ~CChildView();
 
 	
 protected:
+	void ApplySize (int cx, int cy);
+	bool m_bShowSmallTip;
+	CSmallTipWnd m_wndSmallTip;
 	
 	afx_msg void OnUpdatePluginCommand (CCmdUI* pCmdUI);
 	
@@ -47,6 +52,9 @@ protected:
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnSmallTipClose();
+	afx_msg void OnSmallTipChanged();
+	afx_msg void OnApplyShowSmallTipsSetting();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };    

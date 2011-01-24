@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */    
 
 #if !defined(AFX_FSZIPARCHIVEFASTREBUILDER_H__93697060_3D86_4D64_896A_B16DEEDF296B__INCLUDED_)

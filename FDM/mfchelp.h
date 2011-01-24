@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #ifndef __MFC_HELP_H_
@@ -8,9 +8,10 @@
 extern void ConvertBmp32WithAlphaToBmp32WithoutAlpha (CBitmap& bmp, COLORREF clrBk);
 extern LPCSTR fsGetAppDataFolder ();
 
-extern CString fsGetDataFilePath (LPCSTR pszFile);    
+extern CString fsGetDataFilePath (LPCSTR pszFile);
+extern CString fsGetProgramFilePath (LPCTSTR ptszFile);    
 
-extern CString vmsGetAppFolder (); 
+extern CString vmsGetAppFolder ();
 
 extern void mfcSetForegroundWindow (CWnd *pwnd);
 

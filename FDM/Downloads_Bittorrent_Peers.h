@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DOWNLOADS_BITTORRENT_PEERS_H__0CDE7524_9A02_4941_B975_66D2AA398531__INCLUDED_)

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */    
 
 #if !defined(AFX_MAINFRM_H__AC3FA611_4FF2_4779_82DF_504A2BF21D9A__INCLUDED_)
@@ -53,6 +53,7 @@ public:
 	//}}AFX_VIRTUAL  
 
 public:
+	void ApplyShowSmallTipsSetting();
 	void SetActivePlugin (int nIndex);
 	
 	vmsFDMCustomizations m_Customizations;

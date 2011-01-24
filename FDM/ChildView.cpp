@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */      
 
 #include "stdafx.h"
@@ -7,6 +7,7 @@
 #include "ChildView.h"
 #include "plugincmds.h"
 #include "DownloadsWnd.h"
+#include "vmsAppTipsMgr.h"
 
 extern CDownloadsWnd* _pwndDownloads;
 
@@ -14,7 +15,9 @@ extern CDownloadsWnd* _pwndDownloads;
 #define new DEBUG_NEW
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
-#endif    
+#endif
+
+#define ID_APPLY_SHOWSMALLTIPS_SETTING		200    
 
 extern fsPluginMgr _PluginMgr;
 
@@ -22,6 +25,7 @@ IMPLEMENT_DYNAMIC(CChildView, CWnd)
 
 CChildView::CChildView()
 {
+	m_bShowSmallTip = false;
 }
 
 CChildView::~CChildView()
@@ -38,6 +42,9 @@ BEGIN_MESSAGE_MAP(CChildView,CWnd )
 	//}}AFX_MSG_MAP
 	ON_COMMAND_RANGE (WGP_MENU_CMDFIRST, WGP_MENU_CMDLAST, OnPluginCommand)
 	ON_UPDATE_COMMAND_UI_RANGE (WGP_MENU_CMDFIRST, WGP_MENU_VIEWSMPLITEM_CMDSTART-1, OnUpdatePluginCommand)
+	ON_COMMAND(ID_SMALLTIP_CLOSE, OnSmallTipClose)
+	ON_COMMAND(ID_SMALLTIP_CHANGED, OnSmallTipChanged)
+	ON_COMMAND(ID_APPLY_SHOWSMALLTIPS_SETTING, OnApplyShowSmallTipsSetting)
 END_MESSAGE_MAP()        
 
 BOOL CChildView::PreCreateWindow(CREATESTRUCT& cs) 
@@ -66,7 +73,7 @@ void CChildView::OnPaint()
 
 void CChildView::OnSize(UINT, int cx, int cy) 
 {
-	m_wndClient.MoveWindow (0, 3, cx, cy-3, TRUE);
+	ApplySize (cx, cy);
 }
 
 int CChildView::OnCreate(LPCREATESTRUCT lpCreateStruct) 
@@ -76,6 +83,8 @@ int CChildView::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	if (FALSE == m_wndClient.Create (this))
 		return -1;
+
+	ApplyShowSmallTipsSetting ();
 	
 	return 0;
 }
@@ -119,4 +128,70 @@ BOOL CChildView::OnEraseBkgnd(CDC* pDC)
 	}
 	
 	return CWnd ::OnEraseBkgnd(pDC);
+}
+
+void CChildView::OnSmallTipClose() 
+{
+	if (IDYES != MessageBox (LS (L_OKTODISABLETIPS), LS (L_CONFIRMATION), MB_ICONQUESTION | MB_YESNO))
+		return;
+	_App.SmallTips_Show (FALSE);
+	ApplyShowSmallTipsSetting ();	
+}
+
+void CChildView::ApplySize(int cx, int cy)
+{
+	int cyAdd = 0;
+	
+	if (m_bShowSmallTip)
+	{
+		CSize s = m_wndSmallTip.getRequiredSize ();
+		s.cx = min (s.cx, cx-6-6);
+		m_wndSmallTip.MoveWindow (6, 3, s.cx, s.cy);
+		cyAdd += s.cy+3;
+	}
+	
+	m_wndClient.MoveWindow (0, 3+cyAdd, cx, cy-(3+cyAdd), TRUE);
+}
+
+void CChildView::OnSmallTipChanged() 
+{
+	CRect rc; GetClientRect (&rc);
+	ApplySize (rc.Width (), rc.Height ());
+	m_wndSmallTip.Invalidate (FALSE);
+}
+
+void CChildView::ApplyShowSmallTipsSetting()
+{
+	SendMessage (WM_COMMAND, ID_APPLY_SHOWSMALLTIPS_SETTING);
+}
+
+void CChildView::OnApplyShowSmallTipsSetting() 
+{
+	bool bApplySize = false;
+	
+	if (_App.SmallTips_Show () && vmsAppSmallTipsMgr::o ().getTip ().empty () == false)
+	{
+		if (m_bShowSmallTip == false)
+		{
+			m_bShowSmallTip = true;
+			m_wndSmallTip.Create (this);
+			m_wndSmallTip.ShowWindow (SW_SHOW);
+			bApplySize = true;
+		}
+	}
+	else
+	{
+		if (m_bShowSmallTip)
+		{
+			m_bShowSmallTip = false;
+			m_wndSmallTip.DestroyWindow ();
+			bApplySize = true;
+		}
+	}
+	
+	if (bApplySize)
+	{
+		CRect rc; GetClientRect (&rc);
+		ApplySize (rc.Width (), rc.Height ());
+	}	
 }

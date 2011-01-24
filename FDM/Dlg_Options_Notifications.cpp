@@ -1,11 +1,12 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */      
 
 #include "stdafx.h"
 #include "fdm.h"
 #include "Dlg_Options_Notifications.h"
 #include "DlgSounds.h"
+#include "MainFrm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -49,6 +50,9 @@ BOOL CDlg_Options_Notifications::OnInitDialog()
 	CheckDlgButton (IDC_USESOUNDS, _App.Snd_Use () ? BST_CHECKED : BST_UNCHECKED);
 	
 	CheckDlgButton (IDC_DISABLEFORBATCHDLDS, _App.Notif_DisableForBatchDownloads () ? BST_CHECKED : BST_UNCHECKED);
+
+	if (_App.SmallTips_Show ())
+		CheckDlgButton (IDC_SHOWTIPS, BST_CHECKED);
 	
 	ApplyLanguage ();
 	UpdateEnabled ();
@@ -77,6 +81,14 @@ BOOL CDlg_Options_Notifications::Apply()
 	
 	_App.Notif_DisableForBatchDownloads (IsDlgButtonChecked (IDC_DISABLEFORBATCHDLDS) == BST_CHECKED);
 
+	BOOL b = _App.SmallTips_Show ();
+	BOOL b2 = IsDlgButtonChecked (IDC_SHOWTIPS) == BST_CHECKED;
+	if (!b != !b2)
+	{
+		_App.SmallTips_Show (b2);
+		((CMainFrame*)AfxGetApp ()->m_pMainWnd)->ApplyShowSmallTipsSetting ();
+	}
+
 	return TRUE;
 }
 
@@ -89,6 +101,7 @@ void CDlg_Options_Notifications::ApplyLanguage()
 		fsDlgLngInfo (IDC_USESOUNDS, L_USESOUNDS),
 		fsDlgLngInfo (IDC_CUSTOMIZE, L_CUSTOMIZE),
 		fsDlgLngInfo (IDC_DISABLEFORBATCHDLDS, L_DISABLENOTIFICATIONSFORBATCHDLDS),
+		fsDlgLngInfo (IDC_SHOWTIPS, L_SHOWTIPS),
 	};
 	
 	_LngMgr.ApplyLanguage (	this, lnginfo, sizeof (lnginfo) / sizeof (fsDlgLngInfo), 0);

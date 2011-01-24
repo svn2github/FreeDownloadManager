@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */          
 
 #if !defined(AFX_VMSINTERNETSESSION_H__D02A0038_60AB_46ED_8961_C277CA35463C__INCLUDED_)

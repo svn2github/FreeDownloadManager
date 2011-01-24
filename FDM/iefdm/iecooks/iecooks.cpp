@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */              
 
 #include "stdafx.h"
@@ -14,7 +14,7 @@
 CComModule _Module;
 
 BEGIN_OBJECT_MAP(ObjectMap)
-OBJECT_ENTRY(CLSID_FDMIECookiesBHO, CFDMIECookiesBHO)
+OBJECT_ENTRY(CLSID_FDMIEBHO, CFDMIEBHO)
 OBJECT_ENTRY(CLSID_FDMIEStat, CFDMIEStat)
 END_OBJECT_MAP()      
 
@@ -27,7 +27,7 @@ BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID )
     {
 		_bIsWin9x = GetVersion () & 0x80000000;
 
-        _Module.Init(ObjectMap, hInstance, &LIBID_IECOOKSLib);
+        _Module.Init(ObjectMap, hInstance, &LIBID_IEFDMBHOLib);
         DisableThreadLibraryCalls(hInstance);
     }
     else if (dwReason == DLL_PROCESS_DETACH)

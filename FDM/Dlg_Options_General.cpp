@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */      
 
 #include "stdafx.h"
@@ -126,7 +126,7 @@ BOOL CDlg_Options_General::Apply()
 		dw |= SM_ALLOWICONS;
 	if (IsDlgButtonChecked (IDC_ALLOWBITMAPS2) == BST_CHECKED)
 		dw |= SM_ALLOWBITMAPS;
-	_App.Skin_Flags (dw);      
+	_App.Skin_Flags (dw);  
 
 	return TRUE;
 }

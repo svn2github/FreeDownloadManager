@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #include "fsHttpFiles.h"
@@ -335,34 +335,36 @@ void fsHttpFiles::CalcUrl(fsFileInfo *pInfo, LPCSTR pszSomeUrl)
 {
 	fsURL url1, url2;
 
-	char szResUrl [10000];
+	fsString strResUrl;
 
 	fsInternetResult ir = url2.Crack (pszSomeUrl);
 
-	if (ir != IR_SUCCESS && *m_pszBaseURL)
+	if (ir != IR_SUCCESS && m_pszBaseURL && *m_pszBaseURL)
 	{
 		
 		fsURL urlBase;
 		if (IR_SUCCESS != urlBase.Crack (m_pszBaseURL))
 		{
-			strcpy (szResUrl, "http://");
-			strcat (szResUrl, m_pszBaseURL);
+			strResUrl = "http://";
+			strResUrl += m_pszBaseURL;
 		}
 		else
-			strcpy (szResUrl, m_pszBaseURL);
+		{
+			strResUrl = m_pszBaseURL;
+		}
 
-		if (szResUrl [strlen (szResUrl)-1] != '/' && szResUrl [strlen (szResUrl)-1] != '\\')
-			strcat (szResUrl, "/");
+		if (strResUrl [strResUrl.Length ()-1] != '/' && strResUrl [strResUrl.Length ()-1] != '\\')
+			strResUrl += "/";
 
-		ir = urlBase.Crack (szResUrl);
+		ir = urlBase.Crack (strResUrl);
 		if (ir == IR_SUCCESS)
-			strcat (szResUrl, pszSomeUrl);
+			strResUrl += pszSomeUrl;
 		else
-			strcpy (szResUrl, pszSomeUrl);
+			strResUrl = pszSomeUrl;
 	}
 	else
 	{
-		strcpy (szResUrl, pszSomeUrl);
+		strResUrl = pszSomeUrl;
 	}
 
 	if (ir == IR_SUCCESS)
@@ -378,14 +380,14 @@ void fsHttpFiles::CalcUrl(fsFileInfo *pInfo, LPCSTR pszSomeUrl)
 				p2++;
 
 			
-			strcpy (szResUrl, p2);
+			strResUrl = p2;
 		}
 	}
 
 	
 	
 	
-	pInfo->strName = szResUrl;
+	pInfo->strName = strResUrl;
 
 	
 	if (pInfo->strName [pInfo->strName.Length () - 1] == '\\' ||  pInfo->strName [pInfo->strName.Length () - 1] == '/')

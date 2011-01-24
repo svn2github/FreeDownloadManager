@@ -1,9 +1,7 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
-
-//{{NO_DEPENDENCIES}//}}    
-
+//{{NO_DEPENDENCIES}}
+// Microsoft Developer Studio generated include file.
+// Used by FDM.rc
+//
 #define IDOK2                           3
 #define IDC_ADVANCED                    3
 #define IDC_ENTERCODE                   3
@@ -31,6 +29,7 @@
 #define IDR_FDMTORRENTFILESRCVR         110
 #define IDR_FDMFLASHVIDEODOWNLOADS      111
 #define IDR_FDM                         112
+#define IDR_FDMFLVDOWNLOAD              113
 #define IDR_MAINFRAME                   128
 #define IDR_DATASTTYPE                  129
 #define IDD_ENTERURL                    130
@@ -256,6 +255,16 @@
 #define IDD_OPTIONS_SITEMGR             370
 #define IDD_BTDLD_SEEDING               371
 #define IDD_OPTIONS_DOWNLOADS_TIMELIMIT 372
+#define IDI_CLOSEBTN                    373
+#define IDD_PI2                         374
+#define IDD_PI2_IFREMIND                376
+#define IDD_PI2_SURETOCANCEL            377
+#define IDD_DL                          378
+#define IDD_OPTIONS_DOWNLOADS_FLV       379
+#define IDD_CREATEFLVDOWNLOADS          381
+#define IDD_CREATEFLVDOWNLOADS_BY_WEBPAGE_URL 382
+#define IDB_TIP                         383
+#define IDB_CLOSE                       384
 #define IDC_URL                         1001
 #define IDC_BUTTON2                     1003
 #define IDC_SETTIME                     1003
@@ -305,9 +314,11 @@
 #define IDC_OUTFOLDER_SETDEFAULT        1019
 #define IDC_SECTMINSIZE                 1020
 #define IDC_MAXNUMBERVAL                1020
+#define IDC_TIMEOUT2                    1020
 #define IDC__USER                       1021
 #define IDC_MAXNUMBERSPIN               1021
 #define IDC_LOWSPEED_DURATION           1021
+#define IDC_TIMEOUTSPIN2                1021
 #define IDC__PASSWORD                   1022
 #define IDC_SECTMAXCOUNT                1022
 #define IDC_SECTMAXCOUNTSPIN            1023
@@ -322,6 +333,7 @@
 #define IDC_MIRRS                       1024
 #define IDC_SOUNDS                      1024
 #define IDC_TRACKER_LIST                1024
+#define IDC_FLVLIST                     1024
 #define IDC_MESSAGE                     1025
 #define IDC_UNSELDLDS                   1025
 #define IDC_TOSPIN                      1025
@@ -355,6 +367,7 @@
 #define IDC_TORRENTFILE                 1029
 #define IDC_FOLDER                      1029
 #define IDC_MALREPSMINIMUM              1029
+#define IDC_WPURL                       1029
 #define IDC_SERVERTYPE                  1030
 #define IDC_PROTOCOLS                   1030
 #define IDC_ARGUMENTS                   1030
@@ -482,6 +495,7 @@
 #define IDC_AUTOLAUNCH                  1035
 #define IDC_DISABLEFORBATCHDLDS         1035
 #define IDC_USE2                        1035
+#define IDC_M_FIREFOX                   1035
 #define IDC_USEZIPPREVIEW               1036
 #define IDC_RADIO1                      1036
 #define IDC_BINARY                      1036
@@ -513,6 +527,7 @@
 #define IDC_NEWGRP_0                    1036
 #define IDC_QUALITY                     1036
 #define IDC_UNLIMITED_SEEDING           1036
+#define IDC_M_OPERA                     1036
 #define IDC_ASCII                       1037
 #define IDC_RADIO2                      1037
 #define IDC_HANGUPIFLESS                1037
@@ -555,19 +570,23 @@
 #define IDC_NEWGRP_2                    1038
 #define IDC_DLVIDEO                     1038
 #define IDC_COMPONLY2                   1038
+#define IDC_M_NETSCAPE                  1038
 #define IDC_REFERER                     1039
 #define IDC_USEMAXDLDS                  1039
 #define IDC_OPERA                       1039
 #define IDC_APPENDCOMMENT               1039
 #define IDC_USEWC                       1039
 #define IDC_CHECKEXISTS                 1039
+#define IDC_M_SAFARI                    1039
 #define IDC_USECOOKIE                   1040
 #define IDC_NETSCAPE                    1040
 #define IDC_DISPLAYOPINIONS2            1040
+#define IDC_M_CHROME                    1040
 #define IDC_ASCIIEXTS                   1041
 #define IDC_IEXPLORE                    1041
 #define IDC_FIREFOX                     1041
 #define IDC_SWITCHTOOPINIONS2           1041
+#define IDC_SHOWGETITBTN                1041
 #define IDC_CHECK4                      1042
 #define IDC_MON                         1042
 #define IDC_USEFTPPASSIVE               1042
@@ -581,6 +600,7 @@
 #define IDC_PREVENT_STANDBY             1042
 #define IDC_SKIN2                       1042
 #define IDC_LISTRECENTDLDS              1042
+#define IDC_USE_ONDONE_WNDS             1042
 #define IDC_IGNOREALLRESTRICTIONS       1043
 #define IDC_CHECK5                      1043
 #define IDC_WED                         1043
@@ -590,6 +610,7 @@
 #define IDC_DONTSENDLIST2               1043
 #define IDC_ALLOWICONS2                 1043
 #define IDC_CHECKIFMAL2                 1043
+#define IDC_USETIMEOUT2                 1043
 #define IDC__PROTOCOL                   1044
 #define IDC_MOZILLA                     1044
 #define IDC_ALLOWBITMAPS2               1044
@@ -599,6 +620,8 @@
 #define IDC_CHECK6                      1046
 #define IDC_THU                         1046
 #define IDC_CHROME                      1046
+#define IDC_CHECKIFDLDISMIRR            1046
+#define IDC_SHOWTIPS                    1046
 #define IDC_FILENOTFOUND                1047
 #define IDC_CHECK7                      1047
 #define IDC_FRI                         1047
@@ -662,6 +685,7 @@
 #define IDC__MESSAGE                    1073
 #define IDC_DLGICON                     1074
 #define IDC_RESTARTDLDIFDONE            1074
+#define ID_CANCEL2                      1075
 #define IDC_REWRITE                     1076
 #define IDC_RENAME                      1077
 #define IDC_RESUME                      1078
@@ -746,6 +770,7 @@
 #define IDC_SETGRPSFLDR                 1120
 #define IDC_FILE                        1120
 #define IDC_CHECK_UNCHECK_ALL           1120
+#define ID_REMIND_ME_LATER              1120
 #define IDC_ORDER                       1121
 #define IDC__LICTO                      1121
 #define IDC_SHAREIT                     1121
@@ -843,6 +868,7 @@
 #define IDC__SEC                        1190
 #define IDC__MSG8                       1190
 #define IDC_MAXMIRRORSVAL               1191
+#define IDC__SEC2                       1191
 #define IDC_MAXMIRRORSSPIN              1192
 #define IDC_RECALCVAL                   1193
 #define IDC_RECALCSPIN                  1194
@@ -969,8 +995,11 @@
 #define IDC_DROPBOX                     1301
 #define IDC_MAXHALFSSPIN                1301
 #define IDC_DLINFO                      1302
+#define IDC_LIMITCONNS                  1302
 #define IDC__TRANCPARENCY1              1303
+#define IDC_CONNSLIMITVAL               1303
 #define IDC__TRANCPARENCY1_VAL          1304
+#define IDC_CONNSLIMITVALSPIN           1304
 #define IDC__TRANCPARENCY2              1305
 #define IDC__TRANCPARENCY2_VAL          1306
 #define IDC__PVDESC                     1307
@@ -1002,6 +1031,14 @@
 #define IDC_STATIC0                     1337
 #define IDC_DONTCHECKAGAIN              1339
 #define IDC_SETLIMIT                    1340
+#define IDC__WEBPAGE                    1342
+#define IDC_CNVRT_SETTINGS              1343
+#define IDC_ENABLE_MONITORING           1344
+#define IDC__WARNING                    1345
+#define IDC__FLVONTHISPAGE              1346
+#define IDC__NOTE                       1347
+#define IDC_M_IE                        1348
+#define IDC_M_SEAMONKEY                 1349
 #define IDC__COPYRIGHT                  1900
 #define IDC__REGTO                      1901
 #define IDC_USEMAXCONNS                 2034
@@ -1117,6 +1154,7 @@
 #define ID_BTFILES_NORMALPRIORITY       33012
 #define ID_BTFILES_HIGHPIORITY          33013
 #define ID_BTFILES_DONTDOWNLOAD         33014
+#define ID_DLD_CREATEFLVDLD             33015
 #define ID_SPIDERDLWEBPAGE              33900
 #define ID_FDC                          34000
 #define ID_PROCCEEDFURTHERINIT          34001
@@ -1126,14 +1164,16 @@
 #define IDS_COMPANY                     61204
 #define ID_SB_TRAFFIC_THISDAY           61205
 #define ID_SB_TRAFFIC_THISMONTH         61206
-#define ID_SB_TOTALSPEED                61207    
+#define ID_SB_TOTALSPEED                61207
 
+// Next default values for new objects
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        373
-#define _APS_NEXT_COMMAND_VALUE         33015
-#define _APS_NEXT_CONTROL_VALUE         1341
-#define _APS_NEXT_SYMED_VALUE           112
+#define _APS_NEXT_RESOURCE_VALUE        387
+#define _APS_NEXT_COMMAND_VALUE         33016
+#define _APS_NEXT_CONTROL_VALUE         1350
+#define _APS_NEXT_SYMED_VALUE           114
 #endif
 #endif

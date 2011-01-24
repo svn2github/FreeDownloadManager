@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */                    
 
 #ifndef __REQUIRED_RPCNDR_H_VERSION__
@@ -35,6 +35,11 @@ typedef interface IWGUrlReceiver IWGUrlReceiver;
 #ifndef __IWGUrlListReceiver_FWD_DEFINED__
 #define __IWGUrlListReceiver_FWD_DEFINED__
 typedef interface IWGUrlListReceiver IWGUrlListReceiver;
+#endif 	  
+
+#ifndef __IFdmFlvDownload_FWD_DEFINED__
+#define __IFdmFlvDownload_FWD_DEFINED__
+typedef interface IFdmFlvDownload IFdmFlvDownload;
 #endif 	  
 
 #ifndef __IFDM_FWD_DEFINED__
@@ -80,6 +85,17 @@ typedef struct WGUrlReceiver WGUrlReceiver;
 typedef class WGUrlListReceiver WGUrlListReceiver;
 #else
 typedef struct WGUrlListReceiver WGUrlListReceiver;
+#endif 
+
+#endif 	  
+
+#ifndef __FdmFlvDownload_FWD_DEFINED__
+#define __FdmFlvDownload_FWD_DEFINED__
+
+#ifdef __cplusplus
+typedef class FdmFlvDownload FdmFlvDownload;
+#else
+typedef struct FdmFlvDownload FdmFlvDownload;
 #endif 
 
 #endif 	  
@@ -1252,6 +1268,146 @@ void __RPC_STUB IWGUrlListReceiver_put_Cookies_Stub(
 
 #endif 	  
 
+#ifndef __IFdmFlvDownload_INTERFACE_DEFINED__
+#define __IFdmFlvDownload_INTERFACE_DEFINED__  
+
+   
+
+EXTERN_C const IID IID_IFdmFlvDownload;
+
+#if defined(__cplusplus) && !defined(CINTERFACE)
+    
+    MIDL_INTERFACE("E66B63B0-49F8-47E3-A9BA-799287B59E87")
+    IFdmFlvDownload : public IDispatch
+    {
+    public:
+        virtual  HRESULT STDMETHODCALLTYPE get_Url( 
+             IWGUrlReceiver __RPC_FAR *__RPC_FAR *pVal) = 0;
+        
+        virtual  HRESULT STDMETHODCALLTYPE put_Url( 
+             IWGUrlReceiver __RPC_FAR *newVal) = 0;
+        
+    };
+    
+#else 	
+
+    typedef struct IFdmFlvDownloadVtbl
+    {
+        BEGIN_INTERFACE
+        
+        HRESULT ( STDMETHODCALLTYPE __RPC_FAR *QueryInterface )( 
+            IFdmFlvDownload __RPC_FAR * This,
+             REFIID riid,
+             void __RPC_FAR *__RPC_FAR *ppvObject);
+        
+        ULONG ( STDMETHODCALLTYPE __RPC_FAR *AddRef )( 
+            IFdmFlvDownload __RPC_FAR * This);
+        
+        ULONG ( STDMETHODCALLTYPE __RPC_FAR *Release )( 
+            IFdmFlvDownload __RPC_FAR * This);
+        
+        HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfoCount )( 
+            IFdmFlvDownload __RPC_FAR * This,
+             UINT __RPC_FAR *pctinfo);
+        
+        HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfo )( 
+            IFdmFlvDownload __RPC_FAR * This,
+             UINT iTInfo,
+             LCID lcid,
+             ITypeInfo __RPC_FAR *__RPC_FAR *ppTInfo);
+        
+        HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetIDsOfNames )( 
+            IFdmFlvDownload __RPC_FAR * This,
+             REFIID riid,
+             LPOLESTR __RPC_FAR *rgszNames,
+             UINT cNames,
+             LCID lcid,
+             DISPID __RPC_FAR *rgDispId);
+        
+         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Invoke )( 
+            IFdmFlvDownload __RPC_FAR * This,
+             DISPID dispIdMember,
+             REFIID riid,
+             LCID lcid,
+             WORD wFlags,
+             DISPPARAMS __RPC_FAR *pDispParams,
+             VARIANT __RPC_FAR *pVarResult,
+             EXCEPINFO __RPC_FAR *pExcepInfo,
+             UINT __RPC_FAR *puArgErr);
+        
+         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Url )( 
+            IFdmFlvDownload __RPC_FAR * This,
+             IWGUrlReceiver __RPC_FAR *__RPC_FAR *pVal);
+        
+         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Url )( 
+            IFdmFlvDownload __RPC_FAR * This,
+             IWGUrlReceiver __RPC_FAR *newVal);
+        
+        END_INTERFACE
+    } IFdmFlvDownloadVtbl;
+
+    interface IFdmFlvDownload
+    {
+        CONST_VTBL struct IFdmFlvDownloadVtbl __RPC_FAR *lpVtbl;
+    };
+
+    
+
+#ifdef COBJMACROS  
+
+#define IFdmFlvDownload_QueryInterface(This,riid,ppvObject)	\
+    (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
+
+#define IFdmFlvDownload_AddRef(This)	\
+    (This)->lpVtbl -> AddRef(This)
+
+#define IFdmFlvDownload_Release(This)	\
+    (This)->lpVtbl -> Release(This)  
+
+#define IFdmFlvDownload_GetTypeInfoCount(This,pctinfo)	\
+    (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
+
+#define IFdmFlvDownload_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+    (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo)
+
+#define IFdmFlvDownload_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+    (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
+
+#define IFdmFlvDownload_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+    (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)  
+
+#define IFdmFlvDownload_get_Url(This,pVal)	\
+    (This)->lpVtbl -> get_Url(This,pVal)
+
+#define IFdmFlvDownload_put_Url(This,newVal)	\
+    (This)->lpVtbl -> put_Url(This,newVal)
+
+#endif   
+
+#endif 	    
+
+ HRESULT STDMETHODCALLTYPE IFdmFlvDownload_get_Url_Proxy( 
+    IFdmFlvDownload __RPC_FAR * This,
+     IWGUrlReceiver __RPC_FAR *__RPC_FAR *pVal);  
+
+void __RPC_STUB IFdmFlvDownload_get_Url_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);  
+
+ HRESULT STDMETHODCALLTYPE IFdmFlvDownload_put_Url_Proxy( 
+    IFdmFlvDownload __RPC_FAR * This,
+     IWGUrlReceiver __RPC_FAR *newVal);  
+
+void __RPC_STUB IFdmFlvDownload_put_Url_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);    
+
+#endif 	  
+
 #ifndef __IFDM_INTERFACE_DEFINED__
 #define __IFDM_INTERFACE_DEFINED__  
 
@@ -2045,6 +2201,14 @@ EXTERN_C const CLSID CLSID_WGUrlListReceiver;
 
 class DECLSPEC_UUID("83E6F60E-7147-4475-9DF6-5F1E237FE2CE")
 WGUrlListReceiver;
+#endif
+
+EXTERN_C const CLSID CLSID_FdmFlvDownload;
+
+#ifdef __cplusplus
+
+class DECLSPEC_UUID("42130E6A-0045-4208-A252-71CA12C8FE99")
+FdmFlvDownload;
 #endif
 
 EXTERN_C const CLSID CLSID_FDM;

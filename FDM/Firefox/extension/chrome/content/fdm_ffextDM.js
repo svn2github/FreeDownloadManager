@@ -86,7 +86,9 @@ function fdm_DM_load (ev)
      cookie = doc.cookie;	
   } catch(err) {}
 
-  cookie = fdm_gatherCookieForHost (doc.location.hostname, cookie);
+  try {
+    cookie = fdm_gatherCookieForHost (doc.location.hostname, cookie);
+  } catch (err) {}
 
   url.Cookies = cookie;
 

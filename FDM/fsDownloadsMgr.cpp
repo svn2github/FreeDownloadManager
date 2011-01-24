@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #include "stdafx.h"
@@ -3050,14 +3050,15 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsMetaLink(vmsDownloadSmartPtr dld)
 		if (psz)
 			*psz = 0;
 
-		char szNewFile [MY_MAX_PATH];
-		lstrcpy (szNewFile, dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
-		lstrcat (szNewFile, "\\");
-		if (file->strName.pszString != NULL)
-			lstrcat (szNewFile, file->strName);
+		fsString strNewFile;
+		strNewFile = dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
+		strNewFile += "\\";
+		if (file->strName.pszString != NULL && strstr (file->strName, "..\\") == NULL &&
+			strstr (file->strName, "../") == NULL)
+			strNewFile += file->strName;
 		SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
-		dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new char [lstrlen (szNewFile) + 1];
-		lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, szNewFile);
+		dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new char [strNewFile.Length () + 1];
+		lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, strNewFile);
 
 		if (dld->strComment.GetLength () != 0)
 			dld->strComment += "\r\n";

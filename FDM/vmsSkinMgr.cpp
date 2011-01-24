@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #include "stdafx.h"
@@ -268,4 +268,9 @@ vmsSkinInfo* vmsSkinMgr::get_Skin(int iIndex)
 BOOL vmsSkinMgr::tbUseAlpha_ForAllPluginMenuImages()
 {
 	return m_nCurrSkin != -1 && tbUseAlpha ();
+}
+
+COLORREF vmsSkinMgr::getLinkTextColor() const
+{
+	return GetSysColor (26);
 }

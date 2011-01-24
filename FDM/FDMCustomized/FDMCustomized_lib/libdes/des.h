@@ -1,10 +1,10 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
-
-  
-
-  
+/* des.h */
+/* Copyright (C) 1995 Eric Young (eay@mincom.oz.au).
+ * All rights reserved.
+ * Copyright remains Eric Young's, and as such any Copyright notices in
+ * the code are not to be removed.
+ * See the COPYRIGHT file in the libdes distribution for more details.
+ */
 
 #ifndef HEADER_DES_H
 #define HEADER_DES_H
@@ -14,7 +14,8 @@ typedef struct des_ks_struct
 	{
 	union	{
 		des_cblock _;
-		
+		/* make sure things are correct size on machines with
+		 * 8 byte longs */
 		unsigned long pad[2];
 		} ks;
 #undef _
@@ -44,12 +45,13 @@ typedef struct des_ks_struct
 #define ecb_encrypt des_ecb_encrypt
 #define cbc_encrypt des_cbc_encrypt
 #define cbc_cksum des_cbc_cksum
-#define quad_cksum des_quad_cksum 
+#define quad_cksum des_quad_cksum
 
+/* For compatibility with the MIT lib - eay 20/05/92 */
 typedef struct des_ks_struct bit_64;
 
-extern int des_check_key;	
-extern int des_rw_mode;		
+extern int des_check_key;	/* defaults to false */
+extern int des_rw_mode;		/* defaults to DES_PCBC_MODE */
 
 int des_3ecb_encrypt(des_cblock *input,des_cblock *output,\
 	des_key_schedule ks1,des_key_schedule ks2,int encrypt);

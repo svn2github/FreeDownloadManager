@@ -2,353 +2,362 @@
 
 [General Info]
 Version=1
-LastClass=CDlg_Options_Downloads_TimeLimit
-LastTemplate=CDialog
+LastClass=CSmallTipWnd
+LastTemplate=generic CWnd
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "fdm.h"
 LastPage=0
 
-ClassCount=188
+ClassCount=201
 Class1=CAERDlg
 Class2=CAppStatusBar
 Class3=CBtDld_Files
 Class4=CBtDld_General
 Class5=CBtDld_Misc
-Class6=CBtDldSheet
-Class7=CCBD_SeeResultsDlg
-Class8=CChildView
-Class9=CClientAreaWnd
-Class10=CComboBoxTreeCtrl
-Class11=CCreateBatchDownload
-Class12=CCreateDownloadDlg
-Class13=CCreateDownloadFromTorrentFileDlg
-Class14=CCreateDownloadListDlg
-Class15=CCreateDownloadsDlg
-Class16=CDDRDlg
-Class17=CDialDlg
-Class18=CDlg_CheckFileIntegrity
-Class19=CDlg_CheckFileIntegrity_Progress
-Class20=CDlg_CheckFileIntegrity_Result
-Class21=CDlg_ChooseGroup
-Class22=CDlg_Convert
-Class23=CDlg_CreateFVDownload
-Class24=CDlg_CreateNewTorrent
-Class25=CDlg_Download
-Class26=CDlg_Download_OnHide
-Class27=CDlg_MakePortableVer
-Class28=CDlg_Opinions
-Class29=CDlg_SavePassword
-Class30=CDlg_SetBatchNumbers
-Class31=CDlg_ShutdownType
-Class32=CDlg_SpreadHelp
-Class33=CDlg_SpreadHelp_LinkCode
-Class34=CDlg_SpreadHelp2
-Class35=CDlg_TUMChanged
-Class36=CDlg_Unpack_AskOverwrite
-Class37=CDlg_Unpack_InstAddPack
-Class38=CDlg_UnpackProgress
-Class39=CDlg_UnpackSettings
-Class40=CDlg_WPD_IgnoreList
-Class41=CDlg_WPD_IL_Add
-Class42=CDlgCustomizeIEMenu
-Class43=CDlgDeletedProperties
-Class44=CDlgDownloadsHistory
-Class45=CDlgExportDownloads
-Class46=CDlgExportHistory
-Class47=CDlgExtensionsFilter
-Class48=CDlgFind
-Class49=CDlgFindAdvanced
-Class50=CDlgSounds
-Class51=CDlgT1ToT2
-Class52=CDlgVidMan
-Class53=CDlgVidSeek
-Class54=CDownloadAlrExistsDlg
-Class55=CDownloaderProperties_BtPage
-Class56=CDownloaderProperties_CommunityPage
-Class57=CDownloaderProperties_ListPage
-Class58=CDownloaderProperties_MirrorsPage
-Class59=CDownloaderProperties_MonitorPage
-Class60=CDownloaderProperties_MonitorPage_SkipList
-Class61=CDownloaderProperties_NetworkPage
-Class62=CDownloaderProperties_NewDownloadPage
-Class63=CDownloaderProperties_NotificationsPage
-Class64=CDownloaderPropertiesSheet
-Class65=CDownloadProperties_ConnectionPage
-Class66=CDownloadProperties_GeneralPage
-Class67=CDownloadProperties_IntegrityPage
-Class68=CDownloadProperties_MirrorsPage
-Class69=CDownloadProperties_MiscPage
-Class70=CDownloadProperties_ProtocolPage
-Class71=CDownloadProperties_ProxyPage
-Class72=CDownloads_Bittorrent
-Class73=CDownloads_Bittorrent_Files
-Class74=CDownloads_Bittorrent_General
-Class75=CDownloads_Bittorrent_Peers
-Class76=CDownloads_Deleted
-Class77=CDownloads_Downloads
-Class78=CDownloads_Groups
-Class79=CDownloads_History
-Class80=CDownloads_Info
-Class81=CDownloads_InfoFrame
-Class82=CDownloads_Log
-Class83=CDownloads_Opinions
-Class84=CDownloads_Opinions_WBEvents
-Class85=CDownloads_Progress
-Class86=CDownloads_Tasks
-Class87=CDownloads_VideoPreview
-Class88=CDownloadsGroupsComboBox
-Class89=CDownloadsWnd
-Class90=CEnterKeyDlg
-Class91=CFDCButton
-Class92=CFdmApp
-Class93=CAboutDlg
-Class94=CFlashVideoDownloadsWnd
-Class95=CFloatingInfo_ListCtrlWnd
-Class96=CFloatingInfoWnd
-Class97=CFloatingWnd
-Class98=CFloatingWndsThread
-Class99=CFolderBrowser
-Class100=fsClipboardCatchMgr
-Class101=fsShellBrowsersEvents
-Class102=fsShellWindowsEvents
-Class103=CFVDownloads_Tasks
-Class104=CGroupDlg
-Class105=CHFE_Address
-Class106=CHFE_FileList
-Class107=CHFE_ListLog
-Class108=CHFE_Log
-Class109=CHFE_ProtocolPage
-Class110=CHFESheet
-Class111=CHFEWnd
-Class112=CListCtrlEx
-Class113=CLoginDlg
-Class114=CMainFrame
-Class115=CMyMessageBox
-Class116=CNOWDlg
-Class117=CPlugFrame
-Class118=CPlugFrame2Tabs
-Class119=CPluginFrame2
-Class120=CPlugToolBar
-Class121=CPlugToolBarContainer
-Class122=CPrg_Data
-Class123=CPrg_GeneralPage
-Class124=CPrg_GeneralPage_FWDlg
-Class125=CPrg_HistoryPage
-Class126=CPrg_MiscPage
-Class127=CPrg_SkinsPage
-Class128=CPrg_UpdatePage
-Class129=CPrgSheet
-Class130=CSchedule_AdvancedPage
-Class131=CSchedule_HTSPage
-Class132=CSchedule_WTSPage
-Class133=CScheduler_Log
-Class134=CScheduleSheet
-Class135=CSCRDlg
-Class136=CSheduler_Tasks
-Class137=CShedulerWnd
-Class138=CSiteManager_GeneralPage
-Class139=CSiteManager_PasswordsPage
-Class140=CSiteManagerSheet
-Class141=CSites_AdvancedPage
-Class142=CSites_GeneralPage
-Class143=CSitesSheet
-Class144=CSitesWnd
-Class145=CSpiderAddPageDlg
-Class146=CSpiderTasks
-Class147=CSpiderTaskTree
-Class148=CSpiderWnd
-Class149=CToolBarEx
-Class150=CTorrents_Tasks
-Class151=CTorrentsWnd
-Class152=CTreeCtrlEx
-Class153=CUEDlg
-Class154=UIThread
-Class155=CUpdateDlg
-Class156=CUploadsWnd
-Class157=CUrlWithLoginDlg
-Class158=CUrlWnd
-Class159=CVideoWindow
-Class160=vmsWebBrowserEvents
-Class161=CWaitDlg
-Class162=CWaitForConfirmationDlg
-Class163=CWnd_Banner
-Class164=CWnd_DownloadProgress
-Class165=CWnd_FDMGetCustVer_Btn
-Class166=CWndLog
-Class167=CWPDS_FilesPage
-Class168=CWPDS_GeneralPage
-Class169=CWPDS_ImagesPages
-Class170=CWPDS_Sheet
-Class171=CWPDS_WebPagesPage
-Class172=CXInfoTip
-Class173=CZipPreviewDlg
+Class6=CBtDld_Seeding
+Class7=CBtDldSheet
+Class8=CCBD_SeeResultsDlg
+Class9=CChildView
+Class10=CClientAreaWnd
+Class11=CComboBoxTreeCtrl
+Class12=CCreateBatchDownload
+Class13=CCreateDownloadDlg
+Class14=CCreateDownloadFromTorrentFileDlg
+Class15=CCreateDownloadListDlg
+Class16=CCreateDownloadsDlg
+Class17=CDDRDlg
+Class18=CDialDlg
+Class19=CDlg_CheckFileIntegrity
+Class20=CDlg_CheckFileIntegrity_Progress
+Class21=CDlg_CheckFileIntegrity_Result
+Class22=CDlg_ChooseGroup
+Class23=CDlg_Convert
+Class24=CDlg_CreateFVDownload
+Class25=CDlg_CreateNewTorrent
+Class26=CDlg_Download
+Class27=CDlg_Download_OnHide
+Class28=CDlg_MakePortableVer
+Class29=CDlg_Opinions
+Class30=CDlg_Options
+Class31=CDlg_Options_Downloads
+Class32=CDlg_Options_Downloads_Bittorrent
+Class33=CDlg_Options_Downloads_Mirrors
+Class34=CDlg_Options_Downloads_Monitoring
+Class35=CDlg_Options_Downloads_Network
+Class36=CDlg_Options_Downloads_NewDld
+Class37=CDlg_Options_Downloads_TimeLimit
+Class38=CDlg_Options_General
+Class39=CDlg_Options_General_History
+Class40=CDlg_Options_General_Misc
+Class41=CDlg_Options_General_Misc_Advanced
+Class42=CDlg_Options_Notifications
+Class43=CDlg_Options_SiteMgr
+Class44=CDlg_SavePassword
+Class45=CDlg_SetBatchNumbers
+Class46=CDlg_ShutdownType
+Class47=CDlg_SpreadHelp
+Class48=CDlg_SpreadHelp_LinkCode
+Class49=CDlg_SpreadHelp2
+Class50=CDlg_TUMChanged
+Class51=CDlg_Unpack_AskOverwrite
+Class52=CDlg_Unpack_InstAddPack
+Class53=CDlg_UnpackProgress
+Class54=CDlg_UnpackSettings
+Class55=CDlg_WPD_IgnoreList
+Class56=CDlg_WPD_IL_Add
+Class57=CDlgCustomizeIEMenu
+Class58=CDlgDeletedProperties
+Class59=CDlgDownloadsHistory
+Class60=CDlgExportDownloads
+Class61=CDlgExportHistory
+Class62=CDlgExtensionsFilter
+Class63=CDlgFind
+Class64=CDlgFindAdvanced
+Class65=CDlgProgramOptions
+Class66=CDlgSounds
+Class67=CDlgT1ToT2
+Class68=CDlgVidMan
+Class69=CDlgVidSeek
+Class70=CDownloadAlrExistsDlg
+Class71=CDownloaderProperties_BtPage
+Class72=CDownloaderProperties_CommunityPage
+Class73=CDownloaderProperties_ListPage
+Class74=CDownloaderProperties_MirrorsPage
+Class75=CDownloaderProperties_MonitorPage
+Class76=CDownloaderProperties_MonitorPage_SkipList
+Class77=CDownloaderProperties_NetworkPage
+Class78=CDownloaderProperties_NewDownloadPage
+Class79=CDownloaderProperties_NotificationsPage
+Class80=CDownloaderPropertiesSheet
+Class81=CDownloadProperties_ConnectionPage
+Class82=CDownloadProperties_GeneralPage
+Class83=CDownloadProperties_IntegrityPage
+Class84=CDownloadProperties_MirrorsPage
+Class85=CDownloadProperties_MiscPage
+Class86=CDownloadProperties_ProtocolPage
+Class87=CDownloadProperties_ProxyPage
+Class88=CDownloads_Bittorrent
+Class89=CDownloads_Bittorrent_Files
+Class90=CDownloads_Bittorrent_General
+Class91=CDownloads_Bittorrent_Peers
+Class92=CDownloads_Deleted
+Class93=CDownloads_Downloads
+Class94=CDownloads_Groups
+Class95=CDownloads_History
+Class96=CDownloads_Info
+Class97=CDownloads_InfoFrame
+Class98=CDownloads_Log
+Class99=CDownloads_Opinions
+Class100=CDownloads_Opinions_WBEvents
+Class101=CDownloads_Progress
+Class102=CDownloads_Tasks
+Class103=CDownloads_VideoPreview
+Class104=CDownloadsGroupsComboBox
+Class105=CDownloadsWnd
+Class106=CEnterKeyDlg
+Class107=CFDCButton
+Class108=CFdmApp
+Class109=CAboutDlg
+Class110=CFdmBalloon
+Class111=CFdmBalloon_Content
+Class112=CFdmBalloon_OnDownloadDone
+Class113=CFdmBalloonContent
+Class114=CFlashVideoDownloadsWnd
+Class115=CFloatingInfo_ListCtrlWnd
+Class116=CFloatingInfoWnd
+Class117=CFloatingWnd
+Class118=CFloatingWndsThread
+Class119=CFolderBrowser
+Class120=fsClipboardCatchMgr
+Class121=fsShellBrowsersEvents
+Class122=fsShellWindowsEvents
+Class123=CFVDownloads_Tasks
+Class124=CGroupDlg
+Class125=CHFE_Address
+Class126=CHFE_FileList
+Class127=CHFE_ListLog
+Class128=CHFE_Log
+Class129=CHFE_ProtocolPage
+Class130=CHFESheet
+Class131=CHFEWnd
+Class132=CListCtrlEx
+Class133=CLoginDlg
+Class134=CMainFrame
+Class135=CMyBalloon
+Class136=CMyBalloon_Content
+Class137=CMyMessageBox
+Class138=CNOWDlg
+Class139=CPlugFrame
+Class140=CPlugFrame2Tabs
+Class141=CPluginFrame2
+Class142=CPlugToolBar
+Class143=CPlugToolBarContainer
+Class144=CPrg_Data
+Class145=CPrg_GeneralPage
+Class146=CPrg_GeneralPage_FWDlg
+Class147=CPrg_HistoryPage
+Class148=CPrg_MiscPage
+Class149=CPrg_SkinsPage
+Class150=CPrg_UpdatePage
+Class151=CPrgSheet
+Class152=CSchedule_AdvancedPage
+Class153=CSchedule_HTSPage
+Class154=CSchedule_WTSPage
+Class155=CScheduler_Log
+Class156=CScheduleSheet
+Class157=CSCRDlg
+Class158=CSheduler_Tasks
+Class159=CShedulerWnd
+Class160=CSiteManager_GeneralPage
+Class161=CSiteManager_PasswordsPage
+Class162=CSiteManagerSheet
+Class163=CSites_AdvancedPage
+Class164=CSites_GeneralPage
+Class165=CSitesSheet
+Class166=CSitesWnd
+Class167=CSpiderAddPageDlg
+Class168=CSpiderTasks
+Class169=CSpiderTaskTree
+Class170=CSpiderWnd
+Class171=CToolBarEx
+Class172=CTorrents_Tasks
+Class173=CTorrentsWnd
+Class174=CTreeCtrlEx
+Class175=CUEDlg
+Class176=UIThread
+Class177=CUpdateDlg
+Class178=CUploadsWnd
+Class179=CUrlWithLoginDlg
+Class180=CUrlWnd
+Class181=CVideoWindow
+Class182=vmsWebBrowserEvents
+Class183=CWaitDlg
+Class184=CWaitForConfirmationDlg
+Class185=CWnd_Banner
+Class186=CWnd_DownloadProgress
+Class187=CWnd_FDMGetCustVer_Btn
+Class188=CWndLog
+Class189=CWPDS_FilesPage
+Class190=CWPDS_GeneralPage
+Class191=CWPDS_ImagesPages
+Class192=CWPDS_Sheet
+Class193=CWPDS_WebPagesPage
+Class194=CXInfoTip
+Class195=CZipPreviewDlg
 
-ResourceCount=150
-Resource1=IDM_TORRENTS_VIEW (Neutral)
-Resource2=IDD_DOWNLOAD_MISC (Neutral (Default))
-Resource3=IDD_CREATEDOWNLOADS (Neutral (Default))
-Resource4=IDD_OPTMASTER (Neutral (Default))
-Resource5=IDD_CHECKFILEINTEGRITY (Neutral)
-Resource6=IDM_SITES_VIEW (Neutral (Default))
-Resource7=IDD_WPDS_WEBPAGES
-Resource8=IDD_DOWNLOAD_GENERAL (Neutral (Default))
-Resource9=IDD_DOWNLOAD_PROXY (Neutral (Default))
-Resource10=IDD_PRG_SKINS (Neutral)
-Resource11=IDM_TASKS (Neutral (Default))
-Resource12=IDD_WPD_IGNORELIST (Neutral)
-Resource13=IDD_EXPHIST (Neutral)
-Resource14=IDM_TORRENTS (Neutral)
-Resource15=IDD_OPTIONS_GENERAL_HISTORY (Neutral)
-Resource16=IDM_FVDOWNLOADS_VIEW (Neutral (Default))
-Resource17=IDD_EXPDLDS (Neutral (Default))
-Resource18=IDM_LOG (Neutral (Default))
-Resource19=IDM_SPIDER (Neutral (Default))
-Resource20=IDD_SPREADHELP (Neutral)
-Resource21=IDD_SITES_ADVANCED (Neutral (Default))
-Resource22=IDD_UNPACK_SETTINGS (Neutral)
-Resource23=IDD_OPTIONS_NOTIFICATIONS (Neutral)
-Resource24=IDD_UPDATE (Neutral (Default))
-Resource25=IDD_DOWNLOAD_MIRRORS (Neutral (Default))
-Resource26=IDD_DLDALREXISTS (Neutral (Default))
-Resource27=IDM_DOWNLOADS (Neutral (Default))
-Resource28=IDD_DLDDIALOG_HIDE (Neutral)
-Resource29=IDD_SM_GENERAL (Neutral)
-Resource30=IDD_PRG_HISTORY (Neutral (Default))
-Resource31=IDD_SOUNDS (Neutral (Default))
-Resource32=IDD_OPTIONS_GENERAL_MISC (Neutral)
-Resource33=IDD_REQLOGIN (Neutral (Default))
-Resource34=IDD_DLDR_MONITOR (English (U.S.))
-Resource35=IDD_DOWNLOADSHISTORY_SETTINGS (Neutral (Default))
-Resource36=IDD_OPTIONS_DOWNLOADS_NETWORK (Neutral)
-Resource37=IDD_CHOOSEGRP (Neutral)
-Resource38=IDD_DOWNLOAD_INTEGRITY (Neutral)
-Resource39=IDD_CHECKFILEINTEGRITY_PROGRESS (Neutral)
-Resource40=IDD_WPDS_IMAGES
-Resource41=IDD_SAVEPASSWORD (Neutral)
-Resource42=IDM_HFE_VIEW (Neutral (Default))
-Resource43=IDD_DELETED_PROPS (Neutral (Default))
-Resource44=IDD_TUM_CHANGED (Neutral (Default))
-Resource45=IDD_VIDSEEK (Neutral (Default))
-Resource46=IDD_OPINIONS (Neutral)
-Resource47=IDD_SPREADHELP_LINKCODE (Neutral)
-Resource48=IDD_CBD_RESULTS (Neutral (Default))
-Resource49=IDD_HFE_PROTOCOL (English (U.S.))
-Resource50=IDD_SITES_GENERAL (English (U.S.))
-Resource51=IDD_SPREADHELP2 (Neutral)
-Resource52=IDD_OPTIONS_DOWNLOADS_TIMELIMIT (Neutral)
-Resource53=IDD_MYMESSAGEBOX (Neutral)
-Resource54=IDD_PRG_GENERAL (Neutral (Default))
-Resource55=IDD_PRG_UPDATE (Neutral (Default))
-Resource56=IDD_BTDLD_GENERAL (Neutral)
-Resource57=IDD_SM_PASSWORDS (Neutral)
-Resource58=IDD_UNPACK_ASKOVERWRITE (Neutral)
-Resource59=IDD_DLDR_MONITOR
-Resource60=IDD_CREATENEWTORRENT (Neutral)
-Resource61=IDD_SCHEDULE_WHATTOSTART (Neutral (Default))
-Resource62=IDD_BTDLD_FILES (Neutral)
-Resource63=IDD_URLWITHLOGIN (Neutral (Default))
-Resource64=IDD_HFE_PROTOCOL
-Resource65=IDD_UNHEXC (Neutral (Default))
-Resource66=IDD_FIND (Neutral)
-Resource67=IDD_EXTFILTER (Neutral)
-Resource68=IDM_UPLOADS_VIEW (Neutral)
-Resource69=IDD_UNPACK_INSTADDPACK (Neutral)
-Resource70=IDD_OPTIONS_DOWNLOADS_BITTORRENT (Neutral)
-Resource71=IDD_WPDS_IMAGES (English (U.S.))
-Resource72=IDD_CREATEBATCHDOWNLOAD (Neutral (Default))
-Resource73=IDD_WAITFORCONFIRMATION (Neutral (Default))
-Resource74=IDD_SPIDER_ADD (Neutral (Default))
-Resource75=IDM_HFE (Neutral (Default))
-Resource76=IDD_DLDR_NEWDLD (Neutral (Default))
-Resource77=IDR_MAINFRAME
-Resource78=IDD_DLDR_MONITOR_SKIPLIST (English (U.S.))
-Resource79=IDD_WPDS_WEBPAGES (English (U.S.))
-Resource80=IDD_FIND_ADVANCED (Neutral)
-Resource81=IDD_CREATEDOWNLOAD
-Resource82=IDD_ABOUTBOX (Neutral (Default))
-Resource83=IDD_WPD_IL_ADD (Neutral)
-Resource84=IDM_SITES (Neutral (Default))
-Resource85=IDD_DOWNLOAD_PROTOCOL (Neutral (Default))
-Resource86=IDD_UNPACK_PROGRESS (Neutral)
-Resource87=IDD_SITES_GENERAL
-Resource88=IDM_HISTORYITEMS (Neutral)
-Resource89=IDD_SCHEDULE_ADVANCED (Neutral (Default))
-Resource90=IDM_SPIDER_VIEW (Neutral (Default))
-Resource91=IDD_DLDR_NOTIFICATIONS (Neutral (Default))
-Resource92=IDD_WPDS_GENERAL (English (U.S.))
-Resource93=IDD_T1TOT2 (Neutral)
-Resource94=IDD_OPTIONS_DOWNLOADS_NEWDLD (Neutral)
-Resource95=IDD_DOWNLOAD_CONNECTION (Neutral (Default))
-Resource96=IDD_CHECKFILEINTEGRITY_RESULT (Neutral)
-Resource97=IDD_DOWNLOAD (Neutral)
-Resource98=IDM_BTFILES (Neutral)
-Resource99=IDM_SPIDER_TREE (English (U.S.))
-Resource100=IDD_OPTIONS_SITEMGR
-Resource101=IDD_CUSTOMIZEIEMENU (Neutral (Default))
-Resource102=IDR_MAINFRAME (Neutral (Default))
-Resource103=IDM_TASKS_VIEW (Neutral (Default))
-Resource104=IDD_WPDS_GENERAL
-Resource105=IDD_DLDR_MIRRORS (Neutral (Default))
-Resource106=IDD_PRG_MISC (Neutral)
-Resource107=IDD_WAITER (Neutral (Default))
-Resource108=IDD_SCHEDULE_WHENTOSTART (Neutral (Default))
-Resource109=IDD_BTDLD_MISC (Neutral (Default))
-Resource110=IDD_CREATEDOWNLOAD (English (U.S.))
-Resource111=IDD_SCR (Neutral (Default))
-Resource112=IDM_GCV_BUTTON (Neutral)
-Resource113=IDM_DL_VIEW (Neutral (Default))
-Resource114=IDM_GROUP (Neutral (Default))
-Resource115=IDD_OPTIONS_DOWNLOADS_MONITORING (Neutral)
-Resource116=IDD_WPDS_FILES
-Resource117=IDD_AER (Neutral (Default))
-Resource118=IDD_CREATETORRENTDOWNLOAD (Neutral (Default))
-Resource119=IDD_DIAL (Neutral (Default))
-Resource120=IDD_DLDGROUP (Neutral (Default))
-Resource121=IDD_ZIPPREVIEW (Neutral (Default))
-Resource122=IDM_FVDOWNLOADS (Neutral (Default))
-Resource123=IDD_SHUTDOWN_TYPE (Neutral)
-Resource124=IDD_CREATEURLLIST (Neutral (Default))
-Class174=CDlgProgramOptions
-Class175=CDlg_Options_General
-Resource125=IDM_WT (Neutral (Default))
-Class176=CDlg_Options_General_History
-Resource126=IDD_DLDR_MONITOR_SKIPLIST
-Class177=CDlg_Options_General_Misc
-Resource127=IDD_OPTIONS_DOWNLOADS_MIRRORS (Neutral)
-Class178=CDlg_Options_General_Misc_Advanced
-Resource128=IDM_TRAY (Neutral (Default))
-Class179=CDlg_Options_Downloads
-Resource129=IDM_SPIDER_TREE
-Class180=CDlg_Options_Downloads_NewDld
-Resource130=IDD_DLDR_COMMUNITY (Neutral)
-Class181=CDlg_Options_Downloads_Network
-Resource131=IDD_OPTIONS_DOWNLOADS (Neutral)
-Class182=CDlg_Options_Downloads_Bittorrent
-Resource132=IDM_DELETEDITEMS (Neutral (Default))
-Class183=CDlg_Options_Downloads_Mirrors
-Resource133=IDD_OPTIONS_GENERAL_MISC_ADV (Neutral)
-Class184=CDlg_Options_Downloads_Monitoring
-Resource134=IDD_VIDMAN (Neutral (Default))
-Class185=CDlg_Options_Notifications
-Resource135=IDD_SETUPBATCHNUMBERS (Neutral)
-Class186=CDlg_Options_SiteMgr
-Resource136=IDD_OPTIONS_SITEMGR (Russian)
-Class187=CBtDld_Seeding
-Resource137=IDD_BTDLD_SEEDING (Neutral)
-Class188=CDlg_Options_Downloads_TimeLimit
-Resource138=IDD_DLDR_BT (Neutral)
-Resource139=IDD_PRG_GENERAL_FW (Neutral)
-Resource140=IDD_PRG_DATA (Neutral)
-Resource141=IDD_MAKE_PORTABLE_VER (Neutral)
-Resource142=IDD_CREATEFVDOWNLOAD (Neutral)
-Resource143=IDD_CONVERT (Neutral)
-Resource144=IDD_DDR (Neutral (Default))
-Resource145=IDD_WPDS_FILES (English (U.S.))
-Resource146=IDD_OPTIONS (Neutral)
-Resource147=IDD_OPTIONS_GENERAL (Neutral)
-Resource148=IDD_DLDR_NETWORK (Neutral (Default))
-Resource149=IDD_DLDR_LIST (Neutral (Default))
-Resource150=IDR_MAINFRAME (English (U.S.))
+ResourceCount=146
+Resource1=IDD_OPTIONS_DOWNLOADS_BITTORRENT (Neutral)
+Resource2=IDD_CONVERT (Neutral)
+Resource3=IDD_DLDR_NEWDLD (Neutral (Default))
+Resource4=IDD_DLDR_COMMUNITY (Neutral)
+Resource5=IDD_DIAL (Neutral (Default))
+Resource6=IDM_HFE_VIEW (Neutral (Default))
+Resource7=IDM_DELETEDITEMS (Neutral (Default))
+Resource8=IDD_PI2_IFREMIND (Neutral - _PI_ADVERT)
+Resource9=IDD_UNPACK_ASKOVERWRITE (Neutral)
+Resource10=IDD_OPTIONS_GENERAL_MISC (Neutral)
+Resource11=IDD_DDR (Neutral (Default))
+Resource12=IDD_DOWNLOADSHISTORY_SETTINGS (Neutral (Default))
+Resource13=IDD_DLDR_NETWORK (Neutral (Default))
+Resource14=IDD_CBD_RESULTS (Neutral (Default))
+Resource15=IDD_DOWNLOAD_MISC (Neutral (Default))
+Resource16=IDM_HFE (Neutral (Default))
+Resource17=IDM_SPIDER_VIEW (Neutral (Default))
+Resource18=IDD_UNPACK_INSTADDPACK (Neutral)
+Resource19=IDD_WPD_IL_ADD (Neutral)
+Resource20=IDD_DLDR_LIST (Neutral (Default))
+Resource21=IDD_WPDS_WEBPAGES (English (U.S.))
+Resource22=IDD_OPTIONS_DOWNLOADS_MIRRORS (Neutral)
+Resource23=IDD_DLDR_MONITOR (English (U.S.))
+Resource24=IDD_SCR (Neutral (Default))
+Resource25=IDD_OPTIONS_NOTIFICATIONS (Neutral)
+Resource26=IDM_FVDOWNLOADS (Neutral (Default))
+Resource27=IDD_EXPHIST (Neutral)
+Resource28=IDD_CREATEFLVDOWNLOADS_BY_WEBPAGE_URL (Neutral)
+Resource29=IDD_DELETED_PROPS (Neutral (Default))
+Resource30=IDD_OPTIONS_GENERAL_MISC_ADV (Neutral)
+Resource31=IDD_OPINIONS (Neutral)
+Resource32=IDD_DLDR_MONITOR_SKIPLIST (English (U.S.))
+Resource33=IDD_PRG_HISTORY (Neutral (Default))
+Resource34=IDD_CREATEBATCHDOWNLOAD (Neutral (Default))
+Resource35=IDM_TASKS_VIEW (Neutral (Default))
+Resource36=IDD_UNPACK_PROGRESS (Neutral)
+Resource37=IDD_DOWNLOAD (Neutral)
+Resource38=IDD_SHUTDOWN_TYPE (Neutral)
+Resource39=IDD_PI2 (Neutral - _PI_ADVERT)
+Resource40=IDM_LOG (Neutral (Default))
+Resource41=IDD_OPTIONS_GENERAL_HISTORY (Neutral)
+Resource42=IDD_WAITFORCONFIRMATION (Neutral (Default))
+Resource43=IDD_UNHEXC (Neutral (Default))
+Resource44=IDD_DLDDIALOG_HIDE (Neutral)
+Resource45=IDM_GROUP (Neutral (Default))
+Resource46=IDD_CHECKFILEINTEGRITY (Neutral)
+Resource47=IDM_TORRENTS (Neutral)
+Resource48=IDD_SM_PASSWORDS (Neutral)
+Resource49=IDD_CHECKFILEINTEGRITY_RESULT (Neutral)
+Resource50=IDD_DL (Neutral)
+Resource51=IDM_GCV_BUTTON (Neutral)
+Resource52=IDD_CREATETORRENTDOWNLOAD (Neutral (Default))
+Resource53=IDD_OPTIONS_DOWNLOADS_FLV (Neutral)
+Resource54=IDD_SM_GENERAL (Neutral)
+Resource55=IDD_OPTIONS_DOWNLOADS_TIMELIMIT (Neutral)
+Resource56=IDD_BTDLD_FILES (Neutral)
+Resource57=IDD_ZIPPREVIEW (Neutral (Default))
+Resource58=IDD_SCHEDULE_WHATTOSTART (Neutral (Default))
+Resource59=IDM_TASKS (Neutral (Default))
+Resource60=IDM_WT (Neutral (Default))
+Resource61=IDM_SPIDER_TREE (English (U.S.))
+Resource62=IDD_TUM_CHANGED (Neutral (Default))
+Resource63=IDD_BTDLD_SEEDING (Neutral)
+Resource64=IDD_CHECKFILEINTEGRITY_PROGRESS (Neutral)
+Resource65=IDD_SAVEPASSWORD (Neutral)
+Resource66=IDD_CHOOSEGRP (Neutral)
+Resource67=IDD_URLWITHLOGIN (Neutral (Default))
+Resource68=IDD_REQLOGIN (Neutral (Default))
+Resource69=IDM_SITES (Neutral (Default))
+Resource70=IDD_OPTIONS_GENERAL (Neutral)
+Resource71=IDD_SPIDER_ADD (Neutral (Default))
+Resource72=IDD_DOWNLOAD_GENERAL (Neutral (Default))
+Resource73=IDD_WAITER (Neutral (Default))
+Resource74=IDD_WPDS_FILES (English (U.S.))
+Resource75=IDD_BTDLD_GENERAL (Neutral)
+Resource76=IDD_SITES_ADVANCED (Neutral (Default))
+Resource77=IDD_WPD_IGNORELIST (Neutral)
+Resource78=IDD_CREATEFLVDOWNLOADS (Neutral)
+Resource79=IDM_HISTORYITEMS (Neutral)
+Resource80=IDD_OPTIONS_SITEMGR
+Resource81=IDD_WPDS_IMAGES (English (U.S.))
+Resource82=IDM_TORRENTS_VIEW (Neutral)
+Resource83=IDD_UNPACK_SETTINGS (Neutral)
+Resource84=IDD_EXTFILTER (Neutral)
+Resource85=IDD_OPTIONS_DOWNLOADS (Neutral)
+Resource86=IDD_DOWNLOAD_CONNECTION (Neutral (Default))
+Resource87=IDD_SOUNDS (Neutral (Default))
+Resource88=IDD_DOWNLOAD_INTEGRITY (Neutral)
+Resource89=IDD_FIND (Neutral)
+Resource90=IDD_VIDMAN (Neutral (Default))
+Resource91=IDR_MAINFRAME (Neutral (Default))
+Resource92=IDD_PRG_MISC (Neutral)
+Resource93=IDD_SCHEDULE_ADVANCED (Neutral (Default))
+Resource94=IDD_CREATENEWTORRENT (Neutral)
+Resource95=IDD_CREATEFLVDOWNLOAD (Neutral)
+Resource96=IDD_OPTIONS (Neutral)
+Resource97=IDD_VIDSEEK (Neutral (Default))
+Resource98=IDD_DLDR_MIRRORS (Neutral (Default))
+Resource99=IDD_PRG_SKINS (Neutral)
+Resource100=IDD_DLDR_NOTIFICATIONS (Neutral (Default))
+Resource101=IDD_DLDALREXISTS (Neutral (Default))
+Resource102=IDD_SPREADHELP2 (Neutral)
+Resource103=IDM_TRAY (Neutral (Default))
+Resource104=IDM_UPLOADS_VIEW (Neutral)
+Resource105=IDD_SCHEDULE_WHENTOSTART (Neutral (Default))
+Resource106=IDD_HFE_PROTOCOL (English (U.S.))
+Resource107=IDD_CREATEDOWNLOAD (English (U.S.))
+Resource108=IDD_OPTIONS_DOWNLOADS_MONITORING (Neutral)
+Resource109=IDM_SPIDER (Neutral (Default))
+Resource110=IDD_OPTIONS_DOWNLOADS_NETWORK (Neutral)
+Resource111=IDD_PRG_GENERAL_FW (Neutral)
+Resource112=IDD_SPREADHELP_LINKCODE (Neutral)
+Resource113=IDD_SPREADHELP (Neutral)
+Resource114=IDM_DOWNLOADS (Neutral (Default))
+Resource115=IDM_BTFILES (Neutral)
+Resource116=IDD_CREATEFVDOWNLOAD (Neutral)
+Resource117=IDD_ABOUTBOX (Neutral (Default))
+Resource118=IDM_FVDOWNLOADS_VIEW (Neutral (Default))
+Resource119=IDD_PRG_UPDATE (Neutral (Default))
+Resource120=IDD_PRG_GENERAL (Neutral (Default))
+Resource121=IDD_DOWNLOAD_PROXY (Neutral (Default))
+Resource122=IDD_WPDS_GENERAL (English (U.S.))
+Resource123=IDD_CREATEDOWNLOADS (Neutral (Default))
+Resource124=IDD_T1TOT2 (Neutral)
+Resource125=IDD_DLDGROUP (Neutral (Default))
+Resource126=IDD_OPTIONS_DOWNLOADS_NEWDLD (Neutral)
+Resource127=IDD_SETUPBATCHNUMBERS (Neutral)
+Resource128=IDD_CREATEURLLIST (Neutral (Default))
+Resource129=IDD_DOWNLOAD_PROTOCOL (Neutral (Default))
+Resource130=IDD_AER (Neutral (Default))
+Resource131=IDD_MYMESSAGEBOX (Neutral)
+Resource132=IDD_FIND_ADVANCED (Neutral)
+Resource133=IDD_DOWNLOAD_MIRRORS (Neutral (Default))
+Resource134=IDD_OPTMASTER (Neutral (Default))
+Resource135=IDD_DLDR_BT (Neutral)
+Resource136=IDD_SITES_GENERAL (English (U.S.))
+Resource137=IDD_UPDATE (Neutral (Default))
+Class196=CWndDlDoneNotification
+Resource138=IDD_PI2_SURETOCANCEL (Neutral - _PI_ADVERT)
+Resource139=IDM_DL_VIEW (Neutral (Default))
+Resource140=IDD_CUSTOMIZEIEMENU (Neutral (Default))
+Resource141=IDD_PRG_DATA (Neutral)
+Class197=CDlgDL
+Resource142=IDD_EXPDLDS (Neutral (Default))
+Class198=CDlg_Options_Downloads_Flv
+Resource143=IDM_SITES_VIEW (Neutral (Default))
+Class199=CDlgCreateFlvDownloads
+Resource144=IDD_BTDLD_MISC (Neutral (Default))
+Resource145=IDD_MAKE_PORTABLE_VER (Neutral)
+Class200=CDlgCreateFlvDownloadsByWebPageUrl
+Class201=CSmallTipWnd
+Resource146=IDR_MAINFRAME (English (U.S.))
 
 [CLS:CAERDlg]
 Type=0
@@ -380,6 +389,12 @@ BaseClass=CPropertyPage
 HeaderFile=BtDld_Misc.h
 ImplementationFile=BtDld_Misc.cpp
 
+[CLS:CBtDld_Seeding]
+Type=0
+BaseClass=CPropertyPage
+HeaderFile=BtDld_Seeding.h
+ImplementationFile=BtDld_Seeding.cpp
+
 [CLS:CBtDldSheet]
 Type=0
 BaseClass=CPropertySheet
@@ -394,9 +409,11 @@ ImplementationFile=CBD_SeeResultsDlg.cpp
 
 [CLS:CChildView]
 Type=0
-BaseClass=CWnd
+BaseClass=CWnd 
 HeaderFile=ChildView.h
 ImplementationFile=ChildView.cpp
+Filter=W
+VirtualFilter=WC
 
 [CLS:CClientAreaWnd]
 Type=0
@@ -517,6 +534,95 @@ Type=0
 BaseClass=CDialog
 HeaderFile=Dlg_Opinions.h
 ImplementationFile=Dlg_Opinions.cpp
+
+[CLS:CDlg_Options]
+Type=0
+BaseClass=CDialog
+HeaderFile=Dlg_Options.h
+ImplementationFile=Dlg_Options.cpp
+
+[CLS:CDlg_Options_Downloads]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_Downloads.h
+ImplementationFile=Dlg_Options_Downloads.cpp
+
+[CLS:CDlg_Options_Downloads_Bittorrent]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_Downloads_Bittorrent.h
+ImplementationFile=Dlg_Options_Downloads_Bittorrent.cpp
+Filter=D
+VirtualFilter=dWC
+
+[CLS:CDlg_Options_Downloads_Mirrors]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_Downloads_Mirrors.h
+ImplementationFile=Dlg_Options_Downloads_Mirrors.cpp
+
+[CLS:CDlg_Options_Downloads_Monitoring]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_Downloads_Monitoring.h
+ImplementationFile=Dlg_Options_Downloads_Monitoring.cpp
+
+[CLS:CDlg_Options_Downloads_Network]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_Downloads_Network.h
+ImplementationFile=Dlg_Options_Downloads_Network.cpp
+
+[CLS:CDlg_Options_Downloads_NewDld]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_Downloads_NewDld.h
+ImplementationFile=Dlg_Options_Downloads_NewDld.cpp
+
+[CLS:CDlg_Options_Downloads_TimeLimit]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_Downloads_TimeLimit.h
+ImplementationFile=Dlg_Options_Downloads_TimeLimit.cpp
+
+[CLS:CDlg_Options_General]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_General.h
+ImplementationFile=Dlg_Options_General.cpp
+
+[CLS:CDlg_Options_General_History]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_General_History.h
+ImplementationFile=Dlg_Options_General_History.cpp
+
+[CLS:CDlg_Options_General_Misc]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_General_Misc.h
+ImplementationFile=Dlg_Options_General_Misc.cpp
+
+[CLS:CDlg_Options_General_Misc_Advanced]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_General_Misc_Advanced.h
+ImplementationFile=Dlg_Options_General_Misc_Advanced.cpp
+
+[CLS:CDlg_Options_Notifications]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_Notifications.h
+ImplementationFile=Dlg_Options_Notifications.cpp
+Filter=D
+VirtualFilter=dWC
+LastObject=CDlg_Options_Notifications
+
+[CLS:CDlg_Options_SiteMgr]
+Type=0
+BaseClass=CDlg_Options_Page
+HeaderFile=Dlg_Options_SiteMgr.h
+ImplementationFile=Dlg_Options_SiteMgr.cpp
 
 [CLS:CDlg_SavePassword]
 Type=0
@@ -644,6 +750,11 @@ BaseClass=CDialog
 HeaderFile=DlgFindAdvanced.h
 ImplementationFile=DlgFindAdvanced.cpp
 
+[CLS:CDlgProgramOptions]
+Type=0
+HeaderFile=DlgProgramOptions.h
+ImplementationFile=DlgProgramOptions.cpp
+
 [CLS:CDlgSounds]
 Type=0
 BaseClass=CDialog
@@ -673,8 +784,6 @@ Type=0
 BaseClass=CDialog
 HeaderFile=DownloadAlrExistsDlg.h
 ImplementationFile=DownloadAlrExistsDlg.cpp
-Filter=D
-VirtualFilter=dWC
 
 [CLS:CDownloaderProperties_BtPage]
 Type=0
@@ -789,8 +898,6 @@ Type=0
 BaseClass=CColumnTreeCtrl
 HeaderFile=Downloads_Bittorrent_Files.h
 ImplementationFile=Downloads_Bittorrent_Files.cpp
-Filter=W
-VirtualFilter=GWC
 
 [CLS:CDownloads_Bittorrent_General]
 Type=0
@@ -912,6 +1019,32 @@ BaseClass=CDialog
 HeaderFile=FdmApp.cpp
 ImplementationFile=FdmApp.cpp
 LastObject=CAboutDlg
+
+[CLS:CFdmBalloon]
+Type=0
+BaseClass=CMyBalloon
+HeaderFile=FdmBalloon.h
+ImplementationFile=FdmBalloon.cpp
+
+[CLS:CFdmBalloon_Content]
+Type=0
+BaseClass=CMyBalloon_Content
+HeaderFile=FdmBalloon_Content.h
+ImplementationFile=FdmBalloon_Content.cpp
+
+[CLS:CFdmBalloon_OnDownloadDone]
+Type=0
+BaseClass=CFdmBalloonContent
+HeaderFile=FdmBalloon_OnDownloadDone.h
+ImplementationFile=FdmBalloon_OnDownloadDone.cpp
+Filter=W
+VirtualFilter=WC
+
+[CLS:CFdmBalloonContent]
+Type=0
+BaseClass=CWnd
+HeaderFile=FdmBalloonContent.h
+ImplementationFile=FdmBalloonContent.cpp
 
 [CLS:CFlashVideoDownloadsWnd]
 Type=0
@@ -1038,6 +1171,22 @@ Type=0
 BaseClass=CFrameWnd
 HeaderFile=MainFrm.h
 ImplementationFile=MainFrm.cpp
+Filter=T
+VirtualFilter=fWC
+
+[CLS:CMyBalloon]
+Type=0
+BaseClass=CWnd
+HeaderFile=MyBalloon.h
+ImplementationFile=MyBalloon.cpp
+Filter=W
+VirtualFilter=WC
+
+[CLS:CMyBalloon_Content]
+Type=0
+BaseClass=CWnd
+HeaderFile=MyBalloon_Content.h
+ImplementationFile=MyBalloon_Content.cpp
 
 [CLS:CMyMessageBox]
 Type=0
@@ -1409,6 +1558,10 @@ Class=CBtDld_General
 Type=1
 Class=CBtDld_Misc
 
+[DLG:IDD_BTDLD_SEEDING]
+Type=1
+Class=CBtDld_Seeding
+
 [DLG:IDD_CBD_RESULTS]
 Type=1
 Class=CCBD_SeeResultsDlg
@@ -1420,40 +1573,6 @@ Class=CCreateBatchDownload
 [DLG:IDD_CREATEDOWNLOAD]
 Type=1
 Class=CCreateDownloadDlg
-ControlCount=33
-Control1=IDC__URL,static,1342308352
-Control2=IDC_URL,combobox,1344340034
-Control3=IDC_USELOGIN,button,1342242819
-Control4=IDC_MALICIOUS,button,1342242816
-Control5=IDC_MIRRORS,button,1342242816
-Control6=IDC__USER,static,1342308352
-Control7=IDC_USER,edit,1350631552
-Control8=IDC__PASSWORD,static,1342308352
-Control9=IDC_PASSWORD,edit,1350631584
-Control10=IDC__DLDTYPE,static,1342308352
-Control11=IDC_DLDTYPE,combobox,1344340035
-Control12=IDC__GROUP,static,1342308352
-Control13=IDC_GROUPS,combobox,1344340291
-Control14=IDC_CREATEGROUP,button,1342242880
-Control15=IDC__SAVETO,static,1342308352
-Control16=IDC_OUTFOLDER,combobox,1344340034
-Control17=IDC_CHOOSEFOLDER,button,1342242880
-Control18=IDC_OUTFOLDER_SETDEFAULT,button,1342242880
-Control19=IDC_FILEAUTO,button,1342242819
-Control20=IDC__SAVEAS,static,1342308352
-Control21=IDC_SAVEAS,edit,1350631552
-Control22=IDC__START,button,1342177287
-Control23=IDC_STARTNOW,button,1342177289
-Control24=IDC_STARTMANUAL,button,1342177289
-Control25=IDC_STARTSCHEDULE,button,1342177289
-Control26=IDC_SETTIME,button,1342242880
-Control27=IDC__COMMENT,static,1342308352
-Control28=IDC_COMMENT,edit,1352732740
-Control29=IDC_PLACEATTOP,button,1342242819
-Control30=IDC_QSIZE,button,1342242816
-Control31=IDC_ADVANCED,button,1342242816
-Control32=IDOK,button,1342242817
-Control33=IDCANCEL,button,1342242816
 
 [DLG:IDD_CREATETORRENTDOWNLOAD]
 Type=1
@@ -1518,6 +1637,69 @@ Class=CDlg_MakePortableVer
 [DLG:IDD_OPINIONS]
 Type=1
 Class=CDlg_Opinions
+
+[DLG:IDD_OPTIONS]
+Type=1
+Class=CDlg_Options
+
+[DLG:IDD_OPTIONS_DOWNLOADS]
+Type=1
+Class=CDlg_Options_Downloads
+
+[DLG:IDD_OPTIONS_DOWNLOADS_BITTORRENT]
+Type=1
+Class=CDlg_Options_Downloads_Bittorrent
+
+[DLG:IDD_OPTIONS_DOWNLOADS_MIRRORS]
+Type=1
+Class=CDlg_Options_Downloads_Mirrors
+
+[DLG:IDD_OPTIONS_DOWNLOADS_MONITORING]
+Type=1
+Class=CDlg_Options_Downloads_Monitoring
+
+[DLG:IDD_OPTIONS_DOWNLOADS_NETWORK]
+Type=1
+Class=CDlg_Options_Downloads_Network
+
+[DLG:IDD_OPTIONS_DOWNLOADS_NEWDLD]
+Type=1
+Class=CDlg_Options_Downloads_NewDld
+
+[DLG:IDD_OPTIONS_DOWNLOADS_TIMELIMIT]
+Type=1
+Class=CDlg_Options_Downloads_TimeLimit
+
+[DLG:IDD_OPTIONS_GENERAL]
+Type=1
+Class=CDlg_Options_General
+
+[DLG:IDD_OPTIONS_GENERAL_HISTORY]
+Type=1
+Class=CDlg_Options_General_History
+
+[DLG:IDD_OPTIONS_GENERAL_MISC]
+Type=1
+Class=CDlg_Options_General_Misc
+
+[DLG:IDD_OPTIONS_GENERAL_MISC_ADV]
+Type=1
+Class=CDlg_Options_General_Misc_Advanced
+
+[DLG:IDD_OPTIONS_NOTIFICATIONS]
+Type=1
+Class=CDlg_Options_Notifications
+
+[DLG:IDD_OPTIONS_SITEMGR]
+Type=1
+Class=CDlg_Options_SiteMgr
+ControlCount=6
+Control1=IDC_USE,button,1342242819
+Control2=IDC_ASK,button,1342177289
+Control3=IDC_DONTASK,button,1342177289
+Control4=IDC_AUTODEL,button,1342242819
+Control5=IDC_DELALL,button,1342242816
+Control6=IDC__PASSWORDS,button,1342177287
 
 [DLG:IDD_SAVEPASSWORD]
 Type=1
@@ -1642,35 +1824,10 @@ Class=CDownloaderProperties_MirrorsPage
 [DLG:IDD_DLDR_MONITOR]
 Type=1
 Class=CDownloaderProperties_MonitorPage
-ControlCount=17
-Control1=IDC__MONITORFOR,button,1342177287
-Control2=IDC_CLIPBOARD,button,1342242819
-Control3=IDC_STATIC,button,1342177287
-Control4=IDC_IE2,button,1342242819
-Control5=IDC_FIREFOX,button,1342242819
-Control6=IDC_ALTPRESSED,button,1342242819
-Control7=IDC_ALLOWIETODL,button,1342242819
-Control8=IDC_DONTMONSMALL,button,1342242819
-Control9=IDC_SMALLSIZE,edit,1350639616
-Control10=IDC__KBYTES,static,1342308352
-Control11=IDC_SKIPLIST,button,1342242816
-Control12=IDC_ADDTOIEMENU,button,1342242819
-Control13=IDC_CUSTOMIZE,button,1342242816
-Control14=IDC_OPERA,button,1342242819
-Control15=IDC_NETSCAPE,button,1342242819
-Control16=IDC_MOZILLA,button,1342242819
-Control17=IDC_SILENT,button,1342242819
 
 [DLG:IDD_DLDR_MONITOR_SKIPLIST]
 Type=1
 Class=CDownloaderProperties_MonitorPage_SkipList
-ControlCount=6
-Control1=IDC_EXTS,edit,1350631552
-Control2=IDC_SERVERS,edit,1352728644
-Control3=IDOK,button,1342242817
-Control4=IDCANCEL,button,1342242816
-Control5=IDC_SKIPEXTS,static,1342308352
-Control6=IDC__SKIPSERVERS,static,1342308352
 
 [DLG:IDD_DLDR_NETWORK]
 Type=1
@@ -1727,12 +1884,6 @@ Class=CGroupDlg
 [DLG:IDD_HFE_PROTOCOL]
 Type=1
 Class=CHFE_ProtocolPage
-ControlCount=5
-Control1=IDC_RETREIVEADDINFO,button,1342242819
-Control2=IDC_PASSIVEMODE,button,1342242819
-Control3=IDC_STATIC,button,1342177287
-Control4=IDC_STATIC,button,1342177287
-Control5=IDC__USINGMAY,static,1476526080
 
 [DLG:IDD_REQLOGIN]
 Type=1
@@ -1805,22 +1956,6 @@ Class=CSites_AdvancedPage
 [DLG:IDD_SITES_GENERAL]
 Type=1
 Class=CSites_GeneralPage
-ControlCount=15
-Control1=IDC__SITE,static,1342308352
-Control2=IDC_SITE,combobox,1344340034
-Control3=IDC_USELOGIN,button,1342242819
-Control4=IDC__USER,static,1342308352
-Control5=IDC__PASSWORD,static,1342308352
-Control6=IDC_USER,edit,1350631552
-Control7=IDC_PASSWORD,edit,1350631584
-Control8=IDC_USEMAXCONNS,button,1342242819
-Control9=IDC_MAXCONNS,edit,1350639744
-Control10=IDC_MAXCONNSSPIN,msctls_updown32,1342177334
-Control11=IDC_USEDEFGROUP,button,1342242819
-Control12=IDC_GROUPS,combobox,1344340291
-Control13=IDC_CREATEGROUP,button,1342242880
-Control14=IDC_USEFTPPASSIVE,button,1342242819
-Control15=IDC_DONTSENDLIST2,button,1342242819
 
 [DLG:IDD_SPIDER_ADD]
 Type=1
@@ -1849,61 +1984,18 @@ Class=CWaitForConfirmationDlg
 [DLG:IDD_WPDS_FILES]
 Type=1
 Class=CWPDS_FilesPage
-ControlCount=8
-Control1=IDC_DLFILES,button,1342242819
-Control2=IDC_DLFILESFROMOTHERSITES,button,1342242819
-Control3=IDC__ELIMINATION,button,1342177287
-Control4=IDC_ELON,button,1342242819
-Control5=IDC_ELDL,button,1342177289
-Control6=IDC_ELDONTDL,button,1342177289
-Control7=IDC_EXTS,edit,1350631552
-Control8=IDC__EXTS,static,1342308352
 
 [DLG:IDD_WPDS_GENERAL]
 Type=1
 Class=CWPDS_GeneralPage
-ControlCount=13
-Control1=IDC_URL,edit,1350633600
-Control2=IDC_USELOGIN,button,1342242819
-Control3=IDC_USER,edit,1350631552
-Control4=IDC_PASSWORD,edit,1350631584
-Control5=IDC_SAVEDIN,edit,1350633600
-Control6=IDC_GROUPS,combobox,1344340291
-Control7=IDC__URL,static,1342308352
-Control8=IDC__SAVEDIN,static,1342308352
-Control9=IDC__GENERAL,button,1342177287
-Control10=IDC_STATIC,button,1342177287
-Control11=IDC__GROUP,static,1342308352
-Control12=IDC__USER,static,1342308352
-Control13=IDC__PASSWORD,static,1342308352
 
 [DLG:IDD_WPDS_IMAGES]
 Type=1
 Class=CWPDS_ImagesPages
-ControlCount=8
-Control1=IDC_DLIMAGES,button,1342242819
-Control2=IDC_DLIMAGESFROMOTHERSITES,button,1342242819
-Control3=IDC__ELIMINATION,button,1342177287
-Control4=IDC_ELON,button,1342242819
-Control5=IDC_ELDL,button,1342177289
-Control6=IDC_ELDONTDL,button,1342177289
-Control7=IDC_EXTS,edit,1350631552
-Control8=IDC__EXTS,static,1342308352
 
 [DLG:IDD_WPDS_WEBPAGES]
 Type=1
 Class=CWPDS_WebPagesPage
-ControlCount=10
-Control1=IDC_HTMLEXTS,edit,1350631552
-Control2=IDC_DLSTYLES,button,1342242819
-Control3=IDC_DLWPFROMOTHERSITES,button,1342242819
-Control4=IDC_DEPTH,edit,1350639744
-Control5=IDC_DEPTHSPIN,msctls_updown32,1342177462
-Control6=IDC__HTMLEXTS,static,1342308352
-Control7=IDC__DEPTH,static,1342308352
-Control8=IDC__PAGES,button,1342177287
-Control9=IDC_USEHTM,button,1342242819
-Control10=IDC_IGNORELIST,button,1342242816
 
 [DLG:IDD_ZIPPREVIEW]
 Type=1
@@ -2440,6 +2532,285 @@ Control1=IDC_FILES,static,1342177287
 Control2=IDC_STATIC,static,1342308352
 Control3=IDC_CHECK_UNCHECK_ALL,button,1342242816
 
+[DLG:IDD_OPTIONS (Neutral)]
+Type=1
+Class=?
+ControlCount=6
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+Control3=IDC_STATIC,static,1342177296
+Control4=IDC__DLGFRAME,static,1342177288
+Control5=IDC__DLGCAPTION,static,1342177288
+Control6=IDC_PAGELIST,SysTreeView32,1342247463
+
+[DLG:IDD_OPTIONS_GENERAL (Neutral)]
+Type=1
+Class=?
+ControlCount=17
+Control1=IDC_AUTOSTART,button,1342242819
+Control2=IDC_STARTMINIMIZED,button,1342242819
+Control3=IDC_MINTOTRAY,button,1342242819
+Control4=IDC_CLOSEASMINIMIZE,button,1342242819
+Control5=IDC_MODIFYIEUSERAGENT,button,1342242819
+Control6=IDC__SYSTEM,button,1342177287
+Control7=IDC__STARTUP,button,1342177287
+Control8=IDC_AUTOUPDATES_INSTALL,button,1342177289
+Control9=IDC_AUTOUPDATES_NOTIFYONLY,button,1342177289
+Control10=IDC_AUTOUPDATES_TURNOFF,button,1342177289
+Control11=IDC__UPDATE,button,1342177287
+Control12=IDC__SKINS,button,1342177287
+Control13=IDC__SKIN,static,1342308352
+Control14=IDC_SKIN2,combobox,1344339971
+Control15=IDC_ALLOWICONS2,button,1342242819
+Control16=IDC_ALLOWBITMAPS2,button,1342242819
+Control17=IDC__AFTERRESTART,static,1342308352
+
+[DLG:IDD_OPTIONS_GENERAL_HISTORY (Neutral)]
+Type=1
+Class=?
+ControlCount=20
+Control1=IDC_USEHIST,button,1342242819
+Control2=IDC_FOLDERSONLY,button,1342242819
+Control3=IDC_DELRECTHATEXISTS,button,1342242819
+Control4=IDC_DAYS,edit,1350639744
+Control5=IDC_DAYSSPIN,msctls_updown32,1342177462
+Control6=IDC__DAYS,static,1342308352
+Control7=IDC_MAXNUMBER,button,1342242819
+Control8=IDC_MAXNUMBERVAL,edit,1350639744
+Control9=IDC_MAXNUMBERSPIN,msctls_updown32,1342177462
+Control10=IDC_CLEARHISTORY,button,1342242816
+Control11=IDC_USE2,button,1342242819
+Control12=IDC_DELRECTHATEXISTS2,button,1342242819
+Control13=IDC_DAYS2,edit,1350639744
+Control14=IDC_DAYSSPIN2,msctls_updown32,1342177334
+Control15=IDC__DAYS2,static,1342308352
+Control16=IDC_COMPONLY2,button,1342242819
+Control17=IDC_CLEARHISTORY2,button,1342242816
+Control18=IDC_STATIC,static,1342177296
+Control19=IDC_STATIC,static,1342177296
+Control20=IDC_LISTRECENTDLDS,button,1342242819
+
+[DLG:IDD_OPTIONS_GENERAL_MISC (Neutral)]
+Type=1
+Class=?
+ControlCount=21
+Control1=IDC__TOUTSFORCONFS,button,1342177287
+Control2=IDC__HANGUP,static,1342308352
+Control3=IDC_HANGUP_TOUT,combobox,1344339971
+Control4=IDC__EXIT,static,1342308352
+Control5=IDC_EXIT_TOUT,combobox,1344339971
+Control6=IDC__SHUTDOWN,static,1342308352
+Control7=IDC_SHUTDOWN_TOUT,combobox,1344339971
+Control8=IDC__LAUNCHDLD,static,1342308352
+Control9=IDC_LAUNCHDLD_TOUT,combobox,1344339971
+Control10=IDC_ASKFORST,button,1342242819
+Control11=IDC_DISABLEWDTASKAFTEREXEC,button,1342242819
+Control12=IDC__FLOATING_WINDOWS,button,1342177287
+Control13=IDC_DROPBOX,button,1342242819
+Control14=IDC_TRANCPARENCY1,msctls_trackbar32,1342242840
+Control15=IDC_DLINFO,button,1342242819
+Control16=IDC_TRANCPARENCY2,msctls_trackbar32,1342242840
+Control17=IDC_HIDEFWWFS,button,1342242819
+Control18=IDC__TRANCPARENCY1,static,1342308352
+Control19=IDC__TRANCPARENCY1_VAL,static,1342308352
+Control20=IDC__TRANCPARENCY2,static,1342308352
+Control21=IDC__TRANCPARENCY2_VAL,static,1342308352
+
+[DLG:IDD_OPTIONS_GENERAL_MISC_ADV (Neutral)]
+Type=1
+Class=?
+ControlCount=10
+Control1=IDC_AUTOSAVE,edit,1350639744
+Control2=IDC_AUTOSAVESPIN,msctls_updown32,1342177462
+Control3=IDC__MIN,static,1342308352
+Control4=IDC__AUTOSAVE,static,1342308352
+Control5=IDC_KEEP_1,button,1342177289
+Control6=IDC_KEEP_2,button,1342177289
+Control7=IDC_FOLDER,edit,1350631552
+Control8=IDC_BROWSE,button,1342246656
+Control9=IDC__DATADESC,static,1342308352
+Control10=IDC__SERVICE_FILES,button,1342177287
+
+[DLG:IDD_OPTIONS_DOWNLOADS (Neutral)]
+Type=1
+Class=?
+ControlCount=26
+Control1=IDC_DONTSAVELOGS,button,1342242819
+Control2=IDC_AUTODEL,button,1342242819
+Control3=IDC__WHENDEL,static,1342308352
+Control4=IDC_WHENDEL,combobox,1344340035
+Control5=IDC_SHOWDLDDLG,button,1342242819
+Control6=IDC_DETAILEDLOG,button,1342242819
+Control7=IDC_SIZEINBYTES,button,1342242819
+Control8=IDC_VIRCHECK,button,1342242819
+Control9=IDC_VIRNAME,combobox,1344340034
+Control10=IDC_CHOOSEVIR,button,1342246656
+Control11=IDC__ARGS,static,1342308352
+Control12=IDC_ARGS,edit,1350631552
+Control13=IDC__EXTS,static,1342308352
+Control14=IDC_VIREXTS,edit,1350631552
+Control15=IDC_USEWC,button,1342242819
+Control16=IDC_WC_SIZE,edit,1350639744
+Control17=IDC_WC_SPIN,msctls_updown32,1342177462
+Control18=IDC__WC_MB,static,1342308352
+Control19=IDC_PREVENT_STANDBY,button,1342242819
+Control20=IDC__FDM_COMMUNITY,button,1342177287
+Control21=IDC_DISPLAYOPINIONS2,button,1342242819
+Control22=IDC_SWITCHTOOPINIONS2,button,1342242819
+Control23=IDC_CHECKIFMAL2,button,1342242819
+Control24=IDC__S0,static,1342308352
+Control25=IDC_MALREPSMINIMUM2,edit,1350639618
+Control26=IDC__S1,static,1342308352
+
+[DLG:IDD_OPTIONS_DOWNLOADS_NEWDLD (Neutral)]
+Type=1
+Class=?
+ControlCount=15
+Control1=IDC__GRPFORNEWDLD,button,1342177287
+Control2=IDC_NEWGRP_0,button,1342177289
+Control3=IDC_NEWGRP_1,button,1342177289
+Control4=IDC_GROUPS,combobox,1344340291
+Control5=IDC_CREATEGROUP,button,1342242880
+Control6=IDC_NEWGRP_2,button,1342177289
+Control7=IDC_GROUPS2,combobox,1344340291
+Control8=IDC_CREATEGROUP2,button,1342242880
+Control9=IDC_CHECKEXISTS,button,1342242819
+Control10=IDC_AUTOSTART,button,1342242819
+Control11=IDC_USEZIP,button,1342242819
+Control12=IDC_SETGRPSFLDR,button,1342242816
+Control13=IDC_ADVANCED,button,1342242816
+Control14=IDC_HTMLSPIDER_DEFDLDSTGS,button,1342242816
+Control15=IDC_BT_DEFDLDSTGS,button,1342242816
+
+[DLG:IDD_OPTIONS_DOWNLOADS_NETWORK (Neutral)]
+Type=1
+Class=?
+ControlCount=18
+Control1=IDC_MODE,combobox,1344339971
+Control2=IDC_USEMAXCONNS,button,1342242819
+Control3=IDC_MAXCONNS,edit,1350639744
+Control4=IDC_MAXCONNSSPIN,msctls_updown32,1342177462
+Control5=IDC_USEMAXCONNSPERSERVER,button,1342242819
+Control6=IDC_MAXCONNSPERSERVER,edit,1350639744
+Control7=IDC_MAXCONNSPERSERVERSPIN,msctls_updown32,1342177462
+Control8=IDC_USEMAXDLDS,button,1342242819
+Control9=IDC_MAXDLDSVAL,edit,1350639744
+Control10=IDC_MAXDLDSSPIN,msctls_updown32,1342177462
+Control11=IDC_TRAFFICLIMITVAL,edit,1350631552
+Control12=IDC_TRAFFICLIMITDIMENSION,combobox,1344339971
+Control13=IDC_DETECTACTIVITY,button,1342242819
+Control14=IDC_DECBYLEVEL,button,1342177289
+Control15=IDC_SETTOLIGHT,button,1342177289
+Control16=IDC__TUR,static,1342308352
+Control17=IDC__TUMS,button,1342177287
+Control18=IDC__MODEADJUSTMENT,static,1342308352
+
+[DLG:IDD_OPTIONS_DOWNLOADS_BITTORRENT (Neutral)]
+Type=1
+Class=?
+ControlCount=21
+Control1=IDC_ENABLE,button,1342242819
+Control2=IDC_STATIC,static,1342177280
+Control3=IDC_TRAFFICMODESTAB,SysTabControl32,1342177280
+Control4=IDC_LIMIT,button,1342242819
+Control5=IDC_LIMITVAL,edit,1350631552
+Control6=IDC_LIMITDIM,combobox,1344339971
+Control7=IDC_LIMITUPLOADS,button,1342242819
+Control8=IDC_UPLLIMITVAL,edit,1350639744
+Control9=IDC_UPLLIMITVALSPIN,msctls_updown32,1342177462
+Control10=IDC__MAXHALFS,static,1342308352
+Control11=IDC_MAXHALFSVAL,edit,1350639744
+Control12=IDC_MAXHALFSSPIN,msctls_updown32,1342177462
+Control13=IDC__USEPORTS,static,1342308352
+Control14=IDC_PORT_FROM,edit,1350639744
+Control15=IDC_PORT_TO,edit,1350639744
+Control16=IDC_USE_DHT,button,1342242819
+Control17=IDC_ASSOCWITHTORRENT,button,1342242819
+Control18=IDC_STATIC,static,1342177296
+Control19=IDC_PORT_FROM_SPIN,msctls_updown32,1342177462
+Control20=IDC_PORT_TO_SPIN,msctls_updown32,1342177462
+Control21=IDC__TO,static,1342308352
+
+[DLG:IDD_OPTIONS_DOWNLOADS_MIRRORS (Neutral)]
+Type=1
+Class=?
+ControlCount=16
+Control1=IDC_AUTO,button,1342242819
+Control2=IDC_FILEMINSIZE,edit,1350631552
+Control3=IDC_FILEMINSIZEDIM,combobox,1344339971
+Control4=IDC_DONTIFSIZEUNK,button,1342242819
+Control5=IDC_MAXMIRRORS,button,1342242819
+Control6=IDC_MAXMIRRORSVAL,edit,1350639744
+Control7=IDC_MAXMIRRORSSPIN,msctls_updown32,1342177334
+Control8=IDC_CALCSPEED,button,1342242819
+Control9=IDC_RECALCSPEED,button,1342242819
+Control10=IDC_RECALCVAL,edit,1350639744
+Control11=IDC_RECALCSPIN,msctls_updown32,1342177334
+Control12=IDC__MIN,static,1342308352
+Control13=IDC__DONTSEARCH,static,1342308352
+Control14=IDC_STATIC,static,1342177296
+Control15=IDC__MIRRSERVER,static,1342308352
+Control16=IDC_MIRRSERVERS,combobox,1344339971
+
+[DLG:IDD_OPTIONS_DOWNLOADS_MONITORING (Neutral)]
+Type=1
+Class=?
+ControlCount=20
+Control1=IDC__MONITORFOR,button,1342177287
+Control2=IDC_CLIPBOARD,button,1342242819
+Control3=IDC_STATIC,button,1342177287
+Control4=IDC_IE2,button,1342242819
+Control5=IDC_FIREFOX,button,1342242819
+Control6=IDC_ALTPRESSED,button,1342242819
+Control7=IDC_ALLOWIETODL,button,1342242819
+Control8=IDC_DONTMONSMALL,button,1342242819
+Control9=IDC_SMALLSIZE,edit,1350639616
+Control10=IDC__KBYTES,static,1342308352
+Control11=IDC_SKIPLIST,button,1342242816
+Control12=IDC_ADDTOIEMENU,button,1342242819
+Control13=IDC_CUSTOMIZE,button,1342242816
+Control14=IDC_OPERA,button,1342242819
+Control15=IDC_NETSCAPE,button,1342242819
+Control16=IDC_MOZILLA,button,1342242819
+Control17=IDC_SAFARI,button,1342242819
+Control18=IDC_CHROME,button,1342242819
+Control19=IDC_SILENT,button,1342242819
+Control20=IDC_FFPORTVER,button,1073807360
+
+[DLG:IDD_OPTIONS_NOTIFICATIONS (Neutral)]
+Type=1
+Class=?
+ControlCount=9
+Control1=IDC_USEBALLOON,button,1342242819
+Control2=IDC__TIMEOUT,static,1342308352
+Control3=IDC_TIMEOUT,edit,1350631552
+Control4=IDC_TIMEOUTSPIN,msctls_updown32,1342177462
+Control5=IDC__SEC,static,1342308352
+Control6=IDC_USESOUNDS,button,1342242819
+Control7=IDC_CUSTOMIZE,button,1342242816
+Control8=IDC_DISABLEFORBATCHDLDS,button,1342242819
+Control9=IDC_SHOWTIPS,button,1342242819
+
+[DLG:IDD_BTDLD_SEEDING (Neutral)]
+Type=1
+Class=?
+ControlCount=5
+Control1=IDC_ENABLE_SEEDING,button,1342242822
+Control2=IDC_UNLIMITED_SEEDING,button,1342177289
+Control3=IDC_LIMIT_BY_RATIO,button,1342177289
+Control4=IDC_STATIC0,static,1342308352
+Control5=IDC_RATIO_LIST,combobox,1344339971
+
+[DLG:IDD_OPTIONS_DOWNLOADS_TIMELIMIT (Neutral)]
+Type=1
+Class=?
+ControlCount=5
+Control1=IDC_SETLIMIT,button,1342242819
+Control2=IDC__S0,static,1342308352
+Control3=IDC_FROM,combobox,1344339971
+Control4=IDC__S1,static,1342308352
+Control5=IDC_TO,combobox,1344339971
+
 [DLG:IDD_SOUNDS (Neutral (Default))]
 Type=1
 Class=?
@@ -2933,7 +3304,7 @@ Control19=IDCANCEL,button,1342242816
 
 [DLG:IDD_ABOUTBOX (Neutral (Default))]
 Type=1
-Class=CAboutDlg
+Class=?
 ControlCount=11
 Control1=IDOK,button,1342242817
 Control2=IDC_STATIC,static,1342177283
@@ -3513,6 +3884,14 @@ Command8=ID_DLLIST_8
 Command9=ID_DLLIST_9
 CommandCount=9
 
+[MNU:IDM_BTFILES (Neutral)]
+Type=1
+Class=?
+Command1=ID_BTFILES_NORMALPRIORITY
+Command2=ID_BTFILES_HIGHPIORITY
+Command3=ID_BTFILES_DONTDOWNLOAD
+CommandCount=3
+
 [MNU:IDM_DELETEDITEMS (Neutral (Default))]
 Type=1
 Class=?
@@ -3812,483 +4191,142 @@ Command26=ID_INSERT
 Command27=ID_APP_EXIT
 CommandCount=27
 
-[MNU:IDM_BTFILES (Neutral)]
+[CLS:CWndDlDoneNotification]
+Type=0
+HeaderFile=WndDlDoneNotification.h
+ImplementationFile=WndDlDoneNotification.cpp
+BaseClass=CFrameWnd
+Filter=T
+VirtualFilter=fWC
+
+[DLG:IDD_DL (Neutral)]
+Type=1
+Class=CDlgDL
+ControlCount=3
+Control1=IDCANCEL,button,1342242816
+Control2=IDC_PROGRESS,msctls_progress32,1350565888
+Control3=IDC__MSG,static,1342308352
+
+[CLS:CDlgDL]
+Type=0
+HeaderFile=DlgDL.h
+ImplementationFile=DlgDL.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=CDlgDL
+VirtualFilter=dWC
+
+[DLG:IDD_PI2 (Neutral - _PI_ADVERT)]
 Type=1
 Class=?
-Command1=ID_BTFILES_NORMALPRIORITY
-Command2=ID_BTFILES_HIGHPIORITY
-Command3=ID_BTFILES_DONTDOWNLOAD
-CommandCount=3
+ControlCount=4
+Control1=IDOK,button,1342242817
+Control2=ID_CANCEL2,button,1342242816
+Control3=IDC_WB,{8856F961-340A-11D0-A96B-00C04FD705A2},1342242816
+Control4=ID_REMIND_ME_LATER,button,1073807360
 
-[DLG:IDD_OPTIONS (Neutral)]
+[DLG:IDD_PI2_IFREMIND (Neutral - _PI_ADVERT)]
 Type=1
-Class=CDlgProgramOptions
-ControlCount=6
+Class=?
+ControlCount=3
+Control1=IDOK,button,1342242816
+Control2=IDCANCEL,button,1342242816
+Control3=IDC__MSG,static,1342308352
+
+[DLG:IDD_PI2_SURETOCANCEL (Neutral - _PI_ADVERT)]
+Type=1
+Class=?
+ControlCount=3
 Control1=IDOK,button,1342242817
 Control2=IDCANCEL,button,1342242816
-Control3=IDC_STATIC,static,1342177296
-Control4=IDC__DLGFRAME,static,1342177288
-Control5=IDC__DLGCAPTION,static,1342177288
-Control6=IDC_PAGELIST,SysTreeView32,1342247463
+Control3=IDC__MSG,static,1342308352
 
-[CLS:CDlgProgramOptions]
-Type=0
-HeaderFile=DlgProgramOptions.h
-ImplementationFile=DlgProgramOptions.cpp
-BaseClass=CDlg_Options
-Filter=D
-LastObject=IDC_PAGELIST
-VirtualFilter=dWC
-
-[DLG:IDD_OPTIONS_GENERAL (Neutral)]
+[DLG:IDD_OPTIONS_DOWNLOADS_FLV (Neutral)]
 Type=1
-Class=CDlg_Options_General
-ControlCount=17
-Control1=IDC_AUTOSTART,button,1342242819
-Control2=IDC_STARTMINIMIZED,button,1342242819
-Control3=IDC_MINTOTRAY,button,1342242819
-Control4=IDC_CLOSEASMINIMIZE,button,1342242819
-Control5=IDC_MODIFYIEUSERAGENT,button,1342242819
-Control6=IDC__SYSTEM,button,1342177287
-Control7=IDC__STARTUP,button,1342177287
-Control8=IDC_AUTOUPDATES_INSTALL,button,1342177289
-Control9=IDC_AUTOUPDATES_NOTIFYONLY,button,1342177289
-Control10=IDC_AUTOUPDATES_TURNOFF,button,1342177289
-Control11=IDC__UPDATE,button,1342177287
-Control12=IDC__SKINS,button,1342177287
-Control13=IDC__SKIN,static,1342308352
-Control14=IDC_SKIN2,combobox,1344339971
-Control15=IDC_ALLOWICONS2,button,1342242819
-Control16=IDC_ALLOWBITMAPS2,button,1342242819
-Control17=IDC__AFTERRESTART,static,1342308352
-
-[CLS:CDlg_Options_General]
-Type=0
-HeaderFile=Dlg_Options_General.h
-ImplementationFile=Dlg_Options_General.cpp
-BaseClass=CDlg_Options_Page
-Filter=D
-LastObject=CDlg_Options_General
-VirtualFilter=dWC
-
-[DLG:IDD_OPTIONS_GENERAL_HISTORY (Neutral)]
-Type=1
-Class=CDlg_Options_General_History
-ControlCount=20
-Control1=IDC_USEHIST,button,1342242819
-Control2=IDC_FOLDERSONLY,button,1342242819
-Control3=IDC_DELRECTHATEXISTS,button,1342242819
-Control4=IDC_DAYS,edit,1350639744
-Control5=IDC_DAYSSPIN,msctls_updown32,1342177462
-Control6=IDC__DAYS,static,1342308352
-Control7=IDC_MAXNUMBER,button,1342242819
-Control8=IDC_MAXNUMBERVAL,edit,1350639744
-Control9=IDC_MAXNUMBERSPIN,msctls_updown32,1342177462
-Control10=IDC_CLEARHISTORY,button,1342242816
-Control11=IDC_USE2,button,1342242819
-Control12=IDC_DELRECTHATEXISTS2,button,1342242819
-Control13=IDC_DAYS2,edit,1350639744
-Control14=IDC_DAYSSPIN2,msctls_updown32,1342177334
-Control15=IDC__DAYS2,static,1342308352
-Control16=IDC_COMPONLY2,button,1342242819
-Control17=IDC_CLEARHISTORY2,button,1342242816
-Control18=IDC_STATIC,static,1342177296
-Control19=IDC_STATIC,static,1342177296
-Control20=IDC_LISTRECENTDLDS,button,1342242819
-
-[CLS:CDlg_Options_General_History]
-Type=0
-HeaderFile=Dlg_Options_General_History.h
-ImplementationFile=Dlg_Options_General_History.cpp
-BaseClass=CDlg_Options_Page
-Filter=D
-VirtualFilter=dWC
-LastObject=CDlg_Options_General_History
-
-[DLG:IDD_OPTIONS_GENERAL_MISC (Neutral)]
-Type=1
-Class=CDlg_Options_General_Misc
-ControlCount=21
-Control1=IDC__TOUTSFORCONFS,button,1342177287
-Control2=IDC__HANGUP,static,1342308352
-Control3=IDC_HANGUP_TOUT,combobox,1344339971
-Control4=IDC__EXIT,static,1342308352
-Control5=IDC_EXIT_TOUT,combobox,1344339971
-Control6=IDC__SHUTDOWN,static,1342308352
-Control7=IDC_SHUTDOWN_TOUT,combobox,1344339971
-Control8=IDC__LAUNCHDLD,static,1342308352
-Control9=IDC_LAUNCHDLD_TOUT,combobox,1344339971
-Control10=IDC_ASKFORST,button,1342242819
-Control11=IDC_DISABLEWDTASKAFTEREXEC,button,1342242819
-Control12=IDC__FLOATING_WINDOWS,button,1342177287
-Control13=IDC_DROPBOX,button,1342242819
-Control14=IDC_TRANCPARENCY1,msctls_trackbar32,1342242840
-Control15=IDC_DLINFO,button,1342242819
-Control16=IDC_TRANCPARENCY2,msctls_trackbar32,1342242840
-Control17=IDC_HIDEFWWFS,button,1342242819
-Control18=IDC__TRANCPARENCY1,static,1342308352
-Control19=IDC__TRANCPARENCY1_VAL,static,1342308352
-Control20=IDC__TRANCPARENCY2,static,1342308352
-Control21=IDC__TRANCPARENCY2_VAL,static,1342308352
-
-[CLS:CDlg_Options_General_Misc]
-Type=0
-HeaderFile=Dlg_Options_General_Misc.h
-ImplementationFile=Dlg_Options_General_Misc.cpp
-BaseClass=CDlg_Options_Page
-Filter=D
-VirtualFilter=dWC
-LastObject=IDC_TRANCPARENCY1
-
-[DLG:IDD_OPTIONS_GENERAL_MISC_ADV (Neutral)]
-Type=1
-Class=CDlg_Options_General_Misc_Advanced
+Class=CDlg_Options_Downloads_Flv
 ControlCount=10
-Control1=IDC_AUTOSAVE,edit,1350639744
-Control2=IDC_AUTOSAVESPIN,msctls_updown32,1342177462
-Control3=IDC__MIN,static,1342308352
-Control4=IDC__AUTOSAVE,static,1342308352
-Control5=IDC_KEEP_1,button,1342177289
-Control6=IDC_KEEP_2,button,1342177289
-Control7=IDC_FOLDER,edit,1350631552
-Control8=IDC_BROWSE,button,1342246656
-Control9=IDC__DATADESC,static,1342308352
-Control10=IDC__SERVICE_FILES,button,1342177287
+Control1=IDC_SHOWGETITBTN,button,1342242819
+Control2=IDC_ENABLE_MONITORING,button,1342242819
+Control3=IDC__WARNING,static,1342308352
+Control4=IDC_M_IE,button,1342242819
+Control5=IDC_M_FIREFOX,button,1342242819
+Control6=IDC_M_OPERA,button,1342242819
+Control7=IDC_M_NETSCAPE,button,1342242819
+Control8=IDC_M_SAFARI,button,1342242819
+Control9=IDC_M_CHROME,button,1208025091
+Control10=IDC_M_SEAMONKEY,button,1342242819
 
-[CLS:CDlg_Options_General_Misc_Advanced]
+[CLS:CDlg_Options_Downloads_Flv]
 Type=0
-HeaderFile=Dlg_Options_General_Misc_Advanced.h
-ImplementationFile=Dlg_Options_General_Misc_Advanced.cpp
+HeaderFile=Dlg_Options_Downloads_Flv.h
+ImplementationFile=Dlg_Options_Downloads_Flv.cpp
 BaseClass=CDlg_Options_Page
 Filter=D
+LastObject=CDlg_Options_Downloads_Flv
 VirtualFilter=dWC
-LastObject=CDlg_Options_General_Misc_Advanced
 
-[DLG:IDD_OPTIONS_DOWNLOADS (Neutral)]
+[DLG:IDD_CREATEFLVDOWNLOAD (Neutral)]
 Type=1
-Class=CDlg_Options_Downloads
-ControlCount=26
-Control1=IDC_DONTSAVELOGS,button,1342242819
-Control2=IDC_AUTODEL,button,1342242819
-Control3=IDC__WHENDEL,static,1342308352
-Control4=IDC_WHENDEL,combobox,1344340035
-Control5=IDC_SHOWDLDDLG,button,1342242819
-Control6=IDC_DETAILEDLOG,button,1342242819
-Control7=IDC_SIZEINBYTES,button,1342242819
-Control8=IDC_VIRCHECK,button,1342242819
-Control9=IDC_VIRNAME,combobox,1344340034
-Control10=IDC_CHOOSEVIR,button,1342246656
-Control11=IDC__ARGS,static,1342308352
-Control12=IDC_ARGS,edit,1350631552
-Control13=IDC__EXTS,static,1342308352
-Control14=IDC_VIREXTS,edit,1350631552
-Control15=IDC_USEWC,button,1342242819
-Control16=IDC_WC_SIZE,edit,1350639744
-Control17=IDC_WC_SPIN,msctls_updown32,1342177462
-Control18=IDC__WC_MB,static,1342308352
-Control19=IDC_PREVENT_STANDBY,button,1342242819
-Control20=IDC__FDM_COMMUNITY,button,1342177287
-Control21=IDC_DISPLAYOPINIONS2,button,1342242819
-Control22=IDC_SWITCHTOOPINIONS2,button,1342242819
-Control23=IDC_CHECKIFMAL2,button,1342242819
-Control24=IDC__S0,static,1342308352
-Control25=IDC_MALREPSMINIMUM2,edit,1350639618
-Control26=IDC__S1,static,1342308352
+Class=?
+ControlCount=9
+Control1=IDC_URL,combobox,1344340034
+Control2=IDC_USE_AUTO_CONVERT,button,1342252035
+Control3=IDC_SETTINGS2,button,1476460544
+Control4=IDC_ADVANCED,button,1342242819
+Control5=IDOK,button,1342242817
+Control6=IDCANCEL,button,1342242816
+Control7=IDC__URL,static,1342308352
+Control8=IDC_STATIC,static,1342308352
+Control9=IDC_EDIT1,edit,1350631552
 
-[CLS:CDlg_Options_Downloads]
+[DLG:IDD_CREATEFLVDOWNLOADS (Neutral)]
+Type=1
+Class=CDlgCreateFlvDownloads
+ControlCount=10
+Control1=IDC__WEBPAGE,static,1342308352
+Control2=IDC_WPURL,edit,1350633600
+Control3=IDC__FLVONTHISPAGE,static,1342308352
+Control4=IDC_FLVLIST,SysListView32,1350664197
+Control5=IDC__SAVETO,static,1342308352
+Control6=IDC_OUTFOLDER,combobox,1344340034
+Control7=IDC_USE_AUTO_CONVERT,button,1342252035
+Control8=IDC_CNVRT_SETTINGS,button,1476460544
+Control9=IDOK,button,1342242817
+Control10=IDCANCEL,button,1342242816
+
+[CLS:CDlgCreateFlvDownloads]
 Type=0
-HeaderFile=Dlg_Options_Downloads.h
-ImplementationFile=Dlg_Options_Downloads.cpp
-BaseClass=CDlg_Options_Page
+HeaderFile=DlgCreateFlvDownloads.h
+ImplementationFile=DlgCreateFlvDownloads.cpp
+BaseClass=CDialog
 Filter=D
-LastObject=CDlg_Options_Downloads
+LastObject=CDlgCreateFlvDownloads
 VirtualFilter=dWC
 
-[DLG:IDD_OPTIONS_DOWNLOADS_NEWDLD (Neutral)]
+[DLG:IDD_CREATEFLVDOWNLOADS_BY_WEBPAGE_URL (Neutral)]
 Type=1
-Class=CDlg_Options_Downloads_NewDld
-ControlCount=15
-Control1=IDC__GRPFORNEWDLD,button,1342177287
-Control2=IDC_NEWGRP_0,button,1342177289
-Control3=IDC_NEWGRP_1,button,1342177289
-Control4=IDC_GROUPS,combobox,1344340291
-Control5=IDC_CREATEGROUP,button,1342242880
-Control6=IDC_NEWGRP_2,button,1342177289
-Control7=IDC_GROUPS2,combobox,1344340291
-Control8=IDC_CREATEGROUP2,button,1342242880
-Control9=IDC_CHECKEXISTS,button,1342242819
-Control10=IDC_AUTOSTART,button,1342242819
-Control11=IDC_USEZIP,button,1342242819
-Control12=IDC_SETGRPSFLDR,button,1342242816
-Control13=IDC_ADVANCED,button,1342242816
-Control14=IDC_HTMLSPIDER_DEFDLDSTGS,button,1342242816
-Control15=IDC_BT_DEFDLDSTGS,button,1342242816
-
-[CLS:CDlg_Options_Downloads_NewDld]
-Type=0
-HeaderFile=Dlg_Options_Downloads_NewDld.h
-ImplementationFile=Dlg_Options_Downloads_NewDld.cpp
-BaseClass=CDlg_Options_Page
-Filter=D
-LastObject=CDlg_Options_Downloads_NewDld
-VirtualFilter=dWC
-
-[DLG:IDD_OPTIONS_DOWNLOADS_NETWORK (Neutral)]
-Type=1
-Class=CDlg_Options_Downloads_Network
-ControlCount=18
-Control1=IDC_MODE,combobox,1344339971
-Control2=IDC_USEMAXCONNS,button,1342242819
-Control3=IDC_MAXCONNS,edit,1350639744
-Control4=IDC_MAXCONNSSPIN,msctls_updown32,1342177462
-Control5=IDC_USEMAXCONNSPERSERVER,button,1342242819
-Control6=IDC_MAXCONNSPERSERVER,edit,1350639744
-Control7=IDC_MAXCONNSPERSERVERSPIN,msctls_updown32,1342177462
-Control8=IDC_USEMAXDLDS,button,1342242819
-Control9=IDC_MAXDLDSVAL,edit,1350639744
-Control10=IDC_MAXDLDSSPIN,msctls_updown32,1342177462
-Control11=IDC_TRAFFICLIMITVAL,edit,1350631552
-Control12=IDC_TRAFFICLIMITDIMENSION,combobox,1344339971
-Control13=IDC_DETECTACTIVITY,button,1342242819
-Control14=IDC_DECBYLEVEL,button,1342177289
-Control15=IDC_SETTOLIGHT,button,1342177289
-Control16=IDC__TUR,static,1342308352
-Control17=IDC__TUMS,button,1342177287
-Control18=IDC__MODEADJUSTMENT,static,1342308352
-
-[CLS:CDlg_Options_Downloads_Network]
-Type=0
-HeaderFile=Dlg_Options_Downloads_Network.h
-ImplementationFile=Dlg_Options_Downloads_Network.cpp
-BaseClass=CDlg_Options_Page
-Filter=D
-LastObject=CDlg_Options_Downloads_Network
-VirtualFilter=dWC
-
-[DLG:IDD_OPTIONS_DOWNLOADS_BITTORRENT (Neutral)]
-Type=1
-Class=CDlg_Options_Downloads_Bittorrent
-ControlCount=21
-Control1=IDC_ENABLE,button,1342242819
-Control2=IDC_STATIC,static,1342177280
-Control3=IDC_TRAFFICMODESTAB,SysTabControl32,1342177280
-Control4=IDC_LIMIT,button,1342242819
-Control5=IDC_LIMITVAL,edit,1350631552
-Control6=IDC_LIMITDIM,combobox,1344339971
-Control7=IDC_LIMITUPLOADS,button,1342242819
-Control8=IDC_UPLLIMITVAL,edit,1350639744
-Control9=IDC_UPLLIMITVALSPIN,msctls_updown32,1342177462
-Control10=IDC__MAXHALFS,static,1342308352
-Control11=IDC_MAXHALFSVAL,edit,1350639744
-Control12=IDC_MAXHALFSSPIN,msctls_updown32,1342177462
-Control13=IDC__USEPORTS,static,1342308352
-Control14=IDC_PORT_FROM,edit,1350639744
-Control15=IDC_PORT_TO,edit,1350639744
-Control16=IDC_USE_DHT,button,1342242819
-Control17=IDC_ASSOCWITHTORRENT,button,1342242819
-Control18=IDC_STATIC,static,1342177296
-Control19=IDC_PORT_FROM_SPIN,msctls_updown32,1342177462
-Control20=IDC_PORT_TO_SPIN,msctls_updown32,1342177462
-Control21=IDC__TO,static,1342308352
-
-[CLS:CDlg_Options_Downloads_Bittorrent]
-Type=0
-HeaderFile=Dlg_Options_Downloads_Bittorrent.h
-ImplementationFile=Dlg_Options_Downloads_Bittorrent.cpp
-BaseClass=CDlg_Options_Page
-Filter=D
-LastObject=IDC_LIMITDIM
-VirtualFilter=dWC
-
-[DLG:IDD_OPTIONS_DOWNLOADS_MIRRORS (Neutral)]
-Type=1
-Class=CDlg_Options_Downloads_Mirrors
-ControlCount=16
-Control1=IDC_AUTO,button,1342242819
-Control2=IDC_FILEMINSIZE,edit,1350631552
-Control3=IDC_FILEMINSIZEDIM,combobox,1344339971
-Control4=IDC_DONTIFSIZEUNK,button,1342242819
-Control5=IDC_MAXMIRRORS,button,1342242819
-Control6=IDC_MAXMIRRORSVAL,edit,1350639744
-Control7=IDC_MAXMIRRORSSPIN,msctls_updown32,1342177334
-Control8=IDC_CALCSPEED,button,1342242819
-Control9=IDC_RECALCSPEED,button,1342242819
-Control10=IDC_RECALCVAL,edit,1350639744
-Control11=IDC_RECALCSPIN,msctls_updown32,1342177334
-Control12=IDC__MIN,static,1342308352
-Control13=IDC__DONTSEARCH,static,1342308352
-Control14=IDC_STATIC,static,1342177296
-Control15=IDC__MIRRSERVER,static,1342308352
-Control16=IDC_MIRRSERVERS,combobox,1344339971
-
-[CLS:CDlg_Options_Downloads_Mirrors]
-Type=0
-HeaderFile=Dlg_Options_Downloads_Mirrors.h
-ImplementationFile=Dlg_Options_Downloads_Mirrors.cpp
-BaseClass=CDlg_Options_Page
-Filter=D
-VirtualFilter=dWC
-LastObject=IDC_FILEMINSIZEDIM
-
-[DLG:IDD_OPTIONS_DOWNLOADS_MONITORING (Neutral)]
-Type=1
-Class=CDlg_Options_Downloads_Monitoring
-ControlCount=20
-Control1=IDC__MONITORFOR,button,1342177287
-Control2=IDC_CLIPBOARD,button,1342242819
-Control3=IDC_STATIC,button,1342177287
-Control4=IDC_IE2,button,1342242819
-Control5=IDC_FIREFOX,button,1342242819
-Control6=IDC_ALTPRESSED,button,1342242819
-Control7=IDC_ALLOWIETODL,button,1342242819
-Control8=IDC_DONTMONSMALL,button,1342242819
-Control9=IDC_SMALLSIZE,edit,1350639616
-Control10=IDC__KBYTES,static,1342308352
-Control11=IDC_SKIPLIST,button,1342242816
-Control12=IDC_ADDTOIEMENU,button,1342242819
-Control13=IDC_CUSTOMIZE,button,1342242816
-Control14=IDC_OPERA,button,1342242819
-Control15=IDC_NETSCAPE,button,1342242819
-Control16=IDC_MOZILLA,button,1342242819
-Control17=IDC_SAFARI,button,1342242819
-Control18=IDC_CHROME,button,1342242819
-Control19=IDC_SILENT,button,1342242819
-Control20=IDC_FFPORTVER,button,1073807360
-
-[CLS:CDlg_Options_Downloads_Monitoring]
-Type=0
-HeaderFile=Dlg_Options_Downloads_Monitoring.h
-ImplementationFile=Dlg_Options_Downloads_Monitoring.cpp
-BaseClass=CDlg_Options_Page
-Filter=D
-VirtualFilter=dWC
-
-[DLG:IDD_OPTIONS_NOTIFICATIONS (Neutral)]
-Type=1
-Class=CDlg_Options_Notifications
-ControlCount=8
-Control1=IDC_USEBALLOON,button,1342242819
-Control2=IDC__TIMEOUT,static,1342308352
-Control3=IDC_TIMEOUT,edit,1350631552
-Control4=IDC_TIMEOUTSPIN,msctls_updown32,1342177462
-Control5=IDC__SEC,static,1342308352
-Control6=IDC_USESOUNDS,button,1342242819
-Control7=IDC_CUSTOMIZE,button,1342242816
-Control8=IDC_DISABLEFORBATCHDLDS,button,1342242819
-
-[CLS:CDlg_Options_Notifications]
-Type=0
-HeaderFile=Dlg_Options_Notifications.h
-ImplementationFile=Dlg_Options_Notifications.cpp
-BaseClass=CDlg_Options_Page
-Filter=D
-VirtualFilter=dWC
-LastObject=CDlg_Options_Notifications
-
-[DLG:IDD_OPTIONS_SITEMGR]
-Type=1
-Class=CDlg_Options_SiteMgr
-ControlCount=6
-Control1=IDC_USE,button,1342242819
-Control2=IDC_ASK,button,1342177289
-Control3=IDC_DONTASK,button,1342177289
-Control4=IDC_AUTODEL,button,1342242819
-Control5=IDC_DELALL,button,1342242816
-Control6=IDC__PASSWORDS,button,1342177287
-
-[CLS:CDlg_Options_SiteMgr]
-Type=0
-HeaderFile=Dlg_Options_SiteMgr.h
-ImplementationFile=Dlg_Options_SiteMgr.cpp
-BaseClass=CDlg_Options_Page
-Filter=D
-LastObject=CDlg_Options_SiteMgr
-VirtualFilter=dWC
-
-[DLG:IDD_BTDLD_SEEDING (Neutral)]
-Type=1
-Class=CBtDld_Seeding
+Class=CDlgCreateFlvDownloadsByWebPageUrl
 ControlCount=5
-Control1=IDC_ENABLE_SEEDING,button,1342242822
-Control2=IDC_UNLIMITED_SEEDING,button,1342177289
-Control3=IDC_LIMIT_BY_RATIO,button,1342177289
-Control4=IDC_STATIC0,static,1342308352
-Control5=IDC_RATIO_LIST,combobox,1344339971
+Control1=IDC__WEBPAGE,static,1342308352
+Control2=IDC_WPURL,combobox,1344340034
+Control3=IDOK,button,1342242817
+Control4=IDCANCEL,button,1342242816
+Control5=IDC__NOTE,static,1342308352
 
-[CLS:CBtDld_Seeding]
+[CLS:CDlgCreateFlvDownloadsByWebPageUrl]
 Type=0
-HeaderFile=BtDld_Seeding.h
-ImplementationFile=BtDld_Seeding.cpp
-BaseClass=CPropertyPage
+HeaderFile=DlgCreateFlvDownloadsByWebPageUrl.h
+ImplementationFile=DlgCreateFlvDownloadsByWebPageUrl.cpp
+BaseClass=CDialog
 Filter=D
-LastObject=CBtDld_Seeding
-VirtualFilter=idWC
-
-[DLG:IDD_OPTIONS_DOWNLOADS_TIMELIMIT (Neutral)]
-Type=1
-Class=CDlg_Options_Downloads_TimeLimit
-ControlCount=5
-Control1=IDC_SETLIMIT,button,1342242819
-Control2=IDC__S0,static,1342308352
-Control3=IDC_FROM,combobox,1344339971
-Control4=IDC__S1,static,1342308352
-Control5=IDC_TO,combobox,1344339971
-
-[CLS:CDlg_Options_Downloads_TimeLimit]
-Type=0
-HeaderFile=Dlg_Options_Downloads_TimeLimit.h
-ImplementationFile=Dlg_Options_Downloads_TimeLimit.cpp
-BaseClass=CDlg_Options_Page
-Filter=D
-LastObject=IDC_FROM
+LastObject=CDlgCreateFlvDownloadsByWebPageUrl
 VirtualFilter=dWC
 
-[DLG:IDD_OPTIONS_SITEMGR (Russian)]
-Type=1
-Class=?
-ControlCount=6
-Control1=IDC_USE,button,1342242819
-Control2=IDC_ASK,button,1342177289
-Control3=IDC_DONTASK,button,1342177289
-Control4=IDC_AUTODEL,button,1342242819
-Control5=IDC_DELALL,button,1342242816
-Control6=IDC__PASSWORDS,button,1342177287
-
-[MNU:IDM_SPIDER_TREE]
-Type=1
-Class=?
-Command1=ID_DONTDOWNLOADANDDEL
-CommandCount=1
-
-[ACL:IDR_MAINFRAME]
-Type=1
-Class=?
-Command1=ID_TUM_LIGHT
-Command2=ID_ALT1
-Command3=ID_TUM_MEDIUM
-Command4=ID_ALT2
-Command5=ID_TUM_HEAVY
-Command6=ID_ALT3
-Command7=ID_ALT4
-Command8=ID_ALT5
-Command9=ID_ALT6
-Command10=ID_ALT7
-Command11=ID_ALT8
-Command12=ID_ALT9
-Command13=ID_DIAL
-Command14=ID_DLDDEFOPTIONS
-Command15=ID_FIND
-Command16=ID_ADDSITE
-Command17=ID_SPIDERDLWEBPAGE
-Command18=ID_DLD_CREATE
-Command19=ID_DLDROPTIONS
-Command20=ID_SAVEALL
-Command21=ID_TASK_CREATE_NEW
-Command22=ID_FILE_IMPORT_IMPORTLISTOFDOWNLOADSFROMCLIPBOARD
-Command23=ID_FINDNEXT
-Command24=ID_NEXT_PANE
-Command25=ID_PREV_PANE
-Command26=ID_INSERT
-Command27=ID_APP_EXIT
-CommandCount=27
+[CLS:CSmallTipWnd]
+Type=0
+HeaderFile=SmallTipWnd.h
+ImplementationFile=SmallTipWnd.cpp
+BaseClass=vmsUiWindowsHoster
+Filter=W
+VirtualFilter=WC
 

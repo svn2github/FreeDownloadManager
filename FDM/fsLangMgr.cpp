@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #include "stdafx.h"
@@ -44,6 +44,9 @@ BOOL fsLangMgr::Initialize()
 		try {
 		fsLngFileInfo info;
 		info.strFileName = wfd.cFileName;
+		info.strFileNameWoExt = wfd.cFileName;
+		ASSERT (info.strFileNameWoExt.GetLength () > 4);
+		info.strFileNameWoExt.Delete (info.strFileNameWoExt.GetLength ()-4, 4);
 
 		CStdioFile file (m_strLngFolder + info.strFileName, CFile::modeRead | CFile::typeText | CFile::shareDenyNone);
 
@@ -227,4 +230,11 @@ void fsLangMgr::LoadBuiltInLngStrings()
 void fsLangMgr::PreprocessLanguageString(CString &str)
 {
 	str.Replace ("\\n", "\n");
+}
+
+LPCSTR fsLangMgr::GetLngFileNameWoExt(int iIndex)
+{
+	if (iIndex < 0 || iIndex >= m_vLngFiles.size ())
+		return "eng";
+	return m_vLngFiles [iIndex].strFileNameWoExt;
 }

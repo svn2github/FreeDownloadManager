@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -149,6 +149,19 @@ CString fsGetDataFilePath (LPCSTR pszFile)
 	}
 
 	return strPath;
+}
+
+CString fsGetProgramFilePath (LPCTSTR ptszFile)
+{
+	TCHAR tsz [MY_MAX_PATH] = _T ("");
+	GetModuleFileName (NULL, tsz, MY_MAX_PATH);
+	LPTSTR ptsz = _tcsrchr (tsz, '\\');
+	if (!ptsz)
+		return _T ("");
+	ptsz [1] = 0;
+	CString str = tsz;
+	str += ptszFile;
+	return str;
 }
 
 extern CFdmApp theApp;

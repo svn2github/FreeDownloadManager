@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -10,10 +10,11 @@
 using namespace boost::filesystem;
 #include <libtorrent/file_pool.hpp>
 #include <libtorrent/storage.hpp>
-#include <libtorrent/hasher.hpp>  
+#include <libtorrent/hasher.hpp>    
 
 __declspec(dllexport) vmsBtFile* WINAPI vmsBt_CreateTorrentFileObject ()
 {
+	
 	return new vmsBtFileImpl;
 }
 

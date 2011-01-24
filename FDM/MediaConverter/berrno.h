@@ -1,14 +1,9 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
-
-    
-
 #ifndef BERRNO_H
 #define BERRNO_H
 
-#include <Errors.h>  
+#include <Errors.h>
 
+// mmu_man: this is needed for http.c (defined errno)
 #include <errno.h>
 
 #ifdef ENOENT
@@ -46,4 +41,4 @@
 #endif
 #define EPIPE  32
 
-#endif 
+#endif /* BERRNO_H */

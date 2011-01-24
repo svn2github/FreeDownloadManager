@@ -2,9 +2,9 @@
 
 
 /* File created by MIDL compiler version 5.01.0164 */
-/* at Tue Dec 30 01:00:19 2008
+/* at Tue Feb 02 03:21:45 2010
  */
-/* Compiler settings for D:\VCW\FDM\FDM\iefdm\iecooks\iecooks.idl:
+/* Compiler settings for D:\VCW\FDM\FDM\iefdm\FdmIeBho\iecooks.idl:
     Oicf (OptLev=i2), W1, Zp8, env=Win32, ms_ext, c_ext
     error checks: allocation ref bounds_check enum stub_data 
 */
@@ -27,8 +27,8 @@
 
 #include "iecooks.h"
 
-#define TYPE_FORMAT_STRING_SIZE   1019                              
-#define PROC_FORMAT_STRING_SIZE   205                               
+#define TYPE_FORMAT_STRING_SIZE   1029                              
+#define PROC_FORMAT_STRING_SIZE   301                               
 
 typedef struct _MIDL_TYPE_FORMAT_STRING
     {
@@ -55,17 +55,17 @@ extern const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString;
    GUID={0x00020400,0x0000,0x0000,{0xC0,0x00,0x00,0x00,0x00,0x00,0x00,0x46}} */
 
 
-/* Object interface: IFDMIECookiesBHO, ver. 0.0,
+/* Object interface: IFDMIEBHO, ver. 0.0,
    GUID={0x40D3F599,0x74F0,0x44D3,{0xB0,0x59,0x76,0xC0,0xF1,0x2C,0x0D,0x6E}} */
 
 
 extern const MIDL_STUB_DESC Object_StubDesc;
 
 
-extern const MIDL_SERVER_INFO IFDMIECookiesBHO_ServerInfo;
+extern const MIDL_SERVER_INFO IFDMIEBHO_ServerInfo;
 
 #pragma code_seg(".orpc")
-static const unsigned short IFDMIECookiesBHO_FormatStringOffsetTable[] = 
+static const unsigned short IFDMIEBHO_FormatStringOffsetTable[] = 
     {
     (unsigned short) -1,
     (unsigned short) -1,
@@ -75,35 +75,38 @@ static const unsigned short IFDMIECookiesBHO_FormatStringOffsetTable[] =
     34,
     98,
     120,
-    142
+    142,
+    176,
+    210,
+    244
     };
 
-static const MIDL_SERVER_INFO IFDMIECookiesBHO_ServerInfo = 
+static const MIDL_SERVER_INFO IFDMIEBHO_ServerInfo = 
     {
     &Object_StubDesc,
     0,
     __MIDL_ProcFormatString.Format,
-    &IFDMIECookiesBHO_FormatStringOffsetTable[-3],
+    &IFDMIEBHO_FormatStringOffsetTable[-3],
     0,
     0,
     0,
     0
     };
 
-static const MIDL_STUBLESS_PROXY_INFO IFDMIECookiesBHO_ProxyInfo =
+static const MIDL_STUBLESS_PROXY_INFO IFDMIEBHO_ProxyInfo =
     {
     &Object_StubDesc,
     __MIDL_ProcFormatString.Format,
-    &IFDMIECookiesBHO_FormatStringOffsetTable[-3],
+    &IFDMIEBHO_FormatStringOffsetTable[-3],
     0,
     0,
     0
     };
 
-CINTERFACE_PROXY_VTABLE(12) _IFDMIECookiesBHOProxyVtbl = 
+CINTERFACE_PROXY_VTABLE(15) _IFDMIEBHOProxyVtbl = 
 {
-    &IFDMIECookiesBHO_ProxyInfo,
-    &IID_IFDMIECookiesBHO,
+    &IFDMIEBHO_ProxyInfo,
+    &IID_IFDMIEBHO,
     IUnknown_QueryInterface_Proxy,
     IUnknown_AddRef_Proxy,
     IUnknown_Release_Proxy ,
@@ -111,20 +114,26 @@ CINTERFACE_PROXY_VTABLE(12) _IFDMIECookiesBHOProxyVtbl =
     0 /* (void *)-1 /* IDispatch::GetTypeInfo */ ,
     0 /* (void *)-1 /* IDispatch::GetIDsOfNames */ ,
     0 /* IDispatch_Invoke_Proxy */ ,
-    (void *)-1 /* IFDMIECookiesBHO::ProgressChange */ ,
-    (void *)-1 /* IFDMIECookiesBHO::BeforeNavigate2 */ ,
-    (void *)-1 /* IFDMIECookiesBHO::DownloadBegin */ ,
-    (void *)-1 /* IFDMIECookiesBHO::DownloadComplete */ ,
-    (void *)-1 /* IFDMIECookiesBHO::DocumentComplete */
+    (void *)-1 /* IFDMIEBHO::ProgressChange */ ,
+    (void *)-1 /* IFDMIEBHO::BeforeNavigate2 */ ,
+    (void *)-1 /* IFDMIEBHO::DownloadBegin */ ,
+    (void *)-1 /* IFDMIEBHO::DownloadComplete */ ,
+    (void *)-1 /* IFDMIEBHO::DocumentComplete */ ,
+    (void *)-1 /* IFDMIEBHO::WindowStateChanged */ ,
+    (void *)-1 /* IFDMIEBHO::NavigateComplete2 */ ,
+    (void *)-1 /* IFDMIEBHO::StatusTextChange */
 };
 
 
-static const PRPC_STUB_FUNCTION IFDMIECookiesBHO_table[] =
+static const PRPC_STUB_FUNCTION IFDMIEBHO_table[] =
 {
     STUB_FORWARDING_FUNCTION,
     STUB_FORWARDING_FUNCTION,
     STUB_FORWARDING_FUNCTION,
     STUB_FORWARDING_FUNCTION,
+    NdrStubCall2,
+    NdrStubCall2,
+    NdrStubCall2,
     NdrStubCall2,
     NdrStubCall2,
     NdrStubCall2,
@@ -132,12 +141,12 @@ static const PRPC_STUB_FUNCTION IFDMIECookiesBHO_table[] =
     NdrStubCall2
 };
 
-CInterfaceStubVtbl _IFDMIECookiesBHOStubVtbl =
+CInterfaceStubVtbl _IFDMIEBHOStubVtbl =
 {
-    &IID_IFDMIECookiesBHO,
-    &IFDMIECookiesBHO_ServerInfo,
-    12,
-    &IFDMIECookiesBHO_table[-3],
+    &IID_IFDMIEBHO,
+    &IFDMIEBHO_ServerInfo,
+    15,
+    &IFDMIEBHO_table[-3],
     CStdStubBuffer_DELEGATING_METHODS
 };
 
@@ -152,7 +161,7 @@ extern const MIDL_STUB_DESC Object_StubDesc;
 extern const MIDL_SERVER_INFO IFDMIEStat_ServerInfo;
 
 #pragma code_seg(".orpc")
-extern const USER_MARSHAL_ROUTINE_QUADRUPLE UserMarshalRoutines[1];
+extern const USER_MARSHAL_ROUTINE_QUADRUPLE UserMarshalRoutines[2];
 
 static const MIDL_STUB_DESC Object_StubDesc = 
     {
@@ -184,7 +193,7 @@ static const unsigned short IFDMIEStat_FormatStringOffsetTable[] =
     (unsigned short) -1,
     (unsigned short) -1,
     (unsigned short) -1,
-    176
+    272
     };
 
 static const MIDL_SERVER_INFO IFDMIEStat_ServerInfo = 
@@ -244,7 +253,7 @@ CInterfaceStubVtbl _IFDMIEStatStubVtbl =
 
 #pragma data_seg(".rdata")
 
-static const USER_MARSHAL_ROUTINE_QUADRUPLE UserMarshalRoutines[1] = 
+static const USER_MARSHAL_ROUTINE_QUADRUPLE UserMarshalRoutines[2] = 
         {
             
             {
@@ -252,6 +261,12 @@ static const USER_MARSHAL_ROUTINE_QUADRUPLE UserMarshalRoutines[1] =
             ,VARIANT_UserMarshal
             ,VARIANT_UserUnmarshal
             ,VARIANT_UserFree
+            },
+            {
+            BSTR_UserSize
+            ,BSTR_UserMarshal
+            ,BSTR_UserUnmarshal
+            ,BSTR_UserFree
             }
 
         };
@@ -522,25 +537,25 @@ static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
 /* 174 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
-	/* Procedure get_DownloadCount */
+	/* Procedure WindowStateChanged */
 
 /* 176 */	0x33,		/* FC_AUTO_HANDLE */
 			0x6c,		/* Old Flags:  object, Oi2 */
 /* 178 */	NdrFcLong( 0x0 ),	/* 0 */
-/* 182 */	NdrFcShort( 0x7 ),	/* 7 */
+/* 182 */	NdrFcShort( 0xc ),	/* 12 */
 #ifndef _ALPHA_
-/* 184 */	NdrFcShort( 0xc ),	/* x86, MIPS, PPC Stack size/offset = 12 */
+/* 184 */	NdrFcShort( 0x10 ),	/* x86, MIPS, PPC Stack size/offset = 16 */
 #else
-			NdrFcShort( 0x18 ),	/* Alpha Stack size/offset = 24 */
+			NdrFcShort( 0x20 ),	/* Alpha Stack size/offset = 32 */
 #endif
-/* 186 */	NdrFcShort( 0x0 ),	/* 0 */
-/* 188 */	NdrFcShort( 0x10 ),	/* 16 */
+/* 186 */	NdrFcShort( 0x10 ),	/* 16 */
+/* 188 */	NdrFcShort( 0x8 ),	/* 8 */
 /* 190 */	0x4,		/* Oi2 Flags:  has return, */
-			0x2,		/* 2 */
+			0x3,		/* 3 */
 
-	/* Parameter pVal */
+	/* Parameter dwFlags */
 
-/* 192 */	NdrFcShort( 0x2150 ),	/* Flags:  out, base type, simple ref, srv alloc size=8 */
+/* 192 */	NdrFcShort( 0x48 ),	/* Flags:  in, base type, */
 #ifndef _ALPHA_
 /* 194 */	NdrFcShort( 0x4 ),	/* x86, MIPS, PPC Stack size/offset = 4 */
 #else
@@ -549,15 +564,148 @@ static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
 /* 196 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
-	/* Return value */
+	/* Parameter dwValidFlagsMask */
 
-/* 198 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+/* 198 */	NdrFcShort( 0x48 ),	/* Flags:  in, base type, */
 #ifndef _ALPHA_
 /* 200 */	NdrFcShort( 0x8 ),	/* x86, MIPS, PPC Stack size/offset = 8 */
 #else
 			NdrFcShort( 0x10 ),	/* Alpha Stack size/offset = 16 */
 #endif
 /* 202 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Return value */
+
+/* 204 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+#ifndef _ALPHA_
+/* 206 */	NdrFcShort( 0xc ),	/* x86, MIPS, PPC Stack size/offset = 12 */
+#else
+			NdrFcShort( 0x18 ),	/* Alpha Stack size/offset = 24 */
+#endif
+/* 208 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Procedure NavigateComplete2 */
+
+/* 210 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 212 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 216 */	NdrFcShort( 0xd ),	/* 13 */
+#ifndef _ALPHA_
+/* 218 */	NdrFcShort( 0x10 ),	/* x86, MIPS, PPC Stack size/offset = 16 */
+#else
+			NdrFcShort( 0x20 ),	/* Alpha Stack size/offset = 32 */
+#endif
+/* 220 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 222 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 224 */	0x6,		/* Oi2 Flags:  clt must size, has return, */
+			0x3,		/* 3 */
+
+	/* Parameter pDisp */
+
+/* 226 */	NdrFcShort( 0xb ),	/* Flags:  must size, must free, in, */
+#ifndef _ALPHA_
+/* 228 */	NdrFcShort( 0x4 ),	/* x86, MIPS, PPC Stack size/offset = 4 */
+#else
+			NdrFcShort( 0x8 ),	/* Alpha Stack size/offset = 8 */
+#endif
+/* 230 */	NdrFcShort( 0x2 ),	/* Type Offset=2 */
+
+	/* Parameter URL */
+
+/* 232 */	NdrFcShort( 0x10b ),	/* Flags:  must size, must free, in, simple ref, */
+#ifndef _ALPHA_
+/* 234 */	NdrFcShort( 0x8 ),	/* x86, MIPS, PPC Stack size/offset = 8 */
+#else
+			NdrFcShort( 0x10 ),	/* Alpha Stack size/offset = 16 */
+#endif
+/* 236 */	NdrFcShort( 0x3e8 ),	/* Type Offset=1000 */
+
+	/* Return value */
+
+/* 238 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+#ifndef _ALPHA_
+/* 240 */	NdrFcShort( 0xc ),	/* x86, MIPS, PPC Stack size/offset = 12 */
+#else
+			NdrFcShort( 0x18 ),	/* Alpha Stack size/offset = 24 */
+#endif
+/* 242 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Procedure StatusTextChange */
+
+/* 244 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 246 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 250 */	NdrFcShort( 0xe ),	/* 14 */
+#ifndef _ALPHA_
+/* 252 */	NdrFcShort( 0xc ),	/* x86, MIPS, PPC Stack size/offset = 12 */
+#else
+			NdrFcShort( 0x18 ),	/* Alpha Stack size/offset = 24 */
+#endif
+/* 254 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 256 */	NdrFcShort( 0x8 ),	/* 8 */
+/* 258 */	0x6,		/* Oi2 Flags:  clt must size, has return, */
+			0x2,		/* 2 */
+
+	/* Parameter bstrText */
+
+/* 260 */	NdrFcShort( 0x8b ),	/* Flags:  must size, must free, in, by val, */
+#ifndef _ALPHA_
+/* 262 */	NdrFcShort( 0x4 ),	/* x86, MIPS, PPC Stack size/offset = 4 */
+#else
+			NdrFcShort( 0x8 ),	/* Alpha Stack size/offset = 8 */
+#endif
+/* 264 */	NdrFcShort( 0x3f6 ),	/* Type Offset=1014 */
+
+	/* Return value */
+
+/* 266 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+#ifndef _ALPHA_
+/* 268 */	NdrFcShort( 0x8 ),	/* x86, MIPS, PPC Stack size/offset = 8 */
+#else
+			NdrFcShort( 0x10 ),	/* Alpha Stack size/offset = 16 */
+#endif
+/* 270 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Procedure get_DownloadCount */
+
+/* 272 */	0x33,		/* FC_AUTO_HANDLE */
+			0x6c,		/* Old Flags:  object, Oi2 */
+/* 274 */	NdrFcLong( 0x0 ),	/* 0 */
+/* 278 */	NdrFcShort( 0x7 ),	/* 7 */
+#ifndef _ALPHA_
+/* 280 */	NdrFcShort( 0xc ),	/* x86, MIPS, PPC Stack size/offset = 12 */
+#else
+			NdrFcShort( 0x18 ),	/* Alpha Stack size/offset = 24 */
+#endif
+/* 282 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 284 */	NdrFcShort( 0x10 ),	/* 16 */
+/* 286 */	0x4,		/* Oi2 Flags:  has return, */
+			0x2,		/* 2 */
+
+	/* Parameter pVal */
+
+/* 288 */	NdrFcShort( 0x2150 ),	/* Flags:  out, base type, simple ref, srv alloc size=8 */
+#ifndef _ALPHA_
+/* 290 */	NdrFcShort( 0x4 ),	/* x86, MIPS, PPC Stack size/offset = 4 */
+#else
+			NdrFcShort( 0x8 ),	/* Alpha Stack size/offset = 8 */
+#endif
+/* 292 */	0x8,		/* FC_LONG */
+			0x0,		/* 0 */
+
+	/* Return value */
+
+/* 294 */	NdrFcShort( 0x70 ),	/* Flags:  out, return, base type, */
+#ifndef _ALPHA_
+/* 296 */	NdrFcShort( 0x8 ),	/* x86, MIPS, PPC Stack size/offset = 8 */
+#else
+			NdrFcShort( 0x10 ),	/* Alpha Stack size/offset = 16 */
+#endif
+/* 298 */	0x8,		/* FC_LONG */
 			0x0,		/* 0 */
 
 			0x0
@@ -1259,9 +1407,15 @@ static const MIDL_TYPE_FORMAT_STRING __MIDL_TypeFormatString =
 			0x11, 0x8,	/* FC_RP [simple_pointer] */
 /* 1012 */	0x6,		/* FC_SHORT */
 			0x5c,		/* FC_PAD */
-/* 1014 */	
+/* 1014 */	0xb4,		/* FC_USER_MARSHAL */
+			0x83,		/* 131 */
+/* 1016 */	NdrFcShort( 0x1 ),	/* 1 */
+/* 1018 */	NdrFcShort( 0x4 ),	/* 4 */
+/* 1020 */	NdrFcShort( 0x0 ),	/* 0 */
+/* 1022 */	NdrFcShort( 0xfffffd4c ),	/* Offset= -692 (330) */
+/* 1024 */	
 			0x11, 0xc,	/* FC_RP [alloced_on_stack] [simple_pointer] */
-/* 1016 */	0x8,		/* FC_LONG */
+/* 1026 */	0x8,		/* FC_LONG */
 			0x5c,		/* FC_PAD */
 
 			0x0
@@ -1271,21 +1425,21 @@ static const MIDL_TYPE_FORMAT_STRING __MIDL_TypeFormatString =
 const CInterfaceProxyVtbl * _iecooks_ProxyVtblList[] = 
 {
     ( CInterfaceProxyVtbl *) &_IFDMIEStatProxyVtbl,
-    ( CInterfaceProxyVtbl *) &_IFDMIECookiesBHOProxyVtbl,
+    ( CInterfaceProxyVtbl *) &_IFDMIEBHOProxyVtbl,
     0
 };
 
 const CInterfaceStubVtbl * _iecooks_StubVtblList[] = 
 {
     ( CInterfaceStubVtbl *) &_IFDMIEStatStubVtbl,
-    ( CInterfaceStubVtbl *) &_IFDMIECookiesBHOStubVtbl,
+    ( CInterfaceStubVtbl *) &_IFDMIEBHOStubVtbl,
     0
 };
 
 PCInterfaceName const _iecooks_InterfaceNamesList[] = 
 {
     "IFDMIEStat",
-    "IFDMIECookiesBHO",
+    "IFDMIEBHO",
     0
 };
 

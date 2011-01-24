@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */      
 
 #include "stdafx.h"
@@ -149,6 +149,11 @@ void CUpdateDlg::_UpdateMgrEvents(fsUpdateMgrEvent ev, LPVOID lp)
 			char szErr [1000];
 			fsIRToStr (_UpdateMgr.m_dldr->GetLastError (), szErr, sizeof (szErr));
 			pThis->m_wndMsg.SetWindowText (szErr);
+			pThis->KillTimer (1);
+		break;
+
+		case UME_VERIFYSIGN_ERROR:
+			pThis->m_wndMsg.SetWindowText (LS (L_FILESIGNCHECK_FAILED));
 			pThis->KillTimer (1);
 		break;
 

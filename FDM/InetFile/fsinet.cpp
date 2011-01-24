@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #include "fsinet.h"
@@ -179,7 +179,7 @@ fsInternetResult fsHttpOpenPath (LPCSTR pszPath, fsHttpConnection *pServer, fsHt
 	{
 		if (ir == IR_NEEDREDIRECT) 
 		{
-			CHAR szUrl [10000];
+			fsString strUrl;
 			fsURL u;
 			BOOL bRelUrl = FALSE;
 
@@ -193,35 +193,35 @@ fsInternetResult fsHttpOpenPath (LPCSTR pszPath, fsHttpConnection *pServer, fsHt
 				if (*pFile->GetLastError () != '/' && *pFile->GetLastError () != '\\')
 				{
 					
-					strcpy (szUrl, pszPath);
-					int len = strlen (szUrl);
-					while (szUrl [len-1] != '/' && szUrl [len-1] != '\\')
+					strUrl = pszPath;
+					int len = strUrl.Length ();
+					while (strUrl [len-1] != '/' && strUrl [len-1] != '\\')
 						len--;
-					szUrl [len] = 0;
-					strcat (szUrl, pFile->GetLastError ());
+					strUrl [len] = 0;
+					strUrl += pFile->GetLastError ();
 					
 				}
 				else
 				{
-					strcpy (szUrl, pFile->GetLastError ());
+					strUrl = pFile->GetLastError ();
 				}
 
 				
 
 				
-				ir = fsHttpOpenPath (szUrl, pServer, pFile, ppRedirectedUrl, pbRedirInner);
+				ir = fsHttpOpenPath (strUrl, pServer, pFile, ppRedirectedUrl, pbRedirInner);
 			}
 			else
 			{
-				strcpy (szUrl, pFile->GetLastError ()); 
-				ir =  fsHttpOpenUrl (szUrl, NULL, NULL, pServer, pFile, ppRedirectedUrl, pbRedirInner); 
+				strUrl = pFile->GetLastError (); 
+				ir =  fsHttpOpenUrl (strUrl, NULL, NULL, pServer, pFile, ppRedirectedUrl, pbRedirInner); 
 			}
 
 			
 			if (*ppRedirectedUrl == NULL)
 			{
-				fsnew (*ppRedirectedUrl, CHAR, strlen (szUrl) + 1);
-				strcpy (*ppRedirectedUrl, szUrl);
+				fsnew (*ppRedirectedUrl, CHAR, strUrl.Length () + 1);
+				strcpy (*ppRedirectedUrl, strUrl);
 			}
 
 			
@@ -327,17 +327,28 @@ BOOL fsUrlToFullUrl (LPCSTR pszUrlParent, LPCSTR pszUrlCurrent, LPSTR *ppszFullU
 
 							i += 2; 
 						}
+						else
+						{
+							
+							(*ppszFullUrl) [pos++] = pszUrlCurrent [i];
+						}
 					}
 					
 					else if (pszUrlCurrent [i+1] == '\\' || pszUrlCurrent [i+1] == '/') 
+					{
 						i += 1; 
+					}
 					else
+					{
 						
 						(*ppszFullUrl) [pos++] = pszUrlCurrent [i];
+					}
 				}
 				else
+				{
 					
 					(*ppszFullUrl) [pos++] = pszUrlCurrent [i];
+				}
 			}
 
 			

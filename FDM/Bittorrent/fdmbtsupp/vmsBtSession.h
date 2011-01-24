@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -126,4 +126,5 @@ public:
 	virtual UINT64 get_TotalUploadedByteCount () = NULL;
 	virtual void SetUserAgent (LPCSTR pszUA) = NULL;
 	virtual void SetMaxHalfOpenConnections (int limit) = NULL;
+	virtual void SetMaxConnections (int limit) = NULL;
 };

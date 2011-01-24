@@ -2,9 +2,9 @@
 
 
 /* File created by MIDL compiler version 5.01.0164 */
-/* at Thu Jan 01 15:33:59 2009
+/* at Wed Apr 28 23:25:34 2010
  */
-/* Compiler settings for D:\VCW\FDM\FDM\Fdm.idl:
+/* Compiler settings for D:\VCW\FDM\FDM.851\Fdm.idl:
     Os (OptLev=s), W1, Zp8, env=Win32, ms_ext, c_ext
     error checks: allocation ref bounds_check enum stub_data 
 */
@@ -25,8 +25,8 @@
 
 #include "Fdm.h"
 
-#define TYPE_FORMAT_STRING_SIZE   99                                
-#define PROC_FORMAT_STRING_SIZE   63                                
+#define TYPE_FORMAT_STRING_SIZE   121                               
+#define PROC_FORMAT_STRING_SIZE   75                                
 
 typedef struct _MIDL_TYPE_FORMAT_STRING
     {
@@ -5168,6 +5168,288 @@ CInterfaceStubVtbl _IWGUrlListReceiverStubVtbl =
 };
 
 
+/* Object interface: IFdmFlvDownload, ver. 0.0,
+   GUID={0xE66B63B0,0x49F8,0x47E3,{0xA9,0xBA,0x79,0x92,0x87,0xB5,0x9E,0x87}} */
+
+
+extern const MIDL_STUB_DESC Object_StubDesc;
+
+
+#pragma code_seg(".orpc")
+
+/* [helpstring][id][propget] */ HRESULT STDMETHODCALLTYPE IFdmFlvDownload_get_Url_Proxy( 
+    IFdmFlvDownload __RPC_FAR * This,
+    /* [retval][out] */ IWGUrlReceiver __RPC_FAR *__RPC_FAR *pVal)
+{
+
+    HRESULT _RetVal;
+    
+    RPC_MESSAGE _RpcMessage;
+    
+    MIDL_STUB_MESSAGE _StubMsg;
+    
+    if(pVal)
+        {
+        MIDL_memset(
+               pVal,
+               0,
+               sizeof( IWGUrlReceiver __RPC_FAR *__RPC_FAR * ));
+        }
+    RpcTryExcept
+        {
+        NdrProxyInitialize(
+                      ( void __RPC_FAR *  )This,
+                      ( PRPC_MESSAGE  )&_RpcMessage,
+                      ( PMIDL_STUB_MESSAGE  )&_StubMsg,
+                      ( PMIDL_STUB_DESC  )&Object_StubDesc,
+                      7);
+        
+        
+        
+        if(!pVal)
+            {
+            RpcRaiseException(RPC_X_NULL_REF_POINTER);
+            }
+        RpcTryFinally
+            {
+            
+            _StubMsg.BufferLength = 0U;
+            NdrProxyGetBuffer(This, &_StubMsg);
+            NdrProxySendReceive(This, &_StubMsg);
+            
+            if ( (_RpcMessage.DataRepresentation & 0X0000FFFFUL) != NDR_LOCAL_DATA_REPRESENTATION )
+                NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[30] );
+            
+            NdrPointerUnmarshall( (PMIDL_STUB_MESSAGE) &_StubMsg,
+                                  (unsigned char __RPC_FAR * __RPC_FAR *)&pVal,
+                                  (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[76],
+                                  (unsigned char)0 );
+            
+            _StubMsg.Buffer = (unsigned char __RPC_FAR *)(((long)_StubMsg.Buffer + 3) & ~ 0x3);
+            _RetVal = *(( HRESULT __RPC_FAR * )_StubMsg.Buffer)++;
+            
+            }
+        RpcFinally
+            {
+            NdrProxyFreeBuffer(This, &_StubMsg);
+            
+            }
+        RpcEndFinally
+        
+        }
+    RpcExcept(_StubMsg.dwStubPhase != PROXY_SENDRECEIVE)
+        {
+        NdrClearOutParameters(
+                         ( PMIDL_STUB_MESSAGE  )&_StubMsg,
+                         ( PFORMAT_STRING  )&__MIDL_TypeFormatString.Format[76],
+                         ( void __RPC_FAR * )pVal);
+        _RetVal = NdrProxyErrorHandler(RpcExceptionCode());
+        }
+    RpcEndExcept
+    return _RetVal;
+}
+
+void __RPC_STUB IFdmFlvDownload_get_Url_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase)
+{
+    IWGUrlReceiver __RPC_FAR *_M20;
+    HRESULT _RetVal;
+    MIDL_STUB_MESSAGE _StubMsg;
+    IWGUrlReceiver __RPC_FAR *__RPC_FAR *pVal;
+    
+NdrStubInitialize(
+                     _pRpcMessage,
+                     &_StubMsg,
+                     &Object_StubDesc,
+                     _pRpcChannelBuffer);
+    ( IWGUrlReceiver __RPC_FAR *__RPC_FAR * )pVal = 0;
+    RpcTryFinally
+        {
+        pVal = &_M20;
+        _M20 = 0;
+        
+        *_pdwStubPhase = STUB_CALL_SERVER;
+        _RetVal = (((IFdmFlvDownload*) ((CStdStubBuffer *)This)->pvServerObject)->lpVtbl) -> get_Url((IFdmFlvDownload *) ((CStdStubBuffer *)This)->pvServerObject,pVal);
+        
+        *_pdwStubPhase = STUB_MARSHAL;
+        
+        _StubMsg.BufferLength = 0U + 4U;
+        NdrPointerBufferSize( (PMIDL_STUB_MESSAGE) &_StubMsg,
+                              (unsigned char __RPC_FAR *)pVal,
+                              (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[76] );
+        
+        _StubMsg.BufferLength += 16;
+        
+        NdrStubGetBuffer(This, _pRpcChannelBuffer, &_StubMsg);
+        NdrPointerMarshall( (PMIDL_STUB_MESSAGE)& _StubMsg,
+                            (unsigned char __RPC_FAR *)pVal,
+                            (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[76] );
+        
+        _StubMsg.Buffer = (unsigned char __RPC_FAR *)(((long)_StubMsg.Buffer + 3) & ~ 0x3);
+        *(( HRESULT __RPC_FAR * )_StubMsg.Buffer)++ = _RetVal;
+        
+        }
+    RpcFinally
+        {
+        NdrPointerFree( &_StubMsg,
+                        (unsigned char __RPC_FAR *)pVal,
+                        &__MIDL_TypeFormatString.Format[76] );
+        
+        }
+    RpcEndFinally
+    _pRpcMessage->BufferLength = 
+        (unsigned int)((long)_StubMsg.Buffer - (long)_pRpcMessage->Buffer);
+    
+}
+
+
+/* [helpstring][id][propput] */ HRESULT STDMETHODCALLTYPE IFdmFlvDownload_put_Url_Proxy( 
+    IFdmFlvDownload __RPC_FAR * This,
+    /* [in] */ IWGUrlReceiver __RPC_FAR *newVal)
+{
+
+    HRESULT _RetVal;
+    
+    RPC_MESSAGE _RpcMessage;
+    
+    MIDL_STUB_MESSAGE _StubMsg;
+    
+    RpcTryExcept
+        {
+        NdrProxyInitialize(
+                      ( void __RPC_FAR *  )This,
+                      ( PRPC_MESSAGE  )&_RpcMessage,
+                      ( PMIDL_STUB_MESSAGE  )&_StubMsg,
+                      ( PMIDL_STUB_DESC  )&Object_StubDesc,
+                      8);
+        
+        
+        
+        RpcTryFinally
+            {
+            
+            _StubMsg.BufferLength = 0U;
+            NdrInterfacePointerBufferSize( (PMIDL_STUB_MESSAGE) &_StubMsg,
+                                           (unsigned char __RPC_FAR *)newVal,
+                                           (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[80] );
+            
+            NdrProxyGetBuffer(This, &_StubMsg);
+            NdrInterfacePointerMarshall( (PMIDL_STUB_MESSAGE)& _StubMsg,
+                                         (unsigned char __RPC_FAR *)newVal,
+                                         (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[80] );
+            
+            NdrProxySendReceive(This, &_StubMsg);
+            
+            if ( (_RpcMessage.DataRepresentation & 0X0000FFFFUL) != NDR_LOCAL_DATA_REPRESENTATION )
+                NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[36] );
+            
+            _RetVal = *(( HRESULT __RPC_FAR * )_StubMsg.Buffer)++;
+            
+            }
+        RpcFinally
+            {
+            NdrProxyFreeBuffer(This, &_StubMsg);
+            
+            }
+        RpcEndFinally
+        
+        }
+    RpcExcept(_StubMsg.dwStubPhase != PROXY_SENDRECEIVE)
+        {
+        _RetVal = NdrProxyErrorHandler(RpcExceptionCode());
+        }
+    RpcEndExcept
+    return _RetVal;
+}
+
+void __RPC_STUB IFdmFlvDownload_put_Url_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase)
+{
+    HRESULT _RetVal;
+    MIDL_STUB_MESSAGE _StubMsg;
+    IWGUrlReceiver __RPC_FAR *newVal;
+    
+NdrStubInitialize(
+                     _pRpcMessage,
+                     &_StubMsg,
+                     &Object_StubDesc,
+                     _pRpcChannelBuffer);
+    newVal = 0;
+    RpcTryFinally
+        {
+        if ( (_pRpcMessage->DataRepresentation & 0X0000FFFFUL) != NDR_LOCAL_DATA_REPRESENTATION )
+            NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[36] );
+        
+        NdrInterfacePointerUnmarshall( (PMIDL_STUB_MESSAGE) &_StubMsg,
+                                       (unsigned char __RPC_FAR * __RPC_FAR *)&newVal,
+                                       (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[80],
+                                       (unsigned char)0 );
+        
+        
+        *_pdwStubPhase = STUB_CALL_SERVER;
+        _RetVal = (((IFdmFlvDownload*) ((CStdStubBuffer *)This)->pvServerObject)->lpVtbl) -> put_Url((IFdmFlvDownload *) ((CStdStubBuffer *)This)->pvServerObject,newVal);
+        
+        *_pdwStubPhase = STUB_MARSHAL;
+        
+        _StubMsg.BufferLength = 4U;
+        NdrStubGetBuffer(This, _pRpcChannelBuffer, &_StubMsg);
+        *(( HRESULT __RPC_FAR * )_StubMsg.Buffer)++ = _RetVal;
+        
+        }
+    RpcFinally
+        {
+        NdrInterfacePointerFree( &_StubMsg,
+                                 (unsigned char __RPC_FAR *)newVal,
+                                 &__MIDL_TypeFormatString.Format[80] );
+        
+        }
+    RpcEndFinally
+    _pRpcMessage->BufferLength = 
+        (unsigned int)((long)_StubMsg.Buffer - (long)_pRpcMessage->Buffer);
+    
+}
+
+CINTERFACE_PROXY_VTABLE(9) _IFdmFlvDownloadProxyVtbl = 
+{
+    &IID_IFdmFlvDownload,
+    IUnknown_QueryInterface_Proxy,
+    IUnknown_AddRef_Proxy,
+    IUnknown_Release_Proxy ,
+    0 /* IDispatch_GetTypeInfoCount_Proxy */ ,
+    0 /* IDispatch_GetTypeInfo_Proxy */ ,
+    0 /* IDispatch_GetIDsOfNames_Proxy */ ,
+    0 /* IDispatch_Invoke_Proxy */ ,
+    IFdmFlvDownload_get_Url_Proxy ,
+    IFdmFlvDownload_put_Url_Proxy
+};
+
+
+static const PRPC_STUB_FUNCTION IFdmFlvDownload_table[] =
+{
+    STUB_FORWARDING_FUNCTION,
+    STUB_FORWARDING_FUNCTION,
+    STUB_FORWARDING_FUNCTION,
+    STUB_FORWARDING_FUNCTION,
+    IFdmFlvDownload_get_Url_Stub,
+    IFdmFlvDownload_put_Url_Stub
+};
+
+CInterfaceStubVtbl _IFdmFlvDownloadStubVtbl =
+{
+    &IID_IFdmFlvDownload,
+    0,
+    9,
+    &IFdmFlvDownload_table[-3],
+    CStdStubBuffer_DELEGATING_METHODS
+};
+
+
 /* Object interface: IFDM, ver. 0.0,
    GUID={0xF8FA5B48,0xB7A2,0x4BC6,{0x83,0x89,0x95,0x87,0x64,0x3A,0x46,0x60}} */
 
@@ -5392,7 +5674,7 @@ void __RPC_STUB IFDMDownload_get_Url_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase)
 {
-    BSTR _M20;
+    BSTR _M21;
     HRESULT _RetVal;
     MIDL_STUB_MESSAGE _StubMsg;
     BSTR __RPC_FAR *pVal;
@@ -5405,7 +5687,7 @@ NdrStubInitialize(
     ( BSTR __RPC_FAR * )pVal = 0;
     RpcTryFinally
         {
-        pVal = &_M20;
+        pVal = &_M21;
         MIDL_memset(
                pVal,
                0,
@@ -5605,7 +5887,7 @@ NdrStubInitialize(
             NdrProxySendReceive(This, &_StubMsg);
             
             if ( (_RpcMessage.DataRepresentation & 0X0000FFFFUL) != NDR_LOCAL_DATA_REPRESENTATION )
-                NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[30] );
+                NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[42] );
             
             NdrUserMarshalUnmarshall( (PMIDL_STUB_MESSAGE) &_StubMsg,
                                       (unsigned char __RPC_FAR * __RPC_FAR *)&pVal,
@@ -5642,7 +5924,7 @@ void __RPC_STUB IFDMDownload_get_DownloadText_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase)
 {
-    BSTR _M21;
+    BSTR _M22;
     HRESULT _RetVal;
     MIDL_STUB_MESSAGE _StubMsg;
     long nTextIndex;
@@ -5657,11 +5939,11 @@ NdrStubInitialize(
     RpcTryFinally
         {
         if ( (_pRpcMessage->DataRepresentation & 0X0000FFFFUL) != NDR_LOCAL_DATA_REPRESENTATION )
-            NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[30] );
+            NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[42] );
         
         nTextIndex = *(( long __RPC_FAR * )_StubMsg.Buffer)++;
         
-        pVal = &_M21;
+        pVal = &_M22;
         MIDL_memset(
                pVal,
                0,
@@ -5817,7 +6099,7 @@ void __RPC_STUB IFDMDownloadsStat_get_DownloadCount_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase)
 {
-    long _M22;
+    long _M23;
     HRESULT _RetVal;
     MIDL_STUB_MESSAGE _StubMsg;
     long __RPC_FAR *pVal;
@@ -5830,7 +6112,7 @@ NdrStubInitialize(
     ( long __RPC_FAR * )pVal = 0;
     RpcTryFinally
         {
-        pVal = &_M22;
+        pVal = &_M23;
         
         *_pdwStubPhase = STUB_CALL_SERVER;
         _RetVal = (((IFDMDownloadsStat*) ((CStdStubBuffer *)This)->pvServerObject)->lpVtbl) -> get_DownloadCount((IFDMDownloadsStat *) ((CStdStubBuffer *)This)->pvServerObject,pVal);
@@ -5898,11 +6180,11 @@ NdrStubInitialize(
             NdrProxySendReceive(This, &_StubMsg);
             
             if ( (_RpcMessage.DataRepresentation & 0X0000FFFFUL) != NDR_LOCAL_DATA_REPRESENTATION )
-                NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[38] );
+                NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[50] );
             
             NdrPointerUnmarshall( (PMIDL_STUB_MESSAGE) &_StubMsg,
                                   (unsigned char __RPC_FAR * __RPC_FAR *)&pVal,
-                                  (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[76],
+                                  (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[98],
                                   (unsigned char)0 );
             
             _StubMsg.Buffer = (unsigned char __RPC_FAR *)(((long)_StubMsg.Buffer + 3) & ~ 0x3);
@@ -5921,7 +6203,7 @@ NdrStubInitialize(
         {
         NdrClearOutParameters(
                          ( PMIDL_STUB_MESSAGE  )&_StubMsg,
-                         ( PFORMAT_STRING  )&__MIDL_TypeFormatString.Format[76],
+                         ( PFORMAT_STRING  )&__MIDL_TypeFormatString.Format[98],
                          ( void __RPC_FAR * )pVal);
         _RetVal = NdrProxyErrorHandler(RpcExceptionCode());
         }
@@ -5935,7 +6217,7 @@ void __RPC_STUB IFDMDownloadsStat_get_Download_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase)
 {
-    IFDMDownload __RPC_FAR *_M23;
+    IFDMDownload __RPC_FAR *_M24;
     HRESULT _RetVal;
     MIDL_STUB_MESSAGE _StubMsg;
     long nIndex;
@@ -5950,12 +6232,12 @@ NdrStubInitialize(
     RpcTryFinally
         {
         if ( (_pRpcMessage->DataRepresentation & 0X0000FFFFUL) != NDR_LOCAL_DATA_REPRESENTATION )
-            NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[38] );
+            NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[50] );
         
         nIndex = *(( long __RPC_FAR * )_StubMsg.Buffer)++;
         
-        pVal = &_M23;
-        _M23 = 0;
+        pVal = &_M24;
+        _M24 = 0;
         
         *_pdwStubPhase = STUB_CALL_SERVER;
         _RetVal = (((IFDMDownloadsStat*) ((CStdStubBuffer *)This)->pvServerObject)->lpVtbl) -> get_Download(
@@ -5968,14 +6250,14 @@ NdrStubInitialize(
         _StubMsg.BufferLength = 0U + 4U;
         NdrPointerBufferSize( (PMIDL_STUB_MESSAGE) &_StubMsg,
                               (unsigned char __RPC_FAR *)pVal,
-                              (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[76] );
+                              (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[98] );
         
         _StubMsg.BufferLength += 16;
         
         NdrStubGetBuffer(This, _pRpcChannelBuffer, &_StubMsg);
         NdrPointerMarshall( (PMIDL_STUB_MESSAGE)& _StubMsg,
                             (unsigned char __RPC_FAR *)pVal,
-                            (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[76] );
+                            (PFORMAT_STRING) &__MIDL_TypeFormatString.Format[98] );
         
         _StubMsg.Buffer = (unsigned char __RPC_FAR *)(((long)_StubMsg.Buffer + 3) & ~ 0x3);
         *(( HRESULT __RPC_FAR * )_StubMsg.Buffer)++ = _RetVal;
@@ -5985,7 +6267,7 @@ NdrStubInitialize(
         {
         NdrPointerFree( &_StubMsg,
                         (unsigned char __RPC_FAR *)pVal,
-                        &__MIDL_TypeFormatString.Format[76] );
+                        &__MIDL_TypeFormatString.Format[98] );
         
         }
     RpcEndFinally
@@ -6030,7 +6312,7 @@ NdrStubInitialize(
             NdrProxySendReceive(This, &_StubMsg);
             
             if ( (_RpcMessage.DataRepresentation & 0X0000FFFFUL) != NDR_LOCAL_DATA_REPRESENTATION )
-                NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[46] );
+                NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[58] );
             
             _RetVal = *(( HRESULT __RPC_FAR * )_StubMsg.Buffer)++;
             
@@ -6070,7 +6352,7 @@ NdrStubInitialize(
     RpcTryFinally
         {
         if ( (_pRpcMessage->DataRepresentation & 0X0000FFFFUL) != NDR_LOCAL_DATA_REPRESENTATION )
-            NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[46] );
+            NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[58] );
         
         bIncludeCompleted = *(( BOOL __RPC_FAR * )_StubMsg.Buffer)++;
         
@@ -6327,7 +6609,7 @@ void __RPC_STUB IFdmTorrentFilesRcvr_get_ForceSilent_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase)
 {
-    BOOL _M24;
+    BOOL _M25;
     HRESULT _RetVal;
     MIDL_STUB_MESSAGE _StubMsg;
     BOOL __RPC_FAR *pVal;
@@ -6340,7 +6622,7 @@ NdrStubInitialize(
     ( BOOL __RPC_FAR * )pVal = 0;
     RpcTryFinally
         {
-        pVal = &_M24;
+        pVal = &_M25;
         
         *_pdwStubPhase = STUB_CALL_SERVER;
         _RetVal = (((IFdmTorrentFilesRcvr*) ((CStdStubBuffer *)This)->pvServerObject)->lpVtbl) -> get_ForceSilent((IFdmTorrentFilesRcvr *) ((CStdStubBuffer *)This)->pvServerObject,pVal);
@@ -6662,7 +6944,7 @@ NdrStubInitialize(
             NdrProxySendReceive(This, &_StubMsg);
             
             if ( (_RpcMessage.DataRepresentation & 0X0000FFFFUL) != NDR_LOCAL_DATA_REPRESENTATION )
-                NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[52] );
+                NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[64] );
             
             _RetVal = *(( HRESULT __RPC_FAR * )_StubMsg.Buffer)++;
             
@@ -6714,7 +6996,7 @@ NdrStubInitialize(
     RpcTryFinally
         {
         if ( (_pRpcMessage->DataRepresentation & 0X0000FFFFUL) != NDR_LOCAL_DATA_REPRESENTATION )
-            NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[52] );
+            NdrConvert( (PMIDL_STUB_MESSAGE) &_StubMsg, (PFORMAT_STRING) &__MIDL_ProcFormatString.Format[64] );
         
         NdrUserMarshalUnmarshall( (PMIDL_STUB_MESSAGE) &_StubMsg,
                                   (unsigned char __RPC_FAR * __RPC_FAR *)&_p_bstrHost,
@@ -7011,53 +7293,73 @@ static const MIDL_PROC_FORMAT_STRING __MIDL_ProcFormatString =
 /* 26 */	NdrFcShort( 0x3a ),	/* Type Offset=58 */
 /* 28 */	0x53,		/* FC_RETURN_PARAM_BASETYPE */
 			0x8,		/* FC_LONG */
-/* 30 */	0x4e,		/* FC_IN_PARAM_BASETYPE */
-			0x8,		/* FC_LONG */
-/* 32 */	
+/* 30 */	
 			0x51,		/* FC_OUT_PARAM */
 #ifndef _ALPHA_
 			0x1,		/* x86, MIPS & PPC Stack size = 1 */
 #else
 			0x2,		/* Alpha Stack size = 2 */
 #endif
-/* 34 */	NdrFcShort( 0x2 ),	/* Type Offset=2 */
-/* 36 */	0x53,		/* FC_RETURN_PARAM_BASETYPE */
+/* 32 */	NdrFcShort( 0x4c ),	/* Type Offset=76 */
+/* 34 */	0x53,		/* FC_RETURN_PARAM_BASETYPE */
 			0x8,		/* FC_LONG */
-/* 38 */	0x4e,		/* FC_IN_PARAM_BASETYPE */
+/* 36 */	
+			0x4d,		/* FC_IN_PARAM */
+#ifndef _ALPHA_
+			0x1,		/* x86, MIPS & PPC Stack size = 1 */
+#else
+			0x2,		/* Alpha Stack size = 2 */
+#endif
+/* 38 */	NdrFcShort( 0x50 ),	/* Type Offset=80 */
+/* 40 */	0x53,		/* FC_RETURN_PARAM_BASETYPE */
 			0x8,		/* FC_LONG */
-/* 40 */	
+/* 42 */	0x4e,		/* FC_IN_PARAM_BASETYPE */
+			0x8,		/* FC_LONG */
+/* 44 */	
 			0x51,		/* FC_OUT_PARAM */
 #ifndef _ALPHA_
 			0x1,		/* x86, MIPS & PPC Stack size = 1 */
 #else
 			0x2,		/* Alpha Stack size = 2 */
 #endif
-/* 42 */	NdrFcShort( 0x4c ),	/* Type Offset=76 */
-/* 44 */	0x53,		/* FC_RETURN_PARAM_BASETYPE */
+/* 46 */	NdrFcShort( 0x2 ),	/* Type Offset=2 */
+/* 48 */	0x53,		/* FC_RETURN_PARAM_BASETYPE */
 			0x8,		/* FC_LONG */
-/* 46 */	0x4e,		/* FC_IN_PARAM_BASETYPE */
-			0x8,		/* FC_LONG */
-/* 48 */	0x4e,		/* FC_IN_PARAM_BASETYPE */
-			0x8,		/* FC_LONG */
-/* 50 */	0x53,		/* FC_RETURN_PARAM_BASETYPE */
+/* 50 */	0x4e,		/* FC_IN_PARAM_BASETYPE */
 			0x8,		/* FC_LONG */
 /* 52 */	
+			0x51,		/* FC_OUT_PARAM */
+#ifndef _ALPHA_
+			0x1,		/* x86, MIPS & PPC Stack size = 1 */
+#else
+			0x2,		/* Alpha Stack size = 2 */
+#endif
+/* 54 */	NdrFcShort( 0x62 ),	/* Type Offset=98 */
+/* 56 */	0x53,		/* FC_RETURN_PARAM_BASETYPE */
+			0x8,		/* FC_LONG */
+/* 58 */	0x4e,		/* FC_IN_PARAM_BASETYPE */
+			0x8,		/* FC_LONG */
+/* 60 */	0x4e,		/* FC_IN_PARAM_BASETYPE */
+			0x8,		/* FC_LONG */
+/* 62 */	0x53,		/* FC_RETURN_PARAM_BASETYPE */
+			0x8,		/* FC_LONG */
+/* 64 */	
 			0x4d,		/* FC_IN_PARAM */
 #ifndef _ALPHA_
 			0x1,		/* x86, MIPS & PPC Stack size = 1 */
 #else
 			0x2,		/* Alpha Stack size = 2 */
 #endif
-/* 54 */	NdrFcShort( 0x2c ),	/* Type Offset=44 */
-/* 56 */	
+/* 66 */	NdrFcShort( 0x2c ),	/* Type Offset=44 */
+/* 68 */	
 			0x4d,		/* FC_IN_PARAM */
 #ifndef _ALPHA_
 			0x1,		/* x86, MIPS & PPC Stack size = 1 */
 #else
 			0x2,		/* Alpha Stack size = 2 */
 #endif
-/* 58 */	NdrFcShort( 0x2c ),	/* Type Offset=44 */
-/* 60 */	0x53,		/* FC_RETURN_PARAM_BASETYPE */
+/* 70 */	NdrFcShort( 0x2c ),	/* Type Offset=44 */
+/* 72 */	0x53,		/* FC_RETURN_PARAM_BASETYPE */
 			0x8,		/* FC_LONG */
 
 			0x0
@@ -7132,16 +7434,33 @@ static const MIDL_TYPE_FORMAT_STRING __MIDL_TypeFormatString =
 /* 80 */	
 			0x2f,		/* FC_IP */
 			0x5a,		/* FC_CONSTANT_IID */
-/* 82 */	NdrFcLong( 0x8f2b3016 ),	/* -1892995050 */
-/* 86 */	NdrFcShort( 0x17d4 ),	/* 6100 */
-/* 88 */	NdrFcShort( 0x447a ),	/* 17530 */
-/* 90 */	0xb2,		/* 178 */
+/* 82 */	NdrFcLong( 0x454a4044 ),	/* 1162494020 */
+/* 86 */	NdrFcShort( 0x16ec ),	/* 5868 */
+/* 88 */	NdrFcShort( 0x4d64 ),	/* 19812 */
+/* 90 */	0x90,		/* 144 */
+			0x69,		/* 105 */
+/* 92 */	0xc5,		/* 197 */
+			0xb8,		/* 184 */
+/* 94 */	0x83,		/* 131 */
+			0x2b,		/* 43 */
+/* 96 */	0x7b,		/* 123 */
+			0x55,		/* 85 */
+/* 98 */	
+			0x11, 0x14,	/* FC_RP [alloced_on_stack] */
+/* 100 */	NdrFcShort( 0x2 ),	/* Offset= 2 (102) */
+/* 102 */	
+			0x2f,		/* FC_IP */
+			0x5a,		/* FC_CONSTANT_IID */
+/* 104 */	NdrFcLong( 0x8f2b3016 ),	/* -1892995050 */
+/* 108 */	NdrFcShort( 0x17d4 ),	/* 6100 */
+/* 110 */	NdrFcShort( 0x447a ),	/* 17530 */
+/* 112 */	0xb2,		/* 178 */
 			0x7,		/* 7 */
-/* 92 */	0xff,		/* 255 */
+/* 114 */	0xff,		/* 255 */
 			0xa8,		/* 168 */
-/* 94 */	0x95,		/* 149 */
+/* 116 */	0x95,		/* 149 */
 			0x7a,		/* 122 */
-/* 96 */	0x83,		/* 131 */
+/* 118 */	0x83,		/* 131 */
 			0x4a,		/* 74 */
 
 			0x0
@@ -7157,6 +7476,7 @@ const CInterfaceProxyVtbl * _Fdm_ProxyVtblList[] =
     ( CInterfaceProxyVtbl *) &_IWGUrlListReceiverProxyVtbl,
     ( CInterfaceProxyVtbl *) &_IFdmTorrentFilesRcvrProxyVtbl,
     ( CInterfaceProxyVtbl *) &_IFDMDownloadsStatProxyVtbl,
+    ( CInterfaceProxyVtbl *) &_IFdmFlvDownloadProxyVtbl,
     0
 };
 
@@ -7169,6 +7489,7 @@ const CInterfaceStubVtbl * _Fdm_StubVtblList[] =
     ( CInterfaceStubVtbl *) &_IWGUrlListReceiverStubVtbl,
     ( CInterfaceStubVtbl *) &_IFdmTorrentFilesRcvrStubVtbl,
     ( CInterfaceStubVtbl *) &_IFDMDownloadsStatStubVtbl,
+    ( CInterfaceStubVtbl *) &_IFdmFlvDownloadStubVtbl,
     0
 };
 
@@ -7181,11 +7502,13 @@ PCInterfaceName const _Fdm_InterfaceNamesList[] =
     "IWGUrlListReceiver",
     "IFdmTorrentFilesRcvr",
     "IFDMDownloadsStat",
+    "IFdmFlvDownload",
     0
 };
 
 const IID *  _Fdm_BaseIIDList[] = 
 {
+    &IID_IDispatch,
     &IID_IDispatch,
     &IID_IDispatch,
     &IID_IDispatch,
@@ -7203,10 +7526,10 @@ int __stdcall _Fdm_IID_Lookup( const IID * pIID, int * pIndex )
 {
     IID_BS_LOOKUP_SETUP
 
-    IID_BS_LOOKUP_INITIAL_TEST( _Fdm, 7, 4 )
+    IID_BS_LOOKUP_INITIAL_TEST( _Fdm, 8, 4 )
     IID_BS_LOOKUP_NEXT_TEST( _Fdm, 2 )
     IID_BS_LOOKUP_NEXT_TEST( _Fdm, 1 )
-    IID_BS_LOOKUP_RETURN_RESULT( _Fdm, 7, *pIndex )
+    IID_BS_LOOKUP_RETURN_RESULT( _Fdm, 8, *pIndex )
     
 }
 
@@ -7217,7 +7540,7 @@ const ExtendedProxyFileInfo Fdm_ProxyFileInfo =
     (const PCInterfaceName * ) & _Fdm_InterfaceNamesList,
     (const IID ** ) & _Fdm_BaseIIDList,
     & _Fdm_IID_Lookup, 
-    7,
+    8,
     1,
     0, /* table of [async_uuid] interfaces */
     0, /* Filler1 */

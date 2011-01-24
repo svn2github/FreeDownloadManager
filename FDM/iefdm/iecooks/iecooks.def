@@ -1,6 +1,6 @@
 ; iecooks.def : Declares the module parameters.
 
-LIBRARY      "iefdmcks.DLL"
+LIBRARY      "iefdm2.DLL"
 
 EXPORTS
 	DllCanUnloadNow     @1 PRIVATE

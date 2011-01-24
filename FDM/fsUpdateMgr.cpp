@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #include "stdafx.h"
@@ -7,6 +7,7 @@
 #include "fsUpdateMgr.h"
 #include "MainFrm.h"
 #include "mfchelp.h"
+#include "vmsSecurity.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -149,9 +150,23 @@ DWORD fsUpdateMgr::_DownloadMgrEvents(fsDownloadMgr* pMgr, fsDownloaderEvent ev,
 					}
 					else
 					{
-						pThis->m_strUpdateFile = pThis->m_dldr->GetDP ()->pszFileName;
-						pThis->Event (UME_UPDATEDONE);
-						pThis->m_bRunning = FALSE;
+						CString strKeyFile = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
+						strKeyFile += "sigkey.dat";
+						if (GetFileAttributes (strKeyFile) == DWORD (-1))
+							strKeyFile = fsGetProgramFilePath ("sigkey.dat");
+						if (false == vmsSecurity::VerifySign (pThis->m_dldr->GetDP ()->pszFileName, strKeyFile))
+						{
+							DeleteFile (pThis->m_dldr->GetDP ()->pszFileName);
+							pThis->Event (UME_VERIFYSIGN_ERROR);
+							pThis->m_bRunning = FALSE;
+						}
+						else
+						{
+							pThis->m_strUpdateFile = pThis->m_dldr->GetDP ()->pszFileName;
+							pThis->Event (UME_UPDATEDONE);
+							pThis->m_bRunning = FALSE;
+						}
+						
 					}
 				}
 				else

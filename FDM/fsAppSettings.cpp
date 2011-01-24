@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #include "stdafx.h"
@@ -758,14 +758,14 @@ void fsAppSettings::View_ReadWndPlacement(CWnd *pWnd, LPCSTR pszName, BOOL bInit
 		if (wp->rcNormalPosition.left >= cx || wp->rcNormalPosition.right <= 0)
 		{
 			wp->rcNormalPosition.left = cx / 2;
-			wp->rcNormalPosition.right = cx / 2 + 40;
+			wp->rcNormalPosition.right = wp->rcNormalPosition.left + 40;
 
 			
 		}
 		if (wp->rcNormalPosition.top >= cy || wp->rcNormalPosition.bottom <= 0)
 		{
 			wp->rcNormalPosition.top = cy / 2;
-			wp->rcNormalPosition.bottom = cy / 2 + 40;
+			wp->rcNormalPosition.bottom = wp->rcNormalPosition.top + 40;
 
 			
 		}
@@ -1308,11 +1308,13 @@ BOOL fsAppSettings::Monitor_IEMenu_DLThis()
 void fsAppSettings::Monitor_IEMenu_DLThis(BOOL b)
 {
 	m_stgs.WriteProfileInt (_T ("Settings\\Monitor\\IEMenu"), _T ("DLThis"), b);
+	ApplySettingsToMutexes ();
 }
 
 void fsAppSettings::Monitor_IEMenu_DLPage(BOOL b)
 {
 	m_stgs.WriteProfileInt (_T ("Settings\\Monitor\\IEMenu"), _T ("DLPage"), b);
+	ApplySettingsToMutexes ();
 }
 
 BOOL fsAppSettings::Monitor_IEMenu_DLPage()
@@ -1323,6 +1325,7 @@ BOOL fsAppSettings::Monitor_IEMenu_DLPage()
 void fsAppSettings::Monitor_IEMenu_DLAll(BOOL b)
 {
 	m_stgs.WriteProfileInt (_T ("Settings\\Monitor\\IEMenu"), _T ("DLAll"), b);
+	ApplySettingsToMutexes ();
 }
 
 BOOL fsAppSettings::Monitor_IEMenu_DLAll()
@@ -1333,6 +1336,7 @@ BOOL fsAppSettings::Monitor_IEMenu_DLAll()
 void fsAppSettings::Monitor_IEMenu_DLSelected(BOOL b)
 {
 	m_stgs.WriteProfileInt (_T ("Settings\\Monitor\\IEMenu"), _T ("DLSelected"), b);
+	ApplySettingsToMutexes ();
 }
 
 BOOL fsAppSettings::Monitor_IEMenu_DLSelected()
@@ -2433,6 +2437,7 @@ BOOL fsAppSettings::Monitor_IEMenu_Enable()
 void fsAppSettings::Monitor_IEMenu_Enable(BOOL b)
 {
 	m_stgs.WriteProfileInt (_T ("Settings\\Monitor\\IEMenu"), _T ("Enable"), b);
+	ApplySettingsToMutexes ();
 }
 
 DWORD fsAppSettings::DNPFlags()
@@ -2837,6 +2842,7 @@ BOOL fsAppSettings::Monitor_IEMenu_DLFlashVideo()
 void fsAppSettings::Monitor_IEMenu_DLFlashVideo(BOOL b)
 {
 	m_stgs.WriteProfileInt (_T ("Settings\\Monitor\\IEMenu"), _T ("DLFlashVideo"), b);
+	ApplySettingsToMutexes ();
 }
 
 void fsAppSettings::WriteTranslatedStringToRegistry(LPCSTR pszStringId, LPCSTR pszString)
@@ -3161,4 +3167,256 @@ DWORD fsAppSettings::DldsMgrPDTimeLimit()
 void fsAppSettings::DldsMgrPDTimeLimit(DWORD dw)
 {
 	m_stgs.WriteProfileInt (_T ("Settings"), _T ("DldsMgrPDTimeLimit"), dw);
+}
+
+void fsAppSettings::ApplySettingsToMutexes()
+{
+	if (IS_PORTABLE_MODE == FALSE)
+		return;
+
+	
+	static HANDLE _hmxDisableBrMenu = NULL;
+	if (Monitor_IEMenu_Enable () == FALSE)
+	{
+		if (_hmxDisableBrMenu == NULL)
+			_hmxDisableBrMenu = CreateMutex (NULL, FALSE, "mx::fdm: brmenu_disable");
+	}
+	else if (_hmxDisableBrMenu)
+	{
+		CloseHandle (_hmxDisableBrMenu);
+		_hmxDisableBrMenu = NULL;
+	}
+
+	
+	static HANDLE _hmxDisableDlLink = NULL;
+	if (Monitor_IEMenu_DLThis () == FALSE)
+	{
+		if (_hmxDisableDlLink == NULL)
+			_hmxDisableDlLink = CreateMutex (NULL, FALSE, "mx::fdm: dllink_disable");
+	}
+	else if (_hmxDisableDlLink)
+	{
+		CloseHandle (_hmxDisableDlLink);
+		_hmxDisableDlLink = NULL;
+	}  
+
+	static HANDLE _hmxDisableDlAll = NULL;
+	if (Monitor_IEMenu_DLAll () == FALSE)
+	{
+		if (_hmxDisableDlAll == NULL)
+			_hmxDisableDlAll = CreateMutex (NULL, FALSE, "mx::fdm: dlall_disable");
+	}
+	else if (_hmxDisableDlAll)
+	{
+		CloseHandle (_hmxDisableDlAll);
+		_hmxDisableDlAll = NULL;
+	}	  
+
+	static HANDLE _hmxDisableDlSelected = NULL;
+	if (Monitor_IEMenu_DLSelected () == FALSE)
+	{
+		if (_hmxDisableDlSelected == NULL)
+			_hmxDisableDlSelected = CreateMutex (NULL, FALSE, "mx::fdm: dlselected_disable");
+	}
+	else if (_hmxDisableDlSelected)
+	{
+		CloseHandle (_hmxDisableDlSelected);
+		_hmxDisableDlSelected = NULL;
+	}  
+
+	static HANDLE _hmxDisableDlVideo = NULL;
+	if (Monitor_IEMenu_DLFlashVideo () == FALSE)
+	{
+		if (_hmxDisableDlVideo == NULL)
+			_hmxDisableDlVideo = CreateMutex (NULL, FALSE, "mx::fdm: dlvideo_disable");
+	}
+	else if (_hmxDisableDlVideo)
+	{
+		CloseHandle (_hmxDisableDlVideo);
+		_hmxDisableDlVideo = NULL;
+	}
+}
+
+BOOL fsAppSettings::CheckIfDownloadIsMirror()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\General"), _T ("CheckIfDownloadIsMirror"), FALSE);
+}
+
+void fsAppSettings::CheckIfDownloadIsMirror(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\General"), _T ("CheckIfDownloadIsMirror"), b);
+}
+
+BOOL fsAppSettings::Notif_UseOnDoneWnds()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\Notifications"), _T ("UseOnDoneWnds"), TRUE);
+}
+
+void fsAppSettings::Notif_UseOnDoneWnds(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\Notifications"), _T ("UseOnDoneWnds"), b);
+}
+
+int fsAppSettings::Notif_OnDoneWnds_Timeout()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\Notifications"), _T ("OnDoneWnds_Timeout"), 0);
+}
+
+void fsAppSettings::Notif_OnDoneWnds_Timeout(int i)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\Notifications"), _T ("OnDoneWnds_Timeout"), i);
+}
+
+int fsAppSettings::StartCount()
+{
+	return m_stgs.GetProfileInt (_T (""), _T ("StartCount"), 0);
+}
+
+void fsAppSettings::StartCount(int i)
+{
+	m_stgs.WriteProfileInt (_T (""), _T ("StartCount"), i);
+}
+
+BOOL fsAppSettings::DontShowPiWindow()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\View"), _T ("DontShowPiWindow"), FALSE);
+}
+
+void fsAppSettings::DontShowPiWindow(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\View"), _T ("DontShowPiWindow"), b);
+}
+
+FILETIME fsAppSettings::LastTimePiWindowWasShown()
+{
+	BYTE *pb;
+	UINT sz;
+	FILETIME t;
+	ZeroMemory (&t, sizeof (t));
+	
+	if (m_stgs.GetProfileBinary (_T ("Settings\\View"), _T ("LastTimePiWindowWasShown"), &pb, &sz))
+	{
+		if (sz == sizeof (t))
+		{
+			CopyMemory (&t, pb, sizeof (t));
+			delete [] pb;
+		}
+	}
+	
+	return t;
+}
+
+void fsAppSettings::LastTimePiWindowWasShown(FILETIME *pft)
+{
+	m_stgs.WriteProfileBinary (_T ("Settings\\View"), _T ("LastTimePiWindowWasShown"),
+		(LPBYTE)pft, sizeof (FILETIME));
+}
+
+BOOL fsAppSettings::View_AvpWarnWasShown()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\View"), _T ("AvpWarnWasShown"), FALSE);
+}
+
+void fsAppSettings::View_AvpWarnWasShown(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\View"), _T ("AvpWarnWasShown"), b);
+}
+
+BOOL fsAppSettings::FlvMonitoring_Enable()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\FlvMonitoring"), _T ("Enable"), FALSE);
+}
+
+void fsAppSettings::FlvMonitoring_Enable(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\FlvMonitoring"), _T ("Enable"), b);
+}
+
+DWORD fsAppSettings::FlvMonitoring_ProcessList()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\FlvMonitoring"), _T ("ProcessList"), 0);
+}
+
+void fsAppSettings::FlvMonitoring_ProcessList(DWORD dw)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\FlvMonitoring"), _T ("ProcessList"), dw);
+}
+
+BOOL fsAppSettings::FlvMonitoring_ShowGetItButton()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\FlvMonitoring"), _T ("ShowGetItBtn"), TRUE);
+}
+
+void fsAppSettings::FlvMonitoring_ShowGetItButton(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\FlvMonitoring"), _T ("ShowGetItBtn"), b);
+}
+
+int fsAppSettings::Bittorrent_MaxConnections(int mode)
+{
+	ASSERT (mode >= 0 && mode <= 2); 
+	CString str; str.Format ("MaxConnections%d", mode);
+	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", str, -1);
+}
+
+void fsAppSettings::Bittorrent_MaxConnections(int mode, int max)
+{
+	ASSERT (mode >= 0 && mode <= 2); 
+	CString str; str.Format ("MaxConnections%d", mode);
+	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", str, max);
+}
+
+BOOL fsAppSettings::SmallTips_Show()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\SmallTips"), _T ("Show"), TRUE);
+}
+
+void fsAppSettings::SmallTips_Show(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\SmallTips"), _T ("Show"), b);
+}
+
+CString fsAppSettings::SmallTips_ForceShow()
+{
+	return m_stgs.GetProfileString (_T ("Settings\\SmallTips"), _T ("ForceShow"), _T (""));
+}
+
+void fsAppSettings::SmallTips_ForceShow(LPCTSTR ptsz)
+{
+	m_stgs.WriteProfileString (_T ("Settings\\SmallTips"), _T ("ForceShow"), ptsz);
+}
+
+FILETIME fsAppSettings::SmallTips_LastTime()
+{
+	BYTE *pb;
+	UINT sz;
+	FILETIME t;
+	ZeroMemory (&t, sizeof (t));
+	
+	if (m_stgs.GetProfileBinary (_T ("Settings\\SmallTips"), _T ("LastTime"), &pb, &sz))
+	{
+		if (sz == sizeof (t))
+		{
+			CopyMemory (&t, pb, sizeof (t));
+			delete [] pb;
+		}
+	}
+	
+	return t;
+}
+
+void fsAppSettings::SmallTips_LastTime(FILETIME ft)
+{
+	m_stgs.WriteProfileBinary (_T ("Settings\\SmallTips"), _T ("LastTime"),
+		(LPBYTE) &ft, sizeof (ft));
+}
+
+int fsAppSettings::SmallTips_CurrentTip()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\SmallTips"), _T ("CurrentTip"), 0);
+}
+
+void fsAppSettings::SmallTips_CurrentTip(int n)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\SmallTips"), _T ("CurrentTip"), n);
 }

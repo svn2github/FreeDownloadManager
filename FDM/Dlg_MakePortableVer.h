@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DLG_MAKEPORTABLEVER_H__348C0367_D3F0_40C6_9559_B70EA600AF7E__INCLUDED_)

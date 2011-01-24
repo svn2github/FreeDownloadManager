@@ -1,9 +1,7 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
-
-//{{NO_DEPENDENCIES}//}}    
-
+//{{NO_DEPENDENCIES}}
+// Microsoft Developer Studio generated include file.
+// Used by Web Interface.rc
+//
 #define IDD_WEBINTERFACE_DIALOG         102
 #define IDR_MAINFRAME                   128
 #define IDM_TRAY                        129
@@ -17,8 +15,10 @@
 #define IDC__S0                         1009
 #define IDC__S1                         1010
 #define ID_CONFIGURE                    32771
-#define ID_SHUTDOWN                     32772    
+#define ID_SHUTDOWN                     32772
 
+// Next default values for new objects
+// 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        131

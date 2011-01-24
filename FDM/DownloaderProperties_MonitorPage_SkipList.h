@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #if !defined(AFX_DOWNLOADERPROPERTIES_MONITORPAGE_SKIPLIST_H__EE259FB4_630B_4A0A_8356_1464FE3E18C2__INCLUDED_)

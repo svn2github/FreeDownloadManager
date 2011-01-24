@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_SHOCKWAVEFLASH_H__84CAFFB7_2487_4C5F_8D71_4AFED296F3A9__INCLUDED_)

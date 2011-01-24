@@ -42,7 +42,7 @@ RSC=rc.exe
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_MBCS" /D "_LIB" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "../../include.add/" /I "../../include.add/openssl" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "CURL_STATICLIB" /D "USE_SSLEAY" /D "CURL_DISABLE_LDAP" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /Ot /I "../../include.add/" /I "../../include.add/openssl" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "CURL_STATICLIB" /D "USE_SSLEAY" /D "CURL_DISABLE_LDAP" /YX /FD /c
 # ADD BASE RSC /l 0x419 /d "NDEBUG"
 # ADD RSC /l 0x419 /d "NDEBUG"
 BSC32=bscmake.exe
@@ -88,7 +88,7 @@ LIB32=link.exe -lib
 # PROP Intermediate_Dir "Release_nossl"
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GX /O2 /I "../../include.add/" /I "../../include.add/openssl" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "CURL_STATICLIB" /D "USE_SSLEAY" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /GX /O2 /I "../../include.add/" /I "../../include.add/openssl" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "CURL_STATICLIB" /YX /FD /c
+# ADD CPP /nologo /MD /W3 /GX /Ot /I "../../include.add/" /I "../../include.add/openssl" /D "NDEBUG" /D "WIN32" /D "_MBCS" /D "_LIB" /D "CURL_STATICLIB" /D "CURL_DISABLE_LDAP" /YX /FD /c
 # ADD BASE RSC /l 0x419 /d "NDEBUG"
 # ADD RSC /l 0x419 /d "NDEBUG"
 BSC32=bscmake.exe

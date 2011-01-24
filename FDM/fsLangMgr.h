@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */    
 
 #if !defined(AFX_FSLANGMGR_H__24624383_B5E1_4CAA_8F76_0F435FBAFE45__INCLUDED_)
@@ -17,12 +17,14 @@
 struct fsLngFileInfo
 {
 	CString strFileName;		
+	CString strFileNameWoExt;	
 	CString strLngName;			
 };
 
 class fsLangMgr  
 {
 public:
+	LPCSTR GetLngFileNameWoExt (int iIndex);
 	
 	BOOL Initialize ();
 	

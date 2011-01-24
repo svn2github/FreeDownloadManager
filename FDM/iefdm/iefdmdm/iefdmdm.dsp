@@ -51,7 +51,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib Ws2_32.lib Mswsock.lib winmm.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"../../lib.add"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib Ws2_32.lib Mswsock.lib winmm.lib Urlmon.lib /nologo /subsystem:windows /dll /debug /machine:I386 /pdbtype:sept /libpath:"../../lib.add"
 # Begin Custom Build - Performing registration
 OutDir=.\Debug
 TargetPath=.\Debug\iefdmdm.dll
@@ -87,7 +87,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib Ws2_32.lib Mswsock.lib inetfile.lib /nologo /subsystem:windows /dll /machine:I386
-# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib Ws2_32.lib Mswsock.lib winmm.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"../../lib.add"
+# ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib wininet.lib Ws2_32.lib Mswsock.lib winmm.lib Urlmon.lib /nologo /subsystem:windows /dll /machine:I386 /libpath:"../../lib.add"
 # Begin Custom Build - Performing registration
 OutDir=.\Release
 TargetPath=.\Release\iefdmdm.dll
@@ -142,6 +142,10 @@ SOURCE=.\StdAfx.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\vmsBindStatusCallback.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\vmsCookie.cpp
 # End Source File
 # Begin Source File
@@ -163,6 +167,10 @@ SOURCE=.\Resource.h
 # Begin Source File
 
 SOURCE=.\StdAfx.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\vmsBindStatusCallback.h
 # End Source File
 # Begin Source File
 

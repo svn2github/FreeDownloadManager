@@ -1,0 +1,33 @@
+  <radiogroup id="mode" >
+    <hbox insertbefore="save" >
+        <radio id="fdm-dmradio" label="Free Download Manager"/>
+        <menulist id="fdm-dms" flex="1">
+          <menupopup id="fdm-mp-dms">
+            <menuitem id="fdm-menu-dms-removeme" label="---" />
+          </menupopup>
+        </menulist>
+    </hbox>
+  </radiogroup>
+
+
+
+/*function tttest()
+{
+  var cookieManager = Components.classes["@mozilla.org/cookiemanager;1"
+        ].getService(Components.interfaces.nsICookieManager);
+
+var objCookie;
+
+for(var iter = cookieManager.enumerator; iter.hasMoreElements();) 
+{
+      if((objCookie=iter.getNext()) instanceof Components.interfaces.nsICookie) 
+      {
+        alert ("host: " + objCookie.host + "\n" + 
+               "name: " + objCookie.name + "\n" + 
+               "value: " + objCookie.value + "\n" + 
+               "path: " + objCookie.path + "\n" + 
+               "status: " + objCookie.status + "\n");
+      }
+}
+
+}*/

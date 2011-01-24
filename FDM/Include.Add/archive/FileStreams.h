@@ -1,8 +1,6 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
-
-    
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+*/    
 
 #ifndef __FILESTREAMS_H
 #define __FILESTREAMS_H

@@ -72,6 +72,18 @@ import "ocidl.idl";
 	};
 	[
 		object,
+		uuid(E66B63B0-49F8-47E3-A9BA-799287B59E87),
+		dual,
+		helpstring("IFdmFlvDownload Interface"),
+		pointer_default(unique)
+	]
+	interface IFdmFlvDownload : IDispatch
+	{
+		[propget, id(1), helpstring("property Url")] HRESULT Url([out, retval] IWGUrlReceiver* *pVal);
+		[propput, id(1), helpstring("property Url")] HRESULT Url([in] IWGUrlReceiver* newVal);
+	};
+	[
+		object,
 		uuid(F8FA5B48-B7A2-4BC6-8389-9587643A4660),
 		dual,
 		helpstring("IFDM Interface"),
@@ -159,6 +171,14 @@ library FdmLib
 	coclass WGUrlListReceiver
 	{
 		[default] interface IWGUrlListReceiver;
+	};
+	[
+		uuid(42130E6A-0045-4208-A252-71CA12C8FE99),
+		helpstring("FdmFlvDownload Class")
+	]
+	coclass FdmFlvDownload
+	{
+		[default] interface IFdmFlvDownload;
 	};
 	[
 		uuid(01483019-D8C9-47D8-8E93-AF032EBFADA6),

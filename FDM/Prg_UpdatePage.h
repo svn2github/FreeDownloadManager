@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */    
 
 #if !defined(AFX_PRG_UPDATEPAGE_H__1096C9B4_07EE_4C66_9F61_69850C2C1137__INCLUDED_)

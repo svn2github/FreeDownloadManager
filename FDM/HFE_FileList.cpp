@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */      
 
 #include "stdafx.h"
@@ -336,25 +336,25 @@ void CHFE_FileList::OnHfeOpenfolder()
 	POSITION pos = GetFirstSelectedItemPosition ();
 	int iItem = GetNextSelectedItem (pos);
 
-	char szUrl [10000];
+	fsString strUrl;
 
 	
 	if (iItem == 0 && _pwndHFE->GetMgr ()->IsCurrentPathRoot () == FALSE)
 	{
 		
-		_pwndHFE->GetMgr ()->GetParentFolderUrl (szUrl);
+		_pwndHFE->GetMgr ()->GetParentFolderUrl (strUrl);
 		_pwndHFE->GetMgr ()->GoParentFolder ();
 	}
 	else
 	{
 		
 		CString strFolder = GetItemText (iItem, 0);
-		_pwndHFE->GetMgr ()->FolderToUrl (strFolder, szUrl);
+		_pwndHFE->GetMgr ()->FolderToUrl (strFolder, strUrl);
 		_pwndHFE->GetMgr ()->GoFolder (strFolder);
 	}
 
 	
-	_pwndHFE->m_wndUrl.PushUrl (szUrl);
+	_pwndHFE->m_wndUrl.PushUrl (strUrl);
 }
 
 void CHFE_FileList::OnHfeParentfolder() 
@@ -421,8 +421,8 @@ void CHFE_FileList::DownloadSelected()
 	
 	mgr->RetreiveInfoWhileGettingList (FALSE); 
 	
-	char szUrl [10000];
-	mgr->GetCurrentUrl (szUrl, 10000);
+	fsString strUrl;
+	mgr->GetCurrentUrl (strUrl);
 
 	CString strOrigUrl; 
 	_pwndHFE->m_wndUrl.m_wndUrl.GetWindowText (strOrigUrl);
@@ -437,7 +437,7 @@ void CHFE_FileList::DownloadSelected()
 		CCreateDownloadsDlg dlg;
 
 		dlg.m_pFileList = m_pList;
-		dlg.m_strRootUrl = szUrl;
+		dlg.m_strRootUrl = strUrl;
 		
 		_DlgMgr.DoModal (&dlg);
 
@@ -458,7 +458,7 @@ void CHFE_FileList::DownloadSelected()
 	}
 
 	if (mgr->IsConnected ())
-		mgr->GetList (szUrl, NULL, NULL);	
+		mgr->GetList (strUrl, NULL, NULL);	
 	else
 		DeleteAllItems ();
 

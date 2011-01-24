@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */      
 
 #include "stdafx.h"
@@ -170,13 +170,12 @@ void CHFE_Address::UpdateUrl()
 		bIncPass = *url.GetPassword () != 0;
 	}
 
-	char szUrl [10000];
-	*szUrl = 0;
-	_pwndHFE->GetMgr ()->GetCurrentUrl (szUrl, sizeof (szUrl), bIncUser, bIncPass);
-	if (*szUrl)
+	fsString strUrl;
+	_pwndHFE->GetMgr ()->GetCurrentUrl (strUrl, bIncUser, bIncPass);
+	if (!strUrl.IsEmpty ())
 	{
-		m_strUrl = szUrl;
-		m_wndUrl.SetWindowText (szUrl);
+		m_strUrl = strUrl;
+		m_wndUrl.SetWindowText (strUrl);
 	}
 }
 

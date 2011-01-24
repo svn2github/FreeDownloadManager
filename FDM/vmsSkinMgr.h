@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */    
 
 #if !defined(AFX_VMSSKINMGR_H__3007DDD4_437C_4D37_B1A8_88EA19D78531__INCLUDED_)
@@ -35,6 +35,7 @@ struct vmsSkinInfo
 class vmsSkinMgr  
 {
 public:
+	COLORREF getLinkTextColor () const;
 	BOOL tbUseAlpha_ForAllPluginMenuImages();
 	
 	vmsSkinInfo* get_Skin (int iIndex);

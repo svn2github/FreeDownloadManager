@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #include "fsURL.h"
@@ -174,6 +174,11 @@ INTERNET_PORT fsURL::GetPort()
 
 fsInternetResult fsURL::Create(INTERNET_SCHEME nScheme, LPCTSTR lpszHostName, INTERNET_PORT nPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, LPCTSTR lpszUrlPath, LPSTR lpszUrl, DWORD *pdwUrlLength)
 {
+	if (!lpszUrl)
+		return IR_ERROR;
+
+	*lpszUrl = 0;
+
 	ZeroMemory (&m_url, sizeof (m_url));
 	m_url.dwStructSize = sizeof (m_url);
 

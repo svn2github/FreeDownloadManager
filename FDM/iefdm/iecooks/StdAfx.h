@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */        
 
 #if !defined(AFX_STDAFX_H__47BAA06B_F3FC_415D_9BFF_4633F8789428__INCLUDED_)
@@ -13,7 +13,9 @@
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0400
 #endif
-#define _ATL_APARTMENT_THREADED    
+#define _ATL_APARTMENT_THREADED
+
+#define ISOLATION_AWARE_ENABLED			1    
 
 #include <atlbase.h>  
 

@@ -1,7 +1,3 @@
-/*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/
-
 #ifndef __INETFILE_H_
 #define __INETFILE_H_
 

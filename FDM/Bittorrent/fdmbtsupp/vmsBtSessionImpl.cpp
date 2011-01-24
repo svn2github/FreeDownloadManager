@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -467,6 +467,8 @@ UINT64 vmsBtSessionImpl::get_TotalUploadedByteCount ()
 void vmsBtSessionImpl::SetUserAgent (LPCSTR pszUA)
 {
 	session_settings s = m_session.settings ();
+	if (stricmp (pszUA, "FDM 3.x") == 0 || stricmp (pszUA, "FDM 2.x") == 0)
+		pszUA = "FDM/3.0(848)";
 	s.user_agent = pszUA;
 	m_session.set_settings (s);
 }
@@ -475,4 +477,11 @@ void vmsBtSessionImpl::SetMaxHalfOpenConnections (int limit)
 {
 	if (limit > 0 && limit < 200)
 		m_session.set_max_half_open_connections (limit);
+}
+
+void vmsBtSessionImpl::SetMaxConnections (int limit)
+{
+	if (limit < 0 && limit != -1)
+		limit = -1; 
+	m_session.set_max_connections (limit);
 }

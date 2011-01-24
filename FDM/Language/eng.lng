@@ -654,7 +654,7 @@ Name of the folder to save downloads in
 Output folder:
 Web pages
 Pages
-Extensions of web pages’ files with HTML code:
+Extensions of web pages' files with HTML code:
 Download CSS files
 Download web pages from other sites
 Images
@@ -762,8 +762,8 @@ Allow the browser to download if you press Cancel
 Check this box if you want your browser to download file when you press Cancel in the "Create download" dialog
 The final sequence number must be greater than the start one
 Please use (*) in the URL to specify template for URL
-Create an extension if a file doesn’t have one
-Check this box to create a specified extension for a file which doesn’t have it. For example if the file name is "file" and you specify "txt", the result will be "file.txt"
+Create an extension if a file doesn't have one
+Check this box to create a specified extension for a file which doesn't have it. For example if the file name is "file" and you specify "txt", the result will be "file.txt"
 Show sizes in bytes only
 Check this box to show all sizes in bytes instead of kilobytes or megabytes
 Perform virus check
@@ -1355,7 +1355,7 @@ Result checksum
 ; zip preview window
 Check/uncheck all
 ; group's properties dialog
-Macroses
+Macroes
 name of the server (e.g. "freedownloadmanager.org")
 path to the downloading file on the server
 current year
@@ -1643,7 +1643,7 @@ Can't install Apple Safari monitoring
 Can't uninstall Apple Safari monitoring
 Can't install Google Chrome monitoring
 Can't uninstall Google Chrome monitoring
-Time limit
+Time Limit
 ;hours, for shprt
 hr.
 Limit time when FDM can start downloads
@@ -1651,3 +1651,46 @@ Allow to start only from
 Normal priority
 High priority
 Essential
+No timeout for download completion balloons
+Check if a new download is the mirror for existing one
+Show small notification windows on downloads completion
+Automatically hide after
+Like FDM? Try Personal Informer!
+The latest version of FDM comes with a free bonus: Personal Informer.
+It places quick links to all your
+favorite sites
+; next line means --- after you start _browser_. "_browser_" will be Internet Explorer or Firefox
+on your homepage, so that you can access them right after you start
+; \n means next line. don't change this.
+We will analyze your browsing history and show you the list\nof the web sites you visited we think you might like\nto have on your webpage. You will we able to customize\nthe list then.
+Are you sure? The whole process is going to take less than 1 minute and give you a really powerful home page.
+Still Cancel
+Proceed
+Do you want us to remind you in a few days?
+Title
+Monitor flash video downloads in browsers
+Using this feature can cause conflicts with other software installed on your PC. If you experience problems you will have to disable this feature in FDM or try to resolve conflicts by removing conflicting software or disabling some of its features.
+Web page
+Flash videos found on this page
+You should enable monitoring of flash video downloads for this. See Options | Downloads | Flash Video.
+Enter the URL of the web page you want to download flash videos from. Note that this page must already be loaded in your browser and videos should be playing.
+Searching flash videos...
+There were no flash videos found on this page. Make sure the videos on this page are playing or try to reload it (refresh page or clear browser's cache).
+; keep "0x%x" as is
+An error occurred while trying to get downloads.\nError: 0x%x.
+Error
+Show "Get It" button 
+(Internet Explorer only)
+Failed to found information about this web page. Please force your browser to reload it.
+Flash Video
+Limit the maximum number of connections
+This will disable FDM tips. Are you sure?\nYou can enable tips again in Options | Notifications settings.
+Show Tips
+Error! Update file is not signed by FreeDownloadManager.ORG.
+; 
+; Also, please download and translate this file:
+;  http://freedownloadmanager.org/tips-eng.txt
+; Note, that it's UTF-8 encoded file (use Notepad.exe to edit).
+;  and do not change text in tags (between "<>", e.g. "<a href...>")
+; Send translated file to support@freedownloadmanager.org.
+;

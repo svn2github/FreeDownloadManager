@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -62,6 +62,8 @@ public:
 	std::string m_strOutputPath;
 
 protected:
+	bool m_bOnTrackerAlert_IsSeed;
+	DWORD m_dwAnnounceInterval;
 	std::vector <DWORD> m_vTicksTrackersConnected;
 	vmsBtDownloadPeerInfoListImpl m_peerList;
 	long m_cRefs;

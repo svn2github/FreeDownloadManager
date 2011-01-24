@@ -1,8 +1,6 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
-*/    
-
-      
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+*/      
 
 #include "stdafx.h"
 
@@ -1674,6 +1672,7 @@ static void av_encode(vmsMediaConverterJob *job,
     AVInputFile *file_table;
     AVFormatContext *stream_no_data;
     int key;
+	bool bWritten = false;
 
     file_table= (AVInputFile*) av_mallocz(nb_input_files * sizeof(AVInputFile));
     if (!file_table)
@@ -2086,7 +2085,6 @@ static void av_encode(vmsMediaConverterJob *job,
     key = -1;
 
 	int totalsize; totalsize = 0;
-	bool bWritten; bWritten = false;
 
     for(;;) {
         int file_index, ist_index;
@@ -2261,7 +2259,7 @@ static void av_encode(vmsMediaConverterJob *job,
             }
         }
         av_free(ost_table);
-    }
+    }    
 
 	if (bWritten == false)
 		throw 0;

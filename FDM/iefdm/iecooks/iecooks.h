@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2007 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */                    
 
 #ifndef __REQUIRED_RPCNDR_H_VERSION__
@@ -27,9 +27,9 @@ extern "C"{
 
  
 
-#ifndef __IFDMIECookiesBHO_FWD_DEFINED__
-#define __IFDMIECookiesBHO_FWD_DEFINED__
-typedef interface IFDMIECookiesBHO IFDMIECookiesBHO;
+#ifndef __IFDMIEBHO_FWD_DEFINED__
+#define __IFDMIEBHO_FWD_DEFINED__
+typedef interface IFDMIEBHO IFDMIEBHO;
 #endif 	  
 
 #ifndef __IFDMIEStat_FWD_DEFINED__
@@ -37,13 +37,13 @@ typedef interface IFDMIECookiesBHO IFDMIECookiesBHO;
 typedef interface IFDMIEStat IFDMIEStat;
 #endif 	  
 
-#ifndef __FDMIECookiesBHO_FWD_DEFINED__
-#define __FDMIECookiesBHO_FWD_DEFINED__
+#ifndef __FDMIEBHO_FWD_DEFINED__
+#define __FDMIEBHO_FWD_DEFINED__
 
 #ifdef __cplusplus
-typedef class FDMIECookiesBHO FDMIECookiesBHO;
+typedef class FDMIEBHO FDMIEBHO;
 #else
-typedef struct FDMIECookiesBHO FDMIECookiesBHO;
+typedef struct FDMIEBHO FDMIEBHO;
 #endif 
 
 #endif 	  
@@ -65,17 +65,17 @@ typedef struct FDMIEStat FDMIEStat;
 void __RPC_FAR * __RPC_USER MIDL_user_allocate(size_t);
 void __RPC_USER MIDL_user_free( void __RPC_FAR * ); 
 
-#ifndef __IFDMIECookiesBHO_INTERFACE_DEFINED__
-#define __IFDMIECookiesBHO_INTERFACE_DEFINED__  
+#ifndef __IFDMIEBHO_INTERFACE_DEFINED__
+#define __IFDMIEBHO_INTERFACE_DEFINED__  
 
    
 
-EXTERN_C const IID IID_IFDMIECookiesBHO;
+EXTERN_C const IID IID_IFDMIEBHO;
 
 #if defined(__cplusplus) && !defined(CINTERFACE)
     
     MIDL_INTERFACE("40D3F599-74F0-44D3-B059-76C0F12C0D6E")
-    IFDMIECookiesBHO : public IDispatch
+    IFDMIEBHO : public IDispatch
     {
     public:
         virtual  HRESULT STDMETHODCALLTYPE ProgressChange( 
@@ -99,37 +99,48 @@ EXTERN_C const IID IID_IFDMIECookiesBHO;
              IDispatch __RPC_FAR *pDisp,
              VARIANT __RPC_FAR *URL) = 0;
         
+        virtual  HRESULT STDMETHODCALLTYPE WindowStateChanged( 
+            DWORD dwFlags,
+            DWORD dwValidFlagsMask) = 0;
+        
+        virtual  HRESULT STDMETHODCALLTYPE NavigateComplete2( 
+             IDispatch __RPC_FAR *pDisp,
+             VARIANT __RPC_FAR *URL) = 0;
+        
+        virtual  HRESULT STDMETHODCALLTYPE StatusTextChange( 
+             BSTR bstrText) = 0;
+        
     };
     
 #else 	
 
-    typedef struct IFDMIECookiesBHOVtbl
+    typedef struct IFDMIEBHOVtbl
     {
         BEGIN_INTERFACE
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *QueryInterface )( 
-            IFDMIECookiesBHO __RPC_FAR * This,
+            IFDMIEBHO __RPC_FAR * This,
              REFIID riid,
              void __RPC_FAR *__RPC_FAR *ppvObject);
         
         ULONG ( STDMETHODCALLTYPE __RPC_FAR *AddRef )( 
-            IFDMIECookiesBHO __RPC_FAR * This);
+            IFDMIEBHO __RPC_FAR * This);
         
         ULONG ( STDMETHODCALLTYPE __RPC_FAR *Release )( 
-            IFDMIECookiesBHO __RPC_FAR * This);
+            IFDMIEBHO __RPC_FAR * This);
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfoCount )( 
-            IFDMIECookiesBHO __RPC_FAR * This,
+            IFDMIEBHO __RPC_FAR * This,
              UINT __RPC_FAR *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfo )( 
-            IFDMIECookiesBHO __RPC_FAR * This,
+            IFDMIEBHO __RPC_FAR * This,
              UINT iTInfo,
              LCID lcid,
              ITypeInfo __RPC_FAR *__RPC_FAR *ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetIDsOfNames )( 
-            IFDMIECookiesBHO __RPC_FAR * This,
+            IFDMIEBHO __RPC_FAR * This,
              REFIID riid,
              LPOLESTR __RPC_FAR *rgszNames,
              UINT cNames,
@@ -137,7 +148,7 @@ EXTERN_C const IID IID_IFDMIECookiesBHO;
              DISPID __RPC_FAR *rgDispId);
         
          HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Invoke )( 
-            IFDMIECookiesBHO __RPC_FAR * This,
+            IFDMIEBHO __RPC_FAR * This,
              DISPID dispIdMember,
              REFIID riid,
              LCID lcid,
@@ -148,12 +159,12 @@ EXTERN_C const IID IID_IFDMIECookiesBHO;
              UINT __RPC_FAR *puArgErr);
         
          HRESULT ( STDMETHODCALLTYPE __RPC_FAR *ProgressChange )( 
-            IFDMIECookiesBHO __RPC_FAR * This,
+            IFDMIEBHO __RPC_FAR * This,
             long Progress,
             long ProgressMax);
         
          HRESULT ( STDMETHODCALLTYPE __RPC_FAR *BeforeNavigate2 )( 
-            IFDMIECookiesBHO __RPC_FAR * This,
+            IFDMIEBHO __RPC_FAR * This,
             IDispatch __RPC_FAR *__MIDL_0011,
             VARIANT __RPC_FAR *url,
             VARIANT __RPC_FAR *flags,
@@ -163,81 +174,104 @@ EXTERN_C const IID IID_IFDMIECookiesBHO;
             VARIANT_BOOL __RPC_FAR *bCancel);
         
          HRESULT ( STDMETHODCALLTYPE __RPC_FAR *DownloadBegin )( 
-            IFDMIECookiesBHO __RPC_FAR * This);
+            IFDMIEBHO __RPC_FAR * This);
         
          HRESULT ( STDMETHODCALLTYPE __RPC_FAR *DownloadComplete )( 
-            IFDMIECookiesBHO __RPC_FAR * This);
+            IFDMIEBHO __RPC_FAR * This);
         
          HRESULT ( STDMETHODCALLTYPE __RPC_FAR *DocumentComplete )( 
-            IFDMIECookiesBHO __RPC_FAR * This,
+            IFDMIEBHO __RPC_FAR * This,
              IDispatch __RPC_FAR *pDisp,
              VARIANT __RPC_FAR *URL);
         
+         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *WindowStateChanged )( 
+            IFDMIEBHO __RPC_FAR * This,
+            DWORD dwFlags,
+            DWORD dwValidFlagsMask);
+        
+         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *NavigateComplete2 )( 
+            IFDMIEBHO __RPC_FAR * This,
+             IDispatch __RPC_FAR *pDisp,
+             VARIANT __RPC_FAR *URL);
+        
+         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *StatusTextChange )( 
+            IFDMIEBHO __RPC_FAR * This,
+             BSTR bstrText);
+        
         END_INTERFACE
-    } IFDMIECookiesBHOVtbl;
+    } IFDMIEBHOVtbl;
 
-    interface IFDMIECookiesBHO
+    interface IFDMIEBHO
     {
-        CONST_VTBL struct IFDMIECookiesBHOVtbl __RPC_FAR *lpVtbl;
+        CONST_VTBL struct IFDMIEBHOVtbl __RPC_FAR *lpVtbl;
     };
 
     
 
 #ifdef COBJMACROS  
 
-#define IFDMIECookiesBHO_QueryInterface(This,riid,ppvObject)	\
+#define IFDMIEBHO_QueryInterface(This,riid,ppvObject)	\
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
-#define IFDMIECookiesBHO_AddRef(This)	\
+#define IFDMIEBHO_AddRef(This)	\
     (This)->lpVtbl -> AddRef(This)
 
-#define IFDMIECookiesBHO_Release(This)	\
+#define IFDMIEBHO_Release(This)	\
     (This)->lpVtbl -> Release(This)  
 
-#define IFDMIECookiesBHO_GetTypeInfoCount(This,pctinfo)	\
+#define IFDMIEBHO_GetTypeInfoCount(This,pctinfo)	\
     (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
 
-#define IFDMIECookiesBHO_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
+#define IFDMIEBHO_GetTypeInfo(This,iTInfo,lcid,ppTInfo)	\
     (This)->lpVtbl -> GetTypeInfo(This,iTInfo,lcid,ppTInfo)
 
-#define IFDMIECookiesBHO_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
+#define IFDMIEBHO_GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)	\
     (This)->lpVtbl -> GetIDsOfNames(This,riid,rgszNames,cNames,lcid,rgDispId)
 
-#define IFDMIECookiesBHO_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
+#define IFDMIEBHO_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)  
 
-#define IFDMIECookiesBHO_ProgressChange(This,Progress,ProgressMax)	\
+#define IFDMIEBHO_ProgressChange(This,Progress,ProgressMax)	\
     (This)->lpVtbl -> ProgressChange(This,Progress,ProgressMax)
 
-#define IFDMIECookiesBHO_BeforeNavigate2(This,__MIDL_0011,url,flags,tfn,pd,headers,bCancel)	\
+#define IFDMIEBHO_BeforeNavigate2(This,__MIDL_0011,url,flags,tfn,pd,headers,bCancel)	\
     (This)->lpVtbl -> BeforeNavigate2(This,__MIDL_0011,url,flags,tfn,pd,headers,bCancel)
 
-#define IFDMIECookiesBHO_DownloadBegin(This)	\
+#define IFDMIEBHO_DownloadBegin(This)	\
     (This)->lpVtbl -> DownloadBegin(This)
 
-#define IFDMIECookiesBHO_DownloadComplete(This)	\
+#define IFDMIEBHO_DownloadComplete(This)	\
     (This)->lpVtbl -> DownloadComplete(This)
 
-#define IFDMIECookiesBHO_DocumentComplete(This,pDisp,URL)	\
+#define IFDMIEBHO_DocumentComplete(This,pDisp,URL)	\
     (This)->lpVtbl -> DocumentComplete(This,pDisp,URL)
+
+#define IFDMIEBHO_WindowStateChanged(This,dwFlags,dwValidFlagsMask)	\
+    (This)->lpVtbl -> WindowStateChanged(This,dwFlags,dwValidFlagsMask)
+
+#define IFDMIEBHO_NavigateComplete2(This,pDisp,URL)	\
+    (This)->lpVtbl -> NavigateComplete2(This,pDisp,URL)
+
+#define IFDMIEBHO_StatusTextChange(This,bstrText)	\
+    (This)->lpVtbl -> StatusTextChange(This,bstrText)
 
 #endif   
 
 #endif 	    
 
- HRESULT STDMETHODCALLTYPE IFDMIECookiesBHO_ProgressChange_Proxy( 
-    IFDMIECookiesBHO __RPC_FAR * This,
+ HRESULT STDMETHODCALLTYPE IFDMIEBHO_ProgressChange_Proxy( 
+    IFDMIEBHO __RPC_FAR * This,
     long Progress,
     long ProgressMax);  
 
-void __RPC_STUB IFDMIECookiesBHO_ProgressChange_Stub(
+void __RPC_STUB IFDMIEBHO_ProgressChange_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);  
 
- HRESULT STDMETHODCALLTYPE IFDMIECookiesBHO_BeforeNavigate2_Proxy( 
-    IFDMIECookiesBHO __RPC_FAR * This,
+ HRESULT STDMETHODCALLTYPE IFDMIEBHO_BeforeNavigate2_Proxy( 
+    IFDMIEBHO __RPC_FAR * This,
     IDispatch __RPC_FAR *__MIDL_0011,
     VARIANT __RPC_FAR *url,
     VARIANT __RPC_FAR *flags,
@@ -246,36 +280,68 @@ void __RPC_STUB IFDMIECookiesBHO_ProgressChange_Stub(
     VARIANT __RPC_FAR *headers,
     VARIANT_BOOL __RPC_FAR *bCancel);  
 
-void __RPC_STUB IFDMIECookiesBHO_BeforeNavigate2_Stub(
+void __RPC_STUB IFDMIEBHO_BeforeNavigate2_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);  
 
- HRESULT STDMETHODCALLTYPE IFDMIECookiesBHO_DownloadBegin_Proxy( 
-    IFDMIECookiesBHO __RPC_FAR * This);  
+ HRESULT STDMETHODCALLTYPE IFDMIEBHO_DownloadBegin_Proxy( 
+    IFDMIEBHO __RPC_FAR * This);  
 
-void __RPC_STUB IFDMIECookiesBHO_DownloadBegin_Stub(
+void __RPC_STUB IFDMIEBHO_DownloadBegin_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);  
 
- HRESULT STDMETHODCALLTYPE IFDMIECookiesBHO_DownloadComplete_Proxy( 
-    IFDMIECookiesBHO __RPC_FAR * This);  
+ HRESULT STDMETHODCALLTYPE IFDMIEBHO_DownloadComplete_Proxy( 
+    IFDMIEBHO __RPC_FAR * This);  
 
-void __RPC_STUB IFDMIECookiesBHO_DownloadComplete_Stub(
+void __RPC_STUB IFDMIEBHO_DownloadComplete_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);  
 
- HRESULT STDMETHODCALLTYPE IFDMIECookiesBHO_DocumentComplete_Proxy( 
-    IFDMIECookiesBHO __RPC_FAR * This,
+ HRESULT STDMETHODCALLTYPE IFDMIEBHO_DocumentComplete_Proxy( 
+    IFDMIEBHO __RPC_FAR * This,
      IDispatch __RPC_FAR *pDisp,
      VARIANT __RPC_FAR *URL);  
 
-void __RPC_STUB IFDMIECookiesBHO_DocumentComplete_Stub(
+void __RPC_STUB IFDMIEBHO_DocumentComplete_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);  
+
+ HRESULT STDMETHODCALLTYPE IFDMIEBHO_WindowStateChanged_Proxy( 
+    IFDMIEBHO __RPC_FAR * This,
+    DWORD dwFlags,
+    DWORD dwValidFlagsMask);  
+
+void __RPC_STUB IFDMIEBHO_WindowStateChanged_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);  
+
+ HRESULT STDMETHODCALLTYPE IFDMIEBHO_NavigateComplete2_Proxy( 
+    IFDMIEBHO __RPC_FAR * This,
+     IDispatch __RPC_FAR *pDisp,
+     VARIANT __RPC_FAR *URL);  
+
+void __RPC_STUB IFDMIEBHO_NavigateComplete2_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);  
+
+ HRESULT STDMETHODCALLTYPE IFDMIEBHO_StatusTextChange_Proxy( 
+    IFDMIEBHO __RPC_FAR * This,
+     BSTR bstrText);  
+
+void __RPC_STUB IFDMIEBHO_StatusTextChange_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
@@ -403,19 +469,19 @@ void __RPC_STUB IFDMIEStat_get_DownloadCount_Stub(
 
 #endif 	    
 
-#ifndef __IECOOKSLib_LIBRARY_DEFINED__
-#define __IECOOKSLib_LIBRARY_DEFINED__  
+#ifndef __IEFDMBHOLib_LIBRARY_DEFINED__
+#define __IEFDMBHOLib_LIBRARY_DEFINED__  
 
    
 
-EXTERN_C const IID LIBID_IECOOKSLib;
+EXTERN_C const IID LIBID_IEFDMBHOLib;
 
-EXTERN_C const CLSID CLSID_FDMIECookiesBHO;
+EXTERN_C const CLSID CLSID_FDMIEBHO;
 
 #ifdef __cplusplus
 
 class DECLSPEC_UUID("CC59E0F9-7E43-44FA-9FAA-8377850BF205")
-FDMIECookiesBHO;
+FDMIEBHO;
 #endif
 
 EXTERN_C const CLSID CLSID_FDMIEStat;
@@ -426,6 +492,11 @@ class DECLSPEC_UUID("D4D6EAB8-009E-4EED-814E-4891D7E1741B")
 FDMIEStat;
 #endif
 #endif     
+
+unsigned long             __RPC_USER  BSTR_UserSize(     unsigned long __RPC_FAR *, unsigned long            , BSTR __RPC_FAR * ); 
+unsigned char __RPC_FAR * __RPC_USER  BSTR_UserMarshal(  unsigned long __RPC_FAR *, unsigned char __RPC_FAR *, BSTR __RPC_FAR * ); 
+unsigned char __RPC_FAR * __RPC_USER  BSTR_UserUnmarshal(unsigned long __RPC_FAR *, unsigned char __RPC_FAR *, BSTR __RPC_FAR * ); 
+void                      __RPC_USER  BSTR_UserFree(     unsigned long __RPC_FAR *, BSTR __RPC_FAR * ); 
 
 unsigned long             __RPC_USER  VARIANT_UserSize(     unsigned long __RPC_FAR *, unsigned long            , VARIANT __RPC_FAR * ); 
 unsigned char __RPC_FAR * __RPC_USER  VARIANT_UserMarshal(  unsigned long __RPC_FAR *, unsigned char __RPC_FAR *, VARIANT __RPC_FAR * ); 
