@@ -1,4 +1,0 @@
-EXPORTS
-	Initialize				@1
-	Shutdown				@2
-	ConvertMediaFile		@3

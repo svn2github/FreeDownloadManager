@@ -1,4 +1,0 @@
-EXPORTS
-	vmsBt_getSession					@1
-	vmsBt_Shutdown						@2
-	vmsBt_CreateTorrentFileObject		@3
