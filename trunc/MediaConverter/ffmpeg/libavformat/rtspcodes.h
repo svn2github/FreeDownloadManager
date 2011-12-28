@@ -1,0 +1,25 @@
+/*
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+*/
+
+
+
+#ifndef AVFORMAT_RTSPCODES_H
+#define AVFORMAT_RTSPCODES_H
+
+
+enum RTSPStatusCode {
+RTSP_STATUS_OK              =200, 
+RTSP_STATUS_METHOD          =405, 
+RTSP_STATUS_BANDWIDTH       =453, 
+RTSP_STATUS_SESSION         =454, 
+RTSP_STATUS_STATE           =455, 
+RTSP_STATUS_AGGREGATE       =459, 
+RTSP_STATUS_ONLY_AGGREGATE  =460, 
+RTSP_STATUS_TRANSPORT       =461, 
+RTSP_STATUS_INTERNAL        =500, 
+RTSP_STATUS_SERVICE         =503, 
+RTSP_STATUS_VERSION         =505, 
+};
+
+#endif 
