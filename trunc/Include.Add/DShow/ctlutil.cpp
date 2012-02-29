@@ -1,19 +1,36 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: CtlUtil.cpp
+//
+// Desc: DirectShow base classes.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
+
+
+// Base classes implementing IDispatch parsing for the basic control dual
+// interfaces. Derive from these and implement just the custom method and
+// property methods. We also implement CPosPassThru that can be used by
+// renderers and transforms to pass by IMediaPosition and IMediaSeeking
+
 
 #include <streams.h>
 #include <limits.h>
 #include "seekpt.h"
 
+// 'bool' non standard reserved word
 #pragma warning(disable:4237)
 
+
+// --- CBaseDispatch implementation ----------
 CBaseDispatch::~CBaseDispatch()
 {
     if (m_pti) {
 	m_pti->Release();
     }
 }
+
+
+// return 1 if we support GetTypeInfo
 
 STDMETHODIMP
 CBaseDispatch::GetTypeInfoCount(UINT * pctinfo)
@@ -24,6 +41,7 @@ CBaseDispatch::GetTypeInfoCount(UINT * pctinfo)
     return S_OK;
 }
 
+
 typedef HRESULT (STDAPICALLTYPE *LPLOADTYPELIB)(
 			    const OLECHAR FAR *szFile,
 			    ITypeLib FAR* FAR* pptlib);
@@ -33,6 +51,8 @@ typedef HRESULT (STDAPICALLTYPE *LPLOADREGTYPELIB)(REFGUID rguid,
 			    WORD wVerMinor,
 			    LCID lcid,
 			    ITypeLib FAR* FAR* pptlib);
+
+// attempt to find our type library
 
 STDMETHODIMP
 CBaseDispatch::GetTypeInfo(
@@ -47,7 +67,7 @@ CBaseDispatch::GetTypeInfo(
 
     *pptinfo = NULL;
 
-    
+    // we only support one type element
     if (0 != itinfo) {
 	return TYPE_E_ELEMENTNOTFOUND;
     }
@@ -56,7 +76,7 @@ CBaseDispatch::GetTypeInfo(
 	return E_POINTER;
     }
 
-    
+    // always look for neutral
     if (NULL == m_pti) {
 
 	LPLOADTYPELIB	    lpfnLoadTypeLib;
@@ -68,9 +88,9 @@ CBaseDispatch::GetTypeInfo(
 	static const char  szRegTypeLib[] = "LoadRegTypeLib";
 	static const WCHAR szControl[]	  = L"control.tlb";
 
-	
-	
-	
+	//
+	// Try to get the Ole32Aut.dll module handle.
+	//
 
 	hInst = LoadOLEAut32();
 	if (hInst == NULL) {
@@ -84,13 +104,13 @@ CBaseDispatch::GetTypeInfo(
 	    return AmHresultFromWin32(dwError);
 	}
 
-	hr = (*lpfnLoadRegTypeLib)(LIBID_QuartzTypeLib, 1, 0, 
+	hr = (*lpfnLoadRegTypeLib)(LIBID_QuartzTypeLib, 1, 0, // version 1.0
 				   lcid, &ptlib);
 
 	if (FAILED(hr)) {
 
-	    
-	    
+	    // attempt to load directly - this will fill the
+	    // registry in if it finds it
 
 	    lpfnLoadTypeLib = (LPLOADTYPELIB)GetProcAddress(hInst, szTypeLib);
 	    if (lpfnLoadTypeLib == NULL) {
@@ -120,6 +140,7 @@ CBaseDispatch::GetTypeInfo(
     return S_OK;
 }
 
+
 STDMETHODIMP
 CBaseDispatch::GetIDsOfNames(
   REFIID riid,
@@ -128,8 +149,8 @@ CBaseDispatch::GetIDsOfNames(
   LCID lcid,
   DISPID * rgdispid)
 {
-    
-    
+    // although the IDispatch riid is dead, we use this to pass from
+    // the interface implementation class to us the iid we are talking about.
 
     ITypeInfo * pti;
     HRESULT hr = GetTypeInfo(riid, 0, lcid, &pti);
@@ -142,10 +163,15 @@ CBaseDispatch::GetIDsOfNames(
     return hr;
 }
 
+
+// --- CMediaControl implementation ---------
+
 CMediaControl::CMediaControl(const TCHAR * name,LPUNKNOWN pUnk) :
     CUnknown(name, pUnk)
 {
 }
+
+// expose our interfaces IMediaControl and IUnknown
 
 STDMETHODIMP
 CMediaControl::NonDelegatingQueryInterface(REFIID riid, void **ppv)
@@ -158,11 +184,17 @@ CMediaControl::NonDelegatingQueryInterface(REFIID riid, void **ppv)
     }
 }
 
+
+// return 1 if we support GetTypeInfo
+
 STDMETHODIMP
 CMediaControl::GetTypeInfoCount(UINT * pctinfo)
 {
     return m_basedisp.GetTypeInfoCount(pctinfo);
 }
+
+
+// attempt to find our type library
 
 STDMETHODIMP
 CMediaControl::GetTypeInfo(
@@ -176,6 +208,7 @@ CMediaControl::GetTypeInfo(
 		lcid,
 		pptinfo);
 }
+
 
 STDMETHODIMP
 CMediaControl::GetIDsOfNames(
@@ -193,6 +226,7 @@ CMediaControl::GetIDsOfNames(
 			rgdispid);
 }
 
+
 STDMETHODIMP
 CMediaControl::Invoke(
   DISPID dispidMember,
@@ -204,7 +238,7 @@ CMediaControl::Invoke(
   EXCEPINFO * pexcepinfo,
   UINT * puArgErr)
 {
-    
+    // this parameter is a dead leftover from an earlier interface
     if (IID_NULL != riid) {
 	return DISP_E_UNKNOWNINTERFACE;
     }
@@ -229,10 +263,17 @@ CMediaControl::Invoke(
     return hr;
 }
 
+
+// --- CMediaEvent implementation ----------
+
+
 CMediaEvent::CMediaEvent(const TCHAR * name,LPUNKNOWN pUnk) :
     CUnknown(name, pUnk)
 {
 }
+
+
+// expose our interfaces IMediaEvent and IUnknown
 
 STDMETHODIMP
 CMediaEvent::NonDelegatingQueryInterface(REFIID riid, void **ppv)
@@ -245,11 +286,17 @@ CMediaEvent::NonDelegatingQueryInterface(REFIID riid, void **ppv)
     }
 }
 
+
+// return 1 if we support GetTypeInfo
+
 STDMETHODIMP
 CMediaEvent::GetTypeInfoCount(UINT * pctinfo)
 {
     return m_basedisp.GetTypeInfoCount(pctinfo);
 }
+
+
+// attempt to find our type library
 
 STDMETHODIMP
 CMediaEvent::GetTypeInfo(
@@ -263,6 +310,7 @@ CMediaEvent::GetTypeInfo(
 		lcid,
 		pptinfo);
 }
+
 
 STDMETHODIMP
 CMediaEvent::GetIDsOfNames(
@@ -280,6 +328,7 @@ CMediaEvent::GetIDsOfNames(
 			rgdispid);
 }
 
+
 STDMETHODIMP
 CMediaEvent::Invoke(
   DISPID dispidMember,
@@ -291,7 +340,7 @@ CMediaEvent::Invoke(
   EXCEPINFO * pexcepinfo,
   UINT * puArgErr)
 {
-    
+    // this parameter is a dead leftover from an earlier interface
     if (IID_NULL != riid) {
 	return DISP_E_UNKNOWNINTERFACE;
     }
@@ -316,6 +365,10 @@ CMediaEvent::Invoke(
     return hr;
 }
 
+
+// --- CMediaPosition implementation ----------
+
+
 CMediaPosition::CMediaPosition(const TCHAR * name,LPUNKNOWN pUnk) :
     CUnknown(name, pUnk)
 {
@@ -329,6 +382,9 @@ CMediaPosition::CMediaPosition(const TCHAR * name,
     UNREFERENCED_PARAMETER(phr);
 }
 
+
+// expose our interfaces IMediaPosition and IUnknown
+
 STDMETHODIMP
 CMediaPosition::NonDelegatingQueryInterface(REFIID riid, void **ppv)
 {
@@ -340,11 +396,17 @@ CMediaPosition::NonDelegatingQueryInterface(REFIID riid, void **ppv)
     }
 }
 
+
+// return 1 if we support GetTypeInfo
+
 STDMETHODIMP
 CMediaPosition::GetTypeInfoCount(UINT * pctinfo)
 {
     return m_basedisp.GetTypeInfoCount(pctinfo);
 }
+
+
+// attempt to find our type library
 
 STDMETHODIMP
 CMediaPosition::GetTypeInfo(
@@ -358,6 +420,7 @@ CMediaPosition::GetTypeInfo(
 		lcid,
 		pptinfo);
 }
+
 
 STDMETHODIMP
 CMediaPosition::GetIDsOfNames(
@@ -375,6 +438,7 @@ CMediaPosition::GetIDsOfNames(
 			rgdispid);
 }
 
+
 STDMETHODIMP
 CMediaPosition::Invoke(
   DISPID dispidMember,
@@ -386,7 +450,7 @@ CMediaPosition::Invoke(
   EXCEPINFO * pexcepinfo,
   UINT * puArgErr)
 {
-    
+    // this parameter is a dead leftover from an earlier interface
     if (IID_NULL != riid) {
 	return DISP_E_UNKNOWNINTERFACE;
     }
@@ -411,6 +475,10 @@ CMediaPosition::Invoke(
     return hr;
 }
 
+
+// --- IMediaPosition and IMediaSeeking pass through class ----------
+
+
 CPosPassThru::CPosPassThru(const TCHAR *pName,
 			   LPUNKNOWN pUnk,
 			   HRESULT *phr,
@@ -424,6 +492,9 @@ CPosPassThru::CPosPassThru(const TCHAR *pName,
     }
 }
 
+
+// Expose our IMediaSeeking and IMediaPosition interfaces
+
 STDMETHODIMP
 CPosPassThru::NonDelegatingQueryInterface(REFIID riid,void **ppv)
 {
@@ -435,6 +506,9 @@ CPosPassThru::NonDelegatingQueryInterface(REFIID riid,void **ppv)
     }
     return CMediaPosition::NonDelegatingQueryInterface(riid,ppv);
 }
+
+
+// Return the IMediaPosition interface from our peer
 
 HRESULT
 CPosPassThru::GetPeer(IMediaPosition ** ppMP)
@@ -457,6 +531,9 @@ CPosPassThru::GetPeer(IMediaPosition ** ppMP)
     return S_OK;
 }
 
+
+// Return the IMediaSeeking interface from our peer
+
 HRESULT
 CPosPassThru::GetPeerSeeking(IMediaSeeking ** ppMS)
 {
@@ -477,6 +554,10 @@ CPosPassThru::GetPeerSeeking(IMediaSeeking ** ppMS)
     *ppMS = pMS;
     return S_OK;
 }
+
+
+// --- IMediaSeeking methods ----------
+
 
 STDMETHODIMP
 CPosPassThru::GetCapabilities(DWORD * pCaps)
@@ -520,6 +601,7 @@ CPosPassThru::IsFormatSupported(const GUID * pFormat)
     return hr;
 }
 
+
 STDMETHODIMP
 CPosPassThru::QueryPreferredFormat(GUID *pFormat)
 {
@@ -533,6 +615,7 @@ CPosPassThru::QueryPreferredFormat(GUID *pFormat)
     pMS->Release();
     return hr;
 }
+
 
 STDMETHODIMP
 CPosPassThru::SetTimeFormat(const GUID * pFormat)
@@ -548,6 +631,7 @@ CPosPassThru::SetTimeFormat(const GUID * pFormat)
     return hr;
 }
 
+
 STDMETHODIMP
 CPosPassThru::GetTimeFormat(GUID *pFormat)
 {
@@ -561,6 +645,7 @@ CPosPassThru::GetTimeFormat(GUID *pFormat)
     pMS->Release();
     return hr;
 }
+
 
 STDMETHODIMP
 CPosPassThru::IsUsingTimeFormat(const GUID * pFormat)
@@ -576,6 +661,7 @@ CPosPassThru::IsUsingTimeFormat(const GUID * pFormat)
     return hr;
 }
 
+
 STDMETHODIMP
 CPosPassThru::ConvertTimeFormat(LONGLONG * pTarget, const GUID * pTargetFormat,
 				LONGLONG    Source, const GUID * pSourceFormat )
@@ -590,6 +676,7 @@ CPosPassThru::ConvertTimeFormat(LONGLONG * pTarget, const GUID * pTargetFormat,
     pMS->Release();
     return hr;
 }
+
 
 STDMETHODIMP
 CPosPassThru::SetPositions( LONGLONG * pCurrent, DWORD CurrentFlags
@@ -636,15 +723,18 @@ CPosPassThru::GetSeekingLongLong
     return hr;
 }
 
+// If we don't have a current position then ask upstream
+
 STDMETHODIMP
 CPosPassThru::GetCurrentPosition(LONGLONG *pCurrent)
 {
-    
+    // Can we report the current position
     HRESULT hr = GetMediaTime(pCurrent,NULL);
     if (SUCCEEDED(hr)) hr = NOERROR;
     else hr = GetSeekingLongLong( &IMediaSeeking::GetCurrentPosition, pCurrent );
     return hr;
 }
+
 
 STDMETHODIMP
 CPosPassThru::GetStopPosition(LONGLONG *pStop)
@@ -658,11 +748,13 @@ CPosPassThru::GetDuration(LONGLONG *pDuration)
     return GetSeekingLongLong( &IMediaSeeking::GetDuration, pDuration );;
 }
 
+
 STDMETHODIMP
 CPosPassThru::GetPreroll(LONGLONG *pllPreroll)
 {
     return GetSeekingLongLong( &IMediaSeeking::GetPreroll, pllPreroll );;
 }
+
 
 STDMETHODIMP
 CPosPassThru::GetAvailable( LONGLONG *pEarliest, LONGLONG *pLatest )
@@ -678,6 +770,7 @@ CPosPassThru::GetAvailable( LONGLONG *pEarliest, LONGLONG *pLatest )
     return hr;
 }
 
+
 STDMETHODIMP
 CPosPassThru::GetRate(double * pdRate)
 {
@@ -690,6 +783,7 @@ CPosPassThru::GetRate(double * pdRate)
     pMS->Release();
     return hr;
 }
+
 
 STDMETHODIMP
 CPosPassThru::SetRate(double dRate)
@@ -708,6 +802,12 @@ CPosPassThru::SetRate(double dRate)
     return hr;
 }
 
+
+
+
+// --- IMediaPosition methods ----------
+
+
 STDMETHODIMP
 CPosPassThru::get_Duration(REFTIME * plength)
 {
@@ -722,6 +822,7 @@ CPosPassThru::get_Duration(REFTIME * plength)
     return hr;
 }
 
+
 STDMETHODIMP
 CPosPassThru::get_CurrentPosition(REFTIME * pllTime)
 {
@@ -734,6 +835,7 @@ CPosPassThru::get_CurrentPosition(REFTIME * pllTime)
     pMP->Release();
     return hr;
 }
+
 
 STDMETHODIMP
 CPosPassThru::put_CurrentPosition(REFTIME llTime)
@@ -748,6 +850,7 @@ CPosPassThru::put_CurrentPosition(REFTIME llTime)
     return hr;
 }
 
+
 STDMETHODIMP
 CPosPassThru::get_StopTime(REFTIME * pllTime)
 {
@@ -760,6 +863,7 @@ CPosPassThru::get_StopTime(REFTIME * pllTime)
     pMP->Release();
     return hr;
 }
+
 
 STDMETHODIMP
 CPosPassThru::put_StopTime(REFTIME llTime)
@@ -774,6 +878,7 @@ CPosPassThru::put_StopTime(REFTIME llTime)
     return hr;
 }
 
+
 STDMETHODIMP
 CPosPassThru::get_PrerollTime(REFTIME * pllTime)
 {
@@ -786,6 +891,7 @@ CPosPassThru::get_PrerollTime(REFTIME * pllTime)
     pMP->Release();
     return hr;
 }
+
 
 STDMETHODIMP
 CPosPassThru::put_PrerollTime(REFTIME llTime)
@@ -800,6 +906,7 @@ CPosPassThru::put_PrerollTime(REFTIME llTime)
     return hr;
 }
 
+
 STDMETHODIMP
 CPosPassThru::get_Rate(double * pdRate)
 {
@@ -812,6 +919,7 @@ CPosPassThru::get_Rate(double * pdRate)
     pMP->Release();
     return hr;
 }
+
 
 STDMETHODIMP
 CPosPassThru::put_Rate(double dRate)
@@ -830,6 +938,7 @@ CPosPassThru::put_Rate(double dRate)
     return hr;
 }
 
+
 STDMETHODIMP
 CPosPassThru::CanSeekForward(LONG *pCanSeekForward)
 {
@@ -842,6 +951,7 @@ CPosPassThru::CanSeekForward(LONG *pCanSeekForward)
     pMP->Release();
     return hr;
 }
+
 
 STDMETHODIMP
 CPosPassThru::CanSeekBackward(LONG *pCanSeekBackward)
@@ -856,6 +966,16 @@ CPosPassThru::CanSeekBackward(LONG *pCanSeekBackward)
     return hr;
 }
 
+
+// --- Implements the CRendererPosPassThru class ----------
+
+
+// Media times (eg current frame, field, sample etc) are passed through the
+// filtergraph in media samples. When a renderer gets a sample with media
+// times in it, it will call one of the RegisterMediaTime methods we expose
+// (one takes an IMediaSample, the other takes the media times direct). We
+// store the media times internally and return them in GetCurrentPosition.
+
 CRendererPosPassThru::CRendererPosPassThru(const TCHAR *pName,
 					   LPUNKNOWN pUnk,
 					   HRESULT *phr,
@@ -867,6 +987,9 @@ CRendererPosPassThru::CRendererPosPassThru(const TCHAR *pName,
 {
 }
 
+
+// Sets the media times the object should report
+
 HRESULT
 CRendererPosPassThru::RegisterMediaTime(IMediaSample *pMediaSample)
 {
@@ -876,7 +999,7 @@ CRendererPosPassThru::RegisterMediaTime(IMediaSample *pMediaSample)
 
     CAutoLock cAutoLock(&m_PositionLock);
 
-    
+    // Get the media times from the sample
 
     HRESULT hr = pMediaSample->GetTime(&StartMedia,&EndMedia);
     if (FAILED(hr))
@@ -891,6 +1014,9 @@ CRendererPosPassThru::RegisterMediaTime(IMediaSample *pMediaSample)
     return NOERROR;
 }
 
+
+// Sets the media times the object should report
+
 HRESULT
 CRendererPosPassThru::RegisterMediaTime(LONGLONG StartTime,LONGLONG EndTime)
 {
@@ -900,6 +1026,9 @@ CRendererPosPassThru::RegisterMediaTime(LONGLONG StartTime,LONGLONG EndTime)
     m_bReset = FALSE;
     return NOERROR;
 }
+
+
+// Return the current media times registered in the object
 
 HRESULT
 CRendererPosPassThru::GetMediaTime(LONGLONG *pStartTime,LONGLONG *pEndTime)
@@ -911,7 +1040,7 @@ CRendererPosPassThru::GetMediaTime(LONGLONG *pStartTime,LONGLONG *pEndTime)
 	return E_FAIL;
     }
 
-    
+    // We don't have to return the end time
 
     HRESULT hr = ConvertTimeFormat( pStartTime, 0, m_StartMedia, &TIME_FORMAT_MEDIA_TIME );
     if (pEndTime && SUCCEEDED(hr)) {
@@ -919,6 +1048,9 @@ CRendererPosPassThru::GetMediaTime(LONGLONG *pStartTime,LONGLONG *pEndTime)
     }
     return hr;
 }
+
+
+// Resets the media times we hold
 
 HRESULT
 CRendererPosPassThru::ResetMediaTime()
@@ -930,6 +1062,9 @@ CRendererPosPassThru::ResetMediaTime()
     return NOERROR;
 }
 
+// Intended to be called by the owing filter during EOS processing so
+// that the media times can be adjusted to the stop time.  This ensures
+// that the GetCurrentPosition will actully get to the stop position.
 HRESULT
 CRendererPosPassThru::EOS()
 {
@@ -948,6 +1083,8 @@ CRendererPosPassThru::EOS()
     }
     return hr;
 }
+
+// -- CSourceSeeking implementation ------------
 
 CSourceSeeking::CSourceSeeking(
     const TCHAR * pName,
@@ -980,10 +1117,11 @@ HRESULT CSourceSeeking::NonDelegatingQueryInterface(REFIID riid, void **ppv)
     }
 }
 
+
 HRESULT CSourceSeeking::IsFormatSupported(const GUID * pFormat)
 {
     CheckPointer(pFormat, E_POINTER);
-    
+    // only seeking in time (REFERENCE_TIME units) is supported
     return *pFormat == TIME_FORMAT_MEDIA_TIME ? S_OK : S_FALSE;
 }
 
@@ -998,7 +1136,7 @@ HRESULT CSourceSeeking::SetTimeFormat(const GUID * pFormat)
 {
     CheckPointer(pFormat, E_POINTER);
 
-    
+    // nothing to set; just check that it's TIME_FORMAT_TIME
     return *pFormat == TIME_FORMAT_MEDIA_TIME ? S_OK : E_INVALIDARG;
 }
 
@@ -1033,8 +1171,8 @@ HRESULT CSourceSeeking::GetStopPosition(LONGLONG *pStop)
 
 HRESULT CSourceSeeking::GetCurrentPosition(LONGLONG *pCurrent)
 {
-    
-    
+    // GetCurrentPosition is typically supported only in renderers and
+    // not in source filters.
     return E_NOTIMPL;
 }
 
@@ -1049,7 +1187,7 @@ HRESULT CSourceSeeking::CheckCapabilities( DWORD * pCapabilities )
 {
     CheckPointer(pCapabilities, E_POINTER);
 
-    
+    // make sure all requested capabilities are in our mask
     return (~m_dwSeekingCaps & *pCapabilities) ? S_FALSE : S_OK;
 }
 
@@ -1057,10 +1195,10 @@ HRESULT CSourceSeeking::ConvertTimeFormat( LONGLONG * pTarget, const GUID * pTar
                            LONGLONG    Source, const GUID * pSourceFormat )
 {
     CheckPointer(pTarget, E_POINTER);
-    
+    // format guids can be null to indicate current format
 
-    
-    
+    // since we only support TIME_FORMAT_MEDIA_TIME, we don't really
+    // offer any conversions.
     if(pTargetFormat == 0 || *pTargetFormat == TIME_FORMAT_MEDIA_TIME)
     {
         if(pSourceFormat == 0 || *pSourceFormat == TIME_FORMAT_MEDIA_TIME)
@@ -1073,6 +1211,7 @@ HRESULT CSourceSeeking::ConvertTimeFormat( LONGLONG * pTarget, const GUID * pTar
     return E_INVALIDARG;
 }
 
+
 HRESULT CSourceSeeking::SetPositions( LONGLONG * pCurrent,  DWORD CurrentFlags
                       , LONGLONG * pStop,  DWORD StopFlags )
 {
@@ -1082,7 +1221,7 @@ HRESULT CSourceSeeking::SetPositions( LONGLONG * pCurrent,  DWORD CurrentFlags
     if(StopFlags) {
         CheckPointer(pStop, E_POINTER);
 
-        
+        // accept only relative, incremental, or absolute positioning
         if(StopPosBits != StopFlags) {
             return E_INVALIDARG;
         }
@@ -1096,11 +1235,12 @@ HRESULT CSourceSeeking::SetPositions( LONGLONG * pCurrent,  DWORD CurrentFlags
         }
     }
 
-    
+
+    // scope for autolock
     {
         CAutoLock lock(m_pLock);
 
-        
+        // set start position
         if(StartPosBits == AM_SEEKING_AbsolutePositioning)
         {
             m_rtStart = *pCurrent;
@@ -1110,7 +1250,7 @@ HRESULT CSourceSeeking::SetPositions( LONGLONG * pCurrent,  DWORD CurrentFlags
             m_rtStart += *pCurrent;
         }
 
-        
+        // set stop position
         if(StopPosBits == AM_SEEKING_AbsolutePositioning)
         {
             m_rtStop = *pStop;
@@ -1125,6 +1265,7 @@ HRESULT CSourceSeeking::SetPositions( LONGLONG * pCurrent,  DWORD CurrentFlags
         }
     }
 
+
     HRESULT hr = S_OK;
     if(SUCCEEDED(hr) && StopPosBits) {
         hr = ChangeStop();
@@ -1135,6 +1276,7 @@ HRESULT CSourceSeeking::SetPositions( LONGLONG * pCurrent,  DWORD CurrentFlags
 
     return hr;
 }
+
 
 HRESULT CSourceSeeking::GetPositions( LONGLONG * pCurrent, LONGLONG * pStop )
 {
@@ -1147,6 +1289,7 @@ HRESULT CSourceSeeking::GetPositions( LONGLONG * pCurrent, LONGLONG * pStop )
 
     return S_OK;;
 }
+
 
 HRESULT CSourceSeeking::GetAvailable( LONGLONG * pEarliest, LONGLONG * pLatest )
 {
@@ -1184,6 +1327,13 @@ HRESULT CSourceSeeking::GetPreroll(LONGLONG *pPreroll)
     return S_OK;
 }
 
+
+
+
+
+// --- CSourcePosition implementation ----------
+
+
 CSourcePosition::CSourcePosition(const TCHAR * pName,
 				 LPUNKNOWN pUnk,
 				 HRESULT* phr,
@@ -1196,6 +1346,7 @@ CSourcePosition::CSourcePosition(const TCHAR * pName,
     m_Rate = 1.0;
 }
 
+
 STDMETHODIMP
 CSourcePosition::get_Duration(REFTIME * plength)
 {
@@ -1207,6 +1358,7 @@ CSourcePosition::get_Duration(REFTIME * plength)
     return S_OK;
 }
 
+
 STDMETHODIMP
 CSourcePosition::put_CurrentPosition(REFTIME llTime)
 {
@@ -1216,6 +1368,7 @@ CSourcePosition::put_CurrentPosition(REFTIME llTime)
 
     return ChangeStart();
 }
+
 
 STDMETHODIMP
 CSourcePosition::get_StopTime(REFTIME * pllTime)
@@ -1228,6 +1381,7 @@ CSourcePosition::get_StopTime(REFTIME * pllTime)
     return S_OK;
 }
 
+
 STDMETHODIMP
 CSourcePosition::put_StopTime(REFTIME llTime)
 {
@@ -1238,6 +1392,7 @@ CSourcePosition::put_StopTime(REFTIME llTime)
     return ChangeStop();
 }
 
+
 STDMETHODIMP
 CSourcePosition::get_PrerollTime(REFTIME * pllTime)
 {
@@ -1246,11 +1401,13 @@ CSourcePosition::get_PrerollTime(REFTIME * pllTime)
     return E_NOTIMPL;
 }
 
+
 STDMETHODIMP
 CSourcePosition::put_PrerollTime(REFTIME llTime)
 {
     return E_NOTIMPL;
 }
+
 
 STDMETHODIMP
 CSourcePosition::get_Rate(double * pdRate)
@@ -1263,6 +1420,7 @@ CSourcePosition::get_Rate(double * pdRate)
     return S_OK;
 }
 
+
 STDMETHODIMP
 CSourcePosition::put_Rate(double dRate)
 {
@@ -1273,6 +1431,9 @@ CSourcePosition::put_Rate(double dRate)
     return ChangeRate();
 }
 
+
+// By default we can seek forwards
+
 STDMETHODIMP
 CSourcePosition::CanSeekForward(LONG *pCanSeekForward)
 {
@@ -1280,6 +1441,9 @@ CSourcePosition::CanSeekForward(LONG *pCanSeekForward)
     *pCanSeekForward = OATRUE;
     return S_OK;
 }
+
+
+// By default we can seek backwards
 
 STDMETHODIMP
 CSourcePosition::CanSeekBackward(LONG *pCanSeekBackward)
@@ -1289,10 +1453,16 @@ CSourcePosition::CanSeekBackward(LONG *pCanSeekBackward)
     return S_OK;
 }
 
+
+// --- Implementation of CBasicAudio class ----------
+
+
 CBasicAudio::CBasicAudio(const TCHAR * pName,LPUNKNOWN punk) :
     CUnknown(pName, punk)
 {
 }
+
+// overriden to publicise our interfaces
 
 STDMETHODIMP
 CBasicAudio::NonDelegatingQueryInterface(REFIID riid, void **ppv)
@@ -1305,11 +1475,13 @@ CBasicAudio::NonDelegatingQueryInterface(REFIID riid, void **ppv)
     }
 }
 
+
 STDMETHODIMP
 CBasicAudio::GetTypeInfoCount(UINT * pctinfo)
 {
     return m_basedisp.GetTypeInfoCount(pctinfo);
 }
+
 
 STDMETHODIMP
 CBasicAudio::GetTypeInfo(
@@ -1323,6 +1495,7 @@ CBasicAudio::GetTypeInfo(
 		lcid,
 		pptinfo);
 }
+
 
 STDMETHODIMP
 CBasicAudio::GetIDsOfNames(
@@ -1340,6 +1513,7 @@ CBasicAudio::GetIDsOfNames(
 			rgdispid);
 }
 
+
 STDMETHODIMP
 CBasicAudio::Invoke(
   DISPID dispidMember,
@@ -1351,7 +1525,7 @@ CBasicAudio::Invoke(
   EXCEPINFO * pexcepinfo,
   UINT * puArgErr)
 {
-    
+    // this parameter is a dead leftover from an earlier interface
     if (IID_NULL != riid) {
 	return DISP_E_UNKNOWNINTERFACE;
     }
@@ -1376,10 +1550,16 @@ CBasicAudio::Invoke(
     return hr;
 }
 
+
+// --- IVideoWindow implementation ----------
+
 CBaseVideoWindow::CBaseVideoWindow(const TCHAR * pName,LPUNKNOWN punk) :
     CUnknown(pName, punk)
 {
 }
+
+
+// overriden to publicise our interfaces
 
 STDMETHODIMP
 CBaseVideoWindow::NonDelegatingQueryInterface(REFIID riid, void **ppv)
@@ -1392,11 +1572,13 @@ CBaseVideoWindow::NonDelegatingQueryInterface(REFIID riid, void **ppv)
     }
 }
 
+
 STDMETHODIMP
 CBaseVideoWindow::GetTypeInfoCount(UINT * pctinfo)
 {
     return m_basedisp.GetTypeInfoCount(pctinfo);
 }
+
 
 STDMETHODIMP
 CBaseVideoWindow::GetTypeInfo(
@@ -1410,6 +1592,7 @@ CBaseVideoWindow::GetTypeInfo(
 		lcid,
 		pptinfo);
 }
+
 
 STDMETHODIMP
 CBaseVideoWindow::GetIDsOfNames(
@@ -1427,6 +1610,7 @@ CBaseVideoWindow::GetIDsOfNames(
 			rgdispid);
 }
 
+
 STDMETHODIMP
 CBaseVideoWindow::Invoke(
   DISPID dispidMember,
@@ -1438,7 +1622,7 @@ CBaseVideoWindow::Invoke(
   EXCEPINFO * pexcepinfo,
   UINT * puArgErr)
 {
-    
+    // this parameter is a dead leftover from an earlier interface
     if (IID_NULL != riid) {
 	return DISP_E_UNKNOWNINTERFACE;
     }
@@ -1463,10 +1647,17 @@ CBaseVideoWindow::Invoke(
     return hr;
 }
 
+
+// --- IBasicVideo implementation ----------
+
+
 CBaseBasicVideo::CBaseBasicVideo(const TCHAR * pName,LPUNKNOWN punk) :
     CUnknown(pName, punk)
 {
 }
+
+
+// overriden to publicise our interfaces
 
 STDMETHODIMP
 CBaseBasicVideo::NonDelegatingQueryInterface(REFIID riid, void **ppv)
@@ -1479,11 +1670,13 @@ CBaseBasicVideo::NonDelegatingQueryInterface(REFIID riid, void **ppv)
     }
 }
 
+
 STDMETHODIMP
 CBaseBasicVideo::GetTypeInfoCount(UINT * pctinfo)
 {
     return m_basedisp.GetTypeInfoCount(pctinfo);
 }
+
 
 STDMETHODIMP
 CBaseBasicVideo::GetTypeInfo(
@@ -1497,6 +1690,7 @@ CBaseBasicVideo::GetTypeInfo(
 		lcid,
 		pptinfo);
 }
+
 
 STDMETHODIMP
 CBaseBasicVideo::GetIDsOfNames(
@@ -1514,6 +1708,7 @@ CBaseBasicVideo::GetIDsOfNames(
 			rgdispid);
 }
 
+
 STDMETHODIMP
 CBaseBasicVideo::Invoke(
   DISPID dispidMember,
@@ -1525,7 +1720,7 @@ CBaseBasicVideo::Invoke(
   EXCEPINFO * pexcepinfo,
   UINT * puArgErr)
 {
-    
+    // this parameter is a dead leftover from an earlier interface
     if (IID_NULL != riid) {
 	return DISP_E_UNKNOWNINTERFACE;
     }
@@ -1549,6 +1744,10 @@ CBaseBasicVideo::Invoke(
     pti->Release();
     return hr;
 }
+
+
+// --- Implementation of Deferred Commands ----------
+
 
 CDispParams::CDispParams(UINT nArgs, VARIANT* pArgs, HRESULT *phr)
 {
@@ -1615,8 +1814,8 @@ CDispParams::CDispParams(UINT nArgs, VARIANT* pArgs, HRESULT *phr)
 		    pDest->bstrVal = NULL;
 		} else {
 
-		    
-		    
+		    // a BSTR is a WORD followed by a UNICODE string.
+		    // the pointer points just after the WORD
 
 		    WORD len = * (WORD*) (pSrc->bstrVal - (sizeof(WORD) / sizeof(OLECHAR)));
 		    OLECHAR* pch = new OLECHAR[len + (sizeof(WORD)/sizeof(OLECHAR))];
@@ -1646,7 +1845,7 @@ CDispParams::CDispParams(UINT nArgs, VARIANT* pArgs, HRESULT *phr)
 		break;
 
 	    default:
-		
+		// a type we haven't got round to adding yet!
 		ASSERT(0);
 		break;
 	    }
@@ -1657,6 +1856,7 @@ CDispParams::CDispParams(UINT nArgs, VARIANT* pArgs, HRESULT *phr)
     }
 
 }
+
 
 CDispParams::~CDispParams()
 {
@@ -1680,6 +1880,9 @@ CDispParams::~CDispParams()
     }
     delete[] rgvarg;
 }
+
+
+// lifetime is controlled by refcounts (see defer.h)
 
 CDeferredCommand::CDeferredCommand(
     CCmdQueue * pQ,
@@ -1708,14 +1911,14 @@ CDeferredCommand::CDeferredCommand(
 	m_hrResult(E_ABORT)
 
 {
-    
+    // convert REFTIME to REFERENCE_TIME
     COARefTime convertor(time);
     m_time = convertor;
 
-    
-    
+    // no check of time validity - it's ok to queue a command that's
+    // already late
 
-    
+    // check iid is supportable on pUnk by QueryInterface for it
     IUnknown * pInterface;
     HRESULT hr = m_pUnk->QueryInterface(GetIID(), (void**) &pInterface);
     if (FAILED(hr)) {
@@ -1724,49 +1927,58 @@ CDeferredCommand::CDeferredCommand(
     }
     pInterface->Release();
 
-    
+
+    // !!! check dispidMethod and param/return types using typelib
     ITypeInfo *pti;
     hr = m_Dispatch.GetTypeInfo(*iid, 0, 0, &pti);
     if (FAILED(hr)) {
 	*phr = hr;
 	return;
     }
-    
+    // !!! some sort of ITypeInfo validity check here
     pti->Release();
 
-    
+
+    // Fix up the dispid for put and get
     if (wFlags == DISPATCH_PROPERTYPUT) {
         m_DispParams.cNamedArgs = 1;
         m_DispId = DISPID_PROPERTYPUT;
         m_DispParams.rgdispidNamedArgs = &m_DispId;
     }
 
-    
+    // all checks ok - add to queue
     hr = pQ->Insert(this);
     if (FAILED(hr)) {
 	*phr = hr;
     }
 }
 
+
+// refcounts are held by caller of InvokeAt... and by list. So if
+// we get here, we can't be on the list
+
 #if 0
 CDeferredCommand::~CDeferredCommand()
 {
-    
-    
-    
-    
+    // this assert is invalid since if the queue is deleted while we are
+    // still on the queue, we will have been removed by the queue and this
+    // m_pQueue will not have been modified.
+    // ASSERT(m_pQueue == NULL);
 
-    
-    
-    
-    
-    
-    
-    
-    
+    // we don't hold a ref count on pUnk, which is the object that should
+    // execute the command.
+    // This is because there would otherwise be a circular refcount problem
+    // since pUnk probably owns the CmdQueue object that has a refcount
+    // on us.
+    // The lifetime of pUnk is guaranteed by it being part of, or lifetime
+    // controlled by, our parent object. As long as we are on the list, pUnk
+    // must be valid. Once we are off the list, we do not use pUnk.
 
 }
 #endif
+
+
+// overriden to publicise our interfaces
 
 STDMETHODIMP
 CDeferredCommand::NonDelegatingQueryInterface(REFIID riid, void **ppv)
@@ -1778,6 +1990,11 @@ CDeferredCommand::NonDelegatingQueryInterface(REFIID riid, void **ppv)
 	return CUnknown::NonDelegatingQueryInterface(riid, ppv);
     }
 }
+
+
+// remove from q. this will reduce the refcount by one (since the q
+// holds a count) but can't make us go away since he must have a
+// refcount in order to call this method.
 
 STDMETHODIMP
 CDeferredCommand::Cancel()
@@ -1795,11 +2012,13 @@ CDeferredCommand::Cancel()
     return S_OK;
 }
 
+
 STDMETHODIMP
 CDeferredCommand::Confidence(LONG* pConfidence)
 {
     return E_NOTIMPL;
 }
+
 
 STDMETHODIMP
 CDeferredCommand::GetHResult(HRESULT * phrResult)
@@ -1814,51 +2033,56 @@ CDeferredCommand::GetHResult(HRESULT * phrResult)
     return S_OK;
 }
 
+
+// set the time to be a new time (checking that it is valid) and
+// then requeue
+
 STDMETHODIMP
 CDeferredCommand::Postpone(REFTIME newtime)
 {
 
-    
-    
+    // check that this time is not past
+    // convert REFTIME to REFERENCE_TIME
     COARefTime convertor(newtime);
 
-    
+    // check that the time has not passed
     if (m_pQueue->CheckTime(convertor, IsStreamTime())) {
 	return VFW_E_TIME_ALREADY_PASSED;
     }
 
-    
+    // extract from list
     HRESULT hr = m_pQueue->Remove(this);
     if (FAILED(hr)) {
 	return hr;
     }
 
-    
+    // change time
     m_time = convertor;
 
-    
+    // requeue
     hr = m_pQueue->Insert(this);
 
     return hr;
 }
 
+
 HRESULT
 CDeferredCommand::Invoke()
 {
-    
+    // check that we are still outstanding
     if (m_pQueue == NULL) {
 	return VFW_E_ALREADY_CANCELLED;
     }
 
-    
+    // get the type info
     ITypeInfo* pti;
     HRESULT hr = m_Dispatch.GetTypeInfo(GetIID(), 0, 0, &pti);
     if (FAILED(hr)) {
 	return hr;
     }
 
-    
-    
+    // qi for the expected interface and then invoke it. Note that we have to
+    // treat the returned interface as IUnknown since we don't know its type.
     IUnknown* pInterface;
 
     hr = m_pUnk->QueryInterface(GetIID(), (void**) &pInterface);
@@ -1878,33 +2102,40 @@ CDeferredCommand::Invoke()
 	&expinfo,
 	&uArgErr);
 
-    
+    // release the interface we QI'd for
     pInterface->Release();
     pti->Release();
 
-    
-    
+
+    // remove from list whether or not successful
+    // or we loop indefinitely
     hr = m_pQueue->Remove(this);
     m_pQueue = NULL;
     return hr;
 }
 
+
+
+// --- CCmdQueue methods ----------
+
+
 CCmdQueue::CCmdQueue() :
     m_listPresentation(NAME("Presentation time command list")),
     m_listStream(NAME("Stream time command list")),
-    m_evDue(TRUE),    
+    m_evDue(TRUE),    // manual reset
     m_dwAdvise(0),
     m_pClock(NULL),
     m_bRunning(FALSE)
 {
 }
 
+
 CCmdQueue::~CCmdQueue()
 {
-    
+    // empty all our lists
 
-    
-    
+    // we hold a refcount on each, so traverse and Release each
+    // entry then RemoveAll to empty the list
     POSITION pos = m_listPresentation.GetHeadPosition();
 
     while(pos) {
@@ -1930,10 +2161,16 @@ CCmdQueue::~CCmdQueue()
     }
 }
 
+
+// returns a new CDeferredCommand object that will be initialised with
+// the parameters and will be added to the queue during construction.
+// returns S_OK if successfully created otherwise an error and
+// no object has been queued.
+
 HRESULT
 CCmdQueue::New(
     CDeferredCommand **ppCmd,
-    LPUNKNOWN	pUnk,		
+    LPUNKNOWN	pUnk,		// this object will execute command
     REFTIME	time,
     GUID*	iid,
     long	dispidMethod,
@@ -1953,9 +2190,9 @@ CCmdQueue::New(
     CDeferredCommand* pCmd;
     pCmd = new CDeferredCommand(
 		    this,
-		    NULL,	    
+		    NULL,	    // not aggregated
 		    &hr,
-		    pUnk,	    
+		    pUnk,	    // this guy will execute
 		    time,
 		    iid,
 		    dispidMethod,
@@ -1974,12 +2211,13 @@ CCmdQueue::New(
     return hr;
 }
 
+
 HRESULT
 CCmdQueue::Insert(CDeferredCommand* pCmd)
 {
     CAutoLock lock(&m_Lock);
 
-    
+    // addref the item
     pCmd->AddRef();
 
     CGenericList<CDeferredCommand> * pList;
@@ -1990,14 +2228,14 @@ CCmdQueue::Insert(CDeferredCommand* pCmd)
     }
     POSITION pos = pList->GetHeadPosition();
 
-    
+    // seek past all items that are before us
     while (pos &&
 	(pList->Get(pos)->GetTime() <= pCmd->GetTime())) {
 
 	pList->GetNext(pos);
     }
 
-    
+    // now at end of list or in front of items that come later
     if (!pos) {
 	pList->AddTail(pCmd);
     } else {
@@ -2007,6 +2245,7 @@ CCmdQueue::Insert(CDeferredCommand* pCmd)
     SetTimeAdvise();
     return S_OK;
 }
+
 
 HRESULT
 CCmdQueue::Remove(CDeferredCommand* pCmd)
@@ -2022,39 +2261,42 @@ CCmdQueue::Remove(CDeferredCommand* pCmd)
     }
     POSITION pos = pList->GetHeadPosition();
 
-    
+    // traverse the list
     while (pos && (pList->Get(pos) != pCmd)) {
 	pList->GetNext(pos);
     }
 
-    
+    // did we drop off the end?
     if (!pos) {
 	hr = VFW_E_NOT_FOUND;
     } else {
 
-	
+	// found it - now take off list
 	pList->Remove(pos);
 
-	
+	// Insert did an AddRef, so release it
 	pCmd->Release();
 
-	
+	// check that timer request is still for earliest time
 	SetTimeAdvise();
     }
     return hr;
 }
+
+
+// set the clock used for timing
 
 HRESULT
 CCmdQueue::SetSyncSource(IReferenceClock* pClock)
 {
     CAutoLock lock(&m_Lock);
 
-    
+    // addref the new clock first in case they are the same
     if (pClock) {
 	pClock->AddRef();
     }
 
-    
+    // kill any advise on the old clock
     if (m_pClock) {
 	if (m_dwAdvise) {
 	    m_pClock->Unadvise(m_dwAdvise);
@@ -2064,33 +2306,36 @@ CCmdQueue::SetSyncSource(IReferenceClock* pClock)
     }
     m_pClock = pClock;
 
-    
+    // set up a new advise
     SetTimeAdvise();
     return S_OK;
 }
 
+
+// set up a timer event with the reference clock
+
 void
 CCmdQueue::SetTimeAdvise(void)
 {
-    
+    // make sure we have a clock to use
     if (!m_pClock) {
 	return;
     }
 
-    
+    // reset the event whenever we are requesting a new signal
     m_evDue.Reset();
 
-    
+    // time 0 is earliest
     CRefTime current;
 
-    
+    // find the earliest presentation time
     if (m_listPresentation.GetCount() > 0) {
 
 	POSITION pos = m_listPresentation.GetHeadPosition();
 	current = m_listPresentation.Get(pos)->GetTime();
     }
 
-    
+    // if we're running, check the stream times too
     if (m_bRunning) {
 
 	CRefTime t;
@@ -2100,27 +2345,27 @@ CCmdQueue::SetTimeAdvise(void)
 	    POSITION pos = m_listStream.GetHeadPosition();
 	    t = m_listStream.Get(pos)->GetTime();
 
-	    
+	    // add on stream time offset to get presentation time
 	    t += m_StreamTimeOffset;
 
-	    
+	    // is this earlier?
 	    if ((current == TimeZero) || (t < current)) {
 		current = t;
 	    }
 	}
     }
 
-    
+    // need to change?
     if ((current > TimeZero) && (current != m_tCurrentAdvise)) {
 	if (m_dwAdvise) {
 	    m_pClock->Unadvise(m_dwAdvise);
-	    
+	    // reset the event whenever we are requesting a new signal
 	    m_evDue.Reset();
 	}
 
-	
-	
-	
+	// ask for time advice - the first two params are either
+	// stream time offset and stream time or
+	// presentation time and 0. we always use the latter
 	HRESULT hr = m_pClock->AdviseTime(
 		    (REFERENCE_TIME)current,
 		    TimeZero,
@@ -2132,6 +2377,9 @@ CCmdQueue::SetTimeAdvise(void)
     }
 }
 
+
+// switch to run mode. Streamtime to Presentation time mapping known.
+
 HRESULT
 CCmdQueue::Run(REFERENCE_TIME tStreamTimeOffset)
 {
@@ -2140,10 +2388,13 @@ CCmdQueue::Run(REFERENCE_TIME tStreamTimeOffset)
     m_StreamTimeOffset = tStreamTimeOffset;
     m_bRunning = TRUE;
 
-    
+    // ensure advise is accurate
     SetTimeAdvise();
     return S_OK;
 }
+
+
+// switch to Stopped or Paused mode. Time mapping not known.
 
 HRESULT
 CCmdQueue::EndRun()
@@ -2152,25 +2403,35 @@ CCmdQueue::EndRun()
 
     m_bRunning = FALSE;
 
-    
+    // check timer setting - stream times
     SetTimeAdvise();
     return S_OK;
 }
 
+
+// return a pointer to the next due command. Blocks for msTimeout
+// milliseconds until there is a due command.
+// Stream-time commands will only become due between Run and Endrun calls.
+// The command remains queued until invoked or cancelled.
+// Returns E_ABORT if timeout occurs, otherwise S_OK (or other error).
+//
+// returns an AddRef'd object
+
 HRESULT
 CCmdQueue::GetDueCommand(CDeferredCommand ** ppCmd, long msTimeout)
 {
-    
+    // loop until we timeout or find a due command
     for (;;) {
 
 	{
 	    CAutoLock lock(&m_Lock);
 
-	    
+
+	    // find the earliest command
 	    CDeferredCommand * pCmd = NULL;
 
-	    
-	    
+	    // check the presentation time and the
+	    // stream time list to find the earliest
 
 	    if (m_listPresentation.GetCount() > 0) {
 		POSITION pos = m_listPresentation.GetHeadPosition();
@@ -2187,11 +2448,11 @@ CCmdQueue::GetDueCommand(CDeferredCommand ** ppCmd, long msTimeout)
 		}
 	    }
 
-	    
+	    //	if we have found one, is it due?
 	    if (pCmd) {
 		if (CheckTime(pCmd->GetTime(), pCmd->IsStreamTime())) {
 
-		    
+		    // yes it's due - addref it
 		    pCmd->AddRef();
 		    *ppCmd = pCmd;
 		    return S_OK;
@@ -2199,12 +2460,22 @@ CCmdQueue::GetDueCommand(CDeferredCommand ** ppCmd, long msTimeout)
 	    }
 	}
 
-	
+	// block until the advise is signalled
 	if (WaitForSingleObject(m_evDue, msTimeout) != WAIT_OBJECT_0) {
 	    return E_ABORT;
 	}
     }
 }
+
+
+// return a pointer to a command that will be due for a given time.
+// Pass in a stream time here. The stream time offset will be passed
+// in via the Run method.
+// Commands remain queued until invoked or cancelled.
+// This method will not block. It will report E_ABORT if there are no
+// commands due yet.
+//
+// returns an AddRef'd object
 
 HRESULT
 CCmdQueue::GetCommandDueFor(REFERENCE_TIME rtStream, CDeferredCommand**ppCmd)
@@ -2213,7 +2484,7 @@ CCmdQueue::GetCommandDueFor(REFERENCE_TIME rtStream, CDeferredCommand**ppCmd)
 
     CRefTime tStream(rtStream);
 
-    
+    // find the earliest stream and presentation time commands
     CDeferredCommand* pStream = NULL;
     if (m_listStream.GetCount() > 0) {
 	POSITION pos = m_listStream.GetHeadPosition();
@@ -2225,36 +2496,36 @@ CCmdQueue::GetCommandDueFor(REFERENCE_TIME rtStream, CDeferredCommand**ppCmd)
 	pPresent = m_listPresentation.Get(pos);
     }
 
-    
+    // is there a presentation time that has passed already
     if (pPresent && CheckTime(pPresent->GetTime(), FALSE)) {
 	pPresent->AddRef();
 	*ppCmd = pPresent;
 	return S_OK;
     }
 
-    
+    // is there a stream time command due before this stream time
     if (pStream && (pStream->GetTime() <= tStream)) {
 	pPresent->AddRef();
 	*ppCmd = pStream;
 	return S_OK;
     }
 
-    
-    
-    
+    // if we are running, we can map presentation times to
+    // stream time. In this case, is there a presentation time command
+    // that will be due before this stream time is presented?
     if (m_bRunning && pPresent) {
 
-	
+	// this stream time will appear at...
 	tStream += m_StreamTimeOffset;
 
-	
+	// due before that?
 	if (pPresent->GetTime() <= tStream) {
 	    *ppCmd = pPresent;
 	    return S_OK;
 	}
     }
 
-    
+    // no commands due yet
     return VFW_E_NOT_FOUND;
 }
 

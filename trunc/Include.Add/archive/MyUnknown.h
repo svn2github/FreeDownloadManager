@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// MyUnknown.h
 
 #ifndef __MYUNKNOWN_H
 #define __MYUNKNOWN_H

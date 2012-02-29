@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Windows/FileFind.cpp
 
 #include "StdAfx.h"
 
@@ -95,6 +93,8 @@ static void ConvertWIN32_FIND_DATA_To_FileInfo(
 }
 #endif
   
+////////////////////////////////
+// CFindFile
 
 bool CFindFile::Close()
 {
@@ -196,6 +196,9 @@ bool DoesFileExist(LPCWSTR name)
 }
 #endif
 
+/////////////////////////////////////
+// CEnumerator
+
 bool CEnumerator::NextAny(CFileInfo &fileInfo)
 {
   if(_findFile.IsHandleAllocated())
@@ -258,6 +261,9 @@ bool CEnumeratorW::Next(CFileInfoW &fileInfo, bool &found)
 }
 
 #endif
+
+////////////////////////////////
+// CFindChangeNotification
 
 bool CFindChangeNotification::Close()
 {

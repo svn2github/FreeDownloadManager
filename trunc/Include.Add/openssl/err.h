@@ -1,9 +1,60 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
-
+/* crypto/err/err.h */
+/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
+ * All rights reserved.
+ *
+ * This package is an SSL implementation written
+ * by Eric Young (eay@cryptsoft.com).
+ * The implementation was written so as to conform with Netscapes SSL.
+ * 
+ * This library is free for commercial and non-commercial use as long as
+ * the following conditions are aheared to.  The following conditions
+ * apply to all code found in this distribution, be it the RC4, RSA,
+ * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
+ * included with this distribution is covered by the same copyright terms
+ * except that the holder is Tim Hudson (tjh@cryptsoft.com).
+ * 
+ * Copyright remains Eric Young's, and as such any Copyright notices in
+ * the code are not to be removed.
+ * If this package is used in a product, Eric Young should be given attribution
+ * as the author of the parts of the library used.
+ * This can be in the form of a textual message at program startup or
+ * in documentation (online or textual) provided with the package.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *    "This product includes cryptographic software written by
+ *     Eric Young (eay@cryptsoft.com)"
+ *    The word 'cryptographic' can be left out if the rouines from the library
+ *    being used are not cryptographic related :-).
+ * 4. If you include any Windows specific code (or a derivative thereof) from 
+ *    the apps directory (application code) you must include an acknowledgement:
+ *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"
+ * 
+ * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * The licence and distribution terms for any publically available version or
+ * derivative of this code cannot be changed.  i.e. this code cannot simply be
+ * copied and put under another distribution licence
+ * [including the GNU Public Licence.]
+ */
 
 #ifndef HEADER_ERR_H
 #define HEADER_ERR_H
@@ -53,7 +104,7 @@ typedef struct err_state_st
 	int top,bottom;
 	} ERR_STATE;
 
-
+/* library */
 #define ERR_LIB_NONE		1
 #define ERR_LIB_SYS		2
 #define ERR_LIB_BN		3
@@ -65,17 +116,17 @@ typedef struct err_state_st
 #define ERR_LIB_PEM		9
 #define ERR_LIB_DSA		10
 #define ERR_LIB_X509		11
-
+/* #define ERR_LIB_METH         12 */
 #define ERR_LIB_ASN1		13
 #define ERR_LIB_CONF		14
 #define ERR_LIB_CRYPTO		15
 #define ERR_LIB_EC		16
 #define ERR_LIB_SSL		20
-
-
-
-
-
+/* #define ERR_LIB_SSL23        21 */
+/* #define ERR_LIB_SSL2         22 */
+/* #define ERR_LIB_SSL3         23 */
+/* #define ERR_LIB_RSAREF       30 */
+/* #define ERR_LIB_PROXY        31 */
 #define ERR_LIB_BIO		32
 #define ERR_LIB_PKCS7		33
 #define ERR_LIB_X509V3		34
@@ -121,7 +172,8 @@ typedef struct err_state_st
 #define ECDHerr(f,r)  ERR_PUT_error(ERR_LIB_ECDH,(f),(r),__FILE__,__LINE__)
 #define STOREerr(f,r) ERR_PUT_error(ERR_LIB_STORE,(f),(r),__FILE__,__LINE__)
 
-
+/* Borland C seems too stupid to be able to shift and do longs in
+ * the pre-processor :-( */
 #define ERR_PACK(l,f,r)		(((((unsigned long)l)&0xffL)*0x1000000)| \
 				((((unsigned long)f)&0xfffL)*0x1000)| \
 				((((unsigned long)r)&0xfffL)))
@@ -131,7 +183,7 @@ typedef struct err_state_st
 #define ERR_FATAL_ERROR(l)	(int)((l)&ERR_R_FATAL)
 
 
-
+/* OS functions */
 #define SYS_F_FOPEN		1
 #define SYS_F_CONNECT		2
 #define SYS_F_GETSERVBYNAME	3
@@ -140,40 +192,40 @@ typedef struct err_state_st
 #define SYS_F_BIND		6
 #define SYS_F_LISTEN		7
 #define SYS_F_ACCEPT		8
-#define SYS_F_WSASTARTUP	9 
+#define SYS_F_WSASTARTUP	9 /* Winsock stuff */
 #define SYS_F_OPENDIR		10
 #define SYS_F_FREAD		11
 
 
-
-#define ERR_R_SYS_LIB	ERR_LIB_SYS       
-#define ERR_R_BN_LIB	ERR_LIB_BN        
-#define ERR_R_RSA_LIB	ERR_LIB_RSA       
-#define ERR_R_DH_LIB	ERR_LIB_DH        
-#define ERR_R_EVP_LIB	ERR_LIB_EVP       
-#define ERR_R_BUF_LIB	ERR_LIB_BUF       
-#define ERR_R_OBJ_LIB	ERR_LIB_OBJ       
-#define ERR_R_PEM_LIB	ERR_LIB_PEM       
-#define ERR_R_DSA_LIB	ERR_LIB_DSA      
-#define ERR_R_X509_LIB	ERR_LIB_X509     
-#define ERR_R_ASN1_LIB	ERR_LIB_ASN1     
-#define ERR_R_CONF_LIB	ERR_LIB_CONF     
-#define ERR_R_CRYPTO_LIB ERR_LIB_CRYPTO  
-#define ERR_R_EC_LIB	ERR_LIB_EC       
-#define ERR_R_SSL_LIB	ERR_LIB_SSL      
-#define ERR_R_BIO_LIB	ERR_LIB_BIO      
-#define ERR_R_PKCS7_LIB	ERR_LIB_PKCS7    
-#define ERR_R_X509V3_LIB ERR_LIB_X509V3  
-#define ERR_R_PKCS12_LIB ERR_LIB_PKCS12  
-#define ERR_R_RAND_LIB	ERR_LIB_RAND     
-#define ERR_R_DSO_LIB	ERR_LIB_DSO      
-#define ERR_R_ENGINE_LIB ERR_LIB_ENGINE  
-#define ERR_R_OCSP_LIB  ERR_LIB_OCSP     
-#define ERR_R_UI_LIB    ERR_LIB_UI       
-#define ERR_R_COMP_LIB	ERR_LIB_COMP     
-#define ERR_R_ECDSA_LIB ERR_LIB_ECDSA	 
-#define ERR_R_ECDH_LIB  ERR_LIB_ECDH	 
-#define ERR_R_STORE_LIB ERR_LIB_STORE    
+/* reasons */
+#define ERR_R_SYS_LIB	ERR_LIB_SYS       /* 2 */
+#define ERR_R_BN_LIB	ERR_LIB_BN        /* 3 */
+#define ERR_R_RSA_LIB	ERR_LIB_RSA       /* 4 */
+#define ERR_R_DH_LIB	ERR_LIB_DH        /* 5 */
+#define ERR_R_EVP_LIB	ERR_LIB_EVP       /* 6 */
+#define ERR_R_BUF_LIB	ERR_LIB_BUF       /* 7 */
+#define ERR_R_OBJ_LIB	ERR_LIB_OBJ       /* 8 */
+#define ERR_R_PEM_LIB	ERR_LIB_PEM       /* 9 */
+#define ERR_R_DSA_LIB	ERR_LIB_DSA      /* 10 */
+#define ERR_R_X509_LIB	ERR_LIB_X509     /* 11 */
+#define ERR_R_ASN1_LIB	ERR_LIB_ASN1     /* 13 */
+#define ERR_R_CONF_LIB	ERR_LIB_CONF     /* 14 */
+#define ERR_R_CRYPTO_LIB ERR_LIB_CRYPTO  /* 15 */
+#define ERR_R_EC_LIB	ERR_LIB_EC       /* 16 */
+#define ERR_R_SSL_LIB	ERR_LIB_SSL      /* 20 */
+#define ERR_R_BIO_LIB	ERR_LIB_BIO      /* 32 */
+#define ERR_R_PKCS7_LIB	ERR_LIB_PKCS7    /* 33 */
+#define ERR_R_X509V3_LIB ERR_LIB_X509V3  /* 34 */
+#define ERR_R_PKCS12_LIB ERR_LIB_PKCS12  /* 35 */
+#define ERR_R_RAND_LIB	ERR_LIB_RAND     /* 36 */
+#define ERR_R_DSO_LIB	ERR_LIB_DSO      /* 37 */
+#define ERR_R_ENGINE_LIB ERR_LIB_ENGINE  /* 38 */
+#define ERR_R_OCSP_LIB  ERR_LIB_OCSP     /* 39 */
+#define ERR_R_UI_LIB    ERR_LIB_UI       /* 40 */
+#define ERR_R_COMP_LIB	ERR_LIB_COMP     /* 41 */
+#define ERR_R_ECDSA_LIB ERR_LIB_ECDSA	 /* 42 */
+#define ERR_R_ECDH_LIB  ERR_LIB_ECDH	 /* 43 */
+#define ERR_R_STORE_LIB ERR_LIB_STORE    /* 44 */
 
 #define ERR_R_NESTED_ASN1_ERROR			58
 #define ERR_R_BAD_ASN1_OBJECT_HEADER		59
@@ -182,7 +234,7 @@ typedef struct err_state_st
 #define ERR_R_ASN1_LENGTH_MISMATCH		62
 #define ERR_R_MISSING_ASN1_EOS			63
 
-
+/* fatal error */
 #define ERR_R_FATAL				64
 #define	ERR_R_MALLOC_FAILURE			(1|ERR_R_FATAL)
 #define	ERR_R_SHOULD_NOT_HAVE_BEEN_CALLED	(2|ERR_R_FATAL)
@@ -190,7 +242,8 @@ typedef struct err_state_st
 #define	ERR_R_INTERNAL_ERROR			(4|ERR_R_FATAL)
 #define	ERR_R_DISABLED				(5|ERR_R_FATAL)
 
-
+/* 99 is the maximum possible ERR_R_... code, higher values
+ * are reserved for the individual libraries */
 
 
 typedef struct ERR_string_data_st
@@ -235,7 +288,7 @@ void ERR_load_ERR_strings(void);
 void ERR_load_crypto_strings(void);
 void ERR_free_strings(void);
 
-void ERR_remove_state(unsigned long pid); 
+void ERR_remove_state(unsigned long pid); /* if zero we look it up */
 ERR_STATE *ERR_get_state(void);
 
 #ifndef OPENSSL_NO_LHASH
@@ -249,11 +302,13 @@ int ERR_get_next_error_library(void);
 int ERR_set_mark(void);
 int ERR_pop_to_mark(void);
 
-
-
-
+/* Already defined in ossl_typ.h */
+/* typedef struct st_ERR_FNS ERR_FNS; */
+/* An application can use this function and provide the return value to loaded
+ * modules that should use the application's ERR state/functionality */
 const ERR_FNS *ERR_get_implementation(void);
-
+/* A loaded module should call this function prior to any ERR operations using
+ * the application's "ERR_FNS". */
 int ERR_set_implementation(const ERR_FNS *fns);
 
 #ifdef	__cplusplus

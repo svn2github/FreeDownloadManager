@@ -1,9 +1,31 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * Copyright (C) 2001-2003 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef SWSCALE_H
 #define SWSCALE_H
+
+/**
+ * @file swscale.h
+ * @brief 
+ *     external api for the swscale stuff
+ */
 
 #include "avutil.h"
 
@@ -20,6 +42,7 @@ extern "C" {
 
 #define LIBSWSCALE_IDENT        "SwS" AV_STRINGIFY(LIBSWSCALE_VERSION)
 
+/* values for the flags, the stuff on the command line is different */
 #define SWS_FAST_BILINEAR 1
 #define SWS_BILINEAR 2
 #define SWS_BICUBIC  4
@@ -39,8 +62,10 @@ extern "C" {
 
 #define SWS_PRINT_INFO		0x1000
 
+//the following 3 flags are not completly implemented
+//internal chrominace subsamling info
 #define SWS_FULL_CHR_H_INT	0x2000
-
+//input subsampling info
 #define SWS_FULL_CHR_H_INP	0x4000
 #define SWS_DIRECT_BGR		0x8000
 #define SWS_ACCURATE_RND	0x40000
@@ -60,11 +85,16 @@ extern "C" {
 #define SWS_CS_SMPTE240M 	7
 #define SWS_CS_DEFAULT 		5
 
+
+
+// when used for filters they must have an odd number of elements
+// coeffs cannot be shared between vectors
 typedef struct {
 	double *coeff;
 	int length;
 } SwsVector;
 
+// vectors can be shared
 typedef struct {
 	SwsVector *lumH;
 	SwsVector *lumV;
@@ -82,6 +112,7 @@ int sws_scale(struct SwsContext *context, uint8_t* src[], int srcStride[], int s
                            int srcSliceH, uint8_t* dst[], int dstStride[]);
 int sws_scale_ordered(struct SwsContext *context, uint8_t* src[], int srcStride[], int srcSliceY,
                            int srcSliceH, uint8_t* dst[], int dstStride[]) attribute_deprecated;
+
 
 int sws_setColorspaceDetails(struct SwsContext *c, const int inv_table[4], int srcRange, const int table[4], int dstRange, int brightness, int contrast, int saturation);
 int sws_getColorspaceDetails(struct SwsContext *c, int **inv_table, int *srcRange, int **table, int *dstRange, int *brightness, int *contrast, int *saturation);

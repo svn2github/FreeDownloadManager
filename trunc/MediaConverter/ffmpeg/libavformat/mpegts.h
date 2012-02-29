@@ -1,8 +1,23 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * MPEG2 transport stream defines
+ * Copyright (c) 2003 Fabrice Bellard
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVFORMAT_MPEGTS_H
 #define AVFORMAT_MPEGTS_H
@@ -17,11 +32,11 @@
 #define NB_PID_MAX 8192
 #define MAX_SECTION_SIZE 4096
 
-
+/* pids */
 #define PAT_PID                 0x0000
 #define SDT_PID                 0x0011
 
-
+/* table ids */
 #define PAT_TID   0x00
 #define PMT_TID   0x02
 #define SDT_TID   0x42
@@ -48,4 +63,4 @@ int ff_mpegts_parse_packet(MpegTSContext *ts, AVPacket *pkt,
                            const uint8_t *buf, int len);
 void ff_mpegts_parse_close(MpegTSContext *ts);
 
-#endif 
+#endif /* AVFORMAT_MPEGTS_H */

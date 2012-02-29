@@ -1,23 +1,44 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
 #ifndef __ARPA_TELNET_H
 #define __ARPA_TELNET_H
-
+/***************************************************************************
+ *                                  _   _ ____  _     
+ *  Project                     ___| | | |  _ \| |    
+ *                             / __| | | | |_) | |    
+ *                            | (__| |_| |  _ <| |___ 
+ *                             \___|\___/|_| \_\_____|
+ *
+ * Copyright (C) 1998 - 2004, Daniel Stenberg, <daniel@haxx.se>, et al.
+ *
+ * This software is licensed as described in the file COPYING, which
+ * you should have received as part of this distribution. The terms
+ * are also available at http://curl.haxx.se/docs/copyright.html.
+ * 
+ * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+ * copies of the Software, and permit persons to whom the Software is
+ * furnished to do so, under the terms of the COPYING file.
+ *
+ * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+ * KIND, either express or implied.
+ *
+ * $Id: arpa_telnet.h,v 1.12 2004/12/20 18:23:43 danf Exp $
+ ***************************************************************************/
 #ifndef CURL_DISABLE_TELNET
+/*
+ * Telnet option defines. Add more here if in need.
+ */
+#define CURL_TELOPT_BINARY   0  /* binary 8bit data */
+#define CURL_TELOPT_SGA      3  /* Supress Go Ahead */
+#define CURL_TELOPT_EXOPL  255  /* EXtended OPtions List */
+#define CURL_TELOPT_TTYPE   24  /* Terminal TYPE */
+#define CURL_TELOPT_XDISPLOC 35 /* X DISPlay LOCation */
 
-#define CURL_TELOPT_BINARY   0  
-#define CURL_TELOPT_SGA      3  
-#define CURL_TELOPT_EXOPL  255  
-#define CURL_TELOPT_TTYPE   24  
-#define CURL_TELOPT_XDISPLOC 35 
-
-#define CURL_TELOPT_NEW_ENVIRON 39  
+#define CURL_TELOPT_NEW_ENVIRON 39  /* NEW ENVIRONment variables */
 #define CURL_NEW_ENV_VAR   0
 #define CURL_NEW_ENV_VALUE 1
 
-
+/*
+ * The telnet options represented as strings
+ */
 static const char * const telnetoptions[]=
 {
   "BINARY",      "ECHO",           "RCP",           "SUPPRESS GO AHEAD",
@@ -39,20 +60,24 @@ static const char * const telnetoptions[]=
 
 #define CURL_NTELOPTS 40 
 
+/*
+ * First some defines
+ */
+#define CURL_xEOF 236 /* End Of File */ 
+#define CURL_SE   240 /* Sub negotiation End */
+#define CURL_NOP  241 /* No OPeration */
+#define CURL_DM   242 /* Data Mark */
+#define CURL_GA   249 /* Go Ahead, reverse the line */
+#define CURL_SB   250 /* SuBnegotiation */
+#define CURL_WILL 251 /* Our side WILL use this option */
+#define CURL_WONT 252 /* Our side WON'T use this option */
+#define CURL_DO   253 /* DO use this option! */
+#define CURL_DONT 254 /* DON'T use this option! */
+#define CURL_IAC  255 /* Interpret As Command */
 
-#define CURL_xEOF 236  
-#define CURL_SE   240 
-#define CURL_NOP  241 
-#define CURL_DM   242 
-#define CURL_GA   249 
-#define CURL_SB   250 
-#define CURL_WILL 251 
-#define CURL_WONT 252 
-#define CURL_DO   253 
-#define CURL_DONT 254 
-#define CURL_IAC  255 
-
-
+/*
+ * Then those numbers represented as strings:
+ */
 static const char * const telnetcmds[]=
 {
   "EOF",  "SUSP",  "ABORT", "EOR",  "SE",
@@ -61,8 +86,8 @@ static const char * const telnetcmds[]=
   "WILL", "WONT",  "DO",    "DONT", "IAC"
 };
 
-#define CURL_TELCMD_MINIMUM CURL_xEOF 
-#define CURL_TELCMD_MAXIMUM CURL_IAC  
+#define CURL_TELCMD_MINIMUM CURL_xEOF /* the first one */
+#define CURL_TELCMD_MAXIMUM CURL_IAC  /* surprise, 255 is the last one! ;-) */
 
 #define CURL_TELQUAL_IS   0
 #define CURL_TELQUAL_SEND 1

@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Windows/FileDir.cpp
 
 #include "StdAfx.h"
 
@@ -108,6 +106,35 @@ bool MyCreateDirectory(LPCWSTR pathName)
 }
 #endif
 
+/*
+bool CreateComplexDirectory(LPCTSTR pathName)
+{
+  NName::CParsedPath path;
+  path.ParsePath(pathName);
+  CSysString fullPath = path.Prefix;
+  DWORD errorCode = ERROR_SUCCESS;
+  for(int i = 0; i < path.PathParts.Size(); i++)
+  {
+    const CSysString &string = path.PathParts[i];
+    if(string.IsEmpty())
+    {
+      if(i != path.PathParts.Size() - 1)
+        return false;
+      return true;
+    }
+    fullPath += path.PathParts[i];
+    if(!MyCreateDirectory(fullPath))
+    {
+      DWORD errorCode = GetLastError();
+      if(errorCode != ERROR_ALREADY_EXISTS)
+        return false;
+    }
+    fullPath += NName::kDirDelimiter;
+  }
+  return true;
+}
+*/
+
 bool CreateComplexDirectory(LPCTSTR _aPathName)
 {
   CSysString pathName = _aPathName;
@@ -115,7 +142,7 @@ bool CreateComplexDirectory(LPCTSTR _aPathName)
   if (pos > 0 && pos == pathName.Length() - 1)
   {
     if (pathName.Length() == 3 && pathName[1] == ':')
-      return true; 
+      return true; // Disk folder;
     pathName.Delete(pos);
   }
   CSysString pathName2 = pathName;
@@ -127,7 +154,7 @@ bool CreateComplexDirectory(LPCTSTR _aPathName)
     if(::GetLastError() == ERROR_ALREADY_EXISTS)
     {
       NFind::CFileInfo fileInfo;
-      if (!NFind::FindFile(pathName, fileInfo)) 
+      if (!NFind::FindFile(pathName, fileInfo)) // For network folders
         return true;
       if (!fileInfo.IsDirectory())
         return false;
@@ -161,7 +188,7 @@ bool CreateComplexDirectory(LPCWSTR _aPathName)
   if (pos > 0 && pos == pathName.Length() - 1)
   {
     if (pathName.Length() == 3 && pathName[1] == L':')
-      return true; 
+      return true; // Disk folder;
     pathName.Delete(pos);
   }
   UString pathName2 = pathName;
@@ -173,7 +200,7 @@ bool CreateComplexDirectory(LPCWSTR _aPathName)
     if(::GetLastError() == ERROR_ALREADY_EXISTS)
     {
       NFind::CFileInfoW fileInfo;
-      if (!NFind::FindFile(pathName, fileInfo)) 
+      if (!NFind::FindFile(pathName, fileInfo)) // For network folders
         return true;
       if (!fileInfo.IsDirectory())
         return false;
@@ -322,6 +349,7 @@ bool MyGetFullPathName(LPCWSTR fileName, UString &resultPath, int &fileNamePartS
   return true;
 }
 #endif
+
 
 bool MyGetFullPathName(LPCTSTR fileName, CSysString &path)
 {
@@ -569,7 +597,11 @@ bool CTempFileW::Remove()
 
 bool CreateTempDirectory(LPCTSTR prefix, CSysString &dirName)
 {
-  
+  /*
+  CSysString prefix = tempPath + prefixChars;
+  CRandom random;
+  random.Init();
+  */
   while(true)
   {
     CTempFile tempFile;
@@ -577,7 +609,12 @@ bool CreateTempDirectory(LPCTSTR prefix, CSysString &dirName)
       return false;
     if (!::DeleteFile(dirName))
       return false;
-    
+    /*
+    UINT32 randomNumber = random.Generate();
+    TCHAR randomNumberString[32];
+    _stprintf(randomNumberString, _T("%04X"), randomNumber);
+    dirName = prefix + randomNumberString;
+    */
     if(NFind::DoesFileExist(dirName))
       continue;
     if (MyCreateDirectory(dirName))
@@ -597,7 +634,11 @@ bool CTempDirectory::Create(LPCTSTR prefix)
 
 bool CreateTempDirectory(LPCWSTR prefix, UString &dirName)
 {
-  
+  /*
+  CSysString prefix = tempPath + prefixChars;
+  CRandom random;
+  random.Init();
+  */
   while(true)
   {
     CTempFileW tempFile;
@@ -605,7 +646,12 @@ bool CreateTempDirectory(LPCWSTR prefix, UString &dirName)
       return false;
     if (!DeleteFileAlways(dirName))
       return false;
-    
+    /*
+    UINT32 randomNumber = random.Generate();
+    TCHAR randomNumberString[32];
+    _stprintf(randomNumberString, _T("%04X"), randomNumber);
+    dirName = prefix + randomNumberString;
+    */
     if(NFind::DoesFileExist(dirName))
       continue;
     if (MyCreateDirectory(dirName))

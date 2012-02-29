@@ -1,7 +1,3 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
     { "L", OPT_EXIT, {(void*)show_license}, "show license" },
     { "h", OPT_EXIT, {(void*)show_help}, "show help" },
     { "?", OPT_EXIT, {(void*)show_help}, "show help" },

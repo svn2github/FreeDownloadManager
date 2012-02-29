@@ -1,7 +1,3 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
 #ifndef _UNRAR_DLL_
 #define _UNRAR_DLL_
 
@@ -49,6 +45,7 @@ struct RARHeaderData
   unsigned int CmtState;
 };
 
+
 struct RARHeaderDataEx
 {
   char         ArcName[1024];
@@ -72,6 +69,7 @@ struct RARHeaderDataEx
   unsigned int CmtState;
   unsigned int Reserved[1024];
 };
+
 
 struct RAROpenArchiveData
 {

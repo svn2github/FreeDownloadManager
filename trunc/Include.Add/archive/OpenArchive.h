@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// OpenArchive.h
 
 #ifndef __OPENARCHIVE_H
 #define __OPENARCHIVE_H
@@ -61,6 +59,7 @@ HRESULT OpenArchive(const UString &filePath,
     UString &defaultItemName1,
     IArchiveOpenCallback *openArchiveCallback);
 
+
 HRESULT ReOpenArchive(IInArchive *archive, 
     const UString &fileName);
 
@@ -111,6 +110,7 @@ struct CArchiveLink
     }
     return result;
   }
+
 
   IInArchive *GetArchive() { return Archive1 != 0 ? Archive1: Archive0; }
   UString GetDefaultItemName()  { return Archive1 != 0 ? DefaultItemName1: DefaultItemName0; }

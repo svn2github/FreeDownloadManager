@@ -1,17 +1,36 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * Atrac 3 compatible decoder data
+ * Copyright (c) 2006-2007 Maxim Poliakovski
+ * Copyright (c) 2006-2007 Benjamin Larsson
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * Atrac 3 AKA RealAudio 8 compatible decoder data
+ */
 
 #ifndef AVCODEC_ATRAC3DATA_H
 #define AVCODEC_ATRAC3DATA_H
 
 #include <stdint.h>
 
-
+/* VLC tables */
 
 static const uint8_t huffcode1[9] = {
   0x0,0x4,0x5,0xC,0xD,0x1C,0x1D,0x1E,0x1F,
@@ -90,14 +109,14 @@ static const uint16_t atrac3_vlc_offs[] = {
     0,512,1024,1536,2048,2560,3072,3584,4096
 };
 
-
+/* selector tables */
 
 static const uint8_t CLCLengthTab[8] = {0, 4, 3, 3, 4, 4, 5, 6};
 static const int8_t seTab_0[4] = {0, 1, -2, -1};
 static const int8_t decTable1[18] = {0,0, 0,1, 0,-1, 1,0, -1,0, 1,1, 1,-1, -1,1, -1,-1};
 
 
-
+/* tables for the scalefactor decoding */
 
 static const float iMaxQuant[8] = {
   0.0, 1.0/1.5, 1.0/2.5, 1.0/3.5, 1.0/4.5, 1.0/7.5, 1.0/15.5, 1.0/31.5
@@ -108,7 +127,7 @@ static const uint16_t subbandTab[33] = {
   256, 288, 320, 352, 384, 416, 448, 480, 512, 576, 640, 704, 768, 896, 1024
 };
 
-
+/* joint stereo related tables */
 static const float matrixCoeffs[8] = {0.0, 2.0, 2.0, 2.0, 0.0, 0.0, 1.0, 1.0};
 
-#endif 
+#endif /* AVCODEC_ATRAC3DATA_H */

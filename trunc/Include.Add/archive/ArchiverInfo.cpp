@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// ArchiverInfo.cpp
 
 #include "StdAfx.h"
 
@@ -351,9 +349,11 @@ void ReadArchiverInfoList(CObjectVector<CArchiverInfo> &archivers)
         item.Associate = VARIANT_BOOLToBool(prop.boolVal);
     prop.Clear();
 
+
     archivers.Add(item);
   }
 
   #endif
 }
+
 

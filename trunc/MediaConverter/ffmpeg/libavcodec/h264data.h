@@ -1,10 +1,30 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * H26L/H264/AVC/JVT/14496-10/... encoder/decoder
+ * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * @brief
+ *     H264 / AVC / MPEG4 part10 codec data table
+ * @author Michael Niedermayer <michaelni@gmx.at>
+ */
 
 #ifndef AVCODEC_H264DATA_H
 #define AVCODEC_H264DATA_H
@@ -60,10 +80,10 @@ static const uint8_t luma_dc_field_scan[16]={
 
 static const uint8_t chroma_dc_scan[4]={
  (0+0*2)*16, (1+0*2)*16,
- (0+1*2)*16, (1+1*2)*16,  
+ (0+1*2)*16, (1+1*2)*16,  //FIXME
 };
 
-
+// zigzag_scan8x8_cavlc[i] = zigzag_scan8x8[(i/4) + 16*(i%4)]
 static const uint8_t zigzag_scan8x8_cavlc[64]={
  0+0*8, 1+1*8, 1+2*8, 2+2*8,
  4+1*8, 0+5*8, 3+3*8, 7+0*8,
@@ -239,4 +259,4 @@ static const uint8_t dequant8_coeff_init[6][6]={
   {36,32,58,34,46,43},
 };
 
-#endif 
+#endif /* AVCODEC_H264DATA_H */

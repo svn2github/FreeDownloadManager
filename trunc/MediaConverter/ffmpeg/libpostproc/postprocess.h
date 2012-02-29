@@ -1,13 +1,31 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Copyright (C) 2001-2003 Michael Niedermayer (michaelni@gmx.at)
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef POSTPROC_POSTPROCESS_H
 #define POSTPROC_POSTPROCESS_H
 
-
+/**
+ * @file
+ * @brief
+ *     external postprocessing API
+ */
 
 #include "libavutil/avutil.h"
 
@@ -25,13 +43,19 @@
 
 #define LIBPOSTPROC_IDENT       "postproc" AV_STRINGIFY(LIBPOSTPROC_VERSION)
 
-
+/**
+ * Returns the LIBPOSTPROC_VERSION_INT constant.
+ */
 unsigned postproc_version(void);
 
-
+/**
+ * Returns the libpostproc build-time configuration.
+ */
 const char *postproc_configuration(void);
 
-
+/**
+ * Returns the libpostproc license.
+ */
 const char *postproc_license(void);
 
 #define PP_QUALITY_MAX 6
@@ -46,9 +70,9 @@ typedef void pp_mode;
 #if LIBPOSTPROC_VERSION_INT < (52<<16)
 typedef pp_context pp_context_t;
 typedef pp_mode pp_mode_t;
-extern const char *const pp_help; 
+extern const char *const pp_help; ///< a simple help text
 #else
-extern const char pp_help[]; 
+extern const char pp_help[]; ///< a simple help text
 #endif
 
 void  pp_postprocess(const uint8_t * src[3], const int srcStride[3],
@@ -58,7 +82,11 @@ void  pp_postprocess(const uint8_t * src[3], const int srcStride[3],
                      pp_mode *mode, pp_context *ppContext, int pict_type);
 
 
-
+/**
+ * returns a pp_mode or NULL if an error occurred
+ * name is the string after "-pp" on the command line
+ * quality is a number from 0 to PP_QUALITY_MAX
+ */
 pp_mode *pp_get_mode_by_name_and_quality(const char *name, int quality);
 void pp_free_mode(pp_mode *mode);
 
@@ -76,6 +104,6 @@ void pp_free_context(pp_context *ppContext);
 #define PP_FORMAT_411    (0x00000002|PP_FORMAT)
 #define PP_FORMAT_444    (0x00000000|PP_FORMAT)
 
-#define PP_PICT_TYPE_QP2  0x00000010 
+#define PP_PICT_TYPE_QP2  0x00000010 ///< MPEG2 style QScale
 
-#endif 
+#endif /* POSTPROC_POSTPROCESS_H */

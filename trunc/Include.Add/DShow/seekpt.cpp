@@ -1,14 +1,27 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: SeekPT.cpp
+//
+// Desc: DirectShow base classes.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
+
 
 #include <streams.h>
 #include "seekpt.h"
+
+//==================================================================
+// CreateInstance
+// This goes in the factory template table to create new instances
+// If there is already a mapper instance - return that, else make one
+// and save it in a static variable so that forever after we can return that.
+//==================================================================
 
 CUnknown * CSeekingPassThru::CreateInstance(LPUNKNOWN pUnk, HRESULT *phr)
 {
     return new CSeekingPassThru(NAME("Silly Seeking Thing"),pUnk, phr);
 }
+
 
 STDMETHODIMP CSeekingPassThru::NonDelegatingQueryInterface(REFIID riid, void ** ppv)
 {
@@ -25,11 +38,13 @@ STDMETHODIMP CSeekingPassThru::NonDelegatingQueryInterface(REFIID riid, void ** 
     }
 }
 
+
 CSeekingPassThru::CSeekingPassThru( TCHAR *pName, LPUNKNOWN pUnk, HRESULT *phr )
                             : CUnknown(pName, pUnk, phr),
                             m_pPosPassThru(NULL)
 {
 }
+
 
 CSeekingPassThru::~CSeekingPassThru()
 {

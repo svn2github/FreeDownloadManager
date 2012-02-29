@@ -1,10 +1,27 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * copyright (c) 2004 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * bitstream reader API header.
+ */
 
 #ifndef AVCODEC_GET_BITS_H
 #define AVCODEC_GET_BITS_H
@@ -27,13 +44,13 @@
 #       define A32_BITSTREAM_READER
 #   else
 #       define ALT_BITSTREAM_READER
-
-
+//#define LIBMPEG2_BITSTREAM_READER
+//#define A32_BITSTREAM_READER
 #   endif
 #endif
 
-
-
+/* bit input */
+/* buffer, buffer_end and size_in_bits must be present and used by every reader */
 typedef struct GetBitContext {
     const uint8_t *buffer, *buffer_end;
 #ifdef ALT_BITSTREAM_READER
@@ -55,7 +72,7 @@ typedef struct GetBitContext {
 
 typedef struct VLC {
     int bits;
-    VLC_TYPE (*table)[2]; 
+    VLC_TYPE (*table)[2]; ///< code, bits
     int table_size, table_allocated;
 } VLC;
 
@@ -65,7 +82,50 @@ typedef struct RL_VLC_ELEM {
     uint8_t run;
 } RL_VLC_ELEM;
 
+/* Bitstream reader API docs:
+name
+    arbitrary name which is used as prefix for the internal variables
 
+gb
+    getbitcontext
+
+OPEN_READER(name, gb)
+    loads gb into local variables
+
+CLOSE_READER(name, gb)
+    stores local vars in gb
+
+UPDATE_CACHE(name, gb)
+    refills the internal cache from the bitstream
+    after this call at least MIN_CACHE_BITS will be available,
+
+GET_CACHE(name, gb)
+    will output the contents of the internal cache, next bit is MSB of 32 or 64 bit (FIXME 64bit)
+
+SHOW_UBITS(name, gb, num)
+    will return the next num bits
+
+SHOW_SBITS(name, gb, num)
+    will return the next num bits and do sign extension
+
+SKIP_BITS(name, gb, num)
+    will skip over the next num bits
+    note, this is equivalent to SKIP_CACHE; SKIP_COUNTER
+
+SKIP_CACHE(name, gb, num)
+    will remove the next num bits from the cache (note SKIP_COUNTER MUST be called before UPDATE_CACHE / CLOSE_READER)
+
+SKIP_COUNTER(name, gb, num)
+    will increment the internal bit counter (see SKIP_CACHE & SKIP_BITS)
+
+LAST_SKIP_CACHE(name, gb, num)
+    will remove the next num bits from the cache if it is needed for UPDATE_CACHE otherwise it will do nothing
+
+LAST_SKIP_BITS(name, gb, num)
+    is equivalent to LAST_SKIP_CACHE; SKIP_COUNTER
+
+for examples see get_bits, show_bits, skip_bits, get_vlc
+*/
 
 #ifdef ALT_BITSTREAM_READER
 #   define MIN_CACHE_BITS 25
@@ -91,7 +151,7 @@ typedef struct RL_VLC_ELEM {
         name##_cache <<= (num);
 # endif
 
-
+// FIXME name?
 #   define SKIP_COUNTER(name, gb, num)\
         name##_index += (num);\
 
@@ -130,7 +190,7 @@ static inline void skip_bits_long(GetBitContext *s, int n){
 }
 
 #elif defined LIBMPEG2_BITSTREAM_READER
-
+//libmpeg2 like reader
 
 #   define MIN_CACHE_BITS 17
 
@@ -267,7 +327,12 @@ static inline void skip_bits_long(GetBitContext *s, int n){
 
 #endif
 
-
+/**
+ * read mpeg1 dc style vlc (sign bit + mantisse with no MSB).
+ * if MSB not set it is negative
+ * @param n length in bits
+ * @author BERO
+ */
 static inline int get_xbits(GetBitContext *s, int n){
     register int sign;
     register int32_t cache;
@@ -290,7 +355,10 @@ static inline int get_sbits(GetBitContext *s, int n){
     return tmp;
 }
 
-
+/**
+ * reads 1-17 bits.
+ * Note, the alt bitstream reader can read up to 25 bits, but the libmpeg2 reader can't
+ */
 static inline unsigned int get_bits(GetBitContext *s, int n){
     register int tmp;
     OPEN_READER(re, s)
@@ -301,18 +369,21 @@ static inline unsigned int get_bits(GetBitContext *s, int n){
     return tmp;
 }
 
-
+/**
+ * shows 1-17 bits.
+ * Note, the alt bitstream reader can read up to 25 bits, but the libmpeg2 reader can't
+ */
 static inline unsigned int show_bits(GetBitContext *s, int n){
     register int tmp;
     OPEN_READER(re, s)
     UPDATE_CACHE(re, s)
     tmp= SHOW_UBITS(re, s, n);
-
+//    CLOSE_READER(re, s)
     return tmp;
 }
 
 static inline void skip_bits(GetBitContext *s, int n){
- 
+ //Note gcc seems to optimize this to s->index+=n for the ALT_READER :))
     OPEN_READER(re, s)
     UPDATE_CACHE(re, s)
     LAST_SKIP_BITS(re, s, n)
@@ -347,7 +418,9 @@ static inline void skip_bits1(GetBitContext *s){
     skip_bits(s, 1);
 }
 
-
+/**
+ * reads 0-32 bits.
+ */
 static inline unsigned int get_bits_long(GetBitContext *s, int n){
     if(n<=MIN_CACHE_BITS) return get_bits(s, n);
     else{
@@ -361,12 +434,16 @@ static inline unsigned int get_bits_long(GetBitContext *s, int n){
     }
 }
 
-
+/**
+ * reads 0-32 bits as a signed integer.
+ */
 static inline int get_sbits_long(GetBitContext *s, int n) {
     return sign_extend(get_bits_long(s, n), n);
 }
 
-
+/**
+ * shows 0-32 bits.
+ */
 static inline unsigned int show_bits_long(GetBitContext *s, int n){
     if(n<=MIN_CACHE_BITS) return show_bits(s, n);
     else{
@@ -384,7 +461,15 @@ static inline int check_marker(GetBitContext *s, const char *msg)
     return bit;
 }
 
-
+/**
+ * init GetBitContext.
+ * @param buffer bitstream buffer, must be FF_INPUT_BUFFER_PADDING_SIZE bytes larger then the actual read bits
+ * because some optimized bitstream readers read 32 or 64 bit at once and could read over the end
+ * @param bit_size the size of the buffer in bits
+ *
+ * While GetBitContext stores the buffer size, for performance reasons you are
+ * responsible for checking for the buffer end yourself (take advantage of the padding)!
+ */
 static inline void init_get_bits(GetBitContext *s,
                    const uint8_t *buffer, int bit_size)
 {
@@ -443,7 +528,12 @@ void free_vlc(VLC *vlc);
 }
 
 
-
+/**
+ *
+ * If the vlc code is invalid and max_depth=1, then no bits will be removed.
+ * If the vlc code is invalid and max_depth>1, then the number of bits removed
+ * is undefined.
+ */
 #define GET_VLC(code, name, gb, table, bits, max_depth)\
 {\
     int n, nb_bits;\
@@ -502,7 +592,14 @@ void free_vlc(VLC *vlc);
 }
 
 
-
+/**
+ * parses a vlc code, faster then get_vlc()
+ * @param bits is the number of bits which will be read at once, must be
+ *             identical to nb_bits in init_vlc()
+ * @param max_depth is the number of times bits bits must be read to completely
+ *                  read the longest vlc code
+ *                  = (max_vlc_length + bits - 1) / bits
+ */
 static av_always_inline int get_vlc2(GetBitContext *s, VLC_TYPE (*table)[2],
                                   int bits, int max_depth)
 {
@@ -517,7 +614,7 @@ static av_always_inline int get_vlc2(GetBitContext *s, VLC_TYPE (*table)[2],
     return code;
 }
 
-
+//#define TRACE
 
 #ifdef TRACE
 static inline void print_bin(int bits, int n){
@@ -566,7 +663,7 @@ static inline int get_xbits_trace(GetBitContext *s, int n, char *file, const cha
 
 #define tprintf(p, ...) av_log(p, AV_LOG_DEBUG, __VA_ARGS__)
 
-#else 
+#else //TRACE
 #define tprintf(p, ...) {}
 #endif
 
@@ -591,4 +688,4 @@ static inline int get_bits_left(GetBitContext *gb)
     return gb->size_in_bits - get_bits_count(gb);
 }
 
-#endif 
+#endif /* AVCODEC_GET_BITS_H */

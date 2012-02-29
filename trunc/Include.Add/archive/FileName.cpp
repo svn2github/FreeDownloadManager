@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Windows/FileName.cpp
 
 #include "StdAfx.h"
 
@@ -12,6 +10,11 @@ namespace NFile {
 namespace NName {
 
 static const wchar_t kDiskDelimiter = L':';
+
+/*
+static bool IsCharAPrefixDelimiter(wchar_t c)
+  { return (c == kDirDelimiter || c == kDiskDelimiter); }
+*/
 
 void NormalizeDirPathPrefix(CSysString &dirPath)
 {

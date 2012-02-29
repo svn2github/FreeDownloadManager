@@ -1,10 +1,28 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * VLC constants for DV codec
+ * Copyright (c) 2002 Fabrice Bellard
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * VLC constants for DV codec.
+ */
 
 #ifndef AVCODEC_DV_VLC_DATA_H
 #define AVCODEC_DV_VLC_DATA_H
@@ -13,7 +31,11 @@
 
 #define NB_DV_VLC 409
 
-
+/*
+ * There's a catch about the following three tables: the mapping they establish
+ * between (run, level) and vlc is not 1-1. So you have to watch out for that
+ * when building misc. tables. E.g. (1, 0) can be either 0x7cf or 0x1f82.
+ */
 static const uint16_t dv_vlc_bits[409] = {
  0x0000, 0x0002, 0x0007, 0x0008, 0x0009, 0x0014, 0x0015, 0x0016,
  0x0017, 0x0030, 0x0031, 0x0032, 0x0033, 0x0068, 0x0069, 0x006a,
@@ -234,4 +256,4 @@ static const uint8_t dv_vlc_level[409] = {
    0,
 };
 
-#endif 
+#endif /* AVCODEC_DV_VLC_DATA_H */

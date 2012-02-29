@@ -1,10 +1,29 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * AAC Spectral Band Replication decoding data
+ * Copyright (c) 2008-2009 Robert Swain ( rob opendot cl )
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * AAC Spectral Band Replication decoding data
+ * @author Robert Swain ( rob opendot cl )
+ */
 
 #ifndef AVCODEC_AACSBRDATA_H
 #define AVCODEC_AACSBRDATA_H
@@ -12,7 +31,7 @@
 #include <stdint.h>
 #include "libavutil/mem.h"
 
-
+///< Huffman tables for SBR
 
 static const uint8_t t_huffman_env_1_5dB_bits[121] = {
     18, 18, 18, 18, 18, 18, 19, 19,
@@ -239,15 +258,15 @@ static const uint8_t t_huffman_noise_bal_3_0dB_codes[25] = {
 };
 
 static const int8_t sbr_offset[6][16] = {
-    {-8, -7, -6, -5, -4, -3, -2, -1,  0,  1,  2,  3,  4,  5,  6,  7}, 
-    {-5, -4, -3, -2, -1,  0,  1,  2,  3,  4,  5,  6,  7,  9, 11, 13}, 
-    {-5, -3, -2, -1,  0,  1,  2,  3,  4,  5,  6,  7,  9, 11, 13, 16}, 
-    {-6, -4, -2, -1,  0,  1,  2,  3,  4,  5,  6,  7,  9, 11, 13, 16}, 
-    {-4, -2, -1,  0,  1,  2,  3,  4,  5,  6,  7,  9, 11, 13, 16, 20}, 
-    {-2, -1,  0,  1,  2,  3,  4,  5,  6,  7,  9, 11, 13, 16, 20, 24}, 
+    {-8, -7, -6, -5, -4, -3, -2, -1,  0,  1,  2,  3,  4,  5,  6,  7}, //             fs_sbr  = 16000 Hz
+    {-5, -4, -3, -2, -1,  0,  1,  2,  3,  4,  5,  6,  7,  9, 11, 13}, //             fs_sbr  = 22050 Hz
+    {-5, -3, -2, -1,  0,  1,  2,  3,  4,  5,  6,  7,  9, 11, 13, 16}, //             fs_sbr  = 24000 Hz
+    {-6, -4, -2, -1,  0,  1,  2,  3,  4,  5,  6,  7,  9, 11, 13, 16}, //             fs_sbr  = 32000 Hz
+    {-4, -2, -1,  0,  1,  2,  3,  4,  5,  6,  7,  9, 11, 13, 16, 20}, // 44100 Hz <= fs_sbr <= 64000 Hz
+    {-2, -1,  0,  1,  2,  3,  4,  5,  6,  7,  9, 11, 13, 16, 20, 24}, // 64000 Hz <  fs_sbr
 };
 
-
+///< window coefficients for analysis/synthesis QMF banks
 static DECLARE_ALIGNED(16, float, sbr_qmf_window_ds)[320];
 static DECLARE_ALIGNED(16, float, sbr_qmf_window_us)[640] = {
      0.0000000000, -0.0005525286, -0.0005617692, -0.0004947518,
@@ -592,4 +611,4 @@ static const float sbr_noise_table[512][2] = {
 {-0.94705089665984, -0.29580042814306}, { 0.91599807087376, -0.98147830385781},
 };
 
-#endif 
+#endif /* AVCODEC_AACSBRDATA_H */

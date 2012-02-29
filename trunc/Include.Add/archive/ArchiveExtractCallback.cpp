@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// ArchiveExtractCallback.cpp
 
 #include "StdAfx.h"
 
@@ -27,6 +25,7 @@ using namespace NWindows;
 static const wchar_t *kCantAutoRename = L"ERROR: Can not create file with auto name";
 static const wchar_t *kCantRenameFile = L"ERROR: Can not rename existing file ";
 static const wchar_t *kCantDeleteOutputFile = L"ERROR: Can not delete output file ";
+
 
 void CArchiveExtractCallback::Init(
     IInArchive *archiveHandler,
@@ -87,6 +86,7 @@ static UString MakePathNameFromParts(const UStringVector &parts)
   return result;
 }
 
+
 STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index, 
     ISequentialOutStream **outStream, Int32 askExtractMode)
 {
@@ -105,7 +105,7 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index,
     fullPath = propVariant.bstrVal;
   }
 
-  
+  // UString fullPathCorrect = GetCorrectPath(fullPath);
   _filePath = fullPath;
   _isSplit = false;
 
@@ -186,7 +186,7 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index,
       }
       case NExtract::NPathMode::kCurrentPathnames:
       {
-        
+        // for incorrect paths: "/dir1/dir2/file"
         int numRemovePathParts = _removePathParts.Size();
         if(pathParts.Size() <= numRemovePathParts)
           return E_FAIL;
@@ -200,7 +200,7 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index,
       case NExtract::NPathMode::kNoPathnames:
       {
         processedPath = pathParts.Back(); 
-        pathParts.Delete(0, pathParts.Size() - 1); 
+        pathParts.Delete(0, pathParts.Size() - 1); // Test it!!
         break;
       }
     }
@@ -306,7 +306,7 @@ STDMETHODIMP CArchiveExtractCallback::GetStream(UInt32 index,
       if (!_outFileStreamSpec->File.Open(fullProcessedPath, 
           _isSplit ? OPEN_ALWAYS: CREATE_ALWAYS))
       {
-        
+        // if (::GetLastError() != ERROR_FILE_EXISTS || !isSplit)
         {
           UString message = L"can not open output file " + fullProcessedPath;
           RINOK(_extractCallback2->MessageError(message));
@@ -361,6 +361,19 @@ STDMETHODIMP CArchiveExtractCallback::SetOperationResult(Int32 operationResult)
   RINOK(_extractCallback2->SetOperationResult(operationResult));
   return S_OK;
 }
+
+/*
+STDMETHODIMP CArchiveExtractCallback::GetInStream(
+    const wchar_t *name, ISequentialInStream **inStream)
+{
+  CInFileStream *inFile = new CInFileStream;
+  CMyComPtr<ISequentialInStream> inStreamTemp = inFile;
+  if (!inFile->Open(_srcDirectoryPrefix + name))
+    return ::GetLastError();
+  *inStream = inStreamTemp.Detach();
+  return S_OK;
+}
+*/
 
 STDMETHODIMP CArchiveExtractCallback::CryptoGetTextPassword(BSTR *password)
 {

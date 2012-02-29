@@ -1,8 +1,25 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * IMC compatible decoder
+ * Copyright (c) 2002-2004 Maxim Poliakovski
+ * Copyright (c) 2006 Benjamin Larsson
+ * Copyright (c) 2006 Konstantin Shishkov
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_IMCDATA_H
 #define AVCODEC_IMCDATA_H
@@ -64,9 +81,9 @@ static const float imc_quantizer2[2][56] = {
 };
 
 
-static const float xTab[14] = {7.6, 3.6, 4.4, 3.7, 6.1, 5.1, 2.3, 1.6, 6.2, 1.5, 1.8, 1.2, 0, 0}; 
+static const float xTab[14] = {7.6, 3.6, 4.4, 3.7, 6.1, 5.1, 2.3, 1.6, 6.2, 1.5, 1.8, 1.2, 0, 0}; //10014048
 
-
+/* precomputed table for 10^(i/4), i=-15..16 */
 static const float imc_exp_tab[32] = {
     1.778280e-4, 3.162278e-4, 5.623413e-4, 1.000000e-3,
     1.778280e-3, 3.162278e-3, 5.623413e-3, 1.000000e-2,
@@ -149,4 +166,4 @@ static const uint16_t imc_huffman_bits[4][4][18] = {
     }
 };
 
-#endif 
+#endif /* AVCODEC_IMCDATA_H */

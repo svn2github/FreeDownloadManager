@@ -1,10 +1,28 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * WMA compatible decoder
+ * copyright (c) 2002 The FFmpeg Project
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * Various WMA tables.
+ */
 
 #ifndef AVCODEC_WMADATA_H
 #define AVCODEC_WMADATA_H
@@ -19,7 +37,7 @@ const uint16_t ff_wma_critical_freqs[25] = {
     24500,
 };
 
-
+/* first value is number of bands */
 static const uint8_t exponent_band_22050[3][25] = {
     { 10, 4, 8, 4, 8, 8, 12, 20, 24, 24, 16, },
     { 14, 4, 8, 8, 4, 12, 12, 16, 24, 16, 20, 24, 32, 40, 36, },
@@ -1382,4 +1400,4 @@ static const CoefVLCTable coef_vlcs[6] = {
     },
 };
 
-#endif 
+#endif /* AVCODEC_WMADATA_H */

@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Windows/FileName.h
 
 #ifndef __WINDOWS_FILENAME_H
 #define __WINDOWS_FILENAME_H
@@ -14,9 +12,9 @@ namespace NName {
 const TCHAR kDirDelimiter = '\\';
 const TCHAR kAnyStringWildcard = '*';
 
-void NormalizeDirPathPrefix(CSysString &dirPath); 
+void NormalizeDirPathPrefix(CSysString &dirPath); // ensures that it ended with '\\'
 #ifndef _UNICODE
-void NormalizeDirPathPrefix(UString &dirPath); 
+void NormalizeDirPathPrefix(UString &dirPath); // ensures that it ended with '\\'
 #endif
 
 namespace NPathType
@@ -31,7 +29,7 @@ namespace NPathType
 
 struct CParsedPath
 {
-  UString Prefix; 
+  UString Prefix; // Disk or UNC with slash
   UStringVector PathParts;
   void ParsePath(const UString &path);
   UString MergePath() const;

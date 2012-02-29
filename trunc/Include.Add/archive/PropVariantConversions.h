@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Windows/PropVariantConversions.h
 
 #ifndef __PROPVARIANTCONVERSIONS_H
 #define __PROPVARIANTCONVERSIONS_H

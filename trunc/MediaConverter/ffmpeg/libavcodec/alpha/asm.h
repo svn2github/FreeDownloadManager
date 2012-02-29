@@ -1,8 +1,23 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Alpha optimized DSP utils
+ * Copyright (c) 2002 Falk Hueffner <falk@debian.org>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_ALPHA_ASM_H
 #define AVCODEC_ALPHA_ASM_H
@@ -75,7 +90,7 @@ struct unaligned_long { uint64_t l; } __attribute__((packed));
 #define prefetch_m(p)   __builtin_prefetch((p), 1, 1)
 #define prefetch_men(p) __builtin_prefetch((p), 1, 0)
 #define cmpbge          __builtin_alpha_cmpbge
-
+/* Avoid warnings.  */
 #define extql(a, b)     __builtin_alpha_extql(a, (uint64_t) (b))
 #define extwl(a, b)     __builtin_alpha_extwl(a, (uint64_t) (b))
 #define extqh(a, b)     __builtin_alpha_extqh(a, (uint64_t) (b))
@@ -131,7 +146,7 @@ struct unaligned_long { uint64_t l; } __attribute__((packed));
 #define unpkbw(a)    ({ uint64_t __r; __asm__ (".arch ev6; unpkbw  %r1,%0"     : "=r" (__r) : "rJ"  (a));           __r; })
 #endif
 
-#elif defined(__DECC)           
+#elif defined(__DECC)           /* Digital/Compaq/hp "ccc" compiler */
 
 #include <c_asm.h>
 #define ldq(p) (*(const uint64_t *) (p))
@@ -168,4 +183,4 @@ struct unaligned_long { uint64_t l; } __attribute__((packed));
 #error "Unknown compiler!"
 #endif
 
-#endif 
+#endif /* AVCODEC_ALPHA_ASM_H */

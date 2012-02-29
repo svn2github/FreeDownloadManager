@@ -1,7 +1,3 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
 #ifndef __VMS_ARRAY_H_
 #define __VMS_ARRAY_H_
 
@@ -82,11 +78,11 @@ protected:
 		m_grow = 1000;
 	};
 	T* m_p;
-	int m_size;	
-	int m_len;	
-	int m_grow;	
+	int m_size;	// capacity
+	int m_len;	// current length of array
+	int m_grow;	// value of growth of capacity
 };
 
 };
 
-#endif	
+#endif	// __VMS_ARRAY_H_

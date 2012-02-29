@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Windows/FileFind.h
 
 #ifndef __WINDOWS_FILEFIND_H
 #define __WINDOWS_FILEFIND_H

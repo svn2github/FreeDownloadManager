@@ -1,11 +1,10 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Common/String.h
 
 #ifndef __COMMON_STRING_H
 #define __COMMON_STRING_H
 
 #include <string.h>
+// #include <wchar.h>
 
 #include "Vector.h"
 
@@ -84,9 +83,21 @@ inline wchar_t * MyStringLower(wchar_t *s) { return CharLowerW(s); }
 wchar_t * MyStringLower(wchar_t *s);
 #endif
 
-#else 
+#else // Standard-C
 wchar_t MyCharUpper(wchar_t c);
 #endif
+
+//////////////////////////////////////
+// Compare
+
+/*
+#ifndef _WIN32_WCE
+int MyStringCollate(const char *s1, const char *s2);
+int MyStringCollateNoCase(const char *s1, const char *s2);
+#endif
+int MyStringCollate(const wchar_t *s1, const wchar_t *s2);
+int MyStringCollateNoCase(const wchar_t *s1, const wchar_t *s2);
+*/
 
 int MyStringCompare(const char *s1, const char  *s2);
 int MyStringCompare(const wchar_t *s1, const wchar_t *s2);
@@ -160,7 +171,13 @@ protected:
     int realCapacity = newCapacity + 1;
     if(realCapacity == _capacity)
       return;
-    
+    /*
+    const int kMaxStringSize = 0x20000000;
+    #ifndef _WIN32_WCE
+    if(newCapacity > kMaxStringSize || newCapacity < _length)
+      throw 1052337;
+    #endif
+    */
     T *newBuffer = new T[realCapacity];
     if(_capacity > 0)
     {
@@ -214,7 +231,7 @@ public:
   {
     int length = MyStringLen(chars);
     SetCapacity(length);
-    MyStringCopy(_chars, chars); 
+    MyStringCopy(_chars, chars); // can be optimized by memove()
     _length = length;
   }
   CStringBase(const CStringBase &s):  _chars(0), _length(0), _capacity(0)
@@ -227,8 +244,8 @@ public:
 
   operator const T*() const { return _chars;} 
 
-  
-  
+  // The minimum size of the character buffer in characters. 
+  // This value does not include space for a null terminator.
   T* GetBuffer(int minBufLength)
   {
     if(minBufLength >= _capacity)
@@ -238,7 +255,12 @@ public:
   void ReleaseBuffer() { ReleaseBuffer(MyStringLen(_chars)); }
   void ReleaseBuffer(int newLength)
   {
-    
+    /*
+    #ifndef _WIN32_WCE
+    if(newLength >= _capacity)
+      throw 282217;
+    #endif
+    */
     _chars[newLength] = 0;
     _length = newLength;
   }
@@ -314,7 +336,7 @@ public:
     
     CStringBase<T> result;
     result.SetCapacity(count);
-    
+    // MyStringNCopy(result._chars, _chars + startIndex, count);
     for (int i = 0; i < count; i++)
       result._chars[i] = _chars[startIndex + i];
     result._chars[count] = 0;
@@ -340,7 +362,12 @@ public:
 
   int CompareNoCase(const CStringBase& s) const
     { return MyStringCompareNoCase(_chars, s._chars); }
-  
+  /*
+  int Collate(const CStringBase& s) const
+    { return MyStringCollate(_chars, s._chars); }
+  int CollateNoCase(const CStringBase& s) const
+    { return MyStringCollateNoCase(_chars, s._chars); }
+  */
 
   int Find(T c) const { return Find(c, 0); }
   int Find(T c, int startIndex) const
@@ -466,7 +493,7 @@ public:
     return _length;
   }
 
-  
+  // !!!!!!!!!!!!!!! test it if newChar = '\0'
   int Replace(T oldChar, T newChar)
   {
     if (oldChar == newChar)

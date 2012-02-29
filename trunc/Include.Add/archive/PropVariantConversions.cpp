@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// PropVariantConversions.cpp
 
 #include "StdAfx.h"
 
@@ -27,13 +25,46 @@ static UString ConvertInt64ToString(Int64 value)
   return buffer;
 }
 
+/*
+static void UIntToStringSpec(UInt32 value, char *s, int numPos)
+{
+  char s2[32];
+  ConvertUInt64ToString(value, s2);
+  int len = strlen(s2);
+  int i;
+  for (i = 0; i < numPos - len; i++)
+    s[i] = '0';
+  for (int j = 0; j < len; j++, i++)
+    s[i] = s2[j];
+  s[i] = '\0';
+}
+*/
+
 bool ConvertFileTimeToString(const FILETIME &ft, char *s, bool includeTime, bool includeSeconds)
 {
   s[0] = '\0';
   SYSTEMTIME st;
   if(!BOOLToBool(FileTimeToSystemTime(&ft, &st)))
     return false;
-  
+  /*
+  UIntToStringSpec(st.wYear, s, 4);
+  strcat(s, "-");
+  UIntToStringSpec(st.wMonth, s + strlen(s), 2);
+  strcat(s, "-");
+  UIntToStringSpec(st.wDay, s + strlen(s), 2);
+  if (includeTime)
+  {
+    strcat(s, " ");
+    UIntToStringSpec(st.wHour, s + strlen(s), 2);
+    strcat(s, ":");
+    UIntToStringSpec(st.wMinute, s + strlen(s), 2);
+    if (includeSeconds)
+    {
+      strcat(s, ":");
+      UIntToStringSpec(st.wSecond, s + strlen(s), 2);
+    }
+  }
+  */
   sprintf(s, "%04d-%02d-%02d", st.wYear, st.wMonth, st.wDay);
   if (includeTime)
   {
@@ -70,7 +101,10 @@ UString ConvertPropVariantToString(const PROPVARIANT &propVariant)
       return ConvertUInt64ToString(propVariant.uhVal.QuadPart);
     case VT_FILETIME:
       return ConvertFileTimeToString(propVariant.filetime, true, true);
-    
+    /*
+    case VT_I1:
+      return ConvertInt64ToString(propVariant.cVal);
+    */
     case VT_I2:
       return ConvertInt64ToString(propVariant.iVal);
     case VT_I4:

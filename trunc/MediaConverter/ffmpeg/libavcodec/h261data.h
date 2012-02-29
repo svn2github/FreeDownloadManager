@@ -1,10 +1,28 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
+ * copyright (c) 2004 Maarten Daniels
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * H.261 tables.
+ */
 
 #ifndef AVCODEC_H261DATA_H
 #define AVCODEC_H261DATA_H
@@ -12,7 +30,7 @@
 #include <stdint.h>
 #include "h261.h"
 
-
+// H.261 VLC table for macroblock addressing
 static const uint8_t h261_mba_code[35] = {
      1,  3,  2,  3,
      2,  3,  2,  7,
@@ -23,8 +41,8 @@ static const uint8_t h261_mba_code[35] = {
     32, 31, 30, 29,
     28, 27, 26, 25,
     24,
-    15,           
-    1             
+    15,           //(MBA stuffing)
+    1             //(start code)
 };
 
 static const uint8_t h261_mba_bits[35] = {
@@ -37,11 +55,11 @@ static const uint8_t h261_mba_bits[35] = {
     11, 11, 11, 11,
     11, 11, 11, 11,
     11,
-    11,           
-    16            
+    11,           //(MBA stuffing)
+    16            //(start code)
 };
 
-
+//H.261 VLC table for macroblock type
 static const uint8_t h261_mtype_code[10] = {
     1,  1,  1,  1,
     1,  1,  1,  1,
@@ -67,7 +85,7 @@ static const int h261_mtype_map[10]= {
                              MB_TYPE_QUANT  |  MB_TYPE_CBP  |  MB_TYPE_16x16  |  MB_TYPE_H261_FIL
 };
 
-
+//H.261 VLC table for motion vectors
 static const uint8_t h261_mv_tab[17][2] = {
     {1,1}, {1,2}, {1,3}, {1,4}, {3,6}, {5,7}, {4,7}, {3,7},
     {11,9}, {10,9}, {9,9}, {17,10}, {16,10}, {15,10}, {14,10}, {13,10}, {12,10}
@@ -78,7 +96,7 @@ static const int mvmap[17] =
     0, -1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -16
 };
 
-
+//H.261 VLC table for coded block pattern
 static const uint8_t h261_cbp_tab[63][2] =
 {
     {11,5}, {9,5}, {13,6}, {13,4}, {23,7}, {19,7}, {31,8}, {12,4},
@@ -91,7 +109,7 @@ static const uint8_t h261_cbp_tab[63][2] =
     {8,8}, {4,8}, {4,9}, {7,3}, {10,5}, {8,5}, {12,6}
 };
 
-
+//H.261 VLC table for transform coefficients
 static const uint16_t h261_tcoeff_vlc[65][2] = {
 { 0x2, 2 }, { 0x3, 2 },{ 0x4, 4 },{ 0x5, 5 },
 { 0x6, 7 },{ 0x26, 8 },{ 0x21, 8 },{ 0xa, 10 },
@@ -109,7 +127,7 @@ static const uint16_t h261_tcoeff_vlc[65][2] = {
 { 0xd, 10 }, { 0x8, 10 },{ 0x1f, 12 }, { 0x1a, 12 },
 { 0x19, 12 }, { 0x17, 12 }, { 0x16, 12}, { 0x1f, 13},
 { 0x1e, 13 }, { 0x1d, 13 }, { 0x1c, 13}, { 0x1b, 13},
-{ 0x1, 6 }                                             
+{ 0x1, 6 }                                             //escape
 };
 
 static const int8_t h261_tcoeff_level[64] = {
@@ -143,4 +161,4 @@ static RLTable h261_rl_tcoeff = {
     h261_tcoeff_level,
 };
 
-#endif 
+#endif /* AVCODEC_H261DATA_H */

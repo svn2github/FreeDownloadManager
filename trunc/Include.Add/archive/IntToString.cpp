@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Common/IntToString.cpp
 
 #include "StdAfx.h"
 

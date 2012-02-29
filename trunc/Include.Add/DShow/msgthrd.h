@@ -1,7 +1,15 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: MsgThrd.h
+//
+// Desc: DirectShow base classes - provides support for a worker thread 
+//       class to which one can asynchronously post messages.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
 
+
+// Message class - really just a structure.
+//
 class CMsg {
 public:
     UINT uMsg;
@@ -16,6 +24,11 @@ public:
         : uMsg(0), dwFlags(0L), lpParam(NULL), pEvent(NULL) {}
 };
 
+// This is the actual thread class.  It exports all the usual thread control
+// functions.  The created thread is different from a normal WIN32 thread in
+// that it is prompted to perform particaular tasks by responding to messages
+// posted to its message queue.
+//
 class AM_NOVTABLE CMsgThread {
 private:
     static DWORD WINAPI DefaultThreadProc(LPVOID lpParam);
@@ -24,8 +37,8 @@ private:
 
 protected:
 
-    
-    
+    // if you want to override GetThreadMsg to block on other things
+    // as well as this queue, you need access to this
     CGenericList<CMsg>        m_ThreadQueue;
     CCritSec                  m_Lock;
     HANDLE                    m_hSem;
@@ -37,17 +50,17 @@ public:
         m_hThread(NULL),
         m_lWaiting(0),
         m_hSem(NULL),
-        
+        // make a list with a cache of 5 items
         m_ThreadQueue(NAME("MsgThread list"), 5)
         {
         }
 
     ~CMsgThread();
-    
-    
+    // override this if you want to block on other things as well
+    // as the message loop
     void virtual GetThreadMsg(CMsg *msg);
 
-    
+    // override this if you want to do something on thread startup
     virtual void OnThreadInit() {
     };
 
@@ -85,6 +98,7 @@ public:
         return m_ThreadId;
     }
 
+
     void PutThreadMsg(UINT uMsg, DWORD dwMsgFlags,
                       LPVOID lpMsgParam, CAMEvent *pEvent = NULL) {
         CAutoLock lck(&m_Lock);
@@ -96,10 +110,10 @@ public:
         }
     }
 
-    
-    
-    
-    
+    // This is the function prototype of the function that the client
+    // supplies.  It is always called on the created thread, never on
+    // the creator thread.
+    //
     virtual LRESULT ThreadMessageProc(
         UINT uMsg, DWORD dwFlags, LPVOID lpParam, CAMEvent *pEvent) = 0;
 };

@@ -1,15 +1,30 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * DSP Group TrueSpeech compatible decoder
+ * copyright (c) 2005 Konstantin Shishkov
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_TRUESPEECH_DATA_H
 #define AVCODEC_TRUESPEECH_DATA_H
 
 #include <stdint.h>
 
-
+/* codebooks fo expanding input filter */
 static const int16_t ts_cb_0[32] = {
     0x8240, 0x8364, 0x84CE, 0x865D, 0x8805, 0x89DE, 0x8BD7, 0x8DF4,
     0x9051, 0x92E2, 0x95DE, 0x990F, 0x9C81, 0xA079, 0xA54C, 0xAAD2,
@@ -55,7 +70,7 @@ static const int16_t * const ts_codebook[8] = {
     ts_cb_0, ts_cb_1, ts_cb_2, ts_cb_3, ts_cb_4, ts_cb_5, ts_cb_6, ts_cb_7
 };
 
-
+/* table used for decoding pulse positions */
 static const int16_t ts_140[120] = {
     0x0E46, 0x0CCC, 0x0B6D, 0x0A28, 0x08FC, 0x07E8, 0x06EB, 0x0604,
     0x0532, 0x0474, 0x03C9, 0x0330, 0x02A8, 0x0230, 0x01C7, 0x016C,
@@ -78,11 +93,11 @@ static const int16_t ts_140[120] = {
     0x0001, 0x0001, 0x0001, 0x0001, 0x0001, 0x0001
 };
 
-
+/* filter for correlated input filter */
 static const int16_t ts_230[8] =
     { 0x7F3B, 0x7E78, 0x7DB6, 0x7CF5, 0x7C35, 0x7B76, 0x7AB8, 0x79FC };
 
-
+/* two-point filters table */
 static const int16_t ts_240[25 * 2] = {
     0xED2F, 0x5239,
     0x54F1, 0xE4A9,
@@ -115,7 +130,7 @@ static const int16_t ts_240[25 * 2] = {
     0x194C, 0x0CE6
 };
 
-
+/* possible pulse values */
 static const int16_t ts_562[64] = {
     0x0002, 0x0006, 0xFFFE, 0xFFFA,
     0x0004, 0x000C, 0xFFFC, 0xFFF4,
@@ -135,10 +150,10 @@ static const int16_t ts_562[64] = {
     0x0A14, 0x1E3C, 0xF5EC, 0xE1C4
 };
 
-
+/* filters used in final output calculations */
 static const int16_t ts_5E2[8] =
     { 0x4666, 0x26B8, 0x154C, 0x0BB6, 0x0671, 0x038B, 0x01F3, 0x0112 };
 static const int16_t ts_5F2[8] =
     { 0x6000, 0x4800, 0x3600, 0x2880, 0x1E60, 0x16C8, 0x1116, 0x0CD1 };
 
-#endif 
+#endif /* AVCODEC_TRUESPEECH_DATA_H */

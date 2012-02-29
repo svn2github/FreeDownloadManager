@@ -1,8 +1,25 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+/**
+ * @file
+ * VP5 and VP6 compatible video decoder (common data)
+ *
+ * Copyright (C) 2006  Aurelien Jacobs <aurel@gnuage.org>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_VP56DATA_H
 #define AVCODEC_VP56DATA_H
@@ -20,16 +37,16 @@ typedef enum {
 } VP56Frame;
 
 typedef enum {
-    VP56_MB_INTER_NOVEC_PF = 0,  
-    VP56_MB_INTRA          = 1,  
-    VP56_MB_INTER_DELTA_PF = 2,  
-    VP56_MB_INTER_V1_PF    = 3,  
-    VP56_MB_INTER_V2_PF    = 4,  
-    VP56_MB_INTER_NOVEC_GF = 5,  
-    VP56_MB_INTER_DELTA_GF = 6,  
-    VP56_MB_INTER_4V       = 7,  
-    VP56_MB_INTER_V1_GF    = 8,  
-    VP56_MB_INTER_V2_GF    = 9,  
+    VP56_MB_INTER_NOVEC_PF = 0,  /**< Inter MB, no vector, from previous frame */
+    VP56_MB_INTRA          = 1,  /**< Intra MB */
+    VP56_MB_INTER_DELTA_PF = 2,  /**< Inter MB, above/left vector + delta, from previous frame */
+    VP56_MB_INTER_V1_PF    = 3,  /**< Inter MB, first vector, from previous frame */
+    VP56_MB_INTER_V2_PF    = 4,  /**< Inter MB, second vector, from previous frame */
+    VP56_MB_INTER_NOVEC_GF = 5,  /**< Inter MB, no vector, from golden frame */
+    VP56_MB_INTER_DELTA_GF = 6,  /**< Inter MB, above/left vector + delta, from golden frame */
+    VP56_MB_INTER_4V       = 7,  /**< Inter MB, 4 vectors, from previous frame */
+    VP56_MB_INTER_V1_GF    = 8,  /**< Inter MB, first vector, from golden frame */
+    VP56_MB_INTER_V2_GF    = 9,  /**< Inter MB, second vector, from golden frame */
 } VP56mb;
 
 typedef struct {
@@ -47,16 +64,16 @@ extern const uint8_t vp56_coeff_bias[];
 extern const uint8_t vp56_coeff_bit_length[];
 
 static const VP56Frame vp56_reference_frame[] = {
-    VP56_FRAME_PREVIOUS,  
-    VP56_FRAME_CURRENT,   
-    VP56_FRAME_PREVIOUS,  
-    VP56_FRAME_PREVIOUS,  
-    VP56_FRAME_PREVIOUS,  
-    VP56_FRAME_GOLDEN,    
-    VP56_FRAME_GOLDEN,    
-    VP56_FRAME_PREVIOUS,  
-    VP56_FRAME_GOLDEN,    
-    VP56_FRAME_GOLDEN,    
+    VP56_FRAME_PREVIOUS,  /* VP56_MB_INTER_NOVEC_PF */
+    VP56_FRAME_CURRENT,   /* VP56_MB_INTRA */
+    VP56_FRAME_PREVIOUS,  /* VP56_MB_INTER_DELTA_PF */
+    VP56_FRAME_PREVIOUS,  /* VP56_MB_INTER_V1_PF */
+    VP56_FRAME_PREVIOUS,  /* VP56_MB_INTER_V2_PF */
+    VP56_FRAME_GOLDEN,    /* VP56_MB_INTER_NOVEC_GF */
+    VP56_FRAME_GOLDEN,    /* VP56_MB_INTER_DELTA_GF */
+    VP56_FRAME_PREVIOUS,  /* VP56_MB_INTER_4V */
+    VP56_FRAME_GOLDEN,    /* VP56_MB_INTER_V1_GF */
+    VP56_FRAME_GOLDEN,    /* VP56_MB_INTER_V2_GF */
 };
 
 static const uint8_t vp56_ac_dequant[64] = {
@@ -216,7 +233,7 @@ static const VP56Tree vp56_pmbt_tree[] = {
     { 2, 9}, {-VP56_MB_INTER_V1_GF},    {-VP56_MB_INTER_V2_GF},
 };
 
-
+/* relative pos of surrounding blocks, from closest to farthest */
 static const int8_t vp56_candidate_predictor_pos[12][2] = {
     {  0, -1 },
     { -1,  0 },
@@ -232,4 +249,4 @@ static const int8_t vp56_candidate_predictor_pos[12][2] = {
     {  2, -2 },
 };
 
-#endif 
+#endif /* AVCODEC_VP56DATA_H */

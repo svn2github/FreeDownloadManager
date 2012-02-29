@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Extract.h
 
 #ifndef __EXTRACT_H
 #define __EXTRACT_H
@@ -26,9 +24,9 @@ public:
   UString DefaultItemName;
   NWindows::NFile::NFind::CFileInfoW ArchiveFileInfo;
   
-  
-  
-  
+  // bool ShowDialog;
+  // bool PasswordEnabled;
+  // UString Password;
 
   NExtract::NOverwriteMode::EEnum OverwriteMode;
 
@@ -40,7 +38,10 @@ public:
       OverwriteMode(NExtract::NOverwriteMode::kAskBefore)
       {}
 
-  
+  /*
+    bool FullPathMode() const { return (ExtractMode == NExtractMode::kTest) || 
+    (ExtractMode == NExtractMode::kFullPath); }
+  */
 };
 
 HRESULT DecompressArchives(

@@ -1,10 +1,29 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * Block Gilbert-Moore decoder
+ * Copyright (c) 2010 Thilo Borgmann <thilo.borgmann _at_ googlemail.com>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * Block Gilbert-Moore decoder header
+ * @author Thilo Borgmann <thilo.borgmann _at_ googlemail.com>
+ */
 
 
 #ifndef AVCODEC_BGMC_H
@@ -34,4 +53,4 @@ void ff_bgmc_decode(GetBitContext *gb, unsigned int num, int32_t *dst,
                  uint8_t *cf_lut, unsigned int *cf_lut_status);
 
 
-#endif 
+#endif /* AVCODEC_BGMC_H */

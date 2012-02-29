@@ -1,214 +1,272 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * QCELP decoder
+ * Copyright (c) 2007 Reynaldo H. Verdejo Pinochet
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_QCELPDATA_H
 #define AVCODEC_QCELPDATA_H
 
-
+/**
+ * @file
+ * Data tables for the QCELP decoder
+ * @author Reynaldo H. Verdejo Pinochet
+ * @remark FFmpeg merging spearheaded by Kenan Gillet
+ * @remark Development mentored by Benjamin Larson
+ */
 
 #include <stddef.h>
 #include <stdint.h>
 #include "libavutil/common.h"
 
-
+/**
+ * QCELP unpacked data frame
+ */
 typedef struct {
+/// @defgroup qcelp_codebook_parameters QCELP excitation codebook parameters
+/// @{
+    uint8_t cbsign[16]; ///!< sign of the codebook gain for each codebook subframe
+    uint8_t cbgain[16]; ///!< unsigned codebook gain for each codebook subframe
+    uint8_t cindex[16]; ///!< codebook index for each codebook subframe
+/// @}
 
+/// @defgroup qcelp_pitch_parameters QCELP pitch prediction parameters
+/// @{
+    uint8_t plag[4];    ///!< pitch lag for each pitch subframe
+    uint8_t pfrac[4];   ///!< fractional pitch lag for each pitch subframe
+    uint8_t pgain[4];   ///!< pitch gain for each pitch subframe
+/// @}
 
-    uint8_t cbsign[16]; 
-    uint8_t cbgain[16]; 
-    uint8_t cindex[16]; 
-
-
-
-
-    uint8_t plag[4];    
-    uint8_t pfrac[4];   
-    uint8_t pgain[4];   
-
-
-    
+    /**
+     * line spectral pair frequencies (LSP) for RATE_OCTAVE,
+     * line spectral pair frequencies grouped into five vectors
+     * of dimension two (LSPV) for other rates
+     */
     uint8_t lspv[10];
 
-    
+    /**
+     * reserved bits only present in bitrate 1, 1/4 and 1/8 packets
+     */
     uint8_t reserved;
 } QCELPFrame;
 
-
+/**
+ * pre-calculated table for hammsinc function
+ * Only half of the table is needed because of symmetry.
+ *
+ * TIA/EIA/IS-733 2.4.5.2-2/3
+ */
 static const float qcelp_hammsinc_table[4] = { -0.006822,  0.041249, -0.143459,  0.588863};
 
 typedef struct {
-    uint8_t index;  
-    uint8_t bitpos; 
-    uint8_t bitlen; 
+    uint8_t index;  /*!< index into the QCELPContext structure */
+    uint8_t bitpos; /*!< position of the lowest bit in the value's byte */
+    uint8_t bitlen; /*!< number of bits to read */
 } QCELPBitmap;
 
 #define QCELP_OF(variable, bit, len) {offsetof(QCELPFrame, variable), bit, len}
 
-
+/**
+ * bitmap unpacking tables for RATE_FULL
+ *
+ * TIA/EIA/IS-733 Table 2.4.7.1-1
+ */
 static const QCELPBitmap qcelp_rate_full_bitmap[] = {
-                                
-    QCELP_OF(lspv  [ 2], 0, 3), 
-    QCELP_OF(lspv  [ 1], 0, 7), 
-    QCELP_OF(lspv  [ 0], 0, 6), 
-    QCELP_OF(lspv  [ 4], 0, 6), 
-    QCELP_OF(lspv  [ 3], 0, 6), 
-    QCELP_OF(lspv  [ 2], 3, 4), 
-    QCELP_OF(cbsign[ 0], 0, 1), 
-    QCELP_OF(cbgain[ 0], 0, 4), 
-    QCELP_OF(pfrac [ 0], 0, 1), 
-    QCELP_OF(plag  [ 0], 0, 7), 
-    QCELP_OF(pgain [ 0], 0, 3), 
-    QCELP_OF(cindex[ 1], 0, 4), 
-    QCELP_OF(cbsign[ 1], 0, 1), 
-    QCELP_OF(cbgain[ 1], 0, 4), 
-    QCELP_OF(cindex[ 0], 0, 7), 
-    QCELP_OF(cbgain[ 3], 0, 1), 
-    QCELP_OF(cindex[ 2], 0, 7), 
-    QCELP_OF(cbsign[ 2], 0, 1), 
-    QCELP_OF(cbgain[ 2], 0, 4), 
-    QCELP_OF(cindex[ 1], 4, 3), 
-    QCELP_OF(plag  [ 1], 0, 3), 
-    QCELP_OF(pgain [ 1], 0, 3), 
-    QCELP_OF(cindex[ 3], 0, 7), 
-    QCELP_OF(cbsign[ 3], 0, 1), 
-    QCELP_OF(cbgain[ 3], 1, 2), 
-    QCELP_OF(cindex[ 4], 0, 6), 
-    QCELP_OF(cbsign[ 4], 0, 1), 
-    QCELP_OF(cbgain[ 4], 0, 4), 
-    QCELP_OF(pfrac [ 1], 0, 1), 
-    QCELP_OF(plag  [ 1], 3, 4), 
-    QCELP_OF(cbgain[ 6], 0, 3), 
-    QCELP_OF(cindex[ 5], 0, 7), 
-    QCELP_OF(cbsign[ 5], 0, 1), 
-    QCELP_OF(cbgain[ 5], 0, 4), 
-    QCELP_OF(cindex[ 4], 6, 1), 
-    QCELP_OF(cindex[ 7], 0, 3), 
-    QCELP_OF(cbsign[ 7], 0, 1), 
-    QCELP_OF(cbgain[ 7], 0, 3), 
-    QCELP_OF(cindex[ 6], 0, 7), 
-    QCELP_OF(cbsign[ 6], 0, 1), 
-    QCELP_OF(cbgain[ 6], 3, 1), 
-    QCELP_OF(cbgain[ 8], 0, 1), 
-    QCELP_OF(pfrac [ 2], 0, 1), 
-    QCELP_OF(plag  [ 2], 0, 7), 
-    QCELP_OF(pgain [ 2], 0, 3), 
-    QCELP_OF(cindex[ 7], 3, 4), 
-    QCELP_OF(cbsign[ 9], 0, 1), 
-    QCELP_OF(cbgain[ 9], 0, 4), 
-    QCELP_OF(cindex[ 8], 0, 7), 
-    QCELP_OF(cbsign[ 8], 0, 1), 
-    QCELP_OF(cbgain[ 8], 1, 3), 
-    QCELP_OF(cindex[10], 0, 4), 
-    QCELP_OF(cbsign[10], 0, 1), 
-    QCELP_OF(cbgain[10], 0, 4), 
-    QCELP_OF(cindex[ 9], 0, 7), 
-    QCELP_OF(pgain [ 3], 0, 2), 
-    QCELP_OF(cindex[11], 0, 7), 
-    QCELP_OF(cbsign[11], 0, 1), 
-    QCELP_OF(cbgain[11], 0, 3), 
-    QCELP_OF(cindex[10], 4, 3), 
-    QCELP_OF(cindex[12], 0, 2), 
-    QCELP_OF(cbsign[12], 0, 1), 
-    QCELP_OF(cbgain[12], 0, 4), 
-    QCELP_OF(pfrac [ 3], 0, 1), 
-    QCELP_OF(plag  [ 3], 0, 7), 
-    QCELP_OF(pgain [ 3], 2, 1), 
-    QCELP_OF(cindex[13], 0, 6), 
-    QCELP_OF(cbsign[13], 0, 1), 
-    QCELP_OF(cbgain[13], 0, 4), 
-    QCELP_OF(cindex[12], 2, 5), 
-    QCELP_OF(cbgain[15], 0, 3), 
-    QCELP_OF(cindex[14], 0, 7), 
-    QCELP_OF(cbsign[14], 0, 1), 
-    QCELP_OF(cbgain[14], 0, 4), 
-    QCELP_OF(cindex[13], 6, 1), 
-    QCELP_OF(reserved,   0, 2), 
-    QCELP_OF(cindex[15], 0, 7), 
-    QCELP_OF(cbsign[15], 0, 1)  
+                                // start on bit
+    QCELP_OF(lspv  [ 2], 0, 3), // 265
+    QCELP_OF(lspv  [ 1], 0, 7), // 262
+    QCELP_OF(lspv  [ 0], 0, 6), // 255
+    QCELP_OF(lspv  [ 4], 0, 6), // 249
+    QCELP_OF(lspv  [ 3], 0, 6), // 243
+    QCELP_OF(lspv  [ 2], 3, 4), // 237
+    QCELP_OF(cbsign[ 0], 0, 1), // 233
+    QCELP_OF(cbgain[ 0], 0, 4), // 232
+    QCELP_OF(pfrac [ 0], 0, 1), // 228
+    QCELP_OF(plag  [ 0], 0, 7), // 227
+    QCELP_OF(pgain [ 0], 0, 3), // 220
+    QCELP_OF(cindex[ 1], 0, 4), // 217
+    QCELP_OF(cbsign[ 1], 0, 1), // 213
+    QCELP_OF(cbgain[ 1], 0, 4), // 212
+    QCELP_OF(cindex[ 0], 0, 7), // 208
+    QCELP_OF(cbgain[ 3], 0, 1), // 201
+    QCELP_OF(cindex[ 2], 0, 7), // 200
+    QCELP_OF(cbsign[ 2], 0, 1), // 193
+    QCELP_OF(cbgain[ 2], 0, 4), // 192
+    QCELP_OF(cindex[ 1], 4, 3), // 188
+    QCELP_OF(plag  [ 1], 0, 3), // 185
+    QCELP_OF(pgain [ 1], 0, 3), // 182
+    QCELP_OF(cindex[ 3], 0, 7), // 179
+    QCELP_OF(cbsign[ 3], 0, 1), // 172
+    QCELP_OF(cbgain[ 3], 1, 2), // 171
+    QCELP_OF(cindex[ 4], 0, 6), // 169
+    QCELP_OF(cbsign[ 4], 0, 1), // 163
+    QCELP_OF(cbgain[ 4], 0, 4), // 162
+    QCELP_OF(pfrac [ 1], 0, 1), // 158
+    QCELP_OF(plag  [ 1], 3, 4), // 157
+    QCELP_OF(cbgain[ 6], 0, 3), // 153
+    QCELP_OF(cindex[ 5], 0, 7), // 150
+    QCELP_OF(cbsign[ 5], 0, 1), // 143
+    QCELP_OF(cbgain[ 5], 0, 4), // 142
+    QCELP_OF(cindex[ 4], 6, 1), // 138
+    QCELP_OF(cindex[ 7], 0, 3), // 137
+    QCELP_OF(cbsign[ 7], 0, 1), // 134
+    QCELP_OF(cbgain[ 7], 0, 3), // 133
+    QCELP_OF(cindex[ 6], 0, 7), // 130
+    QCELP_OF(cbsign[ 6], 0, 1), // 123
+    QCELP_OF(cbgain[ 6], 3, 1), // 122
+    QCELP_OF(cbgain[ 8], 0, 1), // 121
+    QCELP_OF(pfrac [ 2], 0, 1), // 120
+    QCELP_OF(plag  [ 2], 0, 7), // 119
+    QCELP_OF(pgain [ 2], 0, 3), // 112
+    QCELP_OF(cindex[ 7], 3, 4), // 109
+    QCELP_OF(cbsign[ 9], 0, 1), // 105
+    QCELP_OF(cbgain[ 9], 0, 4), // 104
+    QCELP_OF(cindex[ 8], 0, 7), // 100
+    QCELP_OF(cbsign[ 8], 0, 1), //  93
+    QCELP_OF(cbgain[ 8], 1, 3), //  92
+    QCELP_OF(cindex[10], 0, 4), //  89
+    QCELP_OF(cbsign[10], 0, 1), //  85
+    QCELP_OF(cbgain[10], 0, 4), //  84
+    QCELP_OF(cindex[ 9], 0, 7), //  80
+    QCELP_OF(pgain [ 3], 0, 2), //  73
+    QCELP_OF(cindex[11], 0, 7), //  71
+    QCELP_OF(cbsign[11], 0, 1), //  64
+    QCELP_OF(cbgain[11], 0, 3), //  63
+    QCELP_OF(cindex[10], 4, 3), //  60
+    QCELP_OF(cindex[12], 0, 2), //  57
+    QCELP_OF(cbsign[12], 0, 1), //  55
+    QCELP_OF(cbgain[12], 0, 4), //  54
+    QCELP_OF(pfrac [ 3], 0, 1), //  50
+    QCELP_OF(plag  [ 3], 0, 7), //  49
+    QCELP_OF(pgain [ 3], 2, 1), //  42
+    QCELP_OF(cindex[13], 0, 6), //  41
+    QCELP_OF(cbsign[13], 0, 1), //  35
+    QCELP_OF(cbgain[13], 0, 4), //  34
+    QCELP_OF(cindex[12], 2, 5), //  30
+    QCELP_OF(cbgain[15], 0, 3), //  25
+    QCELP_OF(cindex[14], 0, 7), //  22
+    QCELP_OF(cbsign[14], 0, 1), //  15
+    QCELP_OF(cbgain[14], 0, 4), //  14
+    QCELP_OF(cindex[13], 6, 1), //  10
+    QCELP_OF(reserved,   0, 2), //   9
+    QCELP_OF(cindex[15], 0, 7), //   7
+    QCELP_OF(cbsign[15], 0, 1)  //   0
 };
 
-
+/**
+ * bitmap unpacking tables for RATE_HALF
+ *
+ * TIA/EIA/IS-733 Table 2.4.7.2-1
+ */
 static const QCELPBitmap qcelp_rate_half_bitmap[] = {
-                               
-    QCELP_OF(lspv  [2], 0, 3), 
-    QCELP_OF(lspv  [1], 0, 7), 
-    QCELP_OF(lspv  [0], 0, 6), 
-    QCELP_OF(lspv  [4], 0, 6), 
-    QCELP_OF(lspv  [3], 0, 6), 
-    QCELP_OF(lspv  [2], 3, 4), 
-    QCELP_OF(cbsign[0], 0, 1), 
-    QCELP_OF(cbgain[0], 0, 4), 
-    QCELP_OF(pfrac [0], 0, 1), 
-    QCELP_OF(plag  [0], 0, 7), 
-    QCELP_OF(pgain [0], 0, 3), 
-    QCELP_OF(plag  [1], 0, 6), 
-    QCELP_OF(pgain [1], 0, 3), 
-    QCELP_OF(cindex[0], 0, 7), 
-    QCELP_OF(pgain [2], 0, 2), 
-    QCELP_OF(cindex[1], 0, 7), 
-    QCELP_OF(cbsign[1], 0, 1), 
-    QCELP_OF(cbgain[1], 0, 4), 
-    QCELP_OF(pfrac [1], 0, 1), 
-    QCELP_OF(plag  [1], 6, 1), 
-    QCELP_OF(cindex[2], 0, 2), 
-    QCELP_OF(cbsign[2], 0, 1), 
-    QCELP_OF(cbgain[2], 0, 4), 
-    QCELP_OF(pfrac [2], 0, 1), 
-    QCELP_OF(plag  [2], 0, 7), 
-    QCELP_OF(pgain [2], 2, 1), 
-    QCELP_OF(pfrac [3], 0, 1), 
-    QCELP_OF(plag  [3], 0, 7), 
-    QCELP_OF(pgain [3], 0, 3), 
-    QCELP_OF(cindex[2], 2, 5), 
-    QCELP_OF(cindex[3], 0, 7), 
-    QCELP_OF(cbsign[3], 0, 1), 
-    QCELP_OF(cbgain[3], 0, 4)  
+                               // start on bit
+    QCELP_OF(lspv  [2], 0, 3), // 123
+    QCELP_OF(lspv  [1], 0, 7), // 120
+    QCELP_OF(lspv  [0], 0, 6), // 113
+    QCELP_OF(lspv  [4], 0, 6), // 107
+    QCELP_OF(lspv  [3], 0, 6), // 101
+    QCELP_OF(lspv  [2], 3, 4), //  95
+    QCELP_OF(cbsign[0], 0, 1), //  91
+    QCELP_OF(cbgain[0], 0, 4), //  90
+    QCELP_OF(pfrac [0], 0, 1), //  86
+    QCELP_OF(plag  [0], 0, 7), //  85
+    QCELP_OF(pgain [0], 0, 3), //  78
+    QCELP_OF(plag  [1], 0, 6), //  75
+    QCELP_OF(pgain [1], 0, 3), //  69
+    QCELP_OF(cindex[0], 0, 7), //  66
+    QCELP_OF(pgain [2], 0, 2), //  59
+    QCELP_OF(cindex[1], 0, 7), //  57
+    QCELP_OF(cbsign[1], 0, 1), //  50
+    QCELP_OF(cbgain[1], 0, 4), //  49
+    QCELP_OF(pfrac [1], 0, 1), //  45
+    QCELP_OF(plag  [1], 6, 1), //  44
+    QCELP_OF(cindex[2], 0, 2), //  43
+    QCELP_OF(cbsign[2], 0, 1), //  41
+    QCELP_OF(cbgain[2], 0, 4), //  40
+    QCELP_OF(pfrac [2], 0, 1), //  36
+    QCELP_OF(plag  [2], 0, 7), //  35
+    QCELP_OF(pgain [2], 2, 1), //  28
+    QCELP_OF(pfrac [3], 0, 1), //  27
+    QCELP_OF(plag  [3], 0, 7), //  26
+    QCELP_OF(pgain [3], 0, 3), //  19
+    QCELP_OF(cindex[2], 2, 5), //  16
+    QCELP_OF(cindex[3], 0, 7), //  11
+    QCELP_OF(cbsign[3], 0, 1), //   4
+    QCELP_OF(cbgain[3], 0, 4)  //   3
 };
 
-
+/**
+ * bitmap unpacking tables for RATE_QUARTER
+ *
+ * TIA/EIA/IS-733 Table 2.4.7.3-1
+ */
 static const QCELPBitmap qcelp_rate_quarter_bitmap[] = {
-                               
-    QCELP_OF(lspv  [2], 0, 3), 
-    QCELP_OF(lspv  [1], 0, 7), 
-    QCELP_OF(lspv  [0], 0, 6), 
-    QCELP_OF(lspv  [4], 0, 6), 
-    QCELP_OF(lspv  [3], 0, 6), 
-    QCELP_OF(lspv  [2], 3, 4), 
-    QCELP_OF(cbgain[3], 0, 4), 
-    QCELP_OF(cbgain[2], 0, 4), 
-    QCELP_OF(cbgain[1], 0, 4), 
-    QCELP_OF(cbgain[0], 0, 4), 
-    QCELP_OF(reserved,  0, 2), 
-    QCELP_OF(cbgain[4], 0, 4)  
+                               // start on bit
+    QCELP_OF(lspv  [2], 0, 3), // 53
+    QCELP_OF(lspv  [1], 0, 7), // 50
+    QCELP_OF(lspv  [0], 0, 6), // 43
+    QCELP_OF(lspv  [4], 0, 6), // 37
+    QCELP_OF(lspv  [3], 0, 6), // 31
+    QCELP_OF(lspv  [2], 3, 4), // 25
+    QCELP_OF(cbgain[3], 0, 4), // 21
+    QCELP_OF(cbgain[2], 0, 4), // 17
+    QCELP_OF(cbgain[1], 0, 4), // 13
+    QCELP_OF(cbgain[0], 0, 4), //  9
+    QCELP_OF(reserved,  0, 2), //  5
+    QCELP_OF(cbgain[4], 0, 4)  //  3
 };
 
-
+/**
+ * bitmap unpacking tables for RATE_OCTAVE
+ *
+ * trick: CBSEED is written into QCELPContext.cbsign[15],
+ * which is not used for RATE_OCTAVE.
+ * CBSEED is only used to ensure the occurrence of random bit
+ * patterns in the 16 first bits that are used as the seed.
+ *
+ * TIA/EIA/IS-733 Table 2.4.7.4-1
+ */
 static const QCELPBitmap qcelp_rate_octave_bitmap[] = {
-                                
-    QCELP_OF(cbsign[15], 3, 1), 
-    QCELP_OF(lspv   [0], 0, 1), 
-    QCELP_OF(lspv   [1], 0, 1), 
-    QCELP_OF(lspv   [2], 0, 1), 
-    QCELP_OF(cbsign[15], 2, 1), 
-    QCELP_OF(lspv   [3], 0, 1), 
-    QCELP_OF(lspv   [4], 0, 1), 
-    QCELP_OF(lspv   [5], 0, 1), 
-    QCELP_OF(cbsign[15], 1, 1), 
-    QCELP_OF(lspv   [6], 0, 1), 
-    QCELP_OF(lspv   [7], 0, 1), 
-    QCELP_OF(lspv   [8], 0, 1), 
-    QCELP_OF(cbsign[15], 0, 1), 
-    QCELP_OF(lspv   [9], 0, 1), 
-    QCELP_OF(cbgain [0], 0, 2), 
-    QCELP_OF(reserved,   0, 4)  
+                                // start on bit
+    QCELP_OF(cbsign[15], 3, 1), // 19
+    QCELP_OF(lspv   [0], 0, 1), // 18
+    QCELP_OF(lspv   [1], 0, 1), // 17
+    QCELP_OF(lspv   [2], 0, 1), // 16
+    QCELP_OF(cbsign[15], 2, 1), // 15
+    QCELP_OF(lspv   [3], 0, 1), // 14
+    QCELP_OF(lspv   [4], 0, 1), // 13
+    QCELP_OF(lspv   [5], 0, 1), // 12
+    QCELP_OF(cbsign[15], 1, 1), // 11
+    QCELP_OF(lspv   [6], 0, 1), // 10
+    QCELP_OF(lspv   [7], 0, 1), //  9
+    QCELP_OF(lspv   [8], 0, 1), //  8
+    QCELP_OF(cbsign[15], 0, 1), //  7
+    QCELP_OF(lspv   [9], 0, 1), //  6
+    QCELP_OF(cbgain [0], 0, 2), //  7
+    QCELP_OF(reserved,   0, 4)  //  3
 };
 
-
+/**
+ * position of the bitmapping data for each packet type in
+ * the QCELPContext
+ */
 static const QCELPBitmap * const qcelp_unpacking_bitmaps_per_rate[5] = {
-    NULL,                     
+    NULL,                     ///!< for SILENCE rate
     qcelp_rate_octave_bitmap,
     qcelp_rate_quarter_bitmap,
     qcelp_rate_half_bitmap,
@@ -216,7 +274,7 @@ static const QCELPBitmap * const qcelp_unpacking_bitmaps_per_rate[5] = {
 };
 
 static const uint16_t qcelp_unpacking_bitmaps_lengths[5] = {
-    0, 
+    0, ///!< for SILENCE rate
     FF_ARRAY_ELEMS(qcelp_rate_octave_bitmap),
     FF_ARRAY_ELEMS(qcelp_rate_quarter_bitmap),
     FF_ARRAY_ELEMS(qcelp_rate_half_bitmap),
@@ -225,7 +283,11 @@ static const uint16_t qcelp_unpacking_bitmaps_lengths[5] = {
 
 typedef uint16_t qcelp_vector[2];
 
-
+/**
+ * LSP vector quantization tables in x*10000 form
+ *
+ * TIA/EIA/IS-733 tables 2.4.3.2.6.3-1 through 2.4.3.2.6.3-5
+ */
 
 static const qcelp_vector qcelp_lspvq1[64]= {
 { 327, 118},{ 919, 111},{ 427, 440},{1327, 185},
@@ -357,10 +419,19 @@ static const qcelp_vector * const qcelp_lspvq[5] = {
     qcelp_lspvq5
 };
 
-
+/**
+ * the final gain scalefactor before clipping into a usable output float
+ */
 #define QCELP_SCALE 8192.
 
-
+/**
+ * table for computing Ga (decoded linear codebook gain magnitude)
+ *
+ * @note The table could fit in int16_t in x*8 form, but it seems
+ *       to be slower on x86
+ *
+ * TIA/EIA/IS-733 2.4.6.2.1-3
+ */
 
 static const float qcelp_g12ga[61] = {
     1.000/QCELP_SCALE,   1.125/QCELP_SCALE,   1.250/QCELP_SCALE,   1.375/QCELP_SCALE,
@@ -380,7 +451,11 @@ static const float qcelp_g12ga[61] = {
   631.000/QCELP_SCALE, 708.000/QCELP_SCALE, 794.375/QCELP_SCALE, 891.250/QCELP_SCALE,
  1000.000/QCELP_SCALE};
 
-
+/**
+ * circular codebook for rate 1 frames in x*100 form
+ *
+ * TIA/EIA/IS-733 2.4.6.1-2
+ */
 static const int16_t qcelp_rate_full_codebook[128] = {
      10,  -65,  -59,   12,  110,   34, -134,  157,
     104,  -84,  -34, -115,   23, -101,    3,   45,
@@ -401,7 +476,11 @@ static const int16_t qcelp_rate_full_codebook[128] = {
 };
 #define QCELP_RATE_FULL_CODEBOOK_RATIO .01
 
-
+/**
+ * circular codebook for rate 1/2 frames in x*2 form
+ *
+ * TIA/EIA/IS-733 2.4.6.1-1
+ */
 static const int8_t qcelp_rate_half_codebook[128] = {
      0, -4,  0, -3,  0,  0,  0,  0,
      0,  0,  0,  0,  0,  0,  0,  0,
@@ -422,23 +501,52 @@ static const int8_t qcelp_rate_half_codebook[128] = {
 };
 #define QCELP_RATE_HALF_CODEBOOK_RATIO 0.5
 
-
+/**
+ * sqrt(1.887) is the maximum of the pseudorandom
+ * white sequence used to generate the scaled codebook
+ * vector for bitrate 1/4.
+ *
+ * TIA/EIA/IS-733 2.4.8.1.2
+ */
 #define QCELP_SQRT1887 1.373681186
 
-
+/**
+ * table for impulse response of BPF used to filter
+ * the white excitation for bitrate 1/4 synthesis
+ *
+ * Only half the tables are needed because of symmetry.
+ *
+ * TIA/EIA/IS-733 2.4.8.1.2-1.1
+ */
 static const double qcelp_rnd_fir_coefs[11] = {
   -1.344519e-1, 1.735384e-2, -6.905826e-2, 2.434368e-2,
   -8.210701e-2, 3.041388e-2, -9.251384e-2, 3.501983e-2,
   -9.918777e-2, 3.749518e-2,  8.985137e-1
 };
 
-
+/**
+ * This spread factor is used, for bitrate 1/8 and I_F_Q,
+ * to force the LSP frequencies to be at least 80 Hz apart.
+ *
+ * TIA/EIA/IS-733 2.4.3.3.2
+ */
 #define QCELP_LSP_SPREAD_FACTOR 0.02
 
-
+/**
+ * predictor coefficient for the conversion of LSP codes
+ * to LSP frequencies for 1/8 and I_F_Q
+ *
+ * TIA/EIA/IS-733 2.4.3.2.7-2
+ */
 #define QCELP_LSP_OCTAVE_PREDICTOR 29.0/32
 
-
+/**
+ * initial coefficient to perform bandwidth expansion on LPC
+ *
+ * @note: 0.9883 looks like an approximation of 253/256.
+ *
+ * TIA/EIA/IS-733 2.4.3.3.6 6
+ */
 #define QCELP_BANDWIDTH_EXPANSION_COEFF 0.9883
 
-#endif 
+#endif /* AVCODEC_QCELPDATA_H */

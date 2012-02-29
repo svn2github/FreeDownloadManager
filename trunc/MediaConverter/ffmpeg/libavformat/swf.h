@@ -1,8 +1,24 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Flash Compatible Streaming Format common header.
+ * Copyright (c) 2000 Fabrice Bellard
+ * Copyright (c) 2003 Tinic Uro
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVFORMAT_SWF_H
 #define AVFORMAT_SWF_H
@@ -10,11 +26,11 @@
 #include "libavutil/fifo.h"
 #include "avformat.h"
 #include "avio.h"
-#include "riff.h"    
+#include "riff.h"    /* for CodecTag */
 
-
+/* should have a generic way to indicate probable size */
 #define DUMMY_FILE_SIZE   (100 * 1024 * 1024)
-#define DUMMY_DURATION    600 
+#define DUMMY_DURATION    600 /* in seconds */
 
 #define TAG_END           0
 #define TAG_SHOWFRAME     1
@@ -33,14 +49,14 @@
 
 #define TAG_LONG         0x100
 
-
+/* flags for shape definition */
 #define FLAG_MOVETO      0x01
 #define FLAG_SETFILL0    0x02
 #define FLAG_SETFILL1    0x04
 
 #define AUDIO_FIFO_SIZE 65536
 
-
+/* character id used */
 #define BITMAP_ID 0
 #define VIDEO_ID 0
 #define SHAPE_ID  1
@@ -73,8 +89,8 @@ static const AVCodecTag swf_audio_codec_tags[] = {
     {CODEC_ID_ADPCM_SWF,  0x01},
     {CODEC_ID_MP3,        0x02},
     {CODEC_ID_PCM_S16LE,  0x03},
-  
+  //{CODEC_ID_NELLYMOSER, 0x06},
     {CODEC_ID_NONE,          0},
 };
 
-#endif 
+#endif /* AVFORMAT_SWF_H */

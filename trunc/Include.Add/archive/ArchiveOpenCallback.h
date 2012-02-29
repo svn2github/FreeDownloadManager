@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// ArchiveOpenCallback.h
 
 #ifndef __ARCHIVE_OPEN_CALLBACK_H
 #define __ARCHIVE_OPEN_CALLBACK_H
@@ -51,12 +49,12 @@ public:
   STDMETHOD(SetTotal)(const UInt64 *files, const UInt64 *bytes);
   STDMETHOD(SetCompleted)(const UInt64 *files, const UInt64 *bytes);
 
-  
+  // IArchiveOpenVolumeCallback
   STDMETHOD(GetProperty)(PROPID propID, PROPVARIANT *value);
   STDMETHOD(GetStream)(const wchar_t *name, IInStream **inStream);
 
   #ifndef _NO_CRYPTO
-  
+  // ICryptoGetTextPassword
   STDMETHOD(CryptoGetTextPassword)(BSTR *password);
   #endif
 

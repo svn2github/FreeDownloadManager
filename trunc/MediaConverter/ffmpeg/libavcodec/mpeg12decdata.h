@@ -1,10 +1,29 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * MPEG1/2 decoder tables
+ * copyright (c) 2000,2001 Fabrice Bellard
+ * copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * MPEG1/2 decoder tables.
+ */
 
 #ifndef AVCODEC_MPEG12DECDATA_H
 #define AVCODEC_MPEG12DECDATA_H
@@ -17,13 +36,13 @@
 #define IS_ZERO_MV(a)   ((a)&MB_TYPE_ZERO_MV)
 
 static const uint8_t table_mb_ptype[7][2] = {
-    { 3, 5 }, 
-    { 1, 2 }, 
-    { 1, 3 }, 
-    { 1, 1 }, 
-    { 1, 6 }, 
-    { 1, 5 }, 
-    { 2, 5 }, 
+    { 3, 5 }, // 0x01 MB_INTRA
+    { 1, 2 }, // 0x02 MB_PAT
+    { 1, 3 }, // 0x08 MB_FOR
+    { 1, 1 }, // 0x0A MB_FOR|MB_PAT
+    { 1, 6 }, // 0x11 MB_QUANT|MB_INTRA
+    { 1, 5 }, // 0x12 MB_QUANT|MB_PAT
+    { 2, 5 }, // 0x1A MB_QUANT|MB_FOR|MB_PAT
 };
 
 static const uint32_t ptype2mb_type[7] = {
@@ -37,17 +56,17 @@ static const uint32_t ptype2mb_type[7] = {
 };
 
 static const uint8_t table_mb_btype[11][2] = {
-    { 3, 5 }, 
-    { 2, 3 }, 
-    { 3, 3 }, 
-    { 2, 4 }, 
-    { 3, 4 }, 
-    { 2, 2 }, 
-    { 3, 2 }, 
-    { 1, 6 }, 
-    { 2, 6 }, 
-    { 3, 6 }, 
-    { 2, 5 }, 
+    { 3, 5 }, // 0x01 MB_INTRA
+    { 2, 3 }, // 0x04 MB_BACK
+    { 3, 3 }, // 0x06 MB_BACK|MB_PAT
+    { 2, 4 }, // 0x08 MB_FOR
+    { 3, 4 }, // 0x0A MB_FOR|MB_PAT
+    { 2, 2 }, // 0x0C MB_FOR|MB_BACK
+    { 3, 2 }, // 0x0E MB_FOR|MB_BACK|MB_PAT
+    { 1, 6 }, // 0x11 MB_QUANT|MB_INTRA
+    { 2, 6 }, // 0x16 MB_QUANT|MB_BACK|MB_PAT
+    { 3, 6 }, // 0x1A MB_QUANT|MB_FOR|MB_PAT
+    { 2, 5 }, // 0x1E MB_QUANT|MB_FOR|MB_BACK|MB_PAT
 };
 
 static const uint32_t btype2mb_type[11] = {
@@ -71,4 +90,4 @@ static const uint8_t non_linear_qscale[32] = {
     56,64,72,80,88,96,104,112,
 };
 
-#endif 
+#endif /* AVCODEC_MPEG12DECDATA_H */

@@ -1,15 +1,30 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Bink video decoder
+ * Copyright (C) 2009 Kostya Shishkov
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_BINKDATA_H
 #define AVCODEC_BINKDATA_H
 
 #include <stdint.h>
 
-
+/** Bink DCT and residue 8x8 block scan order */
 static const uint8_t bink_scan[64] = {
      0,  1,  8,  9,  2,  3, 10, 11,
      4,  5, 12, 13,  6,  7, 14, 15,
@@ -596,4 +611,4 @@ static const uint32_t bink_inter_quant[16][64] = {
 },
 };
 
-#endif 
+#endif /* AVCODEC_BINKDATA_H */

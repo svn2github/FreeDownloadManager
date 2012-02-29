@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Windows/FileIO.h
 
 #ifndef __WINDOWS_FILEIO_H
 #define __WINDOWS_FILEIO_H
@@ -67,9 +65,9 @@ public:
 
 class COutFile: public CFileBase
 {
-  
+  // DWORD m_CreationDisposition;
 public:
-  
+  // COutFile(): m_CreationDisposition(CREATE_NEW){};
   bool Open(LPCTSTR fileName, DWORD shareMode, DWORD creationDisposition, DWORD flagsAndAttributes);
   bool Open(LPCTSTR fileName, DWORD creationDisposition);
   bool Create(LPCTSTR fileName, bool createAlways);
@@ -80,7 +78,12 @@ public:
   bool Create(LPCWSTR fileName, bool createAlways);
   #endif
 
-  
+  /*
+  void SetOpenCreationDisposition(DWORD creationDisposition)
+    { m_CreationDisposition = creationDisposition; }
+  void SetOpenCreationDispositionCreateAlways()
+    { m_CreationDisposition = CREATE_ALWAYS; }
+  */
 
   bool SetTime(const FILETIME *creationTime, const FILETIME *lastAccessTime, const FILETIME *lastWriteTime);
   bool SetLastWriteTime(const FILETIME *lastWriteTime);

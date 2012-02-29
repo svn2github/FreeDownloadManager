@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// IFileExtractCallback.h
 
 #ifndef __IFILEEXTRACTCALLBACK_H
 #define __IFILEEXTRACTCALLBACK_H
@@ -20,6 +18,7 @@ namespace NOverwriteAnswer
   };
 }
 
+// {23170F69-40C1-278A-0000-000100070000}
 DEFINE_GUID(IID_IFolderArchiveExtractCallback, 
 0x23170F69, 0x40C1, 0x278A, 0x00, 0x00, 0x00, 0x01, 0x00, 0x07, 0x00, 0x00);
 MIDL_INTERFACE("23170F69-40C1-278A-0000-000100070000")

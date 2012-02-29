@@ -1,8 +1,22 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Copyright (c) 2003-2004 Romain Dolbeau <romain@dolbeau.org>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_PPC_DSPUTIL_PPC_H
 #define AVCODEC_PPC_DSPUTIL_PPC_H
@@ -11,9 +25,13 @@
 
 #if CONFIG_POWERPC_PERF
 void powerpc_display_perf_report(void);
-
+/* the 604* have 2, the G3* have 4, the G4s have 6,
+   and the G5 are completely different (they MUST use
+   ARCH_PPC64, and let's hope all future 64 bis PPC
+   will use the same PMCs... */
 #define POWERPC_NUM_PMC_ENABLED 6
-
+/* if you add to the enum below, also add to the perfname array
+   in dsputil_ppc.c */
 enum powerpc_perf_index {
     altivec_fft_num = 0,
     altivec_gmc1_num,
@@ -70,7 +88,7 @@ extern unsigned long long perfdata[POWERPC_NUM_PMC_ENABLED][powerpc_perf_total][
 #define POWERPC_GET_PMC5(a) do {} while (0)
 #define POWERPC_GET_PMC6(a) do {} while (0)
 #endif
-#else 
+#else /* ARCH_PPC64 */
 #define POWERP_PMC_DATATYPE unsigned long long
 #define POWERPC_GET_PMC1(a) __asm__ volatile("mfspr %0, 771" : "=r" (a))
 #define POWERPC_GET_PMC2(a) __asm__ volatile("mfspr %0, 772" : "=r" (a))
@@ -88,7 +106,7 @@ extern unsigned long long perfdata[POWERPC_NUM_PMC_ENABLED][powerpc_perf_total][
 #define POWERPC_GET_PMC5(a) do {} while (0)
 #define POWERPC_GET_PMC6(a) do {} while (0)
 #endif
-#endif 
+#endif /* ARCH_PPC64 */
 #define POWERPC_PERF_DECLARE(a, cond)       \
     POWERP_PMC_DATATYPE                     \
         pmc_start[POWERPC_NUM_PMC_ENABLED], \
@@ -126,11 +144,11 @@ extern unsigned long long perfdata[POWERPC_NUM_PMC_ENABLED][powerpc_perf_total][
         }                                     \
     }                                         \
 } while (0)
-#else 
-
+#else /* CONFIG_POWERPC_PERF */
+// those are needed to avoid empty statements.
 #define POWERPC_PERF_DECLARE(a, cond)        int altivec_placeholder __attribute__ ((unused))
 #define POWERPC_PERF_START_COUNT(a, cond)    do {} while (0)
 #define POWERPC_PERF_STOP_COUNT(a, cond)     do {} while (0)
-#endif 
+#endif /* CONFIG_POWERPC_PERF */
 
-#endif 
+#endif /*  AVCODEC_PPC_DSPUTIL_PPC_H */

@@ -1,19 +1,25 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
- 
+ /*****************************************************************************\
+*                                                                             *
+* shellapi.h -  SHELL.DLL functions, types, and definitions                   *
+*                                                                             *
+* Copyright (c) Microsoft Corporation. All rights reserved.                   *
+*                                                                             *
+\*****************************************************************************/
 
 #ifndef _INC_SHELLAPI
 #define _INC_SHELLAPI
 
+
+//
+// Define API decoration for direct importing of DLL references.
+//
 #ifndef WINSHELLAPI
 #if !defined(_SHELL32_)
 #define WINSHELLAPI       DECLSPEC_IMPORT
 #else
 #define WINSHELLAPI
 #endif
-#endif 
+#endif // WINSHELLAPI
 
 #ifndef SHSTDAPI
 #if !defined(_SHELL32_)
@@ -23,7 +29,7 @@
 #define SHSTDAPI          STDAPI
 #define SHSTDAPI_(type)   STDAPI_(type)
 #endif
-#endif 
+#endif // SHSTDAPI
 
 #ifndef SHDOCAPI
 #if !defined(_SHDOCVW_)
@@ -33,15 +39,18 @@
 #define SHDOCAPI          STDAPI
 #define SHDOCAPI_(type)   STDAPI_(type)
 #endif
-#endif 
+#endif // SHDOCAPI
+
 
 #if !defined(_WIN64)
 #include <pshpack1.h>
 #endif
 
 #ifdef __cplusplus
-extern "C" {            
-#endif  
+extern "C" {            /* Assume C declarations for C++ */
+#endif  /* __cplusplus */
+
+
 
 DECLARE_HANDLE(HDROP);
 
@@ -51,7 +60,7 @@ SHSTDAPI_(UINT) DragQueryFileW(HDROP,UINT,LPWSTR,UINT);
 #define DragQueryFile  DragQueryFileW
 #else
 #define DragQueryFile  DragQueryFileA
-#endif 
+#endif // !UNICODE
 SHSTDAPI_(BOOL) DragQueryPoint(HDROP,LPPOINT);
 SHSTDAPI_(void) DragFinish(HDROP);
 SHSTDAPI_(void) DragAcceptFiles(HWND,BOOL);
@@ -62,14 +71,14 @@ SHSTDAPI_(HINSTANCE) ShellExecuteW(HWND hwnd, LPCWSTR lpOperation, LPCWSTR lpFil
 #define ShellExecute  ShellExecuteW
 #else
 #define ShellExecute  ShellExecuteA
-#endif 
+#endif // !UNICODE
 SHSTDAPI_(HINSTANCE) FindExecutableA(LPCSTR lpFile, LPCSTR lpDirectory, LPSTR lpResult);
 SHSTDAPI_(HINSTANCE) FindExecutableW(LPCWSTR lpFile, LPCWSTR lpDirectory, LPWSTR lpResult);
 #ifdef UNICODE
 #define FindExecutable  FindExecutableW
 #else
 #define FindExecutable  FindExecutableA
-#endif 
+#endif // !UNICODE
 SHSTDAPI_(LPWSTR *)  CommandLineToArgvW(LPCWSTR lpCmdLine, int*pNumArgs);
 
 SHSTDAPI_(INT) ShellAboutA(HWND hWnd, LPCSTR szApp, LPCSTR szOtherStuff, HICON hIcon);
@@ -78,7 +87,7 @@ SHSTDAPI_(INT) ShellAboutW(HWND hWnd, LPCWSTR szApp, LPCWSTR szOtherStuff, HICON
 #define ShellAbout  ShellAboutW
 #else
 #define ShellAbout  ShellAboutA
-#endif 
+#endif // !UNICODE
 SHSTDAPI_(HICON) DuplicateIcon(HINSTANCE hInst, HICON hIcon);
 SHSTDAPI_(HICON) ExtractAssociatedIconA(HINSTANCE hInst, LPSTR lpIconPath, LPWORD lpiIcon);
 SHSTDAPI_(HICON) ExtractAssociatedIconW(HINSTANCE hInst, LPWSTR lpIconPath, LPWORD lpiIcon);
@@ -86,25 +95,25 @@ SHSTDAPI_(HICON) ExtractAssociatedIconW(HINSTANCE hInst, LPWSTR lpIconPath, LPWO
 #define ExtractAssociatedIcon  ExtractAssociatedIconW
 #else
 #define ExtractAssociatedIcon  ExtractAssociatedIconA
-#endif 
+#endif // !UNICODE
 SHSTDAPI_(HICON) ExtractIconA(HINSTANCE hInst, LPCSTR lpszExeFileName, UINT nIconIndex);
 SHSTDAPI_(HICON) ExtractIconW(HINSTANCE hInst, LPCWSTR lpszExeFileName, UINT nIconIndex);
 #ifdef UNICODE
 #define ExtractIcon  ExtractIconW
 #else
 #define ExtractIcon  ExtractIconA
-#endif 
+#endif // !UNICODE
 
 #if(WINVER >= 0x0400)
 typedef struct _DRAGINFOA {
-    UINT uSize;                 
+    UINT uSize;                 /* init with sizeof(DRAGINFO) */
     POINT pt;
     BOOL fNC;
     LPSTR   lpFileList;
     DWORD grfKeyState;
 } DRAGINFOA, *LPDRAGINFOA;
 typedef struct _DRAGINFOW {
-    UINT uSize;                 
+    UINT uSize;                 /* init with sizeof(DRAGINFO) */
     POINT pt;
     BOOL fNC;
     LPWSTR  lpFileList;
@@ -116,27 +125,33 @@ typedef LPDRAGINFOW LPDRAGINFO;
 #else
 typedef DRAGINFOA DRAGINFO;
 typedef LPDRAGINFOA LPDRAGINFO;
-#endif 
+#endif // UNICODE
 
+
+////
+//// AppBar stuff
+////
 #define ABM_NEW           0x00000000
 #define ABM_REMOVE        0x00000001
 #define ABM_QUERYPOS      0x00000002
 #define ABM_SETPOS        0x00000003
 #define ABM_GETSTATE      0x00000004
 #define ABM_GETTASKBARPOS 0x00000005
-#define ABM_ACTIVATE      0x00000006  
+#define ABM_ACTIVATE      0x00000006  // lParam == TRUE/FALSE means activate/deactivate
 #define ABM_GETAUTOHIDEBAR 0x00000007
-#define ABM_SETAUTOHIDEBAR 0x00000008  
-                                        
-                                        
+#define ABM_SETAUTOHIDEBAR 0x00000008  // this can fail at any time.  MUST check the result
+                                        // lParam = TRUE/FALSE  Set/Unset
+                                        // uEdge = what edge
 #define ABM_WINDOWPOSCHANGED 0x0000009
 #define ABM_SETSTATE      0x0000000a
 
+// these are put in the wparam of callback messages
 #define ABN_STATECHANGE    0x0000000
 #define ABN_POSCHANGED     0x0000001
 #define ABN_FULLSCREENAPP  0x0000002
-#define ABN_WINDOWARRANGE  0x0000003 
+#define ABN_WINDOWARRANGE  0x0000003 // lParam == TRUE means hide
 
+// flags for get state
 #define ABS_AUTOHIDE    0x0000001
 #define ABS_ALWAYSONTOP 0x0000002
 
@@ -152,10 +167,15 @@ typedef struct _AppBarData
     UINT uCallbackMessage;
     UINT uEdge;
     RECT rc;
-    LPARAM lParam; 
+    LPARAM lParam; // message specific
 } APPBARDATA, *PAPPBARDATA;
 
+
 SHSTDAPI_(UINT_PTR) SHAppBarMessage(DWORD dwMessage, PAPPBARDATA pData);
+
+////
+////  EndAppBar
+////
 
 SHSTDAPI_(DWORD)   DoEnvironmentSubstA(LPSTR szString, UINT cchString);
 SHSTDAPI_(DWORD)   DoEnvironmentSubstW(LPWSTR szString, UINT cchString);
@@ -163,7 +183,7 @@ SHSTDAPI_(DWORD)   DoEnvironmentSubstW(LPWSTR szString, UINT cchString);
 #define DoEnvironmentSubst  DoEnvironmentSubstW
 #else
 #define DoEnvironmentSubst  DoEnvironmentSubstA
-#endif 
+#endif // !UNICODE
 
 #define EIRESID(x) (-1 * (int)(x))
 SHSTDAPI_(UINT) ExtractIconExA(LPCSTR lpszFile, int nIconIndex, HICON *phiconLarge, HICON *phiconSmall, UINT nIcons);
@@ -172,9 +192,13 @@ SHSTDAPI_(UINT) ExtractIconExW(LPCWSTR lpszFile, int nIconIndex, HICON *phiconLa
 #define ExtractIconEx  ExtractIconExW
 #else
 #define ExtractIconEx  ExtractIconExA
-#endif 
+#endif // !UNICODE
 
-#ifndef FO_MOVE 
+
+////
+//// Shell File Operations
+////
+#ifndef FO_MOVE //these need to be kept in sync with the ones in shlobj.h
 
 #define FO_MOVE           0x0001
 #define FO_COPY           0x0002
@@ -183,40 +207,49 @@ SHSTDAPI_(UINT) ExtractIconExW(LPCWSTR lpszFile, int nIconIndex, HICON *phiconLa
 
 #define FOF_MULTIDESTFILES         0x0001
 #define FOF_CONFIRMMOUSE           0x0002
-#define FOF_SILENT                 0x0004  
+#define FOF_SILENT                 0x0004  // don't create progress/report
 #define FOF_RENAMEONCOLLISION      0x0008
-#define FOF_NOCONFIRMATION         0x0010  
-#define FOF_WANTMAPPINGHANDLE      0x0020  
-                                      
+#define FOF_NOCONFIRMATION         0x0010  // Don't prompt the user.
+#define FOF_WANTMAPPINGHANDLE      0x0020  // Fill in SHFILEOPSTRUCT.hNameMappings
+                                      // Must be freed using SHFreeNameMappings
 #define FOF_ALLOWUNDO              0x0040
-#define FOF_FILESONLY              0x0080  
-#define FOF_SIMPLEPROGRESS         0x0100  
-#define FOF_NOCONFIRMMKDIR         0x0200  
-#define FOF_NOERRORUI              0x0400  
-#define FOF_NOCOPYSECURITYATTRIBS  0x0800  
-#define FOF_NORECURSION            0x1000  
+#define FOF_FILESONLY              0x0080  // on *.*, do only files
+#define FOF_SIMPLEPROGRESS         0x0100  // means don't show names of files
+#define FOF_NOCONFIRMMKDIR         0x0200  // don't confirm making any needed dirs
+#define FOF_NOERRORUI              0x0400  // don't put up error UI
+#define FOF_NOCOPYSECURITYATTRIBS  0x0800  // dont copy NT file Security Attributes
+#define FOF_NORECURSION            0x1000  // don't recurse into directories.
 #if (_WIN32_IE >= 0x0500)
-#define FOF_NO_CONNECTED_ELEMENTS  0x2000  
-#define FOF_WANTNUKEWARNING        0x4000  
-#endif 
+#define FOF_NO_CONNECTED_ELEMENTS  0x2000  // don't operate on connected elements.
+#define FOF_WANTNUKEWARNING        0x4000  // during delete operation, warn if nuking instead of recycling (partially overrides FOF_NOCONFIRMATION)
+#endif // (_WIN32_IE >= 0x500)
 #if (_WIN32_WINNT >= 0x0501)
-#define FOF_NORECURSEREPARSE       0x8000  
-#endif 
+#define FOF_NORECURSEREPARSE       0x8000  // treat reparse points as objects, not containers
+#endif // (_WIN32_WINNT >= 0x501)
 
 typedef WORD FILEOP_FLAGS;
 
-#define PO_DELETE       0x0013  
-#define PO_RENAME       0x0014  
-#define PO_PORTCHANGE   0x0020  
-                                
-                                
-                                
-                                
-#define PO_REN_PORT     0x0034  
+#define PO_DELETE       0x0013  // printer is being deleted
+#define PO_RENAME       0x0014  // printer is being renamed
+#define PO_PORTCHANGE   0x0020  // port this printer connected to is being changed
+                                // if this id is set, the strings received by
+                                // the copyhook are a doubly-null terminated
+                                // list of strings.  The first is the printer
+                                // name and the second is the printer port.
+#define PO_REN_PORT     0x0034  // PO_RENAME and PO_PORTCHANGE at same time.
+
+// no POF_ flags currently defined
 
 typedef WORD PRINTEROP_FLAGS;
 
-#endif 
+#endif // FO_MOVE
+
+// implicit parameters are:
+//      if pFrom or pTo are unqualified names the current directories are
+//      taken from the global current drive/directory settings managed
+//      by Get/SetCurrentDrive/Directory
+//
+//      the global confirmation settings
 
 typedef struct _SHFILEOPSTRUCTA
 {
@@ -227,7 +260,7 @@ typedef struct _SHFILEOPSTRUCTA
         FILEOP_FLAGS    fFlags;
         BOOL            fAnyOperationsAborted;
         LPVOID          hNameMappings;
-        LPCSTR           lpszProgressTitle; 
+        LPCSTR           lpszProgressTitle; // only used if FOF_SIMPLEPROGRESS
 } SHFILEOPSTRUCTA, *LPSHFILEOPSTRUCTA;
 typedef struct _SHFILEOPSTRUCTW
 {
@@ -238,7 +271,7 @@ typedef struct _SHFILEOPSTRUCTW
         FILEOP_FLAGS    fFlags;
         BOOL            fAnyOperationsAborted;
         LPVOID          hNameMappings;
-        LPCWSTR          lpszProgressTitle; 
+        LPCWSTR          lpszProgressTitle; // only used if FOF_SIMPLEPROGRESS
 } SHFILEOPSTRUCTW, *LPSHFILEOPSTRUCTW;
 #ifdef UNICODE
 typedef SHFILEOPSTRUCTW SHFILEOPSTRUCT;
@@ -246,7 +279,7 @@ typedef LPSHFILEOPSTRUCTW LPSHFILEOPSTRUCT;
 #else
 typedef SHFILEOPSTRUCTA SHFILEOPSTRUCT;
 typedef LPSHFILEOPSTRUCTA LPSHFILEOPSTRUCT;
-#endif 
+#endif // UNICODE
 
 SHSTDAPI_(int) SHFileOperationA(LPSHFILEOPSTRUCTA lpFileOp);
 SHSTDAPI_(int) SHFileOperationW(LPSHFILEOPSTRUCTW lpFileOp);
@@ -254,7 +287,7 @@ SHSTDAPI_(int) SHFileOperationW(LPSHFILEOPSTRUCTW lpFileOp);
 #define SHFileOperation  SHFileOperationW
 #else
 #define SHFileOperation  SHFileOperationA
-#endif 
+#endif // !UNICODE
 SHSTDAPI_(void) SHFreeNameMappings(HANDLE hNameMappings);
 
 typedef struct _SHNAMEMAPPINGA
@@ -277,16 +310,29 @@ typedef LPSHNAMEMAPPINGW LPSHNAMEMAPPING;
 #else
 typedef SHNAMEMAPPINGA SHNAMEMAPPING;
 typedef LPSHNAMEMAPPINGA LPSHNAMEMAPPING;
-#endif 
+#endif // UNICODE
 
-#define SE_ERR_FNF              2       
-#define SE_ERR_PNF              3       
-#define SE_ERR_ACCESSDENIED     5       
-#define SE_ERR_OOM              8       
+
+////
+//// End Shell File Operations
+////
+
+////
+////  Begin ShellExecuteEx and family
+////
+
+/* ShellExecute() and ShellExecuteEx() error codes */
+
+/* regular WinExec() codes */
+#define SE_ERR_FNF              2       // file not found
+#define SE_ERR_PNF              3       // path not found
+#define SE_ERR_ACCESSDENIED     5       // access denied
+#define SE_ERR_OOM              8       // out of memory
 #define SE_ERR_DLLNOTFOUND              32
 
-#endif 
+#endif /* WINVER >= 0x0400 */
 
+/* error values for ShellExecute() beyond the regular WinExec() codes */
 #define SE_ERR_SHARE                    26
 #define SE_ERR_ASSOCINCOMPLETE          27
 #define SE_ERR_DDETIMEOUT               28
@@ -296,9 +342,10 @@ typedef LPSHNAMEMAPPINGA LPSHNAMEMAPPING;
 
 #if(WINVER >= 0x0400)
 
+// Note CLASSKEY overrides CLASSNAME
 #define SEE_MASK_CLASSNAME        0x00000001
 #define SEE_MASK_CLASSKEY         0x00000003
-
+// Note INVOKEIDLIST overrides IDLIST
 #define SEE_MASK_IDLIST           0x00000004
 #define SEE_MASK_INVOKEIDLIST     0x0000000c
 #define SEE_MASK_ICON             0x00000010
@@ -315,11 +362,15 @@ typedef LPSHNAMEMAPPINGA LPSHNAMEMAPPING;
 #if (_WIN32_IE >= 0x0500)
 #define SEE_MASK_NOQUERYCLASSSTORE 0x01000000
 #define SEE_MASK_WAITFORINPUTIDLE  0x02000000
-#endif 
+#endif // (_WIN32_IE >= 0x500)
 #if (_WIN32_IE >= 0x0560)
 #define SEE_MASK_FLAG_LOG_USAGE    0x04000000
-#endif 
+#endif // (_WIN32_IE >= 0x560)
 
+
+//
+// For compilers that don't support nameless unions
+//
 #ifndef DUMMYUNIONNAME
 #ifdef NONAMELESSUNION
 #define DUMMYUNIONNAME   u
@@ -334,7 +385,7 @@ typedef LPSHNAMEMAPPINGA LPSHNAMEMAPPING;
 #define DUMMYUNIONNAME4
 #define DUMMYUNIONNAME5
 #endif
-#endif 
+#endif // DUMMYUNIONNAME
 
 typedef struct _SHELLEXECUTEINFOA
 {
@@ -347,7 +398,7 @@ typedef struct _SHELLEXECUTEINFOA
         LPCSTR   lpDirectory;
         int nShow;
         HINSTANCE hInstApp;
-        
+        // Optional fields
         LPVOID lpIDList;
         LPCSTR   lpClass;
         HKEY hkeyClass;
@@ -369,7 +420,7 @@ typedef struct _SHELLEXECUTEINFOW
         LPCWSTR  lpDirectory;
         int nShow;
         HINSTANCE hInstApp;
-        
+        // Optional fields
         LPVOID lpIDList;
         LPCWSTR  lpClass;
         HKEY hkeyClass;
@@ -386,7 +437,7 @@ typedef LPSHELLEXECUTEINFOW LPSHELLEXECUTEINFO;
 #else
 typedef SHELLEXECUTEINFOA SHELLEXECUTEINFO;
 typedef LPSHELLEXECUTEINFOA LPSHELLEXECUTEINFO;
-#endif 
+#endif // UNICODE
 
 SHSTDAPI_(BOOL) ShellExecuteExA(LPSHELLEXECUTEINFOA lpExecInfo);
 SHSTDAPI_(BOOL) ShellExecuteExW(LPSHELLEXECUTEINFOW lpExecInfo);
@@ -394,15 +445,17 @@ SHSTDAPI_(BOOL) ShellExecuteExW(LPSHELLEXECUTEINFOW lpExecInfo);
 #define ShellExecuteEx  ShellExecuteExW
 #else
 #define ShellExecuteEx  ShellExecuteExA
-#endif 
+#endif // !UNICODE
 SHSTDAPI_(void) WinExecErrorA(HWND hwnd, int error, LPCSTR lpstrFileName, LPCSTR lpstrTitle);
 SHSTDAPI_(void) WinExecErrorW(HWND hwnd, int error, LPCWSTR lpstrFileName, LPCWSTR lpstrTitle);
 #ifdef UNICODE
 #define WinExecError  WinExecErrorW
 #else
 #define WinExecError  WinExecErrorA
-#endif 
+#endif // !UNICODE
 
+//
+//  SHCreateProcessAsUser()
 typedef struct _SHCREATEPROCESSINFOW
 {
         DWORD cbSize;
@@ -422,6 +475,15 @@ typedef struct _SHCREATEPROCESSINFOW
 
 SHSTDAPI_(BOOL) SHCreateProcessAsUserW(PSHCREATEPROCESSINFOW pscpi);
 
+////
+////  End ShellExecuteEx and family
+////
+
+//
+// RecycleBin
+//
+
+// struct for query recycle bin info
 typedef struct _SHQUERYRBINFO {
     DWORD   cbSize;
 #if !defined(_MAC) || defined(_MAC_INT_64)
@@ -433,9 +495,13 @@ typedef struct _SHQUERYRBINFO {
 #endif
 } SHQUERYRBINFO, *LPSHQUERYRBINFO;
 
+
+// flags for SHEmptyRecycleBin
+//
 #define SHERB_NOCONFIRMATION    0x00000001
 #define SHERB_NOPROGRESSUI      0x00000002
 #define SHERB_NOSOUND           0x00000004
+
 
 SHSTDAPI SHQueryRecycleBinA(LPCSTR pszRootPath, LPSHQUERYRBINFO pSHQueryRBInfo);
 SHSTDAPI SHQueryRecycleBinW(LPCWSTR pszRootPath, LPSHQUERYRBINFO pSHQueryRBInfo);
@@ -443,14 +509,22 @@ SHSTDAPI SHQueryRecycleBinW(LPCWSTR pszRootPath, LPSHQUERYRBINFO pSHQueryRBInfo)
 #define SHQueryRecycleBin  SHQueryRecycleBinW
 #else
 #define SHQueryRecycleBin  SHQueryRecycleBinA
-#endif 
+#endif // !UNICODE
 SHSTDAPI SHEmptyRecycleBinA(HWND hwnd, LPCSTR pszRootPath, DWORD dwFlags);
 SHSTDAPI SHEmptyRecycleBinW(HWND hwnd, LPCWSTR pszRootPath, DWORD dwFlags);
 #ifdef UNICODE
 #define SHEmptyRecycleBin  SHEmptyRecycleBinW
 #else
 #define SHEmptyRecycleBin  SHEmptyRecycleBinA
-#endif 
+#endif // !UNICODE
+
+////
+//// end of RecycleBin
+
+
+////
+//// Tray notification definitions
+////
 
 typedef struct _NOTIFYICONDATAA {
         DWORD cbSize;
@@ -512,7 +586,8 @@ typedef PNOTIFYICONDATAW PNOTIFYICONDATA;
 #else
 typedef NOTIFYICONDATAA NOTIFYICONDATA;
 typedef PNOTIFYICONDATAA PNOTIFYICONDATA;
-#endif 
+#endif // UNICODE
+
 
 #define NOTIFYICONDATAA_V1_SIZE     FIELD_OFFSET(NOTIFYICONDATAA, szTip[64])
 #define NOTIFYICONDATAW_V1_SIZE     FIELD_OFFSET(NOTIFYICONDATAW, szTip[64])
@@ -530,6 +605,7 @@ typedef PNOTIFYICONDATAA PNOTIFYICONDATA;
 #define NOTIFYICONDATA_V2_SIZE      NOTIFYICONDATAA_V2_SIZE
 #endif
 
+
 #if (_WIN32_IE >= 0x0500)
 #define NIN_SELECT          (WM_USER + 0)
 #define NINF_KEY            0x1
@@ -542,6 +618,7 @@ typedef PNOTIFYICONDATAA PNOTIFYICONDATA;
 #define NIN_BALLOONTIMEOUT  (WM_USER + 4)
 #define NIN_BALLOONUSERCLICK (WM_USER + 5)
 #endif
+
 
 #define NIM_ADD         0x00000000
 #define NIM_MODIFY      0x00000001
@@ -567,8 +644,12 @@ typedef PNOTIFYICONDATAA PNOTIFYICONDATA;
 #define NIS_HIDDEN              0x00000001
 #define NIS_SHAREDICON          0x00000002
 
-#define NIIF_NONE       0x00000000
+// says this is the source of a shared icon
 
+// Notify Icon Infotip flags
+#define NIIF_NONE       0x00000000
+// icon flags are mutually exclusive
+// and take only the lowest 2 bits
 #define NIIF_INFO       0x00000001
 #define NIIF_WARNING    0x00000002
 #define NIIF_ERROR      0x00000003
@@ -584,56 +665,82 @@ SHSTDAPI_(BOOL) Shell_NotifyIconW(DWORD dwMessage, PNOTIFYICONDATAW lpData);
 #define Shell_NotifyIcon  Shell_NotifyIconW
 #else
 #define Shell_NotifyIcon  Shell_NotifyIconA
-#endif 
+#endif // !UNICODE
+
+////
+//// End Tray Notification Icons
+////
+
 
 #ifndef SHFILEINFO_DEFINED
 #define SHFILEINFO_DEFINED
+////
+//// Begin SHGetFileInfo
+////
+
+/*
+ * The SHGetFileInfo API provides an easy way to get attributes
+ * for a file given a pathname.
+ *
+ *   PARAMETERS
+ *
+ *     pszPath              file name to get info about
+ *     dwFileAttributes     file attribs, only used with SHGFI_USEFILEATTRIBUTES
+ *     psfi                 place to return file info
+ *     cbFileInfo           size of structure
+ *     uFlags               flags
+ *
+ *   RETURN
+ *     TRUE if things worked
+ */
 
 typedef struct _SHFILEINFOA
 {
-        HICON       hIcon;                      
-        int         iIcon;                      
-        DWORD       dwAttributes;               
-        CHAR        szDisplayName[MAX_PATH];    
-        CHAR        szTypeName[80];             
+        HICON       hIcon;                      // out: icon
+        int         iIcon;                      // out: icon index
+        DWORD       dwAttributes;               // out: SFGAO_ flags
+        CHAR        szDisplayName[MAX_PATH];    // out: display name (or path)
+        CHAR        szTypeName[80];             // out: type name
 } SHFILEINFOA;
 typedef struct _SHFILEINFOW
 {
-        HICON       hIcon;                      
-        int         iIcon;                      
-        DWORD       dwAttributes;               
-        WCHAR       szDisplayName[MAX_PATH];    
-        WCHAR       szTypeName[80];             
+        HICON       hIcon;                      // out: icon
+        int         iIcon;                      // out: icon index
+        DWORD       dwAttributes;               // out: SFGAO_ flags
+        WCHAR       szDisplayName[MAX_PATH];    // out: display name (or path)
+        WCHAR       szTypeName[80];             // out: type name
 } SHFILEINFOW;
 #ifdef UNICODE
 typedef SHFILEINFOW SHFILEINFO;
 #else
 typedef SHFILEINFOA SHFILEINFO;
-#endif 
+#endif // UNICODE
 
-#endif 
 
-#define SHGFI_ICON              0x000000100     
-#define SHGFI_DISPLAYNAME       0x000000200     
-#define SHGFI_TYPENAME          0x000000400     
-#define SHGFI_ATTRIBUTES        0x000000800     
-#define SHGFI_ICONLOCATION      0x000001000     
-#define SHGFI_EXETYPE           0x000002000     
-#define SHGFI_SYSICONINDEX      0x000004000     
-#define SHGFI_LINKOVERLAY       0x000008000     
-#define SHGFI_SELECTED          0x000010000     
-#define SHGFI_ATTR_SPECIFIED    0x000020000     
-#define SHGFI_LARGEICON         0x000000000     
-#define SHGFI_SMALLICON         0x000000001     
-#define SHGFI_OPENICON          0x000000002     
-#define SHGFI_SHELLICONSIZE     0x000000004     
-#define SHGFI_PIDL              0x000000008     
-#define SHGFI_USEFILEATTRIBUTES 0x000000010     
+// NOTE: This is also in shlwapi.h.  Please keep in synch.
+#endif // !SHFILEINFO_DEFINED
+
+#define SHGFI_ICON              0x000000100     // get icon
+#define SHGFI_DISPLAYNAME       0x000000200     // get display name
+#define SHGFI_TYPENAME          0x000000400     // get type name
+#define SHGFI_ATTRIBUTES        0x000000800     // get attributes
+#define SHGFI_ICONLOCATION      0x000001000     // get icon location
+#define SHGFI_EXETYPE           0x000002000     // return exe type
+#define SHGFI_SYSICONINDEX      0x000004000     // get system icon index
+#define SHGFI_LINKOVERLAY       0x000008000     // put a link overlay on icon
+#define SHGFI_SELECTED          0x000010000     // show icon in selected state
+#define SHGFI_ATTR_SPECIFIED    0x000020000     // get only specified attributes
+#define SHGFI_LARGEICON         0x000000000     // get large icon
+#define SHGFI_SMALLICON         0x000000001     // get small icon
+#define SHGFI_OPENICON          0x000000002     // get open icon
+#define SHGFI_SHELLICONSIZE     0x000000004     // get shell size icon
+#define SHGFI_PIDL              0x000000008     // pszPath is a pidl
+#define SHGFI_USEFILEATTRIBUTES 0x000000010     // use passed dwFileAttribute
 
 #if (_WIN32_IE >= 0x0500)
-#define SHGFI_ADDOVERLAYS       0x000000020     
-#define SHGFI_OVERLAYINDEX      0x000000040     
-                                                
+#define SHGFI_ADDOVERLAYS       0x000000020     // apply the appropriate overlays
+#define SHGFI_OVERLAYINDEX      0x000000040     // Get the index of the overlay
+                                                // in the upper 8 bits of the iIcon 
 #endif
 
 SHSTDAPI_(DWORD_PTR) SHGetFileInfoA(LPCSTR pszPath, DWORD dwFileAttributes, SHFILEINFOA *psfi, UINT cbFileInfo, UINT uFlags);
@@ -642,7 +749,8 @@ SHSTDAPI_(DWORD_PTR) SHGetFileInfoW(LPCWSTR pszPath, DWORD dwFileAttributes, SHF
 #define SHGetFileInfo  SHGetFileInfoW
 #else
 #define SHGetFileInfo  SHGetFileInfoA
-#endif 
+#endif // !UNICODE
+
 
 #define SHGetDiskFreeSpace SHGetDiskFreeSpaceEx
 
@@ -652,22 +760,28 @@ SHSTDAPI_(BOOL) SHGetDiskFreeSpaceExW(LPCWSTR pszDirectoryName, ULARGE_INTEGER* 
 #define SHGetDiskFreeSpaceEx  SHGetDiskFreeSpaceExW
 #else
 #define SHGetDiskFreeSpaceEx  SHGetDiskFreeSpaceExA
-#endif 
+#endif // !UNICODE
 SHSTDAPI_(BOOL) SHGetNewLinkInfoA(LPCSTR pszLinkTo, LPCSTR pszDir, LPSTR pszName, BOOL *pfMustCopy, UINT uFlags);
 SHSTDAPI_(BOOL) SHGetNewLinkInfoW(LPCWSTR pszLinkTo, LPCWSTR pszDir, LPWSTR pszName, BOOL *pfMustCopy, UINT uFlags);
 #ifdef UNICODE
 #define SHGetNewLinkInfo  SHGetNewLinkInfoW
 #else
 #define SHGetNewLinkInfo  SHGetNewLinkInfoA
-#endif 
+#endif // !UNICODE
 
-#define SHGNLI_PIDL             0x000000001     
-#define SHGNLI_PREFIXNAME       0x000000002     
-#define SHGNLI_NOUNIQUE         0x000000004     
+#define SHGNLI_PIDL             0x000000001     // pszLinkTo is a pidl
+#define SHGNLI_PREFIXNAME       0x000000002     // Make name "Shortcut to xxx"
+#define SHGNLI_NOUNIQUE         0x000000004     // don't do the unique name generation
 #if (_WIN32_IE >= 0x0501)
-#define SHGNLI_NOLNK            0x000000008     
-#endif 
+#define SHGNLI_NOLNK            0x000000008     // don't add ".lnk" extension
+#endif // _WIN2_IE >= 0x0501
 
+
+////
+//// End SHGetFileInfo
+////
+
+// Printer stuff
 #define PRINTACTION_OPEN           0
 #define PRINTACTION_PROPERTIES     1
 #define PRINTACTION_NETINSTALL     2
@@ -685,25 +799,61 @@ SHSTDAPI_(BOOL) SHInvokePrinterCommandW(HWND hwnd, UINT uAction, LPCWSTR lpBuf1,
 #define SHInvokePrinterCommand  SHInvokePrinterCommandW
 #else
 #define SHInvokePrinterCommand  SHInvokePrinterCommandA
-#endif 
+#endif // !UNICODE
 
-#endif 
+
+#endif /* WINVER >= 0x0400 */
 
 #if (_WIN32_WINNT >= 0x0500) || (_WIN32_WINDOWS >= 0x0500)  
 
+//
+// The SHLoadNonloadedIconOverlayIdentifiers API causes the shell's
+// icon overlay manager to load any registered icon overlay
+// identifers that are not currently loaded.  This is useful if an
+// overlay identifier did not load at shell startup but is needed
+// and can be loaded at a later time.  Identifiers already loaded
+// are not affected.  Overlay identifiers implement the 
+// IShellIconOverlayIdentifier interface.
+//
+// Returns:
+//      S_OK
+// 
 SHSTDAPI SHLoadNonloadedIconOverlayIdentifiers(void);
 
+//
+// The SHIsFileAvailableOffline API determines whether a file
+// or folder is available for offline use.
+//
+// Parameters:
+//     pwszPath             file name to get info about
+//     pdwStatus            (optional) OFFLINE_STATUS_* flags returned here
+//
+// Returns:
+//     S_OK                 File/directory is available offline, unless
+//                            OFFLINE_STATUS_INCOMPLETE is returned.
+//     E_INVALIDARG         Path is invalid, or not a net path
+//     E_FAIL               File/directory is not available offline
+// 
+// Notes:
+//     OFFLINE_STATUS_INCOMPLETE is never returned for directories.
+//     Both OFFLINE_STATUS_LOCAL and OFFLINE_STATUS_REMOTE may be returned,
+//     indicating "open in both places." This is common when the server is online.
+//
 SHSTDAPI SHIsFileAvailableOffline(LPCWSTR pwszPath, LPDWORD pdwStatus);
 
-#define OFFLINE_STATUS_LOCAL        0x0001  
-#define OFFLINE_STATUS_REMOTE       0x0002  
-#define OFFLINE_STATUS_INCOMPLETE   0x0004  
-                                            
-                                            
+#define OFFLINE_STATUS_LOCAL        0x0001  // If open, it's open locally
+#define OFFLINE_STATUS_REMOTE       0x0002  // If open, it's open remotely
+#define OFFLINE_STATUS_INCOMPLETE   0x0004  // The local copy is currently imcomplete.
+                                            // The file will not be available offline
+                                            // until it has been synchronized.
 
 #endif
 
+//  sets the specified path to use the string resource
+//  as the UI instead of the file system name
 SHSTDAPI SHSetLocalizedName(LPWSTR pszPath, LPCWSTR pszResModule, int idsRes);
+
+
 
 #if         _WIN32_IE >= 0x0600
 
@@ -713,47 +863,50 @@ STDAPI          SHEnumerateUnreadMailAccountsW(HKEY hKeyUser, DWORD dwIndex, LPW
 #define SHEnumerateUnreadMailAccounts  SHEnumerateUnreadMailAccountsW
 #else
 #define SHEnumerateUnreadMailAccounts  SHEnumerateUnreadMailAccountsA
-#endif 
+#endif // !UNICODE
 STDAPI          SHGetUnreadMailCountA(HKEY hKeyUser, LPCSTR pszMailAddress, DWORD *pdwCount, FILETIME *pFileTime, LPSTR pszShellExecuteCommand, int cchShellExecuteCommand);
 STDAPI          SHGetUnreadMailCountW(HKEY hKeyUser, LPCWSTR pszMailAddress, DWORD *pdwCount, FILETIME *pFileTime, LPWSTR pszShellExecuteCommand, int cchShellExecuteCommand);
 #ifdef UNICODE
 #define SHGetUnreadMailCount  SHGetUnreadMailCountW
 #else
 #define SHGetUnreadMailCount  SHGetUnreadMailCountA
-#endif 
+#endif // !UNICODE
 STDAPI          SHSetUnreadMailCountA(LPCSTR pszMailAddress, DWORD dwCount, LPCSTR pszShellExecuteCommand);
 STDAPI          SHSetUnreadMailCountW(LPCWSTR pszMailAddress, DWORD dwCount, LPCWSTR pszShellExecuteCommand);
 #ifdef UNICODE
 #define SHSetUnreadMailCount  SHSetUnreadMailCountW
 #else
 #define SHSetUnreadMailCount  SHSetUnreadMailCountA
-#endif 
+#endif // !UNICODE
 
-#endif  
+#endif  /*  _WIN32_IE >= 0x0600     */
+
 
 #if         _WIN32_IE >= 0x0600
 
 HRESULT SHGetImageList(int iImageList, REFIID riid, void **ppvObj);
 
-#define SHIL_LARGE          0   
-#define SHIL_SMALL          1   
+#define SHIL_LARGE          0   // normally 32x32
+#define SHIL_SMALL          1   // normally 16x16
 #define SHIL_EXTRALARGE     2
-#define SHIL_SYSSMALL       3   
+#define SHIL_SYSSMALL       3   // like SHIL_SMALL, but tracks system small icon metric correctly
 
 #define SHIL_LAST           SHIL_SYSSMALL
 
+
+// Function call types for ntshrui folder sharing helpers
 typedef HRESULT (STDMETHODCALLTYPE *PFNCANSHAREFOLDERW)(IN LPCWSTR pszPath);
 typedef HRESULT (STDMETHODCALLTYPE *PFNSHOWSHAREFOLDERUIW)(IN HWND hwndParent, IN LPCWSTR pszPath);
 
-#endif  
+#endif  /*  _WIN32_IE >= 0x0600     */
 
 #ifdef __cplusplus
 }
-#endif  
+#endif  /* __cplusplus */
 
 #if !defined(_WIN64)
 #include <poppack.h>
 #endif
 
-#endif  
+#endif  /* _INC_SHELLAPI */
 

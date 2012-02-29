@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Common/IntToString.h
 
 #ifndef __COMMON_INTTOSTRING_H
 #define __COMMON_INTTOSTRING_H

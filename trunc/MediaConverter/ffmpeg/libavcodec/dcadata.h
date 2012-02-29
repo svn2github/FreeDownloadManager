@@ -1,8 +1,24 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * DCA compatible decoder data
+ * Copyright (C) 2004 Gildas Bazin
+ * Copyright (c) 2006 Benjamin Larsson
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_DCADATA_H
 #define AVCODEC_DCADATA_H
@@ -10,7 +26,7 @@
 #include <stdint.h>
 #include "libavutil/mem.h"
 
-
+/* Generic tables */
 
 static const uint32_t dca_sample_rates[16] =
 {
@@ -25,7 +41,7 @@ static const uint32_t dca_bit_rates[32] =
     448000, 512000, 576000, 640000, 768000,
     896000, 1024000, 1152000, 1280000, 1344000,
     1408000, 1411200, 1472000, 1536000, 1920000,
-    2048000, 3072000, 3840000, 1, 2, 3
+    2048000, 3072000, 3840000, 1/*open*/, 2/*variable*/, 3/*lossless*/
 };
 
 static const uint8_t dca_channels[16] =
@@ -39,9 +55,9 @@ static const uint8_t dca_bits_per_sample[7] =
 };
 
 
+/* Adpcm data */
 
-
-
+/* 16bits signed fractional Q13 binary codes */
 static const int16_t adpcm_vb[4096][4] =
 {
   { 9928, -2618, -1093, -1263 },
@@ -4142,7 +4158,7 @@ static const int16_t adpcm_vb[4096][4] =
   { 8538, -6997, 5309, 453 }
 };
 
-
+/* quantization tables */
 
 static const uint32_t scale_factor_quant6[64] = {
         1,       2,       2,       3,       3,       4,       6,       7,
@@ -4174,7 +4190,7 @@ static const uint32_t scale_factor_quant7[128] = {
   5011872, 5688529, 6456542, 7328245, 8317638,       0,       0,       0
 };
 
-
+/* 20bits unsigned fractional binary codes */
 static const uint32_t lossy_quant[32] = {
         0, 6710886, 4194304, 3355443, 2474639, 2097152, 1761608, 1426063,
    796918,  461373,  251658,  146801,   79692,   46137,   27263,   16777,
@@ -4189,7 +4205,7 @@ static const float lossy_quant_d[32] = {
     0.00002, 0.00001, 0.000005,       0,       0,       0,       0,       0
 };
 
-
+/* 20bits unsigned fractional binary codes */
 static const uint32_t lossless_quant[32] = {
         0, 4194304, 2097152, 1384120, 1048576,  696254,  524288,  348127,
    262144,  131072,   65431,   33026,   16450,    8208,    4100,    2049,
@@ -4206,7 +4222,7 @@ static const float lossless_quant_d[32] = {
 };
 
 
-
+/* Vector quantization tables */
 
 static const int8_t high_freq_vq[1024][32] =
 {
@@ -6261,7 +6277,7 @@ static const int8_t high_freq_vq[1024][32] =
 };
 
 
-
+/* FIR filter coefficients, they can be cut on half and maybe use float instead of double*/
 
 DECLARE_ALIGNED(16, static const float, fir_32bands_perfect)[] =
 {
@@ -7495,8 +7511,8 @@ DECLARE_ALIGNED(16, static const float, lfe_fir_128)[] =
     0.01724460535, 0.47964480519, 0.48503074050, 0.01805862412,
 };
 
-
-
+/* 10^-(dB/20), with dB being a list of dB values ranging from 0 to -72 */
+/* do a 20*log10(dca_downmix_coeffs) to reconvert the values */
 
 static const float dca_downmix_coeffs[65] = {
   1.000000000000000, 0.988553094656939, 0.971627951577106, 0.944060876285923, 0.917275935389780, 0.891250938133746,
@@ -7525,6 +7541,96 @@ static const uint8_t dca_default_coeffs[16][5][2] = {
     { {  6,  6 }, {  0, 25 }, { 25,  0 }, {  0, 13 }, { 13,  0 }, },
 };
 
+/* downmix coeffs
+
+ TABLE 9
+______________________________________
+Down-mix coefficients for 8-channel source
+audio (5 + 3 format)
+ lt
+ cen- rt lt ctr rt
+lt ter ctr center
+ rt srd srd srd
+______________________________________
+1 0.71 0.74 1.0 0.71 0.71 0.58 0.58 0.58
+2 left 1.0 0.89 0.71 0.46 0.71 0.50
+  rt 0.45 0.71 0.89 1.0 0.50 0.71
+3 lt 1.0 0.89 0.71 0.45
+ rt 0.45 0.71 0.89 1.0
+ srd 0.71 0.71 0.71
+4 lt 1.0 0.89 0.71 0.45
+ rt 0.45 0.71 0.89 1.0
+ lt srd 1.0 0.71
+ rt srd 0.71 0.71
+4 lt 1.0 0.5
+ ctr 0.87 1.0 0.87
+ rt 0.5 1.0
+ srd 0.71 0.71 0.71
+5 lt 1.0 0.5
+ ctr 0.87 1.0 0.87
+ rt 0.5 1.0
+ lt srd 1.0 0.71
+ rt srd 0.71 1.0
+6 lt 1.0 0.5
+ lt ctr 0.87 0.71
+ rt ctr 0.71 0.87
+ rt 0.5 1.0
+ lt srd 1.0 0.71
+ rt srd 0.71 1.0
+6 lt 1.0 0.5
+ ctr 0.86 1.0 0.86
+ rt 0.5 1.0
+ lt srd 1.0
+ ctr srd 1.0
+ rt srd 1.0
+7 lt 1.0
+ lt ctr 1.0
+ ctr 1.0
+ rt ctr 1.0
+ rt 1.0
+ lt srd 1.0 0.71
+ rt srd 0.71 1.0
+7 lt 1.0 0.5
+ lt ctr 0.87 0.71
+ rt ctr 0.71 0.87
+ rt 0.5 1.0
+ lt srd 1.0
+ ctr srd 1.0
+ rt srd 1.0
+8 lt 1.0 0.5
+ lt ctr 0.87 0.71
+ rt ctr 0.71 0.87
+ rt 0.5 1.0
+ lt 1 srd 0.87 0.35
+ lt 2 srd 0.5 0.61
+ rt 2 srd 0.61 0.50
+ rt 2 srd 0.35 0.87
+
+ Generation of Lt Rt
+
+In the case when the playback system has analog or digital surround multi-channel capability, a down matrix from 5, 4, or 3 channel to Lt Rt may be desirable. In the case when the number of decoded audio channels exceeds 5, 4 or 3 respectively a first stage down mix to 5, 4 or 3 chs should be used as described above.
+
+The down matrixing equations for 5-channel source audio to a two-channel Lt Rt playback system are given by:
+
+Left left+0.7*center-0.7*(lt surround+rt surround)
+
+Right=right+0.7*center+0.7*(lt surround+rt surround)
+
+Embedded mixing to 2-channel
+
+One concern arising from the proliferation of multi-channel audio systems is that most home systems presently have only two channel playback capability. To accommodate this a fixed 2-channel down matrix processes is commonly used following the multi-channel decoding stage. However, for music only applications the image quality etc. of the down matrixed signal may not match that of an equivalent stereo recording found on CD.
+
+The concept of embedded mixing is to allow the producer to dynamically specify the matrixing coefficients within the audio frame itself. In this way the stereo down mix at the decoder may be better matched to a 2-channel playback environment.
+
+CHS*2, 7-bit down mix indexes (MCOEFFS) are transmitted along with the multi-channel audio once in every frame. The indexes are converted to attenuation factors using a 7 bit LUT. The 2-ch down mix equations are as follows,
+
+Left Ch=sum (MCOEFF[n]*Ch[n]) for n=1, CHS
+
+Right Ch sum (MCOEFF[n+CHS]*Ch[n]) for n=1, CHS
+
+where Ch(n) represents the subband samples in the (n)th audio channel.
 
 
-#endif 
+*/
+
+#endif /* AVCODEC_DCADATA_H */

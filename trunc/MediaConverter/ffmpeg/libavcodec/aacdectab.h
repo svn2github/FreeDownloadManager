@@ -1,10 +1,31 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * AAC decoder data
+ * Copyright (c) 2005-2006 Oded Shimon ( ods15 ods15 dyndns org )
+ * Copyright (c) 2006-2007 Maxim Gavrilov ( maxim.gavrilov gmail com )
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * AAC decoder data
+ * @author Oded Shimon  ( ods15 ods15 dyndns org )
+ * @author Maxim Gavrilov ( maxim.gavrilov gmail com )
+ */
 
 #ifndef AVCODEC_AACDECTAB_H
 #define AVCODEC_AACDECTAB_H
@@ -13,7 +34,12 @@
 
 #include <stdint.h>
 
-
+/* @name tns_tmp2_map
+ * Tables of the tmp2[] arrays of LPC coefficients used for TNS.
+ * The suffix _M_N[] indicate the values of coef_compress and coef_res
+ * respectively.
+ * @{
+ */
 static const float tns_tmp2_map_1_3[4] = {
      0.00000000, -0.43388373,  0.64278758,  0.34202015,
 };
@@ -41,7 +67,7 @@ static const float * const tns_tmp2_map[4] = {
     tns_tmp2_map_1_3,
     tns_tmp2_map_1_4
 };
-
+// @}
 
 static const int8_t tags_per_config[16] = { 0, 1, 1, 2, 3, 3, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0 };
 
@@ -66,4 +92,4 @@ static const int64_t aac_channel_layout[8] = {
     0,
 };
 
-#endif 
+#endif /* AVCODEC_AACDECTAB_H */

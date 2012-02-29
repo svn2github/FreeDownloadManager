@@ -1,8 +1,22 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Copyright (c) 2008 Mans Rullgard <mans@mansr.com>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVUTIL_PPC_INTREADWRITE_H
 #define AVUTIL_PPC_INTREADWRITE_H
@@ -79,13 +93,16 @@ static av_always_inline void AV_WL64(void *p, uint64_t v)
              : "r"(vv.hl[1]), "r"(vv.hl[0]));
 }
 
-#endif 
+#endif /* HAVE_LDBRX */
 
-#endif 
+#endif /* HAVE_XFORM_ASM */
 
-
+/*
+ * GCC fails miserably on the packed struct version which is used by
+ * default, so we override it here.
+ */
 
 #define AV_RB64(p) (*(const uint64_t *)(p))
 #define AV_WB64(p, v) (*(uint64_t *)(p) = (v))
 
-#endif 
+#endif /* AVUTIL_PPC_INTREADWRITE_H */

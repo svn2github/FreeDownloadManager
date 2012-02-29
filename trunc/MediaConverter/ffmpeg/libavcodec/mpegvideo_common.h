@@ -1,10 +1,31 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * The simplest mpeg encoder (well, it was the simplest!)
+ * Copyright (c) 2000,2001 Fabrice Bellard
+ * Copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * 4MV & hq & B-frame encoding stuff by Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * The simplest mpeg encoder (well, it was the simplest!).
+ */
 
 #ifndef AVCODEC_MPEGVIDEO_COMMON_H
 #define AVCODEC_MPEGVIDEO_COMMON_H
@@ -22,10 +43,16 @@ int dct_quantize_c(MpegEncContext *s, DCTELEM *block, int n, int qscale, int *ov
 int dct_quantize_trellis_c(MpegEncContext *s, DCTELEM *block, int n, int qscale, int *overflow);
 void  denoise_dct_c(MpegEncContext *s, DCTELEM *block);
 
-
+/**
+ * allocates a Picture
+ * The pixels are allocated/set by calling get_buffer() if shared=0
+ */
 int alloc_picture(MpegEncContext *s, Picture *pic, int shared);
 
-
+/**
+ * sets the given MpegEncContext to common defaults (same for encoding and decoding).
+ * the changed fields will not depend upon the prior state of the MpegEncContext.
+ */
 void MPV_common_defaults(MpegEncContext *s);
 
 static inline void gmc1_motion(MpegEncContext *s,
@@ -186,8 +213,8 @@ static inline int hpel_motion(MpegEncContext *s,
     src_x += motion_x >> 1;
     src_y += motion_y >> 1;
 
-    
-    src_x = av_clip(src_x, -16, width); 
+    /* WARNING: do no forget half pels */
+    src_x = av_clip(src_x, -16, width); //FIXME unneeded for emu?
     if (src_x == width)
         dxy &= ~1;
     src_y = av_clip(src_y, -16, height);
@@ -249,7 +276,7 @@ if(s->quarter_sample)
             uvsrc_x = src_x>>1;
             uvsrc_y = src_y>>1;
         }
-    }else if(!is_mpeg12 && s->out_format == FMT_H261){
+    }else if(!is_mpeg12 && s->out_format == FMT_H261){//even chroma mv's are full pel in H261
         mx = motion_x / 4;
         my = motion_y / 4;
         uvdxy = 0;
@@ -264,13 +291,13 @@ if(s->quarter_sample)
             uvsrc_y =(   mb_y<<(3-field_based))+ (my >> 1);
         } else {
             if(s->chroma_x_shift){
-            
+            //Chroma422
                 mx = motion_x / 2;
                 uvdxy = ((motion_y & 1) << 1) | (mx & 1);
                 uvsrc_x = s->mb_x* 8           + (mx >> 1);
                 uvsrc_y = src_y;
             } else {
-            
+            //Chroma444
                 uvdxy = dxy;
                 uvsrc_x = src_x;
                 uvsrc_y = src_y;
@@ -312,7 +339,7 @@ if(s->quarter_sample)
             }
     }
 
-    if(bottom_field){ 
+    if(bottom_field){ //FIXME use this for field pix too instead of the obnoxious hack which changes picture.data
         dest_y += s->linesize;
         dest_cb+= s->uvlinesize;
         dest_cr+= s->uvlinesize;
@@ -337,7 +364,7 @@ if(s->quarter_sample)
         ff_h261_loop_filter(s);
     }
 }
-
+/* apply one mpeg motion vector to the three components */
 static av_always_inline
 void mpeg_motion(MpegEncContext *s,
                  uint8_t *dest_y, uint8_t *dest_cb, uint8_t *dest_cr,
@@ -357,7 +384,7 @@ void mpeg_motion(MpegEncContext *s,
                     motion_x, motion_y, h, 0, mb_y);
 }
 
-
+//FIXME move to dsputil, avg variant, 16x16 version
 static inline void put_obmc(uint8_t *dst, uint8_t *src[5], int stride){
     int x;
     uint8_t * const top   = src[1];
@@ -409,12 +436,12 @@ static inline void put_obmc(uint8_t *dst, uint8_t *src[5], int stride){
     OBMC_FILTER (x+7, 0, 0, 4, 2, 2);
 }
 
-
+/* obmc for 1 8x8 luma block */
 static inline void obmc_motion(MpegEncContext *s,
                                uint8_t *dest, uint8_t *src,
                                int src_x, int src_y,
                                op_pixels_func *pix_op,
-                               int16_t mv[5][2])
+                               int16_t mv[5][2]/* mid top left right bottom*/)
 #define MID    0
 {
     int i;
@@ -520,8 +547,8 @@ static inline void qpel_motion(MpegEncContext *s,
             ptr_cb += s->uvlinesize;
             ptr_cr += s->uvlinesize;
         }
-        
-        
+        //damn interlaced mode
+        //FIXME boundary mirroring is not exactly correct here
         qpix_op[1][dxy](dest_y  , ptr_y  , linesize);
         qpix_op[1][dxy](dest_y+8, ptr_y+8, linesize);
     }
@@ -531,7 +558,9 @@ static inline void qpel_motion(MpegEncContext *s,
     }
 }
 
-
+/**
+ * h263 chroma 4mv motion compensation.
+ */
 static inline void chroma_4mv_motion(MpegEncContext *s,
                                      uint8_t *dest_cb, uint8_t *dest_cr,
                                      uint8_t **ref_picture,
@@ -540,7 +569,8 @@ static inline void chroma_4mv_motion(MpegEncContext *s,
     int dxy, emu=0, src_x, src_y, offset;
     uint8_t *ptr;
 
-    
+    /* In case of 8X8, we construct a single chroma motion vector
+       with a special rounding */
     mx= ff_h263_round_chroma(mx);
     my= ff_h263_round_chroma(my);
 
@@ -582,7 +612,8 @@ static inline void chroma_4mv_motion(MpegEncContext *s,
 }
 
 static inline void prefetch_motion(MpegEncContext *s, uint8_t **pix, int dir){
-    
+    /* fetch pixels for estimated mv 4 macroblocks ahead
+     * optimized for 64byte cache lines */
     const int shift = s->quarter_sample ? 2 : 1;
     const int mx= (s->mv[dir][0][0]>>shift) + 16*s->mb_x + 8;
     const int my= (s->mv[dir][0][1]>>shift) + 16*s->mb_y;
@@ -592,7 +623,18 @@ static inline void prefetch_motion(MpegEncContext *s, uint8_t **pix, int dir){
     s->dsp.prefetch(pix[1]+off, pix[2]-pix[1], 2);
 }
 
-
+/**
+ * motion compensation of a single macroblock
+ * @param s context
+ * @param dest_y luma destination pointer
+ * @param dest_cb chroma cb/u destination pointer
+ * @param dest_cr chroma cr/v destination pointer
+ * @param dir direction (0->forward, 1->backward)
+ * @param ref_picture array[3] of pointers to the 3 planes of the reference picture
+ * @param pic_op halfpel motion compensation function (average or put normally)
+ * @param pic_op qpel motion compensation function (average or put normally)
+ * the motion vectors are taken from s->mv and the MV type from s->mv_type
+ */
 static av_always_inline void MPV_motion_internal(MpegEncContext *s,
                               uint8_t *dest_y, uint8_t *dest_cb,
                               uint8_t *dest_cr, int dir,
@@ -654,7 +696,7 @@ static av_always_inline void MPV_motion_internal(MpegEncContext *s,
                 {mv_cache[y][x-1][0], mv_cache[y][x-1][1]},
                 {mv_cache[y][x+1][0], mv_cache[y][x+1][1]},
                 {mv_cache[y+1][x][0], mv_cache[y+1][x][1]}};
-            
+            //FIXME cleanup
             obmc_motion(s, dest_y + ((i & 1) * 8) + (i >> 1) * 8 * s->linesize,
                         ref_picture[0],
                         mb_x * 16 + (i & 1) * 8, mb_y * 16 + (i >>1) * 8,
@@ -710,7 +752,7 @@ static av_always_inline void MPV_motion_internal(MpegEncContext *s,
                 src_x = mb_x * 16 + (motion_x >> 2) + (i & 1) * 8;
                 src_y = mb_y * 16 + (motion_y >> 2) + (i >>1) * 8;
 
-                
+                /* WARNING: do no forget half pels */
                 src_x = av_clip(src_x, -16, s->width);
                 if (src_x == s->width)
                     dxy &= ~3;
@@ -764,12 +806,12 @@ static av_always_inline void MPV_motion_internal(MpegEncContext *s,
                                 s->mv[dir][i][0], s->mv[dir][i][1], 8);
                 }
             }else{
-                
+                /* top field */
                 mpeg_motion(s, dest_y, dest_cb, dest_cr,
                             1, 0, s->field_select[dir][0],
                             ref_picture, pix_op,
                             s->mv[dir][0][0], s->mv[dir][0][1], 8, mb_y);
-                
+                /* bottom field */
                 mpeg_motion(s, dest_y, dest_cb, dest_cr,
                             1, 1, s->field_select[dir][1],
                             ref_picture, pix_op,
@@ -826,10 +868,10 @@ static av_always_inline void MPV_motion_internal(MpegEncContext *s,
                             ref_picture, pix_op,
                             s->mv[dir][2*i][0],s->mv[dir][2*i][1],16, mb_y>>1);
 
-                
+                // after put we make avg of the same block
                 pix_op=s->dsp.avg_pixels_tab;
 
-                
+                //opposite parity is always in the same frame if this is second field
                 if(!s->first_field){
                     ref_picture = s->current_picture_ptr->data;
                 }
@@ -856,4 +898,4 @@ static inline void MPV_motion(MpegEncContext *s,
         MPV_motion_internal(s, dest_y, dest_cb, dest_cr, dir,
                             ref_picture, pix_op, qpix_op, 0);
 }
-#endif 
+#endif /* AVCODEC_MPEGVIDEO_COMMON_H */

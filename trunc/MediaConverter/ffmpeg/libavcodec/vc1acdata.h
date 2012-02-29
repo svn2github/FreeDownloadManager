@@ -1,8 +1,23 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * VC-1 and WMV3 decoder
+ * copyright (c) 2006 Konstantin Shishkov
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_VC1ACDATA_H
 #define AVCODEC_VC1ACDATA_H
@@ -236,7 +251,7 @@ static const uint32_t vc1_ac_tables[AC_MODES][186][2] = {
 }
 };
 
-
+/* which indexes point to last=1 entries in tables */
 static const int vc1_last_decode_table[AC_MODES] = {
     119, 99, 85, 81, 67, 58, 126, 109
 };
@@ -574,4 +589,4 @@ static const uint8_t vc1_last_delta_run_table[AC_MODES][10] = {
 }
 };
 
-#endif 
+#endif /* AVCODEC_VC1ACDATA_H */

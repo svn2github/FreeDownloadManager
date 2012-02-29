@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// ArchiveExtractCallback.h
 
 #ifndef __ARCHIVEEXTRACTCALLBACK_H
 #define __ARCHIVEEXTRACTCALLBACK_H
@@ -18,28 +16,28 @@
 
 class CArchiveExtractCallback: 
   public IArchiveExtractCallback,
-  
+  // public IArchiveVolumeExtractCallback,
   public ICryptoGetTextPassword,
   public CMyUnknownImp
 {
 public:
   MY_UNKNOWN_IMP1(ICryptoGetTextPassword)
-  
+  // COM_INTERFACE_ENTRY(IArchiveVolumeExtractCallback)
 
-  
+  // IProgress
   STDMETHOD(SetTotal)(UInt64 aize);
   STDMETHOD(SetCompleted)(const UInt64 *completeValue);
 
-  
+  // IExtractCallBack
   STDMETHOD(GetStream)(UInt32 anIndex, ISequentialOutStream **outStream, 
       Int32 askExtractMode);
   STDMETHOD(PrepareOperation)(Int32 askExtractMode);
   STDMETHOD(SetOperationResult)(Int32 resultEOperationResult);
 
-  
-  
+  // IArchiveVolumeExtractCallback
+  // STDMETHOD(GetInStream)(const wchar_t *name, ISequentialInStream **inStream);
 
-  
+  // ICryptoGetTextPassword
   STDMETHOD(CryptoGetTextPassword)(BSTR *aPassword);
 
 private:

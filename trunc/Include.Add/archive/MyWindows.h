@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// MyWindows.h
 
 #ifndef __MYWINDOWS_H
 #define __MYWINDOWS_H
@@ -11,7 +9,7 @@
 
 #else
 
-#include <stddef.h> 
+#include <stddef.h> // for wchar_t
 #include <string.h>
 
 #include "MyGuidDef.h"
@@ -29,7 +27,7 @@ typedef int INT;
 typedef Int32 INT32;
 typedef unsigned int UINT;
 typedef UInt32 UINT32;
-typedef INT32 LONG;   
+typedef INT32 LONG;   // LONG, ULONG and DWORD must be 32-bit
 typedef UINT32 ULONG;
 typedef UINT32 DWORD;
 

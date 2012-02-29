@@ -1,10 +1,27 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * copyright (c) 2004 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * bitstream writer API
+ */
 
 #ifndef AVCODEC_PUT_BITS_H
 #define AVCODEC_PUT_BITS_H
@@ -18,10 +35,10 @@
 #include "libavutil/log.h"
 #include "mathops.h"
 
+//#define ALT_BITSTREAM_WRITER
+//#define ALIGNED_BITSTREAM_WRITER
 
-
-
-
+/* buf and buf_end must be present and used by every alternative writer. */
 typedef struct PutBitContext {
 #ifdef ALT_BITSTREAM_WRITER
     uint8_t *buf, *buf_end;
@@ -34,7 +51,12 @@ typedef struct PutBitContext {
     int size_in_bits;
 } PutBitContext;
 
-
+/**
+ * Initializes the PutBitContext s.
+ *
+ * @param buffer the buffer where to put bits
+ * @param buffer_size the size in bytes of buffer
+ */
 static inline void init_put_bits(PutBitContext *s, uint8_t *buffer, int buffer_size)
 {
     if(buffer_size < 0) {
@@ -48,7 +70,7 @@ static inline void init_put_bits(PutBitContext *s, uint8_t *buffer, int buffer_s
 #ifdef ALT_BITSTREAM_WRITER
     s->index=0;
     ((uint32_t*)(s->buf))[0]=0;
-
+//    memset(buffer, 0, buffer_size);
 #else
     s->buf_ptr = s->buf;
     s->bit_left=32;
@@ -56,7 +78,9 @@ static inline void init_put_bits(PutBitContext *s, uint8_t *buffer, int buffer_s
 #endif
 }
 
-
+/**
+ * Returns the total number of bits written to the bitstream.
+ */
 static inline int put_bits_count(PutBitContext *s)
 {
 #ifdef ALT_BITSTREAM_WRITER
@@ -66,7 +90,9 @@ static inline int put_bits_count(PutBitContext *s)
 #endif
 }
 
-
+/**
+ * Pads the end of the output stream with zeros.
+ */
 static inline void flush_put_bits(PutBitContext *s)
 {
 #ifdef ALT_BITSTREAM_WRITER
@@ -76,7 +102,7 @@ static inline void flush_put_bits(PutBitContext *s)
     s->bit_buf<<= s->bit_left;
 #endif
     while (s->bit_left < 32) {
-        
+        /* XXX: should test end of buffer */
 #ifdef BITSTREAM_WRITER_LE
         *s->buf_ptr++=s->bit_buf;
         s->bit_buf>>=8;
@@ -96,31 +122,44 @@ static inline void flush_put_bits(PutBitContext *s)
 #define ff_put_string ff_put_string_unsupported_here
 #define ff_copy_bits ff_copy_bits_unsupported_here
 #else
-
+/**
+ * Pads the bitstream with zeros up to the next byte boundary.
+ */
 void align_put_bits(PutBitContext *s);
 
-
+/**
+ * Puts the string string in the bitstream.
+ *
+ * @param terminate_string 0-terminates the written string if value is 1
+ */
 void ff_put_string(PutBitContext *pb, const char *string, int terminate_string);
 
-
+/**
+ * Copies the content of src to the bitstream.
+ *
+ * @param length the number of bits of src to copy
+ */
 void ff_copy_bits(PutBitContext *pb, const uint8_t *src, int length);
 #endif
 
-
+/**
+ * Writes up to 31 bits into a bitstream.
+ * Use put_bits32 to write 32 bits.
+ */
 static inline void put_bits(PutBitContext *s, int n, unsigned int value)
 #ifndef ALT_BITSTREAM_WRITER
 {
     unsigned int bit_buf;
     int bit_left;
 
-    
+    //    printf("put_bits=%d %x\n", n, value);
     assert(n <= 31 && value < (1U << n));
 
     bit_buf = s->bit_buf;
     bit_left = s->bit_left;
 
-    
-    
+    //    printf("n=%d value=%x cnt=%d buf=%x\n", n, value, bit_cnt, bit_buf);
+    /* XXX: optimize */
 #ifdef BITSTREAM_WRITER_LE
     bit_buf |= value << (32 - bit_left);
     if (n >= bit_left) {
@@ -148,7 +187,7 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
         } else
 #endif
         *(uint32_t *)s->buf_ptr = be2me_32(bit_buf);
-        
+        //printf("bitbuf = %08x\n", bit_buf);
         s->buf_ptr+=4;
         bit_left+=32 - n;
         bit_buf = value;
@@ -158,7 +197,7 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
     s->bit_buf = bit_buf;
     s->bit_left = bit_left;
 }
-#else  
+#else  /* ALT_BITSTREAM_WRITER defined */
 {
 #    ifdef ALIGNED_BITSTREAM_WRITER
 #        if ARCH_X86
@@ -187,11 +226,11 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
 
     ptr[0] |= be2me_32(value>>(index&31));
     ptr[1]  = be2me_32(value<<(32-(index&31)));
-
+//if(n>24) printf("%d %d\n", n, value);
     index+= n;
     s->index= index;
 #        endif
-#    else 
+#    else //ALIGNED_BITSTREAM_WRITER
 #        if ARCH_X86
     __asm__ volatile(
         "movl $7, %%ecx                 \n\t"
@@ -215,11 +254,11 @@ static inline void put_bits(PutBitContext *s, int n, unsigned int value)
 
     ptr[0] |= be2me_32(value<<(32-n-(index&7) ));
     ptr[1] = 0;
-
+//if(n>24) printf("%d %d\n", n, value);
     index+= n;
     s->index= index;
 #        endif
-#    endif 
+#    endif //!ALIGNED_BITSTREAM_WRITER
 }
 #endif
 
@@ -230,7 +269,9 @@ static inline void put_sbits(PutBitContext *pb, int n, int32_t value)
     put_bits(pb, n, value & ((1<<n)-1));
 }
 
-
+/**
+ * Writes exactly 32 bits into a bitstream.
+ */
 static void av_unused put_bits32(PutBitContext *s, uint32_t value)
 {
     int lo = value & 0xffff;
@@ -244,7 +285,10 @@ static void av_unused put_bits32(PutBitContext *s, uint32_t value)
 #endif
 }
 
-
+/**
+ * Returns the pointer to the byte where the bitstream writer will put
+ * the next bit.
+ */
 static inline uint8_t* put_bits_ptr(PutBitContext *s)
 {
 #ifdef ALT_BITSTREAM_WRITER
@@ -254,7 +298,10 @@ static inline uint8_t* put_bits_ptr(PutBitContext *s)
 #endif
 }
 
-
+/**
+ * Skips the given number of bytes.
+ * PutBitContext must be flushed & aligned to a byte boundary before calling this.
+ */
 static inline void skip_put_bytes(PutBitContext *s, int n)
 {
         assert((put_bits_count(s)&7)==0);
@@ -267,7 +314,11 @@ static inline void skip_put_bytes(PutBitContext *s, int n)
 #endif
 }
 
-
+/**
+ * Skips the given number of bits.
+ * Must only be used if the actual values in the bitstream do not matter.
+ * If n is 0 the behavior is undefined.
+ */
 static inline void skip_put_bits(PutBitContext *s, int n)
 {
 #ifdef ALT_BITSTREAM_WRITER
@@ -279,10 +330,14 @@ static inline void skip_put_bits(PutBitContext *s, int n)
 #endif
 }
 
-
+/**
+ * Changes the end of the buffer.
+ *
+ * @param size the new size in bytes of the buffer where to put bits
+ */
 static inline void set_put_bits_buffer_size(PutBitContext *s, int size)
 {
     s->buf_end= s->buf + size;
 }
 
-#endif 
+#endif /* AVCODEC_PUT_BITS_H */

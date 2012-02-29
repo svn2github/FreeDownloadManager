@@ -1,10 +1,28 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * RealVideo 3/4 decoder
+ * Copyright (c) 2007 Konstantin Shishkov
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * RV30/40 VLC tables
+ */
 
 #ifndef AVCODEC_RV34VLC_H
 #define AVCODEC_RV34VLC_H
@@ -4033,4 +4051,4 @@ static const uint8_t rv34_inter_coeff[NUM_INTER_TABLES][COEFF_VLC_SIZE] = {
 }
 };
 
-#endif 
+#endif /* AVCODEC_RV34VLC_H */

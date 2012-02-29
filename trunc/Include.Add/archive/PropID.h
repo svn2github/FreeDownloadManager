@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Interface/PropID.h
 
 #ifndef __INTERFACE_PROPID_H
 #define __INTERFACE_PROPID_H

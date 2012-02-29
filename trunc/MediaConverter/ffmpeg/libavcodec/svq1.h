@@ -1,10 +1,36 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * SVQ1 decoder
+ * ported to MPlayer by Arpi <arpi@thot.banki.hu>
+ * ported to libavcodec by Nick Kurshev <nickols_k@mail.ru>
+ *
+ * Copyright (C) 2002 the xine project
+ * Copyright (C) 2002 the ffmpeg project
+ *
+ * SVQ1 Encoder (c) 2004 Mike Melanson <melanson@pcisys.net>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * Sorenson Vector Quantizer #1 (SVQ1) video codec.
+ * For more information of the SVQ1 algorithm, visit:
+ *   http://www.pcisys.net/~melanson/codecs/
+ */
 
 #ifndef AVCODEC_SVQ1_H
 #define AVCODEC_SVQ1_H
@@ -35,4 +61,4 @@ extern const uint16_t ff_svq1_inter_mean_vlc[512][2];
 
 extern const struct svq1_frame_size ff_svq1_frame_size_table[7];
 
-#endif 
+#endif /* AVCODEC_SVQ1_H */

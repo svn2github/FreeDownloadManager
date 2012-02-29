@@ -1,6 +1,34 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+/*****************************************************************************
+* CColumnTreeCtrl
+* Version: 1.1 
+* Date: February 18, 2008
+* Author: Oleg A. Krivtsov
+* E-mail: olegkrivtsov@mail.ru
+* Based on ideas implemented in Michal Mecinski's CColumnTreeCtrl class 
+* (see copyright note below).
+*
+*****************************************************************************/
+
+/*********************************************************
+* Multi-Column Tree View
+* Version: 1.1
+* Date: October 22, 2003
+* Author: Michal Mecinski
+* E-mail: mimec@mimec.w.pl
+* WWW: http://www.mimec.w.pl
+*
+* You may freely use and modify this code, but don't remove
+* this copyright note.
+*
+* There is no warranty of any kind, express or implied, for this class.
+* The author does not take the responsibility for any damage
+* resulting from the use of it.
+*
+* Let me know if you find this code useful, and
+* send me any modifications and bug reports.
+*
+* Copyright (C) 2003 by Michal Mecinski
+*********************************************************/
 
 #include "stdafx.h"
 #include "ColumnTreeCtrl.h"
@@ -11,45 +39,64 @@
 #define new DEBUG_NEW
 #endif
 
+// IE 5.0 or higher required
 #ifndef TVS_NOHSCROLL
 	#error CColumnTreeCtrl requires IE 5.0 or higher; _WIN32_IE should be greater than 0x500.
 #endif
 
+
+//-------------------------------------------------------------------------------
+// Helper drawing funtions.
+// I tried standard GDI fucntion LineTo with PS_DOT pen style, 
+// but that didn't have the effect I wanted, so I had to use these ones. 
+//-------------------------------------------------------------------------------
+
+// draws a dotted horizontal line
 static void _DotHLine(HDC hdc, LONG x, LONG y, LONG w, COLORREF cr)
 {
 	for (; w>0; w-=2, x+=2)
 		SetPixel(hdc, x, y, cr);
 }
 
+// draws a dotted vertical line
 static void _DotVLine(HDC hdc, LONG x, LONG y, LONG w, COLORREF cr)
 {
 	for (; w>0; w-=2, y+=2)
 		SetPixel(hdc, x, y, cr);
 }
 
+//--------------------------------------------------------------------------------
+// CCustomTreeChildCtrl Implementation
+//--------------------------------------------------------------------------------
+
 IMPLEMENT_DYNAMIC(CCustomTreeChildCtrl, CTreeCtrl)
+
+//--------------------------------------------------------------------------------
+// Construction/Destruction
+//--------------------------------------------------------------------------------
 
 CCustomTreeChildCtrl::CCustomTreeChildCtrl()
 {
 
-#ifdef _OWNER_DRAWN_TREE 
-	
+#ifdef _OWNER_DRAWN_TREE // only if owner-drawn 
+	// init bitmap image structure
 	m_bkImage.hbm=NULL;
 	m_bkImage.xOffsetPercent = 0;
 	m_bkImage.yOffsetPercent = 0;
 
-	
+	// create imagelist for tree buttons
 	m_imgBtns.Create (9, 9, ILC_COLOR32|ILC_MASK,2,1);
 	CBitmap* pBmpBtns = CBitmap::FromHandle(LoadBitmap(AfxGetInstanceHandle(),
 		MAKEINTRESOURCE(IDB_TREEBTNS)));
 	ASSERT(pBmpBtns);
 	m_imgBtns.Add(pBmpBtns,RGB(255,0,255));
-#endif 
+#endif //_OWNER_DRAWN_TREE
 }
 
 CCustomTreeChildCtrl::~CCustomTreeChildCtrl()
 {
 }
+
 
 BEGIN_MESSAGE_MAP(CCustomTreeChildCtrl, CTreeCtrl)
 	ON_WM_MOUSEMOVE()
@@ -62,15 +109,21 @@ BEGIN_MESSAGE_MAP(CCustomTreeChildCtrl, CTreeCtrl)
 	ON_WM_TIMER()
 	ON_WM_CREATE()
 	ON_WM_KEYDOWN()
-	
+	//ON_WM_STYLECHANGED()
 END_MESSAGE_MAP()
 
+//---------------------------------------------------------------------------
+// Operations
+//---------------------------------------------------------------------------
+
+// gets control's background image
 BOOL CCustomTreeChildCtrl::GetBkImage(LVBKIMAGE* plvbkImage) const
 {
 	memcpy(plvbkImage, &m_bkImage, sizeof(LVBKIMAGE));
 	return TRUE;
 }
 
+// sets background image for control
 BOOL CCustomTreeChildCtrl::SetBkImage(LVBKIMAGE* plvbkImage)
 {
 	memcpy(&m_bkImage, plvbkImage, sizeof(LVBKIMAGE));
@@ -78,27 +131,33 @@ BOOL CCustomTreeChildCtrl::SetBkImage(LVBKIMAGE* plvbkImage)
 	return TRUE;
 }
 
+
+//---------------------------------------------------------------------------
+// Message Handlers
+//---------------------------------------------------------------------------
+
+
 void CCustomTreeChildCtrl::OnTimer(UINT_PTR nIDEvent)
 {
-	
-	
-	
-	
+	// Do nothing.
+	// CTreeCtrl sends this message to scroll the bitmap in client area
+	// which also causes background bitmap scrolling,
+	// so we don't pass this message to the base class.
 }
 
 void CCustomTreeChildCtrl::OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags)
 {
-	
-	
+	// CTreeCtrl may scroll the bitmap up or down in several cases,
+	// so we need to invalidate entire client area
 	Invalidate();
 
-	
+	//... and pass to the base class
 	CTreeCtrl::OnKeyDown(nChar, nRepCnt, nFlags);
 }
 
 void CCustomTreeChildCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	
+	// mask left click if outside the real item's label
 	if (CheckHit(point))
 	{
 		UINT nHitFlags;
@@ -109,9 +168,9 @@ void CCustomTreeChildCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 				GetParent ()->GetParent ()->PostMessage (WM_CUSTTREE_CHECKBOX_CLICKED, 0, (LPARAM)hItem);
 
 #ifdef _OWNER_DRAWN_TREE
-			
-			
-			
+			// if the clicked item is partially visible we won't process
+			// the message to avoid background bitmap scrolling
+			// TODO: need to avoid scrolling and process the message
 			CRect rcItem, rcClient;
 			GetClientRect(&rcClient);
 			GetItemRect(hItem,&rcItem,FALSE);
@@ -120,22 +179,22 @@ void CCustomTreeChildCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 				Invalidate();
 				EnsureVisible(hItem);
 				SelectItem(hItem);
-				
+				//CTreeCtrl::OnLButtonDown(nFlags, point);
 				return;
 			}
-#endif 
+#endif //_OWNER_DRAWN_TREE
 
-			
+			// select the clicked item
 			SelectItem(hItem);
 		}
 		
-		
+		// call standard handler	
 		CTreeCtrl::OnLButtonDown(nFlags, point);
 	}
 	else  
 	{
-		
-		
+		// if clicked outside the item's label
+		// than set focus to contol window
 		SetFocus(); 
 	}
 	
@@ -143,16 +202,16 @@ void CCustomTreeChildCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CCustomTreeChildCtrl::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
-	
-	
+	// process this message only if double-clicked the real item's label
+	// mask double click if outside the real item's label
 	if (CheckHit(point))
 	{
 		HTREEITEM hItem = HitTest(point);
 		if(hItem)
 		{
 #ifdef _OWNER_DRAWN_TREE
-			
-			
+			// if the clicked item is partially visible we should invalidate
+			// entire client area to avoid background bitmap scrolling
 			CRect rcItem, rcClient;
 			GetClientRect(&rcClient);
 			GetItemRect(hItem,&rcItem,FALSE);
@@ -162,18 +221,18 @@ void CCustomTreeChildCtrl::OnLButtonDblClk(UINT nFlags, CPoint point)
 				CTreeCtrl::OnLButtonDown(nFlags, point);
 				return;
 			}
-#endif 
+#endif //_OWNER_DRAWN_TREE
 
 			SelectItem(hItem);
 		}
 
-		
+		// call standard message handler
 		CTreeCtrl::OnLButtonDblClk(nFlags, point);
 	}	
 	else 
 	{
-		
-		
+		// if clicked outside the item's label
+		// than set focus to contol window
 		SetFocus();
 	}
 }
@@ -199,16 +258,24 @@ void CCustomTreeChildCtrl::OnMouseMove(UINT nFlags, CPoint point)
 		free (ti.lpszText);
     }
 
-	
+
+	// mask mouse move if outside the real item's label
 	if (CheckHit(point))
 	{
-		
+		// call standard handler
 		CTreeCtrl::OnMouseMove(nFlags, point);
 	}
 	
 }
 
-#ifdef _OWNER_DRAWN_TREE 
+
+#ifdef _OWNER_DRAWN_TREE // this code is only for owner-drawn contol
+
+//----------------------------------------------------------------------
+// Sends NM_CUSTOMDRAW notification to the parent (CColumnTreeCtrl)
+// The idea is to use one custom drawing code for both custom-drawn and
+// owner-drawn controls
+//----------------------------------------------------------------------
 
 LRESULT CCustomTreeChildCtrl::CustomDrawNotify(LPNMTVCUSTOMDRAW lpnm)
 {
@@ -218,55 +285,60 @@ LRESULT CCustomTreeChildCtrl::CustomDrawNotify(LPNMTVCUSTOMDRAW lpnm)
 	return GetParent()->SendMessage(WM_NOTIFY,(WPARAM)0,(LPARAM)lpnm);
 }
 
+//---------------------------------------------------------------------------
+// Performs painting in the client's area.
+// The pDC parameter is the memory device context created in OnPaint handler.
+//---------------------------------------------------------------------------
+
 LRESULT CCustomTreeChildCtrl::OwnerDraw(CDC* pDC)
 {
-	NMTVCUSTOMDRAW nm;	
-	DWORD dwFlags;		
+	NMTVCUSTOMDRAW nm;	// this structure is used by NM_CUSTOMDRAW message
+	DWORD dwFlags;		// custom-drawing flags
 
-	DWORD dwRet;		
-	CRect rcClient;		
+	DWORD dwRet;		// current custom-drawing operation's return value
+	CRect rcClient;		// client's area rectangle
 
-	
+	// get client's rectangle
 	GetClientRect(&rcClient);
 
-	
+	// initialize the structure
 	memset(&nm,0,sizeof(NMTVCUSTOMDRAW));
 
-	
+	// set current drawing stage to pre-paint
 	nm.nmcd.dwDrawStage = CDDS_PREPAINT; 
 	nm.nmcd.hdc = pDC->m_hDC;
 	nm.nmcd.rc = rcClient;
 	
+	// notify the parent (CColumnTreeCtrl) about pre-paint stage
+    dwFlags = (DWORD)CustomDrawNotify(&nm); // CDDS_PREPAINT
 	
-    dwFlags = (DWORD)CustomDrawNotify(&nm); 
-	
-	
-	
-	
+	//
+	// draw control's background
+	//
 
-	
+	// set control's background color
 	COLORREF crBkgnd = IsWindowEnabled()?pDC->GetBkColor():GetSysColor(COLOR_BTNFACE);
-	
+	// ... and fill the background rectangle
 	pDC->FillSolidRect( rcClient, crBkgnd ); 
 
 	if(m_bkImage.hbm && IsWindowEnabled())
 	{
-		
+		// draw background bitmap
 
 		int xOffset = m_nOffsetX;
 		int yOffset = rcClient.left;
 		int yHeight = rcClient.Height();
 
 		SCROLLINFO scroll_info;
-		
-		
+		// Determine window viewport to draw into taking into account
+		// scrolling position
 		if ( GetScrollInfo( SB_VERT, &scroll_info, SIF_POS | SIF_RANGE ) )
 		{
 			yOffset = -scroll_info.nPos;
 			yHeight = max( scroll_info.nMax+1, rcClient.Height());
 		}
 	
-		
+		// create temporary memory DC for background bitmap
 		CDC dcTemp;
 		dcTemp.CreateCompatibleDC(pDC);
 		BITMAP bm;
@@ -274,70 +346,70 @@ LRESULT CCustomTreeChildCtrl::OwnerDraw(CDC* pDC)
 		CBitmap* pOldBitmap = 
 			dcTemp.SelectObject( CBitmap::FromHandle(m_bkImage.hbm) ); 
 		
-		
+		// copy the background bitmap from temporary DC to painting DC
 		float x = (float)m_bkImage.xOffsetPercent/100*(float)rcClient.Width();
 		float y = (float)m_bkImage.yOffsetPercent/100*(float)rcClient.Height();
-		pDC->BitBlt(+(int)x, 
-			(int)y, 
+		pDC->BitBlt(/*xOffset*/+(int)x, 
+			/*yOffset+*/(int)y, 
 			bm.bmWidth, bm.bmHeight, &dcTemp, 0, 0, SRCCOPY);
 		
-		
+		// clean up
 		dcTemp.SelectObject(pOldBitmap);
 			
 	}
 
-	
+	// notify the parent about post-erase drawing stage
 	if(dwFlags&CDRF_NOTIFYPOSTERASE)
 	{
 		nm.nmcd.dwDrawStage = CDDS_POSTERASE;
-		dwRet = (DWORD)CustomDrawNotify(&nm); 
+		dwRet = (DWORD)CustomDrawNotify(&nm); // CDDS_POSTERASE
 	}
 	
-	
+	// select correct font
 	CFont* pOldFont = pDC->SelectObject(GetFont());
 	
-	
+	// get control's image lists
 	CImageList* pstateList = GetImageList(TVSIL_STATE);
 	CImageList* pimgList = GetImageList(TVSIL_NORMAL);
 	
-	
+	// here we will store dimensions of the images
 	CSize iconSize, stateImgSize;
 
-	
+	// retreive information about item images
 	if(pimgList)
 	{
-		
+		// get icons dimensions
 		IMAGEINFO ii;
 		if(pimgList->GetImageInfo(0, &ii))
 			iconSize = CSize(ii.rcImage.right-ii.rcImage.left,
 			ii.rcImage.bottom-ii.rcImage.top);
 	}		
 	
-	
+	// retrieve information about state images
 	if(pstateList)
 	{
-		
+		// get icons dimensions
 		IMAGEINFO ii;
 		if(pstateList->GetImageInfo(0, &ii))
 			stateImgSize = CSize(ii.rcImage.right-ii.rcImage.left,
 			ii.rcImage.bottom-ii.rcImage.top);
 	}
 
-	
-	
-	
+	//
+	// draw all visible items
+	//
 
 	HTREEITEM hItem = GetFirstVisibleItem();
 
 	while(hItem)
 	{
-		
+		// set transparent background mode
 		int nOldBkMode = pDC->SetBkMode(TRANSPARENT);
 
-		
+		// get CTreeCtrl's style
 		DWORD dwStyle = GetStyle();
 
-		
+		// get current item's state
 		DWORD dwState = GetItemState(hItem,0xFFFF);
 
 		BOOL bEnabled = IsWindowEnabled();
@@ -345,14 +417,14 @@ LRESULT CCustomTreeChildCtrl::OwnerDraw(CDC* pDC)
 		BOOL bHasFocus = (GetFocus() && GetFocus()->m_hWnd==m_hWnd)?TRUE:FALSE;
 			
 
-		
-		
-		
-		
+		// Update NMCUSTOMDRAW structure. 
+		// We won't draw entire items here (only item icons and lines), 
+		// all other work will be done in parent's notifications handlers.
+		// This allows to use one code for both custom-drawn and owner-drawn controls.
 
 		nm.nmcd.dwItemSpec = (DWORD_PTR)hItem;
 
-		
+		// set colors for item's background and text
 		if(bEnabled)
 		{	
 			if(bHasFocus)
@@ -382,10 +454,10 @@ LRESULT CCustomTreeChildCtrl::OwnerDraw(CDC* pDC)
 		}
 		
 		
-		
+		// set item's rectangle
 		GetItemRect(hItem,&nm.nmcd.rc,0);
 
-		
+		// set clipping rectangle
 		CRgn rgn;
 		rgn.CreateRectRgn(nm.nmcd.rc.left, nm.nmcd.rc.top, 
 			nm.nmcd.rc.left+m_nFirstColumnWidth, nm.nmcd.rc.bottom);
@@ -393,19 +465,19 @@ LRESULT CCustomTreeChildCtrl::OwnerDraw(CDC* pDC)
 
 		dwRet = CDRF_DODEFAULT;
 
-		
+		// notify the parent about item pre-paint drawing stage
 		if(dwFlags&CDRF_NOTIFYITEMDRAW)
 		{
 			nm.nmcd.dwDrawStage = CDDS_ITEMPREPAINT;
-			dwRet = (DWORD)CustomDrawNotify(&nm); 
+			dwRet = (DWORD)CustomDrawNotify(&nm); // CDDS_ITEMPREPAINT
 
 		}
 
 		if(!(dwFlags&CDRF_SKIPDEFAULT))
 		{
-			
-			
-			
+			//
+			// draw item's icons and dotted lines
+			//
 
 			CRect rcItem;
 			int nImage,nSelImage;
@@ -416,7 +488,7 @@ LRESULT CCustomTreeChildCtrl::OwnerDraw(CDC* pDC)
 			int x = rcItem.left-3;
 			int yCenterItem = rcItem.top + (rcItem.bottom - rcItem.top)/2; 
 
-			
+			// draw item icon
 			if(pimgList)
 			{
 				int nImageIndex = dwState&TVIS_SELECTED?nImage:nSelImage;
@@ -425,10 +497,10 @@ LRESULT CCustomTreeChildCtrl::OwnerDraw(CDC* pDC)
 					CPoint(x, yCenterItem-iconSize.cy/2),ILD_TRANSPARENT);
 			}
 			
-			
+			// draw item state icon
 			if(GetStyle()&TVS_CHECKBOXES && pstateList!=NULL)
 			{
-				
+				// get state image index
 				DWORD dwStateImg = GetItemState(hItem,TVIS_STATEIMAGEMASK)>>12;
 				
 				x-=stateImgSize.cx;
@@ -440,11 +512,11 @@ LRESULT CCustomTreeChildCtrl::OwnerDraw(CDC* pDC)
 			
 			if(dwStyle&TVS_HASLINES)
 			{
-				
-				
-				
+				//
+				// draw dotted lines 
+				//
 
-				
+				// create pen
 				CPen pen;
 				pen.CreatePen(PS_DOT,1,GetLineColor());
 				CPen* pOldPen = pDC->SelectObject(&pen);
@@ -481,14 +553,14 @@ LRESULT CCustomTreeChildCtrl::OwnerDraw(CDC* pDC)
 					hItemParent = GetParentItem(hItemParent);
 				}
 			
-				
+				// clean up
 				pDC->SelectObject(pOldPen);
 				
 			}
 
 			if(dwStyle&TVS_HASBUTTONS && ItemHasChildren(hItem))
 			{
-				
+				// draw buttons
 				int nImg = GetItemState(hItem,TVIF_STATE)&TVIS_EXPANDED?1:0;
 				m_imgBtns.Draw(pDC, nImg, CPoint(x-iconSize.cx/2-6,yCenterItem-4), 
 					ILD_TRANSPARENT);
@@ -498,21 +570,21 @@ LRESULT CCustomTreeChildCtrl::OwnerDraw(CDC* pDC)
 
 		pDC->SelectClipRgn(NULL);
 
-		
+		// notify parent about item post-paint stage
 		if(dwRet&CDRF_NOTIFYPOSTPAINT)
 		{
 			nm.nmcd.dwDrawStage = CDDS_ITEMPOSTPAINT;
-			dwRet = (DWORD)CustomDrawNotify(&nm); 
+			dwRet = (DWORD)CustomDrawNotify(&nm); // CDDS_ITEMPOSTPAINT
 		}
 
-		
+		// clean up
 		pDC->SetBkMode(nOldBkMode);
 
-		
+		// get the next visible item
 		hItem = GetNextVisibleItem(hItem);
 	};
 
-	
+	//clean up
 
 	pDC->SelectObject(pOldFont);
 	
@@ -521,23 +593,25 @@ LRESULT CCustomTreeChildCtrl::OwnerDraw(CDC* pDC)
 
 int CCustomTreeChildCtrl::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 {
-	
+	// inavlidate entire client's area to avoid bitmap scrolling
 	Invalidate();
 
-	
+	// ... and call standard message handler
 	return CTreeCtrl::OnMouseWheel(nFlags, zDelta, pt);
 }
 
 void CCustomTreeChildCtrl::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar *pScrollBar)
 {
-	
+	// inavlidate entire client's area to avoid bitmap scrolling
 	Invalidate();
 	
-	
+	// ... and call standard message handler
 	CTreeCtrl::OnVScroll(nSBCode, nPos, pScrollBar);
 }
 
-#endif 
+
+#endif //_OWNER_DRAWN_TREE
+
 
 void CCustomTreeChildCtrl::OnPaint()
 {
@@ -549,21 +623,21 @@ void CCustomTreeChildCtrl::OnPaint()
 	CDC dcMem;
 	CBitmap bmpMem;
 
-	
+	// use temporary bitmap to avoid flickering
 	dcMem.CreateCompatibleDC(&dc);
 	if (bmpMem.CreateCompatibleBitmap(&dc, rcClient.Width(), rcClient.Height()))
 	{
 		CBitmap* pOldBmp = dcMem.SelectObject(&bmpMem);
 
-		
+		// paint the window onto the memory bitmap
 
-#ifdef _OWNER_DRAWN_TREE	
-		OwnerDraw(&dcMem);	
-#else						
+#ifdef _OWNER_DRAWN_TREE	// if owner-drawn
+		OwnerDraw(&dcMem);	// use our code
+#else						// else use standard code
 		CWnd::DefWindowProc(WM_PAINT, (WPARAM)dcMem.m_hDC, 0);
-#endif 
+#endif //_OWNER_DRAWN_TREE
 
-		
+		// copy it to the window's DC
 		dc.BitBlt(0, 0, rcClient.right, rcClient.bottom, &dcMem, 0, 0, SRCCOPY);
 
 		dcMem.SelectObject(pOldBmp);
@@ -576,12 +650,12 @@ void CCustomTreeChildCtrl::OnPaint()
 
 BOOL CCustomTreeChildCtrl::OnEraseBkgnd(CDC* pDC)
 {
-	return TRUE;	
+	return TRUE;	// do nothing
 }
 
 BOOL CCustomTreeChildCtrl::CheckHit(CPoint point)
 {
-	
+	// return TRUE if should pass the message to CTreeCtrl
 
 	UINT fFlags;
 	HTREEITEM hItem = HitTest(point, &fFlags);
@@ -604,11 +678,12 @@ BOOL CCustomTreeChildCtrl::CheckHit(CPoint point)
 		return FALSE;
 	}
 
-	
+
+	// verify the hit result
 	if (fFlags & TVHT_ONITEMLABEL)
 	{
 		rcItem.right = m_nFirstColumnWidth;
-		
+		// check if within the first column
 		if (!rcItem.PtInRect(point))
 			return FALSE;
 		
@@ -620,7 +695,7 @@ BOOL CCustomTreeChildCtrl::CheckHit(CPoint point)
 		rcItem.right = rcItem.left + pDC->GetTextExtent(strSub).cx + 6;
 		ReleaseDC(pDC);
 
-		
+		// check if inside the label's rectangle
 		if (!rcItem.PtInRect(point))
 			return FALSE;
 		
@@ -630,12 +705,14 @@ BOOL CCustomTreeChildCtrl::CheckHit(CPoint point)
 	return FALSE;
 }
 
-#define COLUMN_MARGIN		1		
 
+#define COLUMN_MARGIN		1		// 1 pixel between coumn edge and text bounding rectangle
+
+// default minimum width for the first column
 #ifdef _OWNER_DRAWN_TREE
-	#define DEFMINFIRSTCOLWIDTH 0 
+	#define DEFMINFIRSTCOLWIDTH 0 // we use clipping rgn, so we can have zero-width column		
 #else
-	#define DEFMINFIRSTCOLWIDTH 100	
+	#define DEFMINFIRSTCOLWIDTH 100	// here we need to avoid zero-width first column	
 #endif
 
 IMPLEMENT_DYNCREATE(CColumnTreeCtrl, CStatic)
@@ -647,13 +724,14 @@ BEGIN_MESSAGE_MAP(CColumnTreeCtrl, CStatic)
 	ON_WM_HSCROLL()
 	ON_WM_SETTINGCHANGE()
 	ON_WM_ENABLE()
-	
+	//
 	ON_MESSAGE (ID_CTCC_GETTOOLTIPTEXT, OnCtccGetToolTipText)
 END_MESSAGE_MAP()
 
+
 CColumnTreeCtrl::CColumnTreeCtrl()
 {
-	
+	// initialize members
 	m_uMinFirstColWidth = DEFMINFIRSTCOLWIDTH;
 	m_bHeaderChangesBlocked = FALSE;
 	m_xOffset = 0;
@@ -682,7 +760,7 @@ void CColumnTreeCtrl::PreSubclassWindow()
 #ifdef DEBUG
 void CColumnTreeCtrl::AssertValid( ) const
 {
-	
+	// validate control state
 
 	CStatic::AssertValid();
 
@@ -695,25 +773,25 @@ void CColumnTreeCtrl::AssertValid( ) const
 void CColumnTreeCtrl::Initialize()
 {
 	if (m_Tree.m_hWnd) 
-		return; 
+		return; // do not initialize twice
 
 	CRect rcClient;
 	GetClientRect(&rcClient);
 	
-	
+	// create tree and header controls as children
 	m_Tree.Create(WS_CHILD | WS_VISIBLE  | TVS_NOHSCROLL, CRect(), this, TreeID);
-	m_Header.Create(WS_CHILD |  WS_VISIBLE | HDS_FULLDRAG  , rcClient, this, HeaderID);
+	m_Header.Create(WS_CHILD | /*HDS_BUTTONS |*/ WS_VISIBLE | HDS_FULLDRAG  , rcClient, this, HeaderID);
 	m_Header2.Create(WS_CHILD , rcClient, this, Header2ID);
 
-	
+	// create horisontal scroll bar
 	m_horScroll.Create(SBS_HORZ|WS_CHILD|SBS_BOTTOMALIGN,rcClient,this,HScrollID);
 	
-	
+	// set correct font for the header
 	CFont* pFont = m_Tree.GetFont();
 	m_Header.SetFont(pFont);
 	m_Header2.SetFont(pFont);
 
-	
+	// check if the common controls library version 6.0 is available
 	BOOL bIsComCtl6 = FALSE;
 
 	HMODULE hComCtlDll = LoadLibrary(_T("comctl32.dll"));
@@ -739,7 +817,7 @@ void CColumnTreeCtrl::Initialize()
 		FreeLibrary(hComCtlDll);
 	}
 
-	
+	// get header layout
 	WINDOWPOS wp;
 	HDLAYOUT hdlayout;
 	hdlayout.prc = &rcClient;
@@ -747,7 +825,7 @@ void CColumnTreeCtrl::Initialize()
 	m_Header.Layout(&hdlayout);
 	m_cyHeader = hdlayout.pwpos->cy;
 	
-	
+	// offset from column start to text start
 	m_xOffset = bIsComCtl6 ? 9 : 6;
 
 	m_xPos = 0;
@@ -755,18 +833,19 @@ void CColumnTreeCtrl::Initialize()
 	UpdateColumns();
 }
 
+
 void CColumnTreeCtrl::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
 	m_Tree.SendMessage(WM_SETTINGCHANGE);
 	m_horScroll.SendMessage(WM_SETTINGCHANGE);
 
-	
+	// set correct font for the header
 	CRect rcClient;
 	GetClientRect(&rcClient);
 	
-	
-	
-	
+	//CFont* pFont = m_Tree.GetFont();
+	//m_Header.SetFont(pFont);
+	//m_Header2.SetFont(pFont);
 	
 	m_Header.SendMessage(WM_SETTINGCHANGE);
 	m_Header2.SendMessage(WM_SETTINGCHANGE);
@@ -774,7 +853,7 @@ void CColumnTreeCtrl::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 	m_Header.SetFont(CFont::FromHandle((HFONT)GetStockObject(DEFAULT_GUI_FONT)));
 	m_Header2.SetFont(CFont::FromHandle((HFONT)GetStockObject(DEFAULT_GUI_FONT)));
 
-	
+	// get header layout
 	WINDOWPOS wp;
 	HDLAYOUT hdlayout;
 	hdlayout.prc = &rcClient;
@@ -787,8 +866,8 @@ void CColumnTreeCtrl::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 
 void CColumnTreeCtrl::OnPaint()
 {
-	
-	
+	// do not draw entire background to avoid flickering
+	// just fill right-bottom rectangle when it is visible
 	
 	CPaintDC dc(this);
 	
@@ -802,7 +881,7 @@ void CColumnTreeCtrl::OnPaint()
 	
 	CRect rc;
 
-	
+	// determine if vertical scroll bar is visible
 	SCROLLINFO scrinfo;
 	scrinfo.cbSize = sizeof(scrinfo);
 	m_Tree.GetScrollInfo(SB_VERT,&scrinfo,SIF_ALL);
@@ -810,7 +889,7 @@ void CColumnTreeCtrl::OnPaint()
 	
 	if(bVScrollVisible)
 	{
-		
+		// fill the right-bottom rectangle
 		rc.SetRect(rcClient.right-cxVScroll, rcClient.bottom-cyHScroll,
 				rcClient.right, rcClient.bottom);
 		dc.FillRect(rc,&brush);
@@ -821,7 +900,7 @@ void CColumnTreeCtrl::OnPaint()
 
 BOOL CColumnTreeCtrl::OnEraseBkgnd(CDC* pDC)
 {
-	
+	// do nothing, all work is done in OnPaint()
 	return FALSE;
 	
 }
@@ -830,6 +909,7 @@ void CColumnTreeCtrl::OnSize(UINT nType, int cx, int cy)
 {
 	RepositionControls();
 }
+
 
 void CColumnTreeCtrl::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
@@ -840,7 +920,7 @@ void CColumnTreeCtrl::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 	
 	BOOL bVScrollVisible = scrinfo.nMin!=scrinfo.nMax?TRUE:FALSE;
 	
-	
+	// determine full header width
 	int cxTotal = m_cxTotal+(bVScrollVisible?GetSystemMetrics(SM_CXVSCROLL):0);
 	
 	CRect rcClient;
@@ -892,15 +972,15 @@ void CColumnTreeCtrl::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 
 void CColumnTreeCtrl::OnHeaderItemChanging(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	
-	
+	// do not allow user to set zero width to the first column.
+	// the minimum width is defined by m_uMinFirstColWidth;
 
 	if(m_bHeaderChangesBlocked)
 	{
-		
-		
+		// do not allow change header size when moving it
+		// but do not prevent changes the next time the header will be changed
 		m_bHeaderChangesBlocked = FALSE;
-		*pResult = TRUE; 
+		*pResult = TRUE; // prevent changes
 		return;
 	}
 
@@ -913,9 +993,9 @@ void CColumnTreeCtrl::OnHeaderItemChanging(NMHDR* pNMHDR, LRESULT* pResult)
 		m_Header.GetItemRect(0,&rc);
 		if(pnm->pitem->cxy<m_uMinFirstColWidth)
 		{
-			
+			// do not allow sizing of the first column 
 			pnm->pitem->cxy=m_uMinFirstColWidth+1;
-			*pResult = TRUE; 
+			*pResult = TRUE; // prevent changes
 		}
 		return;
 	}
@@ -929,11 +1009,12 @@ void CColumnTreeCtrl::OnHeaderItemChanged(NMHDR* pNMHDR, LRESULT* pResult)
 	m_Tree.Invalidate();
 }
 
+
 void CColumnTreeCtrl::OnTreeCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 {
-	
-	
-	
+	// We use custom drawing to correctly display subitems.
+	// Standard drawing code is used only for displaying icons and dotted lines
+	// The rest of work is done here.
 
 	NMCUSTOMDRAW* pNMCustomDraw = (NMCUSTOMDRAW*)pNMHDR;
 	NMTVCUSTOMDRAW* pNMTVCustomDraw = (NMTVCUSTOMDRAW*)pNMHDR;
@@ -955,7 +1036,7 @@ void CColumnTreeCtrl::OnTreeCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 
 			if (rcItem.IsRectEmpty())
 			{
-				
+				// nothing to paint
 				*pResult = CDRF_DODEFAULT;
 				break;
 			}
@@ -971,13 +1052,13 @@ void CColumnTreeCtrl::OnTreeCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 			
 
 #ifndef _OWNER_DRAWN_TREE
-			
+			// clear the original label rectangle
 			dc.FillSolidRect(&rcLabel, crWnd);
-#endif 
+#endif //_OWNER_DRAWN_TREE
 
 			int nColsCnt = m_Header.GetItemCount();
 
-			
+			// draw horizontal lines...
 			int xOffset = 0;
 			int i=0;
 			for (i=0; i<nColsCnt; i++)
@@ -986,14 +1067,14 @@ void CColumnTreeCtrl::OnTreeCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 				rcItem.right = xOffset-1;
 				dc.DrawEdge(&rcItem, BDR_SUNKENINNER, BF_RIGHT);
 			}
-			
+			// ...and the vertical ones
 			dc.DrawEdge(&rcItem, BDR_SUNKENINNER, BF_BOTTOM);
 
 			CString strText = m_Tree.GetItemText(hItem);
 			CString strSub;
 			AfxExtractSubString(strSub, strText, 0, '\t');
 
-			
+			// calculate main label's size
 			CRect rcText(0,0,0,0);
 			dc.DrawText(strSub, &rcText, DT_NOPREFIX | DT_CALCRECT);
 			rcLabel.right = min(rcLabel.left + rcText.right + 4, m_arrColWidths[0] - 4);
@@ -1002,20 +1083,20 @@ void CColumnTreeCtrl::OnTreeCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 
 			if (rcLabel.Width() < 0)
 				crTextBk = crWnd;
-			if (crTextBk != crWnd)	
+			if (crTextBk != crWnd)	// draw label's background
 			{
 				CRect rcSelect =  rcLabel;
 				if(bFullRowSelect) rcSelect.right = rcItem.right;
 				
 				dc.FillSolidRect(&rcSelect, crTextBk);
 
-				
+				// draw focus rectangle if necessary
 				if (pNMCustomDraw->uItemState & CDIS_FOCUS)
 					dc.DrawFocusRect(&rcSelect);
 
 			}
 			
-			
+			// draw main label
 
 			CFont* pOldFont = NULL;
 			if(m_Tree.GetStyle()&TVS_TRACKSELECT && pNMCustomDraw->uItemState && CDIS_HOT)
@@ -1041,11 +1122,11 @@ void CColumnTreeCtrl::OnTreeCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 			if(IsWindowEnabled() && !bFullRowSelect)	
 				dc.SetTextColor(::GetSysColor(COLOR_MENUTEXT));
 			
-			
+			// set not underlined text for subitems
 			if( pOldFont &&  !(m_Tree.GetStyle()& TVS_FULLROWSELECT)) 
 				dc.SelectObject(pOldFont);
 
-			
+			// draw other columns text
 			for (i=1; i<nColsCnt; i++)
 			{
 				if (AfxExtractSubString(strSub, strText, i, '\t'))
@@ -1080,6 +1161,7 @@ void CColumnTreeCtrl::OnTreeCustomDraw(NMHDR* pNMHDR, LRESULT* pResult)
 	}
 }
 
+
 void CColumnTreeCtrl::UpdateColumns()
 {
 	m_cxTotal = 0;
@@ -1090,7 +1172,7 @@ void CColumnTreeCtrl::UpdateColumns()
 	
 	ASSERT(nCnt<=MAX_COLUMN_COUNT);
 	
-	
+	// get column widths from the header control
 	for (int i=0; i<nCnt; i++)
 	{
 		if (m_Header.GetItem(i, &hditem))
@@ -1104,9 +1186,10 @@ void CColumnTreeCtrl::UpdateColumns()
 	RepositionControls();
 }
 
+
 void CColumnTreeCtrl::RepositionControls()
 {
-	
+	// reposition child controls
 	if (m_Tree.m_hWnd)
 	{
 	
@@ -1115,17 +1198,17 @@ void CColumnTreeCtrl::RepositionControls()
 		int cx = rcClient.Width();
 		int cy = rcClient.Height();
 
-		
+		// get dimensions of scroll bars
 		int cyHScroll = GetSystemMetrics(SM_CYHSCROLL);
 		int cxVScroll = GetSystemMetrics(SM_CXVSCROLL);
 	
-		
+		// determine if vertical scroll bar is visible
 		SCROLLINFO scrinfo;
 		scrinfo.cbSize = sizeof(scrinfo);
 		m_Tree.GetScrollInfo(SB_VERT,&scrinfo,SIF_ALL);
 		BOOL bVScrollVisible = scrinfo.nMin!=scrinfo.nMax?TRUE:FALSE;
 	
-		
+		// determine full header width
 		int cxTotal = m_cxTotal+(bVScrollVisible?cxVScroll:0);
 	
 		if (m_xPos > cxTotal - cx) m_xPos = cxTotal - cx;
@@ -1141,7 +1224,7 @@ void CColumnTreeCtrl::RepositionControls()
 		CRect rcTree;
 		m_Tree.GetClientRect(&rcTree);
 		
-		
+		// move to a negative offset if scrolled horizontally
 		int x = 0;
 		if (cx < cxTotal)
 		{
@@ -1149,8 +1232,8 @@ void CColumnTreeCtrl::RepositionControls()
 			cx += x;
 		}
 	
-		
-		
+		// show horisontal scroll only if total header width is greater
+		// than the client rect width and cleint rect height is big enough
 		BOOL bHScrollVisible = rcClient.Width()<cxTotal 
 			&& rcClient.Height()>=cyHScroll+m_cyHeader;
 			
@@ -1166,18 +1249,19 @@ void CColumnTreeCtrl::RepositionControls()
 			rcClient.Width() - (bVScrollVisible?cxVScroll:0), cyHScroll);
 
 		
-		
-		
+		// show the second header at the top-right corner 
+		// only when vertical scroll bar is visible
 		m_Header2.ShowWindow(bVScrollVisible?SW_SHOW:SW_HIDE);
 
 		RedrawWindow();
 	}
 }
 
+
 int CColumnTreeCtrl::InsertColumn(int nCol, LPCTSTR lpszColumnHeading, int nFormat, int nWidth, int nSubItem)
 {
-	
-	
+	// update the header control in upper-right corner
+	// to make it look the same way as main header
 
 	CHeaderCtrl& header = GetHeaderCtrl();
 
@@ -1191,8 +1275,8 @@ int CColumnTreeCtrl::InsertColumn(int nCol, LPCTSTR lpszColumnHeading, int nForm
 
 	if(m_Header.GetItemCount()>0) 
 	{
-		
-		
+		// if the main header contains items, 
+		// insert an item to m_Header2
 		hditem.pszText = _T("");
 		hditem.cxy = GetSystemMetrics(SM_CXVSCROLL)+5;
 		m_Header2.InsertItem(0,&hditem);
@@ -1204,8 +1288,8 @@ int CColumnTreeCtrl::InsertColumn(int nCol, LPCTSTR lpszColumnHeading, int nForm
 
 BOOL  CColumnTreeCtrl::DeleteColumn(int nCol)
 {
-	
-	
+	// update the header control in upper-right corner
+	// to make it look the same way as main header
 
 	BOOL bResult = m_Header.DeleteItem(nCol);
 	if(m_Header.GetItemCount()==0) 
@@ -1219,7 +1303,7 @@ BOOL  CColumnTreeCtrl::DeleteColumn(int nCol)
 
 CString CColumnTreeCtrl::GetItemText(HTREEITEM hItem, int nColumn)
 {
-	
+	// retreive and return the substring from tree item's text
 	CString szText = m_Tree.GetItemText(hItem);
 	CString szSubItem;
 	AfxExtractSubString(szSubItem,szText,nColumn,'\t');
@@ -1242,10 +1326,13 @@ void CColumnTreeCtrl::SetItemText(HTREEITEM hItem,int nColumn,LPCTSTR lpszItem)
 
 void CColumnTreeCtrl::SetFirstColumnMinWidth(UINT uMinWidth)
 {
-	
+	// set minimum width value for the first column
 	m_uMinFirstColWidth = uMinWidth;
 }
 
+
+// Call this function to determine the location of the specified point 
+// relative to the client area of a tree view control.
 HTREEITEM CColumnTreeCtrl::HitTest(CPoint pt, UINT* pFlags) const
 {
 	CTVHITTESTINFO htinfo = {0, 0, NULL, 0};
@@ -1258,10 +1345,12 @@ HTREEITEM CColumnTreeCtrl::HitTest(CPoint pt, UINT* pFlags) const
 	return hItem;
 }
 
+// Call this function to determine the location of the specified point 
+// relative to the client area of a tree view control.
 HTREEITEM CColumnTreeCtrl::HitTest(CTVHITTESTINFO* pHitTestInfo) const
 {
-	
-	
+	// We should use our own HitTest() method, because our custom tree
+	// has different layout than the original CTreeCtrl.
 
 	UINT uFlags = 0;
 	HTREEITEM hItem = NULL;
@@ -1273,7 +1362,7 @@ HTREEITEM CColumnTreeCtrl::HitTest(CTVHITTESTINFO* pHitTestInfo) const
 
 	hItem = m_Tree.HitTest(point, &uFlags);
 
-	
+	// Fill the CTVHITTESTINFO structure
 	pHitTestInfo->hItem = hItem;
 	pHitTestInfo->flags = uFlags;
 	pHitTestInfo->iSubItem = 0;
@@ -1281,8 +1370,8 @@ HTREEITEM CColumnTreeCtrl::HitTest(CTVHITTESTINFO* pHitTestInfo) const
 	if (! (uFlags&TVHT_ONITEMLABEL || uFlags&TVHT_ONITEMRIGHT) )
 		return hItem;
 
-	
-	
+	// Additional check for item's label.
+	// Determine correct subitem's index.
 
 	int i;
 	int x = 0;
@@ -1302,49 +1391,50 @@ HTREEITEM CColumnTreeCtrl::HitTest(CTVHITTESTINFO* pHitTestInfo) const
 	return NULL;
 }
 
+
 BOOL CColumnTreeCtrl::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT *pResult)
 {
-	
-    
+	// we need to forward all notifications to the parent window,
+    // so use OnNotify() to handle all notifications in one step
 	
 	LPNMHDR pHdr = (LPNMHDR)lParam;
 	
-	
+	// there are several notifications we need to precess
 		
 	if(pHdr->code==NM_CUSTOMDRAW && pHdr->idFrom == TreeID)
 	{
 		OnTreeCustomDraw(pHdr,pResult);
-		return TRUE; 
+		return TRUE; // do not forward
 	}
 	
 	if(pHdr->code==HDN_ITEMCHANGING && pHdr->idFrom == HeaderID)
 	{
 		OnHeaderItemChanging(pHdr,pResult);
-		return TRUE; 
+		return TRUE; // do not forward
 	}
 	
 	if(pHdr->code==HDN_ITEMCHANGED && pHdr->idFrom == HeaderID)
 	{
 		OnHeaderItemChanged(pHdr,pResult);
-		return TRUE; 
+		return TRUE; // do not forward
 	}
 
 #ifdef _OWNER_DRAWN_TREE
 	
 	if(pHdr->code==TVN_ITEMEXPANDING && pHdr->idFrom == TreeID)
 	{
-		
-		Invalidate(); 
+		// avoid bitmap scrolling 
+		Invalidate(); // ... and forward
 	}
 
-#endif 
+#endif //_OWNER_DRAWN_TREE
 
 	if(pHdr->code==TVN_ITEMEXPANDED && pHdr->idFrom == TreeID)
 	{
-		RepositionControls(); 
+		RepositionControls(); // ... and forward
 	}
 
-	
+	// forward notifications from children to the control owner
 	pHdr->hwndFrom = GetSafeHwnd();
 	pHdr->idFrom = GetWindowLong(GetSafeHwnd(),GWL_ID);
 	return (BOOL)GetParent()->SendMessage(WM_NOTIFY,wParam,lParam);
@@ -1369,7 +1459,7 @@ void CColumnTreeCtrl::OnEnable(BOOL bEnable)
 
 int CCustomTreeChildCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
-	
+	//EnableToolTips ();
 
     if (m_ttip.Create (this, TTS_ALWAYSTIP) && m_ttip.AddTool(this, ""))
     {
@@ -1384,10 +1474,31 @@ int CCustomTreeChildCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 int CCustomTreeChildCtrl::OnToolHitTest(CPoint point, TOOLINFO *pTI) const
 {
-	
+	/*if (pTI)
+	{
+		WPARAM wp = MAKEWPARAM (point.x, point.y);
+		pTI->lpszText = (char*)malloc (100);
+		strcpy (pTI->lpszText, "");
+		GetParent ()->SendMessage (ID_CTCC_GETTOOLTIPTEXT, wp, (LPARAM)pTI);
+
+		if (*pTI->lpszText != 0)
+		{
+			pTI->hwnd = m_hWnd;
+			pTI->uId = 0;
+			pTI->uFlags = 0;
+			//GetClientRect (&pTI->rect);
+			return 1;
+		}
+		else
+		{
+			free (pTI->lpszText);
+			pTI->lpszText = NULL;
+		}
+	}*/
 
 	return CTreeCtrl::OnToolHitTest (point, pTI);
 }
+
 
 LRESULT CColumnTreeCtrl::OnCtccGetToolTipText(WPARAM wp, LPARAM lp)
 {

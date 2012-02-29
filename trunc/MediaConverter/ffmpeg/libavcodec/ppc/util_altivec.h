@@ -1,10 +1,25 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * Contains misc utility macros and inline functions
+ */
 
 #ifndef AVCODEC_PPC_UTIL_ALTIVEC_H
 #define AVCODEC_PPC_UTIL_ALTIVEC_H
@@ -17,8 +32,8 @@
 #include <altivec.h>
 #endif
 
-
-
+// used to build registers permutation vectors (vcprm)
+// the 's' are for words in the _s_econd vector
 #define WORD_0 0x00,0x01,0x02,0x03
 #define WORD_1 0x04,0x05,0x06,0x07
 #define WORD_2 0x08,0x09,0x0a,0x0b
@@ -31,18 +46,18 @@
 #define vcprm(a,b,c,d) (const vector unsigned char){WORD_ ## a, WORD_ ## b, WORD_ ## c, WORD_ ## d}
 #define vcii(a,b,c,d) (const vector float){FLOAT_ ## a, FLOAT_ ## b, FLOAT_ ## c, FLOAT_ ## d}
 
-
-
-
+// vcprmle is used to keep the same index as in the SSE version.
+// it's the same as vcprm, with the index inversed
+// ('le' is Little Endian)
 #define vcprmle(a,b,c,d) vcprm(d,c,b,a)
 
-
-
+// used to build inverse/identity vectors (vcii)
+// n is _n_egative, p is _p_ositive
 #define FLOAT_n -1.
 #define FLOAT_p 1.
 
 
-
+// Transpose 8x8 matrix of 16-bit elements (in-place)
 #define TRANSPOSE8(a,b,c,d,e,f,g,h) \
 do { \
     vector signed short A1, B1, C1, D1, E1, F1, G1, H1; \
@@ -77,7 +92,8 @@ do { \
 } while (0)
 
 
-
+/** \brief loads unaligned vector \a *src with offset \a offset
+    and returns it */
 static inline vector unsigned char unaligned_load(int offset, uint8_t *src)
 {
     register vector unsigned char first = vec_ld(offset, src);
@@ -86,4 +102,4 @@ static inline vector unsigned char unaligned_load(int offset, uint8_t *src)
     return vec_perm(first, second, mask);
 }
 
-#endif 
+#endif /* AVCODEC_PPC_UTIL_ALTIVEC_H */

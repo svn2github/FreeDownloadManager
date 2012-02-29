@@ -1,8 +1,25 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * SIPR decoder for the 16k mode
+ *
+ * Copyright (c) 2008 Vladimir Voroshilov
+ * Copyright (c) 2009 Vitor Sessak
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_SIPR16KDATA_H
 #define AVCODEC_SIPR16KDATA_H
@@ -34,7 +51,9 @@ static const float mean_lsf_16k[16] = {
     2.347162,  2.521521,  2.717870,  2.847068
 };
 
-
+/**
+ * Hamming windowed sinc function, like in AMR
+ */
 static const float sinc_win[40] = {
      0.874475,  0.755101,  0.455962,  0.118807, -0.114223, -0.176778,
     -0.101923,  0.015553,  0.086555,  0.078193,  0.018660, -0.037513,
@@ -511,4 +530,4 @@ static const float *lsf_codebooks_16k[] = {
     lsf_cb5_16k[0]
 };
 
-#endif 
+#endif /* AVCODEC_SIPR16KDATA_H */

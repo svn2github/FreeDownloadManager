@@ -1,17 +1,80 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
-
-
+/* crypto/bn/bn.h */
+/* Copyright (C) 1995-1997 Eric Young (eay@cryptsoft.com)
+ * All rights reserved.
+ *
+ * This package is an SSL implementation written
+ * by Eric Young (eay@cryptsoft.com).
+ * The implementation was written so as to conform with Netscapes SSL.
+ * 
+ * This library is free for commercial and non-commercial use as long as
+ * the following conditions are aheared to.  The following conditions
+ * apply to all code found in this distribution, be it the RC4, RSA,
+ * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
+ * included with this distribution is covered by the same copyright terms
+ * except that the holder is Tim Hudson (tjh@cryptsoft.com).
+ * 
+ * Copyright remains Eric Young's, and as such any Copyright notices in
+ * the code are not to be removed.
+ * If this package is used in a product, Eric Young should be given attribution
+ * as the author of the parts of the library used.
+ * This can be in the form of a textual message at program startup or
+ * in documentation (online or textual) provided with the package.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *    "This product includes cryptographic software written by
+ *     Eric Young (eay@cryptsoft.com)"
+ *    The word 'cryptographic' can be left out if the rouines from the library
+ *    being used are not cryptographic related :-).
+ * 4. If you include any Windows specific code (or a derivative thereof) from 
+ *    the apps directory (application code) you must include an acknowledgement:
+ *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"
+ * 
+ * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * The licence and distribution terms for any publically available version or
+ * derivative of this code cannot be changed.  i.e. this code cannot simply be
+ * copied and put under another distribution licence
+ * [including the GNU Public Licence.]
+ */
+/* ====================================================================
+ * Copyright 2002 Sun Microsystems, Inc. ALL RIGHTS RESERVED.
+ *
+ * Portions of the attached software ("Contribution") are developed by 
+ * SUN MICROSYSTEMS, INC., and are contributed to the OpenSSL project.
+ *
+ * The Contribution is licensed pursuant to the Eric Young open source
+ * license provided above.
+ *
+ * The binary polynomial arithmetic software is originally written by 
+ * Sheueling Chang Shantz and Douglas Stebila of Sun Microsystems Laboratories.
+ *
+ */
 
 #ifndef HEADER_BN_H
 #define HEADER_BN_H
 
 #include <openssl/e_os2.h>
 #ifndef OPENSSL_NO_FP_API
-#include <stdio.h> 
+#include <stdio.h> /* FILE */
 #endif
 #include <openssl/ossl_typ.h>
 
@@ -19,15 +82,33 @@
 extern "C" {
 #endif
 
-
-
-
+/* These preprocessor symbols control various aspects of the bignum headers and
+ * library code. They're not defined by any "normal" configuration, as they are
+ * intended for development and testing purposes. NB: defining all three can be
+ * useful for debugging application code as well as openssl itself.
+ *
+ * BN_DEBUG - turn on various debugging alterations to the bignum code
+ * BN_DEBUG_RAND - uses random poisoning of unused words to trip up
+ * mismanagement of bignum internals. You must also define BN_DEBUG.
+ */
+/* #define BN_DEBUG */
+/* #define BN_DEBUG_RAND */
 
 #define BN_MUL_COMBA
 #define BN_SQR_COMBA
 #define BN_RECURSION
 
-
+/* This next option uses the C libraries (2 word)/(1 word) function.
+ * If it is not defined, I use my C version (which is slower).
+ * The reason for this flag is that when the particular C compiler
+ * library routine is used, and the library is linked with a different
+ * compiler, the library is missing.  This mostly happens when the
+ * library is built with gcc and then linked using normal cc.  This would
+ * be a common occurrence because gcc normally produces code that is
+ * 2 times faster than system compilers for the big number stuff.
+ * For machines with only one compiler (or shared libraries), this should
+ * be on.  Again this in only really a problem on machines
+ * using "long long's", are 32bit, and are not using my assembler code. */
 #if defined(OPENSSL_SYS_MSDOS) || defined(OPENSSL_SYS_WINDOWS) || \
     defined(OPENSSL_SYS_WIN32) || defined(linux)
 # ifndef BN_DIV2W
@@ -35,7 +116,9 @@ extern "C" {
 # endif
 #endif
 
-
+/* assuming long is 64bit - this is the DEC Alpha
+ * unsigned long long is only 64 bits :-(, don't define
+ * BN_LLONG for the DEC Alpha */
 #ifdef SIXTY_FOUR_BIT_LONG
 #define BN_ULLONG	unsigned long long
 #define BN_ULONG	unsigned long
@@ -56,7 +139,11 @@ extern "C" {
 #define BN_DEC_NUM	19
 #endif
 
-
+/* This is where the long long data type is 64 bits, but long is 32.
+ * For machines where there are 64bit registers, this is the mode to use.
+ * IRIX, on R4000 and above should use this mode, along with the relevant
+ * assembler code :-).  Do NOT define BN_LLONG.
+ */
 #ifdef SIXTY_FOUR_BIT
 #undef BN_LLONG
 #undef BN_ULLONG
@@ -92,7 +179,7 @@ extern "C" {
 #define BN_BITS2	32
 #define BN_BITS4	16
 #ifdef OPENSSL_SYS_WIN32
-
+/* VC++ doesn't like the LL suffix */
 #define BN_MASK		(0xffffffffffffffffL)
 #else
 #define BN_MASK		(0xffffffffffffffffLL)
@@ -158,20 +245,26 @@ extern "C" {
 
 #define BN_FLG_MALLOCED		0x01
 #define BN_FLG_STATIC_DATA	0x02
-#define BN_FLG_CONSTTIME	0x04 
+#define BN_FLG_CONSTTIME	0x04 /* avoid leaking exponent information through timing,
+                                      * BN_mod_exp_mont() will call BN_mod_exp_mont_consttime,
+                                      * BN_div() will call BN_div_no_branch,
+                                      * BN_mod_inverse() will call BN_mod_inverse_no_branch.
+                                      */
 
 #ifndef OPENSSL_NO_DEPRECATED
-#define BN_FLG_EXP_CONSTTIME BN_FLG_CONSTTIME 
-                                      
+#define BN_FLG_EXP_CONSTTIME BN_FLG_CONSTTIME /* deprecated name for the flag */
+                                      /* avoid leaking exponent information through timings
+                                      * (BN_mod_exp_mont() will call BN_mod_exp_mont_consttime) */
 #endif
 
 #ifndef OPENSSL_NO_DEPRECATED
-#define BN_FLG_FREE		0x8000	
+#define BN_FLG_FREE		0x8000	/* used for debuging */
 #endif
 #define BN_set_flags(b,n)	((b)->flags|=(n))
 #define BN_get_flags(b,n)	((b)->flags&(n))
 
-
+/* get a clone of a BIGNUM with changed flags, for *temporary* use only
+ * (the two BIGNUMs cannot not be used in parallel!) */
 #define BN_with_flags(dest,b,n)  ((dest)->d=(b)->d, \
                                   (dest)->top=(b)->top, \
                                   (dest)->dmax=(b)->dmax, \
@@ -181,10 +274,10 @@ extern "C" {
                                                  |  BN_FLG_STATIC_DATA \
                                                  |  (n)))
 
-
+/* Already declared in ossl_typ.h */
 #if 0
 typedef struct bignum_st BIGNUM;
-
+/* Used for temp variables (declaration hidden in bn_lcl.h) */
 typedef struct bignum_ctx BN_CTX;
 typedef struct bn_blinding_st BN_BLINDING;
 typedef struct bn_mont_ctx_st BN_MONT_CTX;
@@ -194,66 +287,74 @@ typedef struct bn_gencb_st BN_GENCB;
 
 struct bignum_st
 	{
-	BN_ULONG *d;	
-	int top;	
-	
-	int dmax;	
-	int neg;	
+	BN_ULONG *d;	/* Pointer to an array of 'BN_BITS2' bit chunks. */
+	int top;	/* Index of last used d +1. */
+	/* The next are internal book keeping for bn_expand. */
+	int dmax;	/* Size of the d array. */
+	int neg;	/* one if the number is negative */
 	int flags;
 	};
 
-
+/* Used for montgomery multiplication */
 struct bn_mont_ctx_st
 	{
-	int ri;        
-	BIGNUM RR;     
-	BIGNUM N;      
-	BIGNUM Ni;     
-	BN_ULONG n0;   
+	int ri;        /* number of bits in R */
+	BIGNUM RR;     /* used to convert to montgomery form */
+	BIGNUM N;      /* The modulus */
+	BIGNUM Ni;     /* R*(1/R mod N) - N*Ni = 1
+	                * (Ni is only stored for bignum algorithm) */
+	BN_ULONG n0;   /* least significant word of Ni */
 	int flags;
 	};
 
-
+/* Used for reciprocal division/mod functions
+ * It cannot be shared between threads
+ */
 struct bn_recp_ctx_st
 	{
-	BIGNUM N;	
-	BIGNUM Nr;	
+	BIGNUM N;	/* the divisor */
+	BIGNUM Nr;	/* the reciprocal */
 	int num_bits;
 	int shift;
 	int flags;
 	};
 
-
+/* Used for slow "generation" functions. */
 struct bn_gencb_st
 	{
-	unsigned int ver;	
-	void *arg;		
+	unsigned int ver;	/* To handle binary (in)compatibility */
+	void *arg;		/* callback-specific data */
 	union
 		{
-		
+		/* if(ver==1) - handles old style callbacks */
 		void (*cb_1)(int, int, void *);
-		
+		/* if(ver==2) - new callback style */
 		int (*cb_2)(int, int, BN_GENCB *);
 		} cb;
 	};
-
+/* Wrapper function to make using BN_GENCB easier,  */
 int BN_GENCB_call(BN_GENCB *cb, int a, int b);
-
+/* Macro to populate a BN_GENCB structure with an "old"-style callback */
 #define BN_GENCB_set_old(gencb, callback, cb_arg) { \
 		BN_GENCB *tmp_gencb = (gencb); \
 		tmp_gencb->ver = 1; \
 		tmp_gencb->arg = (cb_arg); \
 		tmp_gencb->cb.cb_1 = (callback); }
-
+/* Macro to populate a BN_GENCB structure with a "new"-style callback */
 #define BN_GENCB_set(gencb, callback, cb_arg) { \
 		BN_GENCB *tmp_gencb = (gencb); \
 		tmp_gencb->ver = 2; \
 		tmp_gencb->arg = (cb_arg); \
 		tmp_gencb->cb.cb_2 = (callback); }
 
-#define BN_prime_checks 0 
+#define BN_prime_checks 0 /* default: select number of iterations
+			     based on the size of the number */
 
-
+/* number of Miller-Rabin iterations for an error rate  of less than 2^-80
+ * for random 'b'-bit input, b >= 100 (taken from table 4.4 in the Handbook
+ * of Applied Cryptography [Menezes, van Oorschot, Vanstone; CRC Press 1996];
+ * original paper: Damgaard, Landrock, Pomerance: Average case error estimates
+ * for the strong probable prime test. -- Math. Comp. 61 (1993) 177-194) */
 #define BN_prime_checks_for_size(b) ((b) >= 1300 ?  2 : \
                                 (b) >=  850 ?  3 : \
                                 (b) >=  650 ?  4 : \
@@ -265,11 +366,11 @@ int BN_GENCB_call(BN_GENCB *cb, int a, int b);
                                 (b) >=  250 ? 12 : \
                                 (b) >=  200 ? 15 : \
                                 (b) >=  150 ? 18 : \
-                                 27)
+                                /* b >= 100 */ 27)
 
 #define BN_num_bytes(a)	((BN_num_bits(a)+7)/8)
 
-
+/* Note that BN_abs_is_word didn't work reliably for w == 0 until 0.9.8 */
 #define BN_abs_is_word(a,w) ((((a)->top == 1) && ((a)->d[0] == (BN_ULONG)(w))) || \
 				(((w) == 0) && ((a)->top == 0)))
 #define BN_is_zero(a)       ((a)->top == 0)
@@ -321,9 +422,15 @@ int	BN_uadd(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
 int	BN_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b);
 int	BN_mul(BIGNUM *r, const BIGNUM *a, const BIGNUM *b, BN_CTX *ctx);
 int	BN_sqr(BIGNUM *r, const BIGNUM *a,BN_CTX *ctx);
-
+/** BN_set_negative sets sign of a BIGNUM
+ * \param  b  pointer to the BIGNUM object
+ * \param  n  0 if the BIGNUM b should be positive and a value != 0 otherwise 
+ */
 void	BN_set_negative(BIGNUM *b, int n);
-
+/** BN_is_negative returns 1 if the BIGNUM is negative
+ * \param  a  pointer to the BIGNUM object
+ * \return 1 if a < 0 and 0 otherwise
+ */
 #define BN_is_negative(a) ((a)->neg != 0)
 
 int	BN_div(BIGNUM *dv, BIGNUM *rem, const BIGNUM *m, const BIGNUM *d,
@@ -393,13 +500,13 @@ char *	BN_bn2dec(const BIGNUM *a);
 int 	BN_hex2bn(BIGNUM **a, const char *str);
 int 	BN_dec2bn(BIGNUM **a, const char *str);
 int	BN_gcd(BIGNUM *r,const BIGNUM *a,const BIGNUM *b,BN_CTX *ctx);
-int	BN_kronecker(const BIGNUM *a,const BIGNUM *b,BN_CTX *ctx); 
+int	BN_kronecker(const BIGNUM *a,const BIGNUM *b,BN_CTX *ctx); /* returns -2 for error */
 BIGNUM *BN_mod_inverse(BIGNUM *ret,
 	const BIGNUM *a, const BIGNUM *n,BN_CTX *ctx);
 BIGNUM *BN_mod_sqrt(BIGNUM *ret,
 	const BIGNUM *a, const BIGNUM *n,BN_CTX *ctx);
 
-
+/* Deprecated versions */
 #ifndef OPENSSL_NO_DEPRECATED
 BIGNUM *BN_generate_prime(BIGNUM *ret,int bits,int safe,
 	const BIGNUM *add, const BIGNUM *rem,
@@ -410,9 +517,9 @@ int	BN_is_prime(const BIGNUM *p,int nchecks,
 int	BN_is_prime_fasttest(const BIGNUM *p,int nchecks,
 	void (*callback)(int,int,void *),BN_CTX *ctx,void *cb_arg,
 	int do_trial_division);
-#endif 
+#endif /* !defined(OPENSSL_NO_DEPRECATED) */
 
-
+/* Newer versions */
 int	BN_generate_prime_ex(BIGNUM *ret,int bits,int safe, const BIGNUM *add,
 		const BIGNUM *rem, BN_GENCB *cb);
 int	BN_is_prime_ex(const BIGNUM *p,int nchecks, BN_CTX *ctx, BN_GENCB *cb);
@@ -433,11 +540,11 @@ BN_MONT_CTX *BN_MONT_CTX_copy(BN_MONT_CTX *to,BN_MONT_CTX *from);
 BN_MONT_CTX *BN_MONT_CTX_set_locked(BN_MONT_CTX **pmont, int lock,
 					const BIGNUM *mod, BN_CTX *ctx);
 
-
+/* BN_BLINDING flags */
 #define	BN_BLINDING_NO_UPDATE	0x00000001
 #define	BN_BLINDING_NO_RECREATE	0x00000002
 
-BN_BLINDING *BN_BLINDING_new(const BIGNUM *A, const BIGNUM *Ai,  BIGNUM *mod);
+BN_BLINDING *BN_BLINDING_new(const BIGNUM *A, const BIGNUM *Ai, /* const */ BIGNUM *mod);
 void BN_BLINDING_free(BN_BLINDING *b);
 int BN_BLINDING_update(BN_BLINDING *b,BN_CTX *ctx);
 int BN_BLINDING_convert(BIGNUM *n, BN_BLINDING *b, BN_CTX *ctx);
@@ -449,14 +556,14 @@ void BN_BLINDING_set_thread_id(BN_BLINDING *, unsigned long);
 unsigned long BN_BLINDING_get_flags(const BN_BLINDING *);
 void BN_BLINDING_set_flags(BN_BLINDING *, unsigned long);
 BN_BLINDING *BN_BLINDING_create_param(BN_BLINDING *b,
-	const BIGNUM *e,  BIGNUM *m, BN_CTX *ctx,
+	const BIGNUM *e, /* const */ BIGNUM *m, BN_CTX *ctx,
 	int (*bn_mod_exp)(BIGNUM *r, const BIGNUM *a, const BIGNUM *p,
 			  const BIGNUM *m, BN_CTX *ctx, BN_MONT_CTX *m_ctx),
 	BN_MONT_CTX *m_ctx);
 
 #ifndef OPENSSL_NO_DEPRECATED
 void BN_set_params(int mul,int high,int low,int mont);
-int BN_get_params(int which); 
+int BN_get_params(int which); /* 0, mul, 1 high, 2 low, 3 mont */
 #endif
 
 void	BN_RECP_CTX_init(BN_RECP_CTX *recp);
@@ -470,47 +577,59 @@ int	BN_mod_exp_recp(BIGNUM *r, const BIGNUM *a, const BIGNUM *p,
 int	BN_div_recp(BIGNUM *dv, BIGNUM *rem, const BIGNUM *m,
 	BN_RECP_CTX *recp, BN_CTX *ctx);
 
+/* Functions for arithmetic over binary polynomials represented by BIGNUMs. 
+ *
+ * The BIGNUM::neg property of BIGNUMs representing binary polynomials is
+ * ignored.
+ *
+ * Note that input arguments are not const so that their bit arrays can
+ * be expanded to the appropriate size if needed.
+ */
 
-
-int	BN_GF2m_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b); 
+int	BN_GF2m_add(BIGNUM *r, const BIGNUM *a, const BIGNUM *b); /*r = a + b*/
 #define BN_GF2m_sub(r, a, b) BN_GF2m_add(r, a, b)
-int	BN_GF2m_mod(BIGNUM *r, const BIGNUM *a, const BIGNUM *p); 
+int	BN_GF2m_mod(BIGNUM *r, const BIGNUM *a, const BIGNUM *p); /*r=a mod p*/
 int	BN_GF2m_mod_mul(BIGNUM *r, const BIGNUM *a, const BIGNUM *b,
-	const BIGNUM *p, BN_CTX *ctx); 
+	const BIGNUM *p, BN_CTX *ctx); /* r = (a * b) mod p */
 int	BN_GF2m_mod_sqr(BIGNUM *r, const BIGNUM *a, const BIGNUM *p,
-	BN_CTX *ctx); 
+	BN_CTX *ctx); /* r = (a * a) mod p */
 int	BN_GF2m_mod_inv(BIGNUM *r, const BIGNUM *b, const BIGNUM *p,
-	BN_CTX *ctx); 
+	BN_CTX *ctx); /* r = (1 / b) mod p */
 int	BN_GF2m_mod_div(BIGNUM *r, const BIGNUM *a, const BIGNUM *b,
-	const BIGNUM *p, BN_CTX *ctx); 
+	const BIGNUM *p, BN_CTX *ctx); /* r = (a / b) mod p */
 int	BN_GF2m_mod_exp(BIGNUM *r, const BIGNUM *a, const BIGNUM *b,
-	const BIGNUM *p, BN_CTX *ctx); 
+	const BIGNUM *p, BN_CTX *ctx); /* r = (a ^ b) mod p */
 int	BN_GF2m_mod_sqrt(BIGNUM *r, const BIGNUM *a, const BIGNUM *p,
-	BN_CTX *ctx); 
+	BN_CTX *ctx); /* r = sqrt(a) mod p */
 int	BN_GF2m_mod_solve_quad(BIGNUM *r, const BIGNUM *a, const BIGNUM *p,
-	BN_CTX *ctx); 
+	BN_CTX *ctx); /* r^2 + r = a mod p */
 #define BN_GF2m_cmp(a, b) BN_ucmp((a), (b))
-
+/* Some functions allow for representation of the irreducible polynomials
+ * as an unsigned int[], say p.  The irreducible f(t) is then of the form:
+ *     t^p[0] + t^p[1] + ... + t^p[k]
+ * where m = p[0] > p[1] > ... > p[k] = 0.
+ */
 int	BN_GF2m_mod_arr(BIGNUM *r, const BIGNUM *a, const unsigned int p[]);
-	
+	/* r = a mod p */
 int	BN_GF2m_mod_mul_arr(BIGNUM *r, const BIGNUM *a, const BIGNUM *b,
-	const unsigned int p[], BN_CTX *ctx); 
+	const unsigned int p[], BN_CTX *ctx); /* r = (a * b) mod p */
 int	BN_GF2m_mod_sqr_arr(BIGNUM *r, const BIGNUM *a, const unsigned int p[],
-	BN_CTX *ctx); 
+	BN_CTX *ctx); /* r = (a * a) mod p */
 int	BN_GF2m_mod_inv_arr(BIGNUM *r, const BIGNUM *b, const unsigned int p[],
-	BN_CTX *ctx); 
+	BN_CTX *ctx); /* r = (1 / b) mod p */
 int	BN_GF2m_mod_div_arr(BIGNUM *r, const BIGNUM *a, const BIGNUM *b,
-	const unsigned int p[], BN_CTX *ctx); 
+	const unsigned int p[], BN_CTX *ctx); /* r = (a / b) mod p */
 int	BN_GF2m_mod_exp_arr(BIGNUM *r, const BIGNUM *a, const BIGNUM *b,
-	const unsigned int p[], BN_CTX *ctx); 
+	const unsigned int p[], BN_CTX *ctx); /* r = (a ^ b) mod p */
 int	BN_GF2m_mod_sqrt_arr(BIGNUM *r, const BIGNUM *a,
-	const unsigned int p[], BN_CTX *ctx); 
+	const unsigned int p[], BN_CTX *ctx); /* r = sqrt(a) mod p */
 int	BN_GF2m_mod_solve_quad_arr(BIGNUM *r, const BIGNUM *a,
-	const unsigned int p[], BN_CTX *ctx); 
+	const unsigned int p[], BN_CTX *ctx); /* r^2 + r = a mod p */
 int	BN_GF2m_poly2arr(const BIGNUM *a, unsigned int p[], int max);
 int	BN_GF2m_arr2poly(const unsigned int p[], BIGNUM *a);
 
-
+/* faster mod functions for the 'NIST primes' 
+ * 0 <= a < p^2 */
 int BN_nist_mod_192(BIGNUM *r, const BIGNUM *a, const BIGNUM *p, BN_CTX *ctx);
 int BN_nist_mod_224(BIGNUM *r, const BIGNUM *a, const BIGNUM *p, BN_CTX *ctx);
 int BN_nist_mod_256(BIGNUM *r, const BIGNUM *a, const BIGNUM *p, BN_CTX *ctx);
@@ -523,25 +642,51 @@ const BIGNUM *BN_get0_nist_prime_256(void);
 const BIGNUM *BN_get0_nist_prime_384(void);
 const BIGNUM *BN_get0_nist_prime_521(void);
 
-
+/* library internal functions */
 
 #define bn_expand(a,bits) ((((((bits+BN_BITS2-1))/BN_BITS2)) <= (a)->dmax)?\
 	(a):bn_expand2((a),(bits+BN_BITS2-1)/BN_BITS2))
 #define bn_wexpand(a,words) (((words) <= (a)->dmax)?(a):bn_expand2((a),(words)))
 BIGNUM *bn_expand2(BIGNUM *a, int words);
 #ifndef OPENSSL_NO_DEPRECATED
-BIGNUM *bn_dup_expand(const BIGNUM *a, int words); 
+BIGNUM *bn_dup_expand(const BIGNUM *a, int words); /* unused */
 #endif
 
-
+/* Bignum consistency macros
+ * There is one "API" macro, bn_fix_top(), for stripping leading zeroes from
+ * bignum data after direct manipulations on the data. There is also an
+ * "internal" macro, bn_check_top(), for verifying that there are no leading
+ * zeroes. Unfortunately, some auditing is required due to the fact that
+ * bn_fix_top() has become an overabused duct-tape because bignum data is
+ * occasionally passed around in an inconsistent state. So the following
+ * changes have been made to sort this out;
+ * - bn_fix_top()s implementation has been moved to bn_correct_top()
+ * - if BN_DEBUG isn't defined, bn_fix_top() maps to bn_correct_top(), and
+ *   bn_check_top() is as before.
+ * - if BN_DEBUG *is* defined;
+ *   - bn_check_top() tries to pollute unused words even if the bignum 'top' is
+ *     consistent. (ed: only if BN_DEBUG_RAND is defined)
+ *   - bn_fix_top() maps to bn_check_top() rather than "fixing" anything.
+ * The idea is to have debug builds flag up inconsistent bignums when they
+ * occur. If that occurs in a bn_fix_top(), we examine the code in question; if
+ * the use of bn_fix_top() was appropriate (ie. it follows directly after code
+ * that manipulates the bignum) it is converted to bn_correct_top(), and if it
+ * was not appropriate, we convert it permanently to bn_check_top() and track
+ * down the cause of the bug. Eventually, no internal code should be using the
+ * bn_fix_top() macro. External applications and libraries should try this with
+ * their own code too, both in terms of building against the openssl headers
+ * with BN_DEBUG defined *and* linking with a version of OpenSSL built with it
+ * defined. This not only improves external code, it provides more test
+ * coverage for openssl's own code.
+ */
 
 #ifdef BN_DEBUG
 
-
+/* We only need assert() when debugging */
 #include <assert.h>
 
 #ifdef BN_DEBUG_RAND
-
+/* To avoid "make update" cvs wars due to BN_DEBUG, use some tricks */
 #ifndef RAND_pseudo_bytes
 int RAND_pseudo_bytes(unsigned char *buf,int num);
 #define BN_DEBUG_TRIX
@@ -551,7 +696,9 @@ int RAND_pseudo_bytes(unsigned char *buf,int num);
 		const BIGNUM *_bnum1 = (a); \
 		if(_bnum1->top < _bnum1->dmax) { \
 			unsigned char _tmp_char; \
-			 \
+			/* We cast away const without the compiler knowing, any \
+			 * *genuinely* constant variables that aren't mutable \
+			 * wouldn't be constructed with top!=dmax. */ \
 			BN_ULONG *_not_const; \
 			memcpy(&_not_const, &_bnum1->d, sizeof(BN_ULONG*)); \
 			RAND_pseudo_bytes(&_tmp_char, 1); \
@@ -577,7 +724,7 @@ int RAND_pseudo_bytes(unsigned char *buf,int num);
 
 #define bn_fix_top(a)		bn_check_top(a)
 
-#else 
+#else /* !BN_DEBUG */
 
 #define bn_pollute(a)
 #define bn_check_top(a)
@@ -603,11 +750,11 @@ BN_ULONG bn_div_words(BN_ULONG h, BN_ULONG l, BN_ULONG d);
 BN_ULONG bn_add_words(BN_ULONG *rp, const BN_ULONG *ap, const BN_ULONG *bp,int num);
 BN_ULONG bn_sub_words(BN_ULONG *rp, const BN_ULONG *ap, const BN_ULONG *bp,int num);
 
-
+/* Primes from RFC 2409 */
 BIGNUM *get_rfc2409_prime_768(BIGNUM *bn);
 BIGNUM *get_rfc2409_prime_1024(BIGNUM *bn);
 
-
+/* Primes from RFC 3526 */
 BIGNUM *get_rfc3526_prime_1536(BIGNUM *bn);
 BIGNUM *get_rfc3526_prime_2048(BIGNUM *bn);
 BIGNUM *get_rfc3526_prime_3072(BIGNUM *bn);
@@ -617,13 +764,15 @@ BIGNUM *get_rfc3526_prime_8192(BIGNUM *bn);
 
 int BN_bntest_rand(BIGNUM *rnd, int bits, int top,int bottom);
 
-
-
+/* BEGIN ERROR CODES */
+/* The following lines are auto generated by the script mkerr.pl. Any changes
+ * made after this point may be overwritten when the script is next run.
+ */
 void ERR_load_BN_strings(void);
 
+/* Error codes for the BN functions. */
 
-
-
+/* Function codes. */
 #define BN_F_BNRAND					 127
 #define BN_F_BN_BLINDING_CONVERT_EX			 100
 #define BN_F_BN_BLINDING_CREATE_PARAM			 128
@@ -665,7 +814,7 @@ void ERR_load_BN_strings(void);
 #define BN_F_BN_RAND_RANGE				 122
 #define BN_F_BN_USUB					 115
 
-
+/* Reason codes. */
 #define BN_R_ARG2_LT_ARG3				 100
 #define BN_R_BAD_RECIPROCAL				 101
 #define BN_R_BIGNUM_TOO_LONG				 114

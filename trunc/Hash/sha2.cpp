@@ -1,16 +1,92 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+ ---------------------------------------------------------------------------
+ Copyright (c) 2002, Dr Brian Gladman <brg@gladman.me.uk>, Worcester, UK.
+ All rights reserved.
+
+ LICENSE TERMS
+
+ The free distribution and use of this software in both source and binary 
+ form is allowed (with or without changes) provided that:
+
+   1. distributions of this source code include the above copyright 
+      notice, this list of conditions and the following disclaimer;
+
+   2. distributions in binary form include the above copyright
+      notice, this list of conditions and the following disclaimer
+      in the documentation and/or other associated materials;
+
+   3. the copyright holder's name is not used to endorse products 
+      built using this software without specific written permission. 
+
+ ALTERNATIVELY, provided that this notice is retained in full, this product
+ may be distributed under the terms of the GNU General Public License (GPL),
+ in which case the provisions of the GPL apply INSTEAD OF those given above.
+ 
+ DISCLAIMER
+
+ This software is provided 'as is' with no explicit or implied warranties
+ in respect of its properties, including, but not limited to, correctness 
+ and/or fitness for purpose.
+ ---------------------------------------------------------------------------
+ Issue Date: 30/11/2002
+
+ This is a byte oriented version of SHA2 that operates on arrays of bytes
+ stored in memory. This code implements sha256, sha384 and sha512 but the
+ latter two functions rely on efficient 64-bit integer operations that 
+ may not be very efficient on 32-bit machines
+
+ The sha256 functions use a type 'sha256_ctx' to hold details of the 
+ current hash state and uses the following three calls:
+
+       void sha256_begin(sha256_ctx ctx[1])
+       void sha256_hash(const unsigned char data[], 
+                            unsigned long len, sha256_ctx ctx[1])
+       void sha256_end(unsigned char hval[], sha256_ctx ctx[1])
+
+ The first subroutine initialises a hash computation by setting up the 
+ context in the sha256_ctx context. The second subroutine hashes 8-bit 
+ bytes from array data[] into the hash state withinh sha256_ctx context, 
+ the number of bytes to be hashed being given by the the unsigned long 
+ integer len.  The third subroutine completes the hash calculation and 
+ places the resulting digest value in the array of 8-bit bytes hval[].
+
+ The sha384 and sha512 functions are similar and use the interfaces:
+
+       void sha384_begin(sha384_ctx ctx[1]);
+       void sha384_hash(const unsigned char data[], 
+                            unsigned long len, sha384_ctx ctx[1]);
+       void sha384_end(unsigned char hval[], sha384_ctx ctx[1]);
+
+       void sha512_begin(sha512_ctx ctx[1]);
+       void sha512_hash(const unsigned char data[], 
+                            unsigned long len, sha512_ctx ctx[1]);
+       void sha512_end(unsigned char hval[], sha512_ctx ctx[1]);
+
+ In addition there is a function sha2 that can be used to call all these
+ functions using a call with a hash length parameter as follows:
+
+       int sha2_begin(unsigned long len, sha2_ctx ctx[1]);
+       void sha2_hash(const unsigned char data[], 
+                            unsigned long len, sha2_ctx ctx[1]);
+       void sha2_end(unsigned char hval[], sha2_ctx ctx[1]);
+
+ My thanks to Erik Andersen <andersen@codepoet.org> for testing this code 
+ on big-endian systems and for his assistance with corrections
 */
 
-#define SHA_2           
+/* define the hash functions that you need          */
+
+#define SHA_2           /* for dynamic hash length  */
 #define SHA_256
 #define SHA_384
 #define SHA_512
 
-#include <string.h>     
-#include <stdlib.h>     
+#include <string.h>     /* for memcpy() etc.        */
+#include <stdlib.h>     /* for _lrotr with VC++     */
 
 #include "sha2.h"
+
+/*  1. PLATFORM SPECIFIC INCLUDES */
 
 #if defined(__GNU_LIBRARY__)
 #  include <byteswap.h>
@@ -39,8 +115,17 @@
 #  endif
 #endif
 
-#define SHA_LITTLE_ENDIAN   1234 
-#define SHA_BIG_ENDIAN      4321 
+/*  2. BYTE ORDER IN 32-BIT WORDS
+
+    To obtain the highest speed on processors with 32-bit words, this code 
+    needs to determine the order in which bytes are packed into such words.
+    The following block of code is an attempt to capture the most obvious 
+    ways in which various environemnts specify their endian definitions. 
+    It may well fail, in which case the definitions will need to be set by 
+    editing at the points marked **** EDIT HERE IF NECESSARY **** below.
+*/
+#define SHA_LITTLE_ENDIAN   1234 /* byte 0 is least significant (i386) */
+#define SHA_BIG_ENDIAN      4321 /* byte 0 is most significant (mc68k) */
 
 #if !defined(PLATFORM_BYTE_ORDER)
 #if defined(LITTLE_ENDIAN) || defined(BIG_ENDIAN)
@@ -71,9 +156,9 @@
 #  elif !defined(_LITTLE_ENDIAN) && defined(_BIG_ENDIAN)
 #    define PLATFORM_BYTE_ORDER SHA_BIG_ENDIAN
 #  endif
-#elif 0     
+#elif 0     /* **** EDIT HERE IF NECESSARY **** */
 #define PLATFORM_BYTE_ORDER SHA_LITTLE_ENDIAN
-#elif 0     
+#elif 0     /* **** EDIT HERE IF NECESSARY **** */
 #define PLATFORM_BYTE_ORDER SHA_BIG_ENDIAN
 #elif (('1234' >> 24) == '1')
 #  define PLATFORM_BYTE_ORDER SHA_LITTLE_ENDIAN
@@ -112,6 +197,8 @@
 #define	bsw_32(p,n)	
 #endif
 
+/* SHA256 mixing function definitions   */
+
 #define ch(x,y,z)   (((x) & (y)) ^ (~(x) & (z)))
 #define maj(x,y,z)  (((x) & (y)) ^ ((x) & (z)) ^ ((y) & (z)))
 
@@ -119,6 +206,10 @@
 #define s256_1(x) (rotr32((x),  6) ^ rotr32((x), 11) ^ rotr32((x), 25)) 
 #define g256_0(x) (rotr32((x),  7) ^ rotr32((x), 18) ^ ((x) >>  3)) 
 #define g256_1(x) (rotr32((x), 17) ^ rotr32((x), 19) ^ ((x) >> 10)) 
+
+/* rotated SHA256 round definition. Rather than swapping variables as in    */
+/* FIPS-180, different variables are 'rotated' on each round, returning     */
+/* to their starting positions every eight rounds                           */
 
 #define h2(i) ctx->wbuf[i & 15] += \
     g256_1(ctx->wbuf[(i + 14) & 15]) + ctx->wbuf[(i + 9) & 15] + g256_0(ctx->wbuf[(i + 1) & 15])
@@ -128,6 +219,8 @@
         + s256_1(v[(4 - i) & 7]) + ch(v[(4 - i) & 7], v[(5 - i) & 7], v[(6 - i) & 7]); \
     v[(3 - i) & 7] += v[(7 - i) & 7]; \
     v[(7 - i) & 7] += s256_0(v[(0 - i) & 7]) + maj(v[(0 - i) & 7], v[(1 - i) & 7], v[(2 - i) & 7])
+
+/* SHA256 mixing data   */
 
 const sha2_32t k256[64] =
 {   n_u32(428a2f98), n_u32(71374491), n_u32(b5c0fbcf), n_u32(e9b5dba5), 
@@ -148,6 +241,8 @@ const sha2_32t k256[64] =
     n_u32(90befffa), n_u32(a4506ceb), n_u32(bef9a3f7), n_u32(c67178f2),
 };
 
+/* SHA256 initialisation data */
+
 const sha2_32t i256[8] =
 {
     n_u32(6a09e667), n_u32(bb67ae85), n_u32(3c6ef372), n_u32(a54ff53a),
@@ -159,6 +254,13 @@ void sha256_begin(sha256_ctx ctx[1])
     ctx->count[0] = ctx->count[1] = 0;
     memcpy(ctx->hash, i256, 8 * sizeof(sha2_32t));
 }
+
+/* Compile 64 bytes of hash data into SHA256 digest value   */
+/* NOTE: this routine assumes that the byte order in the    */
+/* ctx->wbuf[] at this point is in such an order that low   */
+/* address bytes in the ORIGINAL byte stream placed in this */
+/* buffer will now go to the high end of words on BOTH big  */
+/* and little endian systems                                */
 
 void sha256_compile(sha256_ctx ctx[1])
 {   sha2_32t	v[8], j;
@@ -177,6 +279,9 @@ void sha256_compile(sha256_ctx ctx[1])
     ctx->hash[4] += v[4]; ctx->hash[5] += v[5]; ctx->hash[6] += v[6]; ctx->hash[7] += v[7];
 }
 
+/* SHA256 hash data in an array of bytes into hash buffer   */
+/* and call the hash_compile function as required.          */
+
 void sha256_hash(const unsigned char data[], unsigned long len, sha256_ctx ctx[1])
 {   sha2_32t pos = (sha2_32t)(ctx->count[0] & SHA256_MASK), 
              space = SHA256_BLOCK_SIZE - pos;
@@ -185,7 +290,7 @@ void sha256_hash(const unsigned char data[], unsigned long len, sha256_ctx ctx[1
     if((ctx->count[0] += len) < len)
         ++(ctx->count[1]);
 
-    while(len >= space)     
+    while(len >= space)     /* tranfer whole blocks while possible  */
     {
         memcpy(((unsigned char*)ctx->wbuf) + pos, sp, space);
         sp += space; len -= space; space = SHA256_BLOCK_SIZE; pos = 0; 
@@ -195,6 +300,8 @@ void sha256_hash(const unsigned char data[], unsigned long len, sha256_ctx ctx[1
 
     memcpy(((unsigned char*)ctx->wbuf) + pos, sp, len);
 }
+
+/* SHA256 Final padding and digest calculation  */
 
 static sha2_32t  m1[4] =
 {
@@ -210,41 +317,41 @@ void sha256_end(unsigned char hval[], sha256_ctx ctx[1])
 {   sha2_32t    i = (sha2_32t)(ctx->count[0] & SHA256_MASK);
 
 	bsw_32(ctx->wbuf, (i + 3) >> 2)
+    /* bytes in the buffer are now in an order in which references  */
+    /* to 32-bit words will put bytes with lower addresses into the */
+    /* top of 32 bit words on BOTH big and little endian machines   */
     
-    
-    
-    
-    
-    
+    /* we now need to mask valid bytes and add the padding which is */
+    /* a single 1 bit and as many zero bits as necessary.           */
     ctx->wbuf[i >> 2] = (ctx->wbuf[i >> 2] & m1[i & 3]) | b1[i & 3];
 
-    
-    
-    
+    /* we need 9 or more empty positions, one for the padding byte  */
+    /* (above) and eight for the length count.  If there is not     */
+    /* enough space pad and empty the buffer                        */
     if(i > SHA256_BLOCK_SIZE - 9)
     {
         if(i < 60) ctx->wbuf[15] = 0;
         sha256_compile(ctx);
         i = 0;
     }
-    else    
+    else    /* compute a word index for the empty buffer positions  */
         i = (i >> 2) + 1;
 
-    while(i < 14)  
+    while(i < 14) /* and zero pad all but last two positions      */ 
         ctx->wbuf[i++] = 0;
     
-    
-    
-    
-    
+    /* the following 32-bit length fields are assembled in the      */
+    /* wrong byte order on little endian machines but this is       */
+    /* corrected later since they are only ever used as 32-bit      */
+    /* word values.                                                 */
 
     ctx->wbuf[14] = (ctx->count[1] << 3) | (ctx->count[0] >> 29);
     ctx->wbuf[15] = ctx->count[0] << 3;
 
     sha256_compile(ctx);
 
-    
-    
+    /* extract the hash value as bytes in case the hash buffer is   */
+    /* mislaigned for 32-bit words                                  */
     for(i = 0; i < SHA256_DIGEST_SIZE; ++i)
         hval[i] = (unsigned char)(ctx->hash[i >> 2] >> 8 * (~i & 3));
 }
@@ -273,10 +380,16 @@ void sha256(unsigned char hval[], const unsigned char data[], unsigned long len)
 #define	bsw_64(p,n)	
 #endif
 
+/* SHA512 mixing function definitions   */
+
 #define s512_0(x) (rotr64((x), 28) ^ rotr64((x), 34) ^ rotr64((x), 39)) 
 #define s512_1(x) (rotr64((x), 14) ^ rotr64((x), 18) ^ rotr64((x), 41)) 
 #define g512_0(x) (rotr64((x),  1) ^ rotr64((x),  8) ^ ((x) >>  7)) 
 #define g512_1(x) (rotr64((x), 19) ^ rotr64((x), 61) ^ ((x) >>  6)) 
+
+/* rotated SHA512 round definition. Rather than swapping variables as in    */
+/* FIPS-180, different variables are 'rotated' on each round, returning     */
+/* to their starting positions every eight rounds                           */
 
 #define h5(i) ctx->wbuf[i & 15] += \
     g512_1(ctx->wbuf[(i + 14) & 15]) + ctx->wbuf[(i + 9) & 15] + g512_0(ctx->wbuf[(i + 1) & 15])
@@ -286,6 +399,8 @@ void sha256(unsigned char hval[], const unsigned char data[], unsigned long len)
         + s512_1(v[(4 - i) & 7]) + ch(v[(4 - i) & 7], v[(5 - i) & 7], v[(6 - i) & 7]); \
     v[(3 - i) & 7] += v[(7 - i) & 7]; \
     v[(7 - i) & 7] += s512_0(v[(0 - i) & 7]) + maj(v[(0 - i) & 7], v[(1 - i) & 7], v[(2 - i) & 7])
+
+/* SHA384/SHA512 mixing data    */
 
 const sha2_64t  k512[80] = 
 {
@@ -331,6 +446,8 @@ const sha2_64t  k512[80] =
     n_u64(5fcb6fab3ad6faec), n_u64(6c44198c4a475817)
 };
 
+/* Compile 64 bytes of hash data into SHA384/SHA512 digest value  */
+
 void sha512_compile(sha512_ctx ctx[1])
 {   sha2_64t    v[8];
     sha2_32t    j;
@@ -349,6 +466,13 @@ void sha512_compile(sha512_ctx ctx[1])
     ctx->hash[4] += v[4]; ctx->hash[5] += v[5]; ctx->hash[6] += v[6]; ctx->hash[7] += v[7];
 }
 
+/* Compile 128 bytes of hash data into SHA256 digest value  */
+/* NOTE: this routine assumes that the byte order in the    */
+/* ctx->wbuf[] at this point is in such an order that low   */
+/* address bytes in the ORIGINAL byte stream placed in this */
+/* buffer will now go to the high end of words on BOTH big  */
+/* and little endian systems                                */
+
 void sha512_hash(const unsigned char data[], unsigned long len, sha512_ctx ctx[1])
 {   sha2_32t pos = (sha2_32t)(ctx->count[0] & SHA512_MASK), 
              space = SHA512_BLOCK_SIZE - pos;
@@ -357,7 +481,7 @@ void sha512_hash(const unsigned char data[], unsigned long len, sha512_ctx ctx[1
     if((ctx->count[0] += len) < len)
         ++(ctx->count[1]);
 
-    while(len >= space)     
+    while(len >= space)     /* tranfer whole blocks while possible  */
     {
         memcpy(((unsigned char*)ctx->wbuf) + pos, sp, space);
         sp += space; len -= space; space = SHA512_BLOCK_SIZE; pos = 0; 
@@ -367,6 +491,8 @@ void sha512_hash(const unsigned char data[], unsigned long len, sha512_ctx ctx[1
 
     memcpy(((unsigned char*)ctx->wbuf) + pos, sp, len);
 }
+
+/* SHA384/512 Final padding and digest calculation  */
 
 static sha2_64t  m2[8] =
 {
@@ -389,17 +515,17 @@ static void sha_end(unsigned char hval[], sha512_ctx ctx[1], const unsigned int 
 
 	bsw_64(ctx->wbuf, (i + 7) >> 3);
 
+    /* bytes in the buffer are now in an order in which references  */
+    /* to 64-bit words will put bytes with lower addresses into the */
+    /* top of 64 bit words on BOTH big and little endian machines   */
     
-    
-    
-    
-    
-    
+    /* we now need to mask valid bytes and add the padding which is */
+    /* a single 1 bit and as many zero bits as necessary.           */
     ctx->wbuf[i >> 3] = (ctx->wbuf[i >> 3] & m2[i & 7]) | b2[i & 7];
 
-    
-    
-    
+    /* we need 17 or more empty byte positions, one for the padding */
+    /* byte (above) and sixteen for the length count.  If there is  */
+    /* not enough space pad and empty the buffer                    */
     if(i > SHA512_BLOCK_SIZE - 17)
     {
         if(i < 120) ctx->wbuf[15] = 0;
@@ -412,18 +538,18 @@ static void sha_end(unsigned char hval[], sha512_ctx ctx[1], const unsigned int 
     while(i < 14)
         ctx->wbuf[i++] = 0;
     
-    
-    
-    
-    
+    /* the following 64-bit length fields are assembled in the      */
+    /* wrong byte order on little endian machines but this is       */
+    /* corrected later since they are only ever used as 64-bit      */
+    /* word values.                                                 */
 
     ctx->wbuf[14] = (ctx->count[1] << 3) | (ctx->count[0] >> 61);
     ctx->wbuf[15] = ctx->count[0] << 3;
 
     sha512_compile(ctx);
 
-    
-    
+    /* extract the hash value as bytes in case the hash buffer is   */
+    /* misaligned for 32-bit words                                  */
     for(i = 0; i < hlen; ++i)
         hval[i] = (unsigned char)(ctx->hash[i >> 3] >> 8 * (~i & 7));
 }
@@ -431,6 +557,8 @@ static void sha_end(unsigned char hval[], sha512_ctx ctx[1], const unsigned int 
 #endif
 
 #if defined(SHA_2) || defined(SHA_384)
+
+/* SHA384 initialisation data   */
 
 const sha2_64t  i384[80] = 
 {
@@ -460,6 +588,8 @@ void sha384(unsigned char hval[], const unsigned char data[], unsigned long len)
 #endif
 
 #if defined(SHA_2) || defined(SHA_512)
+
+/* SHA512 initialisation data   */
 
 const sha2_64t  i512[80] = 
 {
@@ -493,6 +623,8 @@ void sha512(unsigned char hval[], const unsigned char data[], unsigned long len)
 #define CTX_256(x)  ((x)->uu->ctx256)
 #define CTX_384(x)  ((x)->uu->ctx512)
 #define CTX_512(x)  ((x)->uu->ctx512)
+
+/* SHA2 initialisation */
 
 int sha2_begin(unsigned long len, sha2_ctx ctx[1])
 {   unsigned long   l = len;

@@ -1,8 +1,23 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+/**
+ * LPC utility code
+ * Copyright (c) 2006  Justin Ruggles <justin.ruggles@gmail.com>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_LPC_H
 #define AVCODEC_LPC_H
@@ -21,7 +36,9 @@
 #define MAX_LPC_ORDER       32
 
 
-
+/**
+ * Calculate LPC coefficients for multiple orders
+ */
 int ff_lpc_calc_coefs(DSPContext *s,
                       const int32_t *samples, int blocksize, int min_order,
                       int max_order, int precision,
@@ -37,7 +54,10 @@ void ff_lpc_compute_autocorr(const int32_t *data, int len, int lag,
 #define LPC_TYPE float
 #endif
 
-
+/**
+ * Levinson-Durbin recursion.
+ * Produces LPC coefficients from autocorrelation data.
+ */
 static inline int compute_lpc_coefs(const LPC_TYPE *autoc, int max_order,
                                     LPC_TYPE *lpc, int lpc_stride, int fail,
                                     int normalize)
@@ -82,4 +102,4 @@ static inline int compute_lpc_coefs(const LPC_TYPE *autoc, int max_order,
     return 0;
 }
 
-#endif 
+#endif /* AVCODEC_LPC_H */

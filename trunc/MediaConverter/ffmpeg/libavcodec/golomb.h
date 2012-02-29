@@ -1,10 +1,31 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * exp golomb vlc stuff
+ * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
+ * Copyright (c) 2004 Alex Beregszaszi
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * @brief
+ *     exp golomb vlc stuff
+ * @author Michael Niedermayer <michaelni@gmx.at> and Alex Beregszaszi
+ */
 
 #ifndef AVCODEC_GOLOMB_H
 #define AVCODEC_GOLOMB_H
@@ -26,7 +47,9 @@ extern const  int8_t ff_interleaved_se_golomb_vlc_code[256];
 extern const uint8_t ff_interleaved_dirac_golomb_vlc_code[256];
 
 
- 
+ /**
+ * read unsigned exp golomb code.
+ */
 static inline int get_ue_golomb(GetBitContext *gb){
     unsigned int buf;
     int log;
@@ -52,7 +75,10 @@ static inline int get_ue_golomb(GetBitContext *gb){
     }
 }
 
- 
+ /**
+ * read unsigned exp golomb code, constraint to a max of 31.
+ * the return value is undefined if the stored value exceeds 31.
+ */
 static inline int get_ue_golomb_31(GetBitContext *gb){
     unsigned int buf;
 
@@ -102,7 +128,9 @@ static inline int svq3_get_ue_golomb(GetBitContext *gb){
     }
 }
 
-
+/**
+ * read unsigned truncated exp golomb code.
+ */
 static inline int get_te0_golomb(GetBitContext *gb, int range){
     assert(range >= 1);
 
@@ -111,7 +139,9 @@ static inline int get_te0_golomb(GetBitContext *gb, int range){
     else              return get_ue_golomb(gb);
 }
 
-
+/**
+ * read unsigned truncated exp golomb code.
+ */
 static inline int get_te_golomb(GetBitContext *gb, int range){
     assert(range >= 1);
 
@@ -120,7 +150,9 @@ static inline int get_te_golomb(GetBitContext *gb, int range){
 }
 
 
-
+/**
+ * read signed exp golomb code.
+ */
 static inline int get_se_golomb(GetBitContext *gb){
     unsigned int buf;
     int log;
@@ -200,7 +232,9 @@ static inline int dirac_get_se_golomb(GetBitContext *gb){
     return ret;
 }
 
-
+/**
+ * read unsigned golomb rice code (ffv1).
+ */
 static inline int get_ur_golomb(GetBitContext *gb, int k, int limit, int esc_len){
     unsigned int buf;
     int log;
@@ -231,7 +265,9 @@ static inline int get_ur_golomb(GetBitContext *gb, int k, int limit, int esc_len
     }
 }
 
-
+/**
+ * read unsigned golomb rice code (jpegls).
+ */
 static inline int get_ur_golomb_jpegls(GetBitContext *gb, int k, int limit, int esc_len){
     unsigned int buf;
     int log;
@@ -278,7 +314,9 @@ static inline int get_ur_golomb_jpegls(GetBitContext *gb, int k, int limit, int 
     }
 }
 
-
+/**
+ * read signed golomb rice code (ffv1).
+ */
 static inline int get_sr_golomb(GetBitContext *gb, int k, int limit, int esc_len){
     int v= get_ur_golomb(gb, k, limit, esc_len);
 
@@ -286,21 +324,27 @@ static inline int get_sr_golomb(GetBitContext *gb, int k, int limit, int esc_len
     if (v&1) return v>>1;
     else return -(v>>1);
 
-
+//    return (v>>1) ^ -(v&1);
 }
 
-
+/**
+ * read signed golomb rice code (flac).
+ */
 static inline int get_sr_golomb_flac(GetBitContext *gb, int k, int limit, int esc_len){
     int v= get_ur_golomb_jpegls(gb, k, limit, esc_len);
     return (v>>1) ^ -(v&1);
 }
 
-
+/**
+ * read unsigned golomb rice code (shorten).
+ */
 static inline unsigned int get_ur_golomb_shorten(GetBitContext *gb, int k){
         return get_ur_golomb_jpegls(gb, k, INT_MAX, 0);
 }
 
-
+/**
+ * read signed golomb rice code (shorten).
+ */
 static inline int get_sr_golomb_shorten(GetBitContext* gb, int k)
 {
     int uvar = get_ur_golomb_jpegls(gb, k + 1, INT_MAX, 0);
@@ -363,7 +407,9 @@ static inline int get_te(GetBitContext *s, int r, char *file, const char *func, 
 
 #endif
 
-
+/**
+ * write unsigned exp golomb code.
+ */
 static inline void set_ue_golomb(PutBitContext *pb, int i){
     int e;
 
@@ -384,7 +430,9 @@ static inline void set_ue_golomb(PutBitContext *pb, int i){
     }
 }
 
-
+/**
+ * write truncated unsigned exp golomb code.
+ */
 static inline void set_te_golomb(PutBitContext *pb, int i, int range){
     assert(range >= 1);
     assert(i<=range);
@@ -393,16 +441,18 @@ static inline void set_te_golomb(PutBitContext *pb, int i, int range){
     else         set_ue_golomb(pb, i);
 }
 
-
+/**
+ * write signed exp golomb code. 16 bits at most.
+ */
 static inline void set_se_golomb(PutBitContext *pb, int i){
-
-
+//    if (i>32767 || i<-32767)
+//        av_log(NULL,AV_LOG_ERROR,"value out of range %d\n", i);
 #if 0
     if(i<=0) i= -2*i;
     else     i=  2*i-1;
 #elif 1
     i= 2*i-1;
-    if(i<0) i^= -1; 
+    if(i<0) i^= -1; //FIXME check if gcc does the right thing
 #else
     i= 2*i-1;
     i^= (i>>31);
@@ -410,7 +460,9 @@ static inline void set_se_golomb(PutBitContext *pb, int i){
     set_ue_golomb(pb, i);
 }
 
-
+/**
+ * write unsigned golomb rice code (ffv1).
+ */
 static inline void set_ur_golomb(PutBitContext *pb, int i, int k, int limit, int esc_len){
     int e;
 
@@ -424,7 +476,9 @@ static inline void set_ur_golomb(PutBitContext *pb, int i, int k, int limit, int
     }
 }
 
-
+/**
+ * write unsigned golomb rice code (jpegls).
+ */
 static inline void set_ur_golomb_jpegls(PutBitContext *pb, int i, int k, int limit, int esc_len){
     int e;
 
@@ -449,7 +503,9 @@ static inline void set_ur_golomb_jpegls(PutBitContext *pb, int i, int k, int lim
     }
 }
 
-
+/**
+ * write signed golomb rice code (ffv1).
+ */
 static inline void set_sr_golomb(PutBitContext *pb, int i, int k, int limit, int esc_len){
     int v;
 
@@ -459,7 +515,9 @@ static inline void set_sr_golomb(PutBitContext *pb, int i, int k, int limit, int
     set_ur_golomb(pb, v, k, limit, esc_len);
 }
 
-
+/**
+ * write signed golomb rice code (flac).
+ */
 static inline void set_sr_golomb_flac(PutBitContext *pb, int i, int k, int limit, int esc_len){
     int v;
 
@@ -469,4 +527,4 @@ static inline void set_sr_golomb_flac(PutBitContext *pb, int i, int k, int limit
     set_ur_golomb_jpegls(pb, v, k, limit, esc_len);
 }
 
-#endif 
+#endif /* AVCODEC_GOLOMB_H */

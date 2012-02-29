@@ -1,8 +1,24 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Header file for hardcoded motionpixels RGB to YUV table
+ *
+ * Copyright (c) 2009 Reimar Döffinger <Reimar.Doeffinger@gmx.de>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef MOTIONPIXELS_TABLEGEN_H
 #define MOTIONPIXELS_TABLEGEN_H
@@ -70,6 +86,6 @@ static void motionpixels_tableinit(void)
     if (!mp_rgb_yuv_table[0].u)
         mp_build_rgb_yuv_table(mp_rgb_yuv_table);
 }
-#endif 
+#endif /* CONFIG_HARDCODED_TABLES */
 
-#endif 
+#endif /* MOTIONPIXELS_TABLEGEN_H */

@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// FileStreams.cpp
 
 #include "StdAfx.h"
 
@@ -14,7 +12,7 @@
 
 static inline HRESULT ConvertBoolToHRESULT(bool result)
 {
-  
+  // return result ? S_OK: E_FAIL;
   #ifdef _WIN32
   return result ? S_OK: (::GetLastError());
   #else
@@ -125,6 +123,10 @@ STDMETHODIMP CInFileStream::GetSize(UInt64 *size)
   return ConvertBoolToHRESULT(File.GetLength(*size));
 }
 
+
+//////////////////////////
+// COutFileStream
+
 bool COutFileStream::Create(LPCTSTR fileName, bool createAlways)
 {
   return File.Create(fileName, createAlways);
@@ -214,8 +216,8 @@ STDMETHODIMP CStdOutFileStream::Write(const void *data, UInt32 size, UInt32 *pro
   BOOL res = TRUE;
   if (size > 0)
   {
-    
-    
+    // Seems that Windows doesn't like big amounts writing to stdout.
+    // So we limit portions by 32KB.
     UInt32 sizeTemp = (1 << 15); 
     if (sizeTemp > size)
       sizeTemp = size;

@@ -1,10 +1,29 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * copyright (c) 2000,2001 Fabrice Bellard
+ * H263+ support
+ * copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * mpeg4 tables.
+ */
 
 #ifndef AVCODEC_MPEG4DATA_H
 #define AVCODEC_MPEG4DATA_H
@@ -12,7 +31,7 @@
 #include <stdint.h>
 #include "mpegvideo.h"
 
-
+/* dc encoding for mpeg4 */
 const uint8_t ff_mpeg4_DCtab_lum[13][2] =
 {
     {3,3}, {3,2}, {2,2}, {2,3}, {1,3}, {1,4}, {1,5}, {1,6}, {1,7},
@@ -95,7 +114,7 @@ RLTable ff_mpeg4_rl_intra = {
     ff_mpeg4_intra_level,
 };
 
-
+/* Note this is identical to the intra rvlc except that it is reordered. */
 const uint16_t inter_rvlc[170][2]={
 {0x0006,  3},{0x0001,  4},{0x0004,  5},{0x001C,  7},
 {0x003C,  8},{0x003D,  8},{0x007C,  9},{0x00FC, 10},
@@ -314,7 +333,7 @@ const uint8_t mb_type_b_tab[4][2] = {
  {1, 1}, {1, 2}, {1, 3}, {1, 4},
 };
 
-
+/* these matrixes will be permuted for the idct */
 const int16_t ff_mpeg4_default_intra_matrix[64] = {
   8, 17, 18, 19, 21, 23, 25, 27,
  17, 18, 19, 21, 23, 25, 27, 28,
@@ -338,11 +357,11 @@ const int16_t ff_mpeg4_default_non_intra_matrix[64] = {
 };
 
 const uint8_t ff_mpeg4_y_dc_scale_table[32]={
-
+//  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
     0, 8, 8, 8, 8,10,12,14,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,34,36,38,40,42,44,46
 };
 const uint8_t ff_mpeg4_c_dc_scale_table[32]={
-
+//  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
     0, 8, 8, 8, 8, 9, 9,10,10,11,11,12,12,13,13,14,14,15,15,16,16,17,17,18,18,19,20,21,22,23,24,25
 };
 
@@ -354,4 +373,4 @@ const uint8_t mpeg4_dc_threshold[8]={
     99, 13, 15, 17, 19, 21, 23, 0
 };
 
-#endif 
+#endif /* AVCODEC_MPEG4DATA_H */

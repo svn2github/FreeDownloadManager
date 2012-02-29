@@ -1,10 +1,11 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+    /* inffixed.h -- table for decoding fixed codes
+     * Generated automatically by makefixed().
+     */
 
-    
-
-    
+    /* WARNING: this file should *not* be used by applications. It
+       is part of the implementation of the compression library and
+       is subject to change. Applications should only use zlib.h.
+     */
 
     static const code lenfix[512] = {
         {96,7,0},{0,8,80},{0,8,16},{20,8,115},{18,7,31},{0,8,112},{0,8,48},

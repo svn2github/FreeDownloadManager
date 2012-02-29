@@ -1,7 +1,17 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+/* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
+
+/* File created by MIDL compiler version 5.01.0164 */
+/* at Thu May 26 02:50:05 2005
+ */
+/* Compiler settings for D:\DOCUME~1\aler\LOCALS~1\Temp\IDL1E5.tmp:
+    Os (OptLev=s), W1, Zp8, env=Win32, ms_ext, c_ext
+    error checks: allocation ref bounds_check enum stub_data 
+*/
+//@@MIDL_FILE_HEADING(  )
+
+
+/* verify that the <rpcndr.h> version is high enough to compile this file*/
 #ifndef __REQUIRED_RPCNDR_H_VERSION__
 #define __REQUIRED_RPCNDR_H_VERSION__ 440
 #endif
@@ -16,37 +26,43 @@
 extern "C"{
 #endif 
 
- 
+/* Forward Declarations */ 
 
 #ifndef __IShockwaveFlash_FWD_DEFINED__
 #define __IShockwaveFlash_FWD_DEFINED__
 typedef interface IShockwaveFlash IShockwaveFlash;
-#endif 	
+#endif 	/* __IShockwaveFlash_FWD_DEFINED__ */
+
 
 #ifndef ___IShockwaveFlashEvents_FWD_DEFINED__
 #define ___IShockwaveFlashEvents_FWD_DEFINED__
 typedef interface _IShockwaveFlashEvents _IShockwaveFlashEvents;
-#endif 	
+#endif 	/* ___IShockwaveFlashEvents_FWD_DEFINED__ */
+
 
 #ifndef __IFlashFactory_FWD_DEFINED__
 #define __IFlashFactory_FWD_DEFINED__
 typedef interface IFlashFactory IFlashFactory;
-#endif 	
+#endif 	/* __IFlashFactory_FWD_DEFINED__ */
+
 
 #ifndef __IDispatchEx_FWD_DEFINED__
 #define __IDispatchEx_FWD_DEFINED__
 typedef interface IDispatchEx IDispatchEx;
-#endif 	
+#endif 	/* __IDispatchEx_FWD_DEFINED__ */
+
 
 #ifndef __IFlashObjectInterface_FWD_DEFINED__
 #define __IFlashObjectInterface_FWD_DEFINED__
 typedef interface IFlashObjectInterface IFlashObjectInterface;
-#endif 	
+#endif 	/* __IFlashObjectInterface_FWD_DEFINED__ */
+
 
 #ifndef __IServiceProvider_FWD_DEFINED__
 #define __IServiceProvider_FWD_DEFINED__
 typedef interface IServiceProvider IServiceProvider;
-#endif 	
+#endif 	/* __IServiceProvider_FWD_DEFINED__ */
+
 
 #ifndef __ShockwaveFlash_FWD_DEFINED__
 #define __ShockwaveFlash_FWD_DEFINED__
@@ -55,9 +71,10 @@ typedef interface IServiceProvider IServiceProvider;
 typedef class ShockwaveFlash ShockwaveFlash;
 #else
 typedef struct ShockwaveFlash ShockwaveFlash;
-#endif 
+#endif /* __cplusplus */
 
-#endif 	
+#endif 	/* __ShockwaveFlash_FWD_DEFINED__ */
+
 
 #ifndef __FlashProp_FWD_DEFINED__
 #define __FlashProp_FWD_DEFINED__
@@ -66,9 +83,10 @@ typedef struct ShockwaveFlash ShockwaveFlash;
 typedef class FlashProp FlashProp;
 #else
 typedef struct FlashProp FlashProp;
-#endif 
+#endif /* __cplusplus */
 
-#endif 	
+#endif 	/* __FlashProp_FWD_DEFINED__ */
+
 
 #ifndef __FlashObjectInterface_FWD_DEFINED__
 #define __FlashObjectInterface_FWD_DEFINED__
@@ -77,24 +95,36 @@ typedef struct FlashProp FlashProp;
 typedef class FlashObjectInterface FlashObjectInterface;
 #else
 typedef struct FlashObjectInterface FlashObjectInterface;
-#endif 
+#endif /* __cplusplus */
 
-#endif 	
+#endif 	/* __FlashObjectInterface_FWD_DEFINED__ */
+
 
 void __RPC_FAR * __RPC_USER MIDL_user_allocate(size_t);
 void __RPC_USER MIDL_user_free( void __RPC_FAR * ); 
 
+
 #ifndef __ShockwaveFlashObjects_LIBRARY_DEFINED__
 #define __ShockwaveFlashObjects_LIBRARY_DEFINED__
 
- 
+/* library ShockwaveFlashObjects */
+/* [helpstring][version][uuid] */ 
+
+
+
+
+
+
+
 
 EXTERN_C const IID LIBID_ShockwaveFlashObjects;
 
 #ifndef __IShockwaveFlash_INTERFACE_DEFINED__
 #define __IShockwaveFlash_INTERFACE_DEFINED__
 
- 
+/* interface IShockwaveFlash */
+/* [object][oleautomation][dual][helpstring][uuid] */ 
+
 
 EXTERN_C const IID IID_IShockwaveFlash;
 
@@ -104,236 +134,236 @@ EXTERN_C const IID IID_IShockwaveFlash;
     IShockwaveFlash : public IDispatch
     {
     public:
-        virtual  HRESULT STDMETHODCALLTYPE get_ReadyState( 
-             long __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_ReadyState( 
+            /* [retval][out] */ long __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_TotalFrames( 
-             long __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_TotalFrames( 
+            /* [retval][out] */ long __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_Playing( 
-             VARIANT_BOOL __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_Playing( 
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_Playing( 
-             VARIANT_BOOL pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_Playing( 
+            /* [in] */ VARIANT_BOOL pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_Quality( 
-             int __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_Quality( 
+            /* [retval][out] */ int __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_Quality( 
-             int pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_Quality( 
+            /* [in] */ int pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_ScaleMode( 
-             int __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_ScaleMode( 
+            /* [retval][out] */ int __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_ScaleMode( 
-             int pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_ScaleMode( 
+            /* [in] */ int pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_AlignMode( 
-             int __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_AlignMode( 
+            /* [retval][out] */ int __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_AlignMode( 
-             int pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_AlignMode( 
+            /* [in] */ int pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_BackgroundColor( 
-             long __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_BackgroundColor( 
+            /* [retval][out] */ long __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_BackgroundColor( 
-             long pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_BackgroundColor( 
+            /* [in] */ long pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_Loop( 
-             VARIANT_BOOL __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_Loop( 
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_Loop( 
-             VARIANT_BOOL pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_Loop( 
+            /* [in] */ VARIANT_BOOL pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_Movie( 
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_Movie( 
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_Movie( 
-             BSTR pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_Movie( 
+            /* [in] */ BSTR pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_FrameNum( 
-             long __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_FrameNum( 
+            /* [retval][out] */ long __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_FrameNum( 
-             long pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_FrameNum( 
+            /* [in] */ long pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE SetZoomRect( 
-             long left,
-             long top,
-             long right,
-             long bottom) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE SetZoomRect( 
+            /* [in] */ long left,
+            /* [in] */ long top,
+            /* [in] */ long right,
+            /* [in] */ long bottom) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE Zoom( 
-             int factor) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Zoom( 
+            /* [in] */ int factor) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE Pan( 
-             long x,
-             long y,
-             int mode) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Pan( 
+            /* [in] */ long x,
+            /* [in] */ long y,
+            /* [in] */ int mode) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE Play( void) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Play( void) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE Stop( void) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Stop( void) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE Back( void) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Back( void) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE Forward( void) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Forward( void) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE Rewind( void) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE Rewind( void) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE StopPlay( void) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE StopPlay( void) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE GotoFrame( 
-             long FrameNum) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE GotoFrame( 
+            /* [in] */ long FrameNum) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE CurrentFrame( 
-             long __RPC_FAR *FrameNum) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE CurrentFrame( 
+            /* [retval][out] */ long __RPC_FAR *FrameNum) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE IsPlaying( 
-             VARIANT_BOOL __RPC_FAR *Playing) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IsPlaying( 
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *Playing) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE PercentLoaded( 
-             long __RPC_FAR *percent) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE PercentLoaded( 
+            /* [retval][out] */ long __RPC_FAR *percent) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE FrameLoaded( 
-             long FrameNum,
-             VARIANT_BOOL __RPC_FAR *loaded) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE FrameLoaded( 
+            /* [in] */ long FrameNum,
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *loaded) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE FlashVersion( 
-             long __RPC_FAR *version) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE FlashVersion( 
+            /* [retval][out] */ long __RPC_FAR *version) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_WMode( 
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_WMode( 
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_WMode( 
-             BSTR pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_WMode( 
+            /* [in] */ BSTR pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_SAlign( 
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_SAlign( 
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_SAlign( 
-             BSTR pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_SAlign( 
+            /* [in] */ BSTR pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_Menu( 
-             VARIANT_BOOL __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_Menu( 
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_Menu( 
-             VARIANT_BOOL pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_Menu( 
+            /* [in] */ VARIANT_BOOL pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_Base( 
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_Base( 
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_Base( 
-             BSTR pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_Base( 
+            /* [in] */ BSTR pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_Scale( 
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_Scale( 
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_Scale( 
-             BSTR pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_Scale( 
+            /* [in] */ BSTR pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_DeviceFont( 
-             VARIANT_BOOL __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_DeviceFont( 
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_DeviceFont( 
-             VARIANT_BOOL pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_DeviceFont( 
+            /* [in] */ VARIANT_BOOL pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_EmbedMovie( 
-             VARIANT_BOOL __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_EmbedMovie( 
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_EmbedMovie( 
-             VARIANT_BOOL pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_EmbedMovie( 
+            /* [in] */ VARIANT_BOOL pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_BGColor( 
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_BGColor( 
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_BGColor( 
-             BSTR pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_BGColor( 
+            /* [in] */ BSTR pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_Quality2( 
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_Quality2( 
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_Quality2( 
-             BSTR pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_Quality2( 
+            /* [in] */ BSTR pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE LoadMovie( 
-             int layer,
-             BSTR url) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE LoadMovie( 
+            /* [in] */ int layer,
+            /* [in] */ BSTR url) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TGotoFrame( 
-             BSTR target,
-             long FrameNum) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TGotoFrame( 
+            /* [in] */ BSTR target,
+            /* [in] */ long FrameNum) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TGotoLabel( 
-             BSTR target,
-             BSTR label) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TGotoLabel( 
+            /* [in] */ BSTR target,
+            /* [in] */ BSTR label) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TCurrentFrame( 
-             BSTR target,
-             long __RPC_FAR *FrameNum) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TCurrentFrame( 
+            /* [in] */ BSTR target,
+            /* [retval][out] */ long __RPC_FAR *FrameNum) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TCurrentLabel( 
-             BSTR target,
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TCurrentLabel( 
+            /* [in] */ BSTR target,
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TPlay( 
-             BSTR target) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TPlay( 
+            /* [in] */ BSTR target) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TStopPlay( 
-             BSTR target) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TStopPlay( 
+            /* [in] */ BSTR target) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE SetVariable( 
-             BSTR name,
-             BSTR value) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE SetVariable( 
+            /* [in] */ BSTR name,
+            /* [in] */ BSTR value) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE GetVariable( 
-             BSTR name,
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE GetVariable( 
+            /* [in] */ BSTR name,
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TSetProperty( 
-             BSTR target,
-             int property,
-             BSTR value) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TSetProperty( 
+            /* [in] */ BSTR target,
+            /* [in] */ int property,
+            /* [in] */ BSTR value) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TGetProperty( 
-             BSTR target,
-             int property,
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TGetProperty( 
+            /* [in] */ BSTR target,
+            /* [in] */ int property,
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TCallFrame( 
-             BSTR target,
-             int FrameNum) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TCallFrame( 
+            /* [in] */ BSTR target,
+            /* [in] */ int FrameNum) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TCallLabel( 
-             BSTR target,
-             BSTR label) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TCallLabel( 
+            /* [in] */ BSTR target,
+            /* [in] */ BSTR label) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TSetPropertyNum( 
-             BSTR target,
-             int property,
-             double value) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TSetPropertyNum( 
+            /* [in] */ BSTR target,
+            /* [in] */ int property,
+            /* [in] */ double value) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE TGetPropertyNum( 
-             BSTR target,
-             int property,
-             double __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][id] */ HRESULT STDMETHODCALLTYPE TGetPropertyNum( 
+            /* [in] */ BSTR target,
+            /* [in] */ int property,
+            /* [retval][out] */ double __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_SWRemote( 
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_SWRemote( 
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_SWRemote( 
-             BSTR pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_SWRemote( 
+            /* [in] */ BSTR pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE get_FlashVars( 
-             BSTR __RPC_FAR *pVal) = 0;
+        virtual /* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE get_FlashVars( 
+            /* [retval][out] */ BSTR __RPC_FAR *pVal) = 0;
         
-        virtual  HRESULT STDMETHODCALLTYPE put_FlashVars( 
-             BSTR pVal) = 0;
+        virtual /* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE put_FlashVars( 
+            /* [in] */ BSTR pVal) = 0;
         
     };
     
-#else 	
+#else 	/* C style interface */
 
     typedef struct IShockwaveFlashVtbl
     {
@@ -341,8 +371,8 @@ EXTERN_C const IID IID_IShockwaveFlash;
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *QueryInterface )( 
             IShockwaveFlash __RPC_FAR * This,
-             REFIID riid,
-             void __RPC_FAR *__RPC_FAR *ppvObject);
+            /* [in] */ REFIID riid,
+            /* [iid_is][out] */ void __RPC_FAR *__RPC_FAR *ppvObject);
         
         ULONG ( STDMETHODCALLTYPE __RPC_FAR *AddRef )( 
             IShockwaveFlash __RPC_FAR * This);
@@ -352,329 +382,329 @@ EXTERN_C const IID IID_IShockwaveFlash;
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfoCount )( 
             IShockwaveFlash __RPC_FAR * This,
-             UINT __RPC_FAR *pctinfo);
+            /* [out] */ UINT __RPC_FAR *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfo )( 
             IShockwaveFlash __RPC_FAR * This,
-             UINT iTInfo,
-             LCID lcid,
-             ITypeInfo __RPC_FAR *__RPC_FAR *ppTInfo);
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo __RPC_FAR *__RPC_FAR *ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetIDsOfNames )( 
             IShockwaveFlash __RPC_FAR * This,
-             REFIID riid,
-             LPOLESTR __RPC_FAR *rgszNames,
-             UINT cNames,
-             LCID lcid,
-             DISPID __RPC_FAR *rgDispId);
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR __RPC_FAR *rgszNames,
+            /* [in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID __RPC_FAR *rgDispId);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Invoke )( 
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Invoke )( 
             IShockwaveFlash __RPC_FAR * This,
-             DISPID dispIdMember,
-             REFIID riid,
-             LCID lcid,
-             WORD wFlags,
-             DISPPARAMS __RPC_FAR *pDispParams,
-             VARIANT __RPC_FAR *pVarResult,
-             EXCEPINFO __RPC_FAR *pExcepInfo,
-             UINT __RPC_FAR *puArgErr);
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS __RPC_FAR *pDispParams,
+            /* [out] */ VARIANT __RPC_FAR *pVarResult,
+            /* [out] */ EXCEPINFO __RPC_FAR *pExcepInfo,
+            /* [out] */ UINT __RPC_FAR *puArgErr);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_ReadyState )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_ReadyState )( 
             IShockwaveFlash __RPC_FAR * This,
-             long __RPC_FAR *pVal);
+            /* [retval][out] */ long __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_TotalFrames )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_TotalFrames )( 
             IShockwaveFlash __RPC_FAR * This,
-             long __RPC_FAR *pVal);
+            /* [retval][out] */ long __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Playing )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Playing )( 
             IShockwaveFlash __RPC_FAR * This,
-             VARIANT_BOOL __RPC_FAR *pVal);
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Playing )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Playing )( 
             IShockwaveFlash __RPC_FAR * This,
-             VARIANT_BOOL pVal);
+            /* [in] */ VARIANT_BOOL pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Quality )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Quality )( 
             IShockwaveFlash __RPC_FAR * This,
-             int __RPC_FAR *pVal);
+            /* [retval][out] */ int __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Quality )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Quality )( 
             IShockwaveFlash __RPC_FAR * This,
-             int pVal);
+            /* [in] */ int pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_ScaleMode )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_ScaleMode )( 
             IShockwaveFlash __RPC_FAR * This,
-             int __RPC_FAR *pVal);
+            /* [retval][out] */ int __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_ScaleMode )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_ScaleMode )( 
             IShockwaveFlash __RPC_FAR * This,
-             int pVal);
+            /* [in] */ int pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_AlignMode )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_AlignMode )( 
             IShockwaveFlash __RPC_FAR * This,
-             int __RPC_FAR *pVal);
+            /* [retval][out] */ int __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_AlignMode )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_AlignMode )( 
             IShockwaveFlash __RPC_FAR * This,
-             int pVal);
+            /* [in] */ int pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_BackgroundColor )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_BackgroundColor )( 
             IShockwaveFlash __RPC_FAR * This,
-             long __RPC_FAR *pVal);
+            /* [retval][out] */ long __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_BackgroundColor )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_BackgroundColor )( 
             IShockwaveFlash __RPC_FAR * This,
-             long pVal);
+            /* [in] */ long pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Loop )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Loop )( 
             IShockwaveFlash __RPC_FAR * This,
-             VARIANT_BOOL __RPC_FAR *pVal);
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Loop )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Loop )( 
             IShockwaveFlash __RPC_FAR * This,
-             VARIANT_BOOL pVal);
+            /* [in] */ VARIANT_BOOL pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Movie )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Movie )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR __RPC_FAR *pVal);
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Movie )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Movie )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR pVal);
+            /* [in] */ BSTR pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_FrameNum )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_FrameNum )( 
             IShockwaveFlash __RPC_FAR * This,
-             long __RPC_FAR *pVal);
+            /* [retval][out] */ long __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_FrameNum )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_FrameNum )( 
             IShockwaveFlash __RPC_FAR * This,
-             long pVal);
+            /* [in] */ long pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *SetZoomRect )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *SetZoomRect )( 
             IShockwaveFlash __RPC_FAR * This,
-             long left,
-             long top,
-             long right,
-             long bottom);
+            /* [in] */ long left,
+            /* [in] */ long top,
+            /* [in] */ long right,
+            /* [in] */ long bottom);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Zoom )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Zoom )( 
             IShockwaveFlash __RPC_FAR * This,
-             int factor);
+            /* [in] */ int factor);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Pan )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Pan )( 
             IShockwaveFlash __RPC_FAR * This,
-             long x,
-             long y,
-             int mode);
+            /* [in] */ long x,
+            /* [in] */ long y,
+            /* [in] */ int mode);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Play )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Play )( 
             IShockwaveFlash __RPC_FAR * This);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Stop )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Stop )( 
             IShockwaveFlash __RPC_FAR * This);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Back )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Back )( 
             IShockwaveFlash __RPC_FAR * This);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Forward )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Forward )( 
             IShockwaveFlash __RPC_FAR * This);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Rewind )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Rewind )( 
             IShockwaveFlash __RPC_FAR * This);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *StopPlay )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *StopPlay )( 
             IShockwaveFlash __RPC_FAR * This);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GotoFrame )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GotoFrame )( 
             IShockwaveFlash __RPC_FAR * This,
-             long FrameNum);
+            /* [in] */ long FrameNum);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *CurrentFrame )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *CurrentFrame )( 
             IShockwaveFlash __RPC_FAR * This,
-             long __RPC_FAR *FrameNum);
+            /* [retval][out] */ long __RPC_FAR *FrameNum);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *IsPlaying )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *IsPlaying )( 
             IShockwaveFlash __RPC_FAR * This,
-             VARIANT_BOOL __RPC_FAR *Playing);
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *Playing);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *PercentLoaded )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *PercentLoaded )( 
             IShockwaveFlash __RPC_FAR * This,
-             long __RPC_FAR *percent);
+            /* [retval][out] */ long __RPC_FAR *percent);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *FrameLoaded )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *FrameLoaded )( 
             IShockwaveFlash __RPC_FAR * This,
-             long FrameNum,
-             VARIANT_BOOL __RPC_FAR *loaded);
+            /* [in] */ long FrameNum,
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *loaded);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *FlashVersion )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *FlashVersion )( 
             IShockwaveFlash __RPC_FAR * This,
-             long __RPC_FAR *version);
+            /* [retval][out] */ long __RPC_FAR *version);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_WMode )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_WMode )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR __RPC_FAR *pVal);
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_WMode )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_WMode )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR pVal);
+            /* [in] */ BSTR pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_SAlign )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_SAlign )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR __RPC_FAR *pVal);
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_SAlign )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_SAlign )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR pVal);
+            /* [in] */ BSTR pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Menu )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Menu )( 
             IShockwaveFlash __RPC_FAR * This,
-             VARIANT_BOOL __RPC_FAR *pVal);
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Menu )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Menu )( 
             IShockwaveFlash __RPC_FAR * This,
-             VARIANT_BOOL pVal);
+            /* [in] */ VARIANT_BOOL pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Base )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Base )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR __RPC_FAR *pVal);
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Base )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Base )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR pVal);
+            /* [in] */ BSTR pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Scale )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Scale )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR __RPC_FAR *pVal);
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Scale )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Scale )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR pVal);
+            /* [in] */ BSTR pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_DeviceFont )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_DeviceFont )( 
             IShockwaveFlash __RPC_FAR * This,
-             VARIANT_BOOL __RPC_FAR *pVal);
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_DeviceFont )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_DeviceFont )( 
             IShockwaveFlash __RPC_FAR * This,
-             VARIANT_BOOL pVal);
+            /* [in] */ VARIANT_BOOL pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_EmbedMovie )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_EmbedMovie )( 
             IShockwaveFlash __RPC_FAR * This,
-             VARIANT_BOOL __RPC_FAR *pVal);
+            /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_EmbedMovie )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_EmbedMovie )( 
             IShockwaveFlash __RPC_FAR * This,
-             VARIANT_BOOL pVal);
+            /* [in] */ VARIANT_BOOL pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_BGColor )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_BGColor )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR __RPC_FAR *pVal);
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_BGColor )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_BGColor )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR pVal);
+            /* [in] */ BSTR pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Quality2 )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_Quality2 )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR __RPC_FAR *pVal);
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Quality2 )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_Quality2 )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR pVal);
+            /* [in] */ BSTR pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *LoadMovie )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *LoadMovie )( 
             IShockwaveFlash __RPC_FAR * This,
-             int layer,
-             BSTR url);
+            /* [in] */ int layer,
+            /* [in] */ BSTR url);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TGotoFrame )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TGotoFrame )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target,
-             long FrameNum);
+            /* [in] */ BSTR target,
+            /* [in] */ long FrameNum);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TGotoLabel )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TGotoLabel )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target,
-             BSTR label);
+            /* [in] */ BSTR target,
+            /* [in] */ BSTR label);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TCurrentFrame )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TCurrentFrame )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target,
-             long __RPC_FAR *FrameNum);
+            /* [in] */ BSTR target,
+            /* [retval][out] */ long __RPC_FAR *FrameNum);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TCurrentLabel )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TCurrentLabel )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target,
-             BSTR __RPC_FAR *pVal);
+            /* [in] */ BSTR target,
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TPlay )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TPlay )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target);
+            /* [in] */ BSTR target);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TStopPlay )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TStopPlay )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target);
+            /* [in] */ BSTR target);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *SetVariable )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *SetVariable )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR name,
-             BSTR value);
+            /* [in] */ BSTR name,
+            /* [in] */ BSTR value);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetVariable )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetVariable )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR name,
-             BSTR __RPC_FAR *pVal);
+            /* [in] */ BSTR name,
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TSetProperty )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TSetProperty )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target,
-             int property,
-             BSTR value);
+            /* [in] */ BSTR target,
+            /* [in] */ int property,
+            /* [in] */ BSTR value);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TGetProperty )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TGetProperty )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target,
-             int property,
-             BSTR __RPC_FAR *pVal);
+            /* [in] */ BSTR target,
+            /* [in] */ int property,
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TCallFrame )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TCallFrame )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target,
-             int FrameNum);
+            /* [in] */ BSTR target,
+            /* [in] */ int FrameNum);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TCallLabel )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TCallLabel )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target,
-             BSTR label);
+            /* [in] */ BSTR target,
+            /* [in] */ BSTR label);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TSetPropertyNum )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TSetPropertyNum )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target,
-             int property,
-             double value);
+            /* [in] */ BSTR target,
+            /* [in] */ int property,
+            /* [in] */ double value);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TGetPropertyNum )( 
+        /* [helpstring][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *TGetPropertyNum )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR target,
-             int property,
-             double __RPC_FAR *pVal);
+            /* [in] */ BSTR target,
+            /* [in] */ int property,
+            /* [retval][out] */ double __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_SWRemote )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_SWRemote )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR __RPC_FAR *pVal);
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_SWRemote )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_SWRemote )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR pVal);
+            /* [in] */ BSTR pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_FlashVars )( 
+        /* [helpstring][propget][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *get_FlashVars )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR __RPC_FAR *pVal);
+            /* [retval][out] */ BSTR __RPC_FAR *pVal);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_FlashVars )( 
+        /* [helpstring][propput][id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *put_FlashVars )( 
             IShockwaveFlash __RPC_FAR * This,
-             BSTR pVal);
+            /* [in] */ BSTR pVal);
         
         END_INTERFACE
     } IShockwaveFlashVtbl;
@@ -688,6 +718,7 @@ EXTERN_C const IID IID_IShockwaveFlash;
 
 #ifdef COBJMACROS
 
+
 #define IShockwaveFlash_QueryInterface(This,riid,ppvObject)	\
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
@@ -696,6 +727,7 @@ EXTERN_C const IID IID_IShockwaveFlash;
 
 #define IShockwaveFlash_Release(This)	\
     (This)->lpVtbl -> Release(This)
+
 
 #define IShockwaveFlash_GetTypeInfoCount(This,pctinfo)	\
     (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
@@ -708,6 +740,7 @@ EXTERN_C const IID IID_IShockwaveFlash;
 
 #define IShockwaveFlash_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
+
 
 #define IShockwaveFlash_get_ReadyState(This,pVal)	\
     (This)->lpVtbl -> get_ReadyState(This,pVal)
@@ -919,13 +952,17 @@ EXTERN_C const IID IID_IShockwaveFlash;
 #define IShockwaveFlash_put_FlashVars(This,pVal)	\
     (This)->lpVtbl -> put_FlashVars(This,pVal)
 
-#endif 
+#endif /* COBJMACROS */
 
-#endif 	
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_ReadyState_Proxy( 
+#endif 	/* C style interface */
+
+
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_ReadyState_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long __RPC_FAR *pVal);
+    /* [retval][out] */ long __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_ReadyState_Stub(
     IRpcStubBuffer *This,
@@ -933,9 +970,11 @@ void __RPC_STUB IShockwaveFlash_get_ReadyState_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_TotalFrames_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_TotalFrames_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long __RPC_FAR *pVal);
+    /* [retval][out] */ long __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_TotalFrames_Stub(
     IRpcStubBuffer *This,
@@ -943,9 +982,11 @@ void __RPC_STUB IShockwaveFlash_get_TotalFrames_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Playing_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Playing_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     VARIANT_BOOL __RPC_FAR *pVal);
+    /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_Playing_Stub(
     IRpcStubBuffer *This,
@@ -953,9 +994,11 @@ void __RPC_STUB IShockwaveFlash_get_Playing_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Playing_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Playing_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     VARIANT_BOOL pVal);
+    /* [in] */ VARIANT_BOOL pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_Playing_Stub(
     IRpcStubBuffer *This,
@@ -963,9 +1006,11 @@ void __RPC_STUB IShockwaveFlash_put_Playing_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Quality_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Quality_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     int __RPC_FAR *pVal);
+    /* [retval][out] */ int __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_Quality_Stub(
     IRpcStubBuffer *This,
@@ -973,9 +1018,11 @@ void __RPC_STUB IShockwaveFlash_get_Quality_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Quality_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Quality_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     int pVal);
+    /* [in] */ int pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_Quality_Stub(
     IRpcStubBuffer *This,
@@ -983,9 +1030,11 @@ void __RPC_STUB IShockwaveFlash_put_Quality_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_ScaleMode_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_ScaleMode_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     int __RPC_FAR *pVal);
+    /* [retval][out] */ int __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_ScaleMode_Stub(
     IRpcStubBuffer *This,
@@ -993,9 +1042,11 @@ void __RPC_STUB IShockwaveFlash_get_ScaleMode_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_ScaleMode_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_ScaleMode_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     int pVal);
+    /* [in] */ int pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_ScaleMode_Stub(
     IRpcStubBuffer *This,
@@ -1003,9 +1054,11 @@ void __RPC_STUB IShockwaveFlash_put_ScaleMode_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_AlignMode_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_AlignMode_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     int __RPC_FAR *pVal);
+    /* [retval][out] */ int __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_AlignMode_Stub(
     IRpcStubBuffer *This,
@@ -1013,9 +1066,11 @@ void __RPC_STUB IShockwaveFlash_get_AlignMode_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_AlignMode_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_AlignMode_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     int pVal);
+    /* [in] */ int pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_AlignMode_Stub(
     IRpcStubBuffer *This,
@@ -1023,9 +1078,11 @@ void __RPC_STUB IShockwaveFlash_put_AlignMode_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_BackgroundColor_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_BackgroundColor_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long __RPC_FAR *pVal);
+    /* [retval][out] */ long __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_BackgroundColor_Stub(
     IRpcStubBuffer *This,
@@ -1033,9 +1090,11 @@ void __RPC_STUB IShockwaveFlash_get_BackgroundColor_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_BackgroundColor_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_BackgroundColor_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long pVal);
+    /* [in] */ long pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_BackgroundColor_Stub(
     IRpcStubBuffer *This,
@@ -1043,9 +1102,11 @@ void __RPC_STUB IShockwaveFlash_put_BackgroundColor_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Loop_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Loop_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     VARIANT_BOOL __RPC_FAR *pVal);
+    /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_Loop_Stub(
     IRpcStubBuffer *This,
@@ -1053,9 +1114,11 @@ void __RPC_STUB IShockwaveFlash_get_Loop_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Loop_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Loop_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     VARIANT_BOOL pVal);
+    /* [in] */ VARIANT_BOOL pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_Loop_Stub(
     IRpcStubBuffer *This,
@@ -1063,9 +1126,11 @@ void __RPC_STUB IShockwaveFlash_put_Loop_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Movie_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Movie_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR __RPC_FAR *pVal);
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_Movie_Stub(
     IRpcStubBuffer *This,
@@ -1073,9 +1138,11 @@ void __RPC_STUB IShockwaveFlash_get_Movie_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Movie_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Movie_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR pVal);
+    /* [in] */ BSTR pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_Movie_Stub(
     IRpcStubBuffer *This,
@@ -1083,9 +1150,11 @@ void __RPC_STUB IShockwaveFlash_put_Movie_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_FrameNum_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_FrameNum_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long __RPC_FAR *pVal);
+    /* [retval][out] */ long __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_FrameNum_Stub(
     IRpcStubBuffer *This,
@@ -1093,9 +1162,11 @@ void __RPC_STUB IShockwaveFlash_get_FrameNum_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_FrameNum_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_FrameNum_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long pVal);
+    /* [in] */ long pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_FrameNum_Stub(
     IRpcStubBuffer *This,
@@ -1103,12 +1174,14 @@ void __RPC_STUB IShockwaveFlash_put_FrameNum_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_SetZoomRect_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_SetZoomRect_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long left,
-     long top,
-     long right,
-     long bottom);
+    /* [in] */ long left,
+    /* [in] */ long top,
+    /* [in] */ long right,
+    /* [in] */ long bottom);
+
 
 void __RPC_STUB IShockwaveFlash_SetZoomRect_Stub(
     IRpcStubBuffer *This,
@@ -1116,9 +1189,11 @@ void __RPC_STUB IShockwaveFlash_SetZoomRect_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_Zoom_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_Zoom_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     int factor);
+    /* [in] */ int factor);
+
 
 void __RPC_STUB IShockwaveFlash_Zoom_Stub(
     IRpcStubBuffer *This,
@@ -1126,11 +1201,13 @@ void __RPC_STUB IShockwaveFlash_Zoom_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_Pan_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_Pan_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long x,
-     long y,
-     int mode);
+    /* [in] */ long x,
+    /* [in] */ long y,
+    /* [in] */ int mode);
+
 
 void __RPC_STUB IShockwaveFlash_Pan_Stub(
     IRpcStubBuffer *This,
@@ -1138,8 +1215,10 @@ void __RPC_STUB IShockwaveFlash_Pan_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_Play_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_Play_Proxy( 
     IShockwaveFlash __RPC_FAR * This);
+
 
 void __RPC_STUB IShockwaveFlash_Play_Stub(
     IRpcStubBuffer *This,
@@ -1147,8 +1226,10 @@ void __RPC_STUB IShockwaveFlash_Play_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_Stop_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_Stop_Proxy( 
     IShockwaveFlash __RPC_FAR * This);
+
 
 void __RPC_STUB IShockwaveFlash_Stop_Stub(
     IRpcStubBuffer *This,
@@ -1156,8 +1237,10 @@ void __RPC_STUB IShockwaveFlash_Stop_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_Back_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_Back_Proxy( 
     IShockwaveFlash __RPC_FAR * This);
+
 
 void __RPC_STUB IShockwaveFlash_Back_Stub(
     IRpcStubBuffer *This,
@@ -1165,8 +1248,10 @@ void __RPC_STUB IShockwaveFlash_Back_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_Forward_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_Forward_Proxy( 
     IShockwaveFlash __RPC_FAR * This);
+
 
 void __RPC_STUB IShockwaveFlash_Forward_Stub(
     IRpcStubBuffer *This,
@@ -1174,8 +1259,10 @@ void __RPC_STUB IShockwaveFlash_Forward_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_Rewind_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_Rewind_Proxy( 
     IShockwaveFlash __RPC_FAR * This);
+
 
 void __RPC_STUB IShockwaveFlash_Rewind_Stub(
     IRpcStubBuffer *This,
@@ -1183,8 +1270,10 @@ void __RPC_STUB IShockwaveFlash_Rewind_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_StopPlay_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_StopPlay_Proxy( 
     IShockwaveFlash __RPC_FAR * This);
+
 
 void __RPC_STUB IShockwaveFlash_StopPlay_Stub(
     IRpcStubBuffer *This,
@@ -1192,9 +1281,11 @@ void __RPC_STUB IShockwaveFlash_StopPlay_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_GotoFrame_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_GotoFrame_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long FrameNum);
+    /* [in] */ long FrameNum);
+
 
 void __RPC_STUB IShockwaveFlash_GotoFrame_Stub(
     IRpcStubBuffer *This,
@@ -1202,9 +1293,11 @@ void __RPC_STUB IShockwaveFlash_GotoFrame_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_CurrentFrame_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_CurrentFrame_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long __RPC_FAR *FrameNum);
+    /* [retval][out] */ long __RPC_FAR *FrameNum);
+
 
 void __RPC_STUB IShockwaveFlash_CurrentFrame_Stub(
     IRpcStubBuffer *This,
@@ -1212,9 +1305,11 @@ void __RPC_STUB IShockwaveFlash_CurrentFrame_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_IsPlaying_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_IsPlaying_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     VARIANT_BOOL __RPC_FAR *Playing);
+    /* [retval][out] */ VARIANT_BOOL __RPC_FAR *Playing);
+
 
 void __RPC_STUB IShockwaveFlash_IsPlaying_Stub(
     IRpcStubBuffer *This,
@@ -1222,9 +1317,11 @@ void __RPC_STUB IShockwaveFlash_IsPlaying_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_PercentLoaded_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_PercentLoaded_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long __RPC_FAR *percent);
+    /* [retval][out] */ long __RPC_FAR *percent);
+
 
 void __RPC_STUB IShockwaveFlash_PercentLoaded_Stub(
     IRpcStubBuffer *This,
@@ -1232,10 +1329,12 @@ void __RPC_STUB IShockwaveFlash_PercentLoaded_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_FrameLoaded_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_FrameLoaded_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long FrameNum,
-     VARIANT_BOOL __RPC_FAR *loaded);
+    /* [in] */ long FrameNum,
+    /* [retval][out] */ VARIANT_BOOL __RPC_FAR *loaded);
+
 
 void __RPC_STUB IShockwaveFlash_FrameLoaded_Stub(
     IRpcStubBuffer *This,
@@ -1243,9 +1342,11 @@ void __RPC_STUB IShockwaveFlash_FrameLoaded_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_FlashVersion_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_FlashVersion_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     long __RPC_FAR *version);
+    /* [retval][out] */ long __RPC_FAR *version);
+
 
 void __RPC_STUB IShockwaveFlash_FlashVersion_Stub(
     IRpcStubBuffer *This,
@@ -1253,9 +1354,11 @@ void __RPC_STUB IShockwaveFlash_FlashVersion_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_WMode_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_WMode_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR __RPC_FAR *pVal);
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_WMode_Stub(
     IRpcStubBuffer *This,
@@ -1263,9 +1366,11 @@ void __RPC_STUB IShockwaveFlash_get_WMode_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_WMode_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_WMode_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR pVal);
+    /* [in] */ BSTR pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_WMode_Stub(
     IRpcStubBuffer *This,
@@ -1273,9 +1378,11 @@ void __RPC_STUB IShockwaveFlash_put_WMode_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_SAlign_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_SAlign_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR __RPC_FAR *pVal);
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_SAlign_Stub(
     IRpcStubBuffer *This,
@@ -1283,9 +1390,11 @@ void __RPC_STUB IShockwaveFlash_get_SAlign_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_SAlign_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_SAlign_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR pVal);
+    /* [in] */ BSTR pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_SAlign_Stub(
     IRpcStubBuffer *This,
@@ -1293,9 +1402,11 @@ void __RPC_STUB IShockwaveFlash_put_SAlign_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Menu_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Menu_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     VARIANT_BOOL __RPC_FAR *pVal);
+    /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_Menu_Stub(
     IRpcStubBuffer *This,
@@ -1303,9 +1414,11 @@ void __RPC_STUB IShockwaveFlash_get_Menu_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Menu_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Menu_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     VARIANT_BOOL pVal);
+    /* [in] */ VARIANT_BOOL pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_Menu_Stub(
     IRpcStubBuffer *This,
@@ -1313,9 +1426,11 @@ void __RPC_STUB IShockwaveFlash_put_Menu_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Base_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Base_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR __RPC_FAR *pVal);
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_Base_Stub(
     IRpcStubBuffer *This,
@@ -1323,9 +1438,11 @@ void __RPC_STUB IShockwaveFlash_get_Base_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Base_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Base_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR pVal);
+    /* [in] */ BSTR pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_Base_Stub(
     IRpcStubBuffer *This,
@@ -1333,9 +1450,11 @@ void __RPC_STUB IShockwaveFlash_put_Base_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Scale_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Scale_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR __RPC_FAR *pVal);
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_Scale_Stub(
     IRpcStubBuffer *This,
@@ -1343,9 +1462,11 @@ void __RPC_STUB IShockwaveFlash_get_Scale_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Scale_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Scale_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR pVal);
+    /* [in] */ BSTR pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_Scale_Stub(
     IRpcStubBuffer *This,
@@ -1353,9 +1474,11 @@ void __RPC_STUB IShockwaveFlash_put_Scale_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_DeviceFont_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_DeviceFont_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     VARIANT_BOOL __RPC_FAR *pVal);
+    /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_DeviceFont_Stub(
     IRpcStubBuffer *This,
@@ -1363,9 +1486,11 @@ void __RPC_STUB IShockwaveFlash_get_DeviceFont_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_DeviceFont_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_DeviceFont_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     VARIANT_BOOL pVal);
+    /* [in] */ VARIANT_BOOL pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_DeviceFont_Stub(
     IRpcStubBuffer *This,
@@ -1373,9 +1498,11 @@ void __RPC_STUB IShockwaveFlash_put_DeviceFont_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_EmbedMovie_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_EmbedMovie_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     VARIANT_BOOL __RPC_FAR *pVal);
+    /* [retval][out] */ VARIANT_BOOL __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_EmbedMovie_Stub(
     IRpcStubBuffer *This,
@@ -1383,9 +1510,11 @@ void __RPC_STUB IShockwaveFlash_get_EmbedMovie_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_EmbedMovie_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_EmbedMovie_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     VARIANT_BOOL pVal);
+    /* [in] */ VARIANT_BOOL pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_EmbedMovie_Stub(
     IRpcStubBuffer *This,
@@ -1393,9 +1522,11 @@ void __RPC_STUB IShockwaveFlash_put_EmbedMovie_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_BGColor_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_BGColor_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR __RPC_FAR *pVal);
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_BGColor_Stub(
     IRpcStubBuffer *This,
@@ -1403,9 +1534,11 @@ void __RPC_STUB IShockwaveFlash_get_BGColor_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_BGColor_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_BGColor_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR pVal);
+    /* [in] */ BSTR pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_BGColor_Stub(
     IRpcStubBuffer *This,
@@ -1413,9 +1546,11 @@ void __RPC_STUB IShockwaveFlash_put_BGColor_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Quality2_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_Quality2_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR __RPC_FAR *pVal);
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_Quality2_Stub(
     IRpcStubBuffer *This,
@@ -1423,9 +1558,11 @@ void __RPC_STUB IShockwaveFlash_get_Quality2_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Quality2_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_Quality2_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR pVal);
+    /* [in] */ BSTR pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_Quality2_Stub(
     IRpcStubBuffer *This,
@@ -1433,10 +1570,12 @@ void __RPC_STUB IShockwaveFlash_put_Quality2_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_LoadMovie_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_LoadMovie_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     int layer,
-     BSTR url);
+    /* [in] */ int layer,
+    /* [in] */ BSTR url);
+
 
 void __RPC_STUB IShockwaveFlash_LoadMovie_Stub(
     IRpcStubBuffer *This,
@@ -1444,10 +1583,12 @@ void __RPC_STUB IShockwaveFlash_LoadMovie_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TGotoFrame_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TGotoFrame_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target,
-     long FrameNum);
+    /* [in] */ BSTR target,
+    /* [in] */ long FrameNum);
+
 
 void __RPC_STUB IShockwaveFlash_TGotoFrame_Stub(
     IRpcStubBuffer *This,
@@ -1455,10 +1596,12 @@ void __RPC_STUB IShockwaveFlash_TGotoFrame_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TGotoLabel_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TGotoLabel_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target,
-     BSTR label);
+    /* [in] */ BSTR target,
+    /* [in] */ BSTR label);
+
 
 void __RPC_STUB IShockwaveFlash_TGotoLabel_Stub(
     IRpcStubBuffer *This,
@@ -1466,10 +1609,12 @@ void __RPC_STUB IShockwaveFlash_TGotoLabel_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TCurrentFrame_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TCurrentFrame_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target,
-     long __RPC_FAR *FrameNum);
+    /* [in] */ BSTR target,
+    /* [retval][out] */ long __RPC_FAR *FrameNum);
+
 
 void __RPC_STUB IShockwaveFlash_TCurrentFrame_Stub(
     IRpcStubBuffer *This,
@@ -1477,10 +1622,12 @@ void __RPC_STUB IShockwaveFlash_TCurrentFrame_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TCurrentLabel_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TCurrentLabel_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target,
-     BSTR __RPC_FAR *pVal);
+    /* [in] */ BSTR target,
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_TCurrentLabel_Stub(
     IRpcStubBuffer *This,
@@ -1488,9 +1635,11 @@ void __RPC_STUB IShockwaveFlash_TCurrentLabel_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TPlay_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TPlay_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target);
+    /* [in] */ BSTR target);
+
 
 void __RPC_STUB IShockwaveFlash_TPlay_Stub(
     IRpcStubBuffer *This,
@@ -1498,9 +1647,11 @@ void __RPC_STUB IShockwaveFlash_TPlay_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TStopPlay_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TStopPlay_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target);
+    /* [in] */ BSTR target);
+
 
 void __RPC_STUB IShockwaveFlash_TStopPlay_Stub(
     IRpcStubBuffer *This,
@@ -1508,10 +1659,12 @@ void __RPC_STUB IShockwaveFlash_TStopPlay_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_SetVariable_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_SetVariable_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR name,
-     BSTR value);
+    /* [in] */ BSTR name,
+    /* [in] */ BSTR value);
+
 
 void __RPC_STUB IShockwaveFlash_SetVariable_Stub(
     IRpcStubBuffer *This,
@@ -1519,10 +1672,12 @@ void __RPC_STUB IShockwaveFlash_SetVariable_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_GetVariable_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_GetVariable_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR name,
-     BSTR __RPC_FAR *pVal);
+    /* [in] */ BSTR name,
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_GetVariable_Stub(
     IRpcStubBuffer *This,
@@ -1530,11 +1685,13 @@ void __RPC_STUB IShockwaveFlash_GetVariable_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TSetProperty_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TSetProperty_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target,
-     int property,
-     BSTR value);
+    /* [in] */ BSTR target,
+    /* [in] */ int property,
+    /* [in] */ BSTR value);
+
 
 void __RPC_STUB IShockwaveFlash_TSetProperty_Stub(
     IRpcStubBuffer *This,
@@ -1542,11 +1699,13 @@ void __RPC_STUB IShockwaveFlash_TSetProperty_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TGetProperty_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TGetProperty_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target,
-     int property,
-     BSTR __RPC_FAR *pVal);
+    /* [in] */ BSTR target,
+    /* [in] */ int property,
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_TGetProperty_Stub(
     IRpcStubBuffer *This,
@@ -1554,10 +1713,12 @@ void __RPC_STUB IShockwaveFlash_TGetProperty_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TCallFrame_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TCallFrame_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target,
-     int FrameNum);
+    /* [in] */ BSTR target,
+    /* [in] */ int FrameNum);
+
 
 void __RPC_STUB IShockwaveFlash_TCallFrame_Stub(
     IRpcStubBuffer *This,
@@ -1565,10 +1726,12 @@ void __RPC_STUB IShockwaveFlash_TCallFrame_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TCallLabel_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TCallLabel_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target,
-     BSTR label);
+    /* [in] */ BSTR target,
+    /* [in] */ BSTR label);
+
 
 void __RPC_STUB IShockwaveFlash_TCallLabel_Stub(
     IRpcStubBuffer *This,
@@ -1576,11 +1739,13 @@ void __RPC_STUB IShockwaveFlash_TCallLabel_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TSetPropertyNum_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TSetPropertyNum_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target,
-     int property,
-     double value);
+    /* [in] */ BSTR target,
+    /* [in] */ int property,
+    /* [in] */ double value);
+
 
 void __RPC_STUB IShockwaveFlash_TSetPropertyNum_Stub(
     IRpcStubBuffer *This,
@@ -1588,11 +1753,13 @@ void __RPC_STUB IShockwaveFlash_TSetPropertyNum_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_TGetPropertyNum_Proxy( 
+
+/* [helpstring][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_TGetPropertyNum_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR target,
-     int property,
-     double __RPC_FAR *pVal);
+    /* [in] */ BSTR target,
+    /* [in] */ int property,
+    /* [retval][out] */ double __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_TGetPropertyNum_Stub(
     IRpcStubBuffer *This,
@@ -1600,9 +1767,11 @@ void __RPC_STUB IShockwaveFlash_TGetPropertyNum_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_SWRemote_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_SWRemote_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR __RPC_FAR *pVal);
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_SWRemote_Stub(
     IRpcStubBuffer *This,
@@ -1610,9 +1779,11 @@ void __RPC_STUB IShockwaveFlash_get_SWRemote_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_SWRemote_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_SWRemote_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR pVal);
+    /* [in] */ BSTR pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_SWRemote_Stub(
     IRpcStubBuffer *This,
@@ -1620,9 +1791,11 @@ void __RPC_STUB IShockwaveFlash_put_SWRemote_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_FlashVars_Proxy( 
+
+/* [helpstring][propget][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_get_FlashVars_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR __RPC_FAR *pVal);
+    /* [retval][out] */ BSTR __RPC_FAR *pVal);
+
 
 void __RPC_STUB IShockwaveFlash_get_FlashVars_Stub(
     IRpcStubBuffer *This,
@@ -1630,9 +1803,11 @@ void __RPC_STUB IShockwaveFlash_get_FlashVars_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
- HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_FlashVars_Proxy( 
+
+/* [helpstring][propput][id] */ HRESULT STDMETHODCALLTYPE IShockwaveFlash_put_FlashVars_Proxy( 
     IShockwaveFlash __RPC_FAR * This,
-     BSTR pVal);
+    /* [in] */ BSTR pVal);
+
 
 void __RPC_STUB IShockwaveFlash_put_FlashVars_Stub(
     IRpcStubBuffer *This,
@@ -1640,12 +1815,17 @@ void __RPC_STUB IShockwaveFlash_put_FlashVars_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
-#endif 	
+
+
+#endif 	/* __IShockwaveFlash_INTERFACE_DEFINED__ */
+
 
 #ifndef ___IShockwaveFlashEvents_DISPINTERFACE_DEFINED__
 #define ___IShockwaveFlashEvents_DISPINTERFACE_DEFINED__
 
- 
+/* dispinterface _IShockwaveFlashEvents */
+/* [hidden][helpstring][uuid] */ 
+
 
 EXTERN_C const IID DIID__IShockwaveFlashEvents;
 
@@ -1656,7 +1836,7 @@ EXTERN_C const IID DIID__IShockwaveFlashEvents;
     {
     };
     
-#else 	
+#else 	/* C style interface */
 
     typedef struct _IShockwaveFlashEventsVtbl
     {
@@ -1664,8 +1844,8 @@ EXTERN_C const IID DIID__IShockwaveFlashEvents;
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *QueryInterface )( 
             _IShockwaveFlashEvents __RPC_FAR * This,
-             REFIID riid,
-             void __RPC_FAR *__RPC_FAR *ppvObject);
+            /* [in] */ REFIID riid,
+            /* [iid_is][out] */ void __RPC_FAR *__RPC_FAR *ppvObject);
         
         ULONG ( STDMETHODCALLTYPE __RPC_FAR *AddRef )( 
             _IShockwaveFlashEvents __RPC_FAR * This);
@@ -1675,32 +1855,32 @@ EXTERN_C const IID DIID__IShockwaveFlashEvents;
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfoCount )( 
             _IShockwaveFlashEvents __RPC_FAR * This,
-             UINT __RPC_FAR *pctinfo);
+            /* [out] */ UINT __RPC_FAR *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfo )( 
             _IShockwaveFlashEvents __RPC_FAR * This,
-             UINT iTInfo,
-             LCID lcid,
-             ITypeInfo __RPC_FAR *__RPC_FAR *ppTInfo);
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo __RPC_FAR *__RPC_FAR *ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetIDsOfNames )( 
             _IShockwaveFlashEvents __RPC_FAR * This,
-             REFIID riid,
-             LPOLESTR __RPC_FAR *rgszNames,
-             UINT cNames,
-             LCID lcid,
-             DISPID __RPC_FAR *rgDispId);
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR __RPC_FAR *rgszNames,
+            /* [in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID __RPC_FAR *rgDispId);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Invoke )( 
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Invoke )( 
             _IShockwaveFlashEvents __RPC_FAR * This,
-             DISPID dispIdMember,
-             REFIID riid,
-             LCID lcid,
-             WORD wFlags,
-             DISPPARAMS __RPC_FAR *pDispParams,
-             VARIANT __RPC_FAR *pVarResult,
-             EXCEPINFO __RPC_FAR *pExcepInfo,
-             UINT __RPC_FAR *puArgErr);
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS __RPC_FAR *pDispParams,
+            /* [out] */ VARIANT __RPC_FAR *pVarResult,
+            /* [out] */ EXCEPINFO __RPC_FAR *pExcepInfo,
+            /* [out] */ UINT __RPC_FAR *puArgErr);
         
         END_INTERFACE
     } _IShockwaveFlashEventsVtbl;
@@ -1714,6 +1894,7 @@ EXTERN_C const IID DIID__IShockwaveFlashEvents;
 
 #ifdef COBJMACROS
 
+
 #define _IShockwaveFlashEvents_QueryInterface(This,riid,ppvObject)	\
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
@@ -1722,6 +1903,7 @@ EXTERN_C const IID DIID__IShockwaveFlashEvents;
 
 #define _IShockwaveFlashEvents_Release(This)	\
     (This)->lpVtbl -> Release(This)
+
 
 #define _IShockwaveFlashEvents_GetTypeInfoCount(This,pctinfo)	\
     (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
@@ -1735,16 +1917,21 @@ EXTERN_C const IID DIID__IShockwaveFlashEvents;
 #define _IShockwaveFlashEvents_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
 
-#endif 
+#endif /* COBJMACROS */
 
-#endif 	
 
-#endif 	
+#endif 	/* C style interface */
+
+
+#endif 	/* ___IShockwaveFlashEvents_DISPINTERFACE_DEFINED__ */
+
 
 #ifndef __IFlashFactory_INTERFACE_DEFINED__
 #define __IFlashFactory_INTERFACE_DEFINED__
 
- 
+/* interface IFlashFactory */
+/* [object][helpstring][uuid] */ 
+
 
 EXTERN_C const IID IID_IFlashFactory;
 
@@ -1756,7 +1943,7 @@ EXTERN_C const IID IID_IFlashFactory;
     public:
     };
     
-#else 	
+#else 	/* C style interface */
 
     typedef struct IFlashFactoryVtbl
     {
@@ -1764,8 +1951,8 @@ EXTERN_C const IID IID_IFlashFactory;
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *QueryInterface )( 
             IFlashFactory __RPC_FAR * This,
-             REFIID riid,
-             void __RPC_FAR *__RPC_FAR *ppvObject);
+            /* [in] */ REFIID riid,
+            /* [iid_is][out] */ void __RPC_FAR *__RPC_FAR *ppvObject);
         
         ULONG ( STDMETHODCALLTYPE __RPC_FAR *AddRef )( 
             IFlashFactory __RPC_FAR * This);
@@ -1785,6 +1972,7 @@ EXTERN_C const IID IID_IFlashFactory;
 
 #ifdef COBJMACROS
 
+
 #define IFlashFactory_QueryInterface(This,riid,ppvObject)	\
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
@@ -1794,16 +1982,24 @@ EXTERN_C const IID IID_IFlashFactory;
 #define IFlashFactory_Release(This)	\
     (This)->lpVtbl -> Release(This)
 
-#endif 
 
-#endif 	
+#endif /* COBJMACROS */
 
-#endif 	
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IFlashFactory_INTERFACE_DEFINED__ */
+
 
 #ifndef __IFlashObjectInterface_INTERFACE_DEFINED__
 #define __IFlashObjectInterface_INTERFACE_DEFINED__
 
- 
+/* interface IFlashObjectInterface */
+/* [object][helpstring][uuid] */ 
+
 
 EXTERN_C const IID IID_IFlashObjectInterface;
 
@@ -1815,7 +2011,7 @@ EXTERN_C const IID IID_IFlashObjectInterface;
     public:
     };
     
-#else 	
+#else 	/* C style interface */
 
     typedef struct IFlashObjectInterfaceVtbl
     {
@@ -1823,8 +2019,8 @@ EXTERN_C const IID IID_IFlashObjectInterface;
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *QueryInterface )( 
             IFlashObjectInterface __RPC_FAR * This,
-             REFIID riid,
-             void __RPC_FAR *__RPC_FAR *ppvObject);
+            /* [in] */ REFIID riid,
+            /* [iid_is][out] */ void __RPC_FAR *__RPC_FAR *ppvObject);
         
         ULONG ( STDMETHODCALLTYPE __RPC_FAR *AddRef )( 
             IFlashObjectInterface __RPC_FAR * This);
@@ -1834,81 +2030,81 @@ EXTERN_C const IID IID_IFlashObjectInterface;
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfoCount )( 
             IFlashObjectInterface __RPC_FAR * This,
-             UINT __RPC_FAR *pctinfo);
+            /* [out] */ UINT __RPC_FAR *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfo )( 
             IFlashObjectInterface __RPC_FAR * This,
-             UINT iTInfo,
-             LCID lcid,
-             ITypeInfo __RPC_FAR *__RPC_FAR *ppTInfo);
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo __RPC_FAR *__RPC_FAR *ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetIDsOfNames )( 
             IFlashObjectInterface __RPC_FAR * This,
-             REFIID riid,
-             LPOLESTR __RPC_FAR *rgszNames,
-             UINT cNames,
-             LCID lcid,
-             DISPID __RPC_FAR *rgDispId);
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR __RPC_FAR *rgszNames,
+            /* [in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID __RPC_FAR *rgDispId);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Invoke )( 
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Invoke )( 
             IFlashObjectInterface __RPC_FAR * This,
-             DISPID dispIdMember,
-             REFIID riid,
-             LCID lcid,
-             WORD wFlags,
-             DISPPARAMS __RPC_FAR *pDispParams,
-             VARIANT __RPC_FAR *pVarResult,
-             EXCEPINFO __RPC_FAR *pExcepInfo,
-             UINT __RPC_FAR *puArgErr);
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS __RPC_FAR *pDispParams,
+            /* [out] */ VARIANT __RPC_FAR *pVarResult,
+            /* [out] */ EXCEPINFO __RPC_FAR *pExcepInfo,
+            /* [out] */ UINT __RPC_FAR *puArgErr);
         
         HRESULT ( __stdcall __RPC_FAR *GetDispID )( 
             IFlashObjectInterface __RPC_FAR * This,
-             BSTR bstrName,
-             unsigned long grfdex,
-             long __RPC_FAR *pid);
+            /* [in] */ BSTR bstrName,
+            /* [in] */ unsigned long grfdex,
+            /* [out] */ long __RPC_FAR *pid);
         
         HRESULT ( __stdcall __RPC_FAR *RemoteInvokeEx )( 
             IFlashObjectInterface __RPC_FAR * This,
-             long id,
-             unsigned long lcid,
-             unsigned long dwFlags,
-             DISPPARAMS __RPC_FAR *pdp,
-             VARIANT __RPC_FAR *pvarRes,
-             EXCEPINFO __RPC_FAR *pei,
-             IServiceProvider __RPC_FAR *pspCaller,
-             unsigned int cvarRefArg,
-             unsigned int __RPC_FAR *rgiRefArg,
-             VARIANT __RPC_FAR *rgvarRefArg);
+            /* [in] */ long id,
+            /* [in] */ unsigned long lcid,
+            /* [in] */ unsigned long dwFlags,
+            /* [in] */ DISPPARAMS __RPC_FAR *pdp,
+            /* [out] */ VARIANT __RPC_FAR *pvarRes,
+            /* [out] */ EXCEPINFO __RPC_FAR *pei,
+            /* [in] */ IServiceProvider __RPC_FAR *pspCaller,
+            /* [in] */ unsigned int cvarRefArg,
+            /* [in] */ unsigned int __RPC_FAR *rgiRefArg,
+            /* [out][in] */ VARIANT __RPC_FAR *rgvarRefArg);
         
         HRESULT ( __stdcall __RPC_FAR *DeleteMemberByName )( 
             IFlashObjectInterface __RPC_FAR * This,
-             BSTR bstrName,
-             unsigned long grfdex);
+            /* [in] */ BSTR bstrName,
+            /* [in] */ unsigned long grfdex);
         
         HRESULT ( __stdcall __RPC_FAR *DeleteMemberByDispID )( 
             IFlashObjectInterface __RPC_FAR * This,
-             long id);
+            /* [in] */ long id);
         
         HRESULT ( __stdcall __RPC_FAR *GetMemberProperties )( 
             IFlashObjectInterface __RPC_FAR * This,
-             long id,
-             unsigned long grfdexFetch,
-             unsigned long __RPC_FAR *pgrfdex);
+            /* [in] */ long id,
+            /* [in] */ unsigned long grfdexFetch,
+            /* [out] */ unsigned long __RPC_FAR *pgrfdex);
         
         HRESULT ( __stdcall __RPC_FAR *GetMemberName )( 
             IFlashObjectInterface __RPC_FAR * This,
-             long id,
-             BSTR __RPC_FAR *pbstrName);
+            /* [in] */ long id,
+            /* [out] */ BSTR __RPC_FAR *pbstrName);
         
         HRESULT ( __stdcall __RPC_FAR *GetNextDispID )( 
             IFlashObjectInterface __RPC_FAR * This,
-             unsigned long grfdex,
-             long id,
-             long __RPC_FAR *pid);
+            /* [in] */ unsigned long grfdex,
+            /* [in] */ long id,
+            /* [out] */ long __RPC_FAR *pid);
         
         HRESULT ( __stdcall __RPC_FAR *GetNameSpaceParent )( 
             IFlashObjectInterface __RPC_FAR * This,
-             IUnknown __RPC_FAR *__RPC_FAR *ppunk);
+            /* [out] */ IUnknown __RPC_FAR *__RPC_FAR *ppunk);
         
         END_INTERFACE
     } IFlashObjectInterfaceVtbl;
@@ -1922,6 +2118,7 @@ EXTERN_C const IID IID_IFlashObjectInterface;
 
 #ifdef COBJMACROS
 
+
 #define IFlashObjectInterface_QueryInterface(This,riid,ppvObject)	\
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
@@ -1930,6 +2127,7 @@ EXTERN_C const IID IID_IFlashObjectInterface;
 
 #define IFlashObjectInterface_Release(This)	\
     (This)->lpVtbl -> Release(This)
+
 
 #define IFlashObjectInterface_GetTypeInfoCount(This,pctinfo)	\
     (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
@@ -1942,6 +2140,7 @@ EXTERN_C const IID IID_IFlashObjectInterface;
 
 #define IFlashObjectInterface_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
+
 
 #define IFlashObjectInterface_GetDispID(This,bstrName,grfdex,pid)	\
     (This)->lpVtbl -> GetDispID(This,bstrName,grfdex,pid)
@@ -1967,16 +2166,24 @@ EXTERN_C const IID IID_IFlashObjectInterface;
 #define IFlashObjectInterface_GetNameSpaceParent(This,ppunk)	\
     (This)->lpVtbl -> GetNameSpaceParent(This,ppunk)
 
-#endif 
 
-#endif 	
+#endif /* COBJMACROS */
 
-#endif 	
+
+#endif 	/* C style interface */
+
+
+
+
+#endif 	/* __IFlashObjectInterface_INTERFACE_DEFINED__ */
+
 
 #ifndef __IDispatchEx_INTERFACE_DEFINED__
 #define __IDispatchEx_INTERFACE_DEFINED__
 
- 
+/* interface IDispatchEx */
+/* [object][uuid] */ 
+
 
 EXTERN_C const IID IID_IDispatchEx;
 
@@ -1987,49 +2194,49 @@ EXTERN_C const IID IID_IDispatchEx;
     {
     public:
         virtual HRESULT __stdcall GetDispID( 
-             BSTR bstrName,
-             unsigned long grfdex,
-             long __RPC_FAR *pid) = 0;
+            /* [in] */ BSTR bstrName,
+            /* [in] */ unsigned long grfdex,
+            /* [out] */ long __RPC_FAR *pid) = 0;
         
         virtual HRESULT __stdcall RemoteInvokeEx( 
-             long id,
-             unsigned long lcid,
-             unsigned long dwFlags,
-             DISPPARAMS __RPC_FAR *pdp,
-             VARIANT __RPC_FAR *pvarRes,
-             EXCEPINFO __RPC_FAR *pei,
-             IServiceProvider __RPC_FAR *pspCaller,
-             unsigned int cvarRefArg,
-             unsigned int __RPC_FAR *rgiRefArg,
-             VARIANT __RPC_FAR *rgvarRefArg) = 0;
+            /* [in] */ long id,
+            /* [in] */ unsigned long lcid,
+            /* [in] */ unsigned long dwFlags,
+            /* [in] */ DISPPARAMS __RPC_FAR *pdp,
+            /* [out] */ VARIANT __RPC_FAR *pvarRes,
+            /* [out] */ EXCEPINFO __RPC_FAR *pei,
+            /* [in] */ IServiceProvider __RPC_FAR *pspCaller,
+            /* [in] */ unsigned int cvarRefArg,
+            /* [in] */ unsigned int __RPC_FAR *rgiRefArg,
+            /* [out][in] */ VARIANT __RPC_FAR *rgvarRefArg) = 0;
         
         virtual HRESULT __stdcall DeleteMemberByName( 
-             BSTR bstrName,
-             unsigned long grfdex) = 0;
+            /* [in] */ BSTR bstrName,
+            /* [in] */ unsigned long grfdex) = 0;
         
         virtual HRESULT __stdcall DeleteMemberByDispID( 
-             long id) = 0;
+            /* [in] */ long id) = 0;
         
         virtual HRESULT __stdcall GetMemberProperties( 
-             long id,
-             unsigned long grfdexFetch,
-             unsigned long __RPC_FAR *pgrfdex) = 0;
+            /* [in] */ long id,
+            /* [in] */ unsigned long grfdexFetch,
+            /* [out] */ unsigned long __RPC_FAR *pgrfdex) = 0;
         
         virtual HRESULT __stdcall GetMemberName( 
-             long id,
-             BSTR __RPC_FAR *pbstrName) = 0;
+            /* [in] */ long id,
+            /* [out] */ BSTR __RPC_FAR *pbstrName) = 0;
         
         virtual HRESULT __stdcall GetNextDispID( 
-             unsigned long grfdex,
-             long id,
-             long __RPC_FAR *pid) = 0;
+            /* [in] */ unsigned long grfdex,
+            /* [in] */ long id,
+            /* [out] */ long __RPC_FAR *pid) = 0;
         
         virtual HRESULT __stdcall GetNameSpaceParent( 
-             IUnknown __RPC_FAR *__RPC_FAR *ppunk) = 0;
+            /* [out] */ IUnknown __RPC_FAR *__RPC_FAR *ppunk) = 0;
         
     };
     
-#else 	
+#else 	/* C style interface */
 
     typedef struct IDispatchExVtbl
     {
@@ -2037,8 +2244,8 @@ EXTERN_C const IID IID_IDispatchEx;
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *QueryInterface )( 
             IDispatchEx __RPC_FAR * This,
-             REFIID riid,
-             void __RPC_FAR *__RPC_FAR *ppvObject);
+            /* [in] */ REFIID riid,
+            /* [iid_is][out] */ void __RPC_FAR *__RPC_FAR *ppvObject);
         
         ULONG ( STDMETHODCALLTYPE __RPC_FAR *AddRef )( 
             IDispatchEx __RPC_FAR * This);
@@ -2048,81 +2255,81 @@ EXTERN_C const IID IID_IDispatchEx;
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfoCount )( 
             IDispatchEx __RPC_FAR * This,
-             UINT __RPC_FAR *pctinfo);
+            /* [out] */ UINT __RPC_FAR *pctinfo);
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetTypeInfo )( 
             IDispatchEx __RPC_FAR * This,
-             UINT iTInfo,
-             LCID lcid,
-             ITypeInfo __RPC_FAR *__RPC_FAR *ppTInfo);
+            /* [in] */ UINT iTInfo,
+            /* [in] */ LCID lcid,
+            /* [out] */ ITypeInfo __RPC_FAR *__RPC_FAR *ppTInfo);
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *GetIDsOfNames )( 
             IDispatchEx __RPC_FAR * This,
-             REFIID riid,
-             LPOLESTR __RPC_FAR *rgszNames,
-             UINT cNames,
-             LCID lcid,
-             DISPID __RPC_FAR *rgDispId);
+            /* [in] */ REFIID riid,
+            /* [size_is][in] */ LPOLESTR __RPC_FAR *rgszNames,
+            /* [in] */ UINT cNames,
+            /* [in] */ LCID lcid,
+            /* [size_is][out] */ DISPID __RPC_FAR *rgDispId);
         
-         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Invoke )( 
+        /* [local] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *Invoke )( 
             IDispatchEx __RPC_FAR * This,
-             DISPID dispIdMember,
-             REFIID riid,
-             LCID lcid,
-             WORD wFlags,
-             DISPPARAMS __RPC_FAR *pDispParams,
-             VARIANT __RPC_FAR *pVarResult,
-             EXCEPINFO __RPC_FAR *pExcepInfo,
-             UINT __RPC_FAR *puArgErr);
+            /* [in] */ DISPID dispIdMember,
+            /* [in] */ REFIID riid,
+            /* [in] */ LCID lcid,
+            /* [in] */ WORD wFlags,
+            /* [out][in] */ DISPPARAMS __RPC_FAR *pDispParams,
+            /* [out] */ VARIANT __RPC_FAR *pVarResult,
+            /* [out] */ EXCEPINFO __RPC_FAR *pExcepInfo,
+            /* [out] */ UINT __RPC_FAR *puArgErr);
         
         HRESULT ( __stdcall __RPC_FAR *GetDispID )( 
             IDispatchEx __RPC_FAR * This,
-             BSTR bstrName,
-             unsigned long grfdex,
-             long __RPC_FAR *pid);
+            /* [in] */ BSTR bstrName,
+            /* [in] */ unsigned long grfdex,
+            /* [out] */ long __RPC_FAR *pid);
         
         HRESULT ( __stdcall __RPC_FAR *RemoteInvokeEx )( 
             IDispatchEx __RPC_FAR * This,
-             long id,
-             unsigned long lcid,
-             unsigned long dwFlags,
-             DISPPARAMS __RPC_FAR *pdp,
-             VARIANT __RPC_FAR *pvarRes,
-             EXCEPINFO __RPC_FAR *pei,
-             IServiceProvider __RPC_FAR *pspCaller,
-             unsigned int cvarRefArg,
-             unsigned int __RPC_FAR *rgiRefArg,
-             VARIANT __RPC_FAR *rgvarRefArg);
+            /* [in] */ long id,
+            /* [in] */ unsigned long lcid,
+            /* [in] */ unsigned long dwFlags,
+            /* [in] */ DISPPARAMS __RPC_FAR *pdp,
+            /* [out] */ VARIANT __RPC_FAR *pvarRes,
+            /* [out] */ EXCEPINFO __RPC_FAR *pei,
+            /* [in] */ IServiceProvider __RPC_FAR *pspCaller,
+            /* [in] */ unsigned int cvarRefArg,
+            /* [in] */ unsigned int __RPC_FAR *rgiRefArg,
+            /* [out][in] */ VARIANT __RPC_FAR *rgvarRefArg);
         
         HRESULT ( __stdcall __RPC_FAR *DeleteMemberByName )( 
             IDispatchEx __RPC_FAR * This,
-             BSTR bstrName,
-             unsigned long grfdex);
+            /* [in] */ BSTR bstrName,
+            /* [in] */ unsigned long grfdex);
         
         HRESULT ( __stdcall __RPC_FAR *DeleteMemberByDispID )( 
             IDispatchEx __RPC_FAR * This,
-             long id);
+            /* [in] */ long id);
         
         HRESULT ( __stdcall __RPC_FAR *GetMemberProperties )( 
             IDispatchEx __RPC_FAR * This,
-             long id,
-             unsigned long grfdexFetch,
-             unsigned long __RPC_FAR *pgrfdex);
+            /* [in] */ long id,
+            /* [in] */ unsigned long grfdexFetch,
+            /* [out] */ unsigned long __RPC_FAR *pgrfdex);
         
         HRESULT ( __stdcall __RPC_FAR *GetMemberName )( 
             IDispatchEx __RPC_FAR * This,
-             long id,
-             BSTR __RPC_FAR *pbstrName);
+            /* [in] */ long id,
+            /* [out] */ BSTR __RPC_FAR *pbstrName);
         
         HRESULT ( __stdcall __RPC_FAR *GetNextDispID )( 
             IDispatchEx __RPC_FAR * This,
-             unsigned long grfdex,
-             long id,
-             long __RPC_FAR *pid);
+            /* [in] */ unsigned long grfdex,
+            /* [in] */ long id,
+            /* [out] */ long __RPC_FAR *pid);
         
         HRESULT ( __stdcall __RPC_FAR *GetNameSpaceParent )( 
             IDispatchEx __RPC_FAR * This,
-             IUnknown __RPC_FAR *__RPC_FAR *ppunk);
+            /* [out] */ IUnknown __RPC_FAR *__RPC_FAR *ppunk);
         
         END_INTERFACE
     } IDispatchExVtbl;
@@ -2136,6 +2343,7 @@ EXTERN_C const IID IID_IDispatchEx;
 
 #ifdef COBJMACROS
 
+
 #define IDispatchEx_QueryInterface(This,riid,ppvObject)	\
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
@@ -2144,6 +2352,7 @@ EXTERN_C const IID IID_IDispatchEx;
 
 #define IDispatchEx_Release(This)	\
     (This)->lpVtbl -> Release(This)
+
 
 #define IDispatchEx_GetTypeInfoCount(This,pctinfo)	\
     (This)->lpVtbl -> GetTypeInfoCount(This,pctinfo)
@@ -2156,6 +2365,7 @@ EXTERN_C const IID IID_IDispatchEx;
 
 #define IDispatchEx_Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)	\
     (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
+
 
 #define IDispatchEx_GetDispID(This,bstrName,grfdex,pid)	\
     (This)->lpVtbl -> GetDispID(This,bstrName,grfdex,pid)
@@ -2181,15 +2391,19 @@ EXTERN_C const IID IID_IDispatchEx;
 #define IDispatchEx_GetNameSpaceParent(This,ppunk)	\
     (This)->lpVtbl -> GetNameSpaceParent(This,ppunk)
 
-#endif 
+#endif /* COBJMACROS */
 
-#endif 	
+
+#endif 	/* C style interface */
+
+
 
 HRESULT __stdcall IDispatchEx_GetDispID_Proxy( 
     IDispatchEx __RPC_FAR * This,
-     BSTR bstrName,
-     unsigned long grfdex,
-     long __RPC_FAR *pid);
+    /* [in] */ BSTR bstrName,
+    /* [in] */ unsigned long grfdex,
+    /* [out] */ long __RPC_FAR *pid);
+
 
 void __RPC_STUB IDispatchEx_GetDispID_Stub(
     IRpcStubBuffer *This,
@@ -2197,18 +2411,20 @@ void __RPC_STUB IDispatchEx_GetDispID_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
+
 HRESULT __stdcall IDispatchEx_RemoteInvokeEx_Proxy( 
     IDispatchEx __RPC_FAR * This,
-     long id,
-     unsigned long lcid,
-     unsigned long dwFlags,
-     DISPPARAMS __RPC_FAR *pdp,
-     VARIANT __RPC_FAR *pvarRes,
-     EXCEPINFO __RPC_FAR *pei,
-     IServiceProvider __RPC_FAR *pspCaller,
-     unsigned int cvarRefArg,
-     unsigned int __RPC_FAR *rgiRefArg,
-     VARIANT __RPC_FAR *rgvarRefArg);
+    /* [in] */ long id,
+    /* [in] */ unsigned long lcid,
+    /* [in] */ unsigned long dwFlags,
+    /* [in] */ DISPPARAMS __RPC_FAR *pdp,
+    /* [out] */ VARIANT __RPC_FAR *pvarRes,
+    /* [out] */ EXCEPINFO __RPC_FAR *pei,
+    /* [in] */ IServiceProvider __RPC_FAR *pspCaller,
+    /* [in] */ unsigned int cvarRefArg,
+    /* [in] */ unsigned int __RPC_FAR *rgiRefArg,
+    /* [out][in] */ VARIANT __RPC_FAR *rgvarRefArg);
+
 
 void __RPC_STUB IDispatchEx_RemoteInvokeEx_Stub(
     IRpcStubBuffer *This,
@@ -2216,10 +2432,12 @@ void __RPC_STUB IDispatchEx_RemoteInvokeEx_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
+
 HRESULT __stdcall IDispatchEx_DeleteMemberByName_Proxy( 
     IDispatchEx __RPC_FAR * This,
-     BSTR bstrName,
-     unsigned long grfdex);
+    /* [in] */ BSTR bstrName,
+    /* [in] */ unsigned long grfdex);
+
 
 void __RPC_STUB IDispatchEx_DeleteMemberByName_Stub(
     IRpcStubBuffer *This,
@@ -2227,9 +2445,11 @@ void __RPC_STUB IDispatchEx_DeleteMemberByName_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
+
 HRESULT __stdcall IDispatchEx_DeleteMemberByDispID_Proxy( 
     IDispatchEx __RPC_FAR * This,
-     long id);
+    /* [in] */ long id);
+
 
 void __RPC_STUB IDispatchEx_DeleteMemberByDispID_Stub(
     IRpcStubBuffer *This,
@@ -2237,11 +2457,13 @@ void __RPC_STUB IDispatchEx_DeleteMemberByDispID_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
+
 HRESULT __stdcall IDispatchEx_GetMemberProperties_Proxy( 
     IDispatchEx __RPC_FAR * This,
-     long id,
-     unsigned long grfdexFetch,
-     unsigned long __RPC_FAR *pgrfdex);
+    /* [in] */ long id,
+    /* [in] */ unsigned long grfdexFetch,
+    /* [out] */ unsigned long __RPC_FAR *pgrfdex);
+
 
 void __RPC_STUB IDispatchEx_GetMemberProperties_Stub(
     IRpcStubBuffer *This,
@@ -2249,10 +2471,12 @@ void __RPC_STUB IDispatchEx_GetMemberProperties_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
+
 HRESULT __stdcall IDispatchEx_GetMemberName_Proxy( 
     IDispatchEx __RPC_FAR * This,
-     long id,
-     BSTR __RPC_FAR *pbstrName);
+    /* [in] */ long id,
+    /* [out] */ BSTR __RPC_FAR *pbstrName);
+
 
 void __RPC_STUB IDispatchEx_GetMemberName_Stub(
     IRpcStubBuffer *This,
@@ -2260,11 +2484,13 @@ void __RPC_STUB IDispatchEx_GetMemberName_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
+
 HRESULT __stdcall IDispatchEx_GetNextDispID_Proxy( 
     IDispatchEx __RPC_FAR * This,
-     unsigned long grfdex,
-     long id,
-     long __RPC_FAR *pid);
+    /* [in] */ unsigned long grfdex,
+    /* [in] */ long id,
+    /* [out] */ long __RPC_FAR *pid);
+
 
 void __RPC_STUB IDispatchEx_GetNextDispID_Stub(
     IRpcStubBuffer *This,
@@ -2272,9 +2498,11 @@ void __RPC_STUB IDispatchEx_GetNextDispID_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
+
 HRESULT __stdcall IDispatchEx_GetNameSpaceParent_Proxy( 
     IDispatchEx __RPC_FAR * This,
-     IUnknown __RPC_FAR *__RPC_FAR *ppunk);
+    /* [out] */ IUnknown __RPC_FAR *__RPC_FAR *ppunk);
+
 
 void __RPC_STUB IDispatchEx_GetNameSpaceParent_Stub(
     IRpcStubBuffer *This,
@@ -2282,12 +2510,17 @@ void __RPC_STUB IDispatchEx_GetNameSpaceParent_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
-#endif 	
+
+
+#endif 	/* __IDispatchEx_INTERFACE_DEFINED__ */
+
 
 #ifndef __IServiceProvider_INTERFACE_DEFINED__
 #define __IServiceProvider_INTERFACE_DEFINED__
 
- 
+/* interface IServiceProvider */
+/* [object][uuid] */ 
+
 
 EXTERN_C const IID IID_IServiceProvider;
 
@@ -2298,13 +2531,13 @@ EXTERN_C const IID IID_IServiceProvider;
     {
     public:
         virtual HRESULT __stdcall RemoteQueryService( 
-             GUID __RPC_FAR *guidService,
-             GUID __RPC_FAR *riid,
-             IUnknown __RPC_FAR *__RPC_FAR *ppvObject) = 0;
+            /* [in] */ GUID __RPC_FAR *guidService,
+            /* [in] */ GUID __RPC_FAR *riid,
+            /* [out] */ IUnknown __RPC_FAR *__RPC_FAR *ppvObject) = 0;
         
     };
     
-#else 	
+#else 	/* C style interface */
 
     typedef struct IServiceProviderVtbl
     {
@@ -2312,8 +2545,8 @@ EXTERN_C const IID IID_IServiceProvider;
         
         HRESULT ( STDMETHODCALLTYPE __RPC_FAR *QueryInterface )( 
             IServiceProvider __RPC_FAR * This,
-             REFIID riid,
-             void __RPC_FAR *__RPC_FAR *ppvObject);
+            /* [in] */ REFIID riid,
+            /* [iid_is][out] */ void __RPC_FAR *__RPC_FAR *ppvObject);
         
         ULONG ( STDMETHODCALLTYPE __RPC_FAR *AddRef )( 
             IServiceProvider __RPC_FAR * This);
@@ -2323,9 +2556,9 @@ EXTERN_C const IID IID_IServiceProvider;
         
         HRESULT ( __stdcall __RPC_FAR *RemoteQueryService )( 
             IServiceProvider __RPC_FAR * This,
-             GUID __RPC_FAR *guidService,
-             GUID __RPC_FAR *riid,
-             IUnknown __RPC_FAR *__RPC_FAR *ppvObject);
+            /* [in] */ GUID __RPC_FAR *guidService,
+            /* [in] */ GUID __RPC_FAR *riid,
+            /* [out] */ IUnknown __RPC_FAR *__RPC_FAR *ppvObject);
         
         END_INTERFACE
     } IServiceProviderVtbl;
@@ -2339,6 +2572,7 @@ EXTERN_C const IID IID_IServiceProvider;
 
 #ifdef COBJMACROS
 
+
 #define IServiceProvider_QueryInterface(This,riid,ppvObject)	\
     (This)->lpVtbl -> QueryInterface(This,riid,ppvObject)
 
@@ -2348,18 +2582,23 @@ EXTERN_C const IID IID_IServiceProvider;
 #define IServiceProvider_Release(This)	\
     (This)->lpVtbl -> Release(This)
 
+
 #define IServiceProvider_RemoteQueryService(This,guidService,riid,ppvObject)	\
     (This)->lpVtbl -> RemoteQueryService(This,guidService,riid,ppvObject)
 
-#endif 
+#endif /* COBJMACROS */
 
-#endif 	
+
+#endif 	/* C style interface */
+
+
 
 HRESULT __stdcall IServiceProvider_RemoteQueryService_Proxy( 
     IServiceProvider __RPC_FAR * This,
-     GUID __RPC_FAR *guidService,
-     GUID __RPC_FAR *riid,
-     IUnknown __RPC_FAR *__RPC_FAR *ppvObject);
+    /* [in] */ GUID __RPC_FAR *guidService,
+    /* [in] */ GUID __RPC_FAR *riid,
+    /* [out] */ IUnknown __RPC_FAR *__RPC_FAR *ppvObject);
+
 
 void __RPC_STUB IServiceProvider_RemoteQueryService_Stub(
     IRpcStubBuffer *This,
@@ -2367,7 +2606,10 @@ void __RPC_STUB IServiceProvider_RemoteQueryService_Stub(
     PRPC_MESSAGE _pRpcMessage,
     DWORD *_pdwStubPhase);
 
-#endif 	
+
+
+#endif 	/* __IServiceProvider_INTERFACE_DEFINED__ */
+
 
 EXTERN_C const CLSID CLSID_ShockwaveFlash;
 
@@ -2392,7 +2634,11 @@ EXTERN_C const CLSID CLSID_FlashObjectInterface;
 class DECLSPEC_UUID("D27CDB71-AE6D-11CF-96B8-444553540000")
 FlashObjectInterface;
 #endif
-#endif 
+#endif /* __ShockwaveFlashObjects_LIBRARY_DEFINED__ */
+
+/* Additional Prototypes for ALL interfaces */
+
+/* end of Additional Prototypes */
 
 #ifdef __cplusplus
 }

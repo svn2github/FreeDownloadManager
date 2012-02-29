@@ -1,10 +1,29 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * rectangle filling function
+ * Copyright (c) 2003 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * useful rectangle filling function
+ * @author Michael Niedermayer <michaelni@gmx.at>
+ */
 
 #ifndef AVCODEC_RECTANGLE_H
 #define AVCODEC_RECTANGLE_H
@@ -14,7 +33,12 @@
 #include "libavutil/common.h"
 #include "dsputil.h"
 
-
+/**
+ * fill a rectangle.
+ * @param h height of the rectangle, should be a constant
+ * @param w width of the rectangle, should be a constant
+ * @param size the size of val (1, 2 or 4), should be a constant
+ */
 static av_always_inline void fill_rectangle(void *vp, int w, int h, int stride, uint32_t val, int size){
     uint8_t *p= (uint8_t*)vp;
     assert(size==1 || size==2 || size==4);
@@ -42,7 +66,7 @@ static av_always_inline void fill_rectangle(void *vp, int w, int h, int stride, 
         *(uint32_t*)(p + 2*stride)= v;
         *(uint32_t*)(p + 3*stride)= v;
     }else if(w==8){
-    
+    //gcc can't optimize 64bit math on x86_32
 #if HAVE_FAST_64BIT
         const uint64_t v=  size==2 ? val*0x0001000100010001ULL : val*0x0100000001ULL;
         *(uint64_t*)(p + 0*stride)= v;
@@ -98,4 +122,4 @@ static av_always_inline void fill_rectangle(void *vp, int w, int h, int stride, 
     assert(h==4);
 }
 
-#endif 
+#endif /* AVCODEC_RECTANGLE_H */

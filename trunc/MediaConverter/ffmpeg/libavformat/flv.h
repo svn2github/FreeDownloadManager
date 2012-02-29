@@ -1,20 +1,37 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+/**
+ * @file
+ * FLV common header
+ *
+ * Copyright (c) 2006 The FFmpeg Project
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVFORMAT_FLV_H
 #define AVFORMAT_FLV_H
 
-
+/* offsets for packed values */
 #define FLV_AUDIO_SAMPLESSIZE_OFFSET 1
 #define FLV_AUDIO_SAMPLERATE_OFFSET  2
 #define FLV_AUDIO_CODECID_OFFSET     4
 
 #define FLV_VIDEO_FRAMETYPE_OFFSET   4
 
-
+/* bitmasks to isolate specific values */
 #define FLV_AUDIO_CHANNEL_MASK    0x01
 #define FLV_AUDIO_SAMPLESIZE_MASK 0x02
 #define FLV_AUDIO_SAMPLERATE_MASK 0x0c
@@ -47,7 +64,7 @@ enum {
 };
 
 enum {
-    FLV_SAMPLERATE_SPECIAL = 0, 
+    FLV_SAMPLERATE_SPECIAL = 0, /**< signifies 5512Hz and 8000Hz in the case of NELLYMOSER */
     FLV_SAMPLERATE_11025HZ = 1 << FLV_AUDIO_SAMPLERATE_OFFSET,
     FLV_SAMPLERATE_22050HZ = 2 << FLV_AUDIO_SAMPLERATE_OFFSET,
     FLV_SAMPLERATE_44100HZ = 3 << FLV_AUDIO_SAMPLERATE_OFFSET,
@@ -95,4 +112,4 @@ typedef enum {
     AMF_DATA_TYPE_UNSUPPORTED = 0x0d,
 } AMFDataType;
 
-#endif 
+#endif /* AVFORMAT_FLV_H */

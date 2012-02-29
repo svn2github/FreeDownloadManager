@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// FileStreams.h
 
 #ifndef __FILESTREAMS_H
 #define __FILESTREAMS_H
@@ -49,9 +47,9 @@ class CStdInFileStream:
   public CMyUnknownImp
 {
 public:
-  
-  
-  
+  // HANDLE File;
+  // CStdInFileStream() File(INVALID_HANDLE_VALUE): {}
+  // void Open() { File = GetStdHandle(STD_INPUT_HANDLE); };
   MY_UNKNOWN_IMP
 
   virtual ~CStdInFileStream() {}

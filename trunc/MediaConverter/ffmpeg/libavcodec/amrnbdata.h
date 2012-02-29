@@ -1,64 +1,87 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * AMR narrowband data and definitions
+ * Copyright (c) 2006-2007 Robert Swain
+ * Copyright (c) 2009 Colin McQuillan
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 
-
-
-
+/**
+ * @file
+ * AMR narrowband data and definitions
+ */
 
 #ifndef AVCODEC_AMRNBDATA_H
 #define AVCODEC_AMRNBDATA_H
 
 #include <stdint.h>
 
-#include "libavutil/common.h"      
+#include "libavutil/common.h"      /* offsetof */
 
-#define AMR_SUBFRAME_SIZE            40   
+#define AMR_SUBFRAME_SIZE            40   ///< samples per subframe
 
-
+/** Frame type (Table 1a in 3GPP TS 26.101) */
 enum Mode {
-    MODE_4k75 = 0,                        
-    MODE_5k15,                            
-    MODE_5k9,                             
-    MODE_6k7,                             
-    MODE_7k4,                             
-    MODE_7k95,                            
-    MODE_10k2,                            
-    MODE_12k2,                            
-    MODE_DTX,                             
-    N_MODES,                              
-    NO_DATA = 15                          
+    MODE_4k75 = 0,                        ///< 4.75 kbit/s
+    MODE_5k15,                            ///< 5.15 kbit/s
+    MODE_5k9,                             ///< 5.90 kbit/s
+    MODE_6k7,                             ///< 6.70 kbit/s
+    MODE_7k4,                             ///< 7.40 kbit/s
+    MODE_7k95,                            ///< 7.95 kbit/s
+    MODE_10k2,                            ///< 10.2 kbit/s
+    MODE_12k2,                            ///< 12.2 kbit/s
+    MODE_DTX,                             ///< silent frame
+    N_MODES,                              ///< number of modes
+    NO_DATA = 15                          ///< no transmission
 };
 
-#define LP_FILTER_ORDER 10        
+#define LP_FILTER_ORDER 10        ///< linear predictive coding filter order
 
-
+/**
+ * AMRNB unpacked data subframe
+ */
 typedef struct {
-    uint16_t p_lag;      
-    uint16_t p_gain;     
-    uint16_t fixed_gain; 
-    uint16_t pulses[10]; 
+    uint16_t p_lag;      ///< index to decode the pitch lag
+    uint16_t p_gain;     ///< index to decode the pitch gain
+    uint16_t fixed_gain; ///< index to decode the fixed gain factor, for MODE_12k2 and MODE_7k95
+    uint16_t pulses[10]; ///< pulses: 10 for MODE_12k2, 7 for MODE_10k2, and index and sign for others
 } AMRNBSubframe;
 
-
+/**
+ * AMRNB unpacked data frame
+ */
 typedef struct {
-    uint16_t lsf[5];           
-    AMRNBSubframe subframe[4]; 
+    uint16_t lsf[5];           ///< lsf parameters: 5 parameters for MODE_12k2, only 3 for other modes
+    AMRNBSubframe subframe[4]; ///< unpacked data for each subframe
 } AMRNBFrame;
 
-
+/** The index of a frame parameter */
 #define AMR_BIT(field)                  (offsetof(AMRNBFrame, field) >> 1)
-
+/** The index of a subframe-specific parameter */
 #define AMR_OF(frame_num, variable)     AMR_BIT(subframe[frame_num].variable)
 
-
-
-
-
-
-
-
+// The following order* tables are used to convert AMR frame parameters to and
+// from a bitstream. See 3GPP TS 26.101 for more information.
+// Each field in AMRNBFrame is stored as:
+// * one byte for the number of bits in the field
+// * one byte for the field index
+// * then, one byte for each bit of the field (from most-significant to least)
+//         of the position of that bit in the AMR frame.
 static const uint8_t order_MODE_4k75[] = {
      8, AMR_BIT(lsf[0]),        7,   6,   5,   4,   3,   2,   1,   0,
      8, AMR_BIT(lsf[1]),       15,  14,  13,  12,  11,  10,   9,   8,
@@ -315,7 +338,10 @@ static const uint8_t order_MODE_12k2[] = {
      0
 };
 
-
+/**
+ * position of the bitmapping data for each packet type in
+ * the AMRNBFrame
+ */
 static const uint8_t * const amr_unpacking_bitmaps_per_mode[N_MODES] = {
     order_MODE_4k75,
     order_MODE_5k15,
@@ -327,12 +353,17 @@ static const uint8_t * const amr_unpacking_bitmaps_per_mode[N_MODES] = {
     order_MODE_12k2,
 };
 
-
+/** number of bytes for each mode */
 static const uint8_t frame_sizes_nb[N_MODES] = {
     12, 13, 15, 17, 19, 20, 26, 31, 5
 };
 
-
+/**
+ * Base-5 representation for values 0-124
+ *
+ * This is useful for decoding pulse positions in 10.2 kbit/s frames.
+ * Safe values are provided for out of range positions 125-127.
+ */
 static const uint8_t base_five_table[128][3] = {
  {0, 0, 0}, {0, 0, 1}, {0, 0, 2}, {0, 0, 3}, {0, 0, 4}, {0, 1, 0}, {0, 1, 1},
  {0, 1, 2}, {0, 1, 3}, {0, 1, 4}, {0, 2, 0}, {0, 2, 1}, {0, 2, 2}, {0, 2, 3},
@@ -355,20 +386,29 @@ static const uint8_t base_five_table[128][3] = {
  {0, 0, 0}, {0, 0, 0}
 };
 
-
+/**
+ * Values for the lsp vector from the 4th subframe of the
+ * previous subframe values.
+ *
+ * @note: Taken from Decoder_amr_reset in Q15 using val/1000
+ */
 static const int8_t lsp_sub4_init[LP_FILTER_ORDER] = {
     30, 26, 21, 15, 8, 0, -8, -15, -21, -26
 };
 
-
+/**
+ * Mean lsp values.
+ *
+ * @note: Taken from Decoder_amr_reset in Q15
+ */
 static const int16_t lsp_avg_init[LP_FILTER_ORDER] = {
     1384, 2077, 3420, 5108, 6742, 8122, 9863, 11092, 12714, 13701
 };
 
+// LSF tables
 
-
-
-
+// These are stored as integers to save space. The values are taken from
+// q_plsf_3.tab and q_plsf_5.tab in 3GPP TS 26.090.
 
 static const int16_t lsf_3_3_MODE_5k15[128][4] = {
 {  419,  163,  -30, -262}, { -455, -789,-1430, -721}, { 1006,  664,  269,   25},
@@ -1376,35 +1416,37 @@ static const float lsf_5_mean[LP_FILTER_ORDER] = {
     1982.910, 2407.960, 2708.010, 3104.00, 3344.97
 };
 
-
+/** Prediction factor table for modes other than 12.2kbit/s */
 static const float pred_fac[LP_FILTER_ORDER] = {
     0.291626, 0.328644, 0.383636, 0.405640, 0.438873,
     0.355560, 0.323120, 0.298065, 0.262238, 0.197876,
 };
 
+// fixed tables
 
-
-
+/**
+ * number of pulses per mode
+ */
 static const uint8_t pulses_nb_per_mode[] = {2, 2, 2, 3, 4, 4, 8, 10};
 
-
+/** track start positions for algebraic code book routines */
 static const uint8_t track_position[16] = {
     0, 2, 0, 3, 0, 2, 0, 3, 1, 3, 2, 4, 1, 4, 1, 4
 };
 
-
+/** 3-bit Gray code to binary lookup table */
 static const uint8_t gray_decode[8] = { 0, 5, 15, 10, 25, 30, 20, 35 };
 
 
+// gain tables
 
-
-
+/** scalar quantized pitch gain table for 7.95 and 12.2 kbps modes */
 static const uint16_t qua_gain_pit[16] = {
      0,  3277,  6556,  8192,  9830, 11469, 12288, 13107,
  13926, 14746, 15565, 16384, 17203, 18022, 18842, 19661
 };
 
-
+/** scalar quantized fixed gain table for 7.95 and 12.2 kbps modes */
 static const uint16_t qua_gain_code[32] = {
    159,   206,   268,   349,   419,   482,   554,   637,
    733,   842,   969,  1114,  1281,  1473,  1694,  1948,
@@ -1412,15 +1454,18 @@ static const uint16_t qua_gain_code[32] = {
   6855,  7883,  9065, 10425, 12510, 16263, 21142, 27485
 };
 
-
+/** desired mean innovation energy, indexed by active mode */
 static const float energy_mean[8] = {
     33.0, 33.0, 33.0, 28.75, 30.0, 36.0, 33.0, 36.0
 };
 
-
+/** 4-tap moving average prediction coefficients in reverse order */
 static const float energy_pred_fac[4] = { 0.19, 0.34, 0.58, 0.68 };
 
-
+/** gain table for 4.75 kbps mode
+ *
+ * first index has even/odd indexes for subframes 0,2/1,3
+ * second index is {pitch_gain, fixed_gain_factor} */
 static const uint16_t gains_MODE_4k75[512][2] = {
 {  812,  128}, {  542,  140}, { 2873, 1135}, { 2266, 3402}, { 2067,  563},
 {12677,  647}, { 4132, 1798}, { 5601, 5285}, { 7689,  374}, { 3735,  441},
@@ -1527,7 +1572,9 @@ static const uint16_t gains_MODE_4k75[512][2] = {
 {13044,19373}, {10526,23124}
 };
 
-
+/** gain table for 6.70, 7.40 and 10.2 kbps modes
+ *
+ * second index is {pitch_gain, fixed_gain_factor} */
 static const uint16_t gains_high[128][2] = {
 {  577,  662}, {  806, 1836}, { 3109, 1052}, { 4181, 1387}, { 2373, 1425},
 { 3248, 1985}, { 1827, 2320}, {  941, 3314}, { 2351, 2977}, { 3616, 2420},
@@ -1557,7 +1604,9 @@ static const uint16_t gains_high[128][2] = {
 {18075,14485}, {19999,17882}, {18842,32764}
 };
 
-
+/** gain table for 5.15 and 5.90 kbps modes
+ *
+ * second index is {pitch_gain, fixed_gain_factor} */
 static const uint16_t gains_low[64][2] = {
 {10813,28753}, {20480, 2785}, {18841, 6594}, { 6225, 7413}, {17203,10444},
 {21626, 1269}, {21135, 4423}, {11304, 1556}, {19005,12820}, {17367, 2498},
@@ -1575,9 +1624,10 @@ static const uint16_t gains_low[64][2] = {
 };
 
 
+// pre-processing tables
 
-
-
+/** impulse response filter tables converted to float from Q15 int32_t
+ * used for anti-sparseness processing */
 static const float ir_filter_strong_MODE_7k95[AMR_SUBFRAME_SIZE] = {
  0.817169,  0.024445,  0.076447, -0.020844, -0.042175,  0.017761,  0.018433,
 -0.038879,  0.107147, -0.179871,  0.138367, -0.015228, -0.059204,  0.091888,
@@ -1612,11 +1662,11 @@ static const float *ir_filters_lookup_MODE_7k95[2] = {
     ir_filter_strong_MODE_7k95, ir_filter_medium
 };
 
-
+// High-pass coefficients
 
 static const float highpass_zeros[2] = { -2.0, 1.0 };
 static const float highpass_poles[2] = { -1.933105469, 0.935913085 };
 static const float highpass_gain     = 0.939819335;
 
-#endif 
+#endif /* AVCODEC_AMRNBDATA_H */
 

@@ -1,26 +1,43 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
 #ifndef __SETUP_OS400_H
 #define __SETUP_OS400_H
+/***************************************************************************
+ *                                  _   _ ____  _
+ *  Project                     ___| | | |  _ \| |
+ *                             / __| | | | |_) | |
+ *                            | (__| |_| |  _ <| |___
+ *                             \___|\___/|_| \_\_____|
+ *
+ * Copyright (C) 1998 - 2008, Daniel Stenberg, <daniel@haxx.se>, et al.
+ *
+ * This software is licensed as described in the file COPYING, which
+ * you should have received as part of this distribution. The terms
+ * are also available at http://curl.haxx.se/docs/copyright.html.
+ *
+ * You may opt to use, copy, modify, merge, publish, distribute and/or sell
+ * copies of the Software, and permit persons to whom the Software is
+ * furnished to do so, under the terms of the COPYING file.
+ *
+ * This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
+ * KIND, either express or implied.
+ *
+ * $Id: setup-os400.h,v 1.4 2008-09-24 12:22:16 yangtse Exp $
+ ***************************************************************************/
 
 
-
-
+/* OS/400 netdb.h does not define NI_MAXHOST. */
 #define NI_MAXHOST      1025
 
-
+/* OS/400 netdb.h does not define NI_MAXSERV. */
 #define NI_MAXSERV      32
 
-
+/* OS/400 does not define the ifr_dstaddr union member. */
 #define ifr_dstaddr     ifr_addr
 
-
+/* No OS/400 header file defines u_int32_t. */
 typedef unsigned long   u_int32_t;
 
 
-
+/* System API wrapper prototypes and definitions to support ASCII parameters. */
 
 #include <sys/socket.h>
 #include <netdb.h>
@@ -40,7 +57,7 @@ extern int      Curl_getnameinfo_a(const struct sockaddr * sa, socklen_t salen,
 #define getnameinfo             Curl_getnameinfo_a
 
 
-
+/* SSL wrappers. */
 
 extern int      Curl_SSL_Init_Application_a(SSLInitApp * init_app);
 #define SSL_Init_Application    Curl_SSL_Init_Application_a
@@ -54,7 +71,7 @@ extern char *   Curl_SSL_Strerror_a(int sslreturnvalue, SSLErrorMsg * serrmsgp);
 #define SSL_Strerror            Curl_SSL_Strerror_a
 
 
-
+/* GSSAPI wrappers. */
 
 extern OM_uint32 Curl_gss_import_name_a(OM_uint32 * minor_status,
                                         gss_buffer_t in_name,
@@ -93,7 +110,7 @@ extern OM_uint32 Curl_gss_delete_sec_context_a(OM_uint32 * minor_status,
                                                gss_buffer_t output_token);
 #define gss_delete_sec_context  Curl_gss_delete_sec_context_a
 
-
+/* LDAP wrappers. */
 
 #define BerValue                struct berval
 
@@ -107,7 +124,8 @@ extern OM_uint32 Curl_gss_delete_sec_context_a(OM_uint32 * minor_status,
 #define ldap_first_attribute    Curl_ldap_first_attribute_a
 #define ldap_next_attribute     Curl_ldap_next_attribute_a
 
-
+/* Some socket functions must be wrapped to process textual addresses
+   like AF_UNIX. */
 
 extern int Curl_os400_connect(int sd, struct sockaddr * destaddr, int addrlen);
 extern int Curl_os400_bind(int sd, struct sockaddr * localaddr, int addrlen);
@@ -122,4 +140,4 @@ extern int Curl_os400_recvfrom(int sd, char * buffer, int buflen, int flags,
 #define recvfrom                Curl_os400_recvfrom
 
 
-#endif 
+#endif /* __SETUP_OS400_H */

@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// ArchiverInfo.h
 
 #ifndef __ARCHIVERINFO_H
 #define __ARCHIVERINFO_H

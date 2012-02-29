@@ -1,9 +1,60 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
-
+/* crypto/evp/evp.h */
+/* Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
+ * All rights reserved.
+ *
+ * This package is an SSL implementation written
+ * by Eric Young (eay@cryptsoft.com).
+ * The implementation was written so as to conform with Netscapes SSL.
+ * 
+ * This library is free for commercial and non-commercial use as long as
+ * the following conditions are aheared to.  The following conditions
+ * apply to all code found in this distribution, be it the RC4, RSA,
+ * lhash, DES, etc., code; not just the SSL code.  The SSL documentation
+ * included with this distribution is covered by the same copyright terms
+ * except that the holder is Tim Hudson (tjh@cryptsoft.com).
+ * 
+ * Copyright remains Eric Young's, and as such any Copyright notices in
+ * the code are not to be removed.
+ * If this package is used in a product, Eric Young should be given attribution
+ * as the author of the parts of the library used.
+ * This can be in the form of a textual message at program startup or
+ * in documentation (online or textual) provided with the package.
+ * 
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ * 3. All advertising materials mentioning features or use of this software
+ *    must display the following acknowledgement:
+ *    "This product includes cryptographic software written by
+ *     Eric Young (eay@cryptsoft.com)"
+ *    The word 'cryptographic' can be left out if the rouines from the library
+ *    being used are not cryptographic related :-).
+ * 4. If you include any Windows specific code (or a derivative thereof) from 
+ *    the apps directory (application code) you must include an acknowledgement:
+ *    "This product includes software written by Tim Hudson (tjh@cryptsoft.com)"
+ * 
+ * THIS SOFTWARE IS PROVIDED BY ERIC YOUNG ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * 
+ * The licence and distribution terms for any publically available version or
+ * derivative of this code cannot be changed.  i.e. this code cannot simply be
+ * copied and put under another distribution licence
+ * [including the GNU Public Licence.]
+ */
 
 #ifndef HEADER_ENVELOPE_H
 #define HEADER_ENVELOPE_H
@@ -24,14 +75,20 @@
 #include <openssl/bio.h>
 #endif
 
-
-#define EVP_MAX_MD_SIZE			64	
+/*
+#define EVP_RC2_KEY_SIZE		16
+#define EVP_RC4_KEY_SIZE		16
+#define EVP_BLOWFISH_KEY_SIZE		16
+#define EVP_CAST5_KEY_SIZE		16
+#define EVP_RC5_32_12_16_KEY_SIZE	16
+*/
+#define EVP_MAX_MD_SIZE			64	/* longest known is SHA512 */
 #define EVP_MAX_KEY_LENGTH		32
 #define EVP_MAX_IV_LENGTH		16
 #define EVP_MAX_BLOCK_LENGTH		32
 
 #define PKCS5_SALT_LEN			8
-
+/* Default PKCS#5 iteration count */
 #define PKCS5_DEFAULT_ITER		2048
 
 #include <openssl/objects.h>
@@ -46,7 +103,7 @@
 #define EVP_PKS_RSA	0x0100
 #define EVP_PKS_DSA	0x0200
 #define EVP_PKS_EC	0x0400
-#define EVP_PKT_EXP	0x1000 
+#define EVP_PKT_EXP	0x1000 /* <= 512 bit key */
 
 #define EVP_PKEY_NONE	NID_undef
 #define EVP_PKEY_RSA	NID_rsaEncryption
@@ -63,7 +120,9 @@
 extern "C" {
 #endif
 
-
+/* Type needs to be a bit field
+ * Sub-type needs to be for variations on the method, as in, can it do
+ * arbitrary encryption.... */
 struct evp_pkey_st
 	{
 	int type;
@@ -72,21 +131,21 @@ struct evp_pkey_st
 	union	{
 		char *ptr;
 #ifndef OPENSSL_NO_RSA
-		struct rsa_st *rsa;	
+		struct rsa_st *rsa;	/* RSA */
 #endif
 #ifndef OPENSSL_NO_DSA
-		struct dsa_st *dsa;	
+		struct dsa_st *dsa;	/* DSA */
 #endif
 #ifndef OPENSSL_NO_DH
-		struct dh_st *dh;	
+		struct dh_st *dh;	/* DH */
 #endif
 #ifndef OPENSSL_NO_EC
-		struct ec_key_st *ec;	
+		struct ec_key_st *ec;	/* ECC */
 #endif
 		} pkey;
 	int save_parameters;
-	STACK_OF(X509_ATTRIBUTE) *attributes; 
-	} ;
+	STACK_OF(X509_ATTRIBUTE) *attributes; /* [ 0 ] */
+	} /* EVP_PKEY */;
 
 #define EVP_PKEY_MO_SIGN	0x0001
 #define EVP_PKEY_MO_VERIFY	0x0002
@@ -94,7 +153,16 @@ struct evp_pkey_st
 #define EVP_PKEY_MO_DECRYPT	0x0008
 
 #if 0
-
+/* This structure is required to tie the message digest and signing together.
+ * The lookup can be done by md/pkey_method, oid, oid/pkey_method, or
+ * oid, md and pkey.
+ * This is required because for various smart-card perform the digest and
+ * signing/verification on-board.  To handle this case, the specific
+ * EVP_MD and EVP_PKEY_METHODs need to be closely associated.
+ * When a PKEY is created, it will have a EVP_PKEY_METHOD associated with it.
+ * This can either be software or a token to provide the required low level
+ * routines.
+ */
 typedef struct evp_pkey_md_st
 	{
 	int oid;
@@ -131,14 +199,14 @@ typedef struct evp_pkey_method_st
 	{
 	char *name;
 	int flags;
-	int type;		
-	int oid;		
-	int encrypt_oid;	
+	int type;		/* RSA, DSA, an SSLeay specific constant */
+	int oid;		/* For the pub-key type */
+	int encrypt_oid;	/* pub/priv key encryption */
 
 	int (*sign)();
 	int (*verify)();
 	struct	{
-		int (*set)();	
+		int (*set)();	/* get and/or set the underlying type */
 		int (*get)();
 		int (*encrypt)();
 		int (*decrypt)();
@@ -164,16 +232,16 @@ struct env_md_st
 	int (*copy)(EVP_MD_CTX *to,const EVP_MD_CTX *from);
 	int (*cleanup)(EVP_MD_CTX *ctx);
 
-	
+	/* FIXME: prototype these some day */
 	int (*sign)(int type, const unsigned char *m, unsigned int m_length,
 		    unsigned char *sigret, unsigned int *siglen, void *key);
 	int (*verify)(int type, const unsigned char *m, unsigned int m_length,
 		      const unsigned char *sigbuf, unsigned int siglen,
 		      void *key);
-	int required_pkey_type[5]; 
+	int required_pkey_type[5]; /*EVP_PKEY_xxx */
 	int block_size;
-	int ctx_size; 
-	} ;
+	int ctx_size; /* how big does the ctx->md_data need to be */
+	} /* EVP_MD */;
 
 typedef int evp_sign_method(int type,const unsigned char *m,
 			    unsigned int m_length,unsigned char *sigret,
@@ -182,7 +250,8 @@ typedef int evp_verify_method(int type,const unsigned char *m,
 			    unsigned int m_length,const unsigned char *sigbuf,
 			    unsigned int siglen, void *key);
 
-#define EVP_MD_FLAG_ONESHOT	0x0001 
+#define EVP_MD_FLAG_ONESHOT	0x0001 /* digest can only handle a single
+					* block */
 
 #define EVP_PKEY_NULL_method	NULL,NULL,{0,0,0,0}
 
@@ -216,44 +285,47 @@ typedef int evp_verify_method(int type,const unsigned char *m,
 #define EVP_PKEY_RSA_ASN1_OCTET_STRING_method EVP_PKEY_NULL_method
 #endif
 
-#endif 
+#endif /* !EVP_MD */
 
 struct env_md_ctx_st
 	{
 	const EVP_MD *digest;
-	ENGINE *engine; 
+	ENGINE *engine; /* functional reference if 'digest' is ENGINE-provided */
 	unsigned long flags;
 	void *md_data;
-	} ;
+	} /* EVP_MD_CTX */;
 
+/* values for EVP_MD_CTX flags */
 
-
-#define EVP_MD_CTX_FLAG_ONESHOT		0x0001 
-#define EVP_MD_CTX_FLAG_CLEANED		0x0002 
-#define EVP_MD_CTX_FLAG_REUSE		0x0004 
+#define EVP_MD_CTX_FLAG_ONESHOT		0x0001 /* digest update will be called
+						* once only */
+#define EVP_MD_CTX_FLAG_CLEANED		0x0002 /* context has already been
+						* cleaned */
+#define EVP_MD_CTX_FLAG_REUSE		0x0004 /* Don't free up ctx->md_data
+						* in EVP_MD_CTX_cleanup */
 
 struct evp_cipher_st
 	{
 	int nid;
 	int block_size;
-	int key_len;		
+	int key_len;		/* Default value for variable length ciphers */
 	int iv_len;
-	unsigned long flags;	
+	unsigned long flags;	/* Various flags */
 	int (*init)(EVP_CIPHER_CTX *ctx, const unsigned char *key,
-		    const unsigned char *iv, int enc);	
+		    const unsigned char *iv, int enc);	/* init key */
 	int (*do_cipher)(EVP_CIPHER_CTX *ctx, unsigned char *out,
-			 const unsigned char *in, unsigned int inl);
-	int (*cleanup)(EVP_CIPHER_CTX *); 
-	int ctx_size;		
-	int (*set_asn1_parameters)(EVP_CIPHER_CTX *, ASN1_TYPE *); 
-	int (*get_asn1_parameters)(EVP_CIPHER_CTX *, ASN1_TYPE *); 
-	int (*ctrl)(EVP_CIPHER_CTX *, int type, int arg, void *ptr); 
-	void *app_data;		
-	} ;
+			 const unsigned char *in, unsigned int inl);/* encrypt/decrypt data */
+	int (*cleanup)(EVP_CIPHER_CTX *); /* cleanup ctx */
+	int ctx_size;		/* how big ctx->cipher_data needs to be */
+	int (*set_asn1_parameters)(EVP_CIPHER_CTX *, ASN1_TYPE *); /* Populate a ASN1_TYPE with parameters */
+	int (*get_asn1_parameters)(EVP_CIPHER_CTX *, ASN1_TYPE *); /* Get parameters from a ASN1_TYPE */
+	int (*ctrl)(EVP_CIPHER_CTX *, int type, int arg, void *ptr); /* Miscellaneous operations */
+	void *app_data;		/* Application data */
+	} /* EVP_CIPHER */;
 
+/* Values for cipher flags */
 
-
-
+/* Modes for ciphers */
 
 #define		EVP_CIPH_STREAM_CIPHER		0x0
 #define		EVP_CIPH_ECB_MODE		0x1
@@ -261,22 +333,22 @@ struct evp_cipher_st
 #define		EVP_CIPH_CFB_MODE		0x3
 #define		EVP_CIPH_OFB_MODE		0x4
 #define 	EVP_CIPH_MODE			0x7
-
+/* Set if variable length cipher */
 #define 	EVP_CIPH_VARIABLE_LENGTH	0x8
-
+/* Set if the iv handling should be done by the cipher itself */
 #define 	EVP_CIPH_CUSTOM_IV		0x10
-
+/* Set if the cipher's init() function should be called if key is NULL */
 #define 	EVP_CIPH_ALWAYS_CALL_INIT	0x20
-
+/* Call ctrl() to init cipher parameters */
 #define 	EVP_CIPH_CTRL_INIT		0x40
-
+/* Don't use standard key length function */
 #define 	EVP_CIPH_CUSTOM_KEY_LENGTH	0x80
-
+/* Don't use standard block padding */
 #define 	EVP_CIPH_NO_PADDING		0x100
-
+/* cipher handles random key generation */
 #define 	EVP_CIPH_RAND_KEY		0x200
 
-
+/* ctrl() values */
 
 #define		EVP_CTRL_INIT			0x0
 #define 	EVP_CTRL_SET_KEY_LENGTH		0x1
@@ -295,34 +367,38 @@ typedef struct evp_cipher_info_st
 struct evp_cipher_ctx_st
 	{
 	const EVP_CIPHER *cipher;
-	ENGINE *engine;	
-	int encrypt;		
-	int buf_len;		
+	ENGINE *engine;	/* functional reference if 'cipher' is ENGINE-provided */
+	int encrypt;		/* encrypt or decrypt */
+	int buf_len;		/* number we have left */
 
-	unsigned char  oiv[EVP_MAX_IV_LENGTH];	
-	unsigned char  iv[EVP_MAX_IV_LENGTH];	
-	unsigned char buf[EVP_MAX_BLOCK_LENGTH];
-	int num;				
+	unsigned char  oiv[EVP_MAX_IV_LENGTH];	/* original iv */
+	unsigned char  iv[EVP_MAX_IV_LENGTH];	/* working iv */
+	unsigned char buf[EVP_MAX_BLOCK_LENGTH];/* saved partial block */
+	int num;				/* used by cfb/ofb mode */
 
-	void *app_data;		
-	int key_len;		
-	unsigned long flags;	
-	void *cipher_data; 
+	void *app_data;		/* application stuff */
+	int key_len;		/* May change for variable length cipher */
+	unsigned long flags;	/* Various flags */
+	void *cipher_data; /* per EVP data */
 	int final_used;
 	int block_mask;
-	unsigned char final[EVP_MAX_BLOCK_LENGTH];
-	} ;
+	unsigned char final[EVP_MAX_BLOCK_LENGTH];/* possible final block */
+	} /* EVP_CIPHER_CTX */;
 
 typedef struct evp_Encode_Ctx_st
 	{
-	int num;	
-	int length;	
-	unsigned char enc_data[80];	
-	int line_num;	
+	int num;	/* number saved in a partial encode/decode */
+	int length;	/* The length is either the output line length
+			 * (in input bytes) or the shortest input line
+			 * length that is ok.  Once decoding begins,
+			 * the length is adjusted up each time a longer
+			 * line is decoded */
+	unsigned char enc_data[80];	/* data to encode */
+	int line_num;	/* number read on current line */
 	int expect_nl;
 	} EVP_ENCODE_CTX;
 
-
+/* Password based encryption function */
 typedef int (EVP_PBE_KEYGEN)(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
 		ASN1_TYPE *param, const EVP_CIPHER *cipher,
                 const EVP_MD *md, int en_de);
@@ -347,7 +423,7 @@ typedef int (EVP_PBE_KEYGEN)(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
                                         (char *)(eckey))
 #endif
 
-
+/* Add some extra combinations */
 #define EVP_get_digestbynid(a) EVP_get_digestbyname(OBJ_nid2sn(a))
 #define EVP_get_digestbyobj(a) EVP_get_digestbynid(OBJ_obj2nid(a))
 #define EVP_get_cipherbynid(a) EVP_get_cipherbyname(OBJ_nid2sn(a))
@@ -555,7 +631,7 @@ const EVP_MD *EVP_mdc2(void);
 #ifndef OPENSSL_NO_RIPEMD
 const EVP_MD *EVP_ripemd160(void);
 #endif
-const EVP_CIPHER *EVP_enc_null(void);		
+const EVP_CIPHER *EVP_enc_null(void);		/* does nothing :-) */
 #ifndef OPENSSL_NO_DES
 const EVP_CIPHER *EVP_des_ecb(void);
 const EVP_CIPHER *EVP_des_ede(void);
@@ -583,7 +659,8 @@ const EVP_CIPHER *EVP_des_cbc(void);
 const EVP_CIPHER *EVP_des_ede_cbc(void);
 const EVP_CIPHER *EVP_des_ede3_cbc(void);
 const EVP_CIPHER *EVP_desx_cbc(void);
-
+/* This should now be supported through the dev_crypto ENGINE. But also, why are
+ * rc4 and md5 declarations made here inside a "NO_DES" precompiler branch? */
 #if 0
 # ifdef OPENSSL_OPENBSD_DEV_CRYPTO
 const EVP_CIPHER *EVP_dev_crypto_des_ede3_cbc(void);
@@ -775,15 +852,15 @@ int EVP_PKEY_cmp(const EVP_PKEY *a, const EVP_PKEY *b);
 
 int EVP_CIPHER_type(const EVP_CIPHER *ctx);
 
-
+/* calls methods */
 int EVP_CIPHER_param_to_asn1(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
 int EVP_CIPHER_asn1_to_param(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
 
-
+/* These are used by EVP_CIPHER methods */
 int EVP_CIPHER_set_asn1_iv(EVP_CIPHER_CTX *c,ASN1_TYPE *type);
 int EVP_CIPHER_get_asn1_iv(EVP_CIPHER_CTX *c,ASN1_TYPE *type);
 
-
+/* PKCS5 password based encryption */
 int PKCS5_PBE_keyivgen(EVP_CIPHER_CTX *ctx, const char *pass, int passlen,
 			 ASN1_TYPE *param, const EVP_CIPHER *cipher, const EVP_MD *md,
 			 int en_de);
@@ -802,13 +879,15 @@ int EVP_PBE_alg_add(int nid, const EVP_CIPHER *cipher, const EVP_MD *md,
 		    EVP_PBE_KEYGEN *keygen);
 void EVP_PBE_cleanup(void);
 
-
-
+/* BEGIN ERROR CODES */
+/* The following lines are auto generated by the script mkerr.pl. Any changes
+ * made after this point may be overwritten when the script is next run.
+ */
 void ERR_load_EVP_strings(void);
 
+/* Error codes for the EVP functions. */
 
-
-
+/* Function codes. */
 #define EVP_F_AES_INIT_KEY				 133
 #define EVP_F_CAMELLIA_INIT_KEY				 159
 #define EVP_F_D2I_PKEY					 100
@@ -846,7 +925,7 @@ void ERR_load_EVP_strings(void);
 #define EVP_F_RC2_MAGIC_TO_METH				 109
 #define EVP_F_RC5_CTRL					 125
 
-
+/* Reason codes. */
 #define EVP_R_AES_KEY_SETUP_FAILED			 143
 #define EVP_R_ASN1_LIB					 140
 #define EVP_R_BAD_BLOCK_LENGTH				 136

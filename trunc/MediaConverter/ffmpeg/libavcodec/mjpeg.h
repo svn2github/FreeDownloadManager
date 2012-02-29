@@ -1,10 +1,34 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * MJPEG encoder and decoder
+ * Copyright (c) 2000, 2001 Fabrice Bellard
+ * Copyright (c) 2003 Alex Beregszaszi
+ * Copyright (c) 2003-2004 Michael Niedermayer
+ *
+ * Support for external huffman table, various fixes (AVID workaround),
+ * aspecting, new decode_frame mechanism and apple mjpeg-b support
+ *                                  by Alex Beregszaszi
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * MJPEG encoder and decoder.
+ */
 
 #ifndef AVCODEC_MJPEG_H
 #define AVCODEC_MJPEG_H
@@ -13,31 +37,31 @@
 #include "put_bits.h"
 
 
-
+/* JPEG marker codes */
 typedef enum {
-    
-    SOF0  = 0xc0,       
-    SOF1  = 0xc1,       
-    SOF2  = 0xc2,       
-    SOF3  = 0xc3,       
+    /* start of frame */
+    SOF0  = 0xc0,       /* baseline */
+    SOF1  = 0xc1,       /* extended sequential, huffman */
+    SOF2  = 0xc2,       /* progressive, huffman */
+    SOF3  = 0xc3,       /* lossless, huffman */
 
-    SOF5  = 0xc5,       
-    SOF6  = 0xc6,       
-    SOF7  = 0xc7,       
-    JPG   = 0xc8,       
-    SOF9  = 0xc9,       
-    SOF10 = 0xca,       
-    SOF11 = 0xcb,       
+    SOF5  = 0xc5,       /* differential sequential, huffman */
+    SOF6  = 0xc6,       /* differential progressive, huffman */
+    SOF7  = 0xc7,       /* differential lossless, huffman */
+    JPG   = 0xc8,       /* reserved for JPEG extension */
+    SOF9  = 0xc9,       /* extended sequential, arithmetic */
+    SOF10 = 0xca,       /* progressive, arithmetic */
+    SOF11 = 0xcb,       /* lossless, arithmetic */
 
-    SOF13 = 0xcd,       
-    SOF14 = 0xce,       
-    SOF15 = 0xcf,       
+    SOF13 = 0xcd,       /* differential sequential, arithmetic */
+    SOF14 = 0xce,       /* differential progressive, arithmetic */
+    SOF15 = 0xcf,       /* differential lossless, arithmetic */
 
-    DHT   = 0xc4,       
+    DHT   = 0xc4,       /* define huffman tables */
 
-    DAC   = 0xcc,       
+    DAC   = 0xcc,       /* define arithmetic-coding conditioning */
 
-    
+    /* restart with modulo 8 count "m" */
     RST0  = 0xd0,
     RST1  = 0xd1,
     RST2  = 0xd2,
@@ -47,14 +71,14 @@ typedef enum {
     RST6  = 0xd6,
     RST7  = 0xd7,
 
-    SOI   = 0xd8,       
-    EOI   = 0xd9,       
-    SOS   = 0xda,       
-    DQT   = 0xdb,       
-    DNL   = 0xdc,       
-    DRI   = 0xdd,       
-    DHP   = 0xde,       
-    EXP   = 0xdf,       
+    SOI   = 0xd8,       /* start of image */
+    EOI   = 0xd9,       /* end of image */
+    SOS   = 0xda,       /* start of scan */
+    DQT   = 0xdb,       /* define quantization tables */
+    DNL   = 0xdc,       /* define number of lines */
+    DRI   = 0xdd,       /* define restart interval */
+    DHP   = 0xde,       /* define hierarchical progression */
+    EXP   = 0xdf,       /* expand reference components */
 
     APP0  = 0xe0,
     APP1  = 0xe1,
@@ -80,19 +104,19 @@ typedef enum {
     JPG4  = 0xf4,
     JPG5  = 0xf5,
     JPG6  = 0xf6,
-    SOF48 = 0xf7,       
-    LSE   = 0xf8,       
+    SOF48 = 0xf7,       ///< JPEG-LS
+    LSE   = 0xf8,       ///< JPEG-LS extension parameters
     JPG9  = 0xf9,
     JPG10 = 0xfa,
     JPG11 = 0xfb,
     JPG12 = 0xfc,
     JPG13 = 0xfd,
 
-    COM   = 0xfe,       
+    COM   = 0xfe,       /* comment */
 
-    TEM   = 0x01,       
+    TEM   = 0x01,       /* temporary private use for arithmetic coding */
 
-    
+    /* 0x02 -> 0xbf reserved */
 } JPEG_MARKER;
 
 static inline void put_marker(PutBitContext *p, int code)
@@ -128,4 +152,4 @@ void ff_mjpeg_build_huffman_codes(uint8_t *huff_size, uint16_t *huff_code,
                                   const uint8_t *bits_table,
                                   const uint8_t *val_table);
 
-#endif 
+#endif /* AVCODEC_MJPEG_H */

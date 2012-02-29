@@ -1,9 +1,8 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
 #ifndef __INTTYPES_H_
 #define __INTTYPES_H_
+
+/* Use [u]intN_t if you need exactly N bits.
+   XXX - doesn't handle the -mint8 option.  */
 
 typedef signed char int8_t;
 typedef unsigned char uint8_t;

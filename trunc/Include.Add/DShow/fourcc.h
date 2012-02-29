@@ -1,9 +1,32 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: FourCC.h
+//
+// Desc: DirectShow base classes.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
+
+
+// FOURCCMap
+//
+// provides a mapping between old-style multimedia format DWORDs
+// and new-style GUIDs.
+//
+// A range of 4 billion GUIDs has been allocated to ensure that this
+// mapping can be done straightforwardly one-to-one in both directions.
+//
+// January 95
+
 
 #ifndef __FOURCC__
 #define __FOURCC__
+
+
+// Multimedia format types are marked with DWORDs built from four 8-bit
+// chars and known as FOURCCs. New multimedia AM_MEDIA_TYPE definitions include
+// a subtype GUID. In order to simplify the mapping, GUIDs in the range:
+//    XXXXXXXX-0000-0010-8000-00AA00389B71
+// are reserved for FOURCCs.
 
 class FOURCCMap : public GUID
 {
@@ -12,6 +35,7 @@ public:
     FOURCCMap();
     FOURCCMap(DWORD Fourcc);
     FOURCCMap(const GUID *);
+
 
     DWORD GetFOURCC(void);
     void SetFOURCC(DWORD fourcc);
@@ -73,5 +97,5 @@ FOURCCMap::GetFOURCC(void)
     return Data1;
 }
 
-#endif 
+#endif /* __FOURCC__ */
 

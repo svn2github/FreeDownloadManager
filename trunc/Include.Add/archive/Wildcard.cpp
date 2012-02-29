@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Common/Wildcard.cpp
 
 #include "StdAfx.h"
 
@@ -28,6 +26,11 @@ static inline bool IsCharDirLimiter(wchar_t c)
   return (c == kDirDelimiter1 || c == kDirDelimiter2);
 }
 
+// -----------------------------------------
+// this function tests is name matches mask
+// ? - any wchar_t or empty
+// * - any characters or empty
+
 static bool EnhancedMaskTest(const UString &mask, int maskPos, 
     const UString &name, int namePos)
 {
@@ -41,7 +44,10 @@ static bool EnhancedMaskTest(const UString &mask, int maskPos,
   wchar_t maskChar = mask[maskPos];
   if(maskChar == kAnyCharChar)
   {
-    
+    /*
+    if (EnhancedMaskTest(mask, maskPos + 1, name, namePos))
+      return true;
+    */
     if (nameLen == 0) 
       return false;
     return EnhancedMaskTest(mask,  maskPos + 1, name, namePos + 1);
@@ -65,6 +71,9 @@ static bool EnhancedMaskTest(const UString &mask, int maskPos,
     return EnhancedMaskTest(mask,  maskPos + 1, name, namePos + 1);
   }
 }
+
+// --------------------------------------------------
+// Splits path to strings
 
 void SplitPathToParts(const UString &path, UStringVector &pathParts)
 {
@@ -115,6 +124,7 @@ UString ExtractFileNameFromPath(const UString &path)
   return path.Mid(i + 1);
 }
 
+
 bool CompareWildCardWithName(const UString &mask, const UString &name)
 {
   return EnhancedMaskTest(mask, 0, name, 0);
@@ -125,12 +135,33 @@ bool DoesNameContainWildCard(const UString &path)
   return (path.FindOneOf(kWildCardCharSet) >= 0);
 }
 
+
+// ----------------------------------------------------------'
+// NWildcard
+
 namespace NWildcard {
 
 static inline int BoolToIndex(bool value)
 {
   return value ? 1: 0;
 }
+
+
+/*
+M = MaskParts.Size();
+N = TestNameParts.Size();
+
+                           File                          Dir
+ForFile     req   M<=N  [N-M, N)                          -
+         nonreq   M=N   [0, M)                            -  
+ 
+ForDir      req   M<N   [0, M) ... [N-M-1, N-1)  same as ForBoth-File
+         nonreq         [0, M)                   same as ForBoth-File
+
+ForBoth     req   m<=N  [0, M) ... [N-M, N)      same as ForBoth-File
+         nonreq         [0, M)                   same as ForBoth-File
+
+*/
 
 bool CItem::CheckPath(const UStringVector &pathParts, bool isFile) const
 {
@@ -290,6 +321,15 @@ bool CCensorNode::CheckPathToRoot(bool include, UStringVector &pathParts, bool i
   pathParts.Insert(0, Name);
   return Parent->CheckPathToRoot(include, pathParts, isFile);
 }
+
+/*
+bool CCensorNode::CheckPathToRoot(bool include, const UString &path, bool isFile) const
+{
+  UStringVector pathParts; 
+  SplitPathToParts(path, pathParts);
+  return CheckPathToRoot(include, pathParts, isFile);
+}
+*/
 
 void CCensorNode::AddItem2(bool include, const UString &path, bool recursive)
 {

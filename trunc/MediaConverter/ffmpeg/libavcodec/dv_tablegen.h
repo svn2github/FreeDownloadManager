@@ -1,8 +1,24 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Header file for hardcoded DV tables
+ *
+ * Copyright (c) 2010 Reimar Döffinger <Reimar.Doeffinger@gmx.de>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef DV_TABLEGEN_H
 #define DV_TABLEGEN_H
@@ -15,10 +31,10 @@
 #define DV_VLC_MAP_LEV_SIZE 23
 #else
 #define DV_VLC_MAP_RUN_SIZE  64
-#define DV_VLC_MAP_LEV_SIZE 512 
+#define DV_VLC_MAP_LEV_SIZE 512 //FIXME sign was removed so this should be /2 but needs check
 #endif
 
-
+/* VLC encoding lookup table */
 struct dv_vlc_pair {
    uint32_t vlc;
    uint32_t size;
@@ -75,6 +91,6 @@ static void dv_vlc_map_tableinit(void)
 #endif
     }
 }
-#endif 
+#endif /* CONFIG_HARDCODED_TABLES */
 
-#endif 
+#endif /* DV_TABLEGEN_H */

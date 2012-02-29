@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Common/Vector.cpp
 
 #include "StdAfx.h"
 
@@ -35,7 +33,14 @@ void CBaseRecordVector::Reserve(int newCapacity)
 {
   if(newCapacity <= _capacity)
     return;
-  
+  /*
+  #ifndef _DEBUG
+  static const unsigned int kMaxVectorSize = 0xF0000000;
+  if(newCapacity < _size || 
+      ((unsigned int )newCapacity * (unsigned int )_itemSize) > kMaxVectorSize) 
+    throw 1052354;
+  #endif
+  */
   unsigned char *p = new unsigned char[newCapacity * _itemSize];
   int numRecordsToMove = _capacity;
   memmove(p, _items, _itemSize * numRecordsToMove);

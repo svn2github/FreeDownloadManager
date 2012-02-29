@@ -1,8 +1,23 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * BeOS audio play interface
+ * Copyright (c) 2000, 2001 Fabrice Bellard
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #include <signal.h>
 #include <stdlib.h>
@@ -23,11 +38,11 @@ extern "C" {
 using namespace BPrivate::Media::Experimental;
 #endif
 
+/* enable performance checks */
+//#define PERF_CHECK
 
-
-
-
-
+/* enable Media Kit latency checks */
+//#define LATENCY_CHECK
 
 #define AUDIO_BLOCK_SIZE 4096
 #define AUDIO_BLOCK_COUNT 8
@@ -35,14 +50,14 @@ using namespace BPrivate::Media::Experimental;
 #define AUDIO_BUFFER_SIZE (AUDIO_BLOCK_SIZE*AUDIO_BLOCK_COUNT)
 
 typedef struct {
-    int fd; 
+    int fd; // UNUSED
     int sample_rate;
     int channels;
-    int frame_size; 
+    int frame_size; /* in bytes ! */
     CodecID codec_id;
     uint8_t buffer[AUDIO_BUFFER_SIZE];
     int buffer_ptr;
-    
+    /* ring buffer */
     sem_id input_sem;
     int input_index;
     sem_id output_sem;
@@ -51,7 +66,7 @@ typedef struct {
 #if HAVE_BSOUNDRECORDER
     BSoundRecorder *recorder;
 #endif
-    int has_quit; 
+    int has_quit; /* signal callbacks not to wait */
     volatile bigtime_t starve_time;
 } AudioData;
 
@@ -60,23 +75,23 @@ static thread_id bapp_thid;
 static int own_BApp_created = 0;
 static int refcount = 0;
 
-
+/* create the BApplication and Run() it */
 static int32 bapp_thread(void *arg)
 {
     new BApplication("application/x-vnd.ffmpeg");
     own_BApp_created = 1;
     be_app->Run();
-    
-
-
+    /* kill the process group */
+//    kill(0, SIGINT);
+//    kill(main_thid, SIGHUP);
     return B_OK;
 }
 
-
+/* create the BApplication only if needed */
 static void create_bapp_if_needed(void)
 {
     if (refcount++ == 0) {
-        
+        /* needed by libmedia */
         if (be_app == NULL) {
             bapp_thid = spawn_thread(bapp_thread, "ffmpeg BApplication", B_NORMAL_PRIORITY, NULL);
             resume_thread(bapp_thid);
@@ -95,7 +110,7 @@ static void destroy_bapp_if_needed(void)
     }
 }
 
-
+/* called back by BSoundPlayer */
 static void audioplay_callback(void *cookie, void *buffer, size_t bufferSize, const media_raw_audio_format &format)
 {
     AudioData *s;
@@ -136,7 +151,7 @@ static void audioplay_callback(void *cookie, void *buffer, size_t bufferSize, co
 }
 
 #if HAVE_BSOUNDRECORDER
-
+/* called back by BSoundRecorder */
 static void audiorecord_callback(void *cookie, bigtime_t timestamp, void *buffer, size_t bufferSize, const media_multi_audio_format &format)
 {
     AudioData *s;
@@ -149,7 +164,7 @@ static void audiorecord_callback(void *cookie, bigtime_t timestamp, void *buffer
 
     while (bufferSize > 0) {
         len = MIN(bufferSize, AUDIO_BLOCK_SIZE);
-        
+        //printf("acquire_sem(input, %d)\n", len);
         if (acquire_sem_etc(s->input_sem, len, B_CAN_INTERRUPT, 0LL) < B_OK) {
             s->has_quit = 1;
             return;
@@ -163,7 +178,7 @@ static void audiorecord_callback(void *cookie, bigtime_t timestamp, void *buffer
             s->input_index += len - amount;
         }
         release_sem_etc(s->output_sem, len, 0);
-        
+        //printf("release_sem(output, %d)\n", len);
         buf += len;
         bufferSize -= len;
     }
@@ -179,7 +194,7 @@ static int audio_open(AudioData *s, int is_output, const char *audio_device)
 
 #if !HAVE_BSOUNDRECORDER
     if (!is_output)
-        return AVERROR(EIO); 
+        return AVERROR(EIO); /* not for now */
 #endif
     s->input_sem = create_sem(AUDIO_BUFFER_SIZE, "ffmpeg_ringbuffer_input");
     if (s->input_sem < B_OK)
@@ -193,7 +208,7 @@ static int audio_open(AudioData *s, int is_output, const char *audio_device)
     s->output_index = 0;
     create_bapp_if_needed();
     s->frame_size = AUDIO_BLOCK_SIZE;
-    
+    /* bump up the priority (avoid realtime though) */
     set_thread_priority(find_thread(NULL), B_DISPLAY_PRIORITY+1);
 #if HAVE_BSOUNDRECORDER
     if (!is_output) {
@@ -266,7 +281,7 @@ static int audio_close(AudioData *s)
     return 0;
 }
 
-
+/* sound output support */
 static int audio_write_header(AVFormatContext *s1)
 {
     AudioData *s = (AudioData *)s1->priv_data;
@@ -329,7 +344,7 @@ static int audio_write_trailer(AVFormatContext *s1)
     return 0;
 }
 
-
+/* grab support */
 
 static int audio_read_header(AVFormatContext *s1, AVFormatParameters *ap)
 {
@@ -352,13 +367,13 @@ static int audio_read_header(AVFormatContext *s1, AVFormatParameters *ap)
         av_free(st);
         return AVERROR(EIO);
     }
-    
+    /* take real parameters */
     st->codec->codec_type = AVMEDIA_TYPE_AUDIO;
     st->codec->codec_id = s->codec_id;
     st->codec->sample_rate = s->sample_rate;
     st->codec->channels = s->channels;
     return 0;
-    av_set_pts_info(st, 48, 1, 1000000);  
+    av_set_pts_info(st, 48, 1, 1000000);  /* 48 bits pts in us */
 }
 
 static int audio_read_packet(AVFormatContext *s1, AVPacket *pkt)
@@ -375,7 +390,7 @@ static int audio_read_packet(AVFormatContext *s1, AVPacket *pkt)
     size = pkt->size;
     while (size > 0) {
         len = MIN(AUDIO_BLOCK_SIZE, size);
-        
+        //printf("acquire_sem(output, %d)\n", len);
         while ((err=acquire_sem_etc(s->output_sem, len, B_CAN_INTERRUPT, 0LL)) == B_INTERRUPTED);
         if (err < B_OK) {
             av_free_packet(pkt);
@@ -391,11 +406,11 @@ static int audio_read_packet(AVFormatContext *s1, AVPacket *pkt)
             s->output_index %= AUDIO_BUFFER_SIZE;
         }
         release_sem_etc(s->input_sem, len, 0);
-        
+        //printf("release_sem(input, %d)\n", len);
         buf += len;
         size -= len;
     }
-    
+    //XXX: add pts info
     return 0;
 }
 
@@ -448,5 +463,5 @@ int audio_init(void)
     return 0;
 }
 
-} 
+} // "C"
 

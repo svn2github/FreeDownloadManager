@@ -1,23 +1,45 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * Indeo Video Interactive 5 compatible decoder
+ * Copyright (c) 2009 Maxim Poliakovski
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * This file contains data needed for the Indeo5 decoder.
+ */
 
 #ifndef AVCODEC_INDEO5DATA_H
 #define AVCODEC_INDEO5DATA_H
 
 #include <stdint.h>
 
-
+/**
+ *  standard picture dimensions (width, height divided by 4)
+ */
 static const uint8_t ivi5_common_pic_sizes[30] = {
     160, 120, 80, 60, 40, 30, 176, 120, 88, 60, 88, 72, 44, 36, 60, 45, 160, 60,
     176,  60, 20, 15, 22, 18,   0,   0,  0,  0,  0,  0
 };
 
-
+/**
+ *  Indeo5 8x8 scan (zigzag) patterns
+ */
 static const uint8_t ivi5_scans8x8[2][64] = {
     {0,  8, 16, 24, 32, 40, 48, 56,  1,  9, 17, 25, 33, 41, 49, 57,
      2, 10, 18, 26, 34, 42, 50, 58,  3, 11, 19, 27, 35, 43, 51, 59,
@@ -31,13 +53,23 @@ static const uint8_t ivi5_scans8x8[2][64] = {
     }
 };
 
-
+/**
+ *  Indeo5 4x4 scan (zigzag) pattern
+ */
 static const uint8_t ivi5_scan4x4[16] = {
     0, 1, 4, 8, 5, 2, 3, 6, 9, 12, 13, 10, 7, 11, 14, 15
 };
 
 
-
+/**
+ *  Indeo5 dequantization matrixes consist of two tables: base table
+ *  and scale table. The base table defines the dequantization matrix
+ *  itself and the scale table tells how this matrix should be scaled
+ *  for a particular quant level (0...24).
+ *
+ *  ivi5_base_quant_bbb_ttt  - base  tables for block size 'bbb' of type 'ttt'
+ *  ivi5_scale_quant_bbb_ttt - scale tables for block size 'bbb' of type 'ttt'
+ */
 static const uint8_t ivi5_base_quant_8x8_inter[5][64] = {
     {0x13, 0x1d, 0x1f, 0x23, 0x25, 0x27, 0x29, 0x2d, 0x1d, 0x1f, 0x21, 0x23, 0x25, 0x27, 0x2b, 0x2f,
      0x1f, 0x21, 0x23, 0x24, 0x26, 0x29, 0x2d, 0x31, 0x23, 0x23, 0x24, 0x25, 0x27, 0x2b, 0x2f, 0x33,
@@ -150,4 +182,4 @@ static const uint8_t ivi5_scale_quant_4x4_intra[24] = {
 };
 
 
-#endif 
+#endif /* AVCODEC_INDEO5DATA_H */

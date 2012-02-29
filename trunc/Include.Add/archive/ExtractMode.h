@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// ExtractMode.h
 
 #ifndef __EXTRACT_MODE_H
 #define __EXTRACT_MODE_H

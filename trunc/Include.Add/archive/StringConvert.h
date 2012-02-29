@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Common/StringConvert.h
 
 #ifndef __COMMON_STRINGCONVERT_H
 #define __COMMON_STRINGCONVERT_H
@@ -38,6 +36,7 @@ inline const AString& GetOemString(const AString &oemString)
   { return oemString; }
 inline AString GetOemString(const UString &unicodeString)
   { return UnicodeStringToMultiByte(unicodeString, CP_OEMCP); }
+
 
 #ifdef _UNICODE
   inline const wchar_t* GetSystemString(const wchar_t* unicodeString)

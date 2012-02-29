@@ -1,10 +1,31 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * mpeg audio layer 2 tables. Most of them come from the mpeg audio
+ * specification.
+ *
+ * Copyright (c) 2000, 2001 Fabrice Bellard
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * mpeg audio layer 2 tables.
+ * Most of them come from the mpeg audio specification.
+ */
 
 #ifndef AVCODEC_MPEGAUDIOTAB_H
 #define AVCODEC_MPEGAUDIOTAB_H
@@ -69,10 +90,12 @@ static unsigned short scale_factor_mult[64];
 #endif
 static unsigned char scale_diff_table[128];
 
-
+/* total number of bits per allocation group */
 static unsigned short total_quant_bits[17];
 
-
+/* signal to noise ratio of each quantification step (could be
+   computed from quant_steps[]). The values are dB multiplied by 10
+*/
 static const unsigned short quant_snr[17] = {
      70, 110, 160, 208,
     253, 316, 378, 439,
@@ -81,7 +104,8 @@ static const unsigned short quant_snr[17] = {
     980
 };
 
-
+/* fixed psycho acoustic model. Values of SNR taken from the 'toolame'
+   project */
 static const float fixed_smr[SBLIMIT] =  {
     30, 17, 16, 10, 3, 12, 8, 2.5,
     5, 5, 6, 6, 5, 6, 10, 6,
@@ -91,4 +115,4 @@ static const float fixed_smr[SBLIMIT] =  {
 
 static const unsigned char nb_scale_factors[4] = { 3, 2, 1, 2 };
 
-#endif 
+#endif /* AVCODEC_MPEGAUDIOTAB_H */

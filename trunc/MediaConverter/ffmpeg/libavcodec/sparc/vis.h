@@ -1,10 +1,43 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * Copyright (C) 2003 David S. Miller <davem@redhat.com>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/* You may be asking why I hard-code the instruction opcodes and don't
+ * use the normal VIS assembler mnenomics for the VIS instructions.
+ *
+ * The reason is that Sun, in their infinite wisdom, decided that a binary
+ * using a VIS instruction will cause it to be marked (in the ELF headers)
+ * as doing so, and this prevents the OS from loading such binaries if the
+ * current cpu doesn't have VIS.  There is no way to easily override this
+ * behavior of the assembler that I am aware of.
+ *
+ * This totally defeats what libmpeg2 is trying to do which is allow a
+ * single binary to be created, and then detect the availability of VIS
+ * at runtime.
+ *
+ * I'm not saying that tainting the binary by default is bad, rather I'm
+ * saying that not providing a way to override this easily unnecessarily
+ * ties people's hands.
+ *
+ * Thus, we do the opcode encoding by hand and output 32-bit words in
+ * the assembler to keep the binary from becoming tainted.
+ */
 
 #ifndef AVCODEC_SPARC_VIS_H
 #define AVCODEC_SPARC_VIS_H
@@ -155,7 +188,11 @@ do {        register void *__mem __asm__("g1"); \
 #define vis_membar_sync()        \
         __asm__ volatile(".word 0x8143e040" : : : "memory")
 
-
+/* 16 and 32 bit partitioned addition and subtraction.  The normal
+ * versions perform 4 16-bit or 2 32-bit additions or subtractions.
+ * The 's' versions perform 2 16-bit or 1 32-bit additions or
+ * subtractions.
+ */
 
 #define vis_padd16(rs1,rs2,rd)          vis_dd2d(0x50, rs1, rs2, rd)
 #define vis_padd16s(rs1,rs2,rd)         vis_ss2s(0x51, rs1, rs2, rd)
@@ -166,7 +203,7 @@ do {        register void *__mem __asm__("g1"); \
 #define vis_psub32(rs1,rs2,rd)          vis_dd2d(0x56, rs1, rs2, rd)
 #define vis_psub32s(rs1,rs2,rd)         vis_ss2s(0x57, rs1, rs2, rd)
 
-
+/* Pixel formatting instructions.  */
 
 #define vis_pack16(rs2,rd)              vis_d2s( 0x3b,      rs2, rd)
 #define vis_pack32(rs1,rs2,rd)          vis_dd2d(0x3a, rs1, rs2, rd)
@@ -174,7 +211,7 @@ do {        register void *__mem __asm__("g1"); \
 #define vis_expand(rs2,rd)              vis_s2d( 0x4d,      rs2, rd)
 #define vis_pmerge(rs1,rs2,rd)          vis_ss2d(0x4b, rs1, rs2, rd)
 
-
+/* Partitioned multiply instructions.  */
 
 #define vis_mul8x16(rs1,rs2,rd)         vis_sd2d(0x31, rs1, rs2, rd)
 #define vis_mul8x16au(rs1,rs2,rd)       vis_ss2d(0x33, rs1, rs2, rd)
@@ -184,7 +221,7 @@ do {        register void *__mem __asm__("g1"); \
 #define vis_muld8sux16(rs1,rs2,rd)      vis_ss2d(0x38, rs1, rs2, rd)
 #define vis_muld8ulx16(rs1,rs2,rd)      vis_ss2d(0x39, rs1, rs2, rd)
 
-
+/* Alignment instructions.  */
 
 static inline const void *vis_alignaddr(const void *_ptr)
 {
@@ -252,7 +289,7 @@ static inline void vis_alignaddrl_g0(void *_ptr)
 
 #define vis_faligndata(rs1,rs2,rd)        vis_dd2d(0x48, rs1, rs2, rd)
 
-
+/* Logical operate instructions.  */
 
 #define vis_fzero(rd)                   vis_d(   0x60,           rd)
 #define vis_fzeros(rd)                  vis_s(   0x61,           rd)
@@ -287,8 +324,8 @@ static inline void vis_alignaddrl_g0(void *_ptr)
 #define vis_andnot2(rs1,rs2,rd)         vis_dd2d(0x64, rs1, rs2, rd)
 #define vis_andnot2s(rs1,rs2,rd)        vis_ss2s(0x65, rs1, rs2, rd)
 
-
+/* Pixel component distance.  */
 
 #define vis_pdist(rs1,rs2,rd)           vis_dd2d(0x3e, rs1, rs2, rd)
 
-#endif 
+#endif /* AVCODEC_SPARC_VIS_H */

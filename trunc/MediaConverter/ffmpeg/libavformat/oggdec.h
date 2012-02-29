@@ -1,8 +1,26 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+/**
+    Copyright (C) 2005  Michael Ahlberg, Måns Rullgård
 
+    Permission is hereby granted, free of charge, to any person
+    obtaining a copy of this software and associated documentation
+    files (the "Software"), to deal in the Software without
+    restriction, including without limitation the rights to use, copy,
+    modify, merge, publish, distribute, sublicense, and/or sell copies
+    of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
 
+    The above copyright notice and this permission notice shall be
+    included in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+**/
 
 #ifndef AVFORMAT_OGGDEC_H
 #define AVFORMAT_OGGDEC_H
@@ -14,12 +32,24 @@ struct ogg_codec {
     const int8_t *magic;
     uint8_t magicsize;
     const int8_t *name;
-    
+    /**
+     * Attempt to process a packet as a header
+     * @return 1 if the packet was a valid header,
+     *         0 if the packet was not a header (was a data packet)
+     *         -1 if an error occurred or for unsupported stream
+     */
     int (*header)(AVFormatContext *, int);
     int (*packet)(AVFormatContext *, int);
-    
+    /**
+     * Translate a granule into a timestamp.
+     * Will set dts if non-null and known.
+     * @return pts
+     */
     uint64_t (*gptopts)(AVFormatContext *, int, uint64_t, int64_t *dts);
-    
+    /**
+     * 1 if granule is the start time of the associated packet.
+     * 0 if granule is the end time of the associated packet.
+     */
     int granule_is_start;
 };
 
@@ -35,15 +65,15 @@ struct ogg_stream {
     uint64_t granule;
     int64_t lastpts;
     int64_t lastdts;
-    int64_t sync_pos;   
-    int64_t page_pos;   
+    int64_t sync_pos;   ///< file offset of the first page needed to reconstruct the current packet
+    int64_t page_pos;   ///< file offset of the current page
     int flags;
     const struct ogg_codec *codec;
     int header;
     int nsegs, segp;
     uint8_t segments[255];
-    int incomplete; 
-    int page_end;   
+    int incomplete; ///< whether we're expecting a continuation in the next page
+    int page_end;   ///< current packet is the last one completed in the page
     int keyframe_seek;
     void *private;
 };
@@ -113,4 +143,4 @@ ogg_gptopts (AVFormatContext * s, int i, uint64_t gp, int64_t *dts)
     return pts;
 }
 
-#endif 
+#endif /* AVFORMAT_OGGDEC_H */

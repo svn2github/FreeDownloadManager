@@ -1,8 +1,22 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Copyright (C) 2004-2010 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_DWT_H
 #define AVCODEC_DWT_H
@@ -20,15 +34,15 @@ typedef struct {
     int y;
 } DWTCompose;
 
-
+/** Used to minimize the amount of memory used in order to optimize cache performance. **/
 typedef struct slice_buffer_s {
-    IDWTELEM * * line; 
-    IDWTELEM * * data_stack; 
+    IDWTELEM * * line; ///< For use by idwt and predict_slices.
+    IDWTELEM * * data_stack; ///< Used for internal purposes.
     int data_stack_top;
     int line_count;
     int line_width;
     int data_count;
-    IDWTELEM * base_buffer; 
+    IDWTELEM * base_buffer; ///< Buffer that this structure is caching.
 } slice_buffer;
 
 typedef struct DWTContext {
@@ -113,7 +127,7 @@ typedef struct DWTContext {
 #endif
 
 #define slice_buffer_get_line(slice_buf, line_num) ((slice_buf)->line[line_num] ? (slice_buf)->line[line_num] : ff_slice_buffer_load_line((slice_buf), (line_num)))
-
+//#define slice_buffer_get_line(slice_buf, line_num) (ff_slice_buffer_load_line((slice_buf), (line_num)))
 
 void ff_slice_buffer_init(slice_buffer * buf, int line_count, int max_allocated_lines, int line_width, IDWTELEM * base_buffer);
 void ff_slice_buffer_release(slice_buffer * buf, int line);
@@ -139,4 +153,4 @@ void ff_spatial_idwt(IDWTELEM *buffer, int width, int height, int stride, int ty
 void ff_dwt_init(DWTContext *c);
 void ff_dwt_init_x86(DWTContext *c);
 
-#endif 
+#endif /* AVCODEC_DWT_H */

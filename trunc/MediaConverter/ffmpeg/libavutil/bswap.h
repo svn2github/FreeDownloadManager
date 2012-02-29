@@ -1,10 +1,27 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * byte swapping routines
+ */
 
 #ifndef AVUTIL_BSWAP_H
 #define AVUTIL_BSWAP_H
@@ -62,8 +79,8 @@ static inline uint64_t av_const bswap_64(uint64_t x)
 }
 #endif
 
-
-
+// be2me ... big-endian to machine-endian
+// le2me ... little-endian to machine-endian
 
 #if HAVE_BIGENDIAN
 #define be2me_16(x) (x)
@@ -81,4 +98,4 @@ static inline uint64_t av_const bswap_64(uint64_t x)
 #define le2me_64(x) (x)
 #endif
 
-#endif 
+#endif /* AVUTIL_BSWAP_H */

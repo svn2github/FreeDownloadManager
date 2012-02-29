@@ -1,15 +1,31 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Header file for hardcoded mpegaudiodec tables
+ *
+ * Copyright (c) 2009 Reimar Döffinger <Reimar.Doeffinger@gmx.de>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef MPEGAUDIO_TABLEGEN_H
 #define MPEGAUDIO_TABLEGEN_H
 
 #include <stdint.h>
-
-
+// do not use libavutil/mathematics.h since this is compiled both
+// for the host and the target and config.h is only valid for the target
 #include <math.h>
 
 #define TABLE_4_3_SIZE (8191 + 16)*4
@@ -34,7 +50,7 @@ static void mpegaudio_tableinit(void)
         m  = (uint32_t)(fm * (1LL << 31) + 0.5);
         e += FRAC_BITS - 31 + 5 - 100;
 
-        
+        /* normalized to FRAC_BITS */
         table_4_3_value[i] =  m;
         table_4_3_exp[i]   = -e;
     }
@@ -46,6 +62,6 @@ static void mpegaudio_tableinit(void)
         exp_table[exponent] = expval_table[exponent][1];
     }
 }
-#endif 
+#endif /* CONFIG_HARDCODED_TABLES */
 
-#endif 
+#endif /* MPEGAUDIO_TABLEGEN_H */

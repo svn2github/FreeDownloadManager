@@ -1,8 +1,25 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+/**
+ * @file
+ * VP5 and VP6 compatible video decoder (common features)
+ *
+ * Copyright (C) 2006  Aurelien Jacobs <aurel@gnuage.org>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_VP56_H
 #define AVCODEC_VP56_H
@@ -54,20 +71,20 @@ typedef struct {
 } VP56Macroblock;
 
 typedef struct {
-    uint8_t coeff_reorder[64];       
-    uint8_t coeff_index_to_pos[64];  
-    uint8_t vector_sig[2];           
-    uint8_t vector_dct[2];           
-    uint8_t vector_pdi[2][2];        
-    uint8_t vector_pdv[2][7];        
-    uint8_t vector_fdv[2][8];        
-    uint8_t coeff_dccv[2][11];       
-    uint8_t coeff_ract[2][3][6][11]; 
-    uint8_t coeff_acct[2][3][3][6][5];
-    uint8_t coeff_dcct[2][36][5];    
-    uint8_t coeff_runv[2][14];       
-    uint8_t mb_type[3][10][10];      
-    uint8_t mb_types_stats[3][10][2];
+    uint8_t coeff_reorder[64];       /* used in vp6 only */
+    uint8_t coeff_index_to_pos[64];  /* used in vp6 only */
+    uint8_t vector_sig[2];           /* delta sign */
+    uint8_t vector_dct[2];           /* delta coding types */
+    uint8_t vector_pdi[2][2];        /* predefined delta init */
+    uint8_t vector_pdv[2][7];        /* predefined delta values */
+    uint8_t vector_fdv[2][8];        /* 8 bit delta value definition */
+    uint8_t coeff_dccv[2][11];       /* DC coeff value */
+    uint8_t coeff_ract[2][3][6][11]; /* Run/AC coding type and AC coeff value */
+    uint8_t coeff_acct[2][3][3][6][5];/* vp5 only AC coding type for coding group < 3 */
+    uint8_t coeff_dcct[2][36][5];    /* DC coeff coding type */
+    uint8_t coeff_runv[2][14];       /* run value (vp6 only) */
+    uint8_t mb_type[3][10][10];      /* model for decoding MB type */
+    uint8_t mb_types_stats[3][10][2];/* contextual, next MB type stats */
 } VP56Model;
 
 struct vp56_context {
@@ -83,11 +100,11 @@ struct vp56_context {
     VP56RangeCoder *ccp;
     int sub_version;
 
-    
+    /* frame info */
     int plane_width[4];
     int plane_height[4];
-    int mb_width;   
-    int mb_height;  
+    int mb_width;   /* number of horizontal MB */
+    int mb_height;  /* number of vertical MB */
     int block_offset[6];
 
     int quantizer;
@@ -95,40 +112,40 @@ struct vp56_context {
     uint16_t dequant_ac;
     int8_t *qscale_table;
 
-    
+    /* DC predictors management */
     VP56RefDc *above_blocks;
     VP56RefDc left_block[4];
     int above_block_idx[6];
-    DCTELEM prev_dc[3][3];    
+    DCTELEM prev_dc[3][3];    /* [plan][ref_frame] */
 
-    
+    /* blocks / macroblock */
     VP56mb mb_type;
     VP56Macroblock *macroblocks;
     DECLARE_ALIGNED(16, DCTELEM, block_coeff)[6][64];
 
-    
-    VP56mv mv[6];  
+    /* motion vectors */
+    VP56mv mv[6];  /* vectors for each block in MB */
     VP56mv vector_candidate[2];
     int vector_candidate_pos;
 
-    
-    int filter_header;               
+    /* filtering hints */
+    int filter_header;               /* used in vp6 only */
     int deblock_filtering;
     int filter_selection;
     int filter_mode;
     int max_vector_length;
     int sample_variance_threshold;
 
-    uint8_t coeff_ctx[4][64];              
-    uint8_t coeff_ctx_last[4];             
+    uint8_t coeff_ctx[4][64];              /* used in vp5 only */
+    uint8_t coeff_ctx_last[4];             /* used in vp5 only */
 
     int has_alpha;
 
-    
-    int flip;  
-    int frbi;  
-    int srbi;  
-    int stride[4];  
+    /* upside-down flipping hints */
+    int flip;  /* are we flipping ? */
+    int frbi;  /* first row block index in MB */
+    int srbi;  /* second row block index in MB */
+    int stride[4];  /* stride for each plan */
 
     const uint8_t *vp56_coord_div;
     VP56ParseVectorAdjustment parse_vector_adjustment;
@@ -143,13 +160,13 @@ struct vp56_context {
     VP56Model *modelp;
     VP56Model models[2];
 
-    
+    /* huffman decoding */
     int use_huffman;
     GetBitContext gb;
     VLC dccv_vlc[2];
     VLC runv_vlc[2];
     VLC ract_vlc[2][3][6];
-    unsigned int nb_null[2][2];       
+    unsigned int nb_null[2][2];       /* number of consecutive NULL DC/AC */
 };
 
 
@@ -160,7 +177,9 @@ int vp56_decode_frame(AVCodecContext *avctx, void *data, int *data_size,
                       AVPacket *avpkt);
 
 
-
+/**
+ * vp56 specific range coder implementation
+ */
 
 static inline void vp56_init_range_decoder(VP56RangeCoder *c,
                                            const uint8_t *buf, int buf_size)
@@ -185,7 +204,7 @@ static inline int vp56_rac_get_prob(VP56RangeCoder *c, uint8_t prob)
         c->high = low;
     }
 
-    
+    /* normalize */
     while (c->high < 128) {
         c->high <<= 1;
         c->code_word <<= 1;
@@ -199,7 +218,7 @@ static inline int vp56_rac_get_prob(VP56RangeCoder *c, uint8_t prob)
 
 static inline int vp56_rac_get(VP56RangeCoder *c)
 {
-    
+    /* equiprobable */
     int low = (c->high + 1) >> 1;
     unsigned int low_shift = low << 8;
     int bit = c->code_word >= low_shift;
@@ -210,7 +229,7 @@ static inline int vp56_rac_get(VP56RangeCoder *c)
         c->high = low << 1;
     }
 
-    
+    /* normalize */
     c->code_word <<= 1;
     if (--c->bits == 0 && c->buffer < c->end) {
         c->bits = 8;
@@ -249,4 +268,4 @@ static inline int vp56_rac_get_tree(VP56RangeCoder *c,
     return -tree->val;
 }
 
-#endif 
+#endif /* AVCODEC_VP56_H */

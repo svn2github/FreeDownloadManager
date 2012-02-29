@@ -1,10 +1,28 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * Colorspace conversion defines
+ * Copyright (c) 2001, 2002, 2003 Fabrice Bellard
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * Various defines for YUV<->RGB conversion
+ */
 
 #ifndef AVCODEC_COLORSPACE_H
 #define AVCODEC_COLORSPACE_H
@@ -57,7 +75,7 @@
 #define C_CCIR_TO_JPEG(y)\
  cm[(((y) - 128) * FIX(127.0/112.0) + (ONE_HALF + (128 << SCALEBITS))) >> SCALEBITS]
 
-
+/* NOTE: the clamp is really necessary! */
 static inline int C_JPEG_TO_CCIR(int y) {
     y = (((y - 128) * FIX(112.0/127.0) + (ONE_HALF + (128 << SCALEBITS))) >> SCALEBITS);
     if (y < 16)
@@ -90,4 +108,4 @@ static inline int C_JPEG_TO_CCIR(int y) {
 (((FIX(0.50000*224.0/255.0) * r1 - FIX(0.41869*224.0/255.0) * g1 -           \
    FIX(0.08131*224.0/255.0) * b1 + (ONE_HALF << shift) - 1) >> (SCALEBITS + shift)) + 128)
 
-#endif 
+#endif /* AVCODEC_COLORSPACE_H */

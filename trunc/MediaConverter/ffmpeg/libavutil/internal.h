@@ -1,10 +1,27 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * copyright (c) 2006 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * common internal API header
+ */
 
 #ifndef AVUTIL_INTERNAL_H
 #define AVUTIL_INTERNAL_H
@@ -85,10 +102,10 @@
 #    define offsetof(T, F) ((unsigned int)((char *)&((T *)0)->F))
 #endif
 
-
+/* Use to export labels from asm. */
 #define LABEL_MANGLE(a) EXTERN_PREFIX #a
 
-
+// Use rip-relative addressing if compiling PIC code on x86-64.
 #if ARCH_X86_64 && defined(PIC)
 #    define LOCAL_MANGLE(a) #a "(%%rip)"
 #else
@@ -97,9 +114,9 @@
 
 #define MANGLE(a) EXTERN_PREFIX LOCAL_MANGLE(a)
 
+/* debug stuff */
 
-
-
+/* dprintf macros */
 #ifdef DEBUG
 #    define dprintf(pctx, ...) av_log(pctx, AV_LOG_DEBUG, __VA_ARGS__)
 #else
@@ -108,7 +125,7 @@
 
 #define av_abort()      do { av_log(NULL, AV_LOG_ERROR, "Abort at %s:%d\n", __FILE__, __LINE__); abort(); } while (0)
 
-
+/* math */
 
 #if ARCH_X86
 #define MASK_ABS(mask, level)\
@@ -124,7 +141,7 @@
             level = (level ^ mask) - mask;
 #endif
 
-
+/* avoid usage of dangerous/inappropriate system functions */
 #undef  malloc
 #define malloc please_use_av_malloc
 #undef  free
@@ -176,11 +193,15 @@
 
 #include "libm.h"
 
-
+/**
+ * Returns NULL if CONFIG_SMALL is true, otherwise the argument
+ * without modification. Used to disable the definition of strings
+ * (for example AVCodec long_names).
+ */
 #if CONFIG_SMALL
 #   define NULL_IF_CONFIG_SMALL(x) NULL
 #else
 #   define NULL_IF_CONFIG_SMALL(x) x
 #endif
 
-#endif 
+#endif /* AVUTIL_INTERNAL_H */

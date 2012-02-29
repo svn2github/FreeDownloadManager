@@ -1,18 +1,97 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+/* crypto/des/des_old.h -*- mode:C; c-file-style: "eay" -*- */
 
+/* WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+ *
+ * The function names in here are deprecated and are only present to
+ * provide an interface compatible with openssl 0.9.6 and older as
+ * well as libdes.  OpenSSL now provides functions where "des_" has
+ * been replaced with "DES_" in the names, to make it possible to
+ * make incompatible changes that are needed for C type security and
+ * other stuff.
+ *
+ * This include files has two compatibility modes:
+ *
+ *   - If OPENSSL_DES_LIBDES_COMPATIBILITY is defined, you get an API
+ *     that is compatible with libdes and SSLeay.
+ *   - If OPENSSL_DES_LIBDES_COMPATIBILITY isn't defined, you get an
+ *     API that is compatible with OpenSSL 0.9.5x to 0.9.6x.
+ *
+ * Note that these modes break earlier snapshots of OpenSSL, where
+ * libdes compatibility was the only available mode or (later on) the
+ * prefered compatibility mode.  However, after much consideration
+ * (and more or less violent discussions with external parties), it
+ * was concluded that OpenSSL should be compatible with earlier versions
+ * of itself before anything else.  Also, in all honesty, libdes is
+ * an old beast that shouldn't really be used any more.
+ *
+ * Please consider starting to use the DES_ functions rather than the
+ * des_ ones.  The des_ functions will disappear completely before
+ * OpenSSL 1.0!
+ *
+ * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+ */
 
-
-
-
-
-
+/* Written by Richard Levitte (richard@levitte.org) for the OpenSSL
+ * project 2001.
+ */
+/* ====================================================================
+ * Copyright (c) 1998-2002 The OpenSSL Project.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. All advertising materials mentioning features or use of this
+ *    software must display the following acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit. (http://www.openssl.org/)"
+ *
+ * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
+ *    endorse or promote products derived from this software without
+ *    prior written permission. For written permission, please contact
+ *    openssl-core@openssl.org.
+ *
+ * 5. Products derived from this software may not be called "OpenSSL"
+ *    nor may "OpenSSL" appear in their names without prior written
+ *    permission of the OpenSSL Project.
+ *
+ * 6. Redistributions of any form whatsoever must retain the following
+ *    acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit (http://www.openssl.org/)"
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
+ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This product includes cryptographic software written by Eric Young
+ * (eay@cryptsoft.com).  This product includes software written by Tim
+ * Hudson (tjh@cryptsoft.com).
+ *
+ */
 
 #ifndef HEADER_DES_H
 #define HEADER_DES_H
 
-#include <openssl/e_os2.h>	
+#include <openssl/e_os2.h>	/* OPENSSL_EXTERN, OPENSSL_NO_DES, DES_LONG */
 
 #ifdef OPENSSL_NO_DES
 #error DES is disabled.
@@ -46,7 +125,8 @@ typedef struct _ossl_old_des_ks_struct
 	{
 	union	{
 		_ossl_old_des_cblock _;
-		
+		/* make sure things are correct size on machines with
+		 * 8 byte longs */
 		DES_LONG pad[2];
 		} ks;
 	} _ossl_old_des_key_schedule[16];
@@ -155,8 +235,9 @@ typedef struct _ossl_old_des_ks_struct
 
 #define des_check_key DES_check_key
 #define des_rw_mode DES_rw_mode
-#else 
-
+#else /* libdes compatibility */
+/* Map all symbol names to _ossl_old_des_* form, so we avoid all
+   clashes with libdes */
 #define des_cblock _ossl_old_des_cblock
 #define des_key_schedule _ossl_old_des_key_schedule
 #define des_ecb3_encrypt(i,o,k1,k2,k3,e)\
@@ -320,7 +401,8 @@ void _ossl_old_des_ofb64_encrypt(unsigned char *in, unsigned char *out, long len
 
 void _ossl_096_des_random_seed(des_cblock *key);
 
-
+/* The following definitions provide compatibility with the MIT Kerberos
+ * library. The _ossl_old_des_key_schedule structure is not binary compatible. */
 
 #define _KERBEROS_DES_H
 
@@ -357,7 +439,7 @@ void _ossl_096_des_random_seed(des_cblock *key);
 }
 #endif
 
-
+/* for DES_read_pw_string et al */
 #include <openssl/ui_compat.h>
 
 #endif

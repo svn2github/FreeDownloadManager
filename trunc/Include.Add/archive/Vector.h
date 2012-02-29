@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Common/Vector.h
 
 #ifndef __COMMON_VECTOR_H
 #define __COMMON_VECTOR_H
@@ -64,8 +62,8 @@ public:
     InsertOneItem(index);
     ((T *)_items)[index] = item;
   }
-  
-  
+  // T* GetPointer() const { return (T*)_items; }
+  // operator const T *() const { return _items; };
   const T& operator[](int index) const { return ((T *)_items)[index]; }
 	T& operator[](int index) { return ((T *)_items)[index]; }
 	const T& Front() const { return operator[](0); }

@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// OpenArchive.cpp
 
 #include "StdAfx.h"
 
@@ -112,12 +110,14 @@ HRESULT IsArchiveItemAnti(IInArchive *archive, UInt32 index, bool &result)
   return IsArchiveItemProp(archive, index, kpidIsAnti, result);
 }
 
+// Static-SFX (for Linux) can be big
 const UInt64 kMaxCheckStartPosition = 
 #ifdef _WIN32
 1 << 20;
 #else
 1 << 22;
 #endif
+
 
 HRESULT ReOpenArchive(IInArchive *archive, const UString &fileName)
 {
@@ -248,6 +248,7 @@ HRESULT OpenArchive(
     if (archiverInfo.Name.CompareNoCase(L"Z") == 0)
       archive = new NArchive::NZ::CHandler;
     #endif
+
 
     #ifndef EXCLUDE_COM
     if (!archive)

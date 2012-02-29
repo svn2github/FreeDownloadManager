@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Common/Types.h
 
 #ifndef __COMMON_TYPES_H
 #define __COMMON_TYPES_H

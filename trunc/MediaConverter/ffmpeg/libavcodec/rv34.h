@@ -1,10 +1,28 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * RV30/40 decoder common data declarations
+ * Copyright (c) 2007 Mike Melanson, Konstantin Shishkov
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * RV30 and RV40 decoder common data declarations
+ */
 
 #ifndef AVCODEC_RV34_H
 #define AVCODEC_RV34_H
@@ -18,75 +36,81 @@
 #define MB_TYPE_SEPARATE_DC 0x01000000
 #define IS_SEPARATE_DC(a)   ((a) & MB_TYPE_SEPARATE_DC)
 
-
+/**
+ * RV30 and RV40 Macroblock types
+ */
 enum RV40BlockTypes{
-    RV34_MB_TYPE_INTRA,      
-    RV34_MB_TYPE_INTRA16x16, 
-    RV34_MB_P_16x16,         
-    RV34_MB_P_8x8,           
-    RV34_MB_B_FORWARD,       
-    RV34_MB_B_BACKWARD,      
-    RV34_MB_SKIP,            
-    RV34_MB_B_DIRECT,        
-    RV34_MB_P_16x8,          
-    RV34_MB_P_8x16,          
-    RV34_MB_B_BIDIR,         
-    RV34_MB_P_MIX16x16,      
+    RV34_MB_TYPE_INTRA,      ///< Intra macroblock
+    RV34_MB_TYPE_INTRA16x16, ///< Intra macroblock with DCs in a separate 4x4 block
+    RV34_MB_P_16x16,         ///< P-frame macroblock, one motion frame
+    RV34_MB_P_8x8,           ///< P-frame macroblock, 8x8 motion compensation partitions
+    RV34_MB_B_FORWARD,       ///< B-frame macroblock, forward prediction
+    RV34_MB_B_BACKWARD,      ///< B-frame macroblock, backward prediction
+    RV34_MB_SKIP,            ///< Skipped block
+    RV34_MB_B_DIRECT,        ///< Bidirectionally predicted B-frame macroblock, no motion vectors
+    RV34_MB_P_16x8,          ///< P-frame macroblock, 16x8 motion compensation partitions
+    RV34_MB_P_8x16,          ///< P-frame macroblock, 8x16 motion compensation partitions
+    RV34_MB_B_BIDIR,         ///< Bidirectionally predicted B-frame macroblock, two motion vectors
+    RV34_MB_P_MIX16x16,      ///< P-frame macroblock with DCs in a separate 4x4 block, one motion vector
     RV34_MB_TYPES
 };
 
-
+/**
+ * VLC tables used by the decoder
+ *
+ * Intra frame VLC sets do not contain some of those tables.
+ */
 typedef struct RV34VLC{
-    VLC cbppattern[2];     
-    VLC cbp[2][4];         
-    VLC first_pattern[4];  
-    VLC second_pattern[2]; 
-    VLC third_pattern[2];  
-    VLC coefficient;       
+    VLC cbppattern[2];     ///< VLCs used for pattern of coded block patterns decoding
+    VLC cbp[2][4];         ///< VLCs used for coded block patterns decoding
+    VLC first_pattern[4];  ///< VLCs used for decoding coefficients in the first subblock
+    VLC second_pattern[2]; ///< VLCs used for decoding coefficients in the subblocks 2 and 3
+    VLC third_pattern[2];  ///< VLCs used for decoding coefficients in the last subblock
+    VLC coefficient;       ///< VLCs used for decoding big coefficients
 }RV34VLC;
 
-
+/** essential slice information */
 typedef struct SliceInfo{
-    int type;              
-    int quant;             
-    int vlc_set;           
-    int start, end;        
-    int width;             
-    int height;            
-    int pts;               
+    int type;              ///< slice type (intra, inter)
+    int quant;             ///< quantizer used for this slice
+    int vlc_set;           ///< VLCs used for this slice
+    int start, end;        ///< start and end macroblocks of the slice
+    int width;             ///< coded width
+    int height;            ///< coded height
+    int pts;               ///< frame timestamp
 }SliceInfo;
 
-
+/** decoder context */
 typedef struct RV34DecContext{
     MpegEncContext s;
-    int8_t *intra_types_hist;
-    int8_t *intra_types;     
-    int    intra_types_stride;
-    const uint8_t *luma_dc_quant_i;
-    const uint8_t *luma_dc_quant_p;
+    int8_t *intra_types_hist;///< old block types, used for prediction
+    int8_t *intra_types;     ///< block types
+    int    intra_types_stride;///< block types array stride
+    const uint8_t *luma_dc_quant_i;///< luma subblock DC quantizer for intraframes
+    const uint8_t *luma_dc_quant_p;///< luma subblock DC quantizer for interframes
 
-    RV34VLC *cur_vlcs;       
-    int bits;                
-    H264PredContext h;       
-    SliceInfo si;            
+    RV34VLC *cur_vlcs;       ///< VLC set used for current frame decoding
+    int bits;                ///< slice size in bits
+    H264PredContext h;       ///< functions for 4x4 and 16x16 intra block prediction
+    SliceInfo si;            ///< current slice information
 
-    int *mb_type;            
-    int block_type;          
-    int luma_vlc;            
-    int chroma_vlc;          
-    int is16;                
-    int dmv[4][2];           
+    int *mb_type;            ///< internal macroblock types
+    int block_type;          ///< current block type
+    int luma_vlc;            ///< which VLC set will be used for decoding of luma blocks
+    int chroma_vlc;          ///< which VLC set will be used for decoding of chroma blocks
+    int is16;                ///< current block has additional 16x16 specific features or not
+    int dmv[4][2];           ///< differential motion vectors for the current macroblock
 
-    int rv30;                
-    int rpr;                 
+    int rv30;                ///< indicates which RV variasnt is currently decoded
+    int rpr;                 ///< one field size in RV30 slice header
 
     int cur_pts, last_pts, next_pts;
 
-    uint16_t *cbp_luma;      
-    uint8_t  *cbp_chroma;    
-    int      *deblock_coefs; 
+    uint16_t *cbp_luma;      ///< CBP values for luma subblocks
+    uint8_t  *cbp_chroma;    ///< CBP values for chroma subblocks
+    int      *deblock_coefs; ///< deblock coefficients for each macroblock
 
-    
+    /** 8x8 block available flags (for MV prediction) */
     DECLARE_ALIGNED(8, uint32_t, avail_cache)[3*4];
 
     int (*parse_slice_header)(struct RV34DecContext *r, GetBitContext *gb, SliceInfo *si);
@@ -95,10 +119,12 @@ typedef struct RV34DecContext{
     void (*loop_filter)(struct RV34DecContext *r, int row);
 }RV34DecContext;
 
-
+/**
+ * common decoding functions
+ */
 int ff_rv34_get_start_offset(GetBitContext *gb, int blocks);
 int ff_rv34_decode_init(AVCodecContext *avctx);
 int ff_rv34_decode_frame(AVCodecContext *avctx, void *data, int *data_size, AVPacket *avpkt);
 int ff_rv34_decode_end(AVCodecContext *avctx);
 
-#endif 
+#endif /* AVCODEC_RV34_H */

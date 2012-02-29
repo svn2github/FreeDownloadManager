@@ -1,8 +1,23 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * TwinVQ decoder
+ * Copyright (c) 2009 Vitor Sessak
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_TWINVQ_DATA_H
 #define AVCODEC_TWINVQ_DATA_H
@@ -10,7 +25,19 @@
 #include <stddef.h>
 #include <stdint.h>
 
-
+/*
+ * The bark_tab_* tables are constructed so that
+ *
+ *       /i-1              \
+ *       |--               |
+ *  bark |\   bark_tab[j]  | == i
+ *       |/                |
+ *       |--               |
+ *       \j=0              /
+ *
+ *
+ * for some slightly nonconventional bark-scale function
+ */
 static const uint16_t bark_tab_l08_512[] = {
     7,     8,     7,     8,     8,     8,     8,     8,     8,     9,
     9,    10,    10,    11,    11,    12,    12,    14,    15,    16,
@@ -101,7 +128,13 @@ static const uint16_t bark_tab_s44_128[] = {
 };
 
 
-
+/**
+ * TwinVQ codebooks. They are coded in a struct so we can use code such as
+ *
+ * float val = tab.fcb0808l[get_bits(gb, 12)];
+ *
+ * without risking a segfault on malformed files.
+ */
 static const struct {
     float lsp08[504];
     int16_t fcb08l[640];
@@ -11101,4 +11134,4 @@ static const struct {
     {25, &tab10[0][0]},{55, &tab11[0][0]}, {15, &tab12[0][0]}
 };
 
-#endif 
+#endif /* AVCODEC_TWINVQ_DATA_H */

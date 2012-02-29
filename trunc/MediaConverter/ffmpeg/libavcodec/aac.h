@@ -1,10 +1,31 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * AAC definitions and structures
+ * Copyright (c) 2005-2006 Oded Shimon ( ods15 ods15 dyndns org )
+ * Copyright (c) 2006-2007 Maxim Gavrilov ( maxim.gavrilov gmail com )
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * AAC definitions and structures
+ * @author Oded Shimon  ( ods15 ods15 dyndns org )
+ * @author Maxim Gavrilov ( maxim.gavrilov gmail com )
+ */
 
 #ifndef AVCODEC_AAC_H
 #define AVCODEC_AAC_H
@@ -56,12 +77,12 @@ enum WindowSequence {
 };
 
 enum BandType {
-    ZERO_BT        = 0,     
-    FIRST_PAIR_BT  = 5,     
-    ESC_BT         = 11,    
-    NOISE_BT       = 13,    
-    INTENSITY_BT2  = 14,    
-    INTENSITY_BT   = 15,    
+    ZERO_BT        = 0,     ///< Scalefactors and spectral data are all zero.
+    FIRST_PAIR_BT  = 5,     ///< This and later band types encode two values (rather than four) with one code word.
+    ESC_BT         = 11,    ///< Spectral data are coded with an escape sequence.
+    NOISE_BT       = 13,    ///< Spectral data are scaled white noise not coded in the bitstream.
+    INTENSITY_BT2  = 14,    ///< Scalefactor data are intensity stereo positions.
+    INTENSITY_BT   = 15,    ///< Scalefactor data are intensity stereo positions.
 };
 
 #define IS_CODEBOOK_UNSIGNED(x) ((x - 1) & 10)
@@ -74,23 +95,29 @@ enum ChannelPosition {
     AAC_CHANNEL_CC    = 5,
 };
 
-
+/**
+ * The point during decoding at which channel coupling is applied.
+ */
 enum CouplingPoint {
     BEFORE_TNS,
     BETWEEN_TNS_AND_IMDCT,
     AFTER_IMDCT = 3,
 };
 
-
+/**
+ * Output configuration status
+ */
 enum OCStatus {
-    OC_NONE,        
-    OC_TRIAL_PCE,   
-    OC_TRIAL_FRAME, 
-    OC_GLOBAL_HDR,  
-    OC_LOCKED,      
+    OC_NONE,        //< Output unconfigured
+    OC_TRIAL_PCE,   //< Output configuration under trial specified by an inband PCE
+    OC_TRIAL_FRAME, //< Output configuration under trial specified by a frame header
+    OC_GLOBAL_HDR,  //< Output configuration set in a global header but not yet locked
+    OC_LOCKED,      //< Output configuration locked in place
 };
 
-
+/**
+ * Predictor State
+ */
 typedef struct {
     float cor0;
     float cor1;
@@ -102,22 +129,24 @@ typedef struct {
 
 #define MAX_PREDICTORS 672
 
-#define SCALE_DIV_512    36    
-#define SCALE_ONE_POS   140    
-#define SCALE_MAX_POS   255    
-#define SCALE_MAX_DIFF   60    
-#define SCALE_DIFF_ZERO  60    
+#define SCALE_DIV_512    36    ///< scalefactor difference that corresponds to scale difference in 512 times
+#define SCALE_ONE_POS   140    ///< scalefactor index that corresponds to scale=1.0
+#define SCALE_MAX_POS   255    ///< scalefactor index maximum value
+#define SCALE_MAX_DIFF   60    ///< maximum scalefactor difference allowed by standard
+#define SCALE_DIFF_ZERO  60    ///< codebook index corresponding to zero scalefactor indices difference
 
-
+/**
+ * Individual Channel Stream
+ */
 typedef struct {
-    uint8_t max_sfb;            
+    uint8_t max_sfb;            ///< number of scalefactor bands per group
     enum WindowSequence window_sequence[2];
-    uint8_t use_kb_window[2];   
+    uint8_t use_kb_window[2];   ///< If set, use Kaiser-Bessel window, otherwise use a sinus window.
     int num_window_groups;
     uint8_t group_len[8];
-    const uint16_t *swb_offset; 
-    const uint8_t *swb_sizes;   
-    int num_swb;                
+    const uint16_t *swb_offset; ///< table of offsets to the lowest spectral coefficient of a scalefactor band, sfb, for a particular window
+    const uint8_t *swb_sizes;   ///< table of scalefactor band sizes for a particular window
+    int num_swb;                ///< number of scalefactor window bands
     int num_windows;
     int tns_max_bands;
     int predictor_present;
@@ -126,7 +155,9 @@ typedef struct {
     uint8_t prediction_used[41];
 } IndividualChannelStream;
 
-
+/**
+ * Temporal Noise Shaping
+ */
 typedef struct {
     int present;
     int n_filt[8];
@@ -136,16 +167,20 @@ typedef struct {
     float coef[8][4][TNS_MAX_ORDER];
 } TemporalNoiseShaping;
 
-
+/**
+ * Dynamic Range Control - decoded from the bitstream but not processed further.
+ */
 typedef struct {
-    int pce_instance_tag;                           
-    int dyn_rng_sgn[17];                            
-    int dyn_rng_ctl[17];                            
-    int exclude_mask[MAX_CHANNELS];                 
-    int band_incr;                                  
-    int interpolation_scheme;                       
-    int band_top[17];                               
-    int prog_ref_level;                             
+    int pce_instance_tag;                           ///< Indicates with which program the DRC info is associated.
+    int dyn_rng_sgn[17];                            ///< DRC sign information; 0 - positive, 1 - negative
+    int dyn_rng_ctl[17];                            ///< DRC magnitude information
+    int exclude_mask[MAX_CHANNELS];                 ///< Channels to be excluded from DRC processing.
+    int band_incr;                                  ///< Number of DRC bands greater than 1 having DRC info.
+    int interpolation_scheme;                       ///< Indicates the interpolation scheme used in the SBR QMF domain.
+    int band_top[17];                               ///< Indicates the top of the i-th DRC band in units of 4 spectral lines.
+    int prog_ref_level;                             /**< A reference level for the long-term program audio level for all
+                                                     *   channels combined.
+                                                     */
 } DynamicRangeControl;
 
 typedef struct {
@@ -155,82 +190,106 @@ typedef struct {
     int amp[4];
 } Pulse;
 
-
+/**
+ * coupling parameters
+ */
 typedef struct {
-    enum CouplingPoint coupling_point;  
-    int num_coupled;       
-    enum RawDataBlockType type[8];   
-    int id_select[8];      
-    int ch_select[8];      
+    enum CouplingPoint coupling_point;  ///< The point during decoding at which coupling is applied.
+    int num_coupled;       ///< number of target elements
+    enum RawDataBlockType type[8];   ///< Type of channel element to be coupled - SCE or CPE.
+    int id_select[8];      ///< element id
+    int ch_select[8];      /**< [0] shared list of gains; [1] list of gains for right channel;
+                            *   [2] list of gains for left channel; [3] lists of gains for both channels
+                            */
     float gain[16][120];
 } ChannelCoupling;
 
-
+/**
+ * Single Channel Element - used for both SCE and LFE elements.
+ */
 typedef struct {
     IndividualChannelStream ics;
     TemporalNoiseShaping tns;
     Pulse pulse;
-    enum BandType band_type[128];             
-    int band_type_run_end[120];               
-    float sf[120];                            
-    int sf_idx[128];                          
-    uint8_t zeroes[128];                      
-    DECLARE_ALIGNED(16, float, coeffs)[1024]; 
-    DECLARE_ALIGNED(16, float, saved)[1024];  
-    DECLARE_ALIGNED(16, float, ret)[2048];    
+    enum BandType band_type[128];             ///< band types
+    int band_type_run_end[120];               ///< band type run end points
+    float sf[120];                            ///< scalefactors
+    int sf_idx[128];                          ///< scalefactor indices (used by encoder)
+    uint8_t zeroes[128];                      ///< band is not coded (used by encoder)
+    DECLARE_ALIGNED(16, float, coeffs)[1024]; ///< coefficients for IMDCT
+    DECLARE_ALIGNED(16, float, saved)[1024];  ///< overlap
+    DECLARE_ALIGNED(16, float, ret)[2048];    ///< PCM output
     PredictorState predictor_state[MAX_PREDICTORS];
 } SingleChannelElement;
 
-
+/**
+ * channel element - generic struct for SCE/CPE/CCE/LFE
+ */
 typedef struct {
-    
-    int common_window;        
-    int     ms_mode;          
-    uint8_t ms_mask[128];     
-    
+    // CPE specific
+    int common_window;        ///< Set if channels share a common 'IndividualChannelStream' in bitstream.
+    int     ms_mode;          ///< Signals mid/side stereo flags coding mode (used by encoder)
+    uint8_t ms_mask[128];     ///< Set if mid/side stereo is used for each scalefactor window band
+    // shared
     SingleChannelElement ch[2];
-    
+    // CCE specific
     ChannelCoupling coup;
     SpectralBandReplication sbr;
 } ChannelElement;
 
-
+/**
+ * main AAC context
+ */
 typedef struct {
     AVCodecContext * avccontext;
 
     MPEG4AudioConfig m4ac;
 
-    int is_saved;                 
+    int is_saved;                 ///< Set if elements have stored overlap from previous frame.
     DynamicRangeControl che_drc;
 
-    
-    enum ChannelPosition che_pos[4][MAX_ELEM_ID]; 
+    /**
+     * @defgroup elements Channel element related data.
+     * @{
+     */
+    enum ChannelPosition che_pos[4][MAX_ELEM_ID]; /**< channel element channel mapping with the
+                                                   *   first index as the first 4 raw data block types
+                                                   */
     ChannelElement * che[4][MAX_ELEM_ID];
     ChannelElement * tag_che_map[4][MAX_ELEM_ID];
     int tags_mapped;
-    
+    /** @} */
 
-    
+    /**
+     * @defgroup temporary aligned temporary buffers (We do not want to have these on the stack.)
+     * @{
+     */
     DECLARE_ALIGNED(16, float, buf_mdct)[1024];
-    
+    /** @} */
 
-    
+    /**
+     * @defgroup tables   Computed / set up during initialization.
+     * @{
+     */
     FFTContext mdct;
     FFTContext mdct_small;
     DSPContext dsp;
     int random_state;
-    
+    /** @} */
 
-    
-    float *output_data[MAX_CHANNELS];                 
-    float add_bias;                                   
-    float sf_scale;                                   
-    int sf_offset;                                    
-    
+    /**
+     * @defgroup output   Members used for output interleaving.
+     * @{
+     */
+    float *output_data[MAX_CHANNELS];                 ///< Points to each element's 'ret' buffer (PCM output).
+    float add_bias;                                   ///< offset for dsp.float_to_int16
+    float sf_scale;                                   ///< Pre-scale for correct IMDCT and dsp.float_to_int16.
+    int sf_offset;                                    ///< offset into pow2sf_tab as appropriate for dsp.float_to_int16
+    /** @} */
 
     DECLARE_ALIGNED(16, float, temp)[128];
 
     enum OCStatus output_configured;
 } AACContext;
 
-#endif 
+#endif /* AVCODEC_AAC_H */

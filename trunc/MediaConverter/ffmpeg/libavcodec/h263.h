@@ -1,8 +1,22 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * H263 internal header
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 #ifndef AVCODEC_H263_H
 #define AVCODEC_H263_H
 
@@ -12,10 +26,10 @@
 #include "mpegvideo.h"
 #include "rl.h"
 
-
-
-
-
+// The defines below define the number of bits that are read at once for
+// reading vlc values. Changing these may improve speed and data cache needs
+// be aware though that decreasing them may need the number of stages that is
+// passed to get_vlc* to be increased.
 #define INTRA_MCBPC_VLC_BITS 6
 #define INTER_MCBPC_VLC_BITS 7
 #define CBPY_VLC_BITS 6
@@ -78,14 +92,20 @@ int h263_pred_dc(MpegEncContext * s, int n, int16_t **dc_val_ptr);
 void h263_pred_acdc(MpegEncContext * s, DCTELEM *block, int n);
 
 
-
+/**
+ * Prints picture info if FF_DEBUG_PICT_INFO is set.
+ */
 void ff_h263_show_pict_info(MpegEncContext *s);
 
 int ff_intel_h263_decode_picture_header(MpegEncContext *s);
 int ff_h263_decode_mb(MpegEncContext *s,
                       DCTELEM block[6][64]);
 
-
+/**
+ * Returns the value of the 3bit "source format" syntax element.
+ * that represents some standard picture dimensions or indicates that
+ * width&height are explicitly stored later.
+ */
 int av_const h263_get_picture_format(int width, int height);
 
 void ff_clean_h263_qscales(MpegEncContext *s);
@@ -102,7 +122,7 @@ static inline int h263_get_motion_length(MpegEncContext * s, int val, int f_code
         return mvtab[0][1];
     } else {
         bit_size = f_code - 1;
-        
+        /* modulo encoding */
         l= INT_BIT - 6 - bit_size;
         val = (val<<l)>>l;
         val--;
@@ -198,7 +218,7 @@ static inline int get_b_cbp(MpegEncContext * s, DCTELEM block[6][64],
         if(cbp){
             int zero_score= -6;
             if ((motion_x | motion_y | s->dquant | mb_type) == 0){
-                zero_score-= 4; 
+                zero_score-= 4; //2*MV + mb_type + cbp bit
             }
 
             zero_score*= lambda;

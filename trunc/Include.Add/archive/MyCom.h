@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// MyCom.h
 
 #ifndef __MYCOM_H
 #define __MYCOM_H
@@ -14,7 +12,7 @@ class CMyComPtr
 {
   T* _p;
 public:
-  
+  // typedef T _PtrClass;
   CMyComPtr() { _p = NULL;}
   CMyComPtr(T* p) {if ((_p = p) != NULL) p->AddRef(); }
   CMyComPtr(const CMyComPtr<T>& lp)
@@ -25,7 +23,7 @@ public:
   ~CMyComPtr() { if (_p) _p->Release(); }
   void Release() { if (_p) { _p->Release(); _p = NULL; } }
   operator T*() const {  return (T*)_p;  }
-  
+  // T& operator*() const {  return *_p; }
   T** operator&() { return &_p; }
   T* operator->() const { return _p; }
   T* operator=(T* p) 
@@ -39,8 +37,8 @@ public:
   }
   T* operator=(const CMyComPtr<T>& lp) { return (*this = lp._p); }
   bool operator!() const { return (_p == NULL); }
-  
-  
+  // bool operator==(T* pT) const {  return _p == pT; }
+  // Compare two objects for equivalence
   void Attach(T* p2)
   {
     Release();
@@ -58,7 +56,17 @@ public:
     return ::CoCreateInstance(rclsid, pUnkOuter, dwClsContext, iid, (void**)&_p);
   }
   #endif
-  
+  /*
+  HRESULT CoCreateInstance(LPCOLESTR szProgID, LPUNKNOWN pUnkOuter = NULL, DWORD dwClsContext = CLSCTX_ALL)
+  {
+    CLSID clsid;
+    HRESULT hr = CLSIDFromProgID(szProgID, &clsid);
+    ATLASSERT(_p == NULL);
+    if (SUCCEEDED(hr))
+      hr = ::CoCreateInstance(clsid, pUnkOuter, dwClsContext, __uuidof(T), (void**)&_p);
+    return hr;
+  }
+  */
   template <class Q>
   HRESULT QueryInterface(REFGUID iid, Q** pp) const
   {
@@ -66,16 +74,26 @@ public:
   }
 };
 
+//////////////////////////////////////////////////////////
+
 class CMyComBSTR
 {
 public:
   BSTR m_str;
   CMyComBSTR() { m_str = NULL; }
   CMyComBSTR(LPCOLESTR pSrc) {  m_str = ::SysAllocString(pSrc);  }
-  
-  
+  // CMyComBSTR(int nSize) { m_str = ::SysAllocStringLen(NULL, nSize); }
+  // CMyComBSTR(int nSize, LPCOLESTR sz) { m_str = ::SysAllocStringLen(sz, nSize);  }
   CMyComBSTR(const CMyComBSTR& src) { m_str = src.MyCopy(); }
-  
+  /*
+  CMyComBSTR(REFGUID src)
+  {
+    LPOLESTR szGuid;
+    StringFromCLSID(src, &szGuid);
+    m_str = ::SysAllocString(szGuid);
+    CoTaskMemFree(szGuid);
+  }
+  */
   ~CMyComBSTR() { ::SysFreeString(m_str); }
   CMyComBSTR& operator=(const CMyComBSTR& src)
   {
@@ -118,6 +136,9 @@ public:
   bool operator!() const {  return (m_str == NULL); }
 };
 
+
+//////////////////////////////////////////////////////////
+
 class CMyUnknownImp
 {
 public:
@@ -143,6 +164,7 @@ STDMETHOD_(ULONG, Release)() { if (--__m_RefCount != 0)  \
   i \
   MY_QUERYINTERFACE_END \
   MY_ADDREF_RELEASE
+
 
 #define MY_UNKNOWN_IMP STDMETHOD(QueryInterface)(REFGUID, void **) { \
   MY_QUERYINTERFACE_END \

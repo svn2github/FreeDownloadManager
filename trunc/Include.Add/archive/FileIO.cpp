@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Windows/FileIO.cpp
 
 #include "StdAfx.h"
 
@@ -116,6 +114,9 @@ bool CFileBase::GetFileInformation(CByHandleFileInfo &fileInfo) const
   return true;
 }
 
+/////////////////////////
+// CInFile
+
 bool CInFile::Open(LPCTSTR fileName, DWORD shareMode, DWORD creationDisposition, DWORD flagsAndAttributes)
   { return Create(fileName, GENERIC_READ, shareMode, creationDisposition, flagsAndAttributes); }
 
@@ -129,6 +130,11 @@ bool CInFile::Open(LPCWSTR fileName, DWORD shareMode, DWORD creationDisposition,
 bool CInFile::Open(LPCWSTR fileName)
   { return Open(fileName, FILE_SHARE_READ, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL); }
 #endif
+
+// ReadFile and WriteFile functions in Windows have BUG:
+// If you Read or Write 64MB or more (probably min_failure_size = 64MB - 32KB + 1) 
+// from/to Network file, it returns ERROR_NO_SYSTEM_RESOURCES 
+// (Insufficient system resources exist to complete the requested service).
 
 static UInt32 kChunkSizeMax = (1 << 24);
 
@@ -160,6 +166,9 @@ bool CInFile::Read(void *data, UInt32 size, UInt32 &processedSize)
   while (size > 0);
   return true;
 }
+
+/////////////////////////
+// COutFile
 
 bool COutFile::Open(LPCTSTR fileName, DWORD shareMode, DWORD creationDisposition, DWORD flagsAndAttributes)
   { return CFileBase::Create(fileName, GENERIC_WRITE, shareMode, creationDisposition, flagsAndAttributes); }

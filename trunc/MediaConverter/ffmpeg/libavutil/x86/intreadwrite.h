@@ -1,8 +1,22 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Copyright (c) 2010 Alexander Strange <astrange@ithinksw.com>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVUTIL_X86_INTREADWRITE_H
 #define AVUTIL_X86_INTREADWRITE_H
@@ -45,7 +59,7 @@ static av_always_inline void AV_ZERO64(void *d)
             :: "mm0");
 }
 
-#endif 
+#endif /* !HAVE_FAST_64BIT && defined(__MMX__) */
 
 #ifdef __SSE__
 
@@ -61,7 +75,7 @@ static av_always_inline void AV_COPY128(void *d, const void *s)
             : "xmm0");
 }
 
-#endif 
+#endif /* __SSE__ */
 
 #ifdef __SSE2__
 
@@ -76,8 +90,8 @@ static av_always_inline void AV_ZERO128(void *d)
             :: "xmm0");
 }
 
-#endif 
+#endif /* __SSE2__ */
 
-#endif 
+#endif /* HAVE_MMX */
 
-#endif 
+#endif /* AVUTIL_X86_INTREADWRITE_H */

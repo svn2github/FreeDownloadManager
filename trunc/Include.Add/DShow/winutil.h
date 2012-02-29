@@ -1,19 +1,31 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: WinUtil.h
+//
+// Desc: DirectShow base classes - defines generic handler classes.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
+
+
+// Make sure that you call PrepareWindow to initialise the window after
+// the object has been constructed. It is a separate method so that
+// derived classes can override useful methods like MessageLoop. Also
+// any derived class must call DoneWithWindow in its destructor. If it
+// doesn't a message may be retrieved and call a derived class member
+// function while a thread is executing the base class destructor code
 
 #ifndef __WINUTIL__
 #define __WINUTIL__
 
-const int DEFWIDTH = 320;                    
-const int DEFHEIGHT = 240;                   
-const int CAPTION = 256;                     
-const int TIMELENGTH = 50;                   
-const int PROFILESTR = 128;                  
-const WORD PALVERSION = 0x300;               
-const LONG PALETTE_VERSION = (LONG) 1;       
-const COLORREF VIDEO_COLOUR = 0;             
-const HANDLE hMEMORY = (HANDLE) (-1);        
+const int DEFWIDTH = 320;                    // Initial window width
+const int DEFHEIGHT = 240;                   // Initial window height
+const int CAPTION = 256;                     // Maximum length of caption
+const int TIMELENGTH = 50;                   // Maximum length of times
+const int PROFILESTR = 128;                  // Normal profile string
+const WORD PALVERSION = 0x300;               // GDI palette version
+const LONG PALETTE_VERSION = (LONG) 1;       // Initial palette version
+const COLORREF VIDEO_COLOUR = 0;             // Defaults to black background
+const HANDLE hMEMORY = (HANDLE) (-1);        // Says to open as memory file
 
 #define WIDTH(x) ((*(x)).right - (*(x)).left)
 #define HEIGHT(x) ((*(x)).bottom - (*(x)).top)
@@ -25,33 +37,34 @@ class AM_NOVTABLE CBaseWindow
 {
 protected:
 
-    HINSTANCE m_hInstance;          
-    HWND m_hwnd;                    
-    HDC m_hdc;                      
-    LONG m_Width;                   
-    LONG m_Height;                  
-    BOOL m_bActivated;              
-    LPTSTR m_pClassName;            
-    DWORD m_ClassStyles;            
-    DWORD m_WindowStyles;           
-    DWORD m_WindowStylesEx;         
-    UINT m_ShowStageMessage;        
-    UINT m_ShowStageTop;            
-    UINT m_RealizePalette;          
-    HDC m_MemoryDC;                 
-    HPALETTE m_hPalette;            
-    BYTE m_bNoRealize;              
-    BYTE m_bBackground;             
-    BYTE m_bRealizing;              
-    CCritSec m_WindowLock;          
-    BOOL m_bDoGetDC;                
-    bool m_bDoPostToDestroy;        
+    HINSTANCE m_hInstance;          // Global module instance handle
+    HWND m_hwnd;                    // Handle for our window
+    HDC m_hdc;                      // Device context for the window
+    LONG m_Width;                   // Client window width
+    LONG m_Height;                  // Client window height
+    BOOL m_bActivated;              // Has the window been activated
+    LPTSTR m_pClassName;            // Static string holding class name
+    DWORD m_ClassStyles;            // Passed in to our constructor
+    DWORD m_WindowStyles;           // Likewise the initial window styles
+    DWORD m_WindowStylesEx;         // And the extended window styles
+    UINT m_ShowStageMessage;        // Have the window shown with focus
+    UINT m_ShowStageTop;            // Makes the window WS_EX_TOPMOST
+    UINT m_RealizePalette;          // Makes us realize our new palette
+    HDC m_MemoryDC;                 // Used for fast BitBlt operations
+    HPALETTE m_hPalette;            // Handle to any palette we may have
+    BYTE m_bNoRealize;              // Don't realize palette now
+    BYTE m_bBackground;             // Should we realise in background
+    BYTE m_bRealizing;              // already realizing the palette
+    CCritSec m_WindowLock;          // Serialise window object access
+    BOOL m_bDoGetDC;                // Should this window get a DC
+    bool m_bDoPostToDestroy;        // Use PostMessage to destroy
 
-    
-    friend LRESULT CALLBACK WndProc(HWND hwnd,      
-                                    UINT uMsg,      
-                                    WPARAM wParam,  
-                                    LPARAM lParam); 
+
+    // Maps windows message procedure into C++ methods
+    friend LRESULT CALLBACK WndProc(HWND hwnd,      // Window handle
+                                    UINT uMsg,      // Message ID
+                                    WPARAM wParam,  // First parameter
+                                    LPARAM lParam); // Other parameter
 
     virtual LRESULT OnPaletteChange(HWND hwnd, UINT Message);
 
@@ -86,7 +99,7 @@ public:
         m_bNoRealize = !bRealize;
     }
 
-    
+    //  Jump over to the window thread to set the current palette
     HRESULT SetPalette();
 
     virtual HRESULT DoRealisePalette(BOOL bForceBackground = FALSE);
@@ -94,7 +107,7 @@ public:
     virtual BOOL PossiblyEatMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	    { return FALSE; };
 
-    
+    // Access our window information
 
     LONG GetWindowWidth();
     LONG GetWindowHeight();
@@ -102,39 +115,57 @@ public:
     HDC GetMemoryHDC();
     HDC GetWindowHDC();
 
-    
+    // This is the window procedure the derived object should override
 
-    virtual LRESULT OnReceiveMessage(HWND hwnd,          
-                                     UINT uMsg,          
-                                     WPARAM wParam,      
-                                     LPARAM lParam);     
+    virtual LRESULT OnReceiveMessage(HWND hwnd,          // Window handle
+                                     UINT uMsg,          // Message ID
+                                     WPARAM wParam,      // First parameter
+                                     LPARAM lParam);     // Other parameter
 
-    
+    // Must be overriden to return class and window styles
 
     virtual LPTSTR GetClassWindowStyles(
-                            DWORD *pClassStyles,          
-                            DWORD *pWindowStyles,         
-                            DWORD *pWindowStylesEx) PURE; 
+                            DWORD *pClassStyles,          // Class styles
+                            DWORD *pWindowStyles,         // Window styles
+                            DWORD *pWindowStylesEx) PURE; // Extended styles
 };
+
+
+// This helper class is entirely subservient to the owning CBaseWindow object
+// All this object does is to split out the actual drawing operation from the
+// main object (because it was becoming too large). We have a number of entry
+// points to set things like the draw device contexts, to implement the actual
+// drawing and to set the destination rectangle in the client window. We have
+// no critical section locking in this class because we are used exclusively
+// by the owning window object which looks after serialising calls into us
+
+// If you want to use this class make sure you call NotifyAllocator once the
+// allocate has been agreed, also call NotifyMediaType with a pointer to a
+// NON stack based CMediaType once that has been set (we keep a pointer to
+// the original rather than taking a copy). When the palette changes call
+// IncrementPaletteVersion (easiest thing to do is to also call this method
+// in the SetMediaType method most filters implement). Finally before you
+// start rendering anything call SetDrawContext so that we can get the HDCs
+// for drawing from the CBaseWindow object we are given during construction
 
 class CDrawImage
 {
 protected:
 
-    CBaseWindow *m_pBaseWindow;     
-    CRefTime m_StartSample;         
-    CRefTime m_EndSample;           
-    HDC m_hdc;                      
-    HDC m_MemoryDC;                 
-    RECT m_TargetRect;              
-    RECT m_SourceRect;              
-    BOOL m_bStretch;                
-    BOOL m_bUsingImageAllocator;    
-    CMediaType *m_pMediaType;       
-    int m_perfidRenderTime;         
-    LONG m_PaletteVersion;          
+    CBaseWindow *m_pBaseWindow;     // Owning video window object
+    CRefTime m_StartSample;         // Start time for the current sample
+    CRefTime m_EndSample;           // And likewise it's end sample time
+    HDC m_hdc;                      // Main window device context
+    HDC m_MemoryDC;                 // Offscreen draw device context
+    RECT m_TargetRect;              // Target destination rectangle
+    RECT m_SourceRect;              // Source image rectangle
+    BOOL m_bStretch;                // Do we have to stretch the images
+    BOOL m_bUsingImageAllocator;    // Are the samples shared DIBSECTIONs
+    CMediaType *m_pMediaType;       // Pointer to the current format
+    int m_perfidRenderTime;         // Time taken to render an image
+    LONG m_PaletteVersion;          // Current palette version cookie
 
-    
+    // Draw the video images in the window
 
     void SlowRender(IMediaSample *pMediaSample);
     void FastRender(IMediaSample *pMediaSample);
@@ -144,7 +175,7 @@ protected:
 
 public:
 
-    
+    // Used to control the image drawing
 
     CDrawImage(CBaseWindow *pBaseWindow);
     BOOL DrawImage(IMediaSample *pMediaSample);
@@ -157,51 +188,63 @@ public:
     void GetSourceRect(RECT *pSourceRect);
     virtual RECT ScaleSourceRect(const RECT *pSource);
 
-    
+    // Handle updating palettes as they change
 
     LONG GetPaletteVersion();
     void ResetPaletteVersion();
     void IncrementPaletteVersion();
 
-    
+    // Tell us media types and allocator assignments
 
     void NotifyAllocator(BOOL bUsingImageAllocator);
     void NotifyMediaType(CMediaType *pMediaType);
     BOOL UsingImageAllocator();
 
-    
+    // Called when we are about to draw an image
 
     void NotifyStartDraw() {
         MSR_START(m_perfidRenderTime);
     };
 
-    
+    // Called when we complete an image rendering
 
     void NotifyEndDraw() {
         MSR_STOP(m_perfidRenderTime);
     };
 };
 
+
+// This is the structure used to keep information about each GDI DIB. All the
+// samples we create from our allocator will have a DIBSECTION allocated to
+// them. When we receive the sample we know we can BitBlt straight to an HDC
+
 typedef struct tagDIBDATA {
 
-    LONG        PaletteVersion;     
-    DIBSECTION  DibSection;         
-    HBITMAP     hBitmap;            
-    HANDLE      hMapping;           
-    BYTE        *pBase;             
+    LONG        PaletteVersion;     // Current palette version in use
+    DIBSECTION  DibSection;         // Details of DIB section allocated
+    HBITMAP     hBitmap;            // Handle to bitmap for drawing
+    HANDLE      hMapping;           // Handle to shared memory block
+    BYTE        *pBase;             // Pointer to base memory address
 
 } DIBDATA;
+
+
+// This class inherits from CMediaSample and uses all of it's methods but it
+// overrides the constructor to initialise itself with the DIBDATA structure
+// When we come to render an IMediaSample we will know if we are using our own
+// allocator, and if we are, we can cast the IMediaSample to a pointer to one
+// of these are retrieve the DIB section information and hence the HBITMAP
 
 class CImageSample : public CMediaSample
 {
 protected:
 
-    DIBDATA m_DibData;      
-    BOOL m_bInit;           
+    DIBDATA m_DibData;      // Information about the DIBSECTION
+    BOOL m_bInit;           // Is the DIB information setup
 
 public:
 
-    
+    // Constructor
 
     CImageSample(CBaseAllocator *pAllocator,
                  TCHAR *pName,
@@ -209,25 +252,33 @@ public:
                  LPBYTE pBuffer,
                  LONG length);
 
-    
+    // Maintain the DIB/DirectDraw state
 
     void SetDIBData(DIBDATA *pDibData);
     DIBDATA *GetDIBData();
 };
 
+
+// This is an allocator based on the abstract CBaseAllocator base class that
+// allocates sample buffers in shared memory. The number and size of these
+// are determined when the output pin calls Prepare on us. The shared memory
+// blocks are used in subsequent calls to GDI CreateDIBSection, once that
+// has been done the output pin can fill the buffers with data which will
+// then be handed to GDI through BitBlt calls and thereby remove one copy
+
 class CImageAllocator : public CBaseAllocator
 {
 protected:
 
-    CBaseFilter *m_pFilter;   
-    CMediaType *m_pMediaType;           
+    CBaseFilter *m_pFilter;   // Delegate reference counts to
+    CMediaType *m_pMediaType;           // Pointer to the current format
 
-    
+    // Used to create and delete samples
 
     HRESULT Alloc();
     void Free();
 
-    
+    // Manage the shared DIBSECTION and DCI/DirectDraw buffers
 
     HRESULT CreateDIB(LONG InSize,DIBDATA &DibData);
     STDMETHODIMP CheckSizes(ALLOCATOR_PROPERTIES *pRequest);
@@ -235,7 +286,7 @@ protected:
 
 public:
 
-    
+    // Constructor and destructor
 
     CImageAllocator(CBaseFilter *pFilter,TCHAR *pName,HRESULT *phr);
 #ifdef DEBUG
@@ -246,21 +297,31 @@ public:
     STDMETHODIMP_(ULONG) NonDelegatingRelease();
     void NotifyMediaType(CMediaType *pMediaType);
 
-    
+    // Agree the number of buffers to be used and their size
 
     STDMETHODIMP SetProperties(
         ALLOCATOR_PROPERTIES *pRequest,
         ALLOCATOR_PROPERTIES *pActual);
 };
 
+
+// This class is a fairly specialised helper class for image renderers that
+// have to create and manage palettes. The CBaseWindow class looks after
+// realising palettes once they have been installed. This class can be used
+// to create the palette handles from a media format (which must contain a
+// VIDEOINFO structure in the format block). We try to make the palette an
+// identity palette to maximise performance and also only change palettes
+// if actually required to (we compare palette colours before updating).
+// All the methods are virtual so that they can be overriden if so required
+
 class CImagePalette
 {
 protected:
 
-    CBaseWindow *m_pBaseWindow;             
-    CBaseFilter *m_pFilter;       
-    CDrawImage *m_pDrawImage;               
-    HPALETTE m_hPalette;                    
+    CBaseWindow *m_pBaseWindow;             // Window to realise palette in
+    CBaseFilter *m_pFilter;       // Media filter to send events
+    CDrawImage *m_pDrawImage;               // Object who will be drawing
+    HPALETTE m_hPalette;                    // The palette handle we own
 
 public:
 
@@ -285,12 +346,23 @@ public:
     }
 };
 
+
+// Another helper class really for video based renderers. Most such renderers
+// need to know what the display format is to some degree or another. This
+// class initialises itself with the display format. The format can be asked
+// for through GetDisplayFormat and various other accessor functions. If a
+// filter detects a display format change (perhaps it gets a WM_DEVMODECHANGE
+// message then it can call RefreshDisplayType to reset that format). Also
+// many video renderers will want to check formats as they are proposed by
+// source filters. This class provides methods to check formats and only
+// accept those video formats that can be efficiently drawn using GDI calls
+
 class CImageDisplay : public CCritSec
 {
 protected:
 
-    
-    
+    // This holds the display format; biSize should not be too big, so we can
+    // safely use the VIDEOINFO structure
     VIDEOINFO m_Display;
 
     static DWORD CountSetBits(const DWORD Field);
@@ -299,11 +371,11 @@ protected:
 
 public:
 
-    
+    // Constructor and destructor
 
     CImageDisplay();
 
-    
+    // Used to manage BITMAPINFOHEADERs and the display format
 
     const VIDEOINFO *GetDisplayFormat();
     HRESULT RefreshDisplayType(LPSTR szDeviceName);
@@ -312,7 +384,7 @@ public:
     BOOL IsPalettised();
     WORD GetDisplayDepth();
 
-    
+    // Provide simple video format type checking
 
     HRESULT CheckMediaType(const CMediaType *pmtIn);
     HRESULT CheckVideoType(const VIDEOINFO *pInput);
@@ -324,7 +396,8 @@ public:
                        DWORD *pMaskBlue);
 };
 
+//  Convert a FORMAT_VideoInfo to FORMAT_VideoInfo2
 STDAPI ConvertVideoInfoToVideoInfo2(AM_MEDIA_TYPE *pmt);
 
-#endif 
+#endif // __WINUTIL__
 

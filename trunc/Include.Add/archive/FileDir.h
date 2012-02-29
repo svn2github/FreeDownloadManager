@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Windows/FileDir.h
 
 #ifndef __WINDOWS_FILEDIR_H
 #define __WINDOWS_FILEDIR_H

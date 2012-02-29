@@ -1,10 +1,29 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * WMA 9/3/PRO compatible decoder
+ * Copyright (c) 2007 Baptiste Coudurier, Benjamin Larsson, Ulion
+ * Copyright (c) 2008 - 2009 Sascha Sommer
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * @brief tables for wmapro decoding
+ */
 
 #ifndef AVCODEC_WMAPRODATA_H
 #define AVCODEC_WMAPRODATA_H
@@ -12,7 +31,9 @@
 #include <stddef.h>
 #include <stdint.h>
 
-
+/**
+ * @brief frequencies to divide the frequency spectrum into scale factor bands
+ */
 static const uint16_t critical_freq[] = {
      100,   200,    300,    400,    510,    630,    770,
      920,  1080,   1270,   1480,   1720,   2000,   2320,
@@ -21,7 +42,10 @@ static const uint16_t critical_freq[] = {
 };
 
 
-
+/**
+ * @name Huffman tables for DPCM-coded scale factors
+ * @{
+ */
 #define HUFF_SCALE_SIZE    121
 #define HUFF_SCALE_MAXBITS  19
 static const uint16_t scale_huffcodes[HUFF_SCALE_SIZE] = {
@@ -61,10 +85,13 @@ static const uint8_t scale_huffbits[HUFF_SCALE_SIZE] = {
     19, 19, 19, 19, 19, 19, 19, 19,
     19,
 };
+/** @} */
 
 
-
-
+/**
+ * @name Huffman, run and level tables for runlevel-coded scale factors
+ * @{
+ */
 #define HUFF_SCALE_RL_SIZE    120
 #define HUFF_SCALE_RL_MAXBITS  21
 static const uint32_t scale_rl_huffcodes[HUFF_SCALE_RL_SIZE] = {
@@ -129,10 +156,13 @@ static const uint8_t scale_rl_level[HUFF_SCALE_RL_SIZE] = {
      5,  5,  5,  5,  5,  5,  5,  5,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,  6,
      7,  7,  8,  8,  9,  9,
 };
+/** @} */
 
 
-
-
+/**
+ * @name Huffman, run and level codes for runlevel-coded coefficients
+ * @{
+ */
 #define HUFF_COEF0_SIZE    272
 #define HUFF_COEF0_MAXBITS  21
 static const uint32_t coef0_huffcodes[HUFF_COEF0_SIZE] = {
@@ -379,10 +409,13 @@ static const float coef1_level[HUFF_COEF1_SIZE] = {
     37, 38, 38, 39, 39, 40, 40, 41, 41, 42, 42, 43, 43, 44, 44, 45, 45, 46,
     46, 47, 47, 48, 48, 49, 49, 50, 51, 52,
 };
+/** @} */
 
 
-
-
+/**
+ * @name Huffman and vector lookup tables for vector-coded coefficients
+ * @{
+ */
 #define HUFF_VEC4_SIZE    127
 #define HUFF_VEC4_MAXBITS  14
 static const uint16_t vec4_huffcodes[HUFF_VEC4_SIZE] = {
@@ -533,10 +566,12 @@ static const uint8_t symbol_to_vec2[HUFF_VEC2_SIZE] = {
     165, 176, 177, 178, 179, 180, 192, 193, 194, 195, 208, 209, 210, 224, 225,
     240,   0,
 };
+/** @} */
 
 
-
-
+/**
+ * @brief decorrelation matrix for multichannel streams
+ **/
 static const float default_decorrelation_matrices[] = {
     1.000000,  0.707031, -0.707031,  0.707031,  0.707031,  0.578125,  0.707031,
     0.410156,  0.578125, -0.707031,  0.410156,  0.578125,  0.000000, -0.816406,
@@ -553,7 +588,9 @@ static const float default_decorrelation_matrices[] = {
     0.410156,  0.410156, -0.558594,  0.500000, -0.410156,  0.289062, -0.148438,
 };
 
-
+/**
+ * @brief default decorrelation matrix offsets
+ */
 static const float * const default_decorrelation[] = {
     NULL,
     &default_decorrelation_matrices[0],
@@ -564,4 +601,4 @@ static const float * const default_decorrelation[] = {
     &default_decorrelation_matrices[55]
 };
 
-#endif 
+#endif /* AVCODEC_WMAPRODATA_H */

@@ -1,8 +1,23 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * vp3dsp MMX function declarations
+ * Copyright (c) 2007 Aurelien Jacobs <aurel@gnuage.org>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_X86_VP3DSP_MMX_H
 #define AVCODEC_X86_VP3DSP_MMX_H
@@ -18,4 +33,4 @@ void ff_vp3_idct_dc_add_mmx2(uint8_t *dest, int line_size, const DCTELEM *block)
 void ff_vp3_v_loop_filter_mmx2(uint8_t *src, int stride, int *bounding_values);
 void ff_vp3_h_loop_filter_mmx2(uint8_t *src, int stride, int *bounding_values);
 
-#endif 
+#endif /* AVCODEC_X86_VP3DSP_MMX_H */

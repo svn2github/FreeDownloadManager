@@ -1,8 +1,23 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * MPEG1/2 muxer and demuxer common defines
+ * Copyright (c) 2000, 2001, 2002 Fabrice Bellard
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVFORMAT_MPEG_H
 #define AVFORMAT_MPEG_H
@@ -17,7 +32,7 @@
 #define PACKET_START_CODE_PREFIX    ((unsigned int)0x00000100)
 #define ISO_11172_END_CODE          ((unsigned int)0x000001b9)
 
-
+/* mpeg2 */
 #define PROGRAM_STREAM_MAP 0x1bc
 #define PRIVATE_STREAM_1   0x1bd
 #define PADDING_STREAM     0x1be
@@ -45,11 +60,13 @@
 
 static const int lpcm_freq_tab[4] = { 48000, 96000, 44100, 32000 };
 
-
+/**
+ * Parse MPEG-PES five-byte timestamp
+ */
 static inline int64_t ff_parse_pes_pts(uint8_t *buf) {
     return (int64_t)(*buf & 0x0e) << 29 |
             (AV_RB16(buf+1) >> 1) << 15 |
              AV_RB16(buf+3) >> 1;
 }
 
-#endif 
+#endif /* AVFORMAT_MPEG_H */

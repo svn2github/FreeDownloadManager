@@ -1,10 +1,28 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * MPEG Audio decoder
+ * copyright (c) 2002 Fabrice Bellard
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * mpeg audio layer decoder tables.
+ */
 
 #ifndef AVCODEC_MPEGAUDIODECTAB_H
 #define AVCODEC_MPEGAUDIODECTAB_H
@@ -12,16 +30,16 @@
 #include <stdint.h>
 #include "mpegaudio.h"
 
+/*******************************************************/
+/* layer 3 tables */
 
-
-
-
+/* layer3 scale factor size */
 static const uint8_t slen_table[2][16] = {
     { 0, 0, 0, 0, 3, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4 },
     { 0, 1, 2, 3, 0, 1, 2, 3, 1, 2, 3, 1, 2, 3, 2, 3 },
 };
 
-
+/* number of lsf scale factors for a given size */
 static const uint8_t lsf_nsf_table[6][3][4] = {
     { {  6,  5,  5, 5 }, {  9,  9,  9, 9 }, {  6,  9,  9, 9 } },
     { {  6,  5,  7, 3 }, {  9,  9, 12, 6 }, {  6,  9, 12, 6 } },
@@ -31,7 +49,7 @@ static const uint8_t lsf_nsf_table[6][3][4] = {
     { {  8,  8,  5, 0 }, { 15, 12,  9, 0 }, {  6, 18,  9, 0 } },
 };
 
-
+/* mpegaudio layer 3 huffman tables */
 
 static const uint16_t mpa_huffcodes_1[4] = {
  0x0001, 0x0001, 0x0001, 0x0000,
@@ -530,7 +548,7 @@ static const uint8_t mpa_huff_data[32][2] = {
 };
 
 
-
+/* huffman tables for quadrules */
 static const uint8_t mpa_quad_codes[2][16] = {
     {  1,  5,  4,  5,  6,  5,  4,  4, 7,  3,  6,  0,  7,  2,  3,  1, },
     { 15, 14, 13, 12, 11, 10,  9,  8, 7,  6,  5,  4,  3,  2,  1,  0, },
@@ -541,38 +559,38 @@ static const uint8_t mpa_quad_bits[2][16] = {
     { 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, },
 };
 
-
+/* band size tables */
 static const uint8_t band_size_long[9][22] = {
 { 4, 4, 4, 4, 4, 4, 6, 6, 8, 8, 10,
-  12, 16, 20, 24, 28, 34, 42, 50, 54, 76, 158, }, 
+  12, 16, 20, 24, 28, 34, 42, 50, 54, 76, 158, }, /* 44100 */
 { 4, 4, 4, 4, 4, 4, 6, 6, 6, 8, 10,
-  12, 16, 18, 22, 28, 34, 40, 46, 54, 54, 192, }, 
+  12, 16, 18, 22, 28, 34, 40, 46, 54, 54, 192, }, /* 48000 */
 { 4, 4, 4, 4, 4, 4, 6, 6, 8, 10, 12,
-  16, 20, 24, 30, 38, 46, 56, 68, 84, 102, 26, }, 
+  16, 20, 24, 30, 38, 46, 56, 68, 84, 102, 26, }, /* 32000 */
 { 6, 6, 6, 6, 6, 6, 8, 10, 12, 14, 16,
-  20, 24, 28, 32, 38, 46, 52, 60, 68, 58, 54, }, 
+  20, 24, 28, 32, 38, 46, 52, 60, 68, 58, 54, }, /* 22050 */
 { 6, 6, 6, 6, 6, 6, 8, 10, 12, 14, 16,
-  18, 22, 26, 32, 38, 46, 52, 64, 70, 76, 36, }, 
+  18, 22, 26, 32, 38, 46, 52, 64, 70, 76, 36, }, /* 24000 */
 { 6, 6, 6, 6, 6, 6, 8, 10, 12, 14, 16,
-  20, 24, 28, 32, 38, 46, 52, 60, 68, 58, 54, }, 
+  20, 24, 28, 32, 38, 46, 52, 60, 68, 58, 54, }, /* 16000 */
 { 6, 6, 6, 6, 6, 6, 8, 10, 12, 14, 16,
-  20, 24, 28, 32, 38, 46, 52, 60, 68, 58, 54, }, 
+  20, 24, 28, 32, 38, 46, 52, 60, 68, 58, 54, }, /* 11025 */
 { 6, 6, 6, 6, 6, 6, 8, 10, 12, 14, 16,
-  20, 24, 28, 32, 38, 46, 52, 60, 68, 58, 54, }, 
+  20, 24, 28, 32, 38, 46, 52, 60, 68, 58, 54, }, /* 12000 */
 { 12, 12, 12, 12, 12, 12, 16, 20, 24, 28, 32,
-  40, 48, 56, 64, 76, 90, 2, 2, 2, 2, 2, }, 
+  40, 48, 56, 64, 76, 90, 2, 2, 2, 2, 2, }, /* 8000 */
 };
 
 static const uint8_t band_size_short[9][13] = {
-{ 4, 4, 4, 4, 6, 8, 10, 12, 14, 18, 22, 30, 56, }, 
-{ 4, 4, 4, 4, 6, 6, 10, 12, 14, 16, 20, 26, 66, }, 
-{ 4, 4, 4, 4, 6, 8, 12, 16, 20, 26, 34, 42, 12, }, 
-{ 4, 4, 4, 6, 6, 8, 10, 14, 18, 26, 32, 42, 18, }, 
-{ 4, 4, 4, 6, 8, 10, 12, 14, 18, 24, 32, 44, 12, }, 
-{ 4, 4, 4, 6, 8, 10, 12, 14, 18, 24, 30, 40, 18, }, 
-{ 4, 4, 4, 6, 8, 10, 12, 14, 18, 24, 30, 40, 18, }, 
-{ 4, 4, 4, 6, 8, 10, 12, 14, 18, 24, 30, 40, 18, }, 
-{ 8, 8, 8, 12, 16, 20, 24, 28, 36, 2, 2, 2, 26, }, 
+{ 4, 4, 4, 4, 6, 8, 10, 12, 14, 18, 22, 30, 56, }, /* 44100 */
+{ 4, 4, 4, 4, 6, 6, 10, 12, 14, 16, 20, 26, 66, }, /* 48000 */
+{ 4, 4, 4, 4, 6, 8, 12, 16, 20, 26, 34, 42, 12, }, /* 32000 */
+{ 4, 4, 4, 6, 6, 8, 10, 14, 18, 26, 32, 42, 18, }, /* 22050 */
+{ 4, 4, 4, 6, 8, 10, 12, 14, 18, 24, 32, 44, 12, }, /* 24000 */
+{ 4, 4, 4, 6, 8, 10, 12, 14, 18, 24, 30, 40, 18, }, /* 16000 */
+{ 4, 4, 4, 6, 8, 10, 12, 14, 18, 24, 30, 40, 18, }, /* 11025 */
+{ 4, 4, 4, 6, 8, 10, 12, 14, 18, 24, 30, 40, 18, }, /* 12000 */
+{ 8, 8, 8, 12, 16, 20, 24, 28, 36, 2, 2, 2, 26, }, /* 8000 */
 };
 
 static const uint8_t mpa_pretab[2][22] = {
@@ -580,9 +598,9 @@ static const uint8_t mpa_pretab[2][22] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 3, 3, 3, 2, 0 },
 };
 
-
+/* table for alias reduction (XXX: store it as integer !) */
 static const float ci_table[8] = {
     -0.6, -0.535, -0.33, -0.185, -0.095, -0.041, -0.0142, -0.0037,
 };
 
-#endif 
+#endif /* AVCODEC_MPEGAUDIODECTAB_H */

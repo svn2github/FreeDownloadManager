@@ -1,10 +1,60 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
-
-
+/* x509v3.h */
+/* Written by Dr Stephen N Henson (shenson@bigfoot.com) for the OpenSSL
+ * project 1999.
+ */
+/* ====================================================================
+ * Copyright (c) 1999-2004 The OpenSSL Project.  All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer. 
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
+ *
+ * 3. All advertising materials mentioning features or use of this
+ *    software must display the following acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit. (http://www.OpenSSL.org/)"
+ *
+ * 4. The names "OpenSSL Toolkit" and "OpenSSL Project" must not be used to
+ *    endorse or promote products derived from this software without
+ *    prior written permission. For written permission, please contact
+ *    licensing@OpenSSL.org.
+ *
+ * 5. Products derived from this software may not be called "OpenSSL"
+ *    nor may "OpenSSL" appear in their names without prior written
+ *    permission of the OpenSSL Project.
+ *
+ * 6. Redistributions of any form whatsoever must retain the following
+ *    acknowledgment:
+ *    "This product includes software developed by the OpenSSL Project
+ *    for use in the OpenSSL Toolkit (http://www.OpenSSL.org/)"
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE OpenSSL PROJECT ``AS IS'' AND ANY
+ * EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE OpenSSL PROJECT OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+ * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ * OF THE POSSIBILITY OF SUCH DAMAGE.
+ * ====================================================================
+ *
+ * This product includes cryptographic software written by Eric Young
+ * (eay@cryptsoft.com).  This product includes software written by Tim
+ * Hudson (tjh@cryptsoft.com).
+ *
+ */
 #ifndef HEADER_X509V3_H
 #define HEADER_X509V3_H
 
@@ -16,11 +66,11 @@
 extern "C" {
 #endif
 
-
+/* Forward reference */
 struct v3_ext_method;
 struct v3_ext_ctx;
 
-
+/* Useful typedefs */
 
 typedef void * (*X509V3_EXT_NEW)(void);
 typedef void (*X509V3_EXT_FREE)(void *);
@@ -33,32 +83,32 @@ typedef void * (*X509V3_EXT_S2I)(struct v3_ext_method *method, struct v3_ext_ctx
 typedef int (*X509V3_EXT_I2R)(struct v3_ext_method *method, void *ext, BIO *out, int indent);
 typedef void * (*X509V3_EXT_R2I)(struct v3_ext_method *method, struct v3_ext_ctx *ctx, const char *str);
 
-
+/* V3 extension structure */
 
 struct v3_ext_method {
 int ext_nid;
 int ext_flags;
-
+/* If this is set the following four fields are ignored */
 ASN1_ITEM_EXP *it;
-
+/* Old style ASN1 calls */
 X509V3_EXT_NEW ext_new;
 X509V3_EXT_FREE ext_free;
 X509V3_EXT_D2I d2i;
 X509V3_EXT_I2D i2d;
 
-
+/* The following pair is used for string extensions */
 X509V3_EXT_I2S i2s;
 X509V3_EXT_S2I s2i;
 
-
+/* The following pair is used for multi-valued extensions */
 X509V3_EXT_I2V i2v;
 X509V3_EXT_V2I v2i;
 
-
+/* The following are used for raw extensions */
 X509V3_EXT_I2R i2r;
 X509V3_EXT_R2I r2i;
 
-void *usr_data;	
+void *usr_data;	/* Any extension specific data */
 };
 
 typedef struct X509V3_CONF_METHOD_st {
@@ -68,7 +118,7 @@ void (*free_string)(void *db, char * string);
 void (*free_section)(void *db, STACK_OF(CONF_VALUE) *section);
 } X509V3_CONF_METHOD;
 
-
+/* Context specific info */
 struct v3_ext_ctx {
 #define CTX_TEST 0x1
 int flags;
@@ -78,14 +128,14 @@ X509_REQ *subject_req;
 X509_CRL *crl;
 X509V3_CONF_METHOD *db_meth;
 void *db;
-
+/* Maybe more here */
 };
 
 typedef struct v3_ext_method X509V3_EXT_METHOD;
 
 DECLARE_STACK_OF(X509V3_EXT_METHOD)
 
-
+/* ext_flags values */
 #define X509V3_EXT_DYNAMIC	0x1
 #define X509V3_EXT_CTX_DEP	0x2
 #define X509V3_EXT_MULTILINE	0x4
@@ -128,7 +178,7 @@ typedef struct GENERAL_NAME_st {
 int type;
 union {
 	char *ptr;
-	OTHERNAME *otherName; 
+	OTHERNAME *otherName; /* otherName */
 	ASN1_IA5STRING *rfc822Name;
 	ASN1_IA5STRING *dNSName;
 	ASN1_TYPE *x400Address;
@@ -138,12 +188,12 @@ union {
 	ASN1_OCTET_STRING *iPAddress;
 	ASN1_OBJECT *registeredID;
 
-	
-	ASN1_OCTET_STRING *ip; 
-	X509_NAME *dirn;		
-	ASN1_IA5STRING *ia5;
-	ASN1_OBJECT *rid; 
-	ASN1_TYPE *other; 
+	/* Old names */
+	ASN1_OCTET_STRING *ip; /* iPAddress */
+	X509_NAME *dirn;		/* dirn */
+	ASN1_IA5STRING *ia5;/* rfc822Name, dNSName, uniformResourceIdentifier */
+	ASN1_OBJECT *rid; /* registeredID */
+	ASN1_TYPE *other; /* x400Address */
 } d;
 } GENERAL_NAME;
 
@@ -189,7 +239,7 @@ GENERAL_NAMES *issuer;
 ASN1_INTEGER *serial;
 } AUTHORITY_KEYID;
 
-
+/* Strong extranet structures */
 
 typedef struct SXNET_ID_st {
 	ASN1_INTEGER *zone;
@@ -263,7 +313,7 @@ typedef struct POLICY_CONSTRAINTS_st {
 	ASN1_INTEGER *inhibitPolicyMapping;
 } POLICY_CONSTRAINTS;
 
-
+/* Proxy certificate structures, see RFC 3820 */
 typedef struct PROXY_POLICY_st
 	{
 	ASN1_OBJECT *policyLanguage;
@@ -305,7 +355,7 @@ DECLARE_ASN1_FUNCTIONS(PROXY_CERT_INFO_EXTENSION)
 #define EXT_END { -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 
 
-
+/* X509_PURPOSE stuff */
 
 #define EXFLAG_BCONS		0x1
 #define EXFLAG_KUSAGE		0x2
@@ -355,7 +405,7 @@ DECLARE_ASN1_FUNCTIONS(PROXY_CERT_INFO_EXTENSION)
 
 typedef struct x509_purpose_st {
 	int purpose;
-	int trust;		
+	int trust;		/* Default trust ID */
 	int flags;
 	int (*check_purpose)(const struct x509_purpose_st *,
 				const X509 *, int);
@@ -376,19 +426,19 @@ typedef struct x509_purpose_st {
 #define X509_PURPOSE_MIN		1
 #define X509_PURPOSE_MAX		8
 
-
+/* Flags for X509V3_EXT_print() */
 
 #define X509V3_EXT_UNKNOWN_MASK		(0xfL << 16)
-
+/* Return error for unknown extensions */
 #define X509V3_EXT_DEFAULT		0
-
+/* Print error for unknown extensions */
 #define X509V3_EXT_ERROR_UNKNOWN	(1L << 16)
-
+/* ASN1 parse unknown extensions */
 #define X509V3_EXT_PARSE_UNKNOWN	(2L << 16)
-
+/* BIO_dump unknown extensions */
 #define X509V3_EXT_DUMP_UNKNOWN		(3L << 16)
 
-
+/* Flags for X509V3_add1_i2d */
 
 #define X509V3_ADD_OP_MASK		0xfL
 #define X509V3_ADD_DEFAULT		0L
@@ -659,15 +709,26 @@ DECLARE_ASN1_FUNCTIONS(IPAddressOrRange)
 DECLARE_ASN1_FUNCTIONS(IPAddressChoice)
 DECLARE_ASN1_FUNCTIONS(IPAddressFamily)
 
-
+/*
+ * API tag for elements of the ASIdentifer SEQUENCE.
+ */
 #define	V3_ASID_ASNUM	0
 #define	V3_ASID_RDI	1
 
-
+/*
+ * AFI values, assigned by IANA.  It'd be nice to make the AFI
+ * handling code totally generic, but there are too many little things
+ * that would need to be defined for other address families for it to
+ * be worth the trouble.
+ */
 #define	IANA_AFI_IPV4	1
 #define	IANA_AFI_IPV6	2
 
-
+/*
+ * Utilities to construct and extract values from RFC3779 extensions,
+ * since some of the encodings (particularly for IP address prefixes
+ * and ranges) are a bit tedious to work with directly.
+ */
 int v3_asid_add_inherit(ASIdentifiers *asid, int which);
 int v3_asid_add_id_or_range(ASIdentifiers *asid, int which,
 			    ASN1_INTEGER *min, ASN1_INTEGER *max);
@@ -684,19 +745,25 @@ int v3_addr_get_range(IPAddressOrRange *aor, const unsigned afi,
 		      unsigned char *min, unsigned char *max,
 		      const int length);
 
-
+/*
+ * Canonical forms.
+ */
 int v3_asid_is_canonical(ASIdentifiers *asid);
 int v3_addr_is_canonical(IPAddrBlocks *addr);
 int v3_asid_canonize(ASIdentifiers *asid);
 int v3_addr_canonize(IPAddrBlocks *addr);
 
-
+/*
+ * Tests for inheritance and containment.
+ */
 int v3_asid_inherits(ASIdentifiers *asid);
 int v3_addr_inherits(IPAddrBlocks *addr);
 int v3_asid_subset(ASIdentifiers *a, ASIdentifiers *b);
 int v3_addr_subset(IPAddrBlocks *a, IPAddrBlocks *b);
 
-
+/*
+ * Check whether RFC 3779 extensions nest properly in chains.
+ */
 int v3_asid_validate_path(X509_STORE_CTX *);
 int v3_addr_validate_path(X509_STORE_CTX *);
 int v3_asid_validate_resource_set(STACK_OF(X509) *chain,
@@ -706,15 +773,17 @@ int v3_addr_validate_resource_set(STACK_OF(X509) *chain,
 				  IPAddrBlocks *ext,
 				  int allow_inheritance);
 
-#endif 
+#endif /* OPENSSL_NO_RFC3779 */
 
-
-
+/* BEGIN ERROR CODES */
+/* The following lines are auto generated by the script mkerr.pl. Any changes
+ * made after this point may be overwritten when the script is next run.
+ */
 void ERR_load_X509V3_strings(void);
 
+/* Error codes for the X509V3 functions. */
 
-
-
+/* Function codes. */
 #define X509V3_F_ASIDENTIFIERCHOICE_CANONIZE		 156
 #define X509V3_F_ASIDENTIFIERCHOICE_IS_CANONICAL	 157
 #define X509V3_F_COPY_EMAIL				 122
@@ -777,7 +846,7 @@ void ERR_load_X509V3_strings(void);
 #define X509V3_F_X509_PURPOSE_ADD			 137
 #define X509V3_F_X509_PURPOSE_SET			 141
 
-
+/* Reason codes. */
 #define X509V3_R_BAD_IP_ADDRESS				 118
 #define X509V3_R_BAD_OBJECT				 119
 #define X509V3_R_BN_DEC2BN_ERROR			 100

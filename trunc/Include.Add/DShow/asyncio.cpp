@@ -1,12 +1,27 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+//------------------------------------------------------------------------------
+// File: AsyncIo.cpp
+//
+// Desc: DirectShow sample code - base library with I/O functionality.
+//
+// Copyright (c) 1992 - 2000, Microsoft Corporation.  All rights reserved.
+//------------------------------------------------------------------------------
+
 
 #include <streams.h>
 #include <asyncio.h>
 
 #pragma warning(disable: 4706)
 
+// --- CAsyncRequest ---
+
+
+// implementation of CAsyncRequest representing a single
+// outstanding request. All the i/o for this object is done
+// in the Complete method.
+
+
+// init the params for this request.
+// Read is not issued until the complete call
 HRESULT
 CAsyncRequest::Request(
     CAsyncIo *pIo,
@@ -15,8 +30,8 @@ CAsyncRequest::Request(
     LONG lLength,
     BOOL bAligned,
     BYTE* pBuffer,
-    LPVOID pContext,	
-    DWORD dwUser)	
+    LPVOID pContext,	// filter's context
+    DWORD dwUser)	// downstream filter's context
 {
     m_pIo = pIo;
     m_pStream = pStream;
@@ -26,11 +41,16 @@ CAsyncRequest::Request(
     m_pBuffer = pBuffer;
     m_pContext = pContext;
     m_dwUser = dwUser;
-    m_hr = VFW_E_TIMEOUT;   
+    m_hr = VFW_E_TIMEOUT;   // not done yet
 
     return S_OK;
 }
 
+
+// issue the i/o if not overlapped, and block until i/o complete.
+// returns error code of file i/o
+//
+//
 HRESULT
 CAsyncRequest::Complete()
 {
@@ -51,7 +71,7 @@ CAsyncRequest::Complete()
         }
         if (FAILED(m_hr)) {
         } else if (dwActual != (DWORD)m_lLength) {
-            
+            // tell caller size changed - probably because of EOF
             m_lLength = (LONG) dwActual;
             m_hr = S_FALSE;
         } else {
@@ -62,6 +82,12 @@ CAsyncRequest::Complete()
     m_pStream->Unlock();
     return m_hr;
 }
+
+
+
+// --- CAsyncIo ---
+
+// note - all events created manual reset
 
 CAsyncIo::CAsyncIo(CAsyncStream *pStream)
  : m_hThread(NULL),
@@ -78,15 +104,16 @@ CAsyncIo::CAsyncIo(CAsyncStream *pStream)
 
 }
 
+
 CAsyncIo::~CAsyncIo()
 {
-    
+    // move everything to the done list
     BeginFlush();
 
-    
+    // shutdown worker thread
     CloseThread();
 
-    
+    // empty the done list
     POSITION pos = m_listDone.GetHeadPosition();
     while (pos) {
         CAsyncRequest* pRequest = m_listDone.GetNext(pos);
@@ -95,18 +122,30 @@ CAsyncIo::~CAsyncIo()
     m_listDone.RemoveAll();
 }
 
+// ready for async activity - call this before
+// calling Request.
+//
+// start the worker thread if we need to
+//
+// !!! use overlapped i/o if possible
 HRESULT
 CAsyncIo::AsyncActive(void)
 {
     return StartThread();
 }
 
+// call this when no more async activity will happen before
+// the next AsyncActive call
+//
+// stop the worker thread if active
 HRESULT
 CAsyncIo::AsyncInactive(void)
 {
     return CloseThread();
 }
 
+
+// add a request to the queue.
 HRESULT
 CAsyncIo::Request(
             LONGLONG llPos,
@@ -136,7 +175,7 @@ CAsyncIo::Request(
                             pContext,
                             dwUser);
     if (SUCCEEDED(hr)) {
-        
+        // might fail if flushing
         hr = PutWorkItem(pRequest);
     }
 
@@ -146,6 +185,8 @@ CAsyncIo::Request(
     return hr;
 }
 
+
+// wait for the next request to complete
 HRESULT
 CAsyncIo::WaitForNext(
     DWORD dwTimeout,
@@ -153,67 +194,70 @@ CAsyncIo::WaitForNext(
     DWORD * pdwUser,
     LONG* pcbActual)
 {
-    
-    
+    // some errors find a sample, others don't. Ensure that
+    // *ppContext is NULL if no sample found
     *ppContext = NULL;
 
-    
-    
+    // wait until the event is set, but since we are not
+    // holding the critsec when waiting, we may need to re-wait
     for (;;) {
 
         if (!m_evDone.Wait(dwTimeout)) {
-            
+            // timeout occurred
             return VFW_E_TIMEOUT;
         }
 
-        
+        // get next event from list
         CAsyncRequest* pRequest = GetDoneItem();
         if (pRequest) {
-            
+            // found a completed request
 
-            
+            // check if ok
             HRESULT hr = pRequest->GetHResult();
             if (hr == S_FALSE) {
 
-                
-                
+                // this means the actual length was less than
+                // requested - may be ok if he aligned the end of file
                 if ((pRequest->GetActualLength() +
                      pRequest->GetStart()) == Size()) {
                         hr = S_OK;
                 } else {
-                    
+                    // it was an actual read error
                     hr = E_FAIL;
                 }
             }
 
-            
+            // return actual bytes read
             *pcbActual = pRequest->GetActualLength();
 
-            
+            // return his context
             *ppContext = pRequest->GetContext();
             *pdwUser = pRequest->GetUser();
             delete pRequest;
             return hr;
         } else {
-            
-            
+            //  Hold the critical section while checking the
+            //  list state
             CAutoLock lck(&m_csLists);
             if (m_bFlushing && !m_bWaiting) {
 
-                
+                // can't block as we are between BeginFlush and EndFlush
 
-                
-                
+                // but note that if m_bWaiting is set, then there are some
+                // items not yet complete that we should block for.
 
                 return VFW_E_WRONG_STATE;
             }
         }
 
-        
-        
+        // done item was grabbed between completion and
+        // us locking m_csLists.
     }
 }
 
+// perform a synchronous read request on this thread.
+// Need to hold m_csFile while doing this (done in
+// request object)
 HRESULT
 CAsyncIo::SyncReadAligned(
             LONGLONG llPos,
@@ -247,7 +291,7 @@ CAsyncIo::SyncReadAligned(
 
     hr = request.Complete();
 
-    
+    // return actual data length
     *pcbActual = request.GetActualLength();
     return hr;
 }
@@ -258,17 +302,32 @@ CAsyncIo::Length(LONGLONG *pllTotal, LONGLONG* pllAvailable)
     return m_pStream->Size(pllTotal, pllAvailable);
 }
 
+// cancel all items on the worklist onto the done list
+// and refuse further requests or further WaitForNext calls
+// until the end flush
+//
+// WaitForNext must return with NULL only if there are no successful requests.
+// So Flush does the following:
+// 1. set m_bFlushing ensures no more requests succeed
+// 2. move all items from work list to the done list.
+// 3. If there are any outstanding requests, then we need to release the
+//    critsec to allow them to complete. The m_bWaiting as well as ensuring
+//    that we are signalled when they are all done is also used to indicate
+//    to WaitForNext that it should continue to block.
+// 4. Once all outstanding requests are complete, we force m_evDone set and
+//    m_bFlushing set and m_bWaiting false. This ensures that WaitForNext will
+//    not block when the done list is empty.
 HRESULT
 CAsyncIo::BeginFlush()
 {
-    
+    // hold the lock while emptying the work list
     {
         CAutoLock lock(&m_csLists);
 
-        
-        
-        
-        
+        // prevent further requests being queued.
+        // Also WaitForNext will refuse to block if this is set
+        // unless m_bWaiting is also set which it will be when we release
+        // the critsec if there are any outstanding).
         m_bFlushing = TRUE;
 
         CAsyncRequest * preq;
@@ -277,23 +336,24 @@ CAsyncIo::BeginFlush()
             PutDoneItem(preq);
         }
 
-        
+
+        // now wait for any outstanding requests to complete
         if (m_cItemsOut > 0) {
 
-            
+            // can be only one person waiting
             ASSERT(!m_bWaiting);
 
-            
-            
-            
+            // this tells the completion routine that we need to be
+            // signalled via m_evAllDone when all outstanding items are
+            // done. It also tells WaitForNext to continue blocking.
             m_bWaiting = TRUE;
         } else {
-            
+            // all done
 
-            
-            
-            
-            
+            // force m_evDone set so that even if list is empty,
+            // WaitForNext will not block
+            // don't do this until we are sure that all
+            // requests are on the done list.
             m_evDone.Set();
             return S_OK;
         }
@@ -301,23 +361,23 @@ CAsyncIo::BeginFlush()
 
     ASSERT(m_bWaiting);
 
-    
+    // wait without holding critsec
     for (;;) {
         m_evAllDone.Wait();
         {
-            
+            // hold critsec to check
             CAutoLock lock(&m_csLists);
 
             if (m_cItemsOut == 0) {
 
-                
-                
+                // now we are sure that all outstanding requests are on
+                // the done list and no more will be accepted
                 m_bWaiting = FALSE;
 
-                
-                
-                
-                
+                // force m_evDone set so that even if list is empty,
+                // WaitForNext will not block
+                // don't do this until we are sure that all
+                // requests are on the done list.
                 m_evDone.Set();
 
                 return S_OK;
@@ -326,6 +386,7 @@ CAsyncIo::BeginFlush()
     }
 }
 
+// end a flushing state
 HRESULT
 CAsyncIo::EndFlush()
 {
@@ -335,8 +396,8 @@ CAsyncIo::EndFlush()
 
     ASSERT(!m_bWaiting);
 
-    
-    
+    // m_evDone might have been set by BeginFlush - ensure it is
+    // set IFF m_listDone is non-empty
     if (m_listDone.GetCount() > 0) {
         m_evDone.Set();
     } else {
@@ -346,6 +407,7 @@ CAsyncIo::EndFlush()
     return S_OK;
 }
 
+// start the thread
 HRESULT
 CAsyncIo::StartThread(void)
 {
@@ -353,7 +415,7 @@ CAsyncIo::StartThread(void)
         return S_OK;
     }
 
-    
+    // clear the stop event before starting
     m_evStop.Reset();
 
     DWORD dwThreadID;
@@ -371,10 +433,11 @@ CAsyncIo::StartThread(void)
     return S_OK;
 }
 
+// stop the thread and close the handle
 HRESULT
 CAsyncIo::CloseThread(void)
 {
-    
+    // signal the thread-exit object
     m_evStop.Set();
 
     if (m_hThread) {
@@ -386,6 +449,11 @@ CAsyncIo::CloseThread(void)
     return S_OK;
 }
 
+
+// manage the list of requests. hold m_csLists and ensure
+// that the (manual reset) event hevList is set when things on
+// the list but reset when the list is empty.
+// returns null if list empty
 CAsyncRequest*
 CAsyncIo::GetWorkItem()
 {
@@ -393,13 +461,14 @@ CAsyncIo::GetWorkItem()
 
     CAsyncRequest * preq  = m_listWork.RemoveHead();
 
-    
+    // force event set correctly
     if (m_listWork.GetCount() == 0) {
         m_evWork.Reset();
     }
     return preq;
 }
 
+// get an item from the done list
 CAsyncRequest*
 CAsyncIo::GetDoneItem()
 {
@@ -407,15 +476,15 @@ CAsyncIo::GetDoneItem()
 
     CAsyncRequest * preq  = m_listDone.RemoveHead();
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    // force event set correctly if list now empty
+    // or we're in the final stages of flushing
+    // Note that during flushing the way it's supposed to work is that
+    // everything is shoved on the Done list then the application is
+    // supposed to pull until it gets nothing more
+    //
+    // Thus we should not set m_evDone unconditionally until everything
+    // has moved to the done list which means we must wait until
+    // cItemsOut is 0 (which is guaranteed by m_bWaiting being TRUE).
 
     if (m_listDone.GetCount() == 0 &&
         (!m_bFlushing || m_bWaiting)) {
@@ -425,6 +494,7 @@ CAsyncIo::GetDoneItem()
     return preq;
 }
 
+// put an item on the work list - fail if bFlushing
 HRESULT
 CAsyncIo::PutWorkItem(CAsyncRequest* pRequest)
 {
@@ -436,10 +506,10 @@ CAsyncIo::PutWorkItem(CAsyncRequest* pRequest)
     }
     else if (m_listWork.AddTail(pRequest)) {
 
-        
+        // event should now be in a set state - force this
         m_evWork.Set();
 
-        
+        // start the thread now if not already started
         hr = StartThread();
 
     } else {
@@ -448,6 +518,8 @@ CAsyncIo::PutWorkItem(CAsyncRequest* pRequest)
     return(hr);
 }
 
+// put an item on the done list - ok to do this when
+// flushing
 HRESULT
 CAsyncIo::PutDoneItem(CAsyncRequest* pRequest)
 {
@@ -455,7 +527,7 @@ CAsyncIo::PutDoneItem(CAsyncRequest* pRequest)
 
     if (m_listDone.AddTail(pRequest)) {
 
-        
+        // event should now be in a set state - force this
         m_evDone.Set();
         return S_OK;
     } else {
@@ -463,10 +535,11 @@ CAsyncIo::PutDoneItem(CAsyncRequest* pRequest)
     }
 }
 
+// called on thread to process any active requests
 void
 CAsyncIo::ProcessRequests(void)
 {
-    
+    // lock to get the item and increment the outstanding count
     CAsyncRequest * preq = NULL;
     for (;;) {
         {
@@ -474,19 +547,19 @@ CAsyncIo::ProcessRequests(void)
 
             preq = GetWorkItem();
             if (preq == NULL) {
-                
+                // done
                 return;
             }
 
-            
+            // one more item not on the done or work list
             m_cItemsOut++;
 
-            
+            // release critsec
         }
 
         preq->Complete();
 
-        
+        // regain critsec to replace on done list
         {
             CAutoLock l(&m_csLists);
 
@@ -501,6 +574,8 @@ CAsyncIo::ProcessRequests(void)
     }
 }
 
+// the thread proc - assumes that DWORD thread param is the
+// this pointer
 DWORD
 CAsyncIo::ThreadProc(void)
 {
@@ -514,15 +589,19 @@ CAsyncIo::ThreadProc(void)
 		    INFINITE);
 	if (dw == WAIT_OBJECT_0+1) {
 
-	    
+	    // requests need processing
 	    ProcessRequests();
 	} else {
-	    
+	    // any error or stop event - we should exit
 	    return 0;
 	}
     }
 }
 
+
+
+// perform a synchronous read request on this thread.
+// may not be aligned - so we will have to buffer.
 HRESULT
 CAsyncIo::SyncRead(
             LONGLONG llPos,
@@ -536,8 +615,8 @@ CAsyncIo::SyncRead(
 	    return SyncReadAligned(llPos, lLength, pBuffer, &cbUnused, NULL);
     }
 
-    
-    
+    // not aligned with requirements - use buffered file handle.
+    //!!! might want to fix this to buffer the data ourselves?
 
     CAsyncRequest request;
 
@@ -558,6 +637,7 @@ CAsyncIo::SyncRead(
     return request.Complete();
 }
 
+//  Return the alignment
 HRESULT
 CAsyncIo::Alignment(LONG *pl)
 {

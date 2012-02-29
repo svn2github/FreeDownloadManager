@@ -1,8 +1,22 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Copyright (c) 2009 Mans Rullgard <mans@mansr.com>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVUTIL_MIPS_INTREADWRITE_H
 #define AVUTIL_MIPS_INTREADWRITE_H
@@ -75,6 +89,6 @@ static av_always_inline void AV_WN64(void *p, uint64_t v)
     AV_WN32((uint8_t *)p + 4, vv.hl[1]);
 }
 
-#endif 
+#endif /* ARCH_MIPS64 */
 
-#endif 
+#endif /* AVUTIL_MIPS_INTREADWRITE_H */

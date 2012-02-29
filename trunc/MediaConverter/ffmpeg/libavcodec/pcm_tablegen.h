@@ -1,8 +1,24 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Header file for hardcoded PCM tables
+ *
+ * Copyright (c) 2010 Reimar Döffinger <Reimar.Doeffinger@gmx.de>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef PCM_TABLEGEN_H
 #define PCM_TABLEGEN_H
@@ -10,17 +26,20 @@
 #include <stdint.h>
 #include "../libavutil/attributes.h"
 
+/* from g711.c by SUN microsystems (unrestricted use) */
 
+#define         SIGN_BIT        (0x80)      /* Sign bit for a A-law byte. */
+#define         QUANT_MASK      (0xf)       /* Quantization field mask. */
+#define         NSEGS           (8)         /* Number of A-law segments. */
+#define         SEG_SHIFT       (4)         /* Left shift for segment number. */
+#define         SEG_MASK        (0x70)      /* Segment field mask. */
 
-#define         SIGN_BIT        (0x80)      
-#define         QUANT_MASK      (0xf)       
-#define         NSEGS           (8)         
-#define         SEG_SHIFT       (4)         
-#define         SEG_MASK        (0x70)      
+#define         BIAS            (0x84)      /* Bias for linear code. */
 
-#define         BIAS            (0x84)      
-
-
+/*
+ * alaw2linear() - Convert an A-law value to 16-bit linear PCM
+ *
+ */
 static av_cold int alaw2linear(unsigned char a_val)
 {
         int t;
@@ -40,10 +59,13 @@ static av_cold int ulaw2linear(unsigned char u_val)
 {
         int t;
 
-        
+        /* Complement to obtain normal u-law value. */
         u_val = ~u_val;
 
-        
+        /*
+         * Extract and bias the quantization bits. Then
+         * shift up by the segment number and subtract out the bias.
+         */
         t = ((u_val & QUANT_MASK) << 3) + BIAS;
         t <<= ((unsigned)u_val & SEG_MASK) >> SEG_SHIFT;
 
@@ -55,7 +77,7 @@ static av_cold int ulaw2linear(unsigned char u_val)
 #define pcm_ulaw_tableinit()
 #include "libavcodec/pcm_tables.h"
 #else
-
+/* 16384 entries per table */
 static uint8_t linear_to_alaw[16384];
 static uint8_t linear_to_ulaw[16384];
 
@@ -92,6 +114,6 @@ static void pcm_ulaw_tableinit(void)
 {
     build_xlaw_table(linear_to_ulaw, ulaw2linear, 0xff);
 }
-#endif 
+#endif /* CONFIG_HARDCODED_TABLES */
 
-#endif 
+#endif /* PCM_TABLEGEN_H */

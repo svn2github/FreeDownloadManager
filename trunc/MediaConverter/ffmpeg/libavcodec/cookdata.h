@@ -1,17 +1,36 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * COOK compatible decoder data
+ * Copyright (c) 2003 Sascha Sommer
+ * Copyright (c) 2005 Benjamin Larsson
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * Cook AKA RealAudio G2 compatible decoderdata
+ */
 
 #ifndef AVCODEC_COOKDATA_H
 #define AVCODEC_COOKDATA_H
 
 #include <stdint.h>
 
-
+/* various data tables */
 
 static const int expbits_tab[8] = {
     52,47,43,37,29,22,16,0,
@@ -49,7 +68,7 @@ static const int vpr_tab[7] = {
 
 
 
-
+/* VLC data */
 
 static const int vhsize_tab[7] = {
     191, 97, 48, 607, 246, 230, 32,
@@ -480,7 +499,7 @@ static const uint8_t* const ccpl_huffbits[5] = {
 };
 
 
-
+//Coupling tables
 
 static const int cplband[51] = {
     0,1,2,3,4,5,6,7,8,9,
@@ -541,4 +560,4 @@ static const float* const cplscales[5] = {
     cplscale2, cplscale3, cplscale4, cplscale5, cplscale6,
 };
 
-#endif 
+#endif /* AVCODEC_COOKDATA_H */

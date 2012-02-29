@@ -1,8 +1,23 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * RealAudio 2.0 (28.8K)
+ * Copyright (c) 2003 the ffmpeg project
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_RA288_H
 #define AVCODEC_RA288_H
@@ -113,7 +128,7 @@ static const float gain_window[38]={
   0.183868408, 0.0923461914
 };
 
-
+/** synthesis bandwidth broadening table */
 static const float syn_bw_tab[36]={
   0.98828125,  0.976699829, 0.965254128, 0.953942537, 0.942763507, 0.931715488,
   0.920796931, 0.910006344, 0.899342179, 0.888803005, 0.878387332, 0.868093729,
@@ -123,10 +138,10 @@ static const float syn_bw_tab[36]={
   0.693900526, 0.685768902, 0.677732527, 0.669790328, 0.66194123,  0.654184103
 };
 
-
+/** gain bandwidth broadening table */
 static const float gain_bw_tab[10]={
   0.90625,     0.821289063, 0.74432373,  0.674499512, 0.61126709,
   0.553955078, 0.50201416,  0.454956055, 0.41229248,  0.373657227
 };
 
-#endif 
+#endif /* AVCODEC_RA288_H */

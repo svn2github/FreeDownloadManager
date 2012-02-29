@@ -1,27 +1,45 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * data for G.729 decoder
+ * Copyright (c) 2007 Vladimir Voroshilov
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_G729DATA_H
 #define AVCODEC_G729DATA_H
 
 #include <stdint.h>
 
-#define MA_NP                4  
+#define MA_NP                4  ///< Moving Average (MA) prediction order
 
-#define VQ_1ST_BITS          7  
-#define VQ_2ND_BITS          5  
+#define VQ_1ST_BITS          7  ///< first stage vector of quantizer (size in bits)
+#define VQ_2ND_BITS          5  ///< second stage vector of quantizer (size in bits)
 
-#define GC_1ST_IDX_BITS_8K   3  
-#define GC_2ND_IDX_BITS_8K   4  
+#define GC_1ST_IDX_BITS_8K   3  ///< gain codebook (first stage) index, 8k mode (size in bits)
+#define GC_2ND_IDX_BITS_8K   4  ///< gain codebook (second stage) index, 8k mode (size in bits)
 
-#define GC_1ST_IDX_BITS_6K4  3  
-#define GC_2ND_IDX_BITS_6K4  3  
+#define GC_1ST_IDX_BITS_6K4  3  ///< gain codebook (first stage) index, 6.4k mode (size in bits)
+#define GC_2ND_IDX_BITS_6K4  3  ///< gain codebook (second stage) index, 6.4k mode (size in bits)
 
-
-static const int16_t cb_lsp_1st[1<<VQ_1ST_BITS][10] = { 
+/**
+ * first stage LSP codebook
+ * (10-dimensional, with 128 entries (3.24 of G.729)
+ */
+static const int16_t cb_lsp_1st[1<<VQ_1ST_BITS][10] = { /* (2.13) */
   { 1486,  2168,  3751,  9074, 12134, 13944, 17983, 19173, 21190, 21820},
   { 1730,  2640,  3450,  4870,  6126,  7876, 15644, 17817, 20294, 21902},
   { 1568,  2256,  3088,  4874, 11063, 13393, 18307, 19293, 21109, 21741},
@@ -152,8 +170,11 @@ static const int16_t cb_lsp_1st[1<<VQ_1ST_BITS][10] = {
   { 1721,  2577,  5553,  7195,  8651, 10686, 15069, 16953, 18703, 19929}
 };
 
-
-static const int16_t cb_lsp_2nd[1<<VQ_2ND_BITS][10] = { 
+/**
+ * second stage LSP codebook, high and low parts
+   (both 5-dimensional, with 32 entries (3.2.4 of G.729)
+ */
+static const int16_t cb_lsp_2nd[1<<VQ_2ND_BITS][10] = { /* (2.13) */
   { -435,  -815,  -742,  1033,  -518,   582, -1201,   829,    86,   385},
   { -833,  -891,   463,    -8, -1251,  1450,    72,  -231,   864,   661},
   {-1021,   231,  -306,   321,  -220,  -163,  -526,  -754, -1633,   267},
@@ -188,8 +209,10 @@ static const int16_t cb_lsp_2nd[1<<VQ_2ND_BITS][10] = {
   { -163,   674,   -11,  -886,   531, -1125,  -265,  -242,   724,   934}
 };
 
-
-static const int16_t cb_gain_1st_8k[1<<GC_1ST_IDX_BITS_8K][2] = { 
+/**
+ * gain codebook (first stage), 8k mode (3.9.2 of G.729)
+ */
+static const int16_t cb_gain_1st_8k[1<<GC_1ST_IDX_BITS_8K][2] = { /*(0.14) (2.13) */
   { 3242 ,  9949 },
   { 1551 ,  2425 },
   { 2678 , 27162 },
@@ -200,8 +223,10 @@ static const int16_t cb_gain_1st_8k[1<<GC_1ST_IDX_BITS_8K][2] = {
   {   57 ,  5404 },
 };
 
-
-static const int16_t cb_gain_2nd_8k[1<<GC_2ND_IDX_BITS_8K][2] = { 
+/**
+ * gain codebook (second stage), 8k mode (3.9.2 of G.729)
+ */
+static const int16_t cb_gain_2nd_8k[1<<GC_2ND_IDX_BITS_8K][2] = { /*(1.14) (1.13) */
   {  5142 ,   592 },
   { 17299 ,  1861 },
   {  6160 ,  2395 },
@@ -220,8 +245,10 @@ static const int16_t cb_gain_2nd_8k[1<<GC_2ND_IDX_BITS_8K][2] = {
   { 13260 ,  3256 },
 };
 
-
-static const int16_t cb_ma_predictor[2][MA_NP][10] = { 
+/**
+ * 4th order Moving Average (MA) Predictor codebook (3.2.4 of G.729)
+ */
+static const int16_t cb_ma_predictor[2][MA_NP][10] = { /* (0.15) */
   {
     { 8421,  9109,  9175,  8965,  9034,  9057,  8765,  8775,  9106,  8673},
     { 7018,  7189,  7638,  7307,  7444,  7379,  7038,  6956,  6930,  6868},
@@ -236,13 +263,16 @@ static const int16_t cb_ma_predictor[2][MA_NP][10] = {
   }
 };
 
-static const int16_t cb_ma_predictor_sum[2][10] = { 
+static const int16_t cb_ma_predictor_sum[2][10] = { /* (0.15) */
   { 7798,  8447,  8205,  8293,  8126,  8477,  8447,  8703,  9043,  8604},
   {14585, 18333, 19772, 17344, 16426, 16459, 15155, 15220, 16043, 15708}
 };
 
-
-static const int16_t lsp_init[10]= { 
+/**
+ * initial LSP coefficients belongs to virtual frame preceding  the
+ * first frame of the stream
+ */
+static const int16_t lsp_init[10]= { /* (0.15) */
    30000, 26000, 21000, 15000, 8000, 0, -8000,-15000,-21000,-26000
 };
-#endif 
+#endif /* AVCODEC_G729DATA_H */

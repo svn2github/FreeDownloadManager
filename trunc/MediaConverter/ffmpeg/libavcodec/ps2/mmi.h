@@ -1,15 +1,62 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * copyright (c) 2002 Leon van Stuivenberg
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_PS2_MMI_H
 #define AVCODEC_PS2_MMI_H
 
 #define align16 __attribute__ ((aligned (16)))
 
-
+/*
+#define r0 $zero
+#define r1 $at          //assembler!
+#define r2 $v0          //return
+#define r3 $v1          //return
+#define r4 $a0          //arg
+#define r5 $a1          //arg
+#define r6 $a2          //arg
+#define r7 $a3          //arg
+#define r8 $t0          //temp
+#define r9 $t1          //temp
+#define r10 $t2         //temp
+#define r11 $t3         //temp
+#define r12 $t4         //temp
+#define r13 $t5         //temp
+#define r14 $t6         //temp
+#define r15 $t7         //temp
+#define r16 $s0         //saved temp
+#define r17 $s1         //saved temp
+#define r18 $s2         //saved temp
+#define r19 $s3         //saved temp
+#define r20 $s4         //saved temp
+#define r21 $s5         //saved temp
+#define r22 $s6         //saved temp
+#define r23 $s7         //saved temp
+#define r24 $t8         //temp
+#define r25 $t9         //temp
+#define r26 $k0         //kernel
+#define r27 $k1         //kernel
+#define r28 $gp         //global ptr
+#define r29 $sp         //stack ptr
+#define r30 $fp         //frame ptr
+#define r31 $ra         //return addr
+*/
 
 
 #define         lq(base, off, reg)        \
@@ -21,7 +68,10 @@
 #define         sq(reg, off, base)        \
         __asm__ volatile ("sq " #reg ", %0("#base ")" : : "i" (off) )
 
-
+/*
+#define         ld(base, off, reg)        \
+        __asm__ volatile ("ld " #reg ", " #off "("#base ")")
+*/
 
 #define         ld3(base, off, reg)        \
         __asm__ volatile (".word %0" : : "i" ( 0xdc000000 | (base<<21) | (reg<<16) | (off)))
@@ -32,8 +82,11 @@
 #define         ldl3(base, off, reg)        \
         __asm__ volatile (".word %0" : : "i" ( 0x68000000 | (base<<21) | (reg<<16) | (off)))
 
-
-
+/*
+#define         sd(reg, off, base)        \
+        __asm__ volatile ("sd " #reg ", " #off "("#base ")")
+*/
+//seems assembler has bug encoding mnemonic 'sd', so DIY
 #define         sd3(reg, off, base)        \
         __asm__ volatile (".word %0" : : "i" ( 0xfc000000 | (base<<21) | (reg<<16) | (off)))
 
@@ -115,4 +168,4 @@
 #define         pextlb(rs, rt, rd) \
         __asm__ volatile ("pextlb  " #rd ", " #rs ", " #rt )
 
-#endif 
+#endif /* AVCODEC_PS2_MMI_H */

@@ -1,10 +1,30 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * copyright (c) 2000,2001 Fabrice Bellard
+ * H263+ support
+ * copyright (c) 2001 Juan J. Sierralta P
+ * copyright (c) 2002-2004 Michael Niedermayer <michaelni@gmx.at>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * H.263 tables.
+ */
 
 #ifndef AVCODEC_H263DATA_H
 #define AVCODEC_H263DATA_H
@@ -12,29 +32,29 @@
 #include <stdint.h>
 #include "mpegvideo.h"
 
-
+/* intra MCBPC, mb_type = (intra), then (intraq) */
 const uint8_t ff_h263_intra_MCBPC_code[9] = { 1, 1, 2, 3, 1, 1, 2, 3, 1 };
 const uint8_t ff_h263_intra_MCBPC_bits[9] = { 1, 3, 3, 3, 4, 6, 6, 6, 9 };
 
-
-
+/* inter MCBPC, mb_type = (inter), (intra), (interq), (intraq), (inter4v) */
+/* Changed the tables for interq and inter4v+q, following the standard ** Juanjo ** */
 const uint8_t ff_h263_inter_MCBPC_code[28] = {
     1, 3, 2, 5,
     3, 4, 3, 3,
     3, 7, 6, 5,
     4, 4, 3, 2,
     2, 5, 4, 5,
-    1, 0, 0, 0, 
+    1, 0, 0, 0, /* Stuffing */
     2, 12, 14, 15,
 };
 const uint8_t ff_h263_inter_MCBPC_bits[28] = {
-    1, 4, 4, 6, 
-    5, 8, 8, 7, 
-    3, 7, 7, 9, 
-    6, 9, 9, 9, 
-    3, 7, 7, 8, 
-    9, 0, 0, 0, 
-    11, 13, 13, 13,
+    1, 4, 4, 6, /* inter  */
+    5, 8, 8, 7, /* intra  */
+    3, 7, 7, 9, /* interQ */
+    6, 9, 9, 9, /* intraQ */
+    3, 7, 7, 8, /* inter4 */
+    9, 0, 0, 0, /* Stuffing */
+    11, 13, 13, 13,/* inter4Q*/
 };
 
 const uint8_t h263_mbtype_b_tab[15][2] = {
@@ -77,7 +97,7 @@ const uint8_t mvtab[33][2] =
   {2,12}
 };
 
-
+/* third non intra table */
 const uint16_t inter_vlc[103][2] = {
 { 0x2, 2 },{ 0xf, 4 },{ 0x15, 6 },{ 0x17, 7 },
 { 0x1f, 8 },{ 0x25, 9 },{ 0x24, 9 },{ 0x21, 10 },
@@ -226,12 +246,12 @@ const uint16_t h263_format[8][2] = {
 };
 
 const uint8_t ff_aic_dc_scale_table[32]={
-
+//  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
     0, 2, 4, 6, 8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62
 };
 
 const uint8_t modified_quant_tab[2][32]={
-
+//  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
 {
     0, 3, 1, 2, 3, 4, 5, 6, 7, 8, 9, 9,10,11,12,13,14,15,16,17,18,18,19,20,21,22,23,24,25,26,27,28
 },{
@@ -240,7 +260,7 @@ const uint8_t modified_quant_tab[2][32]={
 };
 
 const uint8_t ff_h263_chroma_qscale_table[32]={
-
+//  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
     0, 1, 2, 3, 4, 5, 6, 6, 7, 8, 9, 9,10,10,11,11,12,12,12,13,13,13,14,14,14,14,14,15,15,15,15,15
 };
 
@@ -253,7 +273,7 @@ uint8_t ff_mba_length[7]={
 };
 
 const uint8_t ff_h263_loop_filter_strength[32]={
-
+//  0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
     0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 5, 5, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9,10,10,10,11,11,11,12,12,12
 };
 
@@ -276,4 +296,4 @@ const AVRational ff_h263_pixel_aspect[16]={
  {0, 1},
 };
 
-#endif 
+#endif /* AVCODEC_H263DATA_H */

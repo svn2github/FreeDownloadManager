@@ -1,7 +1,3 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
 #ifndef FIFO_H
 #define FIFO_H
 
@@ -26,4 +22,4 @@ static inline uint8_t av_fifo_peek(AVFifoBuffer *f, int offs)
         ptr -= f->end - f->buffer;
     return *ptr;
 }
-#endif 
+#endif /* FIFO_H */

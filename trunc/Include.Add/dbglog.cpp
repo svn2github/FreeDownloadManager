@@ -1,7 +1,3 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
 #ifndef __DBGLOG_H_
 #define __DBGLOG_H_
 
@@ -37,5 +33,6 @@ void dbglog_eraselog ()
 {
 	_lclose ( _lcreat ( DBGLOG_FILENAME, 0 ) );
 }
+
 
 #endif

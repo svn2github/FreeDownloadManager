@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Windows/PropVariant.cpp
 
 #include "StdAfx.h"
 
@@ -64,6 +62,7 @@ CPropVariant& CPropVariant::operator=(LPCOLESTR lpszSrc)
   }
   return *this;
 }
+
 
 CPropVariant& CPropVariant::operator=(bool bSrc)
 {
@@ -143,6 +142,19 @@ CPropVariant& CPropVariant::operator=(Int16 value)
   return *this;
 }
 
+/*
+CPropVariant& CPropVariant::operator=(LONG value)
+{
+  if (vt != VT_I4)
+  {
+    InternalClear();
+    vt = VT_I4;
+  }
+  lVal = value;
+  return *this;
+}
+*/
+
 static HRESULT MyPropVariantClear(PROPVARIANT *propVariant) 
 { 
   switch(propVariant->vt)
@@ -201,6 +213,7 @@ HRESULT CPropVariant::Copy(const PROPVARIANT* pSrc)
   return ::VariantCopy((tagVARIANT *)this, (tagVARIANT *)(pSrc)); 
 }
 
+
 HRESULT CPropVariant::Attach(PROPVARIANT* pSrc)
 {
   HRESULT hr = Clear();
@@ -245,13 +258,16 @@ void CPropVariant::InternalCopy(const PROPVARIANT* pSrc)
 int CPropVariant::Compare(const CPropVariant &a)
 {
   if(vt != a.vt)
-    return 0; 
+    return 0; // it's mean some bug
   switch (vt)
   {
     case VT_EMPTY:
       return 0;
     
-    
+    /*
+    case VT_I1:
+      return MyCompare(cVal, a.cVal);
+    */
     case VT_UI1:
       return MyCompare(bVal, a.bVal);
 
@@ -262,10 +278,16 @@ int CPropVariant::Compare(const CPropVariant &a)
     
     case VT_I4:
       return MyCompare(lVal, a.lVal);
-    
+    /*
+    case VT_INT:
+      return MyCompare(intVal, a.intVal);
+    */
     case VT_UI4:
       return MyCompare(ulVal, a.ulVal);
-    
+    /*
+    case VT_UINT:
+      return MyCompare(uintVal, a.uintVal);
+    */
     case VT_I8:
       return MyCompare(hVal.QuadPart, a.hVal.QuadPart);
     case VT_UI8:
@@ -277,8 +299,8 @@ int CPropVariant::Compare(const CPropVariant &a)
     case VT_FILETIME:
       return ::CompareFileTime(&filetime, &a.filetime);
     case VT_BSTR:
-      return 0; 
-      
+      return 0; // Not implemented 
+      // return MyCompare(aPropVarint.cVal);
 
     default:
       return 0;

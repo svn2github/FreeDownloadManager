@@ -1,6 +1,4 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+// Common/Wildcard.h
 
 #ifndef __COMMON_WILDCARD_H
 #define __COMMON_WILDCARD_H
@@ -52,7 +50,7 @@ public:
   bool CheckPath(const UString &path, bool isFile) const;
 
   bool CheckPathToRoot(bool include, UStringVector &pathParts, bool isFile) const;
-  
+  // bool CheckPathToRoot(const UString &path, bool isFile, bool include) const;
 };
 
 struct CPair
@@ -75,6 +73,7 @@ public:
 
 }
 
+// return true if names differs only with '\' or '/' characters
 bool AreTheFileNamesDirDelimiterEqual(const UString &name1, const UString &name2);
 
 #endif

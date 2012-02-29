@@ -1,8 +1,23 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * Matroska constants
+ * Copyright (c) 2003-2004 The ffmpeg Project
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVFORMAT_MATROSKA_H
 #define AVFORMAT_MATROSKA_H
@@ -10,13 +25,13 @@
 #include "libavcodec/avcodec.h"
 #include "metadata.h"
 
-
+/* EBML version supported */
 #define EBML_VERSION 1
 
-
+/* top-level master-IDs */
 #define EBML_ID_HEADER             0x1A45DFA3
 
-
+/* IDs in the HEADER master */
 #define EBML_ID_EBMLVERSION        0x4286
 #define EBML_ID_EBMLREADVERSION    0x42F7
 #define EBML_ID_EBMLMAXIDLENGTH    0x42F2
@@ -25,16 +40,18 @@
 #define EBML_ID_DOCTYPEVERSION     0x4287
 #define EBML_ID_DOCTYPEREADVERSION 0x4285
 
-
+/* general EBML types */
 #define EBML_ID_VOID               0xEC
 #define EBML_ID_CRC32              0xBF
 
+/*
+ * Matroska element IDs, max. 32 bits
+ */
 
-
-
+/* toplevel segment */
 #define MATROSKA_ID_SEGMENT    0x18538067
 
-
+/* Matroska top-level master IDs */
 #define MATROSKA_ID_INFO       0x1549A966
 #define MATROSKA_ID_TRACKS     0x1654AE6B
 #define MATROSKA_ID_CUES       0x1C53BB6B
@@ -44,7 +61,7 @@
 #define MATROSKA_ID_CLUSTER    0x1F43B675
 #define MATROSKA_ID_CHAPTERS   0x1043A770
 
-
+/* IDs in the info master */
 #define MATROSKA_ID_TIMECODESCALE 0x2AD7B1
 #define MATROSKA_ID_DURATION   0x4489
 #define MATROSKA_ID_TITLE      0x7BA9
@@ -53,10 +70,10 @@
 #define MATROSKA_ID_DATEUTC    0x4461
 #define MATROSKA_ID_SEGMENTUID 0x73A4
 
-
+/* ID in the tracks master */
 #define MATROSKA_ID_TRACKENTRY 0xAE
 
-
+/* IDs in the trackentry master */
 #define MATROSKA_ID_TRACKNUMBER 0xD7
 #define MATROSKA_ID_TRACKUID   0x73C5
 #define MATROSKA_ID_TRACKTYPE  0x83
@@ -82,7 +99,7 @@
 #define MATROSKA_ID_TRACKTIMECODESCALE 0x23314F
 #define MATROSKA_ID_TRACKMAXBLKADDID 0x55EE
 
-
+/* IDs in the trackvideo master */
 #define MATROSKA_ID_VIDEOFRAMERATE 0x2383E3
 #define MATROSKA_ID_VIDEODISPLAYWIDTH 0x54B0
 #define MATROSKA_ID_VIDEODISPLAYHEIGHT 0x54BA
@@ -98,14 +115,14 @@
 #define MATROSKA_ID_VIDEOASPECTRATIO 0x54B3
 #define MATROSKA_ID_VIDEOCOLORSPACE 0x2EB524
 
-
+/* IDs in the trackaudio master */
 #define MATROSKA_ID_AUDIOSAMPLINGFREQ 0xB5
 #define MATROSKA_ID_AUDIOOUTSAMPLINGFREQ 0x78B5
 
 #define MATROSKA_ID_AUDIOBITDEPTH 0x6264
 #define MATROSKA_ID_AUDIOCHANNELS 0x9F
 
-
+/* IDs in the content encoding master */
 #define MATROSKA_ID_ENCODINGORDER 0x5031
 #define MATROSKA_ID_ENCODINGSCOPE 0x5032
 #define MATROSKA_ID_ENCODINGTYPE 0x5033
@@ -113,19 +130,19 @@
 #define MATROSKA_ID_ENCODINGCOMPALGO 0x4254
 #define MATROSKA_ID_ENCODINGCOMPSETTINGS 0x4255
 
-
+/* ID in the cues master */
 #define MATROSKA_ID_POINTENTRY 0xBB
 
-
+/* IDs in the pointentry master */
 #define MATROSKA_ID_CUETIME    0xB3
 #define MATROSKA_ID_CUETRACKPOSITION 0xB7
 
-
+/* IDs in the cuetrackposition master */
 #define MATROSKA_ID_CUETRACK   0xF7
 #define MATROSKA_ID_CUECLUSTERPOSITION 0xF1
 #define MATROSKA_ID_CUEBLOCKNUMBER 0x5378
 
-
+/* IDs in the tags master */
 #define MATROSKA_ID_TAG                 0x7373
 #define MATROSKA_ID_SIMPLETAG           0x67C8
 #define MATROSKA_ID_TAGNAME             0x45A3
@@ -139,26 +156,26 @@
 #define MATROSKA_ID_TAGTARGETS_CHAPTERUID 0x63C4
 #define MATROSKA_ID_TAGTARGETS_ATTACHUID  0x63C6
 
-
+/* IDs in the seekhead master */
 #define MATROSKA_ID_SEEKENTRY  0x4DBB
 
-
+/* IDs in the seekpoint master */
 #define MATROSKA_ID_SEEKID     0x53AB
 #define MATROSKA_ID_SEEKPOSITION 0x53AC
 
-
+/* IDs in the cluster master */
 #define MATROSKA_ID_CLUSTERTIMECODE 0xE7
 #define MATROSKA_ID_CLUSTERPOSITION 0xA7
 #define MATROSKA_ID_CLUSTERPREVSIZE 0xAB
 #define MATROSKA_ID_BLOCKGROUP 0xA0
 #define MATROSKA_ID_SIMPLEBLOCK 0xA3
 
-
+/* IDs in the blockgroup master */
 #define MATROSKA_ID_BLOCK      0xA1
 #define MATROSKA_ID_BLOCKDURATION 0x9B
 #define MATROSKA_ID_BLOCKREFERENCE 0xFB
 
-
+/* IDs in the attachments master */
 #define MATROSKA_ID_ATTACHEDFILE        0x61A7
 #define MATROSKA_ID_FILEDESC            0x467E
 #define MATROSKA_ID_FILENAME            0x466E
@@ -166,7 +183,7 @@
 #define MATROSKA_ID_FILEDATA            0x465C
 #define MATROSKA_ID_FILEUID             0x46AE
 
-
+/* IDs in the chapters master */
 #define MATROSKA_ID_EDITIONENTRY        0x45B9
 #define MATROSKA_ID_CHAPTERATOM         0xB6
 #define MATROSKA_ID_CHAPTERTIMESTART    0x91
@@ -200,7 +217,9 @@ typedef enum {
   MATROSKA_TRACK_ENCODING_COMP_HEADERSTRIP = 3,
 } MatroskaTrackEncodingCompAlgo;
 
-
+/*
+ * Matroska Codec IDs, strings
+ */
 
 typedef struct CodecTags{
     char str[20];
@@ -212,11 +231,11 @@ typedef struct CodecMime{
     enum CodecID id;
 }CodecMime;
 
-
+/* max. depth in the EBML tree structure */
 #define EBML_MAX_DEPTH 16
 
 extern const CodecTags ff_mkv_codec_tags[];
 extern const CodecMime ff_mkv_mime_tags[];
 extern const AVMetadataConv ff_mkv_metadata_conv[];
 
-#endif 
+#endif /* AVFORMAT_MATROSKA_H */

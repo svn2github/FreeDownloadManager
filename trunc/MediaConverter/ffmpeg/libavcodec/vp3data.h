@@ -1,8 +1,22 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
-
+ * copyright (C) 2003 the ffmpeg project
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
 #ifndef AVCODEC_VP3DATA_H
 #define AVCODEC_VP3DATA_H
@@ -10,7 +24,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-
+/* these coefficients dequantize intraframe Y plane coefficients
+ * (note: same as JPEG) */
 static const int16_t vp31_intra_y_dequant[64] =
 {       16,  11,  10,  16,  24,  40,  51,  61,
         12,  12,  14,  19,  26,  58,  60,  55,
@@ -22,7 +37,8 @@ static const int16_t vp31_intra_y_dequant[64] =
         72,  92,  95,  98, 112, 100, 103,  99
 };
 
-
+/* these coefficients dequantize intraframe C plane coefficients
+ * (note: same as JPEG) */
 static const int16_t vp31_intra_c_dequant[64] =
 {       17,  18,     24,     47,     99,     99,     99,     99,
         18,  21,     26,     66,     99,     99,     99,     99,
@@ -34,7 +50,7 @@ static const int16_t vp31_intra_c_dequant[64] =
         99,  99,     99,     99,     99,     99,     99,     99
 };
 
-
+/* these coefficients dequantize interframe coefficients (all planes) */
 static const int16_t vp31_inter_dequant[64] =
 {   16,  16,  16,  20,  24,  28,  32,  40,
     16,  16,  20,  24,  28,  32,  40,  48,
@@ -96,28 +112,29 @@ static const uint16_t superblock_run_length_vlc_table[34][2] = {
     { 0x3E8, 10 },    { 0x3E9, 10 },    { 0x3EA, 10 },    { 0x3EB, 10 },
     { 0x3EC, 10 },    { 0x3ED, 10 },    { 0x3EE, 10 },    { 0x3EF, 10 },
 
-    { 0x3F, 6 }  
+    { 0x3F, 6 }  /* this last VLC is a special case for reading 12 more
+                    bits from stream and adding the value 34 */
 };
 
 static const uint16_t fragment_run_length_vlc_table[30][2] = {
-    
+    /* 1 -> 2 */
     { 0x0, 2 },    { 0x1, 2 },
 
-    
+    /* 3 -> 4 */
     { 0x4, 3 },    { 0x5, 3 },
 
-    
+    /* 5 -> 6 */
     { 0xC, 4 },    { 0xD, 4 },
 
-    
+    /* 7 -> 10 */
     { 0x38, 6 },   { 0x39, 6 },
     { 0x3A, 6 },   { 0x3B, 6 },
 
-    
+    /* 11 -> 14 */
     { 0x78, 7 },   { 0x79, 7 },
     { 0x7A, 7 },   { 0x7B, 7 },
 
-    
+    /* 15 -> 30 */
     { 0x1F0, 9 },  { 0x1F1, 9 },  { 0x1F2, 9 },  { 0x1F3, 9 },
     { 0x1F4, 9 },  { 0x1F5, 9 },  { 0x1F6, 9 },  { 0x1F7, 9 },
     { 0x1F8, 9 },  { 0x1F9, 9 },  { 0x1FA, 9 },  { 0x1FB, 9 },
@@ -180,7 +197,7 @@ static const int8_t fixed_motion_vector_table[64] = {
   28, -28,  29, -29,  30, -30,  31, -31
 };
 
-
+/* only tokens 0..6 indicate eob runs */
 static const int eob_run_base[7] = {
     1, 2, 3, 4, 8, 16, 0
 };
@@ -189,27 +206,27 @@ static const int eob_run_get_bits[7] = {
 };
 
 static const int zero_run_base[32] = {
-    0, 0, 0, 0, 0, 0, 0,  
-    0, 0,  
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  
-    1, 2, 3, 4, 5,  
-    6, 10, 1, 2  
+    0, 0, 0, 0, 0, 0, 0,  /* 0..6 are never used */
+    0, 0,  /* 7..8 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 9..22 */
+    1, 2, 3, 4, 5,  /* 23..27 */
+    6, 10, 1, 2  /* 28..31 */
 };
 static const int zero_run_get_bits[32] = {
-    0, 0, 0, 0, 0, 0, 0,  
-    3, 6,  
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  
-    0, 0, 0, 0, 0,  
-    2, 3, 0, 1  
+    0, 0, 0, 0, 0, 0, 0,  /* 0..6 are never used */
+    3, 6,  /* 7..8 */
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  /* 9..22 */
+    0, 0, 0, 0, 0,  /* 23..27 */
+    2, 3, 0, 1  /* 28..31 */
 };
 
 static const int coeff_get_bits[32] = {
-    0, 0, 0, 0, 0, 0, 0,  
-    0, 0, 0, 0, 0, 0,  
-    1, 1, 1, 1,  
-    2, 3, 4, 5, 6, 10,  
-    1, 1, 1, 1, 1, 1, 1,  
-    2, 2  
+    0, 0, 0, 0, 0, 0, 0,  /* 0..6 are never used */
+    0, 0, 0, 0, 0, 0,  /* 7..12 use constant coeffs */
+    1, 1, 1, 1,  /* 13..16 are constants but still need sign bit */
+    2, 3, 4, 5, 6, 10,  /* 17..22, for reading large coeffs */
+    1, 1, 1, 1, 1, 1, 1,  /* 23..29 are constants but still need sign bit */
+    2, 2  /* 30..31 */
 };
 
 static const int16_t coeff_table_token_7_8[1] = { 0 };
@@ -427,7 +444,7 @@ static const int16_t *const coeff_tables[32] = {
 };
 
 static const uint16_t dc_bias[16][32][2] = {
-  {  
+  {  /* DC bias table 0 */
     { 0x2D, 6 },
     { 0x26, 7 },
     { 0x166, 9 },
@@ -461,7 +478,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x12, 6 },
     { 0x58, 7 }
   },
-  {  
+  {  /* DC bias table 1 */
     { 0x10, 5 },
     { 0x47, 7 },
     { 0x1FF, 9 },
@@ -495,7 +512,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x7C, 7 },
     { 0xFE, 8 }
   },
-  {  
+  {  /* DC bias table 2 */
     { 0x16, 5 },
     { 0x20, 6 },
     { 0x86, 8 },
@@ -529,7 +546,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x42, 7 },
     { 0xD8, 8 }
   },
-  {  
+  {  /* DC bias table 3 */
     { 0x0, 4 },
     { 0x2D, 6 },
     { 0xF7, 8 },
@@ -563,7 +580,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x79, 7 },
     { 0xF6, 8 }
   },
-  {  
+  {  /* DC bias table 4 */
     { 0x3, 4 },
     { 0x3C, 6 },
     { 0xF, 7 },
@@ -597,7 +614,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x7B, 7 },
     { 0x9, 7 }
   },
-  {  
+  {  /* DC bias table 5 */
     { 0x9, 4 },
     { 0x2, 5 },
     { 0x74, 7 },
@@ -631,7 +648,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x75, 7 },
     { 0xED, 8 }
   },
-  {  
+  {  /* DC bias table 6 */
     { 0xA, 4 },
     { 0xC, 5 },
     { 0x12, 6 },
@@ -665,7 +682,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x10, 6 },
     { 0x27, 7 }
   },
-  {  
+  {  /* DC bias table 7 */
     { 0xD, 4 },
     { 0xF, 5 },
     { 0x1D, 6 },
@@ -699,7 +716,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x53, 7 },
     { 0xA5, 8 }
   },
-  {  
+  {  /* DC bias table 8 */
     { 0x1, 4 },
     { 0x1D, 6 },
     { 0xF5, 8 },
@@ -733,7 +750,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x1F, 5 },
     { 0x13, 5 }
   },
-  {  
+  {  /* DC bias table 9 */
     { 0x5, 4 },
     { 0x3C, 6 },
     { 0x40, 7 },
@@ -767,7 +784,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x0, 4 },
     { 0x13, 5 }
   },
-  {  
+  {  /* DC bias table 10 */
     { 0xA, 4 },
     { 0x7, 5 },
     { 0x1, 6 },
@@ -801,7 +818,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x6, 5 },
     { 0x1, 5 }
   },
-  {  
+  {  /* DC bias table 11 */
     { 0x0, 3 },
     { 0xE, 5 },
     { 0x17, 6 },
@@ -835,7 +852,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x9, 6 },
     { 0x51, 7 }
   },
-  {  
+  {  /* DC bias table 12 */
     { 0x2, 3 },
     { 0x18, 5 },
     { 0x2F, 6 },
@@ -869,7 +886,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0x3F, 7 },
     { 0xD6, 8 }
   },
-  {  
+  {  /* DC bias table 13 */
     { 0x2, 3 },
     { 0x1B, 5 },
     { 0xC, 5 },
@@ -903,7 +920,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0xBD, 8 },
     { 0x199, 9 }
   },
-  {  
+  {  /* DC bias table 14 */
     { 0x2, 3 },
     { 0x7, 4 },
     { 0x16, 5 },
@@ -937,7 +954,7 @@ static const uint16_t dc_bias[16][32][2] = {
     { 0xAC, 8 },
     { 0x15E, 9 }
   },
-  {  
+  {  /* DC bias table 15 */
     { 0xF, 4 },
     { 0x1D, 5 },
     { 0x18, 5 },
@@ -974,7 +991,7 @@ static const uint16_t dc_bias[16][32][2] = {
 };
 
 static const uint16_t ac_bias_0[16][32][2] = {
-  {  
+  {  /* AC bias group 1, table 0 */
     { 0x8, 5 },
     { 0x25, 7 },
     { 0x17A, 9 },
@@ -1008,7 +1025,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0xB, 5 },
     { 0x5F, 7 }
   },
-  {  
+  {  /* AC bias group 1, table 1 */
     { 0xF, 5 },
     { 0x10, 6 },
     { 0x4B, 8 },
@@ -1042,7 +1059,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0xE, 5 },
     { 0x11, 6 }
   },
-  {  
+  {  /* AC bias group 1, table 2 */
     { 0x1B, 5 },
     { 0x3, 6 },
     { 0x8D, 8 },
@@ -1076,7 +1093,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x1A, 5 },
     { 0x21, 6 }
   },
-  {  
+  {  /* AC bias group 1, table 3 */
     { 0x1F, 5 },
     { 0x3, 6 },
     { 0x3, 7 },
@@ -1110,7 +1127,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x17, 5 },
     { 0x2C, 6 }
   },
-  {  
+  {  /* AC bias group 1, table 4 */
     { 0x3, 4 },
     { 0x1F, 6 },
     { 0x3A, 7 },
@@ -1144,7 +1161,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x0, 4 },
     { 0x36, 6 }
   },
-  {  
+  {  /* AC bias group 1, table 5 */
     { 0x6, 4 },
     { 0x37, 6 },
     { 0x5D, 7 },
@@ -1178,7 +1195,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x2, 4 },
     { 0x7, 5 }
   },
-  {  
+  {  /* AC bias group 1, table 6 */
     { 0xC, 4 },
     { 0xB, 5 },
     { 0x79, 7 },
@@ -1212,7 +1229,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x1F, 5 },
     { 0xC, 5 }
   },
-  {  
+  {  /* AC bias group 1, table 7 */
     { 0x0, 3 },
     { 0x1A, 5 },
     { 0x33, 6 },
@@ -1246,7 +1263,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x1F, 5 },
     { 0x10, 5 }
   },
-  {  
+  {  /* AC bias group 1, table 8 */
     { 0x1D, 5 },
     { 0x61, 7 },
     { 0x4E, 8 },
@@ -1280,7 +1297,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x8, 4 },
     { 0x19, 5 }
   },
-  {  
+  {  /* AC bias group 1, table 9 */
     { 0x7, 4 },
     { 0x19, 6 },
     { 0xAB, 8 },
@@ -1314,7 +1331,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x8, 4 },
     { 0x14, 5 }
   },
-  {  
+  {  /* AC bias group 1, table 10 */
     { 0xC, 4 },
     { 0x5, 5 },
     { 0x8, 6 },
@@ -1348,7 +1365,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x8, 4 },
     { 0x17, 5 }
   },
-  {  
+  {  /* AC bias group 1, table 11 */
     { 0xF, 4 },
     { 0x13, 5 },
     { 0x75, 7 },
@@ -1382,7 +1399,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x1B, 5 },
     { 0x3B, 6 }
   },
-  {  
+  {  /* AC bias group 1, table 12 */
     { 0x3, 3 },
     { 0x1A, 5 },
     { 0x2D, 6 },
@@ -1416,7 +1433,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x19, 5 },
     { 0x3B, 6 }
   },
-  {  
+  {  /* AC bias group 1, table 13 */
     { 0x4, 3 },
     { 0x4, 4 },
     { 0x3F, 6 },
@@ -1450,7 +1467,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0x16, 5 },
     { 0x33, 6 }
   },
-  {  
+  {  /* AC bias group 1, table 14 */
     { 0x4, 3 },
     { 0x7, 4 },
     { 0x18, 5 },
@@ -1484,7 +1501,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
     { 0xD, 5 },
     { 0x2F, 6 }
   },
-  {  
+  {  /* AC bias group 1, table 15 */
     { 0x0, 3 },
     { 0xA, 4 },
     { 0x1A, 5 },
@@ -1521,7 +1538,7 @@ static const uint16_t ac_bias_0[16][32][2] = {
 };
 
 static const uint16_t ac_bias_1[16][32][2] = {
-  {  
+  {  /* AC bias group 2, table 0 */
     { 0xB, 5 },
     { 0x2B, 7 },
     { 0x54, 8 },
@@ -1555,7 +1572,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x1C, 5 },
     { 0x37, 6 }
   },
-  {  
+  {  /* AC bias group 2, table 1 */
     { 0x1D, 5 },
     { 0x4, 6 },
     { 0xB6, 8 },
@@ -1589,7 +1606,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x0, 4 },
     { 0xC, 5 }
   },
-  {  
+  {  /* AC bias group 2, table 2 */
     { 0x3, 4 },
     { 0x7F, 7 },
     { 0xA1, 8 },
@@ -1623,7 +1640,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x4, 4 },
     { 0xB, 5 }
   },
-  {  
+  {  /* AC bias group 2, table 3 */
     { 0x7, 4 },
     { 0x1B, 6 },
     { 0xF6, 8 },
@@ -1657,7 +1674,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x0, 4 },
     { 0xC, 5 }
   },
-  {  
+  {  /* AC bias group 2, table 4 */
     { 0xD, 4 },
     { 0x3D, 6 },
     { 0x42, 7 },
@@ -1691,7 +1708,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x0, 4 },
     { 0xE, 5 }
   },
-  {  
+  {  /* AC bias group 2, table 5 */
     { 0x0, 3 },
     { 0x12, 5 },
     { 0x76, 7 },
@@ -1725,7 +1742,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x2, 4 },
     { 0x6, 5 }
   },
-  {  
+  {  /* AC bias group 2, table 6 */
     { 0x2, 3 },
     { 0x1A, 5 },
     { 0x2B, 6 },
@@ -1759,7 +1776,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x1B, 5 },
     { 0x5, 5 }
   },
-  {  
+  {  /* AC bias group 2, table 7 */
     { 0x2, 3 },
     { 0x2, 4 },
     { 0x18, 5 },
@@ -1793,7 +1810,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x19, 5 },
     { 0x38, 6 }
   },
-  {  
+  {  /* AC bias group 2, table 8 */
     { 0x16, 5 },
     { 0x50, 7 },
     { 0x172, 9 },
@@ -1827,7 +1844,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x8, 4 },
     { 0x15, 5 }
   },
-  {  
+  {  /* AC bias group 2, table 9 */
     { 0x9, 4 },
     { 0x21, 6 },
     { 0x40, 7 },
@@ -1861,7 +1878,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x7, 4 },
     { 0x16, 5 }
   },
-  {  
+  {  /* AC bias group 2, table 10 */
     { 0xE, 4 },
     { 0x7, 5 },
     { 0x46, 7 },
@@ -1895,7 +1912,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x2, 4 },
     { 0x10, 5 }
   },
-  {  
+  {  /* AC bias group 2, table 11 */
     { 0x3, 3 },
     { 0x18, 5 },
     { 0x23, 6 },
@@ -1929,7 +1946,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x16, 5 },
     { 0x33, 6 }
   },
-  {  
+  {  /* AC bias group 2, table 12 */
     { 0x5, 3 },
     { 0x6, 4 },
     { 0x3E, 6 },
@@ -1963,7 +1980,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x35, 6 },
     { 0x25, 6 }
   },
-  {  
+  {  /* AC bias group 2, table 13 */
     { 0x5, 3 },
     { 0x8, 4 },
     { 0x12, 5 },
@@ -1997,7 +2014,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x32, 6 },
     { 0x67, 7 }
   },
-  {  
+  {  /* AC bias group 2, table 14 */
     { 0x4, 3 },
     { 0xA, 4 },
     { 0x1B, 5 },
@@ -2031,7 +2048,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
     { 0x19, 6 },
     { 0x69, 7 }
   },
-  {  
+  {  /* AC bias group 2, table 15 */
     { 0x3, 3 },
     { 0xC, 4 },
     { 0x1B, 5 },
@@ -2068,7 +2085,7 @@ static const uint16_t ac_bias_1[16][32][2] = {
 };
 
 static const uint16_t ac_bias_2[16][32][2] = {
-  {  
+  {  /* AC bias group 3, table 0 */
     { 0x3, 4 },
     { 0x9, 6 },
     { 0xD0, 8 },
@@ -2102,7 +2119,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x7, 4 },
     { 0xC, 5 }
   },
-  {  
+  {  /* AC bias group 3, table 1 */
     { 0xA, 4 },
     { 0x3C, 6 },
     { 0x32, 7 },
@@ -2136,7 +2153,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x7, 4 },
     { 0x10, 5 }
   },
-  {  
+  {  /* AC bias group 3, table 2 */
     { 0xF, 4 },
     { 0xC, 5 },
     { 0x43, 7 },
@@ -2170,7 +2187,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x7, 4 },
     { 0x11, 5 }
   },
-  {  
+  {  /* AC bias group 3, table 3 */
     { 0x1, 3 },
     { 0x1A, 5 },
     { 0x29, 6 },
@@ -2204,7 +2221,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x1D, 5 },
     { 0x1, 5 }
   },
-  {  
+  {  /* AC bias group 3, table 4 */
     { 0x4, 3 },
     { 0x1F, 5 },
     { 0x3D, 6 },
@@ -2238,7 +2255,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x15, 5 },
     { 0x3C, 6 }
   },
-  {  
+  {  /* AC bias group 3, table 5 */
     { 0x4, 3 },
     { 0xA, 4 },
     { 0x7, 5 },
@@ -2272,7 +2289,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x5, 5 },
     { 0x2D, 6 }
   },
-  {  
+  {  /* AC bias group 3, table 6 */
     { 0x2, 3 },
     { 0x7, 4 },
     { 0x18, 5 },
@@ -2306,7 +2323,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x1B, 6 },
     { 0x8, 6 }
   },
-  {  
+  {  /* AC bias group 3, table 7 */
     { 0x0, 3 },
     { 0x4, 4 },
     { 0x1C, 5 },
@@ -2340,7 +2357,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x3A4, 10 },
     { 0x2D, 7 }
   },
-  {  
+  {  /* AC bias group 3, table 8 */
     { 0xA, 4 },
     { 0x24, 6 },
     { 0xBF, 8 },
@@ -2374,7 +2391,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x6, 4 },
     { 0x16, 5 }
   },
-  {  
+  {  /* AC bias group 3, table 9 */
     { 0x2, 3 },
     { 0xF, 5 },
     { 0x6F, 7 },
@@ -2408,7 +2425,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x19, 5 },
     { 0x3F, 6 }
   },
-  {  
+  {  /* AC bias group 3, table 10 */
     { 0x3, 3 },
     { 0x1C, 5 },
     { 0x25, 6 },
@@ -2442,7 +2459,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x9, 5 },
     { 0x3A, 6 }
   },
-  {  
+  {  /* AC bias group 3, table 11 */
     { 0x5, 3 },
     { 0x3, 4 },
     { 0x4, 5 },
@@ -2476,7 +2493,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x22, 6 },
     { 0x78, 7 }
   },
-  {  
+  {  /* AC bias group 3, table 12 */
     { 0x5, 3 },
     { 0xC, 4 },
     { 0x1B, 5 },
@@ -2510,7 +2527,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0xE, 7 },
     { 0xF9, 8 }
   },
-  {  
+  {  /* AC bias group 3, table 13 */
     { 0x4, 3 },
     { 0xB, 4 },
     { 0x1, 4 },
@@ -2544,7 +2561,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x43, 8 },
     { 0x42, 8 }
   },
-  {  
+  {  /* AC bias group 3, table 14 */
     { 0x4, 3 },
     { 0xD, 4 },
     { 0x7, 4 },
@@ -2578,7 +2595,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
     { 0x5B7, 11 },
     { 0x5B5, 11 }
   },
-  {  
+  {  /* AC bias group 3, table 15 */
     { 0x2, 2 },
     { 0xF, 4 },
     { 0x1C, 5 },
@@ -2615,7 +2632,7 @@ static const uint16_t ac_bias_2[16][32][2] = {
 };
 
 static const uint16_t ac_bias_3[16][32][2] = {
-  {  
+  {  /* AC bias group 4, table 0 */
     { 0x0, 3 },
     { 0x10, 5 },
     { 0x72, 7 },
@@ -2649,7 +2666,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0x1D, 5 },
     { 0x13, 5 }
   },
-  {  
+  {  /* AC bias group 4, table 1 */
     { 0x3, 3 },
     { 0x1F, 5 },
     { 0x29, 6 },
@@ -2683,7 +2700,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0x13, 5 },
     { 0x1, 5 }
   },
-  {  
+  {  /* AC bias group 4, table 2 */
     { 0x4, 3 },
     { 0x4, 4 },
     { 0x3F, 6 },
@@ -2717,7 +2734,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0x3D, 6 },
     { 0x30, 6 }
   },
-  {  
+  {  /* AC bias group 4, table 3 */
     { 0x5, 3 },
     { 0x8, 4 },
     { 0x1A, 5 },
@@ -2751,7 +2768,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0xB, 7 },
     { 0x9, 7 }
   },
-  {  
+  {  /* AC bias group 4, table 4 */
     { 0x2, 3 },
     { 0xE, 4 },
     { 0x1E, 5 },
@@ -2785,7 +2802,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0x6F, 7 },
     { 0xAC, 10 }
   },
-  {  
+  {  /* AC bias group 4, table 5 */
     { 0x4, 3 },
     { 0x5, 4 },
     { 0x3, 3 },
@@ -2819,7 +2836,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0xA4E, 12 },
     { 0x293E, 14 }
   },
-  {  
+  {  /* AC bias group 4, table 6 */
     { 0x4, 3 },
     { 0x5, 4 },
     { 0x3, 3 },
@@ -2853,7 +2870,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0xA4E, 12 },
     { 0x293E, 14 }
   },
-  {  
+  {  /* AC bias group 4, table 7 */
     { 0x4, 3 },
     { 0x5, 4 },
     { 0x3, 3 },
@@ -2887,7 +2904,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0xA4E, 12 },
     { 0x293E, 14 }
   },
-  {  
+  {  /* AC bias group 4, table 8 */
     { 0x3, 3 },
     { 0x11, 5 },
     { 0x20, 6 },
@@ -2921,7 +2938,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0x1A, 5 },
     { 0x3B, 6 }
   },
-  {  
+  {  /* AC bias group 4, table 9 */
     { 0x5, 3 },
     { 0x1, 4 },
     { 0x3E, 6 },
@@ -2955,7 +2972,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0x3D, 6 },
     { 0x1E, 6 }
   },
-  {  
+  {  /* AC bias group 4, table 10 */
     { 0x6, 3 },
     { 0xB, 4 },
     { 0x11, 5 },
@@ -2989,7 +3006,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0x20, 6 },
     { 0x0, 6 }
   },
-  {  
+  {  /* AC bias group 4, table 11 */
     { 0x4, 3 },
     { 0xA, 4 },
     { 0x17, 5 },
@@ -3023,7 +3040,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0x16, 7 },
     { 0xB4, 8 }
   },
-  {  
+  {  /* AC bias group 4, table 12 */
     { 0x5, 3 },
     { 0xD, 4 },
     { 0x5, 4 },
@@ -3057,7 +3074,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0x60, 8 },
     { 0x324, 10 }
   },
-  {  
+  {  /* AC bias group 4, table 13 */
     { 0x6, 3 },
     { 0x0, 3 },
     { 0x2, 4 },
@@ -3091,7 +3108,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0xEC0, 12 },
     { 0x3B1A, 14 }
   },
-  {  
+  {  /* AC bias group 4, table 14 */
     { 0x0, 2 },
     { 0x2, 3 },
     { 0xF, 5 },
@@ -3125,7 +3142,7 @@ static const uint16_t ac_bias_3[16][32][2] = {
     { 0x1D1F, 14 },
     { 0x1D1E, 14 }
   },
-  {  
+  {  /* AC bias group 4, table 15 */
     { 0x2, 2 },
     { 0xF, 4 },
     { 0x1C, 5 },
@@ -3161,4 +3178,4 @@ static const uint16_t ac_bias_3[16][32][2] = {
   }
 };
 
-#endif 
+#endif /* AVCODEC_VP3DATA_H */

@@ -1,10 +1,28 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
+ * SVQ1 Encoder
+ * Copyright (C) 2004 Mike Melanson <melanson@pcisys.net>
+ *
+ * This file is part of FFmpeg.
+ *
+ * FFmpeg is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * FFmpeg is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with FFmpeg; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ */
 
-
-
-
+/**
+ * @file
+ * svq1 code books.
+ */
 
 #ifndef AVCODEC_SVQ1ENC_CB_H
 #define AVCODEC_SVQ1ENC_CB_H
@@ -75,4 +93,4 @@ static const int8_t svq1_intra_codebook_sum[4][16*6] = {
  }
 };
 
-#endif 
+#endif /* AVCODEC_SVQ1ENC_CB_H */
