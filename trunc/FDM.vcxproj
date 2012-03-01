@@ -225,7 +225,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>Lib.add;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>PartMediaPreview\Debug\PartMediaPreview.lib;FDMCustomized/FDMCustomized_lib/Debug/FDMCustomized_lib.lib;InetFile\Debug\inetfile.lib;alsFolderBrowserd.lib;Hash\Debug\hash.lib;InetFile\curl_lib\debug\curl_lib.lib;dxguid.lib;wininet.lib;rasapi32.lib;Ws2_32.lib;htmlhelp.lib;winmm.lib;strmiids.lib;Version.lib;Iphlpapi.lib;libeay32d.lib;ssleay32d.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PartMediaPreview\Debug\PartMediaPreview.lib;FDMCustomized/FDMCustomized_lib/Debug/FDMCustomized_lib.lib;InetFile\Debug\inetfile.lib;Hash\Debug\hash.lib;InetFile\curl_lib\debug\curl_lib.lib;dxguid.lib;wininet.lib;rasapi32.lib;Ws2_32.lib;htmlhelp.lib;winmm.lib;strmiids.lib;Version.lib;Iphlpapi.lib;libeay32d.lib;ssleay32d.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <TypeLibraryFile>.\bin\Release\fdm.tlb</TypeLibraryFile>
       <AdditionalManifestDependencies>type='Win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='X86' publicKeyToken='6595b64144ccf1df' language='*';%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
     </Link>
