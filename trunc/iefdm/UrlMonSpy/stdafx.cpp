@@ -4,4 +4,4 @@
 
 #include "stdafx.h"
 
-#include "vmsSourceCodeLogger.cpp"
+SCL_INITOBJECT (_T ("urlmonspy"), 0);

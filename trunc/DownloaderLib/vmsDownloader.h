@@ -41,6 +41,10 @@ public:
 	void StopDownloading();
 	void StartDownloading();
 	fsInternetResult Initialize (LPCSTR pszURL, LPCSTR pszOutFile);
+	bool RestoreDownload(LPBYTE pbBuffer, LPDWORD pdwSize, DWORD dwVer);
+	void SetResumeMode();
+	bool IsDone();
+	std::string get_DestinationFile();
 	vmsDownloader();
 	virtual ~vmsDownloader();
 

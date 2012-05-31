@@ -174,3 +174,131 @@ void vmsDownloader::set_MinSectionSize (UINT uiMinSectionSize)
 {
 	m_dldr.GetDP()->uSectionMinSize = uiMinSectionSize;
 }
+
+LPCTSTR vmsDownloader::getDstFilePathName(void)
+{
+	return m_dldr.GetDP ()->pszFileName;
+}
+
+LPCSTR vmsDownloader::getContentType(void)
+{
+	return m_dldr.GetDownloader ()->GetContentType ();
+}
+
+void vmsDownloader::fsIRToStr (fsInternetResult ir, tstring& sMsg)
+{
+	switch (ir)
+	{
+		case IR_WININETUNKERROR:
+		case IR_ERROR:
+			sMsg = "Unknown network error";
+			break;
+
+		case IR_LOGINFAILURE:
+			sMsg = "Access denied. Invalid user name or password";
+			break;
+
+		case IR_INVALIDPASSWORD:
+			sMsg = "Access denied. Invalid password";
+			break;
+
+		case IR_SUCCESS:
+			sMsg = "Succeeded";
+			break;
+
+		case IR_CANTCONNECT:
+			sMsg = "Can't connect to the server";
+			break;
+
+		case IR_FILENOTFOUND:
+			sMsg = "File not found on the server";
+			break;
+
+		case IR_LOSTCONNECTION:
+			sMsg = "Connection with the server was lost";
+			break;
+
+		case IR_TIMEOUT:
+			sMsg = "Server does not respond";
+			break;
+
+		case IR_NAMENOTRESOLVED:
+			sMsg = "Unable to resolve the server name";
+			break;
+
+		case IR_RANGESNOTAVAIL:
+			sMsg = "Server does not support download resuming. Don't stop this download; otherwise you'll have to start it from the beginning";
+			break;
+
+		case IR_DOUBTFUL_RANGESRESPONSE:
+			sMsg = "Server can not guarantee its resuming capabilities. Response is invalid.";
+			break;
+
+		case IR_PROXYAUTHREQ:
+			sMsg = "Proxy user name and password are required";
+			break;
+
+		case IR_EXTERROR:
+			sMsg = "Extended error";
+			break;
+
+		case IR_SERVERBADREQUEST:
+			sMsg = "Bad request. Possibly this is a bad URL";
+			break;
+
+		case IR_SERVERUNKERROR:
+			sMsg = "Unknown server error";
+			break;
+
+		case IR_CONNECTIONABORTED:
+			sMsg = "Connection aborted";
+			break;
+
+		case IR_BADURL:
+			sMsg = "Bad URL";
+			break;
+
+		case IR_NOINTERNETCONNECTION:
+			sMsg = "No Internet connection";
+			break;
+
+		case IR_HTTPVERNOTSUP:
+			sMsg = "Selected HTTP version is not supported by this server";
+			break;
+
+		default:
+			sMsg = "Unknown error";
+	}
+}
+
+void vmsDownloader::DumpDownload(LPBYTE pbBuffer, LPDWORD pdwSize)
+{
+	if (!pdwSize)
+		return;
+
+	m_dldr.SaveState(pbBuffer, pdwSize);
+
+}
+
+bool vmsDownloader::RestoreDownload(LPBYTE pbBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	return m_dldr.LoadState(pbBuffer, pdwSize, dwVer) ? true : false;
+}
+
+void vmsDownloader::SetResumeMode()
+{
+	fsDownload_Properties *dp = m_dldr.GetDP ();
+	dp->enAER = AER_RESUME;
+}
+
+bool vmsDownloader::IsDone()
+{
+	return m_dldr.IsDone();
+}
+
+std::string vmsDownloader::get_DestinationFile()
+{
+	fsDownload_Properties *dp = m_dldr.GetDP ();
+	std::string sDestinationFile = dp->pszFileName ? dp->pszFileName : _T("");
+	return sDestinationFile;
+}

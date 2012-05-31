@@ -75,7 +75,7 @@ Refresh
 Add site
 Site properties
 Groups of downloads
-Download info
+Download Info Area
 Scheduler log
 Site Explorer log
 Side bar
@@ -839,7 +839,7 @@ Server speed
 In use
 Measure mirrors speed
 Measure mirror servers' speed
-Downloads Info
+Pop-up Downloads Info
 Waiting...
 Mirror URL for download
 File size exceeds 2GB. Such downloads are supported via FTP only

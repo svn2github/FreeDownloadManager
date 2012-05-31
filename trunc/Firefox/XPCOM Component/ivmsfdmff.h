@@ -402,6 +402,15 @@ class NS_NO_VTABLE NS_SCRIPTABLE IFDMForFirefox : public nsISupports {
   
   NS_SCRIPTABLE NS_IMETHOD OnHttpRedirect(const PRUnichar *wstrUrl, const PRUnichar *wstrOriginalUrl) = 0;
 
+  
+  NS_SCRIPTABLE NS_IMETHOD DownloadComplete(const PRUnichar *wstrUrl) = 0;
+
+  
+  NS_SCRIPTABLE NS_IMETHOD DownloadBegin(const PRUnichar *wstrUrl) = 0;
+
+  
+  NS_SCRIPTABLE NS_IMETHOD OnHttpActivity(const PRUnichar *wstrUrl) = 0;
+
 };
 
   NS_DEFINE_STATIC_IID_ACCESSOR(IFDMForFirefox, IFDMFORFIREFOX_IID)
@@ -421,7 +430,10 @@ class NS_NO_VTABLE NS_SCRIPTABLE IFDMForFirefox : public nsISupports {
   NS_SCRIPTABLE NS_IMETHOD CreateVideoDownloadFromUrl3(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, PRBool *_retval NS_OUTPARAM); \
   NS_SCRIPTABLE NS_IMETHOD IsVideoFlash(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, PRBool *_retval NS_OUTPARAM); \
   NS_SCRIPTABLE NS_IMETHOD OnNewHttpRequest(const PRUnichar *wstrUrl, const PRUnichar *wstrSourceTabUrl); \
-  NS_SCRIPTABLE NS_IMETHOD OnHttpRedirect(const PRUnichar *wstrUrl, const PRUnichar *wstrOriginalUrl); 
+  NS_SCRIPTABLE NS_IMETHOD OnHttpRedirect(const PRUnichar *wstrUrl, const PRUnichar *wstrOriginalUrl); \
+  NS_SCRIPTABLE NS_IMETHOD DownloadComplete(const PRUnichar *wstrUrl); \
+  NS_SCRIPTABLE NS_IMETHOD DownloadBegin(const PRUnichar *wstrUrl); \
+  NS_SCRIPTABLE NS_IMETHOD OnHttpActivity(const PRUnichar *wstrUrl); 
 
 #define NS_FORWARD_IFDMFORFIREFOX(_to) \
   NS_SCRIPTABLE NS_IMETHOD GetLngString(const char *strIDString, PRUnichar **_retval NS_OUTPARAM) { return _to GetLngString(strIDString, _retval); } \
@@ -438,7 +450,10 @@ class NS_NO_VTABLE NS_SCRIPTABLE IFDMForFirefox : public nsISupports {
   NS_SCRIPTABLE NS_IMETHOD CreateVideoDownloadFromUrl3(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, PRBool *_retval NS_OUTPARAM) { return _to CreateVideoDownloadFromUrl3(wstrUrl, wstrFrameUrl, wstrSwfUrl, wstrFlashVars, wstrOtherSwfUrls, wstrOtherFlashVars, _retval); } \
   NS_SCRIPTABLE NS_IMETHOD IsVideoFlash(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, PRBool *_retval NS_OUTPARAM) { return _to IsVideoFlash(wstrUrl, wstrFrameUrl, wstrSwfUrl, wstrFlashVars, wstrOtherSwfUrls, wstrOtherFlashVars, _retval); } \
   NS_SCRIPTABLE NS_IMETHOD OnNewHttpRequest(const PRUnichar *wstrUrl, const PRUnichar *wstrSourceTabUrl) { return _to OnNewHttpRequest(wstrUrl, wstrSourceTabUrl); } \
-  NS_SCRIPTABLE NS_IMETHOD OnHttpRedirect(const PRUnichar *wstrUrl, const PRUnichar *wstrOriginalUrl) { return _to OnHttpRedirect(wstrUrl, wstrOriginalUrl); } 
+  NS_SCRIPTABLE NS_IMETHOD OnHttpRedirect(const PRUnichar *wstrUrl, const PRUnichar *wstrOriginalUrl) { return _to OnHttpRedirect(wstrUrl, wstrOriginalUrl); } \
+  NS_SCRIPTABLE NS_IMETHOD DownloadComplete(const PRUnichar *wstrUrl) { return _to DownloadComplete(wstrUrl); } \
+  NS_SCRIPTABLE NS_IMETHOD DownloadBegin(const PRUnichar *wstrUrl) { return _to DownloadBegin(wstrUrl); } \
+  NS_SCRIPTABLE NS_IMETHOD OnHttpActivity(const PRUnichar *wstrUrl) { return _to OnHttpActivity(wstrUrl); } 
 
 #define NS_FORWARD_SAFE_IFDMFORFIREFOX(_to) \
   NS_SCRIPTABLE NS_IMETHOD GetLngString(const char *strIDString, PRUnichar **_retval NS_OUTPARAM) { return !_to ? NS_ERROR_NULL_POINTER : _to->GetLngString(strIDString, _retval); } \
@@ -455,7 +470,10 @@ class NS_NO_VTABLE NS_SCRIPTABLE IFDMForFirefox : public nsISupports {
   NS_SCRIPTABLE NS_IMETHOD CreateVideoDownloadFromUrl3(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, PRBool *_retval NS_OUTPARAM) { return !_to ? NS_ERROR_NULL_POINTER : _to->CreateVideoDownloadFromUrl3(wstrUrl, wstrFrameUrl, wstrSwfUrl, wstrFlashVars, wstrOtherSwfUrls, wstrOtherFlashVars, _retval); } \
   NS_SCRIPTABLE NS_IMETHOD IsVideoFlash(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, PRBool *_retval NS_OUTPARAM) { return !_to ? NS_ERROR_NULL_POINTER : _to->IsVideoFlash(wstrUrl, wstrFrameUrl, wstrSwfUrl, wstrFlashVars, wstrOtherSwfUrls, wstrOtherFlashVars, _retval); } \
   NS_SCRIPTABLE NS_IMETHOD OnNewHttpRequest(const PRUnichar *wstrUrl, const PRUnichar *wstrSourceTabUrl) { return !_to ? NS_ERROR_NULL_POINTER : _to->OnNewHttpRequest(wstrUrl, wstrSourceTabUrl); } \
-  NS_SCRIPTABLE NS_IMETHOD OnHttpRedirect(const PRUnichar *wstrUrl, const PRUnichar *wstrOriginalUrl) { return !_to ? NS_ERROR_NULL_POINTER : _to->OnHttpRedirect(wstrUrl, wstrOriginalUrl); } 
+  NS_SCRIPTABLE NS_IMETHOD OnHttpRedirect(const PRUnichar *wstrUrl, const PRUnichar *wstrOriginalUrl) { return !_to ? NS_ERROR_NULL_POINTER : _to->OnHttpRedirect(wstrUrl, wstrOriginalUrl); } \
+  NS_SCRIPTABLE NS_IMETHOD DownloadComplete(const PRUnichar *wstrUrl) { return !_to ? NS_ERROR_NULL_POINTER : _to->DownloadComplete(wstrUrl); } \
+  NS_SCRIPTABLE NS_IMETHOD DownloadBegin(const PRUnichar *wstrUrl) { return !_to ? NS_ERROR_NULL_POINTER : _to->DownloadBegin(wstrUrl); } \
+  NS_SCRIPTABLE NS_IMETHOD OnHttpActivity(const PRUnichar *wstrUrl) { return !_to ? NS_ERROR_NULL_POINTER : _to->OnHttpActivity(wstrUrl); } 
 
 #if 0
 
@@ -557,6 +575,21 @@ NS_IMETHODIMP _MYCLASS_::OnNewHttpRequest(const PRUnichar *wstrUrl, const PRUnic
 }
 
 NS_IMETHODIMP _MYCLASS_::OnHttpRedirect(const PRUnichar *wstrUrl, const PRUnichar *wstrOriginalUrl)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+NS_IMETHODIMP _MYCLASS_::DownloadComplete(const PRUnichar *wstrUrl)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+NS_IMETHODIMP _MYCLASS_::DownloadBegin(const PRUnichar *wstrUrl)
+{
+    return NS_ERROR_NOT_IMPLEMENTED;
+}
+
+NS_IMETHODIMP _MYCLASS_::OnHttpActivity(const PRUnichar *wstrUrl)
 {
     return NS_ERROR_NOT_IMPLEMENTED;
 }

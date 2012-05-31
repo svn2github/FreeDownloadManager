@@ -209,6 +209,7 @@
     <ClCompile Include="fsLangMgr.cpp" />
     <ClCompile Include="vmsAppVersion.cpp" />
     <ClCompile Include="vmsBinaryFileVersionInfo.cpp" />
+    <ClCompile Include="vmsBrowserActivityMonitor.cpp" />
     <ClCompile Include="vmsFdmTranslations.cpp" />
     <ClCompile Include="vmsFile.cpp" />
     <ClCompile Include="vmsFileUtil.cpp" />
@@ -227,6 +228,7 @@
     <ClInclude Include="FDMUrlListReceiver.h" />
     <ClInclude Include="FDMUrlReceiver.h" />
     <ClInclude Include="fsLangMgr.h" />
+    <ClInclude Include="vmsBrowserActivityMonitor.h" />
     <ClInclude Include="vmsFdmTranslations.h" />
     <ClInclude Include="vmsFileUtil.h" />
     <ClInclude Include="vmsFirefoxExtensionInstaller.h" />

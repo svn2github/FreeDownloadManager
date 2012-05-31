@@ -623,7 +623,7 @@ void CCreateDownloadDlg::UrlChanged()
 		}
 	}
 
-	fsSiteInfo *site = _SitesMgr.FindSite2 (url.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (url.GetInternetScheme ())));
+	fsSiteInfo *site = _SitesMgr.FindSite (url.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (url.GetInternetScheme ())));
 	if (site)
 	{
 		if (site->strUser != NULL && m_bAuthChanged == FALSE && *url.GetUserName () == 0)
@@ -1011,7 +1011,7 @@ fsSiteInfo* CCreateDownloadDlg::_SavePassword(LPCSTR pszServer, fsNetworkProtoco
 
 	if (_App.SM_KeepPasswords () && _App.SM_PwdsManualAddition () == FALSE)
 	{
-		fsSiteInfo *site = _SitesMgr.FindSite2 (pszServer, fsNPToSiteValidFor (np));
+		fsSiteInfo *site = _SitesMgr.FindSite (pszServer, fsNPToSiteValidFor (np));
 
 		if (site == NULL || site->strUser != pszUser || site->strPassword != pszPwd)
 		{
@@ -1037,8 +1037,8 @@ fsSiteInfo* CCreateDownloadDlg::_SavePassword(LPCSTR pszServer, fsNetworkProtoco
 					site->strUser = pszUser;
 					site->strPassword = pszPwd;
 					site->bTemp = FALSE;
-					int nSite = _SitesMgr.AddSite (site);
-					return _SitesMgr.GetSite (nSite);
+					_SitesMgr.AddSite (site);
+					return site;
 				}
 			}
 		}

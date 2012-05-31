@@ -50,6 +50,11 @@ interface IFDMForFirefox : nsISupports
   boolean IsVideoFlash (in wstring wstrUrl, in wstring wstrFrameUrl, in wstring wstrSwfUrl, in wstring wstrFlashVars, in wstring wstrOtherSwfUrls, in wstring wstrOtherFlashVars);
   void OnNewHttpRequest (in wstring wstrUrl, in wstring wstrSourceTabUrl);
   void OnHttpRedirect (in wstring wstrUrl, in wstring wstrOriginalUrl);
+
+  void DownloadComplete (in wstring wstrUrl);
+  void DownloadBegin (in wstring wstrUrl);
+  // must be called by extension when the browser is sending some requests / getting responses from a server
+  void onHttpActivity (in wstring wstrUrl);
 };
 
 [scriptable, uuid(EBFEC047-F68D-491e-8D7D-268B9C762CB7)]

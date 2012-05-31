@@ -8,6 +8,13 @@
 #include "ivmsfdmff.h"
 #include <atlbase.h>
 #include <string>
+#include <vector>
+#include "vmsObject.h"
+#include <assert.h>
+#include "vmsCriticalSection.h"
+#include "vmsbrowseractivitymonitor.h"
+
+using namespace std;
 
 #define FDMFORFIREFOX_CONTRACTID "@freedownloadmanager.org/FDMForFirefox;1"
 #define FDMFORFIREFOX_CLASSNAME "Free Download Manager component for Firefox"

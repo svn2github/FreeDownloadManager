@@ -99,6 +99,7 @@ void CDlgConnectionSpeedInfo::OnTimer(UINT_PTR nIDEvent)
 
 void CDlgConnectionSpeedInfo::ApplyLanguage(void)
 {
+	SetWindowText (LS(L_CONNECTION_SPEED));
 	fsDlgLngInfo lnginfo [] =  {
 		fsDlgLngInfo (IDC__MSG, L_CONNECTIONSPEEDINFO_MSG),
 		fsDlgLngInfo (IDC__DOWNLOADSPEED, L_DOWNLOADSPEED),

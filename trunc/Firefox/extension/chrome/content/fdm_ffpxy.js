@@ -1,28 +1,31 @@
-var fdm_FfPrefs = Components.classes["@mozilla.org/preferences;1"].getService (Components.interfaces.nsIPrefBranch);
+var freeDldMgr_FfPrefs = Components.classes["@mozilla.org/preferences;1"].getService (Components.interfaces.nsIPrefBranch);
+if (!freeDldMgr_FfPrefs.addObserver)
+	freeDldMgr_FfPrefs = Components.classes["@mozilla.org/preferences;1"].getService (Components.interfaces.nsIPrefBranch2);
+
 
 // write current proxy settings of browser to registry settings of FDM
 // prot - name of protocol ("http", "ssl", "ftp")
-function fdm_ReadProxyPrefs_protocol (prot)
+function freeDldMgr_ReadProxyPrefs_protocol (prot)
 {
   var str = "network.proxy."; 
   str += prot;
-  fdm_FDM.SetProxy (prot, fdm_FfPrefs.getCharPref (str), fdm_FfPrefs.getIntPref (str + "_port"));
+  freeDldMgr_FDM.SetProxy (prot, freeDldMgr_FfPrefs.getCharPref (str), freeDldMgr_FfPrefs.getIntPref (str + "_port"));
 }
 
-function fdm_ReadProxyPrefs ()
+function freeDldMgr_ReadProxyPrefs ()
 {
-  fdm_FDM.SetProxyType (fdm_FfPrefs.getIntPref ("network.proxy.type"));
-  fdm_ReadProxyPrefs_protocol ("http");
-  fdm_ReadProxyPrefs_protocol ("ssl");
-  fdm_ReadProxyPrefs_protocol ("ftp");
+  freeDldMgr_FDM.SetProxyType (freeDldMgr_FfPrefs.getIntPref ("network.proxy.type"));
+  freeDldMgr_ReadProxyPrefs_protocol ("http");
+  freeDldMgr_ReadProxyPrefs_protocol ("ssl");
+  freeDldMgr_ReadProxyPrefs_protocol ("ftp");
 }
 
 /*============== Listen prefs =================*/
 
-var fdm_prefsListener = { 
+var freeDldMgr_prefsListener = { 
  observe: function (subject, topic, data) {
         // settings was changed. update proxy settings.
-        fdm_ReadProxyPrefs ();
+        freeDldMgr_ReadProxyPrefs ();
  },
 
  QueryInterface: function (aIID) {
@@ -32,6 +35,16 @@ var fdm_prefsListener = {
  }
 };
 
-fdm_ReadProxyPrefs ();
+freeDldMgr_ReadProxyPrefs ();
 
-fdm_FfPrefs.addObserver ("network.proxy", fdm_prefsListener, false);
+if (freeDldMgr_FfPrefs.addObserver) {
+	freeDldMgr_FfPrefs.addObserver ("network.proxy", freeDldMgr_prefsListener, false);
+	window.addEventListener("unload",  freeDldMgr_ffpxy_unload, false);
+}
+
+function freeDldMgr_ffpxy_unload ()
+{
+	if (freeDldMgr_FfPrefs.removeObserver)
+		freeDldMgr_FfPrefs.removeObserver ("network.proxy", freeDldMgr_prefsListener, false);
+	window.removeEventListener("unload",  freeDldMgr_ffpxy_unload);
+}

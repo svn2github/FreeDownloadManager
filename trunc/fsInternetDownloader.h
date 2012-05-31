@@ -595,7 +595,7 @@ protected:
 	
 	
 	fsInternetResult OpenUrl (UINT64 uStartPos, fsInternetURLFile **ppFile, int iSectIndex, UINT &nMirror, BOOL bCheckFileSize = FALSE, LPCSTR pszContentTypeReq = NULL);
-	fsInternetResult OpenUrl_imp (UINT64 uStartPos, fsInternetURLFile **ppFile, int iSectIndex, UINT &nMirror, BOOL bCheckFileSize, int iAttempt, LPCSTR pszContentTypeReq = NULL, fsDownload_NetworkProperties *pDNPRedirectedUrl = NULL);
+	fsInternetResult OpenUrl_imp (UINT64 uStartPos, fsInternetURLFile **ppFile, int iSectIndex, UINT &nMirror, BOOL bCheckFileSize, int iAttempt, LPCSTR pszContentTypeReq = NULL, fsDownload_NetworkProperties *pDNPRedirectedUrl = NULL, bool bIsRedirected = false);
 	
 	
 	static DWORD WINAPI _threadDownload(LPVOID lp);

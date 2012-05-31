@@ -562,13 +562,11 @@ BOOL vmsBtDownloadManager::IsDone()
 
 	if (!IsDownloadStatCanBeRead ())
 		return m_info.bDone;
-	
-	vmsBtDownloadStateEx enState = get_State ();
 
-	if (enState == BTDSE_SEEDING || enState == BTDSE_FINISHED)
+	if (isSeeding ())
 		return TRUE;
 
-	if (enState != BTDSE_DOWNLOADING)
+	if (get_State () != BTDSE_DOWNLOADING)
 		return GetPercentDone () == 100.0f;
 
 	return FALSE;
@@ -1532,8 +1530,7 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 	pthis->GetDownloadedBytesCount (false);
 
 	if (pthis->m_pDownload != NULL &&
-			(pthis->m_bDlThreadNeedStop || 
-				(pthis->get_State () != BTDSE_SEEDING && pthis->get_State () != BTDSE_FINISHED) ||
+			(pthis->m_bDlThreadNeedStop || !pthis->isSeeding () ||
 				(pthis->m_info.dwFlags & BTDF_DISABLE_SEEDING) != 0 || 
 				_DldsMgr.AllowStartNewDownloads () == FALSE))
 	{
@@ -1553,7 +1550,7 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 
 	try{pthis->RaiseEvent (BTDME_DOWNLOAD_STOPPED_OR_DONE);}catch(...){}
 
-	if (pthis->get_State () == BTDSE_SEEDING || pthis->get_State () == BTDSE_FINISHED)
+	if (pthis->isSeeding ())
 	{
 		pthis->AddToDldsList ();
 		pthis->RaiseEvent (BTDME_SEEDING);
@@ -1792,8 +1789,7 @@ DWORD WINAPI vmsBtDownloadManager::_threadCheckStartSeeding(LPVOID lp)
 
 	if (pthis->m_bDlThreadNeedStop == false && pthis->m_pDownload != NULL)
 	{
-		if ((pthis->get_State () != BTDSE_SEEDING && pthis->get_State () != BTDSE_FINISHED) || 
-				(pthis->m_info.dwFlags & BTDF_DISABLE_SEEDING) != 0)
+		if (!pthis->isSeeding () || (pthis->m_info.dwFlags & BTDF_DISABLE_SEEDING) != 0)
 		{
 			pthis->DeleteBtDownload ();
 		}
@@ -1811,7 +1807,7 @@ DWORD WINAPI vmsBtDownloadManager::_threadCheckStartSeeding(LPVOID lp)
 
 void vmsBtDownloadManager::StopSeeding()
 {
-	if (get_State () == BTDSE_SEEDING || get_State () == BTDSE_FINISHED)
+	if (isSeeding ())
 	{
 		vmsAUTOLOCKSECTION (m_csDownload);
 		DeleteFromDldsList ();
@@ -1976,7 +1972,8 @@ fsString vmsBtDownloadManager::get_RootFolderName()
 
 BOOL vmsBtDownloadManager::isSeeding()
 {
-	return get_State () == BTDSE_SEEDING || get_State () == BTDSE_FINISHED;
+	vmsBtDownloadStateEx enState = get_State ();
+	return enState == BTDSE_SEEDING || enState == BTDSE_FINISHED;
 }
 
 void vmsBtDownloadManager::GetFilesTree(fs::ListTree <vmsFile> *tree)

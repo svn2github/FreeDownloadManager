@@ -35,6 +35,8 @@ bool vmsUrlMonDefaultApphSpy::Initialize(void)
 
 			_Hooks.HookMethod (spProtocol, InternetProtocolRoot_Start, 3);
 			_Hooks.HookMethod (spProtocol, InternetProtocolRoot_Continue, 4);
+			
+			
 
 			IInternetProtocolExPtr spProtocolEx (spProtocol);
 			if (spProtocolEx)
@@ -56,7 +58,33 @@ STDMETHODIMP vmsUrlMonDefaultApphSpy::InternetProtocolRoot_Start(IInternetProtoc
 	assert (nIndex != -1);
 	if (nIndex == -1)
 		return E_UNEXPECTED;
-	return ((FNSTART)_Hooks.getHook (nIndex)->pvOriginalFn) (pthis, pwszUrl, pSink, pInfo, grfPI, dwReserved);
+	HRESULT hr = ((FNSTART)_Hooks.getHook (nIndex)->pvOriginalFn) (pthis, pwszUrl, pSink, pInfo, grfPI, dwReserved);
+	LOG ("ProtocolRoot_Start hr = 0x%x", hr);
+	return hr;
+}
+
+STDMETHODIMP vmsUrlMonDefaultApphSpy::InternetProtocolRoot_Abort(IInternetProtocolRoot *pthis, HRESULT hrReason, DWORD dwOptions)
+{
+	_Requests.onInternetProtocolRoot_Abort (pthis, hrReason, dwOptions);
+
+	typedef HRESULT (STDMETHODCALLTYPE *FNABORT)(IInternetProtocolRoot *pthis, HRESULT, DWORD);
+	int nIndex = _Hooks.findHookIndex (pthis, 5);
+	assert (nIndex != -1);
+	if (nIndex == -1)
+		return E_UNEXPECTED;
+	return ((FNABORT)_Hooks.getHook (nIndex)->pvOriginalFn) (pthis, hrReason, dwOptions);
+}
+
+STDMETHODIMP vmsUrlMonDefaultApphSpy::InternetProtocolRoot_Terminate(IInternetProtocolRoot *pthis, DWORD dwOptions)
+{
+	_Requests.onInternetProtocolRoot_Terminate (pthis, dwOptions);
+
+	typedef HRESULT (STDMETHODCALLTYPE *FNABORT)(IInternetProtocolRoot *pthis, DWORD);
+	int nIndex = _Hooks.findHookIndex (pthis, 6);
+	assert (nIndex != -1);
+	if (nIndex == -1)
+		return E_UNEXPECTED;
+	return ((FNABORT)_Hooks.getHook (nIndex)->pvOriginalFn) (pthis, dwOptions);
 }
 
 STDMETHODIMP vmsUrlMonDefaultApphSpy::InternetProtocolEx_StartEx(IInternetProtocolEx *pthis, IUri *pUri, IInternetProtocolSink *pSink, IInternetBindInfo *pInfo, DWORD grfPI, DWORD dwReserved)
@@ -75,29 +103,23 @@ STDMETHODIMP vmsUrlMonDefaultApphSpy::InternetProtocolEx_StartEx(IInternetProtoc
 		}
 	}
 	_Hooks.HookMethod (pSink, InternetProtocolSink_ReportProgress, 4);
+	_Hooks.HookMethod (pSink, InternetProtocolSink_ReportData, 5);
 	_Hooks.HookMethod (pSink, InternetProtocolSink_ReportResult, 6);
 
 	_Requests.onInternetProtocolEx_StartEx (pthis, pUri, pSink, pInfo, grfPI);
-
-	
-
-	
-
-	
-
-	
-	
-	
-
-	
-	
 
 	typedef HRESULT (STDMETHODCALLTYPE *FNSTARTEX)(IInternetProtocolEx *pthis, IUri *pUri, IInternetProtocolSink *pSink, IInternetBindInfo *pInfo, DWORD grfPI, DWORD dwReserved);
 	int nIndex = _Hooks.findHookIndex (pthis, 13);
 	assert (nIndex != -1);
 	if (nIndex == -1)
 		return E_UNEXPECTED;
-	return ((FNSTARTEX)_Hooks.getHook (nIndex)->pvOriginalFn) (pthis, pUri, pSink, pInfo, grfPI, dwReserved);
+	HRESULT hr = ((FNSTARTEX)_Hooks.getHook (nIndex)->pvOriginalFn) (pthis, pUri, pSink, pInfo, grfPI, dwReserved);
+	LOG ("ProtocolRoot_StartEx hr = 0x%x", hr);
+	LOG ("ProtocolRoot_StartEx pSink = 0x%x", (DWORD)pSink);
+	LOG ("ProtocolRoot_StartEx pInfo = 0x%x", (DWORD)pInfo);
+	LOG ("ProtocolRoot_StartEx pUri = 0x%x", (DWORD)pUri);
+	LOG ("ProtocolRoot_StartEx grfPI = 0x%x", (DWORD)grfPI);
+	return hr;
 }
 
 STDMETHODIMP vmsUrlMonDefaultApphSpy::InternetProtocolRoot_Continue(IInternetProtocolRoot* pthis, PROTOCOLDATA* pProtocolData)
@@ -163,4 +185,16 @@ STDMETHODIMP vmsUrlMonDefaultApphSpy::InternetProtocolSink_ReportProgress(IInter
 	if (nIndex == -1)
 		return E_UNEXPECTED;
 	return ((FNRP)_Hooks.getHook (nIndex)->pvOriginalFn) (pthis, ulStatusCode, szStatusText);
+}
+
+STDMETHODIMP vmsUrlMonDefaultApphSpy::InternetProtocolSink_ReportData(IInternetProtocolSink* pthis, DWORD grfBSCF, ULONG ulProgress, ULONG ulProgressMax)
+{
+	_Requests.onInternetProtocolSink_ReportData (pthis, grfBSCF, ulProgress, ulProgressMax);
+
+	typedef HRESULT (STDMETHODCALLTYPE *FNRD)(IInternetProtocolSink* pthis, DWORD grfBSCF, ULONG ulProgress, ULONG ulProgressMax);
+	int nIndex = _Hooks.findHookIndex (pthis, 5);
+	assert (nIndex != -1);
+	if (nIndex == -1)
+		return E_UNEXPECTED;
+	return ((FNRD)_Hooks.getHook (nIndex)->pvOriginalFn) (pthis, grfBSCF, ulProgress, ulProgressMax);
 }

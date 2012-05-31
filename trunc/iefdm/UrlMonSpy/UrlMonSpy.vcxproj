@@ -123,7 +123,6 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="vmsInterfaceHook.h" />
-    <ClInclude Include="vmsSourceCodeLogger.h" />
     <ClInclude Include="vmsUrlMonDefaultApphSpy.h" />
     <ClInclude Include="vmsUrlMonRequest.h" />
     <ClInclude Include="vmsUrlMonRequestCollector.h" />

@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "downloaderlib.h"
 #include "vmsDownloader.h"
+#include "..\fsDownloadRegSaver.h"
 
 BOOL vmsdl_InitializeLibrary ()
 {
@@ -119,4 +120,52 @@ extern void vmsdl_SetMinSectionSize(DLHANDLE h, UINT uiMinSectionSize)
 {
 	vmsDownloader* dldr = (vmsDownloader*) h;
 	dldr->set_MinSectionSize (uiMinSectionSize);
+}
+
+extern LPCTSTR	vmsdl_GetDstFilePathName (DLHANDLE h)
+{
+	vmsDownloader* dldr = (vmsDownloader*) h;
+	return dldr->getDstFilePathName ();
+}
+
+extern LPCSTR	vmsdl_GetContentType (DLHANDLE h)
+{
+	vmsDownloader* dldr = (vmsDownloader*) h;
+	return dldr->getContentType ();
+}
+
+extern void vmsdl_DumpDownload(DLHANDLE h, LPBYTE pbBuffer, LPDWORD pdwSize)
+{
+	vmsDownloader* dldr = (vmsDownloader*) h;
+	dldr->DumpDownload (pbBuffer, pdwSize);
+}
+
+extern bool vmsdl_LoadDownload(DLHANDLE h, LPBYTE pbBuffer, LPDWORD pdwSize, WORD wVer)
+{
+	vmsDownloader* dldr = (vmsDownloader*) h;
+	return dldr->RestoreDownload (pbBuffer, pdwSize, wVer);
+}
+
+extern WORD vmsdl_GetVersion()
+{
+	fsDLFileHdr hdr;
+	return hdr.wVer;
+}
+
+extern void vmsdl_SetResumeMode(DLHANDLE h)
+{
+	vmsDownloader* dldr = (vmsDownloader*) h;
+	return dldr->SetResumeMode ();
+}
+
+extern bool vmsdl_IsDone(DLHANDLE h)
+{
+	vmsDownloader* dldr = (vmsDownloader*) h;
+	return dldr->IsDone ();
+}
+
+extern std::string vmsdl_GetDestinationFile(DLHANDLE h)
+{
+	vmsDownloader* dldr = (vmsDownloader*) h;
+	return dldr->get_DestinationFile();
 }

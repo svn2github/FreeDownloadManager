@@ -308,7 +308,7 @@ void CCreateBatchDownload::UrlChanged()
 	strNewPassword = url.GetPassword ();
 
 	
-	fsSiteInfo *site = _SitesMgr.FindSite2 (url.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (url.GetInternetScheme ())));
+	fsSiteInfo *site = _SitesMgr.FindSite (url.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (url.GetInternetScheme ())));
 	if (site)
 	{
 		if (!m_bAuthChanged && strNewUser.IsEmpty ())

@@ -441,6 +441,7 @@ void CHFE_FileList::DownloadSelected()
 		
 		_DlgMgr.DoModal (&dlg);
 
+		cleanFiles();
 		SAFE_DELETE (m_pList);
 	}
 
@@ -521,8 +522,13 @@ fs::tree <fsFileInfo*>* CHFE_FileList::BuildList(LPCSTR pszFolder, BOOL *pbNeedS
 	{
 		fsFileInfo *file = mgr->GetFileInfo (i);
 
+		std::auto_ptr<fsFileInfo> apfiFileInfoGuard( new fsFileInfo(*file) );
+		fsFileInfo* pfiFileInfo = apfiFileInfoGuard.get();
+		if (pfiFileInfo == 0)
+			return 0;
+
 		
-		pCur->Data (file);
+		pCur->Data (apfiFileInfoGuard.release());
 
 		if (file->bFolder)	
 		{
@@ -575,6 +581,21 @@ _lExit:
 	return pRoot;	
 }
 
+void CHFE_FileList::cleanFilesSubtree(fs::tree <fsFileInfo*>* pCur)
+{
+	if (pCur->Left())
+		cleanFilesSubtree(pCur->Left());
+	if (pCur->Right())
+		cleanFilesSubtree(pCur->Right());
+	delete pCur->Data();
+}
+
+void CHFE_FileList::cleanFiles()
+{
+	if (m_pList)
+		cleanFilesSubtree(m_pList);
+}
+
 DWORD WINAPI CHFE_FileList::_threadBuildList(LPVOID lp)
 {
 	
@@ -609,7 +630,13 @@ DWORD WINAPI CHFE_FileList::_threadBuildList(LPVOID lp)
 	for (int i = 0; i < cItems && info->bNeedStop == FALSE; i++)
 	{
 		fsFileInfo *file = (fsFileInfo*) pThis->GetItemData (vItems [i]);
-		pCur->Data (file);
+
+		std::auto_ptr<fsFileInfo> apfiFileInfoGuard( new fsFileInfo(*file) );
+		fsFileInfo* pfiFileInfo = apfiFileInfoGuard.get();
+		if (pfiFileInfo == 0)
+			return 0;
+
+		pCur->Data (apfiFileInfoGuard.release());
 		if (file->bFolder)
 		{
 			try {
@@ -643,6 +670,7 @@ DWORD WINAPI CHFE_FileList::_threadBuildList(LPVOID lp)
 	
 	if (info->bNeedStop)
 	{
+		pThis->cleanFiles();
 		SAFE_DELETE (pThis->m_pList);
 		info->bNeedStop = FALSE;
 	}

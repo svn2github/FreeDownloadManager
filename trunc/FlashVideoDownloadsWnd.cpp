@@ -508,7 +508,7 @@ DWORD WINAPI CFlashVideoDownloadsWnd::_threadPassWebPageUrlToFlvSniffDll(LPVOID 
 	*phrRes = S_FALSE;
 
 	vmsSharedData sdata ("Fdm::mem::passUrlToFlvSniffDll", FALSE, strlen (pszUrl)+1);
-	LPSTR psz = (LPSTR)sdata.get_Data ();
+	LPSTR psz = (LPSTR)sdata.getData ();
 	ASSERT (psz != NULL);
 	if (!psz)
 	{

@@ -20,7 +20,6 @@ public:
 	void FromDialog();
 	
 	BOOL IsUserChangedProtocols();
-	int m_iSiteIndex;	
 	fsSiteInfo* m_pSite;	
 	CSites_AdvancedPage();
 	~CSites_AdvancedPage();

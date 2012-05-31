@@ -64,6 +64,8 @@ protected:
 	
 	
 	static fs::tree <fsFileInfo*>* BuildList (LPCSTR pszFolder, BOOL *pbNeedStop, int* piProgress, int iProgressDone);
+	void cleanFiles();
+	void cleanFilesSubtree(fs::tree <fsFileInfo*>* pCur);
 	
 	void DownloadSelected();
 	

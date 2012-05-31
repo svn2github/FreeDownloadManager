@@ -17,6 +17,20 @@
 #include "xrfix.h"
 #include "vmsHttpRedirectList.h"
 
+#if defined (_UNICODE) || defined (UNICODE)
+#define tstring std::wstring
+#else 
+#define tstring std::string
+#endif
+
+#ifdef _DEBUG
+#define SCL_ENABLE
+#endif
+
+#include "vmsSourceCodeLogger.h"
+
+SCL_INITOBJECT (_T ("vmsfdmff"), 0);
+
 _COM_SMARTPTR_TYPEDEF(IFDMFlashVideoDownloads, __uuidof(IFDMFlashVideoDownloads));
 _COM_SMARTPTR_TYPEDEF(IFdmUiWindow, __uuidof(IFdmUiWindow));
 
@@ -624,10 +638,32 @@ NS_IMETHODIMP CFDMForFirefox::OnHttpRedirect (const PRUnichar *wstrUrl, const PR
 	assert (wstrUrl != NULL && wstrOriginalUrl != NULL);
 	if (!wstrUrl || !wstrOriginalUrl)
 		return NS_ERROR_INVALID_POINTER;
+	LOGsnl ("Redirect:");
+	USES_CONVERSION;
+	LOG (" source: %s", W2CA (wstrOriginalUrl));
+	LOG (" new: %s", W2CA (wstrUrl));
 	vmsHttpRedirectList::Redirect r;
 	r.dwTicksRegistered = GetTickCount ();
 	r.wstrUrl = wstrUrl;
 	r.wstrOriginalUrl = wstrOriginalUrl;
 	vmsHttpRedirectList::o ().addRedirect (r);
+	return NS_OK;
+}
+
+NS_IMETHODIMP CFDMForFirefox::DownloadBegin(const PRUnichar *wstrUrl)
+{
+	vmsBrowserActivityMonitor::o ().onDownloadBegin (wstrUrl);
+	return NS_OK;
+}
+
+NS_IMETHODIMP CFDMForFirefox::DownloadComplete(const PRUnichar *wstrUrl)
+{
+	vmsBrowserActivityMonitor::o ().onDownloadEnd (wstrUrl);
+	return NS_OK;
+}
+
+NS_IMETHODIMP CFDMForFirefox::OnHttpActivity(const PRUnichar *wstrUrl)
+{
+	vmsBrowserActivityMonitor::o ().onActivity (wstrUrl);
 	return NS_OK;
 }

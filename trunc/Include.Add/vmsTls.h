@@ -1,7 +1,3 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
 #ifndef __VMS_TLS_H_
 #define __VMS_TLS_H_
 
@@ -30,5 +26,6 @@ public:
 protected:
 	DWORD m_dwIndex;
 };
+
 
 #endif

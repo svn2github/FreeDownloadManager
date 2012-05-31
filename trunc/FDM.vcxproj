@@ -1528,10 +1528,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="vmsSharedData.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
-    </ClCompile>
     <ClCompile Include="vmsSimpleFileDownloader.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
@@ -1966,6 +1962,8 @@
     <ClInclude Include="Prg_UpdatePage.h" />
     <ClInclude Include="PrgSheet.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="StateInfo.h" />
+    <ClInclude Include="vmsBrowsersSharedData.h" />
     <ClInclude Include="Schedule_AdvancedPage.h" />
     <ClInclude Include="Schedule_HTSPage.h" />
     <ClInclude Include="Schedule_WTSPage.h" />

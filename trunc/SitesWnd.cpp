@@ -270,7 +270,7 @@ void CSitesWnd::OnSitesAdd()
 
 	CSitesSheet sheet (LS (L_ADDSITE), this);
 	_DlgMgr.OnDoModal (&sheet);
-	sheet.Init (site, -1);
+	sheet.Init (site);
 	UINT nRet = sheet.DoModal ();
 	_DlgMgr.OnEndDialog (&sheet);
 
@@ -325,7 +325,7 @@ void CSitesWnd::OnSitesProperties()
 
 	CSitesSheet sheet (LS (L_SITEPROP), this);
 	_DlgMgr.OnDoModal (&sheet);
-	sheet.Init (pSite, _SitesMgr.FindSite (pSite->strName, pSite->dwValidFor));
+	sheet.Init (pSite);
 	UINT nRet = sheet.DoModal ();
 	_DlgMgr.OnEndDialog (&sheet);
 
@@ -551,6 +551,8 @@ void CSitesWnd::Plugin_SetLanguage(wgLanguage, HMENU hMenuMain, HMENU hMenuView)
 void CSitesWnd::OnForceUpdate()
 {
 	DeleteAllItems ();
+	vmsCriticalSectionAutoLock csal;
+	_SitesMgr.LockList (csal);
 	int cSites = _SitesMgr.GetSiteCount ();
 	for (int i = 0; i < cSites; i++)
 		AddSiteToList (_SitesMgr.GetSite (i));

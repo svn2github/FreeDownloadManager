@@ -1,7 +1,3 @@
-/*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
-*/
-
 #ifndef __VMSREADERWRITERLOCK_H_
 #define __VMSREADERWRITERLOCK_H_
 
@@ -146,4 +142,5 @@ protected:
 #define vmsAUTOLOCKRW_WRITE(rw) vmsReaderWriterLockAutoLockWrite rwalw_##rw (&rw)
 #define vmsAUTOLOCKRW_WRITE_UNLOCK(rw) rwalw_##rw.Unlock()
 
-#endif 
+
+#endif //__VMSREADERWRITERLOCK_H_

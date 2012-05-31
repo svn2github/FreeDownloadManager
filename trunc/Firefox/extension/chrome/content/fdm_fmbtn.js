@@ -13,55 +13,67 @@
  *
 */
 
-var fdm_fmb_rkStgs = null;
-var fdm_fmb_Initialized = false;
-var fdm_fmb_objTabElement = null;
-var fdm_fmb_CurrentElement = null;
-var fdm_fmb_OtherSwfUrls = null;
-var fdm_fmb_OtherFlashVars = null;
-var fdm_fmb_ImageDataURI = null;
+var freeDldMgr_fmb_rkStgs = null;
+var freeDldMgr_fmb_Initialized = false;
+var freeDldMgr_fmb_objTabElement = null;
+var freeDldMgr_fmb_CurrentElement = null;
+var freeDldMgr_fmb_OtherSwfUrls = null;
+var freeDldMgr_fmb_OtherFlashVars = null;
+var freeDldMgr_fmb_ImageDataURI = null;
 
-fdm_fmb_Initialize ();
+freeDldMgr_fmb_Initialize ();
 
-function fdm_fmb_Initialize ()
+function freeDldMgr_fmb_Initialize ()
 {
   var ext = Components.classes["@freedownloadmanager.org/FDMFirefoxExtension;1"].createInstance ();
   ext = ext.QueryInterface (Components.interfaces.IFDMFirefoxExtension);
   ext.MakeSureFlvSniffDllLoaded ();
 
-  fdm_fmb_rkStgs = Components.classes["@mozilla.org/windows-registry-key;1"].createInstance (Components.interfaces.nsIWindowsRegKey);
-  fdm_fmb_rkStgs.open (fdm_fmb_rkStgs.ROOT_KEY_CURRENT_USER, 
+  freeDldMgr_fmb_rkStgs = Components.classes["@mozilla.org/windows-registry-key;1"].createInstance (Components.interfaces.nsIWindowsRegKey);
+  freeDldMgr_fmb_rkStgs.open (freeDldMgr_fmb_rkStgs.ROOT_KEY_CURRENT_USER, 
     "Software\\FreeDownloadManager.ORG\\Free Download Manager\\Settings\\FlvMonitoring",
-    fdm_fmb_rkStgs.ACCESS_ALL);
+    freeDldMgr_fmb_rkStgs.ACCESS_ALL);
 
-  fdm_fmb_LoadTabCss ();
+  freeDldMgr_fmb_LoadTabCss ();
 
-  /*if (fdm_fmb_ImageDataURI == null)
-    fdm_fmb_ImageDataURI = fdm_fmb_generateDataURI (fdm_fmb_openMyFile ("chrome/skin/fdm.png"));*/
+  /*if (freeDldMgr_fmb_ImageDataURI == null)
+    freeDldMgr_fmb_ImageDataURI = freeDldMgr_fmb_generateDataURI (freeDldMgr_fmb_openMyFile ("chrome/skin/fdm.png"));*/
 }
 
-function fdm_fmb_ProcessCSSData (data)
+function freeDldMgr_fmb_ProcessCSSData (data)
 {
   var styleService = Components.classes["@mozilla.org/content/style-sheet-service;1"]
                         .getService(Components.interfaces.nsIStyleSheetService);
   let ioService = Components.classes["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
-  let url = ioService.newURI("data:text/css," + encodeURIComponent(data), null, null);
+  let url = ioService.newURI("chrome://fdm_ffext/content/fdm_objtabs.css", null, null);
   styleService.loadAndRegisterSheet(url, Components.interfaces.nsIStyleSheetService.USER_SHEET);
-  fdm_fmb_Initialized = true;
+  window.addEventListener("unload",  freeDldMgr_fmbtn_unload, false);
+  freeDldMgr_fmb_Initialized = true;
 }
 
-function fdm_fmb_LoadTabCss ()
+function freeDldMgr_fmbtn_unload (ev)
 {
-  if (fdm_fmb_Initialized)
+  var styleService = Components.classes["@mozilla.org/content/style-sheet-service;1"]
+                        .getService(Components.interfaces.nsIStyleSheetService);
+ let ioService = Components.classes["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOService);
+ let url = ioService.newURI("chrome://fdm_ffext/content/fdm_objtabs.css", null, null);
+ if(styleService.sheetRegistered(u, Components.interfaces.nsIStyleSheetService.USER_SHEET))
+  styleService.unregisterSheet(u, Components.interfaces.nsIStyleSheetService.USER_SHEET);
+ window.removeEventListener("unload",  freeDldMgr_fmbtn_unload);
+}
+
+function freeDldMgr_fmb_LoadTabCss ()
+{
+  if (freeDldMgr_fmb_Initialized)
     return;
   var request = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance(Ci.nsIJSXMLHttpRequest);
   request.open("GET", "chrome://fdm_ffext/content/fdm_objtabs.css");
   request.overrideMimeType("text/plain");
-  request.onload = function () {fdm_fmb_ProcessCSSData (request.responseText);}
+  request.onload = function () {freeDldMgr_fmb_ProcessCSSData (request.responseText);}
   request.send (null);
 }
 
-function fdm_fmb_getElementParam (elem, paramName)
+function freeDldMgr_fmb_getElementParam (elem, paramName)
 {
   var vars;
 
@@ -104,7 +116,7 @@ function fdm_fmb_getElementParam (elem, paramName)
   return vars ? vars : "";
 }
 
-function fdm_fmb_getFlashElementSwfUrl (elem)
+function freeDldMgr_fmb_getFlashElementSwfUrl (elem)
 {
   var swfSrc;
   try {swfSrc = elem.data;}catch (e){}
@@ -113,67 +125,68 @@ function fdm_fmb_getFlashElementSwfUrl (elem)
     try {swfSrc = elem.src;}catch (e){}
   }
   if (swfSrc == null || swfSrc == "")
-    swfSrc = fdm_fmb_getElementParam (elem, "src");
+    swfSrc = freeDldMgr_fmb_getElementParam (elem, "src");
   if (swfSrc == null || swfSrc == "")
-    swfSrc = fdm_fmb_getElementParam (elem, "movie");
+    swfSrc = freeDldMgr_fmb_getElementParam (elem, "movie");
   return swfSrc;
 }
 
-function fdm_fmb_isFlashObject (elem)
+function freeDldMgr_fmb_isFlashObject (elem)
 {
-  return /x-shockwave-flash/i.test (fdm_fmb_getElementParam (elem, "type"));
+  return /x-shockwave-flash/i.test (freeDldMgr_fmb_getElementParam (elem, "type")) ||
+  	freeDldMgr_fmb_getFlashElementSwfUrl (elem) != "";
 }
 
-function fdm_fmb_getOtherSwfUrls_2 (coll, elemExcept)
+function freeDldMgr_fmb_getOtherSwfUrls_2 (coll, elemExcept)
 {
   for (var i = 0; i < coll.length; i++)
   {
     var el = coll [i];
     if (!el)
       continue;
-    if (el != elemExcept && fdm_fmb_isFlashObject (el))
+    if (el != elemExcept && freeDldMgr_fmb_isFlashObject (el))
     {
-      fdm_fmb_OtherSwfUrls += fdm_fmb_getFlashElementSwfUrl (el);
-      fdm_fmb_OtherSwfUrls += "\n";
-      fdm_fmb_OtherFlashVars += fdm_fmb_getElementParam (el, "flashvars");
-      fdm_fmb_OtherFlashVars += "\n";
+      freeDldMgr_fmb_OtherSwfUrls += freeDldMgr_fmb_getFlashElementSwfUrl (el);
+      freeDldMgr_fmb_OtherSwfUrls += "\n";
+      freeDldMgr_fmb_OtherFlashVars += freeDldMgr_fmb_getElementParam (el, "flashvars");
+      freeDldMgr_fmb_OtherFlashVars += "\n";
     }
   }
 }
 
-function fdm_fmb_getOtherSwfUrls_impl (doc, elem)
+function freeDldMgr_fmb_getOtherSwfUrls_impl (doc, elem)
 {
-  fdm_fmb_getOtherSwfUrls_2 (doc.embeds, elem);
-  fdm_fmb_getOtherSwfUrls_2 (doc.getElementsByTagName ("object"), elem);
+  freeDldMgr_fmb_getOtherSwfUrls_2 (doc.embeds, elem);
+  freeDldMgr_fmb_getOtherSwfUrls_2 (doc.getElementsByTagName ("object"), elem);
   var frames = doc.defaultView.frames;
   for (var i = 0; i < frames.length; i++)
-    fdm_fmb_getOtherSwfUrls_impl (frames [i].document, elem);
+    freeDldMgr_fmb_getOtherSwfUrls_impl (frames [i].document, elem);
 }
 
-function fdm_fmb_getOtherSwfUrls (elem)
+function freeDldMgr_fmb_getOtherSwfUrls (elem)
 {
-  fdm_fmb_OtherSwfUrls = ""; 
-  fdm_fmb_OtherFlashVars = "";
+  freeDldMgr_fmb_OtherSwfUrls = ""; 
+  freeDldMgr_fmb_OtherFlashVars = "";
   //var doc = elem.ownerDocument;
-  fdm_fmb_getOtherSwfUrls_impl (window.content.document, elem);
+  freeDldMgr_fmb_getOtherSwfUrls_impl (window.content.document, elem);
 }
 
-function fdm_fmb_isVideoFlash (elem)
+function freeDldMgr_fmb_isVideoFlash (elem)
 {
-  var swfSrc = fdm_fmb_getFlashElementSwfUrl (elem);
-  var flashVars = fdm_fmb_getElementParam (elem, "flashvars");
+  var swfSrc = freeDldMgr_fmb_getFlashElementSwfUrl (elem);
+  var flashVars = freeDldMgr_fmb_getElementParam (elem, "flashvars");
   var frameUrl = elem.ownerDocument.URL;
   var webPageUrl = window.content.document.URL;
   if (frameUrl == webPageUrl)
     frameUrl = "";
-  fdm_fmb_getOtherSwfUrls (elem);
-  var otherSwfUrls = fdm_fmb_OtherSwfUrls;
-  var otherFlashVars = fdm_fmb_OtherFlashVars;
-  return fdm_FDM.IsVideoFlash (webPageUrl, frameUrl, swfSrc, 
+  freeDldMgr_fmb_getOtherSwfUrls (elem);
+  var otherSwfUrls = freeDldMgr_fmb_OtherSwfUrls;
+  var otherFlashVars = freeDldMgr_fmb_OtherFlashVars;
+  return freeDldMgr_FDM.IsVideoFlash (webPageUrl, frameUrl, swfSrc, 
       flashVars, otherSwfUrls, otherFlashVars);
 }
 
-function fdm_fmb_onTabClick (ev)
+function freeDldMgr_fmb_onTabClick (ev)
 {
   if (!ev.isTrusted)
     return;
@@ -181,35 +194,35 @@ function fdm_fmb_onTabClick (ev)
   {
     ev.preventDefault ();
     ev.stopPropagation ();
-    var swfSrc = fdm_fmb_getFlashElementSwfUrl (fdm_fmb_CurrentElement);
-    var flashVars = fdm_fmb_getElementParam (fdm_fmb_CurrentElement, "flashvars");
-    var frameUrl = fdm_fmb_CurrentElement.ownerDocument.URL;
+    var swfSrc = freeDldMgr_fmb_getFlashElementSwfUrl (freeDldMgr_fmb_CurrentElement);
+    var flashVars = freeDldMgr_fmb_getElementParam (freeDldMgr_fmb_CurrentElement, "flashvars");
+    var frameUrl = freeDldMgr_fmb_CurrentElement.ownerDocument.URL;
     var webPageUrl = window.content.document.URL;
     if (frameUrl == webPageUrl)
       frameUrl = "";
-    fdm_fmb_getOtherSwfUrls (fdm_fmb_CurrentElement);
-    var otherSwfUrls = fdm_fmb_OtherSwfUrls;
-    var otherFlashVars = fdm_fmb_OtherFlashVars;
-    //alert (fdm_fmb_CurrentElement.ownerDocument.URL);
-    //alert (fdm_fmb_CurrentElement.ownerDocument.defaultView.parent.document.URL);
-    fdm_fmb_HideButton ();
-    //fdm_dlURL (swfSrc);
-    fdm_FDM.CreateVideoDownloadFromUrl3 (webPageUrl, frameUrl, swfSrc, 
+    freeDldMgr_fmb_getOtherSwfUrls (freeDldMgr_fmb_CurrentElement);
+    var otherSwfUrls = freeDldMgr_fmb_OtherSwfUrls;
+    var otherFlashVars = freeDldMgr_fmb_OtherFlashVars;
+    //alert (freeDldMgr_fmb_CurrentElement.ownerDocument.URL);
+    //alert (freeDldMgr_fmb_CurrentElement.ownerDocument.defaultView.parent.document.URL);
+    freeDldMgr_fmb_HideButton ();
+    //freeDldMgr_dlURL (swfSrc);
+    freeDldMgr_FDM.CreateVideoDownloadFromUrl3 (webPageUrl, frameUrl, swfSrc, 
       flashVars, otherSwfUrls, otherFlashVars);
   }
 }
 
-function fdm_fmb_ShowTab (elem)
+function freeDldMgr_fmb_ShowTab (elem)
 {
-  fdm_fmb_HideTab ();
-  fdm_fmb_CurrentElement = elem;
+  freeDldMgr_fmb_HideTab ();
+  freeDldMgr_fmb_CurrentElement = elem;
   var doc = elem.ownerDocument.defaultView.top.document;
 
-  fdm_fmb_objTabElement = doc.createElementNS ("http://www.w3.org/1999/xhtml", "a");
-  fdm_fmb_objTabElement.setAttribute ("href", "");
-  fdm_fmb_objTabElement.setAttribute ("class", "fdm_ffext_CLASSVISIBLETOP");
-  fdm_fmb_objTabElement.style.setProperty ("opacity", "1", "important");
-  fdm_fmb_objTabElement.addEventListener ("click", fdm_fmb_onTabClick, true);
+  freeDldMgr_fmb_objTabElement = doc.createElementNS ("http://www.w3.org/1999/xhtml", "a");
+  freeDldMgr_fmb_objTabElement.setAttribute ("href", "");
+  freeDldMgr_fmb_objTabElement.setAttribute ("class", "fdm_ffext_CLASSVISIBLETOP");
+  freeDldMgr_fmb_objTabElement.style.setProperty ("opacity", "1", "important");
+  freeDldMgr_fmb_objTabElement.addEventListener ("click", freeDldMgr_fmb_onTabClick, true);
   
   var el2 = doc.createElementNS ("http://www.w3.org/1999/xhtml", "img");
   el2.setAttribute ("src", "data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%10%00%00%00%10%08%02%00%00%00%90%91h6%00%00%00%01sRGB%00%AE%CE%1C%E9%00%00%00%04gAMA%00%00%B1%8F%0B%FCa%05%00%00%00%20cHRM%00%00z%26%00%00%80%84%00%00%FA%00%00%00%80%E8%00%00u0%00%00%EA%60%00%00%3A%98%00%00%17p%9C%BAQ%3C%00%00%01%01IDAT8O%8D%911%0E%C20%0CE%CD-8%40N%C0%CC%8AT%0EQ1%23%85%0B0%B1%C0%DC%BDB%EA%80%188%00%20%B8%01C%87n%9C%82%AEL%E6%3BN%D3%40%D5%0A%CB%AA%12%E7%3F%7F%A7%1913E1%DF%D1%F5%7DG%C1%BCffL%97u%7C%E8%D6%004%92-%9B%15%DB%92-%CB%D7%9C%99N5*%A8%C7%E1%01%CA'%C7G-%D2%90%3D%8C%00%B4!Q%BB%DE%9B%C1p%F3%E7%13%00%A2.E%5DUUQ%1C%BE%86p%1B%14qd%AD%05%40%01%C0%3E%00P%84%EC%05h%99%FF%E7%F0%F4%26%01%40oJ%09%19%FB%B4%23MoD%8EA%A2%AA%01u%C6%19%BE%A1%E2%01%B9xN%9Ei0%81%1D%B0g%1B3r%E9%00(%93p%82%84N%13k1o%7C%3C%A0O%01%A0%9B%A2~%92a%A3L%0B%A8%8Fb%AD(R%EB%ED%BF%00%7D%2C%C5%F4%17%85%DE%8B%26D%D0%7DTO%A6~%92%1F%C1%10%00%93n%BB%0Fg%7D%C9%E5%DA%24_%06%00%00%00%00IEND%AEB%60%82");
@@ -221,18 +234,18 @@ function fdm_fmb_ShowTab (elem)
   el2.setAttribute ("vspace", "0");
 
   var el3 = doc.createElementNS ("http://www.w3.org/1999/xhtml", "span");
-  el3.textContent = fdm_FDM.GetLngString ("dlbyfdm"); //"Download by FDM";
+  el3.textContent = freeDldMgr_FDM.GetLngString ("dlbyfdm"); //"Download by FDM";
   el3.setAttribute ("class", "");
   el3.setAttribute ("style", "");
 
-  fdm_fmb_objTabElement.appendChild (el2);  
-  fdm_fmb_objTabElement.appendChild (el3);  
+  freeDldMgr_fmb_objTabElement.appendChild (el2);  
+  freeDldMgr_fmb_objTabElement.appendChild (el3);  
 
-  doc.documentElement.appendChild (fdm_fmb_objTabElement);
-  fdm_fmb_positionTabByTimer ();
+  doc.documentElement.appendChild (freeDldMgr_fmb_objTabElement);
+  freeDldMgr_fmb_positionTabByTimer ();
 }
 
-function fdm_fmb_openMyFile (path)
+function freeDldMgr_fmb_openMyFile (path)
 {
   var em = Components.classes["@mozilla.org/extensions/manager;1"].
          getService(Components.interfaces.nsIExtensionManager);
@@ -240,7 +253,7 @@ function fdm_fmb_openMyFile (path)
   	getItemFile ("fdm_ffext@freedownloadmanager.org", path);
 }
 
-function fdm_fmb_generateDataURI (file) 
+function freeDldMgr_fmb_generateDataURI (file) 
 {
   var contentType = Components.classes["@mozilla.org/mime;1"]
                               .getService(Components.interfaces.nsIMIMEService)
@@ -256,34 +269,34 @@ function fdm_fmb_generateDataURI (file)
 }
 
 
-function fdm_fmb_positionTabByTimer ()
+function freeDldMgr_fmb_positionTabByTimer ()
 {
-  if (!fdm_fmb_objTabElement)
+  if (!freeDldMgr_fmb_objTabElement)
     return;
-  fdm_fmb_positionTab ();
-  if (fdm_fmb_objTabElement)
-    setTimeout ('fdm_fmb_positionTabByTimer();', 100);
+  freeDldMgr_fmb_positionTab ();
+  if (freeDldMgr_fmb_objTabElement)
+    setTimeout (function () {freeDldMgr_fmb_positionTabByTimer();}, 100);
 }
 
-function fdm_fmb_HideTab ()
+function freeDldMgr_fmb_HideTab ()
 {
-  if (!fdm_fmb_objTabElement)
+  if (!freeDldMgr_fmb_objTabElement)
     return;
-  var objtab = fdm_fmb_objTabElement;
-  fdm_fmb_objTabElement = null;
-  fdm_fmb_CurrentElement = null;
+  var objtab = freeDldMgr_fmb_objTabElement;
+  freeDldMgr_fmb_objTabElement = null;
+  freeDldMgr_fmb_CurrentElement = null;
   try {
     objtab.parentNode.removeChild (objtab);
   } catch (e) {}
 }
 
-function fdm_fmb_positionTab ()
+function freeDldMgr_fmb_positionTab ()
 {
-  var objRect = fdm_fmb_getElementPosition (fdm_fmb_CurrentElement); 
+  var objRect = freeDldMgr_fmb_getElementPosition (freeDldMgr_fmb_CurrentElement); 
   var className = "fdm_ffext_CLASSVISIBLETOP";
-  //var left = objRect.right - fdm_fmb_objTabElement.offsetWidth;
+  //var left = objRect.right - freeDldMgr_fmb_objTabElement.offsetWidth;
   var left = objRect.left;
-  var top = objRect.top - fdm_fmb_objTabElement.offsetHeight;
+  var top = objRect.top - freeDldMgr_fmb_objTabElement.offsetHeight;
   if (top < 0)
   {
     top = objRect.bottom;
@@ -291,27 +304,27 @@ function fdm_fmb_positionTab ()
   }
   /*var top = objRect.bottom;
   className = "fdm_ffext_CLASSVISIBLEBOTTOM";
-  //var wnd = fdm_fmb_CurrentElement.ownerDocument.defaultView;
+  //var wnd = freeDldMgr_fmb_CurrentElement.ownerDocument.defaultView;
   //var doc = wnd.document;
   var wnd = window;
   var doc = window.content.document;
   var wndH = doc.documentElement.clientHeight;
   if (doc.compatMode == "BackCompat")
     wndH = doc.documentElement.offsetHeight - wnd.scrollMaxY;
-  if (top + fdm_fmb_objTabElement.offsetHeight >= wndH)
+  if (top + freeDldMgr_fmb_objTabElement.offsetHeight >= wndH)
   {
-    top = objRect.top - fdm_fmb_objTabElement.offsetHeight;
+    top = objRect.top - freeDldMgr_fmb_objTabElement.offsetHeight;
     className = "fdm_ffext_CLASSVISIBLETOP";
   }*/
-  if (fdm_fmb_objTabElement.style.left != left + "px")
-    fdm_fmb_objTabElement.style.setProperty ("left", left + "px", "important");
-  if (fdm_fmb_objTabElement.style.top != top + "px")
-    fdm_fmb_objTabElement.style.setProperty ("top", top + "px", "important");
-  if (fdm_fmb_objTabElement.getAttribute ("class") != className)
-    fdm_fmb_objTabElement.setAttribute ("class", className);
+  if (freeDldMgr_fmb_objTabElement.style.left != left + "px")
+    freeDldMgr_fmb_objTabElement.style.setProperty ("left", left + "px", "important");
+  if (freeDldMgr_fmb_objTabElement.style.top != top + "px")
+    freeDldMgr_fmb_objTabElement.style.setProperty ("top", top + "px", "important");
+  if (freeDldMgr_fmb_objTabElement.getAttribute ("class") != className)
+    freeDldMgr_fmb_objTabElement.setAttribute ("class", className);
 }
 
-function fdm_fmb_intersectRect (rect, wnd)
+function freeDldMgr_fmb_intersectRect (rect, wnd)
 {
   var doc = wnd.document;
   var wndWidth = doc.documentElement.clientWidth;
@@ -324,7 +337,7 @@ function fdm_fmb_intersectRect (rect, wnd)
   rect.bottom = Math.min (rect.bottom, wndHeight);
 }
 
-function fdm_fmb_getElementPosition (elem)
+function freeDldMgr_fmb_getElementPosition (elem)
 {
   var rect = elem.getBoundingClientRect ();
   let wnd = elem.ownerDocument.defaultView;
@@ -338,7 +351,7 @@ function fdm_fmb_getElementPosition (elem)
     right: rect.right - offsets [2], bottom: rect.bottom - offsets [3]};
   while (true)
   {
-    fdm_fmb_intersectRect (rect, wnd);
+    freeDldMgr_fmb_intersectRect (rect, wnd);
     if (!wnd.frameElement)
       break;
     var frameElem = wnd.frameElement;
@@ -355,74 +368,74 @@ function fdm_fmb_getElementPosition (elem)
   return rect;
 }
 
-function fdm_fmb_isEnabledInStgs ()
+function freeDldMgr_fmb_isEnabledInStgs ()
 {
-  if (!fdm_fmb_rkStgs.hasValue ("ShowDownloadItBtn"))
+  if (!freeDldMgr_fmb_rkStgs.hasValue ("ShowDownloadItBtn"))
     return true;
-  return fdm_fmb_rkStgs.readIntValue ("ShowDownloadItBtn");
+  return freeDldMgr_fmb_rkStgs.readIntValue ("ShowDownloadItBtn");
 } 
 
-function fdm_fmb_setEnabledInStgs (bEn)
+function freeDldMgr_fmb_setEnabledInStgs (bEn)
 {
-  fdm_fmb_rkStgs.writeIntValue ("ShowDownloadItBtn", bEn); 
+  freeDldMgr_fmb_rkStgs.writeIntValue ("ShowDownloadItBtn", bEn); 
 }
 
-function fdm_fmb_isElemBtnPart (elem)
+function freeDldMgr_fmb_isElemBtnPart (elem)
 {
-  if (elem == fdm_fmb_objTabElement)
+  if (elem == freeDldMgr_fmb_objTabElement)
     return true;
   if (elem.parentNode)
-    return fdm_fmb_isElemBtnPart (elem.parentNode);
+    return freeDldMgr_fmb_isElemBtnPart (elem.parentNode);
 }
 
-function fdm_fmb_ShowButton (elemFlash)
+function freeDldMgr_fmb_ShowButton (elemFlash)
 {
-    fdm_fmb_ShowTab (elemFlash);
+    freeDldMgr_fmb_ShowTab (elemFlash);
 }
 
-function fdm_fmb_HideButton ()
+function freeDldMgr_fmb_HideButton ()
 {
-    fdm_fmb_HideTab ();
+    freeDldMgr_fmb_HideTab ();
 }
 
-function fdm_fmb_onMouseEvent_InElement (ev)
+function freeDldMgr_fmb_onMouseEvent_InElement (ev)
 {
   ev = ev || window.event;
   var elem = ev.target || ev.srcElement;
 
-  if (fdm_fmb_isElemBtnPart (elem))
+  if (freeDldMgr_fmb_isElemBtnPart (elem))
     return; 
 
   if (elem.tagName.toLowerCase () != "embed" && 
   	elem.tagName.toLowerCase() != "object" && 
   	elem.tagName.toLowerCase() != "video")
   {
-    fdm_fmb_HideButton ();
+    freeDldMgr_fmb_HideButton ();
     return;
   }
 
   if (!elem.parentNode)
   {
-    fdm_fmb_HideButton ();
+    freeDldMgr_fmb_HideButton ();
     return;
   }
 
-  if (fdm_fmb_isEnabledInStgs () && 
-  	fdm_fmb_isFlashObject (elem) && 
-  	fdm_fmb_isVideoFlash (elem))
-    fdm_fmb_ShowButton (elem);
+  if (freeDldMgr_fmb_isEnabledInStgs () && 
+  	freeDldMgr_fmb_isFlashObject (elem) && 
+  	freeDldMgr_fmb_isVideoFlash (elem))
+    freeDldMgr_fmb_ShowButton (elem);
 }
 
-function fdm_fmb_onMouseMove (ev)
+function freeDldMgr_fmb_onMouseMove (ev)
 {
-  fdm_fmb_onMouseEvent_InElement (ev);
+  freeDldMgr_fmb_onMouseEvent_InElement (ev);
 }
 
-function fdm_fmb_onMouseOver (ev)
+function freeDldMgr_fmb_onMouseOver (ev)
 {
-  fdm_fmb_onMouseEvent_InElement (ev);
+  freeDldMgr_fmb_onMouseEvent_InElement (ev);
 }
 
-function fdm_fmb_onMouseOut (ev)
+function freeDldMgr_fmb_onMouseOut (ev)
 {
 }

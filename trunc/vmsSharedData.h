@@ -12,11 +12,71 @@
 class vmsSharedData  
 {
 public:
-	LPVOID get_Data();
-	void Release();
-	BOOL Aquire (LPCSTR pszName, BOOL bOpenExisting = TRUE, DWORD dwSize = 0, DWORD dwDesiredAccess = FILE_MAP_ALL_ACCESS);
-	vmsSharedData (LPCSTR pszName = NULL, BOOL bOpenExisting = TRUE, DWORD dwSize = 0, DWORD dwDesiredAccess = FILE_MAP_ALL_ACCESS);
-	virtual ~vmsSharedData();
+	bool Aquire (LPCTSTR ptszName, bool bOpenExisting = true, DWORD dwSize = 0, DWORD dwDesiredAccess = FILE_MAP_ALL_ACCESS, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL)
+	{
+		Release ();
+
+		if (ptszName == NULL)
+			return false;
+
+		if (!bOpenExisting)
+		{
+			m_hFileMapping = CreateFileMapping (INVALID_HANDLE_VALUE,
+				pSecurityAttributes, PAGE_READWRITE, 0, dwSize, ptszName);
+		}
+		else
+		{
+			m_hFileMapping = OpenFileMapping (dwDesiredAccess, FALSE, ptszName);
+		}
+
+		if (!m_hFileMapping)
+			return false;
+
+		m_pViewOfFile = MapViewOfFile (m_hFileMapping, dwDesiredAccess,
+			0, 0, 0);
+
+		if (!m_pViewOfFile)
+			return false;
+
+		return true;
+	}
+
+	void Release()
+	{
+		if (m_hFileMapping)
+		{
+			if (m_pViewOfFile)
+				UnmapViewOfFile (m_pViewOfFile);
+			CloseHandle (m_hFileMapping);
+
+			m_hFileMapping = NULL;
+			m_pViewOfFile  = NULL;
+		}
+	}
+
+	LPVOID getData()
+	{
+		return m_pViewOfFile;
+	}
+
+	HANDLE getHandle () const
+	{
+		return m_hFileMapping;
+	}	
+	
+	vmsSharedData (LPCTSTR ptszName = NULL, bool bOpenExisting = true, DWORD dwSize = 0, DWORD dwDesiredAccess = FILE_MAP_ALL_ACCESS, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL)
+	{
+		m_hFileMapping = NULL;
+		m_pViewOfFile  = NULL;
+
+		if (ptszName)
+			Aquire (ptszName, bOpenExisting, dwSize, dwDesiredAccess, pSecurityAttributes);
+	}
+
+	virtual ~vmsSharedData()
+	{
+		Release ();
+	}
 
 protected:
 	HANDLE m_hFileMapping;
@@ -27,11 +87,12 @@ template <class T>
 class vmsSharedDataT : public vmsSharedData
 {
 public:
-	vmsSharedDataT (LPCSTR pszName = NULL, BOOL bOpenExisting = TRUE, DWORD dwSize = 0) : vmsSharedData (pszName, bOpenExisting, dwSize * sizeof (T)) {}
+	vmsSharedDataT (LPCTSTR ptszName = NULL, bool bOpenExisting = true, DWORD dwSize = 0, DWORD dwDesiredAccess = FILE_MAP_ALL_ACCESS, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL) : 
+	  vmsSharedData (ptszName, bOpenExisting, dwSize * sizeof (T), dwDesiredAccess, pSecurityAttributes) {}
 	virtual ~vmsSharedDataT() {};
 
-	operator T* () {return (T*) get_Data ();}
-	T& operator [] (int n) {return *(((T*)get_Data())+n);}
+	operator T* () {return (T*) getData ();}
+	T& operator [] (int n) {return *(((T*)getData())+n);}
 };
 
 #endif 

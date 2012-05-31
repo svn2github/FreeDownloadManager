@@ -19,7 +19,14 @@ _COM_SMARTPTR_TYPEDEF(IInternetProtocolEx, __uuidof(IInternetProtocolEx));
 _COM_SMARTPTR_TYPEDEF(IUri, __uuidof(IUri));
 
 #include <vector>
+#include <string>
 using namespace std;
+
+#if defined (_UNICODE) || defined (UNICODE)
+#define tstring std::wstring
+#else 
+#define tstring std::string
+#endif
 
 #include "vmsCriticalSection.h"
 
@@ -27,5 +34,5 @@ using namespace std;
 #define SCL_ENABLE
 #endif
 
-#include "vmsSourceCodeLogger.h"
+#include "../../Include.Add/vmsSourceCodeLogger.h"
 

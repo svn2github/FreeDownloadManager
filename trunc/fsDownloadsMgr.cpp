@@ -121,7 +121,7 @@ UINT fsDownloadsMgr::Add(vmsDownloadSmartPtr dld, BOOL bKeepIDAsIs, bool bPlaceT
 	
 	if (dld->pMgr->GetDownloadMgr () != NULL)
 	{
-		fsSiteInfo *site = _SitesMgr.FindSite2 (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszServerName, 
+		fsSiteInfo *site = _SitesMgr.FindSite (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszServerName, 
 			fsNPToSiteValidFor (dld->pMgr->GetDownloadMgr ()->GetDNP ()->enProtocol));
 		if (site)
 			dld->pMgr->GetDownloadMgr ()->GetDNP ()->dwFtpFlags = site->dwFtpFlags;
@@ -327,8 +327,10 @@ void fsDownloadsMgr::ProcessDownloads()
 	
 	
 	size_t i = 0;
+	_SitesMgr.LockList (true);
 	for (i = 0; i < (size_t)_SitesMgr.GetSiteCount (); i++)
 		_SitesMgr.GetSite (i)->cConnsNow = min (_SitesMgr.GetSite (i)->cMaxConns, cMaxCPS);
+	_SitesMgr.LockList (false);
 
 	vmsAUTOLOCKRW_READ (m_rwlDownloads);
 
@@ -351,7 +353,7 @@ void fsDownloadsMgr::ProcessDownloads()
 
 		if (cDlds && cConns)	
 		{	
-			fsSiteInfo* site = pMgr? _SitesMgr.FindSite2 (pszSiteName, fsNPToSiteValidFor (enNP)) : NULL;
+			fsSiteInfo* site = pMgr? _SitesMgr.FindSite (pszSiteName, fsNPToSiteValidFor (enNP)) : NULL;
 			if (site == NULL || site->cConnsNow)	
 			{
 				UINT cDldConns = 0;	
@@ -370,7 +372,7 @@ void fsDownloadsMgr::ProcessDownloads()
 							UINT cMirrConns = pMgr->GetDownloader ()->GetCreatingNowSectionCount (i);
 							fsDownload_NetworkProperties* mirrDNP = pMgr->GetDownloader ()->MirrorDNP (i);
 
-							fsSiteInfo* mirrSite = _SitesMgr.FindSite2 (mirrDNP->pszServerName, fsNPToSiteValidFor (mirrDNP->enProtocol));
+							fsSiteInfo* mirrSite = _SitesMgr.FindSite (mirrDNP->pszServerName, fsNPToSiteValidFor (mirrDNP->enProtocol));
 							assert (mirrSite != NULL);
 
 							if (mirrSite)
@@ -1025,13 +1027,16 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 
 void fsDownloadsMgr::RebuildServerList(BOOL bUpdateSiteList)
 {
+	vmsAUTOLOCKRW_READ (m_rwlDownloads);
+
+	vmsCriticalSectionAutoLock csalSites;
+	_SitesMgr.LockList (csalSites);
+
 	try {
 
 	int i = 0;
 	for (i = 0; i < _SitesMgr.GetSiteCount (); i++)
 		_SitesMgr.GetSite (i)->cConnsNow = 0;	
-
-	vmsAUTOLOCKRW_READ (m_rwlDownloads);
 
 	
 	for (i = m_vDownloads.size () - 1; i >= 0; i--)
@@ -1068,7 +1073,7 @@ void fsDownloadsMgr::RebuildServerList(BOOL bUpdateSiteList)
 			LPCSTR pszServer = dnp->pszServerName;
 			fsNetworkProtocol np = dnp->enProtocol;
 			
-			fsSiteInfo *site = _SitesMgr.FindSite2 (pszServer, fsNPToSiteValidFor (np));
+			fsSiteInfo *site = _SitesMgr.FindSite (pszServer, fsNPToSiteValidFor (np));
 
 			
 			int k = 0;
@@ -1176,6 +1181,9 @@ UINT fsDownloadsMgr::GetAmountConnections()
 {
 	UINT nConns = 0;
 
+	vmsCriticalSectionAutoLock csal;
+	_SitesMgr.LockList (csal);
+
 	try {
 
 	for (int i = _SitesMgr.GetSiteCount () - 1; i >= 0; i--)
@@ -1192,7 +1200,7 @@ void fsDownloadsMgr::OnSectionStop(vmsDownloadSmartPtr dld)
 
 	ASSERT (dld->pMgr->GetDownloadMgr () != NULL);
 
-	fsSiteInfo* site = _SitesMgr.FindSite2 (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszServerName, 
+	fsSiteInfo* site = _SitesMgr.FindSite (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszServerName, 
 		fsNPToSiteValidFor (dld->pMgr->GetDownloadMgr ()->GetDNP ()->enProtocol));
 
 	if (site)
@@ -1371,7 +1379,7 @@ void fsDownloadsMgr::SaveSettings()
 
 BOOL fsDownloadsMgr::IsServerFilled(LPCSTR pszServer, DWORD dwReqProtocols)
 {
-	fsSiteInfo *site = _SitesMgr.FindSite2 (pszServer, dwReqProtocols);
+	fsSiteInfo *site = _SitesMgr.FindSite (pszServer, dwReqProtocols);
 
 	if (site == NULL)
 		return FALSE;

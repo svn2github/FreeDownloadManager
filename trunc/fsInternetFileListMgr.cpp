@@ -192,7 +192,7 @@ _lConnect:
 				{
 					
 
-					fsSiteInfo *site = _SitesMgr.FindSite2 (url.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (url.GetInternetScheme ())));
+					fsSiteInfo *site = _SitesMgr.FindSite (url.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (url.GetInternetScheme ())));
 					if (site && site->strUser)
 					{
 						CString strPass = site->strPassword ? site->strPassword : "";

@@ -24,11 +24,15 @@ fsSitesMgr::~fsSitesMgr()
 
 }
 
-int fsSitesMgr::AddSite(fsSiteInfoPtr site)
+void fsSitesMgr::AddSite(fsSiteInfoPtr site)
 {
+	assert (site != NULL);
+	if (!site)
+		return;
+	vmsAUTOLOCKSECTION (m_csSites);
 	m_vSites.push_back (site);
-	Event (SM_SITEADDED, m_vSites [m_vSites.size () - 1]);
-	return m_vSites.size () - 1;
+	vmsAUTOLOCKSECTION_UNLOCK (m_csSites);
+	Event (SM_SITEADDED, site);
 }
 
 fsSiteInfo* fsSitesMgr::GetSite(int iIndex)
@@ -36,49 +40,43 @@ fsSiteInfo* fsSitesMgr::GetSite(int iIndex)
 	return m_vSites [iIndex];
 }
 
-int fsSitesMgr::FindSite(LPCSTR pszName, DWORD dwValidFor, BOOL bAllReq)
+fsSiteInfo* fsSitesMgr::FindSite(LPCSTR pszSite, DWORD dwValidFor, BOOL bAllReq)
 {
-	for (int i = 0; i < m_vSites.size (); i++)
+	vmsAUTOLOCKSECTION (m_csSites);
+
+	for (size_t i = 0; i < m_vSites.size (); i++)
 	{
 		fsSiteInfo *site = m_vSites [i];
-		if (fsIsServersEqual (site->strName, pszName, site->dwValidFor & SITE_VALIDFOR_SUBDOMAINS))
+		if (fsIsServersEqual (site->strName, pszSite, site->dwValidFor & SITE_VALIDFOR_SUBDOMAINS))
 		{
 			if (bAllReq)
 			{
 				
 				if ((site->dwValidFor & dwValidFor) == dwValidFor)
-					return i;
+					return m_vSites [i];
 			}
 			else
 			{
 				
 				
 				if (site->dwValidFor & dwValidFor)
-					return i;
+					return m_vSites [i];
 			}
 		}
 	}
 
-	return -1;
-}
-
-fsSiteInfo* fsSitesMgr::FindSite2(LPCSTR pszSite, DWORD dwValidFor, BOOL bAllReq)
-{
-	int iIndex = FindSite (pszSite, dwValidFor, bAllReq);
-	
-	if (iIndex == -1)
-		return NULL;
-
-	return m_vSites [iIndex];
+	return NULL;
 }
 
 void fsSitesMgr::DeleteSite(fsSiteInfo *pSite)
 {
-	int iIndex = FindSite (pSite->strName, pSite->dwValidFor);
-	if (iIndex == -1)
+	vmsAUTOLOCKSECTION (m_csSites);
+	std::vector <fsSiteInfoPtr>::iterator it;
+	it = std::find (m_vSites.begin (), m_vSites.end (), pSite);
+	if (it == m_vSites.end ())
 		return;
-	Event (SM_SITEDELETED, m_vSites [iIndex]);
-	m_vSites.erase (m_vSites.begin () + iIndex);
+	Event (SM_SITEDELETED, pSite);
+	m_vSites.erase (it);
 }
 
 void fsSitesMgr::DeleteAllTempSites()
@@ -169,6 +167,8 @@ BOOL fsSitesMgr::SaveToFile(HANDLE hFile)
 
 int fsSitesMgr::GetTempSiteCount()
 {
+	vmsAUTOLOCKSECTION (m_csSites);
+
 	int c = 0;
 
 	for (int i = m_vSites.size () - 1; i >= 0; i--)
@@ -180,6 +180,8 @@ int fsSitesMgr::GetTempSiteCount()
 
 BOOL fsSitesMgr::LoadFromFile(HANDLE hFile)
 {
+	vmsAUTOLOCKSECTION (m_csSites);
+
 	int cSites;
 
 	DWORD dw;
@@ -286,6 +288,7 @@ void fsSitesMgr::SiteUpdated(fsSiteInfo *pSite)
 
 void fsSitesMgr::DeleteAllPasswords()
 {
+	vmsAUTOLOCKSECTION (m_csSites);
 	for (int i = m_vSites.size () - 1; i >= 0; i--)
 	{
 		fsSiteInfo* site = m_vSites [i];
@@ -297,9 +300,9 @@ void fsSitesMgr::DeleteAllPasswords()
 
 void fsSitesMgr::CheckGroups()
 {
-	std::vector <fsSiteInfoPtr> v;
-
 	vmsAUTOLOCKSECTION (m_csSites);
+
+	std::vector <fsSiteInfoPtr> v;
 
 	for (int i = m_vSites.size () - 1; i >= 0; i--)
 	{
@@ -315,4 +318,17 @@ void fsSitesMgr::CheckGroups()
 
 	for (size_t j = 0; j < v.size (); j++)
 		SiteUpdated (v [j]);
+}
+
+void fsSitesMgr::LockList(bool bLock)
+{
+	if (bLock)
+		EnterCriticalSection (&m_csSites);
+	else
+		LeaveCriticalSection (&m_csSites);
+}
+
+void fsSitesMgr::LockList(vmsCriticalSectionAutoLock& csal)
+{
+	csal.Attach (&m_csSites);
 }

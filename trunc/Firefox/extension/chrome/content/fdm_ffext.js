@@ -1,16 +1,16 @@
-var fdm_FDM = Components.classes["@freedownloadmanager.org/FDMForFirefox;1"].createInstance ();
-fdm_FDM = fdm_FDM.QueryInterface (Components.interfaces.IFDMForFirefox);
+var freeDldMgr_FDM = Components.classes["@freedownloadmanager.org/FDMForFirefox;1"].createInstance ();
+freeDldMgr_FDM = freeDldMgr_FDM.QueryInterface (Components.interfaces.IFDMForFirefox);
 
-var fdm_hoverElement = null;
-var fdm_lastClickCaptureTime = 0;
+var freeDldMgr_hoverElement = null;
+var freeDldMgr_lastClickCaptureTime = 0;
 
-function fdm_gatherCookieForHost (_host, _cookieWeHave)
+function freeDldMgr_gatherCookieForHost (_host, _cookieWeHave)
 {
-   var fdm_cookieManager =
+   var freeDldMgr_cookieManager =
       Components.classes["@mozilla.org/cookiemanager;1"].getService(Components.interfaces.nsICookieManager);
    var _cookie = _cookieWeHave;
 
-   for (var iter = fdm_cookieManager.enumerator; iter.hasMoreElements();) 
+   for (var iter = freeDldMgr_cookieManager.enumerator; iter.hasMoreElements();) 
    {
       if ((objCookie = iter.getNext()) instanceof Components.interfaces.nsICookie) 
       {
@@ -34,13 +34,13 @@ function fdm_gatherCookieForHost (_host, _cookieWeHave)
 }
 
 
-function fdm_dlURL (strUrl)
+function freeDldMgr_dlURL (strUrl)
 {
   var url = Components.classes["@freedownloadmanager.org/FDMUrl;1"].createInstance ();
   url = url.QueryInterface (Components.interfaces.IFDMUrl);
   url.Url = strUrl;
   url.Referer = document.commandDispatcher.focusedWindow.document.URL;
-  url.Cookies = fdm_gatherCookieForHost (document.commandDispatcher.focusedWindow.document.location.hostname, document.commandDispatcher.focusedWindow.document.cookie);
+  url.Cookies = freeDldMgr_gatherCookieForHost (document.commandDispatcher.focusedWindow.document.location.hostname, document.commandDispatcher.focusedWindow.document.cookie);
   url.UserAgent = window.navigator.userAgent;
 
   var urlRcvr = Components.classes["@freedownloadmanager.org/FDMUrlReceiver;1"].createInstance ();
@@ -49,43 +49,43 @@ function fdm_dlURL (strUrl)
   urlRcvr.ShowAddDownloadDialog ();
 }
 
-function fdm_dlHoverElem()
+function freeDldMgr_dlHoverElem()
 {
-  var strUrl = fdm_getURL (fdm_hoverElement);
+  var strUrl = freeDldMgr_getURL (freeDldMgr_hoverElement);
   if (strUrl == null)
     return false;
-  fdm_dlURL (strUrl);
+  freeDldMgr_dlURL (strUrl);
   return true;
 }
 
 window.addEventListener ("mousemove", function(ev)
 {
-  fdm_fmb_onMouseMove (ev);
+  freeDldMgr_fmb_onMouseMove (ev);
 }, true);
 
 window.addEventListener ("mouseout", function(ev) 
 {
-  fdm_fmb_onMouseOut (ev); 
+  freeDldMgr_fmb_onMouseOut (ev); 
 }, true);
 
 // remember the current hover element here
 window.addEventListener("mouseover", function(ev) 
 {
-      fdm_hoverElement = ev.target;
-      fdm_fmb_onMouseOver (ev);
+      freeDldMgr_hoverElement = ev.target;
+      freeDldMgr_fmb_onMouseOver (ev);
 
 }, false);
 
 window.addEventListener("mouseup", function(ev) 
 {
   if(ev.altKey && !(ev.ctrlKey || ev.metaKey || ev.shiftKey) && 
-   	fdm_FDM.IsALTShouldBePressed()) 
+   	freeDldMgr_FDM.IsALTShouldBePressed()) 
   {
-     if(fdm_dlHoverElem()) 
+     if(freeDldMgr_dlHoverElem()) 
      {
        ev.preventDefault();
        ev.stopPropagation();
-       fdm_lastClickCaptureTime = new Date().getTime();
+       freeDldMgr_lastClickCaptureTime = new Date().getTime();
        return;
      }
   }
@@ -94,7 +94,7 @@ window.addEventListener("mouseup", function(ev)
 
 window.addEventListener("click",function(ev) 
 {
-      if(ev.altKey && new Date().getTime()-fdm_lastClickCaptureTime < 100) 
+      if(ev.altKey && new Date().getTime()-freeDldMgr_lastClickCaptureTime < 100) 
       {
         // catch click on a link
         ev.preventDefault();
@@ -103,16 +103,16 @@ window.addEventListener("click",function(ev)
 
 }, true);
 
-var fdm_LastPost = null;
+var freeDldMgr_LastPost = null;
 
-var fdm_Observer = { 
+var freeDldMgr_Observer = { 
  observe: function (channel, topic, data) 
  {
    if(channel instanceof Components.interfaces.nsIUploadChannel) {
-      var fdm_Ext = Components.classes["@freedownloadmanager.org/FDMFirefoxExtension;1"].createInstance ();
-      fdm_Ext = fdm_Ext.QueryInterface (Components.interfaces.IFDMFirefoxExtension);
-      fdm_LastPost = channel;
-      fdm_Ext.LastPost = fdm_LastPost;
+      var freeDldMgr_Ext = Components.classes["@freedownloadmanager.org/FDMFirefoxExtension;1"].createInstance ();
+      freeDldMgr_Ext = freeDldMgr_Ext.QueryInterface (Components.interfaces.IFDMFirefoxExtension);
+      freeDldMgr_LastPost = channel;
+      freeDldMgr_Ext.LastPost = freeDldMgr_LastPost;
    }
  },
 
@@ -125,53 +125,60 @@ var fdm_Observer = {
 };
 
 
-const fdm_FFObsrv = Components.classes['@mozilla.org/observer-service;1'].getService(
+const freeDldMgr_FFObsrv = Components.classes['@mozilla.org/observer-service;1'].getService(
     Components.interfaces.nsIObserverService);
-fdm_FFObsrv.addObserver (fdm_Observer, "http-on-modify-request", false);
+freeDldMgr_FFObsrv.addObserver (freeDldMgr_Observer, "http-on-modify-request", false);
+window.addEventListener("unload",  freeDldMgr_ffext_unload, false);
 
-window.addEventListener("load", fdm_initOverlay, false);
+window.addEventListener("load", freeDldMgr_initOverlay, false);
 
-function fdm_initOverlay ()
+function freeDldMgr_ffext_unload ()
 {
-  var menu = document.getElementById("contentAreaContextMenu");
-  menu.addEventListener("popupshowing", fdm_contextPopupShowing, false);
+	freeDldMgr_FFObsrv.removeObserver (freeDldMgr_Observer, "http-on-modify-request", false);
+	window.removeEventListener("unload",  freeDldMgr_ffext_unload);
 }
 
-function fdm_checkHasVideo ()
+function freeDldMgr_initOverlay ()
+{
+  var menu = document.getElementById("contentAreaContextMenu");
+  menu.addEventListener("popupshowing", freeDldMgr_contextPopupShowing, false);
+}
+
+function freeDldMgr_checkHasVideo ()
 {
   return true;
   /*if (document.commandDispatcher.focusedWindow.document.domain == null)
   	return false;
-  return fdm_FDM.IsDomainSupportedForVideoDownloads (document.commandDispatcher.focusedWindow.document.domain);*/
+  return freeDldMgr_FDM.IsDomainSupportedForVideoDownloads (document.commandDispatcher.focusedWindow.document.domain);*/
 }
 
 // handler. will be called by browser
-function fdm_contextPopupShowing ()
+function freeDldMgr_contextPopupShowing ()
 {
   var menuitem = document.getElementById("fdm-context-item-dllink");
-  menuitem.label  = fdm_FDM.GetLngString ("dllink");
-  menuitem.hidden = fdm_FDM.IsContextMenuItemShouldBeHidden ("dllink") || 
-  	!fdm_checkURL (fdm_getURL (document.popupNode));
+  menuitem.label  = freeDldMgr_FDM.GetLngString ("dllink");
+  menuitem.hidden = freeDldMgr_FDM.IsContextMenuItemShouldBeHidden ("dllink") || 
+  	!freeDldMgr_checkURL (freeDldMgr_getURL (document.popupNode));
 
   menuitem = document.getElementById("fdm-context-item-dlall");
-  menuitem.label  = fdm_FDM.GetLngString ("dlall");
-  menuitem.hidden = fdm_FDM.IsContextMenuItemShouldBeHidden ("dlall");
+  menuitem.label  = freeDldMgr_FDM.GetLngString ("dlall");
+  menuitem.hidden = freeDldMgr_FDM.IsContextMenuItemShouldBeHidden ("dlall");
 
   menuitem = document.getElementById("fdm-context-item-dlselected");
-  menuitem.label  = fdm_FDM.GetLngString ("dlselected");
-  menuitem.hidden = fdm_FDM.IsContextMenuItemShouldBeHidden ("dlselected") ||
+  menuitem.label  = freeDldMgr_FDM.GetLngString ("dlselected");
+  menuitem.hidden = freeDldMgr_FDM.IsContextMenuItemShouldBeHidden ("dlselected") ||
   	document.commandDispatcher.focusedWindow.getSelection().isCollapsed;
 
   menuitem = document.getElementById("fdm-context-item-dlvideo");
-  menuitem.label  = fdm_FDM.GetLngString ("dlvideo");
-  menuitem.hidden = fdm_FDM.IsContextMenuItemShouldBeHidden ("dlvideo") ||
-  	fdm_checkHasVideo () == false;
+  menuitem.label  = freeDldMgr_FDM.GetLngString ("dlvideo");
+  menuitem.hidden = freeDldMgr_FDM.IsContextMenuItemShouldBeHidden ("dlvideo") ||
+  	freeDldMgr_checkHasVideo () == false;
 
   menuitem = document.getElementById("fdm-context-item-separator");
-  menuitem.hidden = fdm_FDM.IsContextMenuItemShouldBeHidden ("separator1");
+  menuitem.hidden = freeDldMgr_FDM.IsContextMenuItemShouldBeHidden ("separator1");
 }
 
-function fdm_getURL (node)
+function freeDldMgr_getURL (node)
 {
   if (node instanceof HTMLImageElement &&
 	  	!((node.parentNode instanceof HTMLAnchorElement) || (node.parentNode instanceof HTMLAreaElement)))
@@ -180,29 +187,29 @@ function fdm_getURL (node)
   if ((node instanceof HTMLAnchorElement) || (node instanceof HTMLAreaElement))
   	return node.href;
 
-  return node.parentNode ? fdm_getURL (node.parentNode) : null;
+  return node.parentNode ? freeDldMgr_getURL (node.parentNode) : null;
 }
 
-function fdm_checkURL (url)
+function freeDldMgr_checkURL (url)
 {
    return url ? true : false;
 }
 
-function fdm_dllink ()
+function freeDldMgr_dllink ()
 {
-  fdm_dlURL (fdm_getURL (document.popupNode));
+  freeDldMgr_dlURL (freeDldMgr_getURL (document.popupNode));
 }
 
-function fdm_dlvideo ()
+function freeDldMgr_dlvideo ()
 {
-  /*fdm_FDM.ProcessVideoDocument (document.commandDispatcher.focusedWindow.document.domain, 
+  /*freeDldMgr_FDM.ProcessVideoDocument (document.commandDispatcher.focusedWindow.document.domain, 
   	"", document.commandDispatcher.focusedWindow.document.documentElement.innerHTML);*/
 
-  fdm_FDM.CreateVideoDownloadFromUrl (window.content.document.URL);
+  freeDldMgr_FDM.CreateVideoDownloadFromUrl (window.content.document.URL);
 }
 
 // add urls of all or selected only elements of current web page to fdm
-function fdm_gatherElements (url, urlListRcvr, elements, bSelectedOnly)
+function freeDldMgr_gatherElements (url, urlListRcvr, elements, bSelectedOnly)
 {
   const selection = document.commandDispatcher.focusedWindow.getSelection();
   if (bSelectedOnly && selection.isCollapsed)
@@ -212,8 +219,8 @@ function fdm_gatherElements (url, urlListRcvr, elements, bSelectedOnly)
     const elem = elements.item (i);
     if (bSelectedOnly == false || selection.containsNode (elem, true))
     {
-        var strUrl = fdm_getURL (elem);;
-        if (fdm_checkURL (strUrl))
+        var strUrl = freeDldMgr_getURL (elem);;
+        if (freeDldMgr_checkURL (strUrl))
         {
 	  url.Url = strUrl;
 	  urlListRcvr.AddUrl (url);
@@ -222,7 +229,7 @@ function fdm_gatherElements (url, urlListRcvr, elements, bSelectedOnly)
   }
 }
 
-function fdm_gatherAllElements (bSelectedOnly, cookie)
+function freeDldMgr_gatherAllElements (bSelectedOnly, cookie)
 {
   var url = Components.classes["@freedownloadmanager.org/FDMUrl;1"].createInstance ();
   url = url.QueryInterface (Components.interfaces.IFDMUrl);
@@ -232,23 +239,23 @@ function fdm_gatherAllElements (bSelectedOnly, cookie)
   var urlListRcvr = Components.classes["@freedownloadmanager.org/FDMUrlListReceiver;1"].createInstance ();
   urlListRcvr = urlListRcvr.QueryInterface (Components.interfaces.IFDMUrlListReceiver);
 
-  fdm_gatherElements (url, urlListRcvr, 
+  freeDldMgr_gatherElements (url, urlListRcvr, 
       document.commandDispatcher.focusedWindow.document.links, bSelectedOnly);
 
-  fdm_gatherElements (url, urlListRcvr, 
+  freeDldMgr_gatherElements (url, urlListRcvr, 
       document.commandDispatcher.focusedWindow.document.images, bSelectedOnly);
 
   urlListRcvr.ShowAddUrlListDialog ();
 }
 
-function fdm_dlall ()
+function freeDldMgr_dlall ()
 {
-  fdm_gatherAllElements (false, fdm_gatherCookieForHost (document.commandDispatcher.focusedWindow.document.location.hostname, document.commandDispatcher.focusedWindow.document.cookie));
+  freeDldMgr_gatherAllElements (false, freeDldMgr_gatherCookieForHost (document.commandDispatcher.focusedWindow.document.location.hostname, document.commandDispatcher.focusedWindow.document.cookie));
 }
 
-function fdm_dlselected ()
+function freeDldMgr_dlselected ()
 {
-  fdm_gatherAllElements (true, fdm_gatherCookieForHost (document.commandDispatcher.focusedWindow.document.location.hostname, document.commandDispatcher.focusedWindow.document.cookie));
+  freeDldMgr_gatherAllElements (true, freeDldMgr_gatherCookieForHost (document.commandDispatcher.focusedWindow.document.location.hostname, document.commandDispatcher.focusedWindow.document.cookie));
 }
 
 Components.classes["@mozilla.org/observer-service;1"]
@@ -261,7 +268,7 @@ Components.classes["@mozilla.org/observer-service;1"]
      try {
       subj.QueryInterface (Components.interfaces.nsIHttpChannel);
       if (subj.URI.spec != subj.originalURI.spec)
-        fdm_FDM.OnHttpRedirect (subj.URI.spec, subj.originalURI.spec);
+        freeDldMgr_FDM.OnHttpRedirect (subj.URI.spec, subj.originalURI.spec);
     }catch (err){}
    }
  }, "http-on-examine-response", false);

@@ -1,70 +1,87 @@
-var fdm_CacheMon = Components.classes["@freedownloadmanager.org/FDMFfCacheMonitor;1"].createInstance ();
-fdm_CacheMon.QueryInterface (Components.interfaces.IFDMFfCacheMonitor);
+var freeDldMgr_CacheMon = Components.classes["@freedownloadmanager.org/FDMFfCacheMonitor;1"].createInstance ();
+freeDldMgr_CacheMon.QueryInterface (Components.interfaces.IFDMFfCacheMonitor);
 
-var fdm_FDM1 = Components.classes["@freedownloadmanager.org/FDMForFirefox;1"].createInstance ();
-fdm_FDM1.QueryInterface (Components.interfaces.IFDMForFirefox);
+var freeDldMgr_FDM1 = Components.classes["@freedownloadmanager.org/FDMForFirefox;1"].createInstance ();
+freeDldMgr_FDM1.QueryInterface (Components.interfaces.IFDMForFirefox);
 
 
-function fdm_TracingListener() {
+function freeDldMgr_TracingListener() {
 
 }
 
-fdm_TracingListener.prototype =
+freeDldMgr_TracingListener.prototype =
 {
     originalListener: null,
     httpDlgUID : 0,
+    bJustNotify : false,
+    Url : "",
+    bDontCallOriginalListener : false,
 
     onStartRequest: function(request, context) {
-        this.originalListener.onStartRequest(request, context);
+      try{
+       	this.originalListener.onStartRequest(request, context);
+      }catch(e){this.bDontCallOriginalListener = true;}
     },
 
     onDataAvailable: function(request, context, inputStream, offset, count)
     {
-        //fix for firebug error
-                if (typeof Cc == "undefined") {
-                var Cc = Components.classes;
-                }
-                if (typeof Ci == "undefined") {
-        var Ci = Components.interfaces;
-                }
-                if (typeof CCIN == "undefined") {
-                function CCIN(cName, ifaceName){
-                return Cc[cName].createInstance(Ci[ifaceName]);
-                }
-                }
-                if (typeof CCSV == "undefined") {
+    	if (!this.bJustNotify)
+    	{
+        	//fix for firebug error
+            if (typeof Cc == "undefined") {
+              	var Cc = Components.classes;
+            }
+            if (typeof Ci == "undefined") {
+        		var Ci = Components.interfaces;
+            }
+            if (typeof CCIN == "undefined") {
+               	function CCIN(cName, ifaceName){
+		          return Cc[cName].createInstance(Ci[ifaceName]);
+				}
+            }
+            if (typeof CCSV == "undefined") {
                 function CCSV(cName, ifaceName){
-                if (Cc[cName])
+					if (Cc[cName])
                         // if fbs fails to load, the error can be _CC[cName] has no properties
                         return Cc[cName].getService(Ci[ifaceName]);
-                else
+					else
                         dumpError("CCSV fails for cName:" + cName);
-                }
-                }
+				}
+            }
 
-        var binaryInputStream = CCIN("@mozilla.org/binaryinputstream;1",
+			var binaryInputStream = CCIN("@mozilla.org/binaryinputstream;1",
                 "nsIBinaryInputStream");
-        var storageStream = CCIN("@mozilla.org/storagestream;1", "nsIStorageStream");
-        var binaryOutputStream = CCIN("@mozilla.org/binaryoutputstream;1","nsIBinaryOutputStream");
+			var storageStream = CCIN("@mozilla.org/storagestream;1", "nsIStorageStream");
+			var binaryOutputStream = CCIN("@mozilla.org/binaryoutputstream;1","nsIBinaryOutputStream");
 
-        binaryInputStream.setInputStream(inputStream);
-        storageStream.init(8192, count, null);
-        binaryOutputStream.setOutputStream(storageStream.getOutputStream(0));
+			binaryInputStream.setInputStream(inputStream);
+			storageStream.init(8192, count, null);
+			binaryOutputStream.setOutputStream(storageStream.getOutputStream(0));
 
-        // Copy received data as they come.
-        var data = binaryInputStream.readByteArray (count);
+			// Copy received data as they come.
+			var data = binaryInputStream.readByteArray (count);
         
-	fdm_CacheMon.OnDataReceived (this.httpDlgUID, count, data);
+			freeDldMgr_CacheMon.OnDataReceived (this.httpDlgUID, count, data);
 
-        binaryOutputStream.writeByteArray(data, count);
+			binaryOutputStream.writeByteArray(data, count);
 
-        this.originalListener.onDataAvailable (request, context,
-            storageStream.newInputStream(0), offset, count);
+			this.originalListener.onDataAvailable (request, context,
+				storageStream.newInputStream(0), offset, count);
+		}
+		else // bJustNotify is true
+		{
+			try {
+			  freeDldMgr_FDM1.onHttpActivity (this.Url);
+			  if (!this.bDontCallOriginalListener)
+			    this.originalListener.onDataAvailable (request, context, inputStream, offset, count);
+			}catch(e){this.bDontCallOriginalListener = true;}
+		}
     },
 
     onStopRequest: function(request, context, statusCode)
     {
-        fdm_CacheMon.OnDialogClosed (this.httpDlgUID);
+        if (!this.bJustNotify)
+	  freeDldMgr_CacheMon.OnDialogClosed (this.httpDlgUID);
         this.originalListener.onStopRequest(request, context, statusCode);
     },
 
@@ -77,8 +94,8 @@ fdm_TracingListener.prototype =
     }
 };
 
-function fdm_httpHeaders () {}
-fdm_httpHeaders.prototype =
+function freeDldMgr_httpHeaders () {}
+freeDldMgr_httpHeaders.prototype =
 {
     m_Headers       : "",
 
@@ -94,27 +111,27 @@ fdm_httpHeaders.prototype =
     }
 };
 
-function fdm_ExtractUrlFromHttpChannel (channel)
+function freeDldMgr_ExtractUrlFromHttpChannel (channel)
 {
   return channel.URI.prePath + channel.URI.path;
 }
 
-function fdm_ExtractHttpHeadersFromHttpChannel (channel)
+function freeDldMgr_ExtractHttpHeadersFromHttpChannel (channel)
 {
   var reqH = channel.requestMethod + " " + channel.URI.path + " HTTP/1.1" + "\r\n";
-  var hdrs = new fdm_httpHeaders ();
+  var hdrs = new freeDldMgr_httpHeaders ();
   channel.visitRequestHeaders (hdrs);
   reqH += hdrs.m_Headers;
   delete hdrs;
   var respH = "HTTP/1.0 " + channel.responseStatus + " " + channel.responseStatusText + "\r\n";
-  hdrs = new fdm_httpHeaders;
+  hdrs = new freeDldMgr_httpHeaders;
   channel.visitResponseHeaders (hdrs);
   respH += hdrs.m_Headers;
   delete hdrs;
   return {reqH : reqH, respH : respH};
 }
 
-function fdm_findChannelWindow (aChannel)
+function freeDldMgr_findChannelWindow (aChannel)
 {
   try {
    var notificationCallbacks = aChannel.notificationCallbacks ? 
@@ -128,28 +145,35 @@ function fdm_findChannelWindow (aChannel)
   catch (e) {return null;}
 }
 
-var fdm_brCacheListener = { 
+var freeDldMgr_brCacheListener = { 
  observe: function (subject, topic, data) {
    if (false == (subject instanceof Components.interfaces.nsIHttpChannel))
      return;
    subject.QueryInterface(Components.interfaces.nsIHttpChannel);
-   var url = fdm_ExtractUrlFromHttpChannel (subject);
+   var url = freeDldMgr_ExtractUrlFromHttpChannel (subject);
 
    if (topic == "http-on-modify-request")
    {
-     var wndSrc = fdm_findChannelWindow (subject);
+     freeDldMgr_FDM1.onHttpActivity (url);
+     var wndSrc = freeDldMgr_findChannelWindow (subject);
      if (wndSrc)
      {
        wndSrc = wndSrc.top;
        if (wndSrc)
-         fdm_FDM1.OnNewHttpRequest (url, wndSrc.location.href);
+         freeDldMgr_FDM1.OnNewHttpRequest (url, wndSrc.location.href);
      }
      return;
    }
+
+   var newListener = new freeDldMgr_TracingListener();
+   newListener.Url = url;
+   newListener.bJustNotify = topic != "http-on-examine-cached-response";
+   if (newListener.bJustNotify)
+     freeDldMgr_FDM1.onHttpActivity (url);
    
-   var hdrs = fdm_ExtractHttpHeadersFromHttpChannel (subject);
-   var newListener = new fdm_TracingListener();
-   newListener.httpDlgUID = fdm_CacheMon.OnNewHttpDialog (url, hdrs.reqH, hdrs.respH);
+   var hdrs = freeDldMgr_ExtractHttpHeadersFromHttpChannel (subject);
+   if (!newListener.bJustNotify)
+     newListener.httpDlgUID = freeDldMgr_CacheMon.OnNewHttpDialog (url, hdrs.reqH, hdrs.respH);
    subject.QueryInterface(Components.interfaces.nsITraceableChannel);
    newListener.originalListener = subject.setNewListener(newListener);
  },
@@ -161,12 +185,26 @@ var fdm_brCacheListener = {
  }
 };
 
-function fdm_brCacheRegisterObserver ()
+function freeDldMgr_brCacheRegisterObserver ()
 {
   var observerService = Components.classes["@mozilla.org/observer-service;1"]
               .getService(Components.interfaces.nsIObserverService);
-  observerService.addObserver(fdm_brCacheListener, "http-on-modify-request", false);
-  observerService.addObserver(fdm_brCacheListener, "http-on-examine-cached-response", false);
+  observerService.addObserver(freeDldMgr_brCacheListener, "http-on-modify-request", false);
+  observerService.addObserver(freeDldMgr_brCacheListener, "http-on-examine-response", false);
+  observerService.addObserver(freeDldMgr_brCacheListener, "http-on-examine-cached-response", false);
+  //observerService.addObserver(freeDldMgr_brCacheListener, "http-on-examine-merged-response", false);
+  window.addEventListener("unload",  freeDldMgr_brCache_unload, false);
 }
 
-fdm_brCacheRegisterObserver ();
+freeDldMgr_brCacheRegisterObserver ();
+
+
+function freeDldMgr_brCache_unload (ev)
+{
+	var observerService = Components.classes["@mozilla.org/observer-service;1"]
+              .getService(Components.interfaces.nsIObserverService);
+	observerService.removeObserver(freeDldMgr_brCacheListener, "http-on-modify-request");
+	observerService.removeObserver(freeDldMgr_brCacheListener, "http-on-examine-response");
+	observerService.removeObserver(freeDldMgr_brCacheListener, "http-on-examine-cached-response");
+	window.removeEventListener("unload",  freeDldMgr_brCache_unload);
+}

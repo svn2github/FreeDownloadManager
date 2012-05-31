@@ -113,15 +113,11 @@ public:
 	
 	
 	
-	fsSiteInfo* FindSite2 (LPCSTR pszSite, DWORD dwValidFor, BOOL bAllReq = TRUE);
-	
-	
-	int FindSite (LPCSTR pszName, DWORD dwValidFor, BOOL bAllReq = TRUE);
+	fsSiteInfo* FindSite (LPCSTR pszSite, DWORD dwValidFor, BOOL bAllReq = TRUE);
 	
 	fsSiteInfo* GetSite (int iIndex);
 	
-	
-	int AddSite (fsSiteInfoPtr site);
+	void AddSite (fsSiteInfoPtr site);
 
 	fsSitesMgr();
 	virtual ~fsSitesMgr();
@@ -132,6 +128,9 @@ protected:
 	LPVOID m_lpEventsParam;
 	std::vector <fsSiteInfoPtr> m_vSites;	
 	vmsCriticalSection m_csSites;
+public:
+	void LockList(bool bLock);
+	void LockList(vmsCriticalSectionAutoLock& csal);
 };
 
 #endif 

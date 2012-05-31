@@ -566,7 +566,7 @@ void CDownloads_Tasks::UpdateMenu(CMenu *pPopup)
 				bHasBtDlds = true;
 
 				if ((dld->pMgr->GetBtDownloadMgr ()->get_Flags () & BTDF_DISABLE_SEEDING) == 0 ||
-						dld->pMgr->GetBtDownloadMgr ()->get_State () == BTDSE_SEEDING)
+						dld->pMgr->GetBtDownloadMgr ()->isSeeding ())
 					bHasEnableSeedingDlds = true;
 			}
 
@@ -691,7 +691,7 @@ int CDownloads_Tasks::GetDownloadImage(vmsDownloadSmartPtr dld)
 {
 	if (dld->pMgr->IsRunning ())
 	{
-		if (dld->pMgr->GetDownloadingSectionCount ())
+		if (dld->pMgr->GetDownloadingSectionCount () || dld->pMgr->GetSpeed ())
 			return 3;	
 		else
 			return 4;	
@@ -699,8 +699,7 @@ int CDownloads_Tasks::GetDownloadImage(vmsDownloadSmartPtr dld)
 
 	if (dld->pMgr->IsDone ())
 	{
-		if (dld->pMgr->IsBittorrent () && 
-				(dld->pMgr->GetBtDownloadMgr ()->get_State () == BTDSE_SEEDING || dld->pMgr->GetBtDownloadMgr ()->get_State () == BTDSE_FINISHED))
+		if (dld->pMgr->IsBittorrent () && dld->pMgr->GetBtDownloadMgr ()->isSeeding ())
 			return 7;	
 		return 1;	
 	}
@@ -1544,8 +1543,7 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 	{
 		if (dld->pMgr->IsRunning () == FALSE)
 		{
-			if (dld->pMgr->IsBittorrent () && 
-					dld->pMgr->GetBtDownloadMgr ()->get_State () == BTDS_SEEDING)
+			if (dld->pMgr->IsBittorrent () && dld->pMgr->GetBtDownloadMgr ()->isSeeding ())
 			{
 				CString str;
 				str.Format ("%s/%s; %s/%s", BytesToString (0), LS (L_S),

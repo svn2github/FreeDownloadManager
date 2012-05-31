@@ -14,18 +14,21 @@
 
 <script type="application/x-javascript"
         src="chrome://fdm_ffext/content/fdm_ffpxy.js" />
+		
+<script type="application/x-javascript"
+        src="chrome://fdm_ffext/content/fdm_dldObserver.js" />
 
 
 <popup id="contentAreaContextMenu">
   <menuseparator id="fdm-context-item-separator"/>
   <menuitem id="fdm-context-item-dllink" label="Download by FDM" 
-  	oncommand="fdm_dllink();"/>
+  	oncommand="freeDldMgr_dllink();"/>
   <menuitem id="fdm-context-item-dlall" label="Download all by FDM" 
-  	oncommand="fdm_dlall();"/>
+  	oncommand="freeDldMgr_dlall();"/>
   <menuitem id="fdm-context-item-dlselected" label="Download selected by FDM" 
-  	oncommand="fdm_dlselected();"/>
+  	oncommand="freeDldMgr_dlselected();"/>
   <menuitem id="fdm-context-item-dlvideo" label="Download video by FDM" 
-  	oncommand="fdm_dlvideo();"/>
+  	oncommand="freeDldMgr_dlvideo();"/>
 </popup>
 
 </overlay>

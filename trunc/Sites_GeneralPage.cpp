@@ -235,10 +235,10 @@ BOOL CSites_GeneralPage::OnApply()
 
 	DWORD dwVF = m_pSite->dwValidFor;
 	dwVF &= ~ SITE_VALIDFOR_SUBDOMAINS; 
-	int iNewSiteIndex = _SitesMgr.FindSite (strSite, dwVF, FALSE);
+	fsSiteInfo *pNewSite = _SitesMgr.FindSite (strSite, dwVF, FALSE);
 
 	
-	if (iNewSiteIndex != -1 && iNewSiteIndex != m_iSiteIndex)
+	if (pNewSite != NULL && pNewSite != m_pSite)
 	{
 		MessageBox (LS (L_SITEALREXISTS), LS (L_INPERR), MB_ICONEXCLAMATION);
 		GetDlgItem (IDC_SITE)->SetFocus ();

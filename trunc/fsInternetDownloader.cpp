@@ -1308,7 +1308,7 @@ fsInternetResult fsInternetDownloader::OpenUrl(UINT64 uStartPos, fsInternetURLFi
 	return OpenUrl_imp (uStartPos, ppFile, iSectIndex, nMirror, bCheckFileSize, 0, pszContentTypeReq, NULL);
 }
 
-fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetURLFile **ppFile,  int iSectIndex, UINT &nMirror,  BOOL bCheckFileSize, int iAttempt, LPCSTR , fsDownload_NetworkProperties *pDNPRedirectedUrl)
+fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetURLFile **ppFile,  int iSectIndex, UINT &nMirror,  BOOL bCheckFileSize, int iAttempt, LPCSTR , fsDownload_NetworkProperties *pDNPRedirectedUrl, bool bIsRedirected)
 {
 	fsInternetResult ir;
 	fsDownload_NetworkProperties* dnp;
@@ -1420,12 +1420,25 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 	{
 		if (ir == IR_NEEDREDIRECT)
 		{
+			bool _bIsRedirected = false;
 			if (0 == (m_dnp.dwFlags & DNPF_DONT_UPDATE_ORIGINAL_URL_AFTER_REDIRECT))
 			{
+				_bIsRedirected = true;
 				
 				
 				
-				if (m_vSections.size ())
+				int i = 0;
+				bool bThereIsIdenticalServer = false;
+				for (i = 0; i < GetNumberOfSections(); i++) {
+
+					LPCSTR pszServerName = DNP(i)->pszServerName;
+					if (fsIsServersEqual(pszServerName, dnp->pszServerName, FALSE)) {
+						bThereIsIdenticalServer = true;
+						break;
+					}
+				}
+
+				if (bThereIsIdenticalServer)
 				{
 					SAFE_DELETE (m_pOpeningFile);
 					return IR_SERVERUNKERROR;
@@ -1550,7 +1563,7 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 			SAFE_DELETE (m_pOpeningFile);
 			
 			if (m_bNeedStop == FALSE)
-				ir = OpenUrl_imp (uStartPos, ppFile, iSectIndex, nMirror, bCheckFileSize, ++iAttempt, NULL, dnp);
+				ir = OpenUrl_imp (uStartPos, ppFile, iSectIndex, nMirror, bCheckFileSize, ++iAttempt, NULL, dnp, _bIsRedirected);
 			else
 				ir = IR_S_FALSE;
 			
@@ -1616,9 +1629,10 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 		}
 	}
 
-	if (pDNPRedirectedUrl != NULL && m_vSections.size () != 0)
+	if (pDNPRedirectedUrl != NULL && !bIsRedirected)
 	{
-		assert (dnp->dwFlags & DNPF_DONT_UPDATE_ORIGINAL_URL_AFTER_REDIRECT);
+		
+		
 		if (m_pOpeningFile->GetFileSize () != GetSSFileSize ())
 		{
 			

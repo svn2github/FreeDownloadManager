@@ -5,17 +5,25 @@
 #include "StdAfx.h"
 #include "vmsUrlMonRequestCollector.h"
 #include <WinInet.h>
+#include "../../vmsBrowsersSharedData.h"
 
 LPCSTR vmsUrlMonRequestCollector::_protocolData_pData = "PROTOCOLDATA";
 PROTOCOLDATA vmsUrlMonRequestCollector::_protocolData = {PD_FORCE_SWITCH, 0, (LPVOID)_protocolData_pData, 13};
 
+vmsBrowsersSharedData _BrowsersSharedData;
+
 vmsUrlMonRequestCollector::vmsUrlMonRequestCollector(void)
 {
 	
+	m_hevShutdown = CreateEvent (NULL, TRUE, FALSE, NULL);
+	m_htJob = CreateThread (NULL, 0, _threadJob, this, 0, NULL);
 }
 
 vmsUrlMonRequestCollector::~vmsUrlMonRequestCollector(void)
 {
+	SetEvent (m_hevShutdown);
+	WaitForSingleObject (m_htJob, INFINITE);
+	CloseTimedoutRequests ();
 }
 
 void vmsUrlMonRequestCollector::onInternetProtocolRoot_Start(IInternetProtocolRoot *pProt, LPCWSTR pwszUrl, IInternetProtocolSink *pSink, IInternetBindInfo *pInfo, DWORD grfPI)
@@ -27,6 +35,21 @@ void vmsUrlMonRequestCollector::onInternetProtocolRoot_Start(IInternetProtocolRo
 	r->spBindInfo = pInfo;
 	r->grfPI = grfPI;
 	onNewRequest (r);
+}
+
+void vmsUrlMonRequestCollector::onInternetProtocolRoot_Abort(IInternetProtocolRoot *pProt, HRESULT hrReason, DWORD dwOptions)
+{
+	vmsCriticalSectionAutoLock csal (&m_csReq);
+	int nIndex = findRequestIndexByProtocol (pProt);
+	ATLASSERT (nIndex != -1);
+	if (nIndex == -1)
+		return;
+	Request *req = getRequest (nIndex);
+}
+
+void vmsUrlMonRequestCollector::onInternetProtocolRoot_Terminate(IInternetProtocolRoot *pProt, DWORD dwOptions)
+{
+	
 }
 
 void vmsUrlMonRequestCollector::onInternetProtocolEx_StartEx(IInternetProtocolEx *pProt, IUri *pUri, IInternetProtocolSink *pSink, IInternetBindInfo *pInfo, DWORD grfPI)
@@ -45,6 +68,8 @@ void vmsUrlMonRequestCollector::onInternetProtocolEx_StartEx(IInternetProtocolEx
 
 void vmsUrlMonRequestCollector::onNewRequest(Request *request)
 {
+	_BrowsersSharedData.ModifyActiveDownloadsCount (1);
+
 	RemoveTooOldRequests ();
 
 	request->dwTicksStarted = GetTickCount ();
@@ -78,8 +103,6 @@ void vmsUrlMonRequestCollector::onNewRequest(Request *request)
 	vmsCriticalSectionAutoLock csal (&m_csReq);
 	m_vReq.push_back (request);
 
-	request->spSink->Switch (&_protocolData);
-
 #ifdef SCL_ENABLE
 	LOGsnl ("New request:");
 	USES_CONVERSION;
@@ -87,6 +110,8 @@ void vmsUrlMonRequestCollector::onNewRequest(Request *request)
 	LOG (" thridStart: %d", request->dwthridStart);
 	LOG (" post data size: %d", request->vbPostData.size ());
 #endif
+
+	request->spSink->Switch (&_protocolData);
 }
 
 bool vmsUrlMonRequestCollector::onInternetProtocolRoot_Continue(IInternetProtocolRoot* pProt, PROTOCOLDATA* pProtocolData)
@@ -204,6 +229,7 @@ void vmsUrlMonRequestCollector::onHttpNegotiate_OnResponse(IHttpNegotiate* pHN, 
 	if (nIndex == -1)
 		return;
 	Request *req = getRequest (nIndex);
+	req->dwState |= Request::GotResponse;
 
 	IWinInetHttpInfoPtr spWinInetHttpInfo (req->spProt);
 	if (spWinInetHttpInfo != NULL)
@@ -253,6 +279,7 @@ void vmsUrlMonRequestCollector::onInternetProtocolSink_ReportResult(IInternetPro
 {
 	vmsCriticalSectionAutoLock csal (&m_csReq);
 	int nIndex = findRequestIndexBySink (pSink);
+	ATLASSERT (nIndex != -1);
 	if (nIndex == -1)
 		return;
 	Request *req = getRequest (nIndex);
@@ -261,6 +288,19 @@ void vmsUrlMonRequestCollector::onInternetProtocolSink_ReportResult(IInternetPro
 
 void vmsUrlMonRequestCollector::onInternetProtocolSink_ReportProgress(IInternetProtocolSink* pSink, ULONG ulStatusCode, LPCWSTR szStatusText)
 {
+#ifdef SCL_ENABLE
+	{USES_CONVERSION;
+	vmsCriticalSectionAutoLock csal (&m_csReq);
+	int nIndex = findRequestIndexBySink (pSink);
+	if (nIndex == -1)
+		return;
+	Request *req = getRequest (nIndex);
+	LOGsnl ("Progress for request:");
+	LOG (" URL: %s", W2CA (req->wstrUrl.c_str ()));
+	LOG (" ulStatusCode: %d", ulStatusCode);
+	LOG (" szStatusText: %s", W2CA (szStatusText));}
+#endif
+
 	if (ulStatusCode != BINDSTATUS_REDIRECTING)
 		return;
 
@@ -285,8 +325,39 @@ void vmsUrlMonRequestCollector::onInternetProtocolSink_ReportProgress(IInternetP
 #endif
 }
 
+void vmsUrlMonRequestCollector::onInternetProtocolSink_ReportData(IInternetProtocolSink* pSink, DWORD grfBSCF, ULONG ulProgress, ULONG ulProgressMax)
+{
+	vmsCriticalSectionAutoLock csal (&m_csReq);
+	int nIndex = findRequestIndexBySink (pSink);
+	if (nIndex == -1)
+		return;
+	Request *req = getRequest (nIndex);
+	req->dwState |= Request::GotResponse;
+
+#ifdef SCL_ENABLE
+	USES_CONVERSION;
+	LOGsnl ("Report data for request:");
+	LOG (" URL: %s", W2CA (req->wstrUrl.c_str ()));
+	LOG (" grfBSCF: %d", grfBSCF);
+	LOG (" progress: %d", ulProgress);
+	LOG (" progress max: %d", ulProgressMax);
+#endif
+}
+
 void vmsUrlMonRequestCollector::CloseRequest(Request* request)
 {
+#ifdef SCL_ENABLE
+	LOGsnl ("Close request:");
+	USES_CONVERSION;
+	LOG (" URL: %s", W2CA (request->wstrUrl.c_str ()));
+#endif
+
+	assert (!request->dwTicksCompleted);
+	if (request->dwTicksCompleted)
+		return;
+
+	_BrowsersSharedData.ModifyActiveDownloadsCount (-1);
+
 	request->dwTicksCompleted = GetTickCount ();
 	request->spHttpNegotiate = NULL;
 	request->spSink = NULL;
@@ -323,8 +394,33 @@ void vmsUrlMonRequestCollector::RemoveTooOldRequests(void)
 			break;
 		if (dwTicks - m_vReq [i]->dwTicksStarted < 15*60*1000)
 			break;
+		if (!m_vReq [i]->dwTicksCompleted) 
+			CloseRequest (m_vReq [i]);
 	}
 
 	if (cOld)
 		m_vReq.erase (m_vReq.begin (), m_vReq.begin () + cOld);
+}
+
+DWORD WINAPI vmsUrlMonRequestCollector::_threadJob(LPVOID lp)
+{
+	vmsUrlMonRequestCollector *pthis = (vmsUrlMonRequestCollector*)lp;
+
+	while (WaitForSingleObject (pthis->m_hevShutdown, 1*60*1000) == WAIT_TIMEOUT)
+		pthis->CloseTimedoutRequests ();
+	
+	return 0;
+}
+
+void vmsUrlMonRequestCollector::CloseTimedoutRequests(void)
+{
+	vmsCriticalSectionAutoLock csal (&m_csReq);
+	DWORD dwTicks = GetTickCount ();
+	for (size_t i = 0; i < m_vReq.size (); i++)
+	{
+		if ((m_vReq [i]->dwState & Request::GotResponse) || m_vReq [i]->dwTicksCompleted)
+			continue;
+		if (dwTicks - m_vReq [i]->dwTicksStarted >= 2*60*1000)
+			CloseRequest (m_vReq [i]);
+	}
 }

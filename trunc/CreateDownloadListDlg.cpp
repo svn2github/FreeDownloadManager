@@ -137,7 +137,7 @@ BOOL CCreateDownloadListDlg::OnInitDialog()
 			continue;
 		}
 
-		fsSiteInfo *siDldSiteInfo = _SitesMgr.FindSite2 (urlDownloadUrl.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (urlDownloadUrl.GetInternetScheme ())));
+		fsSiteInfo *siDldSiteInfo = _SitesMgr.FindSite (urlDownloadUrl.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (urlDownloadUrl.GetInternetScheme ())));
 		if (siDldSiteInfo && siDldSiteInfo->strUser != NULL && siDldSiteInfo->strPassword != NULL && *urlDownloadUrl.GetUserName () == 0) {
 				
 			if (!bHaveSpecified) {
@@ -503,7 +503,7 @@ void CCreateDownloadListDlg::WriteUrlsToDialog()
 
 	if (b1ServerESD)
 	{
-		fsSiteInfo* site = _SitesMgr.FindSite2 (strServer, dwVF, FALSE);
+		fsSiteInfo* site = _SitesMgr.FindSite (strServer, dwVF, FALSE);
 		if (site && site->strUser.GetLength ())
 		{
 			CheckDlgButton (IDC_USELOGIN, BST_CHECKED);
@@ -773,7 +773,7 @@ DLDS_LIST* CCreateDownloadListDlg::GenerateDownloads(BOOL bCheckDldExistance)
 			if (IR_SUCCESS != urlDownloadUrl.Crack (pszUrl)) {
 				continue;
 			}
-			fsSiteInfo *siDldSiteInfo = _SitesMgr.FindSite2 (urlDownloadUrl.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (urlDownloadUrl.GetInternetScheme ())));
+			fsSiteInfo *siDldSiteInfo = _SitesMgr.FindSite (urlDownloadUrl.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (urlDownloadUrl.GetInternetScheme ())));
 			if (siDldSiteInfo && siDldSiteInfo->strUser != NULL && siDldSiteInfo->strPassword != NULL && *urlDownloadUrl.GetUserName () == 0) {
 
 				fsDownload_NetworkProperties *dnp = dld->pMgr->GetDownloadMgr ()->GetDNP ();
@@ -809,7 +809,7 @@ DLDS_LIST* CCreateDownloadListDlg::GenerateDownloads(BOOL bCheckDldExistance)
 			if (IR_SUCCESS != urlDownloadUrl.Crack (pszUrl)) {
 				continue;
 			}
-			fsSiteInfo *siDldSiteInfo = _SitesMgr.FindSite2 (urlDownloadUrl.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (urlDownloadUrl.GetInternetScheme ())));
+			fsSiteInfo *siDldSiteInfo = _SitesMgr.FindSite (urlDownloadUrl.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (urlDownloadUrl.GetInternetScheme ())));
 			if (siDldSiteInfo && siDldSiteInfo->strUser != NULL && siDldSiteInfo->strPassword != NULL && *urlDownloadUrl.GetUserName () == 0) {
 
 				fsDownload_NetworkProperties *dnp = dld->pMgr->GetDownloadMgr ()->GetDNP ();

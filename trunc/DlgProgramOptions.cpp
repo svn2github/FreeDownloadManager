@@ -38,6 +38,7 @@ void CProgramOptions::InitializeData()
 	LPOPTIONS_PAGES_TREE pt = m_tPages->AddLeaf (LS (L_GENERAL));
 	pt->AddLeaf (&m_general);
 	pt->AddLeaf (&m_general_history);
+	pt->AddLeaf (&m_notifications);
 	LPOPTIONS_PAGES_TREE ptGenMisc = pt->AddLeaf (LS (L_MISC));
 	ptGenMisc->AddLeaf (&m_general_misc);
 	ptGenMisc->AddLeaf (&m_general_misc_adv);
@@ -53,8 +54,6 @@ void CProgramOptions::InitializeData()
 	pt->AddLeaf (&m_downloads_monitoring);
 	pt->AddLeaf (&m_downloads_flv);
 	pt->AddLeaf (&m_sitemgr);
-
-	m_tPages->AddLeaf (&m_notifications);
 }
 
 BOOL CProgramOptions::OnInitDialog() 

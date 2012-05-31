@@ -1,47 +1,18 @@
-/*****************************************************************************
-* CColumnTreeCtrl
-* Version: 1.1 
-* Date: February 18, 2008
-* Author: Oleg A. Krivtsov
-* E-mail: olegkrivtsov@mail.ru
-* Based on ideas implemented in Michal Mecinski's CColumnTreeCtrl class 
-* (see copyright note below).
-*
-*****************************************************************************/
+/*
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+*/
 
-/*********************************************************
-* Multi-Column Tree View
-* Version: 1.1
-* Date: October 22, 2003
-* Author: Michal Mecinski
-* E-mail: mimec@mimec.w.pl
-* WWW: http://www.mimec.w.pl
-*
-* You may freely use and modify this code, but don't remove
-* this copyright note.
-*
-* There is no warranty of any kind, express or implied, for this class.
-* The author does not take the responsibility for any damage
-* resulting from the use of it.
-*
-* Let me know if you find this code useful, and
-* send me any modifications and bug reports.
-*
-* Copyright (C) 2003 by Michal Mecinski
-*********************************************************/
 #pragma once
 
 #include "resource.h"
 
 #define WM_CUSTTREE_CHECKBOX_CLICKED		(WM_APP+1111)
 
-//#define _OWNER_DRAWN_TREE  // comment this line if you want to use standard drawing code
-
 #ifdef _OWNER_DRAWN_TREE
 #ifndef IDB_TREEBTNS
 	#error You should insert IDB_TREEBTNS bitmap to project resources. See control documentation for more info.
-#endif //IDB_TREEBTNS
-#endif //_OWNER_DRAWN_TREE
+#endif 
+#endif 
 
 typedef struct _CTVHITTESTINFO { 
   POINT pt; 
@@ -50,10 +21,6 @@ typedef struct _CTVHITTESTINFO {
   int iSubItem;
 } CTVHITTESTINFO;
 
-//CCustomTreeChildCtrl will send this message to the parent window in order to get the text
-// for tooltip
-// WPARAM - mouse position in CCustomTreeChildCtrl's client coordinates
-// LPARAM - pointer to text buffer
 #define ID_CTCC_GETTOOLTIPTEXT	(WM_APP+1)
 
 class CCustomTreeChildCtrl : public CTreeCtrl
@@ -64,16 +31,12 @@ class CCustomTreeChildCtrl : public CTreeCtrl
 
 public:
 
-	/*
-	 *  Construction/destruction
-	 */
+	
 	
 	CCustomTreeChildCtrl();
 	virtual ~CCustomTreeChildCtrl();
 
-	/*
-	 * Operations
-	 */
+	
 	
 	BOOL GetBkImage(LVBKIMAGE* plvbkImage) const;
 	BOOL SetBkImage(LVBKIMAGE* plvbkImage);
@@ -85,17 +48,15 @@ protected:
 	CToolTipCtrl m_ttip;
 	DECLARE_MESSAGE_MAP()
 
-	int m_nFirstColumnWidth; // the width of the first column 
-	int m_nOffsetX;      	 // offset of this window inside the parent 
-	LVBKIMAGE m_bkImage;	 // information about background image
-	CImageList m_imgBtns;	 // tree buttons images (IDB_TREEBTNS)
+	int m_nFirstColumnWidth; 
+	int m_nOffsetX;      	 
+	LVBKIMAGE m_bkImage;	 
+	CImageList m_imgBtns;	 
 
 	BOOL CheckHit(CPoint point);
 
 	
-	/*
-	 * Message Handlers
-	 */
+	
 
 	afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
@@ -105,40 +66,33 @@ protected:
 	afx_msg void OnTimer(UINT_PTR nIDEvent);
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 
-	/*
-	 * Custom drawing related methods
-	 */
+	
 
 #ifdef _OWNER_DRAWN_TREE
 	LRESULT CustomDrawNotify(LPNMTVCUSTOMDRAW lpnm);
 	LRESULT OwnerDraw(CDC* pDC);
 	int OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 	void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar *pScrollBar);
-#endif //_OWNER_DRAWN_TREE
+#endif 
 
 };
-
 
 class CColumnTreeCtrl : public CStatic
 {
 public:
 	DECLARE_DYNCREATE(CColumnTreeCtrl)
 	
-	/*
-	 * Construction/destruction
-	 */
+	
 	 
 	CColumnTreeCtrl();
 	virtual ~CColumnTreeCtrl();
 
-	// explicit construction 
+	
 	BOOL Create(DWORD dwStyle , const RECT& rect, CWnd* pParentWnd, UINT nID);
 
 	virtual void PreSubclassWindow();
 
-		/*
-	 *  Operations
-	 */
+		
 
 #ifdef DEBUG
 	virtual void AssertValid( ) const;
@@ -178,7 +132,7 @@ protected:
 	int m_uMinFirstColWidth;
 	BOOL m_bHeaderChangesBlocked;
 
-	enum{MAX_COLUMN_COUNT=16}; // change this value if you need more than 16 columns
+	enum{MAX_COLUMN_COUNT=16}; 
 
 	int m_arrColWidths[MAX_COLUMN_COUNT];
 	DWORD m_arrColFormats[MAX_COLUMN_COUNT];
@@ -186,7 +140,6 @@ protected:
 	virtual void Initialize();
 	void UpdateColumns();
 	void RepositionControls();
-
 
 	virtual void OnDraw(CDC* pDC) {}
 	afx_msg void OnPaint();

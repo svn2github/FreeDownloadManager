@@ -786,7 +786,7 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 			fsDownload_NetworkProperties *dnp = dld->pMgr->GetDownloadMgr ()->GetDNP ();
 			if (!dnp->pszUserName || !*dnp->pszUserName)
 			{
-				fsSiteInfo *site = _SitesMgr.FindSite2 (dnp->pszServerName, fsNPToSiteValidFor (dnp->enProtocol));
+				fsSiteInfo *site = _SitesMgr.FindSite (dnp->pszServerName, fsNPToSiteValidFor (dnp->enProtocol));
 				if (site != NULL && !site->strUser.IsEmpty ())
 				{
 					SAFE_DELETE_ARRAY (dnp->pszUserName);
@@ -1178,7 +1178,7 @@ void CDownloadsWnd::UpdateTrayIconPlusOthers()
 		{
 			bRun = TRUE;	
 
-			if (pMgr->GetDownloadingSectionCount ())
+			if (pMgr->GetDownloadingSectionCount () || pMgr->GetSpeed ())
 				bRunOk = TRUE;	
 
 			if (pMgr->IsCantStart () == FALSE)
@@ -1587,7 +1587,7 @@ BOOL CDownloadsWnd::CreateDownloadWithDefSettings(vmsDownloadSmartPtr dld, LPCST
 
 	fsDownload_NetworkProperties* dnp = dld->pMgr->GetDownloadMgr ()->GetDNP ();
 
-	fsSiteInfo *site = _SitesMgr.FindSite2 (dnp->pszServerName, fsNPToSiteValidFor (dnp->enProtocol));
+	fsSiteInfo *site = _SitesMgr.FindSite (dnp->pszServerName, fsNPToSiteValidFor (dnp->enProtocol));
 	if (site && site->strUser != NULL && *dnp->pszUserName == 0)
 		fsDNP_SetAuth (dnp, site->strUser, site->strPassword);
 

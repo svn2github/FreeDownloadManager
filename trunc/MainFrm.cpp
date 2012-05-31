@@ -2191,6 +2191,11 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 		case 8:
 			OnTimer_CheckShowPI ();
 			break;
+
+		case 9:
+			KillTimer (9);
+			_TrayMgr.TestIcon ();
+			break;
 	}
 }
 
@@ -2519,6 +2524,10 @@ void CMainFrame::OnProceedFurherInitialization()
 		CreateThread (NULL, 0, _threadAutosave, this, 0, &dw));
 
 	
+
+	
+	
+	SetTimer (9, 30*1000, NULL);
 }
 
 void CMainFrame::OnAppAbout() 

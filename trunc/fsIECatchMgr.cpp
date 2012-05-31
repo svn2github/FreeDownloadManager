@@ -11,6 +11,7 @@
 
 #include "iefdm/iefdmdm/iefdmdm.h"
 #include "iefdm/fdmiebho/iecooks.h"
+#include "vmsBrowsersSharedData.h"
 
 extern CDownloadsWnd* _pwndDownloads;
 
@@ -251,34 +252,28 @@ BOOL fsIECatchMgr::IsMonitoringDllRegistered()
 
 DWORD WINAPI fsIECatchMgr::_threadMonitorIEActivity(LPVOID lp)
 {
+	vmsBrowsersSharedData BrowsersSharedData;
+
 	fsIECatchMgr* pthis = (fsIECatchMgr*)lp;
-	CoInitialize (NULL);
 
-	IFDMIEStatPtr spStat;
-	spStat.CreateInstance (__uuidof (FDMIEStat));
+	int iStarted = -1;
 
-	if (spStat != NULL)
+	while (pthis->m_bNeedStop == false)
 	{
-		int iStarted = -1;
+		long lCount;
+		lCount = BrowsersSharedData.getActiveDownloadsCount ();
 
-		while (pthis->m_bNeedStop == false)
+		
+		
+		if (iStarted == -1 || (!iStarted != !lCount))
 		{
-			long lCount;
-			spStat->get_DownloadCount (&lCount);
-
-			
-			
-			if (iStarted == -1 || (!iStarted != !lCount))
-			{
-				iStarted = lCount != 0;
-				pthis->Event (iStarted ? ICME_DLSTARTED : ICME_DLCOMPLETED);
-			}
-
-			Sleep (500);
+			iStarted = lCount != 0;
+			pthis->Event (iStarted ? ICME_DLSTARTED : ICME_DLCOMPLETED);
 		}
+
+		Sleep (500);
 	}
 	
-	CoUninitialize ();
 	pthis->m_bMonitorIEActivityRunning = false;
 	return 0;
 }

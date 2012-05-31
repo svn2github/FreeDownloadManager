@@ -37,5 +37,13 @@ extern void vmsdl_DisableCookies (DLHANDLE h, BOOL bDisable);
 extern void vmsdl_SetUserAgent (DLHANDLE h, LPCSTR pszAgent);
 extern void vmsdl_SetMaxSections(DLHANDLE h, UINT uiMaxSections);
 extern void vmsdl_SetMinSectionSize(DLHANDLE h, UINT uiMinSectionSize);
+extern LPCTSTR	vmsdl_GetDstFilePathName (DLHANDLE h);
+extern LPCSTR	vmsdl_GetContentType (DLHANDLE h);
+extern void vmsdl_DumpDownload(DLHANDLE h, LPBYTE pbBuffer, LPDWORD pdwSize);
+extern bool vmsdl_LoadDownload(DLHANDLE h, LPBYTE pbBuffer, LPDWORD pdwSize, WORD wVer);
+extern WORD vmsdl_GetVersion();
+extern void vmsdl_SetResumeMode(DLHANDLE h);
+extern bool vmsdl_IsDone(DLHANDLE h);
+extern std::string vmsdl_GetDestinationFile(DLHANDLE h);
 
 #endif

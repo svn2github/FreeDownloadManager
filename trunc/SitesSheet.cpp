@@ -33,10 +33,9 @@ BEGIN_MESSAGE_MAP(CSitesSheet, CPropertySheet)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-void CSitesSheet::Init(fsSiteInfo *pSite, int iSiteIndex)
+void CSitesSheet::Init(fsSiteInfo *pSite)
 {
 	m_general.m_pSite = m_advanced.m_pSite = pSite;
-	m_general.m_iSiteIndex = m_advanced.m_iSiteIndex = iSiteIndex;
 	m_general.m_advanced = &m_advanced;
 	AddPage (&m_general);
 	AddPage (&m_advanced);

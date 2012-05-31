@@ -81,10 +81,10 @@ BOOL CSites_AdvancedPage::OnApply()
 		bAtLeast1Protocol = TRUE;
 	}
 
-	int iNewSiteIndex = _SitesMgr.FindSite (m_pSite->strName, dwVF, FALSE);
+	fsSiteInfo *pNewSite = _SitesMgr.FindSite (m_pSite->strName, dwVF, FALSE);
 
 	
-	if (iNewSiteIndex != -1 && iNewSiteIndex != m_iSiteIndex)
+	if (pNewSite != NULL && pNewSite != m_pSite)
 	{
 		MessageBox (LS (L_SITEALREXISTS), LS (L_INPERR), MB_ICONEXCLAMATION);
 		return FALSE;

@@ -33,7 +33,7 @@ public:
 	
 	
 	
-	void Init (fsSiteInfo* pSite, int iSiteIndex);
+	void Init (fsSiteInfo* pSite);
 	virtual ~CSitesSheet();
 
 	
