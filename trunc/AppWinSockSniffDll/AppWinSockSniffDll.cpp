@@ -423,8 +423,8 @@ DWORD WINAPI _threadInitialize (LPVOID)
 	DWORD dwOverrideUEF = FALSE;
 	try {
 		CRegKey key;
-		key.Open (HKEY_CURRENT_USER, _T ("Software\\FreeDownloadManager.ORG\\Free Download Manager\\Debug"), KEY_READ);
-		key.QueryDWORDValue (_T ("FlvSniffOverrideUEF"), dwOverrideUEF);
+		if (ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, _T ("Software\\FreeDownloadManager.ORG\\Free Download Manager\\Debug"), KEY_READ))
+			key.QueryDWORDValue (_T ("FlvSniffOverrideUEF"), dwOverrideUEF);
 	}
 	catch (...) {}
 	if (dwOverrideUEF)
@@ -542,6 +542,9 @@ void WINAPI onNewHttpRequest (LPCSTR pszUrl, LPCSTR pszSrcTabUrl)
 	assert (pszUrl != NULL && pszSrcTabUrl != NULL);
 	if (!pszUrl || !pszSrcTabUrl)
 		return;
+	LOGsnl ("onNewHttpRequest:");
+	LOG (" url: %s", pszUrl);
+	LOG (" srcTab: %s", pszSrcTabUrl);
 	vmsBrowserSpecialInfo::UrlInfo url;
 	url.strUrl = pszUrl;
 	url.strSrcTabUrl = pszSrcTabUrl;

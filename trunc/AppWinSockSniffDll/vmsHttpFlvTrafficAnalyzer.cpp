@@ -41,7 +41,7 @@ void vmsHttpFlvTrafficAnalyzer::AddFlvDownload(const vmsHttpTrafficCollector::Ht
 {
 	FlvDownload flv;
 	const vmsHttpParser::HdrField *pFld;
-	flv.strUrl = pDlg->strRequestUrl;
+	flv.strUrl = pDlg->dwFlags & vmsHttpTrafficCollector::HttpDialog::SCRAP_FILE ? pDlg->strRequestUrlOfFullResource : pDlg->strRequestUrl;
 	if (pDlg->pHttpRequest)
 	{
 		pFld = pDlg->pHttpRequest->FieldByName ("Referer");

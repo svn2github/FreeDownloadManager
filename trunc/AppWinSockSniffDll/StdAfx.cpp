@@ -4,7 +4,5 @@
 
 #include "stdafx.h"
 
-#ifdef SCL_ENABLE
-#include "vmsSourceCodeLogger.cpp"
-#endif
+SCL_INITOBJECT (_T ("AppWinSockSniffDll"), 0);
 

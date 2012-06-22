@@ -66,15 +66,15 @@ LRESULT vmsSniffDllWnd::OnProcessWebPageUrl(LPARAM lp)
 
 	vmsSharedData sdata ("Fdm::mem::passUrlToFlvSniffDll", TRUE, 0, FILE_MAP_READ);
 
-	if (sdata.get_Data () == NULL)
+	if (sdata.getData () == NULL)
 	{
 		LOGsnl ("Failed to access shared data");
 		ReleaseMutex (_hmxAccMem);
 		return E_FAIL;
 	}
 
-	char *pszUrl = new char [strlen ((LPSTR)sdata.get_Data ())+1];
-	strcpy (pszUrl, (LPSTR)sdata.get_Data ());
+	char *pszUrl = new char [strlen ((LPSTR)sdata.getData ())+1];
+	strcpy (pszUrl, (LPSTR)sdata.getData ());
 
 	sdata.Release ();
 

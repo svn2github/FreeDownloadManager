@@ -35,8 +35,8 @@ using namespace std;
 
 #endif
 
-#include "vmsSourceCodeLogger.h"
 #include "../Include.Add/vmsCriticalSection.h"
+#include "../Include.Add/vmsSourceCodeLogger.h"
 #include "vmsLogHelper.h"
 
 //{{AFX_INSERT_LOCATION}}

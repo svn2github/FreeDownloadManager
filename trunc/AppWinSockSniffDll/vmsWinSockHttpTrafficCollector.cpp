@@ -89,9 +89,17 @@ void vmsWinSockHttpTrafficCollector::OnDataSent(SOCKET s, const char *pData, int
 			{
 				spDlg->enState = vmsHttpTrafficCollector::HttpDialog::SENDING_REQUEST_BODY;
 				int l = nLen-(pszHdrEnd-pData);
-				spDlg->vbRequestBody.resize (l);
-				if (l)
-					CopyMemory (&spDlg->vbRequestBody[0], pszHdrEnd, l);
+				if (l <= vmsHttpTrafficCollector::RequestBodyMaxSize)
+				{
+					spDlg->vbRequestBody.resize (l);
+					if (l)
+						CopyMemory (&spDlg->vbRequestBody[0], pszHdrEnd, l);
+				}
+				else
+				{
+					m_pHttpTraffic->DeleteDialogFromListByID (spDlg->nID);
+					return;
+				}
 			}
 		}
 		break;
@@ -104,8 +112,16 @@ void vmsWinSockHttpTrafficCollector::OnDataSent(SOCKET s, const char *pData, int
 	case vmsHttpTrafficCollector::HttpDialog::SENDING_REQUEST_BODY:
 	{
 		int l = spDlg->vbRequestBody.size ();
-		spDlg->vbRequestBody.resize (l + nLen);
-		CopyMemory (&spDlg->vbRequestBody[l], pData, nLen);
+		if (l + nLen <= vmsHttpTrafficCollector::RequestBodyMaxSize)
+		{
+			spDlg->vbRequestBody.resize (l + nLen);
+			CopyMemory (&spDlg->vbRequestBody[l], pData, nLen);
+		}
+		else
+		{
+			m_pHttpTraffic->DeleteDialogFromListByID (spDlg->nID);
+			return;
+		}
 		break;
 	}
 

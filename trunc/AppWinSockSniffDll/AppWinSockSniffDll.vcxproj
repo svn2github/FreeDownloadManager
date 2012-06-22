@@ -460,11 +460,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="..\vmsSharedData.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
-    </ClCompile>
     <ClCompile Include="vmsSniffDllWnd.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>

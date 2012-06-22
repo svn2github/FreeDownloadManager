@@ -20,6 +20,9 @@ class vmsHttpTrafficCollector
 	friend class vmsWinInetHttpTrafficCollector;
 	friend class vmsExternalHttpTrafficCollector;
 public:
+	enum {RequestBodyMaxSize = 30*1024};
+	enum {ResponseBodyMaxSize = 1*1024*1024};
+public:
 	struct HttpDialog;
 	typedef vmsObjectSmartPtr <HttpDialog> HttpDialogPtr;
 	struct HttpDialog : public vmsObject
@@ -112,6 +115,7 @@ public:
 		LONG nID;
 		bool bSaveResponseBody;
 		vmsUrlMonRequestPtr spUrlMonRequest;
+		string strRequestUrlOfFullResource; 
 #ifdef _DEBUG
 		enum Provider {
 			PROV_UNKNOWN,
@@ -148,6 +152,14 @@ public:
 #ifdef _DEBUG
 			enProvider = Provider::PROV_UNKNOWN;
 #endif
+		}
+
+		~HttpDialog ()
+		{
+			if (pHttpRequest)
+				delete pHttpRequest;
+			if (pHttpResponse)
+				delete pHttpResponse;
 		}
 	};
 public:

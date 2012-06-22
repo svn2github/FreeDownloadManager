@@ -151,9 +151,13 @@ void vmsWinInetHttpTrafficCollector::OnSendPostData(HINTERNET hInet, LPVOID pDat
 	assert (dwSize != 0);
 	if (!hInet || !pData || !dwSize)
 		return;
+	if (dwSize > vmsHttpTrafficCollector::RequestBodyMaxSize)
+		return;
 	vmsCriticalSectionAutoLock al (&m_cs_vPostData);
+#ifdef _DEBUG
 	int nIndex = findPostDataIndex (hInet);
 	assert (nIndex == -1);
+#endif
 	PostData pd; 
 	pd.hRequest = hInet;
 	pd.vbData.assign ((LPBYTE)pData, (LPBYTE)pData + dwSize);

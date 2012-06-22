@@ -72,9 +72,16 @@ void vmsExternalHttpTrafficCollector::OnHttpDialogDataReceived(UINT nUID, LPBYTE
 	{
 		assert (m_pHttpTraffic->isNeedBody (spDlg));
 		int l; l = spDlg->vbResponseBody.size ();
-		spDlg->vbResponseBody.resize (l + nSize);
-		CopyMemory (&spDlg->vbResponseBody [l], pbData, nSize);
-		m_pHttpTraffic->onDataReceived (spDlg);
+		if (l + nSize <= vmsHttpTrafficCollector::RequestBodyMaxSize)
+		{
+			spDlg->vbResponseBody.resize (l + nSize);
+			CopyMemory (&spDlg->vbResponseBody [l], pbData, nSize);
+			m_pHttpTraffic->onDataReceived (spDlg);
+		}
+		else
+		{
+			m_pHttpTraffic->DeleteDialogFromListByID (spDlg->nID);
+		}
 	}
 }
 

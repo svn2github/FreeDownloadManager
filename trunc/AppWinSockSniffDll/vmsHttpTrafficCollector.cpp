@@ -32,7 +32,7 @@ bool vmsHttpTrafficCollector::isFlashVideoCT(LPCSTR pszContentType)
 	LPCSTR apszCT [] = {
 		"video/x-flv", "video/mp4", "video/x-m4v", "audio/mp4a-latm", 
 		"video/3gpp", "video/quicktime", "audio/mp4", "video/mpeg",
-		"flv-application/octet-stream",
+		"flv-application/octet-stream", "video/webm",
 	};
 
 	for (int i = 0; i < sizeof (apszCT) / sizeof (LPCSTR); i++)
@@ -72,6 +72,13 @@ void vmsHttpTrafficCollector::CloseDialog(HttpDialog *pDlg)
 {
 	LOGFN ("vmsHttpTrafficCollector::CloseDialog");
 	LOG (" URL: %s", pDlg->strRequestUrl.c_str ());
+
+	if (pDlg->vbRequestBody.size () > RequestBodyMaxSize || 
+			pDlg->vbResponseBody.size () > ResponseBodyMaxSize)
+	{
+		DeleteDialogFromListByID (pDlg->nID);
+		return;
+	}
 
 	switch (pDlg->enState)
 	{
@@ -561,6 +568,12 @@ void vmsHttpTrafficCollector::onDataReceived(HttpDialog *pDlg)
 	if (pDlg->enState == HttpDialog::RECEIVING_RESPONSE_BODY || pDlg->enState == HttpDialog::RESPONSE_HEADERS_RCVD)
 	{
 		assert (pDlg->vbResponseBody.size () <= pDlg->nContentLength || isContentLengthValid (pDlg) == false);
+
+		if (pDlg->vbResponseBody.size () > ResponseBodyMaxSize)
+		{
+			DeleteDialogFromListByID (pDlg->nID);
+			return;
+		}
 		
 		if (pDlg->dwFlags & HttpDialog::CHECK_REAL_CONTENT_TYPE)
 		{
@@ -691,17 +704,21 @@ void vmsHttpTrafficCollector::ExtractRequestUrlFromSocket(HttpDialog *pDlg)
 		strHost = pHost->strValue;
 		
 		sockaddr_in saddr; int i = sizeof (saddr);
-		if (0 != getpeername (pDlg->s, (SOCKADDR*)&saddr, &i))
+		if (!getpeername (pDlg->s, (SOCKADDR*)&saddr, &i))
 		{
-			char sz [10];
-			sprintf (sz, ":%d", (int)ntohs (saddr.sin_port));
-			strHost += sz;			
+			int iPort = ntohs (saddr.sin_port);
+			if (iPort != 80)
+			{
+				char sz [10];
+				sprintf (sz, ":%d", iPort);
+				strHost += sz;
+			}
 		}
 	}
 	else
 	{
 		sockaddr_in saddr; int i = sizeof (saddr);
-		if (0 != getpeername (pDlg->s, (SOCKADDR*)&saddr, &i))
+		if (getpeername (pDlg->s, (SOCKADDR*)&saddr, &i))
 			return; 
 		LPCSTR psz = inet_ntoa (saddr.sin_addr);
 		if (!psz)
@@ -1020,7 +1037,8 @@ void vmsHttpTrafficCollector::onFlvDetected(HttpDialog* pDlg)
 	while (*psz2 && *psz2 != '&')
 		psz2++;
 
-	pDlg->strRequestUrl.erase (psz - pDlg->strRequestUrl.c_str (), psz2-psz);
+	pDlg->strRequestUrlOfFullResource = pDlg->strRequestUrl;
+	pDlg->strRequestUrlOfFullResource.erase (psz - pDlg->strRequestUrl.c_str (), psz2-psz);
 
 	pDlg->dwFlags |= HttpDialog::SCRAP_FILE;
 }
