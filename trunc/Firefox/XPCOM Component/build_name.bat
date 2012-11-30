@@ -12,4 +12,4 @@ cd "..\..\..\Firefox\XPCOM Component"
 copy /Y "..\..\Gecko.SDK\2.0\idl\%1.h" .\ > nul
 copy /Y "..\..\Gecko.SDK\2.0\idl\%1.xpt" .\ > nul
 @rem make a copy for bin\Release folder...
-copy /Y "..\..\Gecko.SDK\2.0\idl\%1.xpt" ..\..\bin\Release\Firefox\extension\Components\ > nul
+copy /Y "..\..\Gecko.SDK\2.0\idl\%1.xpt" ..\extension\Components\ > nul

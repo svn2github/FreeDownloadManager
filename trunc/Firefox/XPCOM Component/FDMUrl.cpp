@@ -26,7 +26,7 @@ CFDMUrl::~CFDMUrl()
 
 NS_IMETHODIMP CFDMUrl::GetUrl(PRUnichar * *aUrl)
 {
-    *aUrl = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strUrl, 
+    *aUrl = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strUrl ? (LPWSTR)m_strUrl : L"", 
 		(m_strUrl.length ()+1) * sizeof (wchar_t));
 	return NS_OK;
 }
@@ -45,12 +45,17 @@ NS_IMETHODIMP CFDMUrl::SetUrl(const PRUnichar * aUrl)
 
 NS_IMETHODIMP CFDMUrl::GetReferer(PRUnichar * *aReferer)
 {
-    *aReferer = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strReferer, 
+    *aReferer = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strReferer ? (LPWSTR)m_strReferer : L"", 
 		(m_strReferer.length ()+1) * sizeof (wchar_t));
 	return NS_OK;
 }
 NS_IMETHODIMP CFDMUrl::SetReferer(const PRUnichar * aReferer)
 {
+	if (!aReferer)
+	{
+		m_strReferer = L"";
+		return NS_OK;
+	}
 	if (_wcsicmp (aReferer, L"about:blank"))
 		m_strReferer = aReferer;
 	return NS_OK;
@@ -58,7 +63,7 @@ NS_IMETHODIMP CFDMUrl::SetReferer(const PRUnichar * aReferer)
 
 NS_IMETHODIMP CFDMUrl::GetComment(PRUnichar * *aComment)
 {
-    *aComment = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strComment, 
+    *aComment = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strComment ? (LPWSTR)m_strComment : L"", 
 		(m_strComment.length ()+1) * sizeof (wchar_t));
 	return NS_OK;
 }
@@ -70,7 +75,7 @@ NS_IMETHODIMP CFDMUrl::SetComment(const PRUnichar * aComment)
 
 NS_IMETHODIMP CFDMUrl::GetCookies(PRUnichar * *aCookies)
 {
-    *aCookies = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strCookies, 
+    *aCookies = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strCookies ? (LPWSTR)m_strCookies : L"", 
 		(m_strCookies.length ()+1) * sizeof (wchar_t));
 	return NS_OK;
 }
@@ -82,7 +87,7 @@ NS_IMETHODIMP CFDMUrl::SetCookies(const PRUnichar * aCookies)
 
 NS_IMETHODIMP CFDMUrl::GetPostData(PRUnichar * *aPostData)
 {
-	*aPostData = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strPostData, 
+	*aPostData = (PRUnichar*) nsMemory::Clone ((LPWSTR)m_strPostData ? (LPWSTR)m_strPostData : L"", 
 		(m_strPostData.length ()+1) * sizeof (wchar_t));
 	return NS_OK;
 }

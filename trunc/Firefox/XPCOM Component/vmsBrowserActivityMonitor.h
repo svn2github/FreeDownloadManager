@@ -10,7 +10,7 @@
 #include <vector>
 #include <assert.h>
 #include <vmsCriticalSection.h>
-#include "../../vmsBrowsersSharedData.h"
+#include "../../include.add/vmsBrowsersSharedData.h"
 
 class vmsBrowserActivityMonitor
 {
