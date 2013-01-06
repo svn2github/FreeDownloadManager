@@ -18,6 +18,7 @@ CWnd_DownloadProgress::CWnd_DownloadProgress()
 {
 	m_hevShutdown = CreateEvent (NULL, TRUE, FALSE, NULL);
 	m_hevDraw = CreateEvent (NULL, TRUE, FALSE, NULL);
+	m_nCVPcurr = 0;
 	
 	DWORD dw;
 	m_hthDraw = CreateThread (NULL, 0, _threadDraw, this, 0, &dw);
@@ -80,6 +81,8 @@ DWORD WINAPI CWnd_DownloadProgress::_threadDraw(LPVOID lp)
 		if (pthis->m_iLastProgress != (int)(pthis->m_dld->pMgr->GetPercentDone () * 10) || pthis->m_bmpProgress.m_hObject == NULL)
 		{
 			CRect rc; pthis->GetClientRect (&rc);
+			static int nCVPWidth = rc.Width () / 4;
+			static int nCVPStep = nCVPWidth / 2;
 
 			if (pthis->m_bmpProgress.m_hObject)
 				pthis->m_bmpProgress.DeleteObject ();
@@ -121,8 +124,18 @@ DWORD WINAPI CWnd_DownloadProgress::_threadDraw(LPVOID lp)
 				vmsSectionInfo &sect = v [i];
 			
 				CSize part;
-				part.cy = rc.left + (int)((double)(INT64)sect.uDCurrent / (INT64)uSize * rc.Width ());
-				part.cx = rc.left + (int)((double)(INT64)sect.uDStart / (INT64)uSize * rc.Width ());
+				if (-1 == pthis->m_dld->pMgr->GetPercentDone ())
+				{
+					part.cy = rc.left + pthis->m_nCVPcurr + nCVPWidth;
+					part.cx = rc.left + pthis->m_nCVPcurr;
+					pthis->m_nCVPcurr += nCVPStep;
+					if (pthis->m_nCVPcurr > rc.Width ()) pthis->m_nCVPcurr = 0;
+				}
+				else
+				{
+					part.cy = rc.left + (int)((double)(INT64)sect.uDCurrent / (INT64)uSize * rc.Width ());
+					part.cx = rc.left + (int)((double)(INT64)sect.uDStart / (INT64)uSize * rc.Width ());
+				}
 			
 				if (part.cy == part.cx)
 				{
@@ -177,7 +190,8 @@ DWORD WINAPI CWnd_DownloadProgress::_threadDraw(LPVOID lp)
 			if (hTheme)
 				_theme.CloseThemeData (hTheme);
 
-			pthis->m_iLastProgress = (int)(pthis->m_dld->pMgr->GetPercentDone () * 10);
+			if (-1 != pthis->m_dld->pMgr->GetPercentDone ())
+				pthis->m_iLastProgress = (int)(pthis->m_dld->pMgr->GetPercentDone () * 10);
 		}
 		else
 		{

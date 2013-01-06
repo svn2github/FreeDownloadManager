@@ -137,6 +137,8 @@ void CDlg_Download::Update()
 
 	SetDlgItemText2 (IDC__FILESIZE, CDownloads_Tasks::GetDownloadText (m_dld, 1));
 
+	int nProgress = (int)m_dld->pMgr->GetPercentDone ();
+
 	if (m_dld->pMgr->IsBittorrent ())
 	{
 		switch (m_dld->pMgr->GetBtDownloadMgr ()->get_State ())
@@ -155,6 +157,17 @@ void CDlg_Download::Update()
 			SetDlgItemText2 (IDC__RESUMESUPPORT_, LS (L_RESUMESUPPORT));
 			SetDlgItemText2 (IDC__RST, LS (L_YES));
 			break;
+		}
+	}
+	else if (m_dld->pMgr->IsTp ())
+	{
+		UINT64 uSize = m_dld->pMgr->GetLDFileSize ();
+		if (uSize != _UI64_MAX && uSize != 0)
+		{
+			if (nProgress == -1)
+				SetDlgItemText2 (IDC__RST, LS (L_NO));
+			else
+				SetDlgItemText2 (IDC__RST, LS (L_YES));
 		}
 	}
 	else
@@ -181,15 +194,22 @@ void CDlg_Download::Update()
 
 	SetDlgItemText2 (IDC__TIMELEFT, CDownloads_Tasks::GetDownloadText (m_dld, 3));
 
-	int nProgress = (int)m_dld->pMgr->GetPercentDone ();
 	char szName [10000] = "";
 	CDownloads_Tasks::GetFileName (m_dld, szName);
 	CString str;
 
-	if (nProgress != 100)
-		str.Format ("[%d%%] - %s", nProgress, szName);
-	else
+	if (nProgress == 100)
 		str.Format ("%s - %s", szName, LS (L_DONE));
+	else if (nProgress == -1)
+	{
+		UINT64 uDone = m_dld->pMgr->GetDownloadedBytesCount ();
+		float val;
+		char szDim [10];
+		BytesToXBytes (uDone, &val, szDim);
+		str.Format ("%s - %.*g %s", szName, val > 999 ? 4 : 3, val, szDim);
+	}
+	else
+		str.Format ("[%d%%] - %s", nProgress, szName);
 	SetWindowText (str);
 
 	m_wndProgress.Invalidate (FALSE);
@@ -258,12 +278,20 @@ void CDlg_Download::OnHide()
 
 		case DDOR_DONTSHOWFORTHISDLD:
 			m_dld->dwFlags |= DLD_DONTSHOWDIALOG;
+			m_dld->setDirty();
 			break;
 		}
 	}	
 
-	m_dld->AddRef (); 
-	_pwndDownloads->PostMessage (WM_DW_CLOSEDLDDIALOG, 0, (LPARAM)(fsDownload*) m_dld);
+	if (_pwndDownloads)
+	{
+		m_dld->AddRef (); 
+		_pwndDownloads->PostMessage (WM_DW_CLOSEDLDDIALOG, 0, (LPARAM)(fsDownload*) m_dld);
+	}
+	else
+	{
+		ShowWindow (SW_HIDE);
+	}
 }
 
 void CDlg_Download::OnAutoclose() 

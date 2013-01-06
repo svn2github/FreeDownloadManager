@@ -508,8 +508,6 @@ BOOL CDownloadProperties_ProxyPage::OnApply()
 		WORD w = 0;
 		DNP_SET (wRollBackSize, FALSE, &w);
 	}
-
-	_DldsMgr.QueryStoringDownloadList();
 	
 	return CPropertyPage::OnApply();
 }

@@ -273,7 +273,11 @@
 #define IDD_TUM_SETTINGS_PERDIRECTION   386
 #define IDD_SPECIFYNETSPEEDVALUE        387
 #define IDD_CONNECTIONSPEEDINFO         388
+#define IDD_CREATETPDOWNLOAD            389
+#define IDD_TPDLD_GENERAL               390
 #define IDD_TORRENTMOVE                 492
+#define IDD_DIALOG2                     495
+#define IDD_UNHEXC2                     495
 #define IDC_URL                         1001
 #define IDC_BUTTON2                     1003
 #define IDC_SETTIME                     1003
@@ -378,6 +382,7 @@
 #define IDC_FOLDER                      1029
 #define IDC_MALREPSMINIMUM              1029
 #define IDC_WPURL                       1029
+#define IDC_STRSPEED                    1029
 #define IDC_SERVERTYPE                  1030
 #define IDC_PROTOCOLS                   1030
 #define IDC_ARGUMENTS                   1030
@@ -888,6 +893,8 @@
 #define IDC__MSG7                       1189
 #define IDC__SEC                        1190
 #define IDC__MSG8                       1190
+#define IDC__MSG9                       1276
+#define IDC_DESCRIPTION                 1300
 #define IDC_MAXMIRRORSVAL               1191
 #define IDC__SEC2                       1191
 #define IDC_MAXMIRRORSSPIN              1192
@@ -1068,9 +1075,12 @@
 #define IDC_ORBIT_FAILED                1355
 #define IDC_STATIC_CHOOSE_MANAGERS      1355
 #define IDC_ORBIT_UNPROCESSED           1356
+#define IDC__STRSPEED                   1356
 #define IDC_RESTRTRAFF                  1356
 #define IDC_ORBIT_TOTAL                 1357
 #define IDC_RESTTRAFFSSPIN              1357
+#define IDC_SPIN1                       1357
+#define IDC_STRSPEED_SPIN               1357
 #define IDC_STATIC_MTORRENT             1358
 #define IDC_MNC_VALUE                   1358
 #define IDC_MTORRENT_SUCCESSFUL         1359
@@ -1232,6 +1242,8 @@
 #define ID_Menu                         33028
 #define ID_IMPORT_IMPORTDOWNLOADSFROMOTHERCLIENTS 33029
 #define ID_FILE_IMPORT_IMPORT_DOWNLOADS_FROMOTHER_MANAGERS 33030
+#define ID_DOWNLOADS_CREATETPDOWNLOAD   33031
+#define ID_DLD_CREATETPDOWNLOAD         33032
 #define ID_SPIDERDLWEBPAGE              33900
 #define ID_FDC                          34000
 #define ID_PROCCEEDFURTHERINIT          34001
@@ -1246,9 +1258,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        389
-#define _APS_NEXT_COMMAND_VALUE         33031
-#define _APS_NEXT_CONTROL_VALUE         1381
-#define _APS_NEXT_SYMED_VALUE           117
+#define _APS_NEXT_RESOURCE_VALUE        496
+#define _APS_NEXT_COMMAND_VALUE         33236
+#define _APS_NEXT_CONTROL_VALUE         1559
+#define _APS_NEXT_SYMED_VALUE           137
 #endif
 #endif

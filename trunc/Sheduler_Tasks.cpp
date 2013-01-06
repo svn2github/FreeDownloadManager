@@ -234,6 +234,11 @@ void CSheduler_Tasks::OnTasksDisable()
 		int iItem = GetNextSelectedItem (pos);
 		fsSchedule *task = (fsSchedule*) GetItemData (iItem);
 		task->dwFlags &= ~ SCHEDULE_ENABLED;
+
+		fsScheduleEx* pschScheduleParam = (fsScheduleEx*)task;
+		if (pschScheduleParam && pschScheduleParam->m_ppoTaskWrapper)
+			pschScheduleParam->m_ppoTaskWrapper->setDirty();
+
 		_pwndScheduler->GetMgr ()->OnTaskUpdated (task);
 	}
 }
@@ -247,6 +252,11 @@ void CSheduler_Tasks::OnTasksEnable()
 		int iItem = GetNextSelectedItem (pos);
 		fsSchedule *task = (fsSchedule*) GetItemData (iItem);
 		task->dwFlags |= SCHEDULE_ENABLED;
+
+		fsScheduleEx* pschScheduleParam = (fsScheduleEx*)task;
+		if (pschScheduleParam && pschScheduleParam->m_ppoTaskWrapper)
+			pschScheduleParam->m_ppoTaskWrapper->setDirty();
+
 		_pwndScheduler->GetMgr ()->RepairNextTime (task);
 		_pwndScheduler->GetMgr ()->OnTaskUpdated (task);
 	}	

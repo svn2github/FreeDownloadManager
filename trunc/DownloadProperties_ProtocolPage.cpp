@@ -314,8 +314,6 @@ BOOL CDownloadProperties_ProtocolPage::OnApply()
 			DNP_SET (pszASCIIExts, TRUE, str);
 	}
 
-	_DldsMgr.QueryStoringDownloadList();
-
 	return CPropertyPage::OnApply();
 }
 

@@ -11,6 +11,7 @@
 
 #include <fsString.h>
 #include "list.h"
+#include "vmsPersistObject.h"
 
 #define SITE_VALIDFOR_HTTP			1	
 #define SITE_VALIDFOR_HTTPS			2	
@@ -86,7 +87,7 @@ enum fsSitesMgrEvent
 
 typedef void (*fntSitesMgrEvents)(fsSitesMgrEvent, fsSiteInfo*, LPVOID);
 
-class fsSitesMgr  
+class fsSitesMgr : public vmsPersistObject
 {
 public:
 	void CheckGroups();
@@ -118,6 +119,8 @@ public:
 	fsSiteInfo* GetSite (int iIndex);
 	
 	void AddSite (fsSiteInfoPtr site);
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 
 	fsSitesMgr();
 	virtual ~fsSitesMgr();

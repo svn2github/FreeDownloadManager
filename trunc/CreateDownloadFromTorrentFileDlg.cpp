@@ -65,16 +65,16 @@ BOOL CCreateDownloadFromTorrentFileDlg::OnInitDialog()
 	m_btnSetTime.SetIcon (SICO (IDI_SETTIME));
 	m_btnSetDefaultFolder.SetIcon (SICO (IDI_SETFOLDERDEFAULT));
 
-	m_task.hts.enType = HTS_ONCE;
-	m_task.hts.last.dwHighDateTime = m_task.hts.last.dwLowDateTime = UINT_MAX;
-	m_task.dwFlags = SCHEDULE_ENABLED;
+	m_schScheduleParam.schTask.hts.enType = HTS_ONCE;
+	m_schScheduleParam.schTask.hts.last.dwHighDateTime = m_schScheduleParam.schTask.hts.last.dwLowDateTime = UINT_MAX;
+	m_schScheduleParam.schTask.dwFlags = SCHEDULE_ENABLED;
 	SYSTEMTIME time;
 	GetLocalTime (&time);
 	if (++time.wHour > 23)
 		time.wHour = 0;
 	time.wMinute = 0;
-	SystemTimeToFileTime (&time, &m_task.hts.next);
-	m_task.uWaitForConfirmation = 0;
+	SystemTimeToFileTime (&time, &m_schScheduleParam.schTask.hts.next);
+	m_schScheduleParam.schTask.uWaitForConfirmation = 0;
 
 	m_wndGroups.Fill ();
 
@@ -181,7 +181,7 @@ void CCreateDownloadFromTorrentFileDlg::OnSettime()
 {
 	CScheduleSheet sheet (LS (L_SCHEDULEDLDS), this);
 
-	sheet.Init (&m_task, FALSE);
+	sheet.Init (&m_schScheduleParam.schTask, FALSE);
 	
 	if (IDOK == _DlgMgr.DoModal (&sheet))
 	{
@@ -193,9 +193,6 @@ void CCreateDownloadFromTorrentFileDlg::OnSettime()
 
 void CCreateDownloadFromTorrentFileDlg::OnAdvanced() 
 {
-	if (m_dld->pMgr && m_dld->pMgr->GetBtDownloadMgr())
-		m_dld->pMgr->GetBtDownloadMgr()->EnableQueryStoringDownloadList(false);
-
 	CBtDldSheet sheet (LS (L_ADVANCED), this);
 	DLDS_LIST v;
 	v.push_back (m_dld);
@@ -240,7 +237,10 @@ void CCreateDownloadFromTorrentFileDlg::OnOK()
 		vmsDownloadsGroupSmartPtr pGrp = _DldsGrps.FindGroup (_App.NewDL_GroupId ());
 		if (pGrp != NULL) {
 			pGrp->strOutFolder = strOutFolder;
-			_DldsGrps.QueryStoringGroupsInformation();
+			pGrp->setDirty();
+			
+			
+			
 		}
 	}
 

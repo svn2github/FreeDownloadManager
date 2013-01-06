@@ -29,11 +29,11 @@ private:
   ~CFDMUrl();
 
 protected:
-	_bstr_t m_strUrl;
-	_bstr_t m_strReferer;
-	_bstr_t m_strComment;
-	_bstr_t m_strCookies;
-	_bstr_t m_strPostData;
+	std::wstring m_wstrUrl;
+	std::wstring m_wstrReferer;
+	std::wstring m_wstrComment;
+	std::wstring m_wstrCookies;
+	std::wstring m_wstrPostData;
 	std::wstring m_wstrUserAgent, m_wstrOriginalUrl;
 };
 

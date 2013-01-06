@@ -61,6 +61,9 @@ void CWPDS_ImagesPages::DoDataExchange(CDataExchange* pDX)
 	else
 		m_wpds->enImgsExtsType = WPDET_OFF;
 	m_wpds->strImgsExts = strExts;
+
+	if (m_wpds->m_ppoOwner)
+		m_wpds->m_ppoOwner->setDirty();
 }
 
 BEGIN_MESSAGE_MAP(CWPDS_ImagesPages, CPropertyPage)

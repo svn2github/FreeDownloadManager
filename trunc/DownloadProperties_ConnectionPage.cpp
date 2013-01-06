@@ -372,7 +372,7 @@ BOOL CDownloadProperties_ConnectionPage::OnApply()
 			m_pvDlds->at (i)->pMgr->GetDownloadMgr ()->ApplyProperties ();	
 	}
 
-	_DldsMgr.QueryStoringDownloadList();
+	
 
 	return CPropertyPage::OnApply();
 }

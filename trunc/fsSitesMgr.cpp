@@ -3,6 +3,7 @@
 */
 
 #include "stdafx.h"
+#include "Utils.h"
 #include "FdmApp.h"
 #include "fsSitesMgr.h"
 #include "inetutil.h"
@@ -32,6 +33,7 @@ void fsSitesMgr::AddSite(fsSiteInfoPtr site)
 	vmsAUTOLOCKSECTION (m_csSites);
 	m_vSites.push_back (site);
 	vmsAUTOLOCKSECTION_UNLOCK (m_csSites);
+	setDirty();
 	Event (SM_SITEADDED, site);
 }
 
@@ -77,6 +79,7 @@ void fsSitesMgr::DeleteSite(fsSiteInfo *pSite)
 		return;
 	Event (SM_SITEDELETED, pSite);
 	m_vSites.erase (it);
+	setDirty();
 }
 
 void fsSitesMgr::DeleteAllTempSites()
@@ -163,6 +166,66 @@ BOOL fsSitesMgr::SaveToFile(HANDLE hFile)
 	}
 
 	return TRUE;	
+}
+
+void fsSitesMgr::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	int cPermSites = GetSiteCount () - GetTempSiteCount ();
+
+	putVarToBuffer(cPermSites, pbtCurrentPos, 0, 0, &dwRequiredSize);
+
+	BOOL bMaySavePwds = _App.SM_KeepPasswords () && 
+		_App.SM_DontSavePwdsToDisk () == FALSE;
+	
+	for (int i = 0; i < GetSiteCount (); i++) {
+		fsSiteInfo *site = GetSite (i);
+
+		if (site->bTemp)
+			continue;
+
+		UINT nGrpId = site->pGroup ? site->pGroup->nId : (UINT)-1;
+
+		putStrToBuffer(site->strName, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		putStrToBuffer(bMaySavePwds ? site->strPassword : NULL, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		putStrToBuffer(bMaySavePwds ? site->strUser : NULL, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		putVarToBuffer(nGrpId, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		putVarToBuffer(site->dwFtpFlags, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		putVarToBuffer(site->cConnsNow, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		putVarToBuffer(site->cMaxConns, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		putVarToBuffer(site->dwValidFor, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	}
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize) {
+			*pdwSize = dwRequiredSize;
+		}
+		return;
+	}
+
+	putVarToBuffer(cPermSites, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+
+	for (int i = 0; i < GetSiteCount (); i++) {
+		fsSiteInfo *site = GetSite (i);
+
+		if (site->bTemp)
+			continue;
+
+		UINT nGrpId = site->pGroup ? site->pGroup->nId : (UINT)-1;
+
+		putStrToBuffer(site->strName, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+		putStrToBuffer(bMaySavePwds ? site->strPassword : NULL, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+		putStrToBuffer(bMaySavePwds ? site->strUser : NULL, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+		putVarToBuffer(nGrpId, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+		putVarToBuffer(site->dwFtpFlags, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+		putVarToBuffer(site->cConnsNow, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+		putVarToBuffer(site->cMaxConns, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+		putVarToBuffer(site->dwValidFor, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	}
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
 }
 
 int fsSitesMgr::GetTempSiteCount()
@@ -281,6 +344,94 @@ BOOL fsSitesMgr::LoadFromFile(HANDLE hFile)
 	return TRUE;	
 }
 
+bool fsSitesMgr::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	vmsAUTOLOCKSECTION (m_csSites);
+
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	int cSites = 0;
+
+	m_vSites.clear ();
+
+	if (!getVarFromBuffer(cSites, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+	
+	for (int i = 0; i < cSites; i++) {
+		fsSiteInfoPtr site;
+		site.CreateInstance ();
+
+		if (dwVer <= 1) {
+			fsSiteInfo_v1 sitev1;
+
+			if (!getVarFromBuffer(sitev1, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+
+			site->dwFtpFlags = sitev1.bFtpPassive;
+			site->bTemp = sitev1.bTemp;
+			site->cConnsNow = sitev1.cConnsNow;
+			site->cMaxConns = sitev1.cMaxConns;
+			site->dwValidFor = SITE_VALIDFOR_HTTP|SITE_VALIDFOR_HTTPS|SITE_VALIDFOR_FTP|SITE_VALIDFOR_SUBDOMAINS;
+
+		} else {
+			if (dwVer < 3) {
+
+				fsSiteInfo_v2 sitev2;
+
+				if (!getVarFromBuffer(sitev2, pbtCurrentPos, pbtBuffer, *pdwSize))
+					return false;
+
+				if (!getStrFromBuffer(&sitev2.strGroup.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+					return false;
+
+				site->dwFtpFlags = sitev2.dwFtpFlags;
+				site->bTemp = sitev2.bTemp;
+				site->cConnsNow = sitev2.cConnsNow;
+				site->cMaxConns = sitev2.cMaxConns;
+				site->dwValidFor = sitev2.dwValidFor;
+			}
+		}
+
+		if (!getStrFromBuffer(&site->strName.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+
+		if (!getStrFromBuffer(&site->strPassword.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+
+		if (!getStrFromBuffer(&site->strUser.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+
+		if (dwVer >= 3) {
+
+			UINT nId;
+			if (!getVarFromBuffer(nId, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+			site->pGroup = nId != (UINT)-1 ? _DldsGrps.FindGroup (nId) : NULL;
+
+			if (!getVarFromBuffer(site->dwFtpFlags, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+
+			if (!getVarFromBuffer(site->cConnsNow, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+
+			if (!getVarFromBuffer(site->cMaxConns, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+
+			if (!getVarFromBuffer(site->dwValidFor, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+		}
+
+		site->cConnsNow = 0;
+		site->bTemp = FALSE;
+
+		AddSite (site);
+	}
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	return true;
+}
+
 void fsSitesMgr::SiteUpdated(fsSiteInfo *pSite)
 {
 	Event (SM_SITEUPDATED, pSite);
@@ -294,6 +445,7 @@ void fsSitesMgr::DeleteAllPasswords()
 		fsSiteInfo* site = m_vSites [i];
 		site->strUser = NULL;
 		site->strPassword = NULL;
+		setDirty();
 		SiteUpdated (site);
 	}
 }
@@ -310,6 +462,7 @@ void fsSitesMgr::CheckGroups()
 		if (site->pGroup != NULL && site->pGroup->bAboutToBeDeleted)
 		{
 			site->pGroup = NULL;
+			setDirty();
 			v.push_back (site);
 		}
 	}

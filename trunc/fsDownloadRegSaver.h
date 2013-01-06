@@ -11,10 +11,11 @@
 
 #include "list.h"
 #include "fsDownload.h"
+#include "vmsPersistableListOfDownloads.h"
 
 typedef DLDS_LIST t_downloads;
 
-#define DLFILE_CURRENT_VERSION	(15)
+#define DLFILE_CURRENT_VERSION	(17)
 
 #define DLFILE_SIG "FDM Downloads  "
 
@@ -50,7 +51,11 @@ public:
 	
 	
 	fsDLLoadResult Load (t_downloads* vDownloads, LPCSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt = DLLFT_SAV, BOOL bErrIfNotExists = FALSE);
+	
+	fsDLLoadResult Load (vmsDownloadList& vDownloads, LPCSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt = DLLFT_SAV, BOOL bErrIfNotExists = FALSE);
 	BOOL Save (t_downloads* vDownloads, LPCSTR pszFileName);
+	
+	BOOL Save(vmsDownloadList& vDownloads, LPCSTR pszFileName);
 	bool IsStoringLogTurnedOn();
 
 	fsDownloadRegSaver();

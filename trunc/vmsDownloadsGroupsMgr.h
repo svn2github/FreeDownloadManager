@@ -10,10 +10,13 @@
 #endif 
 
 #include "tree.h"
+#include "vmsPersistObject.h"
 
 #define GRP_OTHER_ID		((UINT)0)
 
-struct vmsDownloadsGroup : public vmsObject
+typedef bool (*GroupLoadEventHandler)(void* pvData);
+
+struct vmsDownloadsGroup : public vmsObject, public vmsPersistObject
 {
 	fsString strName;		
 	fsString strOutFolder;	
@@ -27,6 +30,14 @@ struct vmsDownloadsGroup : public vmsObject
 
 	
 	UINT nId;
+
+	
+	int nChildren;
+	void* pvData;
+	GroupLoadEventHandler glehEventHandler;
+
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 };
 
 typedef vmsObjectSmartPtr <vmsDownloadsGroup> vmsDownloadsGroupSmartPtr;
@@ -47,7 +58,22 @@ struct vmsDownloadsGroupsFileHdr
 	}
 };
 
-class vmsDownloadsGroupsMgr  
+class vmsDownloadsGroupsMgr;
+
+struct TGroupLoadEventData
+{
+	TGroupLoadEventData()
+		: pdgmGroupsMgr(0),
+		  pgtParent(0),
+		  bIsGroupLoaded(true)
+	{}
+	vmsDownloadsGroupsMgr* pdgmGroupsMgr;
+	PDLDS_GROUPS_TREE pgtParent;
+	vmsDownloadsGroupSmartPtr pGroupPtr;
+	bool bIsGroupLoaded;
+};
+
+class vmsDownloadsGroupsMgr : public vmsPersistObject
 {
 public:
 	static LPCSTR GetAudioExts();
@@ -87,7 +113,13 @@ public:
 	fsString GetGroupsRootOutFolder();
 	
 	void GetGroupWithSubgroups (vmsDownloadsGroupSmartPtr pGroup, std::vector <vmsDownloadsGroupSmartPtr> &v);
-	void QueryStoringGroupsInformation(); 
+	
+	
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+	TGroupLoadEventData& AddGroupLoadEventData(const TGroupLoadEventData& gledData);
+	void RemoveGroupCreators();
+	void UpdateIdForNextGroup(int nId);
 
 	vmsDownloadsGroupsMgr();
 	virtual ~vmsDownloadsGroupsMgr();
@@ -107,11 +139,20 @@ protected:
 	
 	void CreateDefaultGroups();
 	
+	void SaveGroupsTreeToBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize, DWORD* pdwSizeReuiqred, PDLDS_GROUPS_TREE pRoot);
+	void SaveGroupToBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize, DWORD* pdwSizeReuiqred, vmsDownloadsGroupSmartPtr pGroup);
+	bool LoadGroupsTreeFromBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, PDLDS_GROUPS_TREE pRoot);
+	bool LoadGroupFromBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, vmsDownloadsGroupSmartPtr pGroup);
+	
 	fs::ListTree <vmsDownloadsGroupSmartPtr>::ListTreePtr m_tGroups;
 	
 	std::vector <fs::ListTree <vmsDownloadsGroupSmartPtr>::ListTreePtr> m_vGroups;
+	
 	bool m_bIsGroupsInformationChanged; 
 	vmsCriticalSection m_csGroupsInformationChangeGuard;
+	std::list<TGroupLoadEventData> m_lstGroupLoadEventData; 
 };
+
+bool FdmGroupLoadEventHandler(void* pvData);
 
 #endif 

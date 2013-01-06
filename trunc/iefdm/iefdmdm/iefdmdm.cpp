@@ -58,3 +58,16 @@ STDAPI DllUnregisterServer(void)
 	return _Module.UnregisterServer(TRUE);
 }
 
+STDAPI vmsInstaller (bool bInstall, bool bCurrentUserOnly)
+{
+	if (bCurrentUserOnly)
+		AtlSetPerUserRegistration (true);
+
+	HRESULT hrRes = bInstall ? DllRegisterServer () : DllUnregisterServer ();
+
+	if (bCurrentUserOnly)
+		AtlSetPerUserRegistration (false);
+
+	return hrRes;
+}
+

@@ -19,7 +19,8 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CSites_GeneralPage, CPropertyPage)
 
-CSites_GeneralPage::CSites_GeneralPage() : CPropertyPage(CSites_GeneralPage::IDD)
+CSites_GeneralPage::CSites_GeneralPage() : CPropertyPage(CSites_GeneralPage::IDD),
+	m_bIsAddingSite(false)
 {
 	m_psp.dwFlags |= PSP_USETITLE;
 	m_psp.pszTitle = LS (L_GENERAL);
@@ -224,6 +225,8 @@ BOOL CSites_GeneralPage::OnApply()
 			
 			m_pSite->dwValidFor &= ~ (SITE_VALIDFOR_HTTP|SITE_VALIDFOR_HTTPS|SITE_VALIDFOR_FTP);
 			m_pSite->dwValidFor |= fsNPToSiteValidFor (fsSchemeToNP (url.GetInternetScheme ()));
+			if (!m_bIsAddingSite)
+				_SitesMgr.setDirty();
 			m_advanced->ToDialog ();	
 		}
 
@@ -294,6 +297,9 @@ BOOL CSites_GeneralPage::OnApply()
 		m_pSite->strPassword = strPassword; 
 	else 
 		m_pSite->strPassword = NULL;
+
+	if (!m_bIsAddingSite)
+		_SitesMgr.setDirty();
 
 	return CPropertyPage::OnApply();
 }
@@ -370,4 +376,9 @@ BOOL CSites_GeneralPage::OnHelpInfo(HELPINFO* pHelpInfo)
 void CSites_GeneralPage::OnDontsendlist2() 
 {
 	SetModified ();	
+}
+
+void  CSites_GeneralPage::SetMode(bool bIsAddingSite)
+{
+	m_bIsAddingSite = bIsAddingSite;
 }

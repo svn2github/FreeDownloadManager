@@ -1,3 +1,7 @@
+/*
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+*/
+
 #ifndef __FXS_STRING_H_
 #define __FXS_STRING_H_
 
@@ -163,7 +167,7 @@ struct fsString
 
 	int GetLength () const {return Length ();}
 
-	void Replace (LPCSTR /*pszWhat*/, LPCSTR /*pszWith*/) {}
+	void Replace (LPCSTR , LPCSTR ) {}
 
 	void Format (LPCSTR pszFormat ...)
 	{

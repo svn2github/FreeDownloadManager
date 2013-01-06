@@ -816,9 +816,6 @@
     <ClCompile Include="vmsAppUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vmsAppVersion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vmsArchive.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -832,9 +829,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vmsBatchList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsBinaryFileVersionInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vmsBtDownloadManager.cpp">
@@ -967,9 +961,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vmsSkinMgr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsSourceCodeLogger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vmsSpeedTracker.cpp">
@@ -1128,6 +1119,24 @@
     <ClCompile Include="FdmUiWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vmsPersistObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsPersistableListOfDownloads.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CreateTPDownloadDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsTpDownloadMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TpDldSheet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TpDld_General.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="vmsTrafficUsageModeMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -1153,6 +1162,45 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="AlsFolderBrowser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fsDownload.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StateInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CmdHistorySaver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsElevatedFdm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DlgUnhExc2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsFdmCrashReporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsCrashReporter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib.Add\ioapi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib.Add\zip.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsFirefoxExtensionUpdateMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib.Add\unzip.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsAppGlobalObjects.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite\sqlite3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1968,9 +2016,6 @@
     <ClInclude Include="vmsAppUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vmsAppVersion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vmsArchive.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1984,9 +2029,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsBatchList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsBinaryFileVersionInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsBtDownloadManager.h">
@@ -2109,9 +2151,6 @@
     <ClInclude Include="vmsSecurity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vmsSharedData.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vmsSimpleFileDownloader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -2119,9 +2158,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsSkinMgr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsSourceCodeLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsSpeedTracker.h">
@@ -2280,7 +2316,25 @@
     <ClInclude Include="FdmUiWindow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="vmsPersistObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="vmsTrafficUsageModeMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsPersistableListOfDownloads.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateTPDownloadDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsTpDownloadMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TpDldSheet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TpDld_General.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsMaximumSpeedMeter.h">
@@ -2310,7 +2364,40 @@
     <ClInclude Include="TorrentMoveErrorDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vmsBrowsersSharedData.h">
+    <ClInclude Include="AlsFolderBrowser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StateInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CmdHistorySaver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsElevatedFdm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DlgUnhExc2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFdmCrashReporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsCrashCatcher.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsCrashReporter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsAppFileUpdateInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFirefoxExtensionUpdateMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsAppGlobalObjects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFirefoxExtensionInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

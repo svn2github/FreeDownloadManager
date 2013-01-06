@@ -27,12 +27,16 @@ bool vmsIeHelper::RegisterExeAsSafeToRun(LPCTSTR ptszAppGuid)
 	CString strKey = _T ("Software\\Microsoft\\Internet Explorer\\Low Rights\\ElevationPolicy\\");
 	strKey += ptszAppGuid;
 	CRegKey key;
-	if (ERROR_SUCCESS != key.Open (HKEY_LOCAL_MACHINE, strKey, KEY_ALL_ACCESS))
-	{
-		if (ERROR_SUCCESS != key.Create (HKEY_LOCAL_MACHINE, strKey, NULL, 0, KEY_ALL_ACCESS, NULL, NULL))
-			return false;
-	}
-
+	bool bOK = ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strKey, KEY_ALL_ACCESS);
+	if (!bOK)
+		bOK = ERROR_SUCCESS == key.Create (HKEY_LOCAL_MACHINE, strKey, NULL, 0, KEY_ALL_ACCESS, NULL, NULL);
+	if (!bOK)
+		bOK = ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, strKey, KEY_ALL_ACCESS);
+	if (!bOK)
+		bOK = ERROR_SUCCESS == key.Create (HKEY_CURRENT_USER, strKey, NULL, 0, KEY_ALL_ACCESS, NULL, NULL);
+	if (!bOK)
+		return false;
+	
 	TCHAR tsz [MY_MAX_PATH] = _T ("");
 	GetModuleFileName (NULL, tsz, MY_MAX_PATH);
 
@@ -43,11 +47,11 @@ bool vmsIeHelper::RegisterExeAsSafeToRun(LPCTSTR ptszAppGuid)
 	CString strName = ptsz+1;
 	*ptsz = 0;
 
-	bool bOk = ERROR_SUCCESS == key.SetValue (strName, _T ("AppName"));
-	bOk = ERROR_SUCCESS == key.SetValue (tsz, _T ("AppPath")) && bOk;
-	bOk = ERROR_SUCCESS == key.SetValue (3, _T ("Policy")) && bOk;
+	bOK = ERROR_SUCCESS == key.SetValue (strName, _T ("AppName"));
+	bOK = ERROR_SUCCESS == key.SetValue (tsz, _T ("AppPath")) && bOK;
+	bOK = ERROR_SUCCESS == key.SetValue (3, _T ("Policy")) && bOK;
 
-	return bOk;
+	return bOK;
 }
 
 bool vmsIeHelper::RegisterExeAsSafeToDragDrop(LPCTSTR ptszAppGuid)
@@ -55,11 +59,16 @@ bool vmsIeHelper::RegisterExeAsSafeToDragDrop(LPCTSTR ptszAppGuid)
 	CString strKey = _T ("Software\\Microsoft\\Internet Explorer\\Low Rights\\DragDrop\\");
 	strKey += ptszAppGuid;
 	CRegKey key;
-	if (ERROR_SUCCESS != key.Open (HKEY_LOCAL_MACHINE, strKey, KEY_ALL_ACCESS))
-	{
-		if (ERROR_SUCCESS != key.Create (HKEY_LOCAL_MACHINE, strKey, NULL, 0, KEY_ALL_ACCESS, NULL, NULL))
-			return false;
-	}
+	bool bOK = ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strKey, KEY_ALL_ACCESS);
+	if (!bOK)
+		bOK = ERROR_SUCCESS == key.Create (HKEY_LOCAL_MACHINE, strKey, NULL, 0, KEY_ALL_ACCESS, NULL, NULL);
+	if (!bOK)
+		bOK = ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, strKey, KEY_ALL_ACCESS);
+	if (!bOK)
+		bOK = ERROR_SUCCESS == key.Create (HKEY_CURRENT_USER, strKey, NULL, 0, KEY_ALL_ACCESS, NULL, NULL);
+	if (!bOK)
+		return false;
+	
 	
 	TCHAR tsz [MY_MAX_PATH] = _T ("");
 	GetModuleFileName (NULL, tsz, MY_MAX_PATH);
@@ -71,9 +80,9 @@ bool vmsIeHelper::RegisterExeAsSafeToDragDrop(LPCTSTR ptszAppGuid)
 	CString strName = ptsz+1;
 	*ptsz = 0;
 	
-	bool bOk = ERROR_SUCCESS == key.SetValue (strName, _T ("AppName"));
-	bOk = ERROR_SUCCESS == key.SetValue (tsz, _T ("AppPath")) && bOk;
-	bOk = ERROR_SUCCESS == key.SetValue (3, _T ("Policy")) && bOk;
+	bOK = ERROR_SUCCESS == key.SetValue (strName, _T ("AppName"));
+	bOK = ERROR_SUCCESS == key.SetValue (tsz, _T ("AppPath")) && bOK;
+	bOK = ERROR_SUCCESS == key.SetValue (3, _T ("Policy")) && bOK;
 	
-	return bOk;
+	return bOK;
 }

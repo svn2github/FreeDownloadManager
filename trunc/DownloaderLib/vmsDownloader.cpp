@@ -4,13 +4,15 @@
 
 #include "stdafx.h"
 #include "vmsDownloader.h"
+#include "..\fsDownloadRegSaver.h"
 
 #define DNP_COPY(a,b) SAFE_DELETE_ARRAY (m_dldr.GetDNP ()->a);\
 	m_dldr.GetDNP ()->a = new char [lstrlen (b) + 1];\
 	lstrcpy (m_dldr.GetDNP ()->a, b);
 
 vmsDownloader::vmsDownloader() : 
-	m_dldr (NULL)
+	m_dldr (NULL),
+	m_irLastError(IR_SUCCESS)
 {
 	m_dldr.SetEventFunc (_DownloadMgrEvents, this);
 	m_dldr.SetEventDescFunc (NULL, 0);
@@ -43,10 +45,12 @@ DWORD vmsDownloader::_DownloadMgrEvents(fsDownloadMgr *pMgr, fsDownloaderEvent e
 	case DE_EXTERROR:
 		if (uInfo == DMEE_STOPPEDORDONE)
 		{
-			if (pMgr->IsDone ())
+			if (pMgr->IsDone ()) {
 				pthis->m_enState = D_S_DONE;
-			else
+			} else {
 				pthis->m_enState = D_S_FAILED;
+				pthis->m_irLastError = pMgr->GetLastError();
+			}
 		}
 		break;
 
@@ -65,8 +69,10 @@ DWORD vmsDownloader::_DownloadMgrEvents(fsDownloadMgr *pMgr, fsDownloaderEvent e
 fsInternetResult vmsDownloader::Initialize(LPCSTR pszURL, LPCSTR pszOutFile)
 {
 	fsInternetResult ir = m_dldr.CreateByUrl (pszURL, TRUE);
-	if (ir != IR_SUCCESS)
+	if (ir != IR_SUCCESS) {
+		m_irLastError = ir;
 		return ir;
+	}
 
 	fsDownload_Properties *dp = m_dldr.GetDP ();
 
@@ -98,6 +104,25 @@ void vmsDownloader::StopDownloading()
 vmsDownloader_State vmsDownloader::get_State()
 {
 	return m_enState;
+}
+
+fsInternetResult vmsDownloader::get_LastError()
+{
+	return m_irLastError;
+}
+
+tstring vmsDownloader::get_LastErrorMessage()
+{
+	tstring sMsg;
+
+	if (m_irLastError == IR_S_FALSE && m_dldr.IsFailedToCreateDestinationFile()) {
+		TCHAR szMsg[1024] = {0,};
+		_stprintf_s(szMsg, 1024, _T("Cannot create the destionation file (Path: '%s'). There might be another downloader uses a file with an identical path. In this case, in order to retry downloading please exit the wizard and launch it again after other one finishes working."), m_dldr.GetDP()->pszFileName ? m_dldr.GetDP()->pszFileName : _T(""));
+		return tstring(szMsg);
+	}
+
+	fsIRToStr(m_irLastError, sMsg);
+	return sMsg;
 }
 
 int vmsDownloader::get_Progress()

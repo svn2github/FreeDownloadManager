@@ -14,7 +14,8 @@ static char THIS_FILE[] = __FILE__;
 
 IMPLEMENT_DYNCREATE(CSites_AdvancedPage, CPropertyPage)
 
-CSites_AdvancedPage::CSites_AdvancedPage() : CPropertyPage(CSites_AdvancedPage::IDD)
+CSites_AdvancedPage::CSites_AdvancedPage() : CPropertyPage(CSites_AdvancedPage::IDD),
+	m_bIsAddingSite(false)
 {
 	m_psp.dwFlags |= PSP_USETITLE;
 	m_psp.pszTitle = LS (L_ADVANCED);
@@ -100,6 +101,8 @@ BOOL CSites_AdvancedPage::OnApply()
 	}
 
 	m_pSite->dwValidFor = dwVF;
+	if (!m_bIsAddingSite)
+		_SitesMgr.setDirty();
 
 	return CPropertyPage::OnApply();
 }
@@ -200,4 +203,9 @@ BOOL CSites_AdvancedPage::OnHelpInfo(HELPINFO* pHelpInfo)
 	PrepareCHMgr (pHelpInfo->MousePos);
 	_CHMgr.OnWT ();
 	return TRUE;
+}
+
+void  CSites_AdvancedPage::SetMode(bool bIsAddingSite)
+{
+	m_bIsAddingSite = bIsAddingSite;
 }

@@ -117,14 +117,16 @@ fsInternetResult fsHttpFiles::LoadFile()
 			LPSTR psz = 0;
 			fsnew (psz, char, int (uMax+1));
 			CopyMemory (psz, m_pszFileBuffer, UINT (uPos));
-			delete [] m_pszFileBuffer;
+			
+			SAFE_DELETE_ARRAY (m_pszFileBuffer);
 			m_pszFileBuffer = psz;
 		}
 
 		ir = m_httpFile.Read (LPBYTE (m_pszFileBuffer+uPos), uToRead, &dwRead);
 		if (ir != IR_SUCCESS)
 		{
-			delete m_pszFileBuffer;
+			
+			SAFE_DELETE_ARRAY (m_pszFileBuffer);
 			return ir;
 		}
 
@@ -315,6 +317,17 @@ void fsHttpFiles::CheckFolder(fsFileInfo *file)
 
 	
 	file->bFolder = pszSlash >= pszExt;
+
+	
+	if (file->bFolder) {
+		LPCSTR pszNumber = strrchr (file->strName, '#');
+		LPCSTR pszQuestion = strrchr (file->strName, '?');
+		if (pszSlash == 0 && (pszNumber == (LPCSTR)file->strName || pszQuestion == (LPCSTR)file->strName)) {
+			file->bFolder = FALSE;
+		} else if (pszSlash + 1 == pszNumber || pszSlash + 1 == pszQuestion) {
+			file->bFolder = FALSE;
+		}
+	}
 
 	
 	

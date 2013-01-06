@@ -8,6 +8,7 @@
 #include "MainFrm.h"
 #include "mfchelp.h"
 #include "vmsSecurity.h"
+#include "vmsAppMutex.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -49,11 +50,13 @@ BOOL fsUpdateMgr::StartUpdater()
 	si.cb = sizeof (si);
 	ZeroMemory (&pi, sizeof (pi));
 
+	extern vmsAppMutex _appMutex;
+
 	CString strCmdLine;
 	strCmdLine.Format ("\"%s\" \"%s\" \"%s\" \"%s\" \"/silent\" \"0\"",
 		vmsGetAppFolder () + "updater.exe", 
 		((CFdmApp*)AfxGetApp ())->m_strAppPath + "fdm.exe", 
-		_pszAppMutex, 
+		_appMutex.getName (), 
 		m_strUpdateFile);
 
 	if (FALSE == CreateProcess (NULL, (LPSTR)(LPCSTR)strCmdLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
@@ -73,8 +76,7 @@ void fsUpdateMgr::CheckForUpdate(bool bByUser)
 	fsnew1 (m_dldr, fsDownloadMgr (NULL));
 	m_dldr->SetEventFunc (_DownloadMgrEvents, this);
 	m_dldr->SetEventDescFunc (_DownloadMgrDescEvents, this);
-	m_dldr->EnableQueryStoringDownloadingList(false);
-
+	
 	m_bRunning = TRUE;
 	m_bChecking = TRUE;
 

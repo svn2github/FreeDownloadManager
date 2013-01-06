@@ -117,11 +117,11 @@ typedef vmsVariantValue DATAFILEITEM, *LPDATAFILEITEM;
 class vmsDataFile
 {
 public:
-	void get_Value (LPCSTR pszSection, LPCSTR pszValueName, LPBYTE& pbValue, UINT& nValueSize);
-	void get_Value (LPCSTR pszSection, LPCSTR pszValueName, LPCSTR& strValue);
-	void get_Value (LPCSTR pszSection, LPCSTR pszValueName, double& fValue);
-	void get_Value (LPCSTR pszSection, LPCSTR pszValueName, __int64& i64Value);
-	void get_Value (LPCSTR pszSection, LPCSTR pszValueName, int& iValue);
+	bool get_Value (LPCSTR pszSection, LPCSTR pszValueName, LPBYTE& pbValue, UINT& nValueSize);
+	bool get_Value (LPCSTR pszSection, LPCSTR pszValueName, LPCSTR& strValue);
+	bool get_Value (LPCSTR pszSection, LPCSTR pszValueName, double& fValue);
+	bool get_Value (LPCSTR pszSection, LPCSTR pszValueName, __int64& i64Value);
+	bool get_Value (LPCSTR pszSection, LPCSTR pszValueName, int& iValue);
 	void set_Value(LPCSTR pszSection, LPCSTR pszValueName, LPBYTE pbValue, UINT nValueSize);
 	void set_Value(LPCSTR pszSection, LPCSTR pszValueName, LPCSTR pszValue);
 	void set_Value(LPCSTR pszSection, LPCSTR pszValueName, double fValue);
@@ -134,6 +134,8 @@ public:
 	
 	void LoadFromFile (HANDLE hFile);
 	void SaveToFile (HANDLE hFile);
+	void SaveToBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwRequiredSize);
+	void LoadFromBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize);
 
 	vmsDataFile();
 	virtual ~vmsDataFile();
@@ -148,6 +150,10 @@ protected:
 	
 	
 	LPDATAFILETREE FindItem (LPCSTR pszSection, LPCSTR pszValueName, LPDATAFILETREE ptRoot = NULL);
+	void SaveToBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwRequiredSize, vmsDataFileItem &item);
+	void SaveToBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwRequiredSize, LPDATAFILETREE ptRoot);
+	bool LoadFromBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize, LPDATAFILETREE ptRoot);
+	bool LoadFromBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize, vmsDataFileItem &item);
 
 	
 	fs::ListTree <vmsDataFileItem>::ListTreePtr m_tData;

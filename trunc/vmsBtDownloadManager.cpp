@@ -23,7 +23,6 @@ LONG vmsBtDownloadManager::m_cStatDataRefs = 0;
 HANDLE vmsBtDownloadManager::m_hmxStaticObj = CreateMutex (NULL, FALSE, NULL);
 
 vmsBtDownloadManager::vmsBtDownloadManager()
-	: m_bDontQueryStoringDownloadList(false)
 {
 	WaitForSingleObject (m_hmxStaticObj, INFINITE);
 	if (InterlockedIncrement (&m_cStatDataRefs) == 1)
@@ -119,6 +118,7 @@ BOOL vmsBtDownloadManager::CreateByTorrentFile(LPCSTR pszTorrentFile, LPCSTR psz
 			m_info.bDone = TRUE;
 			m_info.fPercentDone = 100;
 			m_info.nDownloadedBytes = GetTotalFilesSize ();
+			setDirty();
 		}
 
 		enable_Flags (BTDF_NEVER_DELETE_FILES_ON_DISK);
@@ -133,11 +133,14 @@ BOOL vmsBtDownloadManager::CreateByTorrentFile(LPCSTR pszTorrentFile, LPCSTR psz
 	for (int i = get_FileCount () - 1; i >= 0; i--)
 		m_info.pfProgress [i] = bSeedOnly ? 1.0f : 0;
 
+	setDirty();
+
 	vmsAUTOLOCKSECTION_UNLOCK (m_csTorrentFile);
 
 	PostCreateTorrentObject ();
 
 	m_fRequiredRatio = _App.Bittorrent_RequiredRatio ();
+	setDirty();
 
 	return TRUE;
 }
@@ -156,6 +159,7 @@ BOOL vmsBtDownloadManager::CreateBtDownload()
 	CString strOutputPath = m_info.strOutputPath;
 	ProcessFilePathMacroses (strOutputPath);
 	m_info.strOutputPath = strOutputPath;
+	setDirty();
 
 	m_pDownload = pSession->CreateDownload (m_pTorrent, strOutputPath, 
 		m_info.pbFastResumeData, m_info.dwFastResumeDataSize, 
@@ -192,6 +196,7 @@ void vmsBtDownloadManager::ProcessFilePathMacroses(CString &str)
 	{
 		str.Replace ("%sdrive%", CString (vmsGetExeDriveLetter ()) + ":");
 		m_info.dwFlags |= BTDF_USE_PORTABLE_DRIVE;
+		setDirty();
 	}
 
 	char szTracker [10000];
@@ -246,10 +251,7 @@ void vmsBtDownloadManager::DeleteBtDownload()
 			pSession->DeleteDownload (p);
 		}
 
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 }
 
@@ -366,12 +368,14 @@ void vmsBtDownloadManager::enable_Flags(DWORD dw)
 {
 	vmsAUTOLOCKSECTION (m_csDownload);
 	m_info.dwFlags |= dw;
+	setDirty();
 }
 
 void vmsBtDownloadManager::disable_Flags(DWORD dw)
 {
 	vmsAUTOLOCKSECTION (m_csDownload);
 	m_info.dwFlags &= ~dw;
+	setDirty();
 }
 
 void vmsBtDownloadManager::set_TrackerLogin(LPCSTR pszUser, LPCSTR pszPassword)
@@ -381,6 +385,7 @@ void vmsBtDownloadManager::set_TrackerLogin(LPCSTR pszUser, LPCSTR pszPassword)
 	m_info.strTrackerPassword = pszPassword;
 	if (m_pDownload)
 		m_pDownload->set_TrackerLogin (pszUser, pszPassword);
+	setDirty();
 }
 
 fsString vmsBtDownloadManager::get_TorrentComment()
@@ -605,10 +610,7 @@ UINT64 vmsBtDownloadManager::GetDownloadedBytesCount(bool bFromCache)
 			m_info.nDownloadedBytes = m_pDownload->get_TotalDownloadedBytesCount ();
 			m_cache.nDownloadedBytes_time.Now ();
 
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList(); 
-#endif
+			setDirty();
 		}
 	}
 	return m_info.nDownloadedBytes;
@@ -710,10 +712,7 @@ BOOL vmsBtDownloadManager::MoveToFolder(LPCSTR pszPath)
 		vmsAUTOLOCKSECTION (m_csTorrentFile);
 		m_info.strOutputPath = W2A (wstrDstPath.c_str ());
 
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 
 		return TRUE;
 	}
@@ -733,10 +732,7 @@ BOOL vmsBtDownloadManager::MoveToFolder(LPCSTR pszPath)
 	vmsAUTOLOCKSECTION (m_csTorrentFile);
 	m_info.strOutputPath = str;
 
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	InterlockedDecrement (&m_nUsingBtDownload);
 
@@ -804,10 +800,7 @@ fsInternetResult vmsBtDownloadManager::SetToRestartState()
 	m_info.bDone = FALSE;
 	m_info.nDownloadedBytes = 0;
 
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	if (FALSE == DeleteFile ())
 		return IR_ERROR;
@@ -1230,9 +1223,6 @@ void vmsBtDownloadManager::FixDir (fsString outputPath, vmsBtFile *pTorrent)
 						m_info.fPercentDone = 0;
 						SAFE_DELETE_ARRAY (m_info.pbFastResumeData);
 						m_info.dwFastResumeDataSize = 0;
-						SAFE_DELETE_ARRAY (m_info.pfProgress);
-						m_info.bDone = FALSE;
-						m_info.nDownloadedBytes = 0;
 						RaiseEvent (BTDME_FATAL_ERROR);
 						return;
 					}
@@ -1416,6 +1406,7 @@ void vmsBtDownloadManager::onSeedingFilesChangedUnexpectively ()
 	m_info.bDone = FALSE;
 	m_cache.nDownloadingSectionCount = 0;
 	m_info.nDownloadedBytes = 0;
+	setDirty();
 
 	DeleteFromDldsList ();
 	if (get_State () == BTDSE_DOWNLOADING)
@@ -1612,10 +1603,8 @@ void vmsBtDownloadManager::SaveBtDownloadState(bool bDontQueryStoringDownloadLis
 	m_info.nDownloadedBytes = GetDownloadedBytesCount (false);
 	m_info.bDone = IsDone ();
 
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!bDontQueryStoringDownloadList && !m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	if (!bDontQueryStoringDownloadList)
+		setDirty();
 }
 
 void vmsBtDownloadManager::SaveBtDownloadState_FileProgress()
@@ -1626,20 +1615,14 @@ void vmsBtDownloadManager::SaveBtDownloadState_FileProgress()
 			return;
 		m_info.pfProgress = new float [get_FileCount ()];
 
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 		
 	if (m_pDownload)
 	{
 		m_pDownload->get_FileProgress (m_info.pfProgress);
 
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 
 		m_info.timeLastDataStatAccess.Now ();
 	}
@@ -1658,12 +1641,9 @@ void vmsBtDownloadManager::PostCreateTorrentObject()
 	for (int i = 0; i < get_PieceCount (); i++)
 		m_info.vPieces.push_back (false);
 
-#ifndef FDM_DLDR__RAWCODEONLY
 	if (get_PieceCount () > 0) {
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
+		setDirty();
 	}
-#endif
 }
 
 BOOL vmsBtDownloadManager::IsDownloadStatCanBeRead()
@@ -1697,10 +1677,6 @@ void vmsBtDownloadManager::EnableSeeding(BOOL bEnable)
 	else
 	{
 		enable_Flags (BTDF_DISABLE_SEEDING);
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList(); 
-#endif
 		StopSeeding ();
 	}
 }
@@ -1863,16 +1839,14 @@ void vmsBtDownloadManager::SaveBtDownloadState_Pieces()
 		for (int i = 0; i < ns; i++)
 			m_info.vPieces [i] = pbPieces [i];
 
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 	else if (ns == nCompleted)
 	{
 		
 		
 		m_info.vPieces.assign (ns, true);
+		setDirty();
 	}
 }
 
@@ -2069,6 +2043,7 @@ BOOL vmsBtDownloadManager::LoadTorrentFile(LPCSTR pszFile)
 		return FALSE;
 	}
 
+	setDirty();
 	return TRUE;
 }
 
@@ -2087,11 +2062,7 @@ void vmsBtDownloadManager::PrioritizeFiles(int *piPriorities)
 			m_info.vFilesPriorities [i] = (BYTE)piPriorities [i];
 	}
 
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList && cFiles > 0) {
-		_DldsMgr.QueryStoringDownloadList();
-	}
-#endif
+	setDirty();
 
 	ApplyNewFilesPriorities ();
 }
@@ -2200,10 +2171,7 @@ void vmsBtDownloadManager::setFilePriority(int nFileIndex, int iPriority, bool b
 
 	m_info.vFilesPriorities [nFileIndex] = (BYTE)iPriority;
 
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	if (bApply)
 		ApplyNewFilesPriorities ();
@@ -2220,10 +2188,7 @@ void vmsBtDownloadManager::ApplyNewFilesPriorities()
 	{
 		StopSeeding ();
 		m_info.bDone = FALSE;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList(); 
-#endif
+		setDirty();
 		StartDownloading ();
 	}
 	else if (m_pDownload)
@@ -2237,10 +2202,7 @@ void vmsBtDownloadManager::ApplyNewFilesPriorities()
 	if (m_info.bDone)
 	{
 		m_info.bDone = FALSE;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList(); 
-#endif
+		setDirty();
 		StartDownloading ();		
 	}
 	
@@ -2275,6 +2237,7 @@ bool vmsBtDownloadManager::isSeedingEnabled() const
 void vmsBtDownloadManager::setRequiredRatio(float f)
 {
 	m_fRequiredRatio = f;
+	setDirty();
 }
 
 float vmsBtDownloadManager::getRequiredRatio()
@@ -2365,6 +2328,7 @@ void vmsBtDownloadManager::setLastTracker(LPCSTR pszUrl)
 {
 	vmsAUTOLOCKSECTION (m_csMisc);
 	m_info.strLastTracker = pszUrl;
+	setDirty();
 }
 
 void vmsBtDownloadManager::setLastTrackerStatus(LPCSTR pszStatus)
@@ -2379,14 +2343,195 @@ std::string vmsBtDownloadManager::getLastTrackerStatus(void)
 	return m_strLastTrackerStatus;
 }
 
-void vmsBtDownloadManager::EnableQueryStoringDownloadList(bool bEnable)
+void vmsBtDownloadManager::getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage)
 {
-	m_bDontQueryStoringDownloadList = !bEnable;
-}
+	vmsAUTOLOCKSECTION (m_csDownload);
+	vmsAUTOLOCKSECTION (m_csTorrentFile);
+	vmsAUTOLOCKSECTION (m_csMisc);
 
-bool vmsBtDownloadManager::IsQueryStoringDownloadListEnable() const
-{
-	return m_bDontQueryStoringDownloadList;
+	if (m_pDownload && pb == NULL)
+		SaveBtDownloadState (false);
+
+	#define CHECK_SIZE(need) {if (pb != NULL && *pdwSize < (UINT)(pb + need - pbOld)) goto _lSizeErr;}
+
+	LPBYTE pbOld = pb;
+
+	DWORD dwNeedSize = 0;
+
+	dwNeedSize += sizeof (DWORD); 
+	dwNeedSize += sizeof (int) + m_info.strOutputPath.GetLength ();
+	dwNeedSize += sizeof (int) + m_info.strTorrentUrl.GetLength ();
+	dwNeedSize += sizeof (int) + m_info.strTrackerUser.GetLength ();
+	dwNeedSize += sizeof (int) + m_info.strTrackerPassword.GetLength ();
+
+	dwNeedSize += sizeof (float) * get_FileCount (); 
+	dwNeedSize += sizeof (int) + m_info.strLastTracker.GetLength ();
+	dwNeedSize += sizeof (m_info.nUploadedBytes);
+	dwNeedSize += sizeof (m_info.fShareRating);
+	dwNeedSize += sizeof (m_info.nWastedBytes);
+	dwNeedSize += sizeof (m_info.fPercentDone);
+	dwNeedSize += sizeof (m_info.bDone);
+	dwNeedSize += sizeof (int) + sizeof (BYTE) * m_info.vPieces.size ();
+	dwNeedSize += sizeof (m_info.nDownloadedBytes);
+	dwNeedSize += sizeof (int) + sizeof (BYTE) * m_info.vFilesPriorities.size ();
+	dwNeedSize += sizeof (m_fRequiredRatio);
+
+	dwNeedSize += sizeof (m_uLowSpeedMaxTime) + sizeof (m_uTrafficLimit);
+
+	DWORD dw;
+	if (FALSE == m_pTorrent->get_TorrentBuffer (NULL, 0, &dw))
+		return;
+	dwNeedSize += dw + sizeof (DWORD);
+	dwNeedSize += m_info.dwFastResumeDataSize + sizeof (DWORD);
+
+	if (pb == NULL)
+	{
+		*pdwSize = dwNeedSize;
+
+		
+		
+		
+		return;
+	}
+
+	int i;
+
+	
+	i = m_info.strTorrentUrl.GetLength ();
+	CHECK_SIZE (sizeof (int));
+	CopyMemory (pb, &i, sizeof (int));
+	pb += sizeof (int);
+	CHECK_SIZE (i);
+	CopyMemory (pb, m_info.strTorrentUrl, i);
+	pb += i;
+
+	
+	i = m_info.strOutputPath.GetLength ();
+	CHECK_SIZE (sizeof (int));
+	CopyMemory (pb, &i, sizeof (int));
+	pb += sizeof (int);
+	CHECK_SIZE (i);
+	CopyMemory (pb, m_info.strOutputPath, i);
+	pb += i;
+
+	
+	i = m_info.strTrackerUser.GetLength ();
+	CHECK_SIZE (sizeof (int));
+	CopyMemory (pb, &i, sizeof (int));
+	pb += sizeof (int);
+	CHECK_SIZE (i);
+	CopyMemory (pb, m_info.strTrackerUser, i);
+	pb += i;
+
+	i = m_info.strTrackerPassword.GetLength ();
+	CHECK_SIZE (sizeof (int));
+	CopyMemory (pb, &i, sizeof (int));
+	pb += sizeof (int);
+	CHECK_SIZE (i);
+	CopyMemory (pb, m_info.strTrackerPassword, i);
+	pb += i;
+
+	
+	CHECK_SIZE (sizeof (DWORD));
+	dw = *pdwSize - (pb - pbOld - sizeof (DWORD));
+	if (FALSE == m_pTorrent->get_TorrentBuffer (pb + sizeof (DWORD), dw, &dw))
+		goto _lSizeErr;
+	*((LPDWORD)pb) = dw;
+	pb += sizeof (DWORD) + dw;
+
+	
+	CHECK_SIZE (sizeof (DWORD));
+	*((LPDWORD)pb) = m_info.dwFastResumeDataSize;
+	pb += sizeof (DWORD);
+	if (m_info.dwFastResumeDataSize != 0)
+	{
+		CHECK_SIZE (m_info.dwFastResumeDataSize);
+		CopyMemory (pb, m_info.pbFastResumeData, m_info.dwFastResumeDataSize);
+		pb += m_info.dwFastResumeDataSize;
+	}
+
+	
+	CHECK_SIZE (get_FileCount () * sizeof (float));
+	ASSERT (m_info.pfProgress != NULL);
+	CopyMemory (pb, m_info.pfProgress, get_FileCount () * sizeof (float));
+	pb += get_FileCount () * sizeof (float);
+
+	i = m_info.strLastTracker.GetLength ();
+	CHECK_SIZE (sizeof (int));
+	CopyMemory (pb, &i, sizeof (int));
+	pb += sizeof (int);
+	CHECK_SIZE (i);
+	CopyMemory (pb, m_info.strLastTracker, i);
+	pb += i;
+
+	UINT64 nUploadedBytes; nUploadedBytes = get_TotalUploadedByteCount ();
+	CHECK_SIZE (sizeof (nUploadedBytes));
+	CopyMemory (pb, &nUploadedBytes, sizeof (nUploadedBytes));
+	pb += sizeof (nUploadedBytes);
+
+	CHECK_SIZE (sizeof (m_info.fShareRating));
+	CopyMemory (pb, &m_info.fShareRating, sizeof (m_info.fShareRating));
+	pb += sizeof (m_info.fShareRating);
+
+	UINT64 nWastedBytes; nWastedBytes = get_WastedByteCount ();
+	CHECK_SIZE (sizeof (nWastedBytes));
+	CopyMemory (pb, &nWastedBytes, sizeof (nWastedBytes));
+	pb += sizeof (nWastedBytes);
+
+	CHECK_SIZE (sizeof (m_info.fPercentDone));
+	CopyMemory (pb, &m_info.fPercentDone, sizeof (m_info.fPercentDone));
+	pb += sizeof (m_info.fPercentDone);
+
+	CHECK_SIZE (sizeof (m_info.bDone));
+	CopyMemory (pb, &m_info.bDone, sizeof (m_info.bDone));
+	pb += sizeof (m_info.bDone);
+
+	i = m_info.vPieces.size ();
+	CHECK_SIZE (sizeof (int));
+	CopyMemory (pb, &i, sizeof (int));
+	pb += sizeof (int);
+	CHECK_SIZE (i);
+	int j;
+	for (j = 0; j < i; j++)
+		*pb++ = m_info.vPieces [j];
+
+	CHECK_SIZE (sizeof (m_info.nDownloadedBytes));
+	CopyMemory (pb, &m_info.nDownloadedBytes, sizeof (m_info.nDownloadedBytes));
+	pb += sizeof (m_info.nDownloadedBytes);
+
+	i = m_info.vFilesPriorities.size ();
+	CHECK_SIZE (sizeof (int));
+	CopyMemory (pb, &i, sizeof (int));
+	pb += sizeof (int);
+	CHECK_SIZE (i);
+	for (j = 0; j < i; j++)
+		*pb++ = m_info.vFilesPriorities [j];
+
+	
+
+	CHECK_SIZE (sizeof (m_fRequiredRatio));
+	*((float*)pb) = m_fRequiredRatio;
+	pb += sizeof (m_fRequiredRatio);
+	
+	CHECK_SIZE (sizeof (m_info.dwFlags));
+	*((LPDWORD)pb) = m_info.dwFlags;
+	pb += sizeof (m_info.dwFlags);
+
+	CHECK_SIZE (sizeof (m_uLowSpeedMaxTime));
+	*((LPDWORD)pb) = m_uLowSpeedMaxTime;
+	pb += sizeof (m_uLowSpeedMaxTime);
+
+	CHECK_SIZE (sizeof (m_uTrafficLimit));
+	*((LPDWORD)pb) = m_uTrafficLimit;
+	pb += sizeof (m_uTrafficLimit);
+
+	*pdwSize = pb - pbOld;
+
+	return;
+
+_lSizeErr:
+	SaveState (NULL, pdwSize);
+	return;
 }
 
 void vmsBtDownloadManager::setOutputPath (LPCTSTR ptszPath)
@@ -2397,6 +2542,7 @@ void vmsBtDownloadManager::setOutputPath (LPCTSTR ptszPath)
 		return;
 	vmsAUTOLOCKSECTION (m_csTorrentFile);
 	m_info.strOutputPath = ptszPath;
+	setDirty();
 }
 
 bool vmsBtDownloadManager::isHashEqual (const vmsBtDownloadManager *pMgr2)
@@ -2411,6 +2557,158 @@ bool vmsBtDownloadManager::isHashEqual (const vmsBtDownloadManager *pMgr2)
 		return false;
 
 	return 0 == memcmp (abHash1, abHash2, dwSize);
+}
+
+bool vmsBtDownloadManager::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer)
+{
+	vmsAUTOLOCKSECTION (m_csTorrentFile);
+
+	ASSERT (dwVer >= 10);
+
+	LPBYTE pB = pb;
+
+	int i;
+	char sz [10000];
+
+	if (dwVer > 10)
+	{
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CopyMemory (sz, pB, i);
+		sz [i] = 0;
+		pB += i;
+		m_info.strTorrentUrl = sz;
+	}
+	else
+	{
+		m_info.strTorrentUrl = "";
+	}
+
+	CopyMemory (&i, pB, sizeof (int));
+	pB += sizeof (int);
+	CopyMemory (sz, pB, i);
+	sz [i] = 0;
+	m_info.strOutputPath = sz;
+	pB += i;
+
+	CopyMemory (&i, pB, sizeof (int));
+	pB += sizeof (int);
+	CopyMemory (sz, pB, i);
+	sz [i] = 0;
+	pB += i;
+	m_info.strTrackerUser = sz;
+
+	CopyMemory (&i, pB, sizeof (int));
+	pB += sizeof (int);
+	CopyMemory (sz, pB, i);
+	sz [i] = 0;
+	pB += i;
+	m_info.strTrackerPassword = sz;
+
+	DWORD dwTorrentSize = *((LPDWORD)pB);
+	LPBYTE pbTorrent = pB + sizeof (DWORD);
+	pB += sizeof (DWORD) + dwTorrentSize;
+
+	m_pTorrent = _BT.CreateTorrentFileObject ();
+	if (m_pTorrent == NULL)
+		return false;
+	if (FALSE == m_pTorrent->LoadFromBuffer (pbTorrent, dwTorrentSize))
+		return false;
+
+	m_info.dwFastResumeDataSize = *((LPDWORD)pB);
+	pB += sizeof (DWORD);
+	SAFE_DELETE_ARRAY (m_info.pbFastResumeData);
+	if (m_info.dwFastResumeDataSize)
+	{
+		m_info.pbFastResumeData = new BYTE [m_info.dwFastResumeDataSize];
+		CopyMemory (m_info.pbFastResumeData, pB, m_info.dwFastResumeDataSize);
+		pB += m_info.dwFastResumeDataSize;
+	}
+
+	if (dwVer > 11)
+	{
+		m_info.pfProgress = new float [get_FileCount () * sizeof (float)];
+		CopyMemory (m_info.pfProgress, pB, get_FileCount () * sizeof (float));
+		pB += get_FileCount () * sizeof (float);
+
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CopyMemory (sz, pB, i);
+		sz [i] = 0;
+		pB += i;
+		m_info.strLastTracker = sz;
+
+		CopyMemory (&m_info.nUploadedBytes, pB, sizeof (m_info.nUploadedBytes));
+		pB += sizeof (m_info.nUploadedBytes);
+
+		CopyMemory (&m_info.fShareRating, pB, sizeof (m_info.fShareRating));
+		pB += sizeof (m_info.fShareRating);
+
+		CopyMemory (&m_info.nWastedBytes, pB, sizeof (m_info.nWastedBytes));
+		pB += sizeof (m_info.nWastedBytes);
+
+		CopyMemory (&m_info.fPercentDone, pB, sizeof (m_info.fPercentDone));
+		pB += sizeof (m_info.fPercentDone);
+
+		CopyMemory (&m_info.bDone, pB, sizeof (m_info.bDone));
+		pB += sizeof (m_info.bDone);
+
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		m_info.vPieces.clear ();
+		while (i--)
+			m_info.vPieces.push_back ((*pB++) != 0);
+		
+		CopyMemory (&m_info.nDownloadedBytes, pB, sizeof (m_info.nDownloadedBytes));
+		pB += sizeof (m_info.nDownloadedBytes);
+
+		if (dwVer > 12)
+		{
+			CopyMemory (&i, pB, sizeof (int));
+			pB += sizeof (int);
+			m_info.vFilesPriorities.clear ();
+			while (i--)
+				m_info.vFilesPriorities.push_back (*pB++);
+
+			if (dwVer > 13)
+			{
+				m_fRequiredRatio = *((float*)pB);
+				pB += sizeof (float);	
+			}
+		}
+	}
+	else
+	{
+		m_info.pfProgress = new float [get_FileCount () * sizeof (float)];
+		for (int i = get_FileCount () - 1; i >= 0; i--)
+			m_info.pfProgress [i] = 0;
+
+		PostCreateTorrentObject ();
+	}
+
+	m_info.dwFlags = *((LPDWORD)pB);
+	pB += sizeof (DWORD);
+
+	if (m_info.dwFlags & BTDF_USE_PORTABLE_DRIVE)
+		m_info.strOutputPath [0] = vmsGetExeDriveLetter ();
+
+	m_uLowSpeedMaxTime = *((LPUINT)pB);
+	pB += sizeof (UINT);
+
+	m_uTrafficLimit = *((LPUINT)pB);
+	pB += sizeof (UINT);
+
+	*pdwSize = pB - pb;
+
+	
+
+	if (!_App.NonUtf8NameFixed ())
+		FixDir (m_info.strOutputPath, m_pTorrent);
+
+	if ((m_info.dwFlags & BTDF_DISABLE_SEEDING) == 0 && m_info.bDone)
+		EnableSeeding (TRUE);
+
+	return true;
 }
 
 UINT64 vmsBtDownloadManager::getSpeed(bool bOfDownload)

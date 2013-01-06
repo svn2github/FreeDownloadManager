@@ -34,6 +34,7 @@ public:
 	
 	
 	void Init (fsSiteInfo* pSite);
+	void SetMode(bool bIsAddingSite);
 	virtual ~CSitesSheet();
 
 	

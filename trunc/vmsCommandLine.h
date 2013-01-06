@@ -12,6 +12,16 @@
 class vmsCommandLine  
 {
 public:
+	enum ExecutionFlags
+	{
+		RunElevatedIfRequired	= 1,
+		WaitForCompletion		= 1 << 1,
+		
+		SearchPathIfRequired	= 1 << 2,
+	};
+public:
+	bool haveArgs () const;
+	int CompareEXEs (const vmsCommandLine &cl) const;
 	LPCTSTR getExeName () const;
 	bool is_EXE_CmdLine () const;
 	void setArgs (LPCTSTR ptsz);
@@ -30,8 +40,12 @@ public:
 	virtual ~vmsCommandLine();
 
 protected:
+	void RemoveTrailingSpaces ();
 	tstring m_tstrArgs;
 	tstring m_tstrExe;
+public:
+	
+	bool Execute(DWORD dwFlags = 0, LPDWORD pdwProcessExitCode = NULL) const;
 };
 
 #endif 

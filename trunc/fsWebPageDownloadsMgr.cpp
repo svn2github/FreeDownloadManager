@@ -6,6 +6,7 @@
 #include "FdmApp.h"
 #include "fsWebPageDownloadsMgr.h"
 #include "mfchelp.h"
+#include "Utils.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -27,6 +28,10 @@ void fsWebPageDownloadsMgr::Add(fsWebPageDownloader *wpd)
 {
 	wpd->SetEventFunc (_DownloaderEvents, this);
 	m_vWPDs.add (wpd);
+	setDirty();
+	wpd->setDirty();
+	wpd->GetWDPS()->m_ppoOwner = (vmsPersistObject*)wpd;
+	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)wpd);
 }
 
 void fsWebPageDownloadsMgr::_DownloaderEvents(fsWebPageDownloader* dldr, fsWPDEvent ev, fsDownload *dld, fsDLWebPage *wp, fsDLWebPageTree wptree, LPVOID lp)
@@ -59,6 +64,8 @@ void fsWebPageDownloadsMgr::Delete(fsWebPageDownloader *wpd)
 		if (m_vWPDs [i] == wpd)
 		{
 			m_vWPDs.del (i);
+			setDirty();
+			getPersistObjectChildren ()->removePersistObject (i);
 			return;
 		}
 	}
@@ -66,43 +73,77 @@ void fsWebPageDownloadsMgr::Delete(fsWebPageDownloader *wpd)
 
 BOOL fsWebPageDownloadsMgr::Save()
 {
+	if (!isDirty())
+		return TRUE;
+
 	HANDLE hFile = CreateFile (fsGetDataFilePath ("spider.sav"), GENERIC_WRITE, FILE_SHARE_READ, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE)
 		return FALSE;
 
-try{
+	try{
 
-	int cWPD = m_vWPDs.size ();
-	DWORD dw;
-	fsSpiderFileHdr hdr;
+		DWORD dw = 0;
+		fsSpiderFileHdr hdr;
 
-	if (FALSE == WriteFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
-	{
-		CloseHandle (hFile);
-		return FALSE;
-	}
-
-	if (FALSE == WriteFile (hFile, &cWPD, sizeof (cWPD), &dw, NULL))
-	{
-		CloseHandle (hFile);
-		return FALSE;
-	}
-
-	for (int i = 0; i < cWPD; i++)
-	{
-		if (FALSE == m_vWPDs [i]->Save (hFile))
+		if (FALSE == WriteFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
 		{
 			CloseHandle (hFile);
 			return FALSE;
 		}
+
+		DWORD dwRequiredSize = 0;
+
+		getStateBuffer(0, &dwRequiredSize, false);
+
+		if (dwRequiredSize == 0)
+			return FALSE;
+
+		std::auto_ptr<BYTE> apbtBufferGuard( new BYTE[dwRequiredSize] );
+		LPBYTE pbtBuffer = apbtBufferGuard.get();
+		if (pbtBuffer == 0)
+			return FALSE;
+		memset(pbtBuffer, 0, dwRequiredSize);
+
+		getStateBuffer(pbtBuffer, &dwRequiredSize, true);
+
+		if (FALSE == WriteFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
+			CloseHandle (hFile);
+			return FALSE;
+		}
+		CloseHandle (hFile);
+		hFile = INVALID_HANDLE_VALUE;
+		onStateSavedSuccessfully();
+
+		CloseHandle (hFile);
+		
+		return TRUE;
+
+	}catch (...) {
+		if (hFile != INVALID_HANDLE_VALUE)
+			CloseHandle (hFile);
+		return FALSE;
+	}
+}
+
+void fsWebPageDownloadsMgr::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+	int cWPD = m_vWPDs.size ();
+
+	putVarToBuffer(cWPD, pbtCurrentPos, 0, 0, &dwRequiredSize);
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize != 0) {
+			*pdwSize = dwRequiredSize;
+		}
 	}
 
-	CloseHandle (hFile);
-	return TRUE;
+	putVarToBuffer(cWPD, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
 
-}catch (...) {CloseHandle (hFile); return FALSE;}
+	*pdwSize = pbtCurrentPos - pbtBuffer;
 }
 
 BOOL fsWebPageDownloadsMgr::Load()
@@ -125,6 +166,7 @@ BOOL fsWebPageDownloadsMgr::Load()
 	DWORD dw;
 	fsSpiderFileHdr hdr;
 	WORD wVer = SPIDERFILE_CURRENT_VERSION;
+	DWORD dwRequiredSize = ::GetFileSize(hFile, NULL);
 
 	if (FALSE == ReadFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
 	{
@@ -143,25 +185,79 @@ BOOL fsWebPageDownloadsMgr::Load()
 		}
 	}
 
-	if (FALSE == ReadFile (hFile, &cWPD, sizeof (cWPD), &dw, NULL))
-	{
-		CloseHandle (hFile);
-		return FALSE;
-	}
+	if (wVer == 1) {
 
-	for (int i = 0; i < cWPD; i++)
-	{
-		fsWebPageDownloaderPtr wpd; wpd.CreateInstance ();
-		if (FALSE == wpd->Load (hFile, wVer))
+		if (FALSE == ReadFile (hFile, &cWPD, sizeof (cWPD), &dw, NULL))
 		{
 			CloseHandle (hFile);
 			return FALSE;
 		}
-		Add (wpd);
+
+		for (int i = 0; i < cWPD; i++)
+		{
+			fsWebPageDownloaderPtr wpd; wpd.CreateInstance ();
+			if (FALSE == wpd->Load (hFile, wVer))
+			{
+				CloseHandle (hFile);
+				return FALSE;
+			}
+			Add (wpd);
+		}
+
+		resetDirty();
+
+		CloseHandle (hFile);
+		return TRUE;
+
 	}
+
+	if (dwRequiredSize == 0 || dwRequiredSize < sizeof(hdr)) {
+		CloseHandle (hFile);
+		return FALSE;
+	}
+
+	std::auto_ptr<BYTE> pbtBufferGuard( new BYTE[dwRequiredSize] );
+	LPBYTE pbtBuffer = pbtBufferGuard.get();
+	if (pbtBuffer == 0) {
+		CloseHandle (hFile);
+		return FALSE;
+	}
+	memset(pbtBuffer, 0, dwRequiredSize);
+
+	if (!ReadFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
+		CloseHandle (hFile);
+		return FALSE;
+	}
+
+	if (!loadFromStateBuffer(pbtBuffer, &dwRequiredSize, hdr.wVer)) {
+		CloseHandle (hFile);
+		return FALSE;
+	}
+
+	resetDirty();
 
 	CloseHandle (hFile);
 	return TRUE;
+}
+
+bool fsWebPageDownloadsMgr::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	int cWPD = 0;
+
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	if (!getVarFromBuffer(cWPD, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	for (int i = 0; i < cWPD; i++) {
+		fsWebPageDownloaderPtr wpd; 
+		wpd.CreateInstance ();
+		Add (wpd);
+	}
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+	return true;
 }
 
 BOOL fsWebPageDownloadsMgr::OnDownloadRestored(vmsDownloadSmartPtr dld)

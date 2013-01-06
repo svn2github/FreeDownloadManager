@@ -17,6 +17,7 @@
 #include "fsArchiveInternetStream.h"
 #include "fsArchiveRebuilder.h"
 #include "vmsCriticalSection.h"
+#include "vmsPersistObject.h"
 
 enum fsSectionState
 {
@@ -470,9 +471,8 @@ public:
 	void CreateCompleteSection(UINT64 uFileSize); 
 	void SetFileSize(UINT64 uFileSize); 
 	void AddSection(UINT64 uStart, UINT64 uEnd, UINT64 uCurrent);
-	
-	void EnableQueryStoringDownloadList(bool bIsEnabled);
-	bool IsQueryStoringDownloadListEnabled() const;
+	void SetManagerPersistObject(vmsPersistObject* pManagerPersistObject);
+	void setDirty();
 
 	fsInternetDownloader();
 	virtual ~fsInternetDownloader();
@@ -657,7 +657,7 @@ protected:
 	
 	int m_cMirrsFound;
 	
-	bool m_bDontQueryStoringDownloadList;
+	vmsPersistObject* m_pManagerPersistObject;
 
 private:
 	

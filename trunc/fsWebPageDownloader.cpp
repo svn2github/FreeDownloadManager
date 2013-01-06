@@ -3,6 +3,7 @@
 */
 
 #include "stdafx.h"
+#include "Utils.h"
 #include "FdmApp.h"
 #include "fsWebPageDownloader.h"
 #include "DownloadsWnd.h"
@@ -18,6 +19,191 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 extern CDownloadsWnd *_pwndDownloads;
+
+void fsDLWebPage::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	putVarToBuffer(uDldId, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	TRACE("uDldId: %d, size: %d\r\n", uDldId, dwRequiredSize);
+	putVarToBuffer(bState, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	TRACE("bState: %d, size: %d\r\n", bState ? 1 : 0, dwRequiredSize);
+	putVarToBuffer(nID, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	TRACE("nID: %d, size: %d\r\n", nID, dwRequiredSize);
+	putStrToBuffer(strFile.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	TRACE("strFile: '%s', size: %d\r\n", strFile.pszString ? strFile.pszString : "<empty>", dwRequiredSize);
+	putStrToBuffer(strURL.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	TRACE("strFile: '%s', size: %d\r\n", strURL.pszString ? strURL.pszString : "<empty>", dwRequiredSize);
+
+	TRACE("\r\n");
+
+	BYTE cUrls = (BYTE) pvUrls->size ();
+	putVarToBuffer(cUrls, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	TRACE("cUrls: %d, size: %d\r\n", cUrls, dwRequiredSize);
+	int  j = 0;
+	for (j = 0; j < cUrls; j++) {
+		putStrToBuffer(pvUrls->at (j).pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		TRACE("URL[%d]: '%s', size: %d\r\n", j, pvUrls->at (j).pszString ? pvUrls->at (j).pszString : "<empty>", dwRequiredSize);
+	}
+	TRACE("\r\n");
+
+	BOOL b = pvUnpLinks && pvUnpLinks->size ();
+
+	putVarToBuffer(b, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	TRACE("UNP: %d, size: %d\r\n", b ? 1 : 0, dwRequiredSize);
+
+	if (b) {
+		putListToBuffer(pvUnpLinks, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		TRACE("UNP size: %d\r\n", dwRequiredSize);
+	}
+	
+	if (osOnSaveHandler)
+		osOnSaveHandler(pbtCurrentPos, 0, 0, &dwRequiredSize, pvOnSaveHandlerData);
+
+	TRACE("\r\n");
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize != 0) {
+			*pdwSize = dwRequiredSize;
+		}
+		return;
+	}
+
+	putVarToBuffer(uDldId, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(bState, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	putVarToBuffer(nID, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	putStrToBuffer(strFile.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	putStrToBuffer(strURL.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+
+	putVarToBuffer(cUrls, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	for (j = 0; j < cUrls; j++) {
+		putStrToBuffer(pvUrls->at (j).pszString, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	}
+
+	putVarToBuffer(b, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+
+	if (b) {
+		putListToBuffer(pvUnpLinks, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	}
+	
+	if (osOnSaveHandler)
+		osOnSaveHandler(pbtCurrentPos, pbtBuffer, *pdwSize, 0, pvOnSaveHandlerData);
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+}
+
+bool fsDLWebPage::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	DWORD _dwVer = dwVer;
+	if (_dwVer < 3)
+		_dwVer = 3;
+
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	if (!getVarFromBuffer(uDldId, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+	TRACE("uDldId: %d, size: %d\r\n", uDldId, (pbtCurrentPos - pbtBuffer));
+
+	if (!getVarFromBuffer(bState, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+	TRACE("bState: %d, size: %d\r\n", bState ? 1 : 0, (pbtCurrentPos - pbtBuffer));
+
+	if (!getVarFromBuffer(nID, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+	TRACE("nID: %d, size: %d\r\n", nID, (pbtCurrentPos - pbtBuffer));
+
+	if (!getStrFromBuffer(&strFile.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+	TRACE("strFile: '%s', size: %d\r\n", strFile.pszString ? strFile.pszString : "<empty>", (pbtCurrentPos - pbtBuffer));
+
+	if (!getStrFromBuffer(&strURL.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+	TRACE("strUrl: '%s', size: %d\r\n", strURL.pszString ? strURL.pszString : "<empty>", (pbtCurrentPos - pbtBuffer));
+
+	TRACE("\r\n");
+
+	BYTE cUrls = 0;
+	if (!getVarFromBuffer(cUrls, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+	TRACE("cUrls: %d, size: %d\r\n", cUrls, (pbtCurrentPos - pbtBuffer));
+	fsnew1 (pvUrls, fs::list <fsString>);
+	while (cUrls--)
+	{
+		fsString strURL;
+		if (!getStrFromBuffer(&strURL.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+		TRACE("URL: '%s', size: %d\r\n", strURL.pszString ? strURL.pszString : "<empty>", (pbtCurrentPos - pbtBuffer));
+		pvUrls->add (strURL);
+	}
+	TRACE("\r\n");
+
+	
+	if (olOnLoadHandler)
+		olOnLoadHandler(DPLC_CreateId, pbtCurrentPos, 0, 0, pvOnLoadHandlerData);
+	
+	dld = NULL;
+	pvUnpLinks = NULL;
+
+	if (uDldId != UINT (-1)) {
+		
+		if (olOnLoadHandler)
+			olOnLoadHandler(DPLC_FindDownload, pbtCurrentPos, 0, 0, pvOnLoadHandlerData);
+
+		BOOL b;
+
+		if (_dwVer > 3) {
+			if (!getVarFromBuffer(b, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+			TRACE("UNP: %d, size: %d\r\n", b ? 1 : 0, (pbtCurrentPos - pbtBuffer));
+		} else {
+			b = dld ? dld->pMgr->IsDone () == FALSE : FALSE;
+		}
+		
+		if (b) {
+			fsnew1 (pvUnpLinks, fs::list <_WP_UnprocessedLinks>);
+			if (!getListFromBuffer(pvUnpLinks, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+			TRACE("UNP size: %d\r\n", (pbtCurrentPos - pbtBuffer));
+		}
+
+		
+		
+		
+		
+		
+		
+		if (olOnLoadHandler)
+			olOnLoadHandler(DPLC_InitDownload, pbtCurrentPos, 0, 0, pvOnLoadHandlerData);
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
+	
+	
+
+	if (olOnLoadHandler)
+		olOnLoadHandler(DPLC_CreateLeafs, pbtCurrentPos, pbtBuffer, pdwSize, pvOnLoadHandlerData);
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	TRACE("\r\n");
+
+	return TRUE;
+}
 
 fsWebPageDownloader::fsWebPageDownloader()
 {
@@ -229,6 +415,8 @@ DWORD fsWebPageDownloader::_DldEvents(fsDownload* dld, fsDLHistoryRecord*, enum 
 			wp->dld->pfnDownloadEventsFunc = _DldEvents;
 			wp->dld->lpEventsParam = pThis;
 
+			wp->setDirty();
+
 			pThis->Event (WPDE_DLDRESTORED, dld);
 
 			return TRUE; 
@@ -249,6 +437,7 @@ DWORD fsWebPageDownloader::_DldEvents(fsDownload* dld, fsDLHistoryRecord*, enum 
 				wp->strFile = wp->dld->pMgr->get_OutputFilePathName (); 
 				wp->uDldId = UINT (-1);	
 				wp->dld = NULL;	
+				wp->setDirty();
 				
 				SAFE_DELETE (wp->pvUnpLinks);
 			}
@@ -305,21 +494,27 @@ fsDLWebPage* fsWebPageDownloader::AddWebPage(fsDLWebPage *wp, fsDLWebPageTree ro
 
 	
 	wp->uDldId = wp->dld->nID;
+	wp->setDirty();
 
 	
 	
 	WebPage_FindDownload (wp);
 
+	wp->osOnSaveHandler = &fsWebPageDownloader::FdmOnDwpSave;
 	if (root)
 	{
 		if (m_bIsDeleting == FALSE)
 		{
 			wptree = root->AddLeaf (wp);
 			wpadded = wp;
+			wp->pvOnSaveHandlerData = wptree;
+			root->GetData()->setDirty();
+			root->GetData()->getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)wp);
 		}
 	}
 	else
 	{
+		wp->pvOnSaveHandlerData = m_pages;
 		m_pages->SetData (wp);
 		wpadded = wp;
 	}
@@ -340,6 +535,7 @@ fsDLWebPage* fsWebPageDownloader::AddWebPage(fsDLWebPage *wp, fsDLWebPageTree ro
 void fsWebPageDownloader::WebPage_FindDownload(fsDLWebPage *wp)
 {
 	wp->dld = _DldsMgr.GetDownloadByID (wp->uDldId);
+	wp->setDirty();
 }
 
 fsDLWebPage* fsWebPageDownloader::FindWebPage(vmsDownloadSmartPtr dld)
@@ -395,7 +591,7 @@ void fsWebPageDownloader::OnWPDownloadDone(vmsDownloadSmartPtr dld)
 			if (m_wpds.dwFlags & WPDF_DONTSTOREPAGES) {
 				dld->dwFlags |= DLD_DELETEWHENDONE | DLD_DELETEFILEALWAYS | 
 						DLD_DONTPUTTOHISTORY | DLD_DONTPUTTORECYCLE;
-				_DldsMgr.QueryStoringDownloadList();
+				dld->setDirty();
 			}
 
 			
@@ -473,6 +669,7 @@ void fsWebPageDownloader::ParseHTMLFile(fsDLWebPageTree wptree, BOOL bFixUrlsOnl
 	CloseHandle (hFile);
 
 	wp->bState |= WPSTATE_PAGEPROCESSED;
+	wp->setDirty();
 }
 
 UINT fsWebPageDownloader::ParseHTML(LPCSTR pszHTML, fsDLWebPageTree wptree, BOOL bFixUrlsOnly)
@@ -708,6 +905,7 @@ int fsWebPageDownloader::ParseHTMLUrls(fsHTMLParser &parser, fsDLWebPageTree wpt
 			unplink.nParserUrl = i;			
 			unplink.lt = WPLT_A;			
 			wp->pvUnpLinks->add (unplink);
+			wp->setDirty();
 		}
 
 		if ((m_wpds.dwFlags & WPDF_DONTSTOREPAGES) == 0)
@@ -855,6 +1053,7 @@ int fsWebPageDownloader::ParseHTMLImages(fsHTMLParser &parser, fsDLWebPageTree w
 			unplink.nParserUrl = i;
 			unplink.lt = WPLT_IMG;
 			wp->pvUnpLinks->add (unplink);
+			wp->setDirty();
 		}
 
 		if ((m_wpds.dwFlags & WPDF_DONTSTOREPAGES) == 0)
@@ -1059,6 +1258,9 @@ void fsWebPageDownloader::ReadDefaultWPDS(fsWPDSettings *wpds)
 	wpds->bDownloadStyles = _App.Spider_DownloadStyles ();
 	wpds->bSavePagesUnderHTM = _App.Spider_SavePagesUnderHTM ();
 	wpds->dwFlags = WPDF_KEEPFOLDERSTRUCTURE | WPDF_DELCOMPLETEDDLDS;
+
+	if (wpds->m_ppoOwner)
+		wpds->m_ppoOwner->setDirty();
 }
 
 int fsWebPageDownloader::ParseHTMLLinkUrls(fsHTMLParser &parser, fsDLWebPageTree wptree, BOOL bFixUrlsOnly, LPCSTR pszBaseURL)
@@ -1113,6 +1315,7 @@ int fsWebPageDownloader::ParseHTMLLinkUrls(fsHTMLParser &parser, fsDLWebPageTree
 			unplink.nParserUrl = i;
 			unplink.lt = WPLT_STYLESHEET;
 			wp->pvUnpLinks->add (unplink);
+			wp->setDirty();
 		}
 
 		if ((m_wpds.dwFlags & WPDF_DONTSTOREPAGES) == 0)
@@ -1204,7 +1407,7 @@ void fsWebPageDownloader::SetAutoStartDownloading(BOOL b)
 		if (dld && dld->pMgr->IsDone () == FALSE)
 		{
 			dld->bAutoStart = b;
-			_DldsMgr.QueryStoringDownloadList();
+			dld->setDirty();
 			_pwndDownloads->UpdateDownload (dld);
 		}
 	}
@@ -1254,6 +1457,7 @@ void fsWebPageDownloader::DeleteAllDownloads(BOOL bByUser)
 		if (m_vConfs [i].wp->dld)
 		{
 			m_vConfs [i].wp->dld = NULL;
+			m_vConfs [i].wp->setDirty();
 			cDeleted --;
 		}
 	}
@@ -1352,6 +1556,80 @@ BOOL fsWebPageDownloader::Save(HANDLE hFile)
 
 	
 	return Save (hFile, m_pages);
+}
+
+void fsWebPageDownloader::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	putStrToBuffer(m_strStartServer.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.bDownloadFiles, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.bDownloadImages, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.bDownloadStyles, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.bNotAllFiles, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.bNotAllImages, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.bNotAllPages, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.bSavePagesUnderHTM, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.dwFlags, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.enExtsType, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.enImgsExtsType, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.iDepth, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.iReserved, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(m_wpds.pDLGroup->nId, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(m_wpds.strExts.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(m_wpds.strImgsExts.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(m_wpds.strFolderSaveTo.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(m_wpds.strHTMLExts.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(m_wpds.strUserName.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(m_wpds.strPassword.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+
+	
+	int cItems = m_wpds.vIgnoreList.size ();
+	putVarToBuffer(cItems, pbtCurrentPos, 0, 0, &dwRequiredSize);
+
+	for (int i = 0; i < cItems; i++) {
+		putStrToBuffer(m_wpds.vIgnoreList [i]->strURL.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		putVarToBuffer(m_wpds.vIgnoreList [i]->dwFlags, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	}
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize != 0) {
+			*pdwSize = dwRequiredSize;
+		}
+		return;
+	}
+
+	putStrToBuffer(m_strStartServer.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.bDownloadFiles, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.bDownloadImages, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.bDownloadStyles, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.bNotAllFiles, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.bNotAllImages, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.bNotAllPages, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.bSavePagesUnderHTM, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.dwFlags, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.enExtsType, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.enImgsExtsType, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.iDepth, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.iReserved, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(m_wpds.pDLGroup->nId, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putStrToBuffer(m_wpds.strExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putStrToBuffer(m_wpds.strImgsExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putStrToBuffer(m_wpds.strFolderSaveTo.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putStrToBuffer(m_wpds.strHTMLExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putStrToBuffer(m_wpds.strUserName.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putStrToBuffer(m_wpds.strPassword.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+
+	
+	putVarToBuffer(cItems, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+
+	for (int i = 0; i < cItems; i++) {
+		putStrToBuffer(m_wpds.vIgnoreList [i]->strURL.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		putVarToBuffer(m_wpds.vIgnoreList [i]->dwFlags, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	}
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
 }
 
 BOOL fsWebPageDownloader::Save(HANDLE hFile, fsDLWebPageTree root)
@@ -1478,7 +1756,97 @@ BOOL fsWebPageDownloader::Load_OLD(HANDLE hFile, BOOL bOldVer)
 
 	m_nMaxID = 0;
 
+	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)m_pages->GetData());
 	return Load (hFile, m_pages, 3);
+}
+
+bool fsWebPageDownloader::loadObjectItselfFromStateBuffer_Old(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	if (!getStrFromBuffer(&m_strStartServer.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (dwVer < 2) {
+		fsWPDSettings_v1 wpds1;
+
+		if (!getVarFromBuffer(wpds1, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+
+		m_wpds.bDownloadFiles = wpds1.bDownloadFiles;
+		m_wpds.bDownloadImages = wpds1.bDownloadImages;
+		m_wpds.bDownloadStyles = wpds1.bDownloadStyles;
+		m_wpds.bNotAllFiles = wpds1.bNotAllFiles;
+		m_wpds.bNotAllImages = wpds1.bNotAllImages;
+		m_wpds.bNotAllPages = wpds1.bNotAllPages;
+		m_wpds.enExtsType = wpds1.enExtsType;
+		m_wpds.enImgsExtsType = wpds1.enImgsExtsType;
+		m_wpds.iDepth = wpds1.iDepth;
+		m_wpds.iReserved = wpds1.iReserved;
+		wpds1.strDLGroup.pszString = NULL;
+		wpds1.strExts.pszString = NULL;
+		wpds1.strFolderSaveTo.pszString = NULL;
+		wpds1.strHTMLExts.pszString = NULL;
+		wpds1.strImgsExts.pszString = NULL;
+	} else {
+
+		if (!getVarFromBuffer(m_wpds, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+
+		m_wpds.bSavePagesUnderHTM = FALSE;
+		m_wpds.dwFlags = 0;
+	}
+
+	fsString str;
+	if (!getStrFromBuffer(&str.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+	m_wpds.pDLGroup = _DldsGrps.FindGroupByName (str);
+	if (m_wpds.pDLGroup == NULL)
+		m_wpds.pDLGroup = _DldsGrps.FindGroup (GRP_OTHER_ID);
+
+	if (!getStrFromBuffer(&m_wpds.strExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&m_wpds.strImgsExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&m_wpds.strFolderSaveTo.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&m_wpds.strHTMLExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (dwVer >= 2) {
+		if (!getStrFromBuffer(&m_wpds.strUserName.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+
+		if (!getStrFromBuffer(&m_wpds.strPassword.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+	} else {
+		m_wpds.strUserName.pszString = NULL;
+		m_wpds.strPassword.pszString = NULL;
+	}
+
+	m_nMaxID = 0;
+
+	fsDLWebPagePtr wp; wp.CreateInstance ();
+	m_pages->SetData(wp);
+	TDlWebPageOnLoadHandlerData wpldData;
+	wpldData.m_dwpPages = (fsDLWebPageTree)m_pages;
+
+	wpldData.m_pDlWebPagePtr = wp;
+	wpldData.m_pwpdWebPageDownloader = this;
+
+	wp->olOnLoadHandler = &fsWebPageDownloader::FdmOnDwpLoad;
+	wp->pvOnLoadHandlerData = &AddDwpOnLoadHandlerData(wpldData);
+	wp->osOnSaveHandler = &fsWebPageDownloader::FdmOnDwpSave;
+	wp->pvOnSaveHandlerData = wpldData.m_dwpPages;
+	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)wp);
+	
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	return true;
 }
 
 BOOL fsWebPageDownloader::Load(HANDLE hFile, fsDLWebPageTree root, WORD wVer)
@@ -1566,7 +1934,11 @@ BOOL fsWebPageDownloader::Load(HANDLE hFile, fsDLWebPageTree root, WORD wVer)
 	for (int i = 0; i < cLeafs; i++)
 	{
 		fsDLWebPagePtr wp; wp.CreateInstance ();
-		if (FALSE == Load (hFile, root->AddLeaf (wp), wVer))
+		wp->osOnSaveHandler = &fsWebPageDownloader::FdmOnDwpSave;
+		fsDLWebPageTree wpChild = root->AddLeaf (wp);
+		wp->pvOnSaveHandlerData = wpChild;
+		root->GetData()->getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)wpChild->GetData());
+		if (FALSE == Load (hFile, wpChild, wVer))
 			return FALSE;
 	}
 
@@ -1639,6 +2011,7 @@ void fsWebPageDownloader::OnDldRedirected(vmsDownloadSmartPtr dld)
 		wp = FindWebPage (dld);
 		wp->pvUrls->add (wp->strURL);	
 		wp->strURL = strNewUrl;	
+		wp->setDirty();
 	}
 	else
 	{
@@ -1661,10 +2034,11 @@ void fsWebPageDownloader::OnDldRedirected(vmsDownloadSmartPtr dld)
 		DeleteWebPage (oldwp);
 		
 		dld->dwFlags |= DLD_DELETEFILEALWAYS;
-		_DldsMgr.QueryStoringDownloadList();
+		dld->setDirty();
 		_pwndDownloads->DeleteDownload (dld, FALSE);
 		
 		wp->pvUrls->add (strNewUrl);
+		wp->setDirty();
 	}
 }
 
@@ -1707,6 +2081,8 @@ void fsWebPageDownloader::DeleteWebPage(fsDLWebPage *wp)
 		if (root->GetLeaf (i)->GetData ()->nID == wp->nID)
 		{
 			root->DeleteLeaf (i);
+			root->GetData()->setDirty();
+			root->GetData()->getPersistObjectChildren ()->removePersistObject (i);
 			break;
 		}
 	}
@@ -1817,6 +2193,7 @@ BOOL fsWebPageDownloader::Load(HANDLE hFile, WORD wVer)
 
 	m_nMaxID = 0;
 
+	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)m_pages->GetData());
 	if (FALSE == Load (hFile, m_pages, wVer))
 	{
 		Load_PerformRollback ();
@@ -1824,6 +2201,126 @@ BOOL fsWebPageDownloader::Load(HANDLE hFile, WORD wVer)
 	}
 
 	return TRUE;
+}
+
+bool fsWebPageDownloader::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	if(dwVer < 3)
+		return loadObjectItselfFromStateBuffer_Old(pbtBuffer, pdwSize, dwVer);
+
+	if (!getStrFromBuffer(&m_strStartServer.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.bDownloadFiles, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.bDownloadImages, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.bDownloadStyles, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.bNotAllFiles, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.bNotAllImages, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.bNotAllPages, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.bSavePagesUnderHTM, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.dwFlags, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.enExtsType, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.enImgsExtsType, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.iDepth, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(m_wpds.iReserved, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (dwVer < 6) {
+		fsString str;
+		if (!getStrFromBuffer(&str.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+		m_wpds.pDLGroup = _DldsGrps.FindGroupByName (str);
+	} else {
+		UINT nId;
+		if (!getVarFromBuffer(nId, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+		m_wpds.pDLGroup = _DldsGrps.FindGroup (nId);
+	}
+
+	if (m_wpds.pDLGroup == NULL)
+		m_wpds.pDLGroup = _DldsGrps.FindGroup (GRP_OTHER_ID);
+
+	if (!getStrFromBuffer(&m_wpds.strExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&m_wpds.strImgsExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&m_wpds.strFolderSaveTo.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&m_wpds.strHTMLExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&m_wpds.strUserName.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&m_wpds.strPassword.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (dwVer >= 5) {
+
+		
+		int cItems;
+		ASSERT (m_wpds.vIgnoreList.size () == 0);
+		if (!getVarFromBuffer(cItems, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+
+		for (int i = 0; i < cItems; i++) {
+			fsWPDIgnoreListItem *item = new fsWPDIgnoreListItem;
+			if (!getStrFromBuffer(&item->strURL.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+
+			if (!getVarFromBuffer(item->dwFlags, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+
+			m_wpds.vIgnoreList.add (item);
+		}
+	}
+
+	m_nMaxID = 0;
+
+	fsDLWebPagePtr wp; wp.CreateInstance ();
+	m_pages->SetData(wp);
+	TDlWebPageOnLoadHandlerData wpldData;
+	wpldData.m_dwpPages = (fsDLWebPageTree)m_pages;
+
+	wpldData.m_pDlWebPagePtr = wp;
+	wpldData.m_pwpdWebPageDownloader = this;
+
+	wp->olOnLoadHandler = &fsWebPageDownloader::FdmOnDwpLoad;
+	wp->pvOnLoadHandlerData = &AddDwpOnLoadHandlerData(wpldData);
+	wp->osOnSaveHandler = &fsWebPageDownloader::FdmOnDwpSave;
+	wp->pvOnSaveHandlerData = wpldData.m_dwpPages;
+	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)wp);
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	return true;
 }
 
 #pragma warning (disable:4706)
@@ -1992,6 +2489,7 @@ void fsWebPageDownloader::CorrectUnpUrls(fsDLWebPage* wpfrom, fsDLWebPage* wpto)
 				vLinkTypes.add (wpfrom->pvUnpLinks->at (j).lt);
 				
 				wpfrom->pvUnpLinks->del (j);
+				wpfrom->setDirty();
 			}
 			else
 			{
@@ -2206,6 +2704,7 @@ int fsWebPageDownloader::ParseHTMLFrameUrls(fsHTMLParser &parser, fsDLWebPageTre
 			unplink.nParserUrl = i;			
 			unplink.lt = WPLT_A;			
 			wp->pvUnpLinks->add (unplink);
+			wp->setDirty();
 		}
 
 		if ((m_wpds.dwFlags & WPDF_DONTSTOREPAGES) == 0)
@@ -2282,7 +2781,6 @@ DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
 	LOGFN ("fsWebPageDownloader::_threadProcessDoneAndRedirEvents");
 
 	fsWebPageDownloader *pthis = (fsWebPageDownloader*)lp;
-	pthis->AddRef ();
 	pthis->m_bthreadProcessDoneAndRedirEvents_Running = true;
 
 	SetThreadPriority (GetCurrentThread (), THREAD_PRIORITY_BELOW_NORMAL);
@@ -2325,6 +2823,7 @@ DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
 					
 					pthis->Event (WPDE_DLDWILLBEDELETED, dld);
 					wp->dld = NULL;	
+					wp->setDirty();
 				}
 			} catch (...) {}
 		}
@@ -2417,7 +2916,6 @@ DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
 	}catch (...) {ASSERT (FALSE);}
 
 	pthis->m_bthreadProcessDoneAndRedirEvents_Running = false;
-	pthis->Release ();
 	return 0;
 }
 
@@ -2436,3 +2934,99 @@ bool fsWebPageDownloader::isDownloadsMgrRequired() const
 {
 	return m_bthreadProcessDoneAndRedirEvents_Running;
 }
+
+TDlWebPageOnLoadHandlerData& fsWebPageDownloader::AddDwpOnLoadHandlerData(const TDlWebPageOnLoadHandlerData& wpldData)
+{
+	m_lstDwpOnLoadHandlerData.push_back(wpldData);
+	return m_lstDwpOnLoadHandlerData.back();
+}
+
+void fsWebPageDownloader::CleanDwpOnLoadHandlerData()
+{
+	m_lstDwpOnLoadHandlerData.swap(std::list<TDlWebPageOnLoadHandlerData>());
+}
+
+bool fsWebPageDownloader::FdmOnDwpLoad(int nCase, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD* pdwSize, void* pvData)
+{
+	TDlWebPageOnLoadHandlerData* wplpData = (TDlWebPageOnLoadHandlerData*)pvData;
+	if (wplpData == 0)
+		return false;
+
+	if ((fsDLWebPage*)wplpData->m_pDlWebPagePtr == 0)
+		return false;
+
+	if (wplpData->m_dwpPages == 0)
+		return false;
+
+	fsWebPageDownloader* pwpdWebPageDownloader = wplpData->m_pwpdWebPageDownloader;
+
+	if (pwpdWebPageDownloader == 0)
+		return false;
+
+	_Conformity conf;
+	int cLeafs = 0;
+
+	switch (nCase) {
+		case DPLC_CreateId:
+			pwpdWebPageDownloader->m_nMaxID = max (pwpdWebPageDownloader->m_nMaxID, wplpData->m_pDlWebPagePtr->nID);
+			break;
+		case DPLC_FindDownload:
+			pwpdWebPageDownloader->WebPage_FindDownload((fsDLWebPage*)wplpData->m_pDlWebPagePtr);
+			break;
+		case DPLC_InitDownload:
+			if (wplpData->m_pDlWebPagePtr->dld) {
+				wplpData->m_pDlWebPagePtr->dld->pfnDownloadEventsFunc = _DldEvents;
+				wplpData->m_pDlWebPagePtr->dld->lpEventsParam = pwpdWebPageDownloader;
+				
+				wplpData->m_pDlWebPagePtr->dld->dwFlags |= DLD_USEDBYHTMLSPIDER;
+			}
+			break;
+		case DPLC_CreateLeafs:
+
+			wplpData->m_dwpPages->SetData ((fsDLWebPage*)wplpData->m_pDlWebPagePtr);
+			
+			conf.wp = wplpData->m_dwpPages->GetData ();
+			conf.wptree = wplpData->m_dwpPages;
+			pwpdWebPageDownloader->m_vConfs.push_back (conf);
+			
+			if (!getVarFromBuffer(cLeafs, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+			TRACE("cLeafs: %d, size: %d\r\n", cLeafs, *pdwSize);
+
+			for (int i = 0; i < cLeafs; i++) {
+				fsDLWebPagePtr wp; wp.CreateInstance ();
+				TDlWebPageOnLoadHandlerData wpldData;
+				wpldData.m_dwpPages = wplpData->m_dwpPages->AddLeaf(wp);
+
+				wpldData.m_pDlWebPagePtr = wp;
+				wpldData.m_pwpdWebPageDownloader = pwpdWebPageDownloader;
+
+				wp->olOnLoadHandler = &fsWebPageDownloader::FdmOnDwpLoad;
+				wp->pvOnLoadHandlerData = &pwpdWebPageDownloader->AddDwpOnLoadHandlerData(wpldData);
+				wp->osOnSaveHandler = &fsWebPageDownloader::FdmOnDwpSave;
+				wp->pvOnSaveHandlerData = wpldData.m_dwpPages;
+				wplpData->m_pDlWebPagePtr->getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)wp);
+			}
+
+			break;
+		default:
+			return false;
+	}
+
+	return true;
+}
+
+bool fsWebPageDownloader::FdmOnDwpSave(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwSizeRequired, void* pvData)
+{
+	fsDLWebPageTree dwpPages = (fsDLWebPageTree)pvData;
+	if (dwpPages == 0)
+		return false;
+
+	int cLeafs = dwpPages->GetLeafCount ();
+
+	putVarToBuffer(cLeafs, pbtCurrentPos, pbtBuffer, dwBufferSize, pdwSizeRequired);
+	TRACE("cLeafs: %d, size: %d\r\n", cLeafs, pdwSizeRequired ? *pdwSizeRequired : 0);
+	
+	return true;
+}
+

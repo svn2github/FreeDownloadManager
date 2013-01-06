@@ -18,7 +18,8 @@ class CCreateBatchDownload : public CDialog
 {
 
 public:
-	fsSchedule m_task;		
+	
+	fsScheduleEx m_schScheduleParam;
 	CCreateBatchDownload(CWnd* pParent = NULL);  
 
 	//{{AFX_DATA(CCreateBatchDownload)

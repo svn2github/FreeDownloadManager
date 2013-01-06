@@ -26,6 +26,14 @@ protected:
 	fsCommandLineParser m_parser;	
 	BOOL m_bForceSilent;		
 	bool m_bNeedExit;
+	bool m_bNeedRegisterServer, m_bNeedUnregisterServer;
+	bool m_bRunAsElevatedTasksProcessor;
+	bool m_bInstallIeIntegration;
+public:
+	bool isNeedRegisterServer(void);
+	bool isNeedUnregisterServer(void);
+	bool isRunAsElevatedTasksProcessor () const {return m_bRunAsElevatedTasksProcessor;}
+	bool isNeedInstallIeIntegration () const {return m_bInstallIeIntegration;}
 };
 
 #endif 

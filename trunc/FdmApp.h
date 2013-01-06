@@ -15,8 +15,7 @@
 
 #include "resource.h"       
 #include "fdm.h"
-
-const char* const _pszAppMutex = "Free Download Manager";
+#include "fsFDMCmdLineParser.h"
 
 class CFdmApp : public CWinApp
 {
@@ -85,7 +84,6 @@ protected:
 	BOOL m_bEmbedding;		
 	BOOL InitLanguage();	
 	void LoadHistory();		
-	HANDLE m_hAppMutex;		
 private:
 	
 	BOOL m_bATLInited;
@@ -94,6 +92,15 @@ private:
 private:
 	
 	BOOL InitATL();
+protected:
+	bool onNeedRegisterServer(void);
+	bool onNeedUnregisterServer(void);
+	void RunAsElevatedTasksProcessor(fsFDMCmdLineParser& cmdline);
+public:
+	
+	
+	
+	void CheckFirefoxExtension(LPDWORD pdwResult = NULL);
 };
 
 //{{AFX_INSERT_LOCATION}}

@@ -104,3 +104,33 @@ bool vmsFirefoxExtensionInstaller::IsInstalled(LPCSTR pszCID, bool bInDefaultPro
 
 	return false;
 }
+
+bool vmsFirefoxExtensionInstaller::ExtractExtensionInfo(LPCTSTR ptszRdf, tstring& tstrVersion)
+{
+	USES_CONVERSION;
+	IXMLDOMDocumentPtr spXML;
+	spXML.CreateInstance (__uuidof (DOMDocument));
+	if (!spXML)
+		return false;
+	spXML->put_async (FALSE);
+	VARIANT_BOOL bRes = FALSE;
+	spXML->load (COleVariant (ptszRdf), &bRes);
+	if (!bRes)
+		return false;
+	IXMLDOMNodePtr spRDF;
+	spXML->selectSingleNode (L"RDF", &spRDF);
+	if (!spRDF)
+		return false;
+	IXMLDOMNodePtr spDesc;
+	spRDF->selectSingleNode (L"Description", &spDesc);
+	if (!spDesc)
+		return false;
+	IXMLDOMNodePtr spVer;
+	spDesc->selectSingleNode (L"em:version", &spVer);
+	if (!spVer)
+		return false;
+	CComBSTR bstr;
+	spVer->get_text (&bstr);
+	tstrVersion = W2CT (bstr);
+	return true;
+}

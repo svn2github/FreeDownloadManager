@@ -54,8 +54,7 @@ enum vmsBtDownloadStateEx
 
 };
 
-class vmsBtDownloadManager : public vmsObject,
-	public vmsDownloaderWithNetworkUsageAdjustment
+class vmsBtDownloadManager : public vmsObject, public vmsDownloaderWithNetworkUsageAdjustment, public vmsPersistObject 
 {
 public:
 	bool isHashEqual (const vmsBtDownloadManager *pMgr2);
@@ -143,8 +142,10 @@ public:
 	vmsBtDownloadStateEx get_State();
 	BOOL CreateByTorrentFile (LPCSTR pszTorrentFile, LPCSTR pszOutputPath, LPCSTR pszTorrentUrl, BOOL bSeedOnly = FALSE);
 	void DeleteBtDownload();
-	void EnableQueryStoringDownloadList(bool bEnable);
-	bool IsQueryStoringDownloadListEnable() const;
+	
+	void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+	void SetParentPersistObjectSize(DWORD dwSize);
 
 protected:
 	friend class vmsObjectSmartPtr <vmsBtDownloadManager>;
@@ -230,8 +231,6 @@ protected:
 		_inc_FilePieces (int start, int end) : nStartPiece (start), nEndPiece (end) {}
 	};
 	std::vector <_inc_FilePieces> m_vFilesPieces;
-
-	bool m_bDontQueryStoringDownloadList;
 
 	static std::vector <vmsBtDownloadManager*>* m_pvpDlds;
 	static vmsCriticalSection *m_pcsvpDlds;

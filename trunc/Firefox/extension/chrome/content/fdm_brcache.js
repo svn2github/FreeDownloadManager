@@ -65,7 +65,8 @@ freeDldMgr_TracingListener.prototype =
 
 			binaryOutputStream.writeByteArray(data, count);
 
-			this.originalListener.onDataAvailable (request, context,
+			if (!this.bDontCallOriginalListener)
+			  this.originalListener.onDataAvailable (request, context,
 				storageStream.newInputStream(0), offset, count);
 		}
 		else // bJustNotify is true
@@ -206,5 +207,6 @@ function freeDldMgr_brCache_unload (ev)
 	observerService.removeObserver(freeDldMgr_brCacheListener, "http-on-modify-request");
 	observerService.removeObserver(freeDldMgr_brCacheListener, "http-on-examine-response");
 	observerService.removeObserver(freeDldMgr_brCacheListener, "http-on-examine-cached-response");
+	observerService.removeObserver(freeDldMgr_brCacheListener, "http-on-examine-merged-response");
 	window.removeEventListener("unload",  freeDldMgr_brCache_unload);
 }

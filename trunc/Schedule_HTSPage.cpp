@@ -314,6 +314,10 @@ BOOL CSchedule_HTSPage::OnApply()
 			m_task->hts.uTimeNothingReceived = GetDlgItemInt (IDC_DURING);
 		}
 	}
+
+	fsScheduleEx* pschScheduleParam = (fsScheduleEx*)m_task;
+	if (pschScheduleParam->m_ppoTaskWrapper)
+		pschScheduleParam->m_ppoTaskWrapper->setDirty();
 	
 	return CPropertyPage::OnApply();
 }

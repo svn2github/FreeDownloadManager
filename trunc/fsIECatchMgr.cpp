@@ -144,64 +144,48 @@ BOOL fsIECatchMgr::IsIE2Active()
 	return _App.Monitor_IE2 ();
 }
 
-typedef HRESULT (_stdcall *fntDllRegUnregServer)(void);
-
-BOOL fsIECatchMgr::ActivateIE2(BOOL bActivate)
+BOOL fsIECatchMgr::InstallIeIntegration(BOOL bInstall, BOOL bCurrentUserOnly, BOOL bOverrideHKCR)
 {
-	fntDllRegUnregServer pfnDll = NULL;
+	bOverrideHKCR = bCurrentUserOnly && bOverrideHKCR;
 
-	DWORD dw1, dw2, dw3, dw4; 
-	GetIEVersion (&dw1, &dw2, &dw3, &dw4);
+	if (bOverrideHKCR)
+	{
+		CRegKey key;
+		if (ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, _T ("Software\\Classes"), KEY_ALL_ACCESS))
+			RegOverridePredefKey (HKEY_CLASSES_ROOT, key);
+	}
+
+	typedef HRESULT (_stdcall *fntDllRegUnregServer)(void);
+	typedef HRESULT (_stdcall *fntInstaller)(bool, bool);
+	fntDllRegUnregServer pfnDll = NULL;
+	fntInstaller pfnInstaller = NULL;
+
+	bool bFdmdm = false, bBho = false;
 
 	
 	HMODULE hLib = LoadLibrary ("iefdmdm.dll");
-	if (hLib == NULL)
-		return FALSE;
-
-	if (bActivate && dw1 >= 6)
-		pfnDll = (fntDllRegUnregServer) GetProcAddress (hLib, "DllRegisterServer");
-	else
-		pfnDll = (fntDllRegUnregServer) GetProcAddress (hLib, "DllUnregisterServer");
-
-	if (pfnDll == NULL)
+	if (hLib)
 	{
+		pfnInstaller = (fntInstaller) GetProcAddress (hLib, "vmsInstaller");
+		if (pfnInstaller)
+			bFdmdm = SUCCEEDED (pfnInstaller (bInstall, bCurrentUserOnly));
 		FreeLibrary (hLib);
-		return FALSE;
 	}
-
-	if (FAILED (pfnDll ()))
-	{
-		FreeLibrary (hLib);
-		return FALSE;
-	}
-
-	FreeLibrary (hLib);
 
 	
 	hLib = LoadLibrary ("iefdm2.dll");
-	if (hLib == NULL)
-		return FALSE;
-
-	if (bActivate && dw1 >= 6)
-		pfnDll = (fntDllRegUnregServer) GetProcAddress (hLib, "DllRegisterServer");
-	else
-		pfnDll = (fntDllRegUnregServer) GetProcAddress (hLib, "DllUnregisterServer");
-
-	if (pfnDll == NULL)
+	if (hLib)
 	{
+		pfnDll = (fntDllRegUnregServer) GetProcAddress (hLib, bInstall ? "DllRegisterServer" : "DllUnregisterServer");
+		if (pfnDll)
+			bBho = SUCCEEDED (pfnDll ());
 		FreeLibrary (hLib);
-		return FALSE;
 	}
 
-	if (FAILED (pfnDll ()))
-	{
-		FreeLibrary (hLib);
-		return FALSE;
-	}
+	if (bOverrideHKCR)
+		RegOverridePredefKey (HKEY_CLASSES_ROOT, NULL);
 
-	FreeLibrary (hLib);
-
-	return TRUE;
+	return bFdmdm && bBho;
 }
 
 void fsIECatchMgr::CleanIEPluginKey()
@@ -245,7 +229,7 @@ BOOL fsIECatchMgr::IsMonitoringDllRegistered()
 
 	
 	if (SUCCEEDED (hr2))
-		ActivateIE2 (TRUE);
+		InstallIeIntegration (TRUE);
 
 	return SUCCEEDED (hr2);
 }

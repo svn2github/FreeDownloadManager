@@ -26,6 +26,11 @@ CShedulerWnd::CShedulerWnd()
 	m_mgr.SetEventFunc (_ScheduleMgrEventFunc, this);
 	m_mgr.SetEventDescFunc (_ScheduleMgrEventDesc, this);
 	m_wndLog.SetEvMgr (&m_evMgr);
+
+	getPersistObjectChildren ()->addPersistObject (&m_mgr);
+	getPersistObjectChildren ()->addPersistObject (&m_evMgr);
+	m_bIsSchedulerMgrLoadedSuccessfully = false;
+	m_bIsEventsMgrLoadedSuccessfully = false;
 }
 
 CShedulerWnd::~CShedulerWnd()
@@ -143,7 +148,9 @@ void CShedulerWnd::OnCreatenewtask()
 {
 	CScheduleSheet sheet (LS (L_NEWTASK), this);
 	
-	fsSchedule task;
+	
+	fsScheduleEx schScheduleParam;
+	fsSchedule& task = schScheduleParam.schTask;
 
 	
 	_App.Scheduler_LastTask_read (&task);
@@ -203,60 +210,76 @@ void CShedulerWnd::LoadTasks()
 		return;
 
 	HANDLE hFile = CreateFile (strFile, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+	if (hFile == INVALID_HANDLE_VALUE)
+		return;
 
-	BOOL bOk = hFile != INVALID_HANDLE_VALUE;
+	DWORD dw = 0;
+	DWORD dwRequiredSize = ::GetFileSize(hFile, NULL);
+	if (dwRequiredSize <= 0) {
+		CloseHandle (hFile);
+		return;
+	}
 
-	if (bOk)
-		bOk = m_mgr.LoadStateFromFile (hFile);
+	std::auto_ptr<BYTE> pbtBufferGuard( new BYTE[dwRequiredSize] );
+	LPBYTE pbtBuffer = pbtBufferGuard.get();
+	if (pbtBuffer == 0) {
+		CloseHandle (hFile);
+		return;
+	}
+	memset(pbtBuffer, 0, dwRequiredSize);
 
-	if (bOk == FALSE)
-	{	
-		if (hFile != INVALID_HANDLE_VALUE)
-			CloseHandle (hFile);
+	if (!ReadFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
+		CloseHandle (hFile);
+		return;
+	}
 
-		
+	if (!loadFromStateBuffer(pbtBuffer, &dwRequiredSize, 0)) {
+		CloseHandle (hFile);
+
+		if (m_bIsSchedulerMgrLoadedSuccessfully && !m_bIsEventsMgrLoadedSuccessfully) {
+			m_evMgr.clear();
+			MessageBox (LS (L_CANTLOADSCHEDULERLOG), LS (L_ERR), MB_ICONERROR);
+		}
 
 		return;
 	}
 
-	
-	if (_App.App_2_0_SchedulerFixPerformed () == FALSE)
-	{
-		_App.App_2_0_SchedulerFixPerformed (TRUE);
-
-		int pos;
-
-		while (-1 != (pos = m_mgr.FindTask (WTS_SHUTDOWN)))
-			m_mgr.DeleteTask (m_mgr.GetTask (pos));
-
-		while (-1 != (pos = m_mgr.FindTask (WTS_EXIT)))
-			m_mgr.DeleteTask (m_mgr.GetTask (pos));
-
-		while (-1 != (pos = m_mgr.FindTask (WTS_HANGUP)))
-			m_mgr.DeleteTask (m_mgr.GetTask (pos));
-	}
-	
-
-	int cTasks = m_mgr.GetTaskCount ();
-	for (int i = 0; i < cTasks; i++)
-	{
-		m_wndTasks.AddTask (m_mgr.GetTask (i));
-	}
-
-	
-
-	
-	if (FALSE == m_evMgr.Load (hFile))
-		MessageBox (LS (L_CANTLOADSCHEDULERLOG), LS (L_ERR), MB_ICONERROR);
-	else
-	{
-		int cEvents = m_evMgr.GetEventCount ();
-
-		for (int i = 0; i < cEvents; i++)
-			m_wndLog.AddRecord (m_evMgr.GetEvent (i));
-	}
-
 	CloseHandle (hFile);
+	resetDirty();
+
+	int cEvents = m_evMgr.GetEventCount ();
+	for (int i = 0; i < cEvents; i++)
+		m_wndLog.AddRecord (m_evMgr.GetEvent (i));
+
+	
+	
+	
+
+		
+
+	
+	
+
+	
+	
+	
+	
+
+	
+	
+
+	
+
+	
+	
+	
+}
+
+bool CShedulerWnd::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer)
+{
+	if (pdwSize)
+		*pdwSize = 0;
+	return true;
 }
 
 fsScheduleMgr* CShedulerWnd::GetMgr()
@@ -419,11 +442,14 @@ void CShedulerWnd::HangupWhenDone(BOOL bUse)
 	{
 		if (pos != -1) {
 			m_mgr.GetTask (pos)->dwFlags |= SCHEDULE_ENABLED;
+			m_mgr.setDirtyFlagForTask(pos);
 			m_wndTasks.UpdateTask (pos);
 			return;
 		}
 
-		fsSchedule task;
+		
+		fsScheduleEx schScheduleParam;
+		fsSchedule& task = schScheduleParam.schTask;
 		task.dwFlags = SCHEDULE_ENABLED;
 		if (_App.WD_DisableAfterExec ())
 			task.dwFlags |= SCHEDULE_AUTODIS;
@@ -439,6 +465,7 @@ void CShedulerWnd::HangupWhenDone(BOOL bUse)
 	{
 		
 		m_mgr.GetTask (pos)->dwFlags &= ~SCHEDULE_ENABLED;
+		m_mgr.setDirtyFlagForTask(pos);
 		m_wndTasks.UpdateTask (pos);
 	}
 }
@@ -474,11 +501,14 @@ void CShedulerWnd::ExitWhenDone(BOOL bUse)
 	{
 		if (pos != -1) {
 			m_mgr.GetTask (pos)->dwFlags |= SCHEDULE_ENABLED;
+			m_mgr.setDirtyFlagForTask(pos);
 			m_wndTasks.UpdateTask (pos);
 			return;
 		}
 
-		fsSchedule task;
+		
+		fsScheduleEx schScheduleParam;
+		fsSchedule& task = schScheduleParam.schTask;
 		task.dwFlags = SCHEDULE_ENABLED;
 		if (_App.WD_DisableAfterExec ())
 			task.dwFlags |= SCHEDULE_AUTODIS;
@@ -493,6 +523,7 @@ void CShedulerWnd::ExitWhenDone(BOOL bUse)
 	{
 		
 		m_mgr.GetTask (pos)->dwFlags &= ~SCHEDULE_ENABLED;
+		m_mgr.setDirtyFlagForTask(pos);
 		m_wndTasks.UpdateTask (pos);
 	}
 }
@@ -534,11 +565,14 @@ void CShedulerWnd::TurnoffWhenDone(fsShutdownType enST, BOOL bUse)
 			fsSchedule* task = m_mgr.GetTask (pos);
 			task->wts.shutdown.enShutdown = enST;
 			task->dwFlags |= SCHEDULE_ENABLED;
+			m_mgr.setDirtyFlagForTask(pos);
 			m_wndTasks.UpdateTask (pos);
 			return;
 		}
 
-		fsSchedule task;
+		
+		fsScheduleEx schScheduleParam;
+		fsSchedule& task = schScheduleParam.schTask;
 		task.dwFlags = SCHEDULE_ENABLED;
 		if (_App.WD_DisableAfterExec ())
 			task.dwFlags |= SCHEDULE_AUTODIS;
@@ -556,6 +590,7 @@ void CShedulerWnd::TurnoffWhenDone(fsShutdownType enST, BOOL bUse)
 	{
 		
 		m_mgr.GetTask (pos)->dwFlags &= ~SCHEDULE_ENABLED;
+		m_mgr.setDirtyFlagForTask(pos);
 		m_wndTasks.UpdateTask (pos);
 	}
 }
@@ -600,25 +635,50 @@ void CShedulerWnd::Plugin_GetPluginNames(LPCSTR *ppszLong, LPCSTR *ppszShort)
 
 BOOL CShedulerWnd::SaveSchedules()
 {
+	if (!isDirty())
+		return TRUE;
+
+	DWORD dwRequiredSize = 0;
+	DWORD dw = 0;
+
 	CString strFile = fsGetDataFilePath ("schedules.sav");
 
 	HANDLE hFile = CreateFile (strFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
 		FILE_ATTRIBUTE_HIDDEN, NULL);
 
-	BOOL bOk = TRUE;
+	getStateBuffer(0, &dwRequiredSize, false);
 
-	if (hFile == INVALID_HANDLE_VALUE)
-		bOk = FALSE;
-	else 
-		bOk = m_mgr.SaveStateToFile (hFile);
-		
-	if (bOk)
-		m_evMgr.Save (hFile);
-
-	if (hFile != INVALID_HANDLE_VALUE)
+	if (dwRequiredSize == 0) {
 		CloseHandle (hFile);
+		return FALSE;
+	}
 
-	return bOk;
+	std::auto_ptr<BYTE> apbtBufferGuard( new BYTE[dwRequiredSize] );
+	LPBYTE pbtBuffer = apbtBufferGuard.get();
+	if (pbtBuffer == 0) {
+		CloseHandle (hFile);
+		return FALSE;
+	}
+	memset(pbtBuffer, 0, dwRequiredSize);
+
+	getStateBuffer(pbtBuffer, &dwRequiredSize, true);
+
+	if (FALSE == WriteFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
+		CloseHandle (hFile);
+		return FALSE;
+	}
+	CloseHandle (hFile);
+	onStateSavedSuccessfully();
+
+	return TRUE;
+
+	
+}
+
+void CShedulerWnd::getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	if (pdwSize)
+		*pdwSize = 0;
 }
 
 void CShedulerWnd::OnSetFocus(CWnd* pOldWnd) 
@@ -711,4 +771,42 @@ HMENU CShedulerWnd::Plugin_GetMainMenu()
 HMENU CShedulerWnd::Plugin_GetViewMenu()
 {
 	return LoadMenu (AfxGetInstanceHandle (), MAKEINTRESOURCE (IDM_TASKS_VIEW));
+}
+
+void CShedulerWnd::onChildObjectLoadFinished (vmsPersistObject *pObject, bool bResult) 
+{
+	if (!bResult)
+		return;
+
+	if (pObject == &m_mgr)
+	{
+		
+		if (_App.App_2_0_SchedulerFixPerformed () == FALSE)
+		{
+			_App.App_2_0_SchedulerFixPerformed (TRUE);
+
+			int pos;
+
+			while (-1 != (pos = m_mgr.FindTask (WTS_SHUTDOWN)))
+				m_mgr.DeleteTask (m_mgr.GetTask (pos));
+
+			while (-1 != (pos = m_mgr.FindTask (WTS_EXIT)))
+				m_mgr.DeleteTask (m_mgr.GetTask (pos));
+
+			while (-1 != (pos = m_mgr.FindTask (WTS_HANGUP)))
+				m_mgr.DeleteTask (m_mgr.GetTask (pos));
+		}
+		
+
+		int cTasks = m_mgr.GetTaskCount ();
+		for (int i = 0; i < cTasks; i++)
+			m_wndTasks.AddTask (m_mgr.GetTask (i));
+
+		m_bIsSchedulerMgrLoadedSuccessfully = true;
+	}
+
+	else if (pObject == &m_evMgr)
+	{
+		m_bIsEventsMgrLoadedSuccessfully = true;
+	}
 }

@@ -201,6 +201,7 @@ protected:
 	afx_msg void OnDldshowprogressdlg();
 	afx_msg void OnDldconvert();
 	afx_msg void OnDldenableseeding();
+	afx_msg void OnDldcreateTP();
 	//}}AFX_MSG
 
 	DECLARE_MESSAGE_MAP()

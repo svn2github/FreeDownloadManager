@@ -151,7 +151,10 @@ void CCreateDownloadDlg::OnOK()
 		vmsDownloadsGroupSmartPtr pGrp = _DldsGrps.FindGroup (_App.NewDL_GroupId ());
 		if (pGrp != NULL) {
 			pGrp->strOutFolder = strOutFolder;
-			_DldsGrps.QueryStoringGroupsInformation();
+			pGrp->setDirty();
+			
+			
+			
 		}
 	}
 
@@ -219,16 +222,16 @@ BOOL CCreateDownloadDlg::OnInitDialog()
 	if (m_pUiWindow)
 		m_pUiWindow->setWindow (m_hWnd);
 
-	m_task.hts.enType = HTS_ONCE;
-	m_task.hts.last.dwHighDateTime = m_task.hts.last.dwLowDateTime = UINT_MAX;
-	m_task.dwFlags = SCHEDULE_ENABLED;
+	m_schScheduleParam.schTask.hts.enType = HTS_ONCE;
+	m_schScheduleParam.schTask.hts.last.dwHighDateTime = m_schScheduleParam.schTask.hts.last.dwLowDateTime = UINT_MAX;
+	m_schScheduleParam.schTask.dwFlags = SCHEDULE_ENABLED;
 	SYSTEMTIME time;
 	GetLocalTime (&time);
 	if (++time.wHour > 23)
 		time.wHour = 0;
 	time.wMinute = 0;
-	SystemTimeToFileTime (&time, &m_task.hts.next);
-	m_task.uWaitForConfirmation = 0;
+	SystemTimeToFileTime (&time, &m_schScheduleParam.schTask.hts.next);
+	m_schScheduleParam.schTask.uWaitForConfirmation = 0;
 
 	m_btnChooseFolder.SetIcon (SICO (IDI_CHOOSEFOLDER));
 	m_btnCreateGroup.SetIcon (SICO (IDI_CREATEGROUP));
@@ -508,7 +511,7 @@ void CCreateDownloadDlg::OnSettime()
 {
 	CScheduleSheet sheet (LS (L_SCHEDULEDLDS), this);
 
-	sheet.Init (&m_task, FALSE);
+	sheet.Init (&m_schScheduleParam.schTask, FALSE);
 	
 	_DlgMgr.OnDoModal (&sheet);
 
@@ -1020,10 +1023,11 @@ fsSiteInfo* CCreateDownloadDlg::_SavePassword(LPCSTR pszServer, fsNetworkProtoco
 			{
 				if (site)
 				{
-					site->strUser = pszUser;
+					site->strUser = pszUser;  
 					site->strPassword = pszPwd;
 					site->bTemp = FALSE;
 					_SitesMgr.SiteUpdated (site);
+					_SitesMgr.setDirty();
 				}
 				else
 				{
@@ -1062,6 +1066,7 @@ fsSiteInfo* CCreateDownloadDlg::_SavePassword(vmsDownloadSmartPtr dld)
 		site->dwFtpFlags = dnp->dwFtpFlags;
 		site->pGroup = dld->pGroup;
 		_SitesMgr.SiteUpdated (site);
+		_SitesMgr.setDirty();
 	}
 
 	return site;
@@ -1151,17 +1156,24 @@ BOOL CCreateDownloadDlg::_SetDownloadOutputFolderAsDefault(CWnd *pwndParent, LPC
 
 	if (dlg.m_bChecked)
 	{
-		for (size_t i = 0; i < _DldsGrps.GetTotalCount (); i++)
+		for (size_t i = 0; i < _DldsGrps.GetTotalCount (); i++) {
 			_DldsGrps.GetGroup (i)->strOutFolder = pszFolder;
-
-		if (_DldsGrps.GetTotalCount () > 0) {
-			_DldsGrps.QueryStoringGroupsInformation();
+			_DldsGrps.GetGroup (i)->setDirty();
+			
 		}
+
+		
+		
+		
+		
 	}
 	else
 	{
 		pGroup->strOutFolder = pszFolder;
-		_DldsGrps.QueryStoringGroupsInformation();
+		pGroup->setDirty();
+		
+		
+		
 	}
 
 	return TRUE;

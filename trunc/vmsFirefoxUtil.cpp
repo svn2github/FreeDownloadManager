@@ -127,10 +127,10 @@ bool vmsFirefoxUtil::GetDefaultProfilePath(LPSTR pszPath)
 {
 	FU_STRINGLIST v; int nDefaultProfile;
 
-	if (false == GetProfilesPathes (v, nDefaultProfile))
+	if (false == GetProfilesPathes (v, nDefaultProfile) || v.size () == 0)
 		return false;
 
-	if (nDefaultProfile == -1)
+	if (nDefaultProfile == -1 || nDefaultProfile < 0 || nDefaultProfile >= v.size ())
 		nDefaultProfile = 0;
 
 	lstrcpy (pszPath, v [nDefaultProfile]);

@@ -65,6 +65,9 @@ void CWPDS_FilesPage::DoDataExchange(CDataExchange* pDX)
 	else
 		m_wpds->enExtsType = WPDET_OFF;
 	m_wpds->strExts = strExts;
+
+	if (m_wpds->m_ppoOwner)
+		m_wpds->m_ppoOwner->setDirty();
 }
 
 BEGIN_MESSAGE_MAP(CWPDS_FilesPage, CPropertyPage)

@@ -10,9 +10,14 @@
 #endif 
 
 #include "list.h"
+#include "vmsPersistObject.h"
+
+struct fsDescEvent;
 
 struct fsDescEvent
 {
+	fsDescEvent () : pszEvent(0) {}
+
 	LPSTR pszEvent;			
 	COLORREF clrBg;			
 	COLORREF clrText;		
@@ -20,7 +25,18 @@ struct fsDescEvent
 	int iImage;				
 };
 
-class fsEventsMgr  
+struct vmsPersistableDescEventWrapper : public vmsObject, public vmsPersistObject
+{
+	fsDescEvent deEvent;
+
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+	vmsPersistableDescEventWrapper& operator = (const  vmsPersistableDescEventWrapper&);
+};
+
+typedef vmsObjectSmartPtr<vmsPersistableDescEventWrapper> vmsPersistableDescEventWrapperSmartPtr;
+
+class fsEventsMgr : public vmsPersistObject
 {
 public:
 	
@@ -36,12 +52,16 @@ public:
 	BOOL Save (HANDLE hFile);
 	
 	BOOL Load (HANDLE hFile);
+
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 	
 	fsEventsMgr();
 	virtual ~fsEventsMgr();
 
 protected:
-	fs::list <fsDescEvent> m_vEvents;	
+	
+	fs::list <vmsPersistableDescEventWrapperSmartPtr> m_vEvents;	
 };
 
 #endif 

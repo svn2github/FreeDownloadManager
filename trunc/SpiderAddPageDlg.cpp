@@ -82,16 +82,19 @@ BOOL CSpiderAddPageDlg::OnInitDialog()
 
 	
 	
-	m_task.hts.enType = HTS_ONCE;
-	m_task.hts.last.dwHighDateTime = m_task.hts.last.dwLowDateTime = UINT_MAX;
-	m_task.dwFlags = SCHEDULE_ENABLED;
+	
+	
+	
+	m_schScheduleParam.schTask.hts.enType = HTS_ONCE;
+	m_schScheduleParam.schTask.hts.last.dwHighDateTime = m_schScheduleParam.schTask.hts.last.dwLowDateTime = UINT_MAX;
+	m_schScheduleParam.schTask.dwFlags = SCHEDULE_ENABLED;
 	SYSTEMTIME time;
 	GetLocalTime (&time);
 	if (++time.wHour > 23)
 		time.wHour = 0;
 	time.wMinute = 0;
-	SystemTimeToFileTime (&time, &m_task.hts.next);
-	m_task.uWaitForConfirmation = 0;
+	SystemTimeToFileTime (&time, &m_schScheduleParam.schTask.hts.next);
+	m_schScheduleParam.schTask.uWaitForConfirmation = 0;
 
 	m_btnChooseFolder.SetIcon (SICO (IDI_CHOOSEFOLDER));
 	m_btnCreateGroup.SetIcon (SICO (IDI_CREATEGROUP));
@@ -188,6 +191,7 @@ void CSpiderAddPageDlg::OnAdvanced()
 
 	
 	m_wpd->GetWDPS ()->iDepth = GetDlgItemInt (IDC_DEPTH);
+	m_wpd->setDirty();
 
 	_DlgMgr.OnDoModal (&sheet);
 	sheet.DoModal ();
@@ -222,7 +226,7 @@ void CSpiderAddPageDlg::OnSettime()
 {
 	CScheduleSheet sheet (LS (L_SCHEDULEDLDS), this);
 
-	sheet.Init (&m_task, FALSE);
+	sheet.Init (&m_schScheduleParam.schTask, FALSE);
 	
 	_DlgMgr.OnDoModal (&sheet);
 
@@ -368,7 +372,10 @@ void CSpiderAddPageDlg::OnOK()
 		vmsDownloadsGroupSmartPtr pGrp = _DldsGrps.FindGroup (_App.NewDL_GroupId ());
 		if (pGrp != NULL) {
 			pGrp->strOutFolder = strOutFolder;
-			_DldsGrps.QueryStoringGroupsInformation();
+			pGrp->setDirty();
+			
+			
+			
 		}
 	}
 
@@ -392,6 +399,9 @@ void CSpiderAddPageDlg::OnOK()
 	if (IsDlgButtonChecked (IDC_DELCOMPLETED) == BST_CHECKED)
 		wpds->dwFlags |= WPDF_DELCOMPLETEDDLDS;
 
+	if (wpds->m_ppoOwner)
+		wpds->m_ppoOwner->setDirty();
+
 	_App.Spider_Flags (wpds->dwFlags);
 
 	m_wndGroups.RememberSelectedGroup ();
@@ -406,6 +416,7 @@ void CSpiderAddPageDlg::OnOK()
 		if (site) 
 		{
 			site->pGroup = wpds->pDLGroup;
+			_SitesMgr.setDirty();
 			_SitesMgr.SiteUpdated (site);
 		}
 	}
@@ -536,6 +547,7 @@ BOOL CSpiderAddPageDlg::WriteAuthorization()
 
 		GetDlgItemText (IDC_PASSWORD, str);
 		m_wpd->GetWDPS ()->strPassword = str;
+		m_wpd->setDirty();
 	}
 
 	return TRUE;

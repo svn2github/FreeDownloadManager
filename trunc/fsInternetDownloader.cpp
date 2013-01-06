@@ -32,6 +32,7 @@ static char THIS_FILE[]=__FILE__;
 #define TSECT(sect) ; 
 
 fsInternetDownloader::fsInternetDownloader()
+	: m_pManagerPersistObject(0)
 {
 	ZeroMemory (DNP (), sizeof (m_dnp));
 
@@ -84,7 +85,6 @@ fsInternetDownloader::fsInternetDownloader()
 
 	m_dwDataLenInCache = 0;
 	m_dwForceCacheSizePerSection = DWORD (-1);
-	m_bDontQueryStoringDownloadList = false;
 }
 
 fsInternetDownloader::~fsInternetDownloader()
@@ -153,10 +153,7 @@ fsInternetResult fsInternetDownloader::CreateMainSection(UINT uStartFrom, BOOL b
 	}
 
 	m_uSSFileSize = m_uLDFileSize = sect.file->GetFileSize ();
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	sect.uStart = sect.uDStart = 0;
 	sect.uCurrent = sect.uDCurrent = uStartFrom;
@@ -170,7 +167,12 @@ fsInternetResult fsInternetDownloader::CreateMainSection(UINT uStartFrom, BOOL b
 	if (FALSE == CreateSection (sect))
 	{
 		m_cBaseSectCreatingNow--;
+		
+		if (m_vSections.size() == 1) {
+			m_vSections[0].file = 0;
+		}
 		delete sect.file;
+
 		return IR_S_FALSE;
 	}
 
@@ -293,10 +295,7 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 		else
 			m_vMirrs [nMirrorInc].cSectsCreatingNow --;
 
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty(); 
 
 		return IR_S_FALSE;
 	}
@@ -318,10 +317,7 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 		else
 			m_vMirrs [nMirrorInc].cSectsCreatingNow --;
 
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty(); 
 
 		m_bAddingSection = FALSE;
 		return IR_S_FALSE;
@@ -334,11 +330,8 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 		else
 			m_vMirrs [nMirrorInc].cSectsCreatingNow --;
 
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
-
+		setDirty(); 
+		
 		m_bAddingSection = FALSE;
 		return ir;
 	}
@@ -347,10 +340,7 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 	EnterCriticalSection (&m_csSections);
 	m_vSections [iSection].uEnd = sect.uStart;
 	m_vSections [iSection].uDEnd = sect.uDStart;
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 	LeaveCriticalSection (&m_csSections);
 
 	if (sect.nMirrorURL != nMirrorInc)	
@@ -373,10 +363,7 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 	{
 		m_vSections [iSection].uEnd = m_vSections [iSection].uCurrent;
 		m_vSections [iSection].uDEnd = m_vSections [iSection].uDCurrent;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 	LeaveCriticalSection (&m_csSections);
 
@@ -403,10 +390,7 @@ void fsInternetDownloader::CreateCompleteSection(UINT64 uFileSize)
 	sect.iSection = m_vSections.size ();
 
 	m_vSections.add (sect);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 }
 
 BOOL fsInternetDownloader::CreateSection(fsSection &sect, BOOL bCreateThread, BOOL bReduceSCN)
@@ -428,10 +412,8 @@ BOOL fsInternetDownloader::CreateSection(fsSection &sect, BOOL bCreateThread, BO
 
 	m_vSections.add (sect);
 
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
+
 	fsSection* pSect = &m_vSections [m_vSections.size ()-1];
 
 	if (sect.iSection == 0 && bCreateThread)
@@ -579,10 +561,7 @@ BOOL fsInternetDownloader::__threadDownload_flushdata (fsSectionEx* sect,
 		
 		sect->uCurrent += dwWrittenTotal;
 		sect->uDCurrent += dwWrittenTotal;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (sect->pThis->IsQueryStoringDownloadListEnabled())
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		sect->pThis->setDirty();
 	}
 
 	LeaveCriticalSection (&sect->pThis->m_csSections);
@@ -638,10 +617,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 	{
 		sect->file->SetDialogFunc (_InetFileDialogFunc, sect->pThis, LPVOID (sect->iSection));
 		sect->state = SS_DOWNLOADING;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (sect->pThis->IsQueryStoringDownloadListEnabled())
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		sect->pThis->setDirty();
 		sect->pThis->Event (DE_SECTDOWNLOADING, sect->iSection);
 
 		
@@ -680,10 +656,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 			EnterCriticalSection (&sect->pThis->m_csSections);
 			if (dnp->enProtocol == NP_FTP && sect->file->FtpGetTransferType () == FTT_ASCII && sect->uEnd == sect->file->GetFileSize ()) {
 				sect->uEnd += 100;
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (sect->pThis->IsQueryStoringDownloadListEnabled())
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				sect->pThis->setDirty();
 			}
 			LeaveCriticalSection (&sect->pThis->m_csSections);
 		}
@@ -708,20 +681,14 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 		{
 			
 			sect->lastErr = sect->file->Read (pBuffer, dwRead, &dwRead);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (sect->pThis->IsQueryStoringDownloadListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			sect->pThis->setDirty();
 		}
 		else
 		{
 			
 			if (sect->lastErr == IR_SUCCESS || sect->lastErr == IR_S_FALSE) {
 				sect->lastErr = IR_ERROR; 
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (sect->pThis->IsQueryStoringDownloadListEnabled())
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				sect->pThis->setDirty();
 			}
 		}
 
@@ -749,10 +716,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 						delete file;
 						sect->lastErr = IR_WININETUNKERROR;
 						sect->state = SS_ERRSTOPPED;
-#ifndef FDM_DLDR__RAWCODEONLY
-						if (sect->pThis->IsQueryStoringDownloadListEnabled())
-							_DldsMgr.QueryStoringDownloadList();
-#endif
+						sect->pThis->setDirty();
 						goto _exit;
 					}
 					
@@ -773,10 +737,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 					EnterCriticalSection (&sect->pThis->m_csSections);
 					sect->uEnd = CURRENT_DL_POS;
 					sect->uDEnd = sect->pThis->m_uLDFileSize = CURRENT_DW_POS;
-#ifndef FDM_DLDR__RAWCODEONLY
-					if (sect->pThis->IsQueryStoringDownloadListEnabled())
-						_DldsMgr.QueryStoringDownloadList();
-#endif
+					sect->pThis->setDirty();
 					LeaveCriticalSection (&sect->pThis->m_csSections);
 					TSECT (sect);
 					break;
@@ -784,6 +745,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 				else
 				{
 					sect->lastErr = IR_LOSTCONNECTION;
+					sect->pThis->setDirty();
 				}
 			}
 			else
@@ -814,10 +776,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 				{
 					sect->uDEnd = sect->uEnd = CURRENT_DL_POS;
 					sect->lastErr = IR_SUCCESS;
-#ifndef FDM_DLDR__RAWCODEONLY
-					if (sect->pThis->IsQueryStoringDownloadListEnabled())
-						_DldsMgr.QueryStoringDownloadList();
-#endif
+					sect->pThis->setDirty();
 					continue;
 				}
 			}
@@ -828,10 +787,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 		{
 			sect->pThis->m_speed.Reset ();
 			sect->uSpeed = 0;
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (sect->pThis->IsQueryStoringDownloadListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			sect->pThis->setDirty();
 			st.Reset ();
 
 			if (sect->file)
@@ -864,10 +820,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 				
 				sect->uCurrent -= dw;
 				sect->uDCurrent -= dw;
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (sect->pThis->IsQueryStoringDownloadListEnabled())
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				sect->pThis->setDirty();
 
 				LeaveCriticalSection (&sect->pThis->m_csSections);
 				TSECT (sect);
@@ -879,10 +832,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 				sect->pThis->Event (DE_ERROROCCURED, sect->iSection);
 			
 			SAFE_DELETE (sect->file);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (sect->pThis->IsQueryStoringDownloadListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			sect->pThis->setDirty();
 
 			sect->pThis->UpdateTrafficLimit ();
 
@@ -895,11 +845,8 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 
 			CHECK_NEED_STOP;
 			sect->state = SS_RECONNECTING;
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (sect->pThis->IsQueryStoringDownloadListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
-	
+			sect->pThis->setDirty();
+			
 			sect->pThis->m_bErrDownloading = TRUE;
 
 			UINT cAttempts = sect->pThis->m_uMaxAttempts;
@@ -913,11 +860,8 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 						sect->state = SS_STOPPED;
 					else
 						sect->state = SS_ERRSTOPPED;
-#ifndef FDM_DLDR__RAWCODEONLY
-					if (sect->pThis->IsQueryStoringDownloadListEnabled())
-						_DldsMgr.QueryStoringDownloadList();
-#endif
-	
+					sect->pThis->setDirty();
+					
 					sect->pThis->m_bErrDownloading = FALSE;
 
 					goto _exit;
@@ -925,10 +869,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 
 				sect->pThis->Event (DE_CONNECTING, sect->iSection);
 				sect->lastErr = sect->pThis->OpenUrl (CURRENT_DL_POS, &sect->file, sect->iSection, sect->nMirrorURL, TRUE);
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (sect->pThis->IsQueryStoringDownloadListEnabled())
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				sect->pThis->setDirty();
 				
 				if (sect->lastErr != IR_SUCCESS)
 				{
@@ -937,10 +878,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 					if (sect->lastErr == IR_RANGESNOTAVAIL || sect->lastErr == IR_DOUBTFUL_RANGESRESPONSE)
 					{
 						sect->state = SS_ERRSTOPPED;
-#ifndef FDM_DLDR__RAWCODEONLY
-						if (sect->pThis->IsQueryStoringDownloadListEnabled())
-							_DldsMgr.QueryStoringDownloadList();
-#endif
+						sect->pThis->setDirty();
 						sect->pThis->m_bErrDownloading = FALSE;						
 						goto _exit;
 					}
@@ -959,10 +897,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 			sect->pThis->m_bErrDownloading = FALSE;
 			CHECK_NEED_STOP;
 			sect->state = SS_DOWNLOADING;
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (sect->pThis->IsQueryStoringDownloadListEnabled())
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+			sect->pThis->setDirty();
 			sect->pThis->Event (DE_CONNECTED, sect->iSection);
 			sect->pThis->Event (DE_SECTDOWNLOADING, sect->iSection);
 
@@ -983,10 +918,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 			CHECK_NEED_STOP;
 			sect->state = SS_WRITEERROR;
 			sect->lastErr = (fsInternetResult) GetLastError ();
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (sect->pThis->IsQueryStoringDownloadListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			sect->pThis->setDirty();
 			goto _exit;
 		}
 
@@ -1090,10 +1022,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 						sect->uDCurrent -= CURRENT_DL_POS - uZIPStart;
 						sect->uCurrent = uZIPStart;
 						sect->dwCacheLen -= min (sect->dwCacheLen, (DWORD)(CURRENT_DL_POS - uZIPStart));
-#ifndef FDM_DLDR__RAWCODEONLY
-						if (sect->pThis->IsQueryStoringDownloadListEnabled())
-							_DldsMgr.QueryStoringDownloadList();
-#endif
+						sect->pThis->setDirty();
 						LeaveCriticalSection (&sect->pThis->m_csSections);
 						TSECT (sect);
 						CHECK_NEED_STOP; 
@@ -1114,10 +1043,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 						sect->uDCurrent -= CURRENT_DL_POS - uZIPStart;
 						sect->uCurrent = uZIPStart;
 						sect->dwCacheLen -= min (sect->dwCacheLen, (DWORD)(CURRENT_DL_POS - uZIPStart));
-#ifndef FDM_DLDR__RAWCODEONLY
-						if (sect->pThis->IsQueryStoringDownloadListEnabled())
-							_DldsMgr.QueryStoringDownloadList();
-#endif
+						sect->pThis->setDirty();
 						LeaveCriticalSection (&sect->pThis->m_csSections);
 						TSECT (sect);
 						goto _exit;
@@ -1151,18 +1077,12 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 					sect->pThis->Event (DE_SPEEDISTOOLOW, sect->iSection);
 					SAFE_DELETE (sect->file);
 				}
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (sect->pThis->IsQueryStoringDownloadListEnabled())
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				sect->pThis->setDirty();
 			}
 			else
 			{
 				sect->uSpeed = dwLastRead;
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (sect->pThis->IsQueryStoringDownloadListEnabled())
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				sect->pThis->setDirty();
 				st.Reset ();
 			}
 
@@ -1210,10 +1130,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 			CHECK_NEED_STOP;
 			sect->state = SS_WRITEERROR;
 			sect->lastErr = (fsInternetResult) GetLastError ();
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (sect->pThis->IsQueryStoringDownloadListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			sect->pThis->setDirty();
 			goto _exit;
 		}
 	}
@@ -1226,19 +1143,13 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 	LeaveCriticalSection (&sect->pThis->m_csSections);
 	TSECT (sect);
 	sect->state = SS_DONE;
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (sect->pThis->IsQueryStoringDownloadListEnabled())
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	sect->pThis->setDirty();
 
 _exit:
 	fsInternetURLFile *file = sect->file;
 	sect->file = NULL;
 	delete file;
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (sect->pThis->IsQueryStoringDownloadListEnabled())
-		_DldsMgr.QueryStoringDownloadList(); 
-#endif
+	sect->pThis->setDirty(); 
 	SAFE_DELETE_ARRAY (pBuffer);
 
 	if (pbCache && sect->dwCacheLen)
@@ -1266,10 +1177,7 @@ _exit:
 				sect->uEnd = sect->uCurrent;
 				sect->uDEnd = sect->uDCurrent;
 			}
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (sect->pThis->IsQueryStoringDownloadListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			sect->pThis->setDirty();
 			LeaveCriticalSection (&sect->pThis->m_csSections);
 			sect->pThis->Event (DE_SECTIONDONE, sect->iSection);
 			break;
@@ -1280,10 +1188,7 @@ _exit:
 		case SS_ERRSTOPPED:
 			sect->pThis->Event (DE_SECTIONSTOPPED, sect->iSection);
 			sect->state = SS_STOPPED;
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (sect->pThis->IsQueryStoringDownloadListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			sect->pThis->setDirty();
 			break;
 	}
 
@@ -1516,20 +1421,14 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 				{
 					fsDNP_CloneSettings (dnpRedirectedUrl, dnp);
 					dnp = dnpRedirectedUrl;
-#ifndef FDM_DLDR__RAWCODEONLY
-					if (!m_bDontQueryStoringDownloadList)
-						_DldsMgr.QueryStoringDownloadList();
-#endif
+					setDirty();
 				}
 			}
 			else
 			{
 				
 				ir = fsDNP_ApplyUrl (dnp, pszUrl);
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (!m_bDontQueryStoringDownloadList)
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				setDirty();
 			}
 
 			delete [] pszUrl;
@@ -1550,10 +1449,7 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 				SAFE_DELETE_ARRAY (dnp->pszPassword);
 				dnp->pszPassword = new char [strlen (pszPassword) + 1];
 				strcpy (dnp->pszPassword, pszPassword);
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (!m_bDontQueryStoringDownloadList)
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				setDirty();
 			}
 
 			delete [] pszUser; delete [] pszPassword;
@@ -1583,10 +1479,7 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 
 			if (nMirr != UINT_MAX) {
 				m_vMirrs [nMirr].bIsGood = FALSE; 
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (!m_bDontQueryStoringDownloadList)
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				setDirty();
 			} else if (m_vMirrs.size ()) {
 				nMirr = 0;	
 			}
@@ -1601,8 +1494,10 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 					{
 						
 
-						if (iSectIndex != -1)
+						if (iSectIndex != -1) {
 							m_vSections [iSectIndex].nMirrorURL = nMirr;
+							setDirty();
+						}
 
 						nMirror = nMirr;
 
@@ -1667,6 +1562,7 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 				TRUE, szFile, sizeof (szFile));
 			m_strFileName = szFile;
 		}
+		setDirty(); 
 	}
 
 	(*ppFile)->GetLastModifiedDate (&m_fileDate);
@@ -1704,10 +1600,7 @@ BOOL fsInternetDownloader::SetSection_TrafficLimit(int iSection, UINT uLimit)
 		return FALSE;
 
 	m_vSections [iSection].uSpeedLimit = uLimit;
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	return TRUE;
 }
@@ -2009,10 +1902,6 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 			bQS = TRUE;
 
 		sect.file = NULL;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
 
 		UINT nMirrorInc = sect.nMirrorURL;
 		if (nMirrorInc == UINT_MAX)
@@ -2021,10 +1910,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 			m_vMirrs [nMirrorInc].cSectsCreatingNow++;
 
 		sect.lastErr = OpenUrl (sect.uCurrent, &sect.file, -1, sect.nMirrorURL, TRUE);
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 		if (sect.lastErr == IR_SUCCESS)
 		{
 			bAtLeast1Started = TRUE;
@@ -2067,10 +1953,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 					while (IsRunning ())
 						Sleep (5);
 					m_vSections.clear ();
-#ifndef FDM_DLDR__RAWCODEONLY
-					if (!m_bDontQueryStoringDownloadList)
-						_DldsMgr.QueryStoringDownloadList(); 
-#endif
+					setDirty();
 					if (nMirrorInc == UINT_MAX)
 						m_cBaseSectCreatingNow--;
 					else
@@ -2114,10 +1997,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 			{
 				if (sect.file->GetFileSize () != m_uSSFileSize) {
 					sect.lastErr = IR_BADFILESIZE; 
-#ifndef FDM_DLDR__RAWCODEONLY
-					if (!m_bDontQueryStoringDownloadList)
-						_DldsMgr.QueryStoringDownloadList();
-#endif
+					setDirty();
 				} else {
 					delete sect.file;
 					sect.file = NULL;
@@ -2133,29 +2013,21 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 			{
 				UINT64 u = m_uSSFileSize;
 				m_uSSFileSize = uNewSize;
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (!m_bDontQueryStoringDownloadList)
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				setDirty();
 
 				
 				DWORD dwSCR = Event (DE_SCR);
 
 				m_uSSFileSize = u;
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (!m_bDontQueryStoringDownloadList)
-					_DldsMgr.QueryStoringDownloadList();
-#endif
-
+				setDirty();
+				
 				switch (dwSCR)
 				{
 					case SCR_RESTART:
 						SAFE_DELETE (sect.file);
 						m_vSections.clear ();
-#ifndef FDM_DLDR__RAWCODEONLY
-						if (!m_bDontQueryStoringDownloadList)
-							_DldsMgr.QueryStoringDownloadList();
-#endif
+						setDirty();
+						
 						if (nMirrorInc == UINT_MAX)
 							m_cBaseSectCreatingNow--;
 						else
@@ -2164,10 +2036,8 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 
 					case SCR_STOP:
 						SAFE_DELETE (sect.file);
-#ifndef FDM_DLDR__RAWCODEONLY
-						if (!m_bDontQueryStoringDownloadList)
-							_DldsMgr.QueryStoringDownloadList();
-#endif
+						setDirty(); 
+						
 						if (nMirrorInc == UINT_MAX)
 							m_cBaseSectCreatingNow--;
 						else
@@ -2192,10 +2062,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 										sect.uCurrent = sect.uDCurrent = sect.uEnd;
 										sect.state = SS_DONE;
 									}
-#ifndef FDM_DLDR__RAWCODEONLY
-									if (!m_bDontQueryStoringDownloadList)
-										_DldsMgr.QueryStoringDownloadList();
-#endif
+									setDirty();
 									LeaveCriticalSection (&m_csSections);
 								}
 							}
@@ -2206,20 +2073,14 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 							if (m_vSections [i].uEnd == m_uSSFileSize)
 							{
 								m_vSections [i].uEnd = uNewSize;
-#ifndef FDM_DLDR__RAWCODEONLY
-								if (!m_bDontQueryStoringDownloadList)
-									_DldsMgr.QueryStoringDownloadList();
-#endif
+								setDirty();
 								break;
 							}
 						}
 						SAFE_DELETE (sect.file);
 						i--; 
 						m_uSSFileSize = uNewSize;
-#ifndef FDM_DLDR__RAWCODEONLY
-						if (!m_bDontQueryStoringDownloadList)
-							_DldsMgr.QueryStoringDownloadList();
-#endif
+						setDirty();
 						bQS = FALSE;
 						if (nMirrorInc == UINT_MAX)
 							m_cBaseSectCreatingNow--;
@@ -2249,10 +2110,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 		m_cThreads++; m_cRunningThreads++;
 		Event (DE_SECTIONSTARTED, i);
 		m_vSections [i].state = SS_DOWNLOADING;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 		CloseHandle (CreateThread (NULL, 0, _threadDownload, &m_vSections [i], 0, &dwThread));
 	}
 
@@ -2420,10 +2278,7 @@ void fsInternetDownloader::UpdateTrafficLimit()
 	for (UINT i = 0; i < nSections; i++)
 	{
 		m_vSections [i].uSpeedLimit = m_uTrafficLimit / nGoodSects;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 }
 
@@ -2517,10 +2372,7 @@ void fsInternetDownloader::ResetSections()
 	while (m_cThreads)
 		Sleep (5);
 	m_vSections.clear ();
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 }	
 
 void fsInternetDownloader::DontRestartIfNoRanges(BOOL b)
@@ -2582,10 +2434,7 @@ void fsInternetDownloader::DeleteAllSections()
 	m_dwState &= ~ IDS_ZIPPREVIEWPERFORMED;
 
 	m_uSSFileSize = m_uLDFileSize = 0;
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 }
 
 void fsInternetDownloader::StopSection()
@@ -2620,19 +2469,13 @@ void fsInternetDownloader::StopSection()
 	{
 		
 		sectErr->state = SS_NEEDSTOP;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 	else if (sectDl)
 	{
 		
 		sectDl->state = SS_NEEDSTOP;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 }
 
@@ -2664,10 +2507,7 @@ fsInternetResult fsInternetDownloader::QuerySize()
 		return ir;
 
 	m_uSSFileSize = m_uLDFileSize = file.GetFileSize ();
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList(); 
-#endif
+	setDirty();
 
 	if (m_vSections.size () == 0)
 	{
@@ -2762,10 +2602,7 @@ fsInternetResult fsInternetDownloader::QuerySize(fsInternetURLFile *file)
 			
 			
 			ir = fsDNP_ApplyUrl (DNP (), szUrl);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			setDirty();
 			
 			if (ir != IR_SUCCESS)
 				return ir;
@@ -2779,10 +2616,7 @@ fsInternetResult fsInternetDownloader::QuerySize(fsInternetURLFile *file)
 				SAFE_DELETE_ARRAY (dnp->pszPassword);
 				dnp->pszPassword = new char [strlen (pszPassword) + 1];
 				strcpy (dnp->pszPassword, pszPassword);
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (!m_bDontQueryStoringDownloadList)
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				setDirty();
 			}
 			
 			delete [] pszUser; delete [] pszPassword;
@@ -2818,6 +2652,7 @@ fsInternetResult fsInternetDownloader::QuerySize(fsInternetURLFile *file)
 				TRUE, szFile, sizeof (szFile));
 			m_strFileName = szFile;
 		}
+		setDirty();
 	}
 
 	return IR_SUCCESS;
@@ -2841,10 +2676,7 @@ fsInternetResult fsInternetDownloader::LaunchOneMoreSection()
 		if (m_vSections [i].state == SS_STOPPED)
 		{
 			m_vSections [i].file = NULL;
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			setDirty(); 
 			m_cThreads++; m_cRunningThreads++;
 			DWORD dwThread;
 			Event (DE_SECTIONSTARTED, i);
@@ -2972,10 +2804,7 @@ fsInternetResult fsInternetDownloader::FindMirrors()
 	}
 
 	m_dwState |= IDS_MIRRSEARCHPERFORMED;
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	for (int i = 0; i < mirrors.Get_MirrorURLCount () && UINT (i) < m_cMaxMirrs; i++)
 	{
@@ -3089,16 +2918,9 @@ BOOL fsInternetDownloader::MeasureMirrorsSpeed()
 		return FALSE;
 	}
 
-#ifndef FDM_DLDR__RAWCODEONLY
-	CQueryStoringDownloadListGuard<fsDownloadsMgr> queryGuard(&_DldsMgr);
-#endif
-
 	m_dwBaseServerPingTime = pinger.Ping (DNP ()->pszServerName);
 
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		queryGuard.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	for (int i = 0; i < m_vMirrs.size (); i++)
 	{
@@ -3106,10 +2928,7 @@ BOOL fsInternetDownloader::MeasureMirrorsSpeed()
 			return FALSE;
 
 		m_vMirrs [i].dwPingTime = pinger.Ping (m_vMirrs [i].dnp.pszServerName);
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			queryGuard.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 
 	return TRUE;
@@ -3191,10 +3010,7 @@ void fsInternetDownloader::RemoveAllMirrors()
 	m_vMirrs.clear ();
 	m_dwState &= ~ IDS_MIRRSEARCHPERFORMED;
 	m_strFileName = "";
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 }
 
 void fsInternetDownloader::AddMirror(fsDownload_NetworkProperties *dnp, BOOL bIsGood, BOOL bDontMeasureSpeed)
@@ -3215,10 +3031,7 @@ void fsInternetDownloader::AddMirror(fsDownload_NetworkProperties *dnp, BOOL bIs
 		m_dwState |= IDS_MIRRORS_HAS_LOCAL_SOURCE;
 	
 	m_vMirrs.add (mirr);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 }
 
 DWORD fsInternetDownloader::Get_BaseServerPingTime()
@@ -3279,10 +3092,7 @@ BOOL fsInternetDownloader::RestoreSectionsState_v5(LPBYTE pBuffer, DWORD )
 		section = *pSects++;
 
 		m_vSections.add (section);
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		
 
 		fsSection *sect = &m_vSections [i];
 		
@@ -3322,6 +3132,7 @@ BOOL fsInternetDownloader::RestoreSectionsState_v5(LPBYTE pBuffer, DWORD )
 
 fsInternetResult fsInternetDownloader::CheckIsZIP(UINT64 uStartPosition, fsInternetURLFile **ppFileToCloseIfNeed)
 {
+
 	if (FALSE == IsMayZIP (uStartPosition ? TRUE : FALSE))
 		return IR_S_FALSE;
 
@@ -3331,12 +3142,17 @@ fsInternetResult fsInternetDownloader::CheckIsZIP(UINT64 uStartPosition, fsInter
 		
 		
 		m_dwState |= IDS_ZIPPREVIEWPERFORMED;
+
+		setDirty();
+
 		return IR_S_FALSE;
 	}
 
 	SAFE_DELETE (*ppFileToCloseIfNeed);
 	m_dwState |= IDS_ZIPPREVIEWALLOWED;
 
+	setDirty();
+	
 	fsArchiveInternetStream file;
 	fsZipArchiveFastRebuilder zip;
 	zip.SetSFXSize ((DWORD)uStartPosition);
@@ -3355,6 +3171,9 @@ fsInternetResult fsInternetDownloader::CheckIsZIP(UINT64 uStartPosition, fsInter
 		m_pZipPreviewStream = NULL;
 		
 		m_dwState &= ~IDS_ZIPPREVIEWALLOWED;
+
+		setDirty();
+		
 		Event (DE_ZIPPREVIEWFAILED);
 		return ir;
 	}
@@ -3368,6 +3187,8 @@ fsInternetResult fsInternetDownloader::CheckIsZIP(UINT64 uStartPosition, fsInter
 		m_pZipPreviewStream = NULL;
 		m_dwState &= ~IDS_ZIPPREVIEWALLOWED;
 
+		setDirty();
+		
 		Event (DE_ZIPPREVIEWFAILED);
 
 		if (dwRes == ARR_STREAMERROR)
@@ -3384,11 +3205,16 @@ fsInternetResult fsInternetDownloader::CheckIsZIP(UINT64 uStartPosition, fsInter
 		
 
 		m_dwState &= ~IDS_ZIPPREVIEWALLOWED;
+
+		setDirty();
+		
 		return (fsInternetResult) 0x1000;
 	}
 
 	m_dwState |= IDS_ZIPPREVIEWPERFORMED;
 
+	setDirty();
+	
 	if (FALSE == Event (DE_NEEDFILE))
 		return IR_S_FALSE;
 
@@ -3412,16 +3238,14 @@ void fsInternetDownloader::UseZipPreview(BOOL b)
 		m_dwState |= IDS_USEZIPPREVIEW;
 	else
 		m_dwState &= ~IDS_USEZIPPREVIEW;
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 }
 
 void fsInternetDownloader::ApplyArchiveRebuilding(fsArchiveRebuilder *ar, UINT64 uAddOffset)
 {
 	m_vSections.clear ();
-
+	setDirty();
+	
 	
 	
 	int i = 0;
@@ -3450,6 +3274,9 @@ void fsInternetDownloader::ApplyArchiveRebuilding(fsArchiveRebuilder *ar, UINT64
 
 		
 		m_vSections.add (sect);
+
+		setDirty();
+
 	}
 
 	
@@ -3471,8 +3298,14 @@ void fsInternetDownloader::ApplyArchiveRebuilding(fsArchiveRebuilder *ar, UINT64
 
 			m_vSections.del (i);
 
+			setDirty();
+			
 			for (int j = i; j < m_vSections.size (); j++)
 				m_vSections [j].iSection--;
+
+			if (m_vSections.size () > 0) {
+				setDirty(); 
+			}
 
 			i--;
 		}
@@ -3503,6 +3336,9 @@ void fsInternetDownloader::ApplyArchiveRebuilding(fsArchiveRebuilder *ar, UINT64
 	TSECT (&sect);
 
 	m_vSections.add (sect);
+
+	setDirty();
+
 }
 
 DWORD fsInternetDownloader::GetState()
@@ -3569,29 +3405,21 @@ BOOL fsInternetDownloader::RemoveMirror(int iIndex)
 			if (m_vSections [i].state == SS_DOWNLOADING) {
 				m_vSections [i].state = SS_NEEDSTOP;
 			}
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			setDirty();
 		}
 		else if (m_vSections [i].nMirrorURL != UINT_MAX && 
 			m_vSections [i].nMirrorURL > (UINT)iIndex)
 		{
 			m_vSections [i].nMirrorURL--;
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			setDirty();
 		}
 	}
 
 	
 	fsDNP_GetByUrl_Free (&m_vMirrs [iIndex].dnp);
 	m_vMirrs.del (iIndex);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+
+	setDirty();
 
 	LeaveCriticalSection (&m_csOpenUrl);
 	return TRUE;
@@ -3754,20 +3582,17 @@ void fsInternetDownloader::AddSection(UINT64 uStart, UINT64 uEnd, UINT64 uCurren
 	sect.iSection = m_vSections.size ();
 
 	m_vSections.add (sect);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	LeaveCriticalSection (&m_csAddSection);
 }
 
-void fsInternetDownloader::EnableQueryStoringDownloadList(bool bIsEnabled)
+void fsInternetDownloader::SetManagerPersistObject(vmsPersistObject* pManagerPersistObject)
 {
-	m_bDontQueryStoringDownloadList = !bIsEnabled;
+	m_pManagerPersistObject = pManagerPersistObject;
 }
 
-bool fsInternetDownloader::IsQueryStoringDownloadListEnabled() const
+void fsInternetDownloader::setDirty()
 {
-	return !m_bDontQueryStoringDownloadList;
+	if (m_pManagerPersistObject) m_pManagerPersistObject->setDirty();
 }

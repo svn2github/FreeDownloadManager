@@ -68,11 +68,16 @@ fsDownloadMgr::fsDownloadMgr(struct fsDownload* dld)
 	m_bKnownFileSharingSiteSupportAdjusted = false;
 
 	m_bDontCreateNewSections = FALSE;
-	m_bDontQueryStoringDownloadList = false;
+	m_dldr.SetManagerPersistObject(this);
+
+	m_bFailedToCreateDestinationFile = false;
+	m_bIsNotEnoughDiskSpace = false;
 }
 
 fsDownloadMgr::~fsDownloadMgr()
 {
+	m_dldr.SetEventFunc (NULL, NULL);
+
 	StopDownloading ();
 	for (int i = 0; i < 10*1000 / 10 && m_iThread; i++)
 	{
@@ -108,10 +113,7 @@ fsInternetResult fsDownloadMgr::StartDownloading()
 		return IR_S_FALSE;
 
 	setStateFlagsTo (DS_NEEDSTART);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	DWORD dwThread;
 	m_bThreadRunning = TRUE;
@@ -125,6 +127,29 @@ fsInternetResult fsDownloadMgr::CreateInternetSession()
 {
 	InternetAutodial (INTERNET_AUTODIAL_FORCE_ONLINE, NULL);
 	return IR_SUCCESS;
+}
+
+BOOL fsDownloadMgr::InternetAutodial(DWORD dwFlags, HWND hwndParent)
+{
+	HMODULE hDll = ::GetModuleHandle(_T("wininet.dll"));
+	if (hDll == 0) {
+		hDll = ::LoadLibrary("wininet.dll");
+	}
+
+	if (hDll == 0) {
+		return FALSE;
+	}
+	
+	typedef BOOL (WINAPI *FUN)(DWORD p1, HWND p2);
+
+	FUN pfnFun = NULL;
+	pfnFun = (FUN)GetProcAddress(hDll, "InternetAutodial");
+
+	if (pfnFun == 0) {
+		return FALSE;
+	}
+
+	return pfnFun(dwFlags, hwndParent);
 }
 
 void fsDownloadMgr::ApplyProperties()
@@ -154,10 +179,7 @@ void fsDownloadMgr::ApplyProperties()
 
 	if (m_dwState & DS_DOWNLOADING) {
 		setStateFlags (DS_NEEDADDSECTION); 
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 }
 
@@ -196,10 +218,6 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 		if (pThis->m_dwState & DS_NEEDSTART)
 		{
 			pThis->removeStateFlags (DS_NEEDSTART); 
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (pThis->IsQueryStoringDownloadingListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
 			bAddSection = TRUE;	
 
 			
@@ -217,10 +235,6 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 				if (pThis->m_lastError == IR_SUCCESS)
 				{
 					pThis->setStateFlags (DS_DOWNLOADING);	
-#ifndef FDM_DLDR__RAWCODEONLY
-					if (pThis->IsQueryStoringDownloadingListEnabled())
-						_DldsMgr.QueryStoringDownloadList();
-#endif
 					if (pThis->m_dldr.IsResumeSupported () == RST_NONE)
 						pThis->Event (LS (L_NORESUME), EDT_WARNING);
 					break;
@@ -252,10 +266,6 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 					pThis->Event (DE_EXTERROR, DMEE_FATALERROR);
 					pThis->m_bFatalError = TRUE;
 					pThis->setStateFlagsTo (0);
-#ifndef FDM_DLDR__RAWCODEONLY
-					if (pThis->IsQueryStoringDownloadingListEnabled())
-						_DldsMgr.QueryStoringDownloadList();
-#endif
 					break;
 				}
 			}
@@ -266,10 +276,6 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 		{
 			pThis->StopDownload ();
 			pThis->setStateFlagsTo (0);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (pThis->IsQueryStoringDownloadingListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
 			pThis->Event (LS (L_DLDSTOPPED), EDT_RESPONSE_S);
 			break;
 		}
@@ -315,10 +321,6 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 		if (pThis->m_dwState & DS_NEEDADDSECTION)
 		{
 			pThis->removeStateFlags (DS_NEEDADDSECTION);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (pThis->IsQueryStoringDownloadingListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
 			pThis->AddSection ();
 		}
 
@@ -326,10 +328,6 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 		if (pThis->m_dwState & DS_NEEDADDSECTION2)
 		{
 			pThis->removeStateFlags (DS_NEEDADDSECTION2);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (pThis->IsQueryStoringDownloadingListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
 			if (pThis->m_dldr.GetStoppedSectionCount ())	
 				pThis->m_dldr.LaunchOneMoreSection ();		
 			else
@@ -342,10 +340,6 @@ DWORD WINAPI fsDownloadMgr::_threadDownloadMgr(LPVOID lp)
 			pThis->removeStateFlags (DS_NEEDRESTARTFROM);
 			
 			pThis->setStateFlags (DS_NEEDSTART);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (pThis->IsQueryStoringDownloadingListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
 		}
 
 		pThis->CheckMirrSpeedRecalcRequired ();
@@ -438,10 +432,6 @@ DWORD fsDownloadMgr::_DownloaderEvents(fsDownloaderEvent enEvent, UINT uInfo, LP
 				pThis->Event (LS (L_DLDCOMPLETED), EDT_DONE);
 				pThis->Event (enEvent, uInfo);
 				pThis->setStateFlagsTo (DS_DONE);	
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (pThis->IsQueryStoringDownloadingListEnabled())
-					_DldsMgr.QueryStoringDownloadList();
-#endif
 				return 0; 
 			}
 			else
@@ -648,6 +638,7 @@ fsInternetResult fsDownloadMgr::CreateByUrl(LPCSTR pszUrl, BOOL bAcceptHTMLPathe
 {
 	fsDNP_BuffersInfo buffs;
 	fsDNP_GetByUrl_Free (m_dldr.DNP ());
+	setDirty();
 
 	CString strURL = pszUrl;
 	strURL.Replace ("&lt;", "<");
@@ -657,6 +648,7 @@ fsInternetResult fsDownloadMgr::CreateByUrl(LPCSTR pszUrl, BOOL bAcceptHTMLPathe
 
 	
 	fsInternetResult ir = fsDNP_GetByUrl (m_dldr.DNP (), &buffs, TRUE, strURL);
+	setDirty();
 	if (ir != IR_SUCCESS)
 		return ir;
 
@@ -721,10 +713,6 @@ fsInternetResult fsDownloadMgr::StartDownload()
 		if (ir == IR_S_FALSE)	
 		{
 			setStateFlags (DS_NEEDSTOP);	
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList();
-#endif
 			Event (DE_EXTERROR, DMEE_FATALERROR);
 			m_bFatalError = TRUE;	
 		}
@@ -733,10 +721,6 @@ fsInternetResult fsDownloadMgr::StartDownload()
 	if (ir == IR_S_FALSE && m_dldr.IsRunning () == FALSE && 
 			(m_dwState & DS_NEEDRESTARTFROM) == 0) {
 		setStateFlags (DS_NEEDSTOP);
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
 	}
 
 	m_ticksStart.Now ();
@@ -749,10 +733,6 @@ void fsDownloadMgr::StopDownloading()
 	if (IsRunning ())
 	{
 		setStateFlags (DS_NEEDSTOP);
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
 		m_dldr.StopDownloading ();
 		#ifndef FDM_DLDR__RAWCODEONLY
 		if (m_mdc)
@@ -781,10 +761,7 @@ void fsDownloadMgr::SetOutputFileName(LPCSTR pszName)
 
 	fsnew (m_dp.pszFileName, CHAR, strlen (pszName)+1);
 	strcpy (m_dp.pszFileName, pszName);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 }
 
 void fsDownloadMgr::SetEventFunc(fntDownloadMgrEventFunc pfnEvents, LPVOID lpParam)
@@ -1300,10 +1277,6 @@ void fsDownloadMgr::OnSectionStopped()
 		{
 			setStateFlags (DS_NEEDSTOP);	
 		}
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
 	}
 }
 
@@ -1348,10 +1321,6 @@ BOOL fsDownloadMgr::OnNeedFile()
 _lErr:	
 	DescribeAPIError ();	
 	setStateFlags (DS_NEEDSTOP);	
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
 	Event (DE_EXTERROR, DMEE_FATALERROR);
 	m_bFatalError = TRUE;
 	return FALSE;
@@ -1423,10 +1392,7 @@ void fsDownloadMgr::RenameFile(BOOL bFormat1)
 	SAFE_DELETE_ARRAY (m_dp.pszFileName);
 	fsnew (m_dp.pszFileName, CHAR, strFile.GetLength () + 1);
 	strcpy (m_dp.pszFileName, strFile);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	HANDLE hFile = CreateFile (m_dp.pszFileName, GENERIC_WRITE, 0, NULL, 
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -1537,10 +1503,7 @@ void fsDownloadMgr::RenameFile(const char* szFileName, BOOL bFormat1)
 	SAFE_DELETE_ARRAY (m_dp.pszFileName);
 	fsnew (m_dp.pszFileName, CHAR, strFile.GetLength () + 1);
 	strcpy (m_dp.pszFileName, strFile);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	HANDLE hFile = CreateFile (m_dp.pszFileName, GENERIC_WRITE, 0, NULL, 
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -1581,10 +1544,7 @@ BOOL fsDownloadMgr::OpenFile(BOOL bFailIfDeleted, BOOL bDisableEvents)
 			if (bDisableEvents == FALSE)
 				Event (LS (L_WASDELETED), EDT_RESPONSE_E);
 			setStateFlags (DS_NEEDSTOP);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			
 			if (bDisableEvents == FALSE)
 				Event (DE_EXTERROR, DMEE_FILEWASDELETED);
 			return -1;
@@ -1600,8 +1560,10 @@ BOOL fsDownloadMgr::OpenFile(BOOL bFailIfDeleted, BOOL bDisableEvents)
 	if ((m_dp.dwFlags & DPF_USEHIDDENATTRIB) && (dw & FILE_ATTRIBUTE_HIDDEN) == 0)
 		SetFileAttributes (m_dp.pszFileName, dw | FILE_ATTRIBUTE_HIDDEN);
 
-	if (m_hOutFile == INVALID_HANDLE_VALUE)
+	if (m_hOutFile == INVALID_HANDLE_VALUE) {
+		m_bFailedToCreateDestinationFile = true;
 		return FALSE;
+	}
 
 	if (::GetLastError () != ERROR_ALREADY_EXISTS)
 		SetFileTime (m_hOutFile);
@@ -1641,10 +1603,7 @@ void fsDownloadMgr::RemoveIncompleteFileExt()
 	if (fl > el && m_dp.pszFileName[fl - el - 1] == '.' &&
 		stricmp (m_dp.pszFileName + fl - el, m_dp.pszAdditionalExt) == 0) {
 		m_dp.pszFileName [fl - el - 1] = 0;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 }
 
@@ -1671,10 +1630,7 @@ BOOL fsDownloadMgr::ApplyAER(fsAlreadyExistReaction enAER, bool bFirstCheck)
 			if (dlg.m_bDontAskAgain)	
 			{
 				m_dp.enAER = dlg.m_enAER;	
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (!m_bDontQueryStoringDownloadList)
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				setDirty();
 				_App.AlreadyExistReaction (dlg.m_enAER); 
 				_DldsMgr.ApplyAER (dlg.m_enAER);
 			}
@@ -1738,10 +1694,6 @@ BOOL fsDownloadMgr::ApplyAER(fsAlreadyExistReaction enAER, bool bFirstCheck)
 			m_uNeedStartFrom = GetFileSize (m_hOutFile, NULL); 
 			Event (LS (L_RESUMINGDLD), EDT_WARNING);
 			setStateFlags (DS_NEEDRESTARTFROM);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList();
-#endif
 			return -1;
 
 		case AER_STOP:
@@ -1757,10 +1709,6 @@ BOOL fsDownloadMgr::ApplyAER(fsAlreadyExistReaction enAER, bool bFirstCheck)
 
 			Event (LS (L_ALREXISTS), EDT_RESPONSE_E);
 			setStateFlags (DS_NEEDSTOP);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList();
-#endif
 			Event (DE_EXTERROR, DMEE_USERSTOP);
 			return -1;
 
@@ -1890,11 +1838,8 @@ BOOL fsDownloadMgr::BuildFileName(LPCSTR pszSetExt)
 	SAFE_DELETE_ARRAY (m_dp.pszFileName);
 	fsnew (m_dp.pszFileName, CHAR, strlen (szPath)+1);
 	strcpy (m_dp.pszFileName, szPath);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
-
+	setDirty();
+	
 	Event (DE_EXTERROR, DMEE_FILEUPDATED);
 
 	return TRUE;
@@ -1917,8 +1862,10 @@ BOOL fsDownloadMgr::ReserveDiskSpace()
 		bool bOK = fsSetFilePointer (m_hOutFile, m_dldr.GetLDFileSize (), FILE_BEGIN) && 
 				SetEndOfFile (m_hOutFile);
 		m_dldr.LockWriteFile (FALSE);
-		if (!bOK)
+		if (!bOK) {
+			m_bIsNotEnoughDiskSpace = true;
 			return FALSE;
+		}
 	}
 
 	if (m_dldr.GetNumberOfSections () == 1 && m_dldr.GetLDFileSize () > 100 * 1024 * 1024)
@@ -1960,10 +1907,7 @@ void fsDownloadMgr::ApplyAdditionalExt()
 	SAFE_DELETE_ARRAY (m_dp.pszFileName);
 	fsnew (m_dp.pszFileName, CHAR, strlen (szFile) + 1);
 	strcpy (m_dp.pszFileName, szFile);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 }
 
 DWORD fsDownloadMgr::OnSCR()
@@ -1983,10 +1927,6 @@ DWORD fsDownloadMgr::ProcessSCR(fsSizeChangeReaction scr, BOOL bFirstCall)
 			Event (LS (L_FAILEDTOOPEN), EDT_RESPONSE_E);
 			DescribeAPIError (&dwLastError);
 			setStateFlags (DS_NEEDSTOP);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList();
-#endif
 			return SCR_STOP;
 		}
 		Event (LS (L_FILESIZEWASCHANGED), EDT_WARNING);
@@ -2005,10 +1945,7 @@ DWORD fsDownloadMgr::ProcessSCR(fsSizeChangeReaction scr, BOOL bFirstCall)
 			if (dlg.m_bDontAskAgain)
 			{
 				m_dp.enSCR = dlg.m_enSCR;
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (!m_bDontQueryStoringDownloadList)
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				setDirty();
 				_App.SizeChangeReaction (dlg.m_enSCR);
 			}
 
@@ -2040,10 +1977,6 @@ DWORD fsDownloadMgr::ProcessSCR(fsSizeChangeReaction scr, BOOL bFirstCall)
 
 		case SCR_STOP:
 			setStateFlags (DS_NEEDSTOP);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList();
-#endif
 			Event (DE_EXTERROR, DMEE_USERSTOP);
 			break;
 
@@ -2090,10 +2023,7 @@ void fsDownloadMgr::OnDone()
 	
 
 	m_dp.pszFileName [fl-el-1] = 0;	
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	if (m_dp.dwFlags & DPF_APPENDCOMMENTTOFILENAME)
 		AppendCommentToFileName (FALSE);
@@ -2109,10 +2039,7 @@ void fsDownloadMgr::OnDone()
 		Event (LS (L_CANTRENAMEBACK), EDT_RESPONSE_E);
 		DescribeAPIError (&dwLastError);
 		lstrcpy (m_dp.pszFileName, szFileNameFrom);
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 }
 
@@ -2189,10 +2116,6 @@ BOOL fsDownloadMgr::InitFile(BOOL bCreateOnDisk, LPCSTR pszSetExt)
 	{
 		Event (LS (L_FILENAMETOOLONG), EDT_RESPONSE_E);
 		setStateFlags (DS_NEEDSTOP);
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
 		m_bFatalError = TRUE;
 		return FALSE;
 	}
@@ -2251,10 +2174,7 @@ BOOL fsDownloadMgr::InitFile(BOOL bCreateOnDisk, LPCSTR pszSetExt)
 	}
 
 	m_dwDownloadFileFlags &= ~DFF_NEED_INIT_FILE;	
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	return TRUE;
 
@@ -2262,10 +2182,6 @@ _lErr:
 	DescribeAPIError ();
 	m_bFatalError = TRUE;
 	setStateFlags (DS_NEEDSTOP);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
 	return FALSE;
 }
 
@@ -2321,10 +2237,7 @@ void fsDownloadMgr::CreateOneMoreSection()
 {
 	if (m_dldr.IsSectionCreatingNow () == FALSE) {
 		setStateFlags (DS_NEEDADDSECTION2);
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 }
 
@@ -2337,19 +2250,11 @@ fsInternetResult fsDownloadMgr::QuerySize(BOOL bCheckPoss)
 	fsInternetResult ir;
 
 	setStateFlags (DS_QUERINGSIZE);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
-
+	
 	ir = CreateInternetSession ();
 	if (ir != IR_SUCCESS)
 	{
 		removeStateFlags (DS_QUERINGSIZE);
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
 		return ir;
 	}
 
@@ -2358,10 +2263,6 @@ fsInternetResult fsDownloadMgr::QuerySize(BOOL bCheckPoss)
 	ir = m_dldr.QuerySize ();
 
 	removeStateFlags (DS_QUERINGSIZE);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
 	return ir;
 }
 
@@ -2376,11 +2277,7 @@ void fsDownloadMgr::QuerySize2()
 		return;
 
 	setStateFlags (DS_QUERINGSIZE);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
-
+	
 	DWORD dw;
 	InterlockedIncrement (&m_iThread);
 	CloseHandle (CreateThread (NULL, 0, _threadQSize, this, 0, &dw));
@@ -2495,10 +2392,6 @@ fsInternetResult fsDownloadMgr::FindMirrors()
 	if (ir != IR_SUCCESS)
 	{
 		removeStateFlags (DS_QUERINGSIZE);
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
 		return ir;
 	}
 
@@ -2519,10 +2412,7 @@ fsInternetResult fsDownloadMgr::SetToRestartState()
 		else
 			m_bRename_CheckIfRenamed = TRUE;
 		m_dwDownloadFileFlags |= DFF_NEED_INIT_FILE;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 
 	m_dldr.DeleteAllSections ();
@@ -2588,10 +2478,6 @@ BOOL fsDownloadMgr::OnNeedFile_FinalInit()
 _lErr:	
 	DescribeAPIError ();	
 	setStateFlags (DS_NEEDSTOP);	
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
 	Event (DE_EXTERROR, DMEE_FATALERROR);
 	m_bFatalError = TRUE;
 	return FALSE;
@@ -2628,10 +2514,7 @@ void fsDownloadMgr::CheckDstFileExists()
 			if (dlg.m_bDontAskAgain)
 			{
 				m_dp.enAER = dlg.m_enAER;
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (!m_bDontQueryStoringDownloadList)
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				setDirty();
 				_App.AlreadyExistReaction (dlg.m_enAER);
 			}
 
@@ -2700,10 +2583,7 @@ void fsDownloadMgr::AppendCommentToFileName(BOOL bMoveFile)
 		strcat (m_dp.pszFileName, pszExt);
 	}
 
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 
 	if (bMoveFile)
 	{
@@ -2796,11 +2676,8 @@ BOOL fsDownloadMgr::MoveFile(LPCSTR pszNewFileName)
 	SAFE_DELETE_ARRAY (m_dp.pszFileName);
 	fsnew (m_dp.pszFileName, char, lstrlen (pszNewFileName) + 1);
 	lstrcpy (m_dp.pszFileName, pszNewFileName);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
-
+	setDirty();
+	
 	return TRUE;
 }
 
@@ -2867,11 +2744,13 @@ BOOL fsDownloadMgr::CheckIfMalicious()
 	if (nPerc < _App.Community_MalReportsMinPerc ())
 	{
 		m_dld->dwFlags |= DLD_MALICIOUS_NO;
+		m_dld->setDirty();
 		Event (LS (L_DLD_NO_USERS_MAL_REPS), EDT_RESPONSE_S);
 		return TRUE;
 	}
 
 	m_dld->dwFlags |= DLD_MALICIOUS_YES;
+	m_dld->setDirty();
 	Event (LS (L_THTREAREMALOPINIONS2), EDT_WARNING);
 
 	CString str;
@@ -2895,6 +2774,7 @@ BOOL fsDownloadMgr::CheckIfMalicious()
 	{
 		Event (LS (L_STOPPED), EDT_RESPONSE_S);
 		m_dld->dwFlags &= ~DLD_MALICIOUS_YES;
+		m_dld->setDirty();
 		return FALSE;
 	}
 
@@ -2912,10 +2792,7 @@ void fsDownloadMgr::Reset()
 	m_dldr.ResetSections ();
 
 	m_dwDownloadFileFlags |= DFF_NEED_INIT_FILE;
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 }
 
 void fsDownloadMgr::InitFile_ProcessMacroses()
@@ -2927,10 +2804,7 @@ void fsDownloadMgr::InitFile_ProcessMacroses()
 	delete [] m_dp.pszFileName;
 	m_dp.pszFileName = new char [str.GetLength () + 1];
 	lstrcpy (m_dp.pszFileName, str);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 }
 
 void fsDownloadMgr::ProcessFilePathMacroses(CString &str)
@@ -2944,10 +2818,7 @@ void fsDownloadMgr::ProcessFilePathMacroses(CString &str)
 	{
 		str.Replace ("%sdrive%", CString (vmsGetExeDriveLetter ()) + ":");
 		m_dwDownloadFileFlags |= DFF_USE_PORTABLE_DRIVE;
-#ifndef FDM_DLDR__RAWCODEONLY
-		if (!m_bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+		setDirty();
 	}
 
 	str.Replace ("%server%", GetDNP ()->pszServerName);
@@ -3067,10 +2938,6 @@ DWORD WINAPI fsDownloadMgr::_threadReserveDiskSpace(LPVOID lp)
 	
 	pthis->m_bDontCreateNewSections = FALSE;
 	pthis->setStateFlags (DS_NEEDADDSECTION);
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (pthis->IsQueryStoringDownloadingListEnabled())
-		_DldsMgr.QueryStoringDownloadList();
-#endif
 
 	InterlockedDecrement (&pthis->m_iThread);
 	return 0;
@@ -3117,10 +2984,7 @@ void fsDownloadMgr::AdjustKnownFileSharingSiteSupport_RapidShare(void)
 				SAFE_DELETE_ARRAY (dnp->pszCookies);
 				dnp->pszCookies = new char [lstrlen (szCookies) + 1];
 				*dnp->pszCookies = 0;
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (!m_bDontQueryStoringDownloadList)
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				setDirty();
 			}
 			else
 			{
@@ -3136,19 +3000,13 @@ void fsDownloadMgr::AdjustKnownFileSharingSiteSupport_RapidShare(void)
 					lstrcat (psz, ";");
 				delete [] dnp->pszCookies;
 				dnp->pszCookies = psz;
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (!m_bDontQueryStoringDownloadList)
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				setDirty();
 			}
 
 			lstrcat (dnp->pszCookies, szCookies);
 
 			dnp->dwFlags |= DNPF_IMMEDIATELY_SEND_AUTH_AS_BASIC;
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (!m_bDontQueryStoringDownloadList)
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			setDirty();
 		}
 	}
 }
@@ -3174,22 +3032,385 @@ void fsDownloadMgr::AdjustKnownFileSharingSiteSupport_FileSonic(void)
 	}
 
 	dnp->dwFlags |= DNPF_IMMEDIATELY_SEND_AUTH_AS_BASIC | DNPF_DONT_UPDATE_ORIGINAL_URL_AFTER_REDIRECT;
-#ifndef FDM_DLDR__RAWCODEONLY
-	if (!m_bDontQueryStoringDownloadList)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+	setDirty();
 	m_bKnownFileSharingSiteSupportAdjusted = true;
 }
 
-void fsDownloadMgr::EnableQueryStoringDownloadingList(bool bIsEnabled)
+void fsDownloadMgr::getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage)
 {
-	m_bDontQueryStoringDownloadList = !bIsEnabled;
-	m_dldr.EnableQueryStoringDownloadList(bIsEnabled);
+	DWORD dwNeedSize;
+	fsDownload_Properties dp = m_dp;
+	fsDownload_NetworkProperties dnp = *GetDNP ();
+	fs::list <fsDownload_NetworkProperties> vDNPs;
+
+	
+	
+	
+	
+	LPCSTR ToSave    [3000];
+	DWORD  ToSaveLen [3000];
+	UINT   cToSave = 0;
+
+	if (FALSE == m_dldr.SaveSectionsState (NULL, &dwNeedSize))
+		return;
+
+	dwNeedSize += sizeof (DWORD); 
+	dwNeedSize += sizeof (dp);
+	dwNeedSize += sizeof (dnp);
+	dwNeedSize += sizeof (m_dwState);
+	dwNeedSize += sizeof (m_dwDownloadFileFlags);
+	dwNeedSize += sizeof (int);		
+
+	
+
+	dp.pszFileName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dp.pszFileName));
+	dwNeedSize += (DWORD) dp.pszFileName;
+
+	dp.pszAdditionalExt = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dp.pszAdditionalExt));
+	dwNeedSize += (DWORD) dp.pszAdditionalExt;
+
+	dp.pszCreateExt = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dp.pszCreateExt));
+	dwNeedSize += (DWORD) dp.pszCreateExt;
+
+	dp.pszCheckSum = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dp.pszCheckSum));
+	dwNeedSize += (DWORD) dp.pszCheckSum;
+
+	int cDPStrings = cToSave;
+
+	UINT i = 0;
+	for (i = 0; int (i) < m_dldr.GetMirrorURLCount () + 1; i++)
+	{
+		if (i)
+		{
+			dnp = *m_dldr.MirrorDNP (i-1);
+			dwNeedSize += sizeof (dnp);
+		}
+		
+		dnp.pszAgent = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszAgent));
+		dnp.pszPassword = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszPassword));
+		dnp.pszPathName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszPathName));
+		dnp.pszProxyName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszProxyName));
+		dnp.pszProxyPassword = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszProxyPassword));
+		dnp.pszProxyUserName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszProxyUserName));
+		dnp.pszReferer = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszReferer));
+		dnp.pszServerName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszServerName));
+		dnp.pszUserName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszUserName));
+		dnp.pszASCIIExts = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszASCIIExts));
+		dnp.pszCookies = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszCookies));
+		dnp.pszPostData = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszPostData));
+
+		vDNPs.add (dnp);
+
+		dwNeedSize += (DWORD) dnp.pszAgent + (DWORD) dnp.pszPassword + 
+			(DWORD) dnp.pszPathName + (DWORD) dnp.pszProxyName + 
+			(DWORD) dnp.pszProxyPassword + (DWORD) dnp.pszProxyUserName + 
+			(DWORD) dnp.pszReferer + (DWORD) dnp.pszServerName + (DWORD) dnp.pszUserName + 
+			(DWORD) dnp.pszASCIIExts + (DWORD) dnp.pszCookies + (DWORD) dnp.pszPostData;
+	}
+
+	dwNeedSize += m_dldr.GetMirrorURLCount () * sizeof (BOOL);	
+
+	if (m_dldr.GetMirrorURLCount ())
+	{
+		dwNeedSize += m_dldr.GetMirrorURLCount () * sizeof (DWORD); 
+		dwNeedSize += sizeof (DWORD); 
+	}
+
+	if (pb == NULL)
+	{
+		*pdwSize = dwNeedSize;
+		return;
+	}
+
+	if (*pdwSize < dwNeedSize)
+	{
+		*pdwSize = dwNeedSize;
+		return;
+	}
+
+	int cDNPStrings;	
+	cDNPStrings = (cToSave - cDPStrings) / (m_dldr.GetMirrorURLCount () + 1);
+
+	
+	DWORD dw = *pdwSize;
+	LPBYTE pB = (LPBYTE) pb;
+
+	if (FALSE == m_dldr.SaveSectionsState (pB + sizeof (DWORD), &dw))
+		return;
+
+	CopyMemory (pB, &dw, sizeof (dw));
+	pB += dw + sizeof (dw);
+
+	CopyMemory (pB, &dp, sizeof (dp));
+	pB += sizeof (dp);
+
+	CopyMemory (pB, &vDNPs [0], sizeof (dnp));
+	pB += sizeof (dnp);
+
+	fsDownloadState state = (m_dwState & DS_DONE) ? DS_DONE : 0;
+	CopyMemory (pB, &state, sizeof (state));
+	pB += sizeof (state);
+
+	if ((m_dwDownloadFileFlags & DFF_USE_PORTABLE_DRIVE) &&
+			m_dp.pszFileName [0] != vmsGetExeDriveLetter ())
+		m_dwDownloadFileFlags &= ~DFF_USE_PORTABLE_DRIVE;
+	CopyMemory (pB, &m_dwDownloadFileFlags, sizeof (m_dwDownloadFileFlags));
+	pB += sizeof (m_dwDownloadFileFlags);
+
+	int cMirrs = m_dldr.GetMirrorURLCount ();
+	CopyMemory (pB, &cMirrs, sizeof (cMirrs));
+	pB += sizeof (cMirrs);
+
+	for (i = 0; i < cToSave; i++)
+	{
+		if (i > UINT (cDPStrings) && ((i-cDPStrings) % cDNPStrings) == 0)
+		{
+			CopyMemory (pB, &vDNPs [(i-cDPStrings) / cDNPStrings], sizeof (dnp));
+			pB += sizeof (dnp);
+
+			BOOL b = m_dldr.GetMirrorIsGood ((i-cDPStrings) / cDNPStrings - 1);
+			CopyMemory (pB, &b, sizeof (b));
+			pB += sizeof (b);
+		}
+
+		CopyMemory (pB, ToSave [i], ToSaveLen [i]);
+		pB += ToSaveLen [i];
+	}
+
+	if (cMirrs)
+	{
+		for (i = 0; i < UINT (cMirrs); i++)
+		{
+			DWORD dw = m_dldr.GetMirrorPingTime (i);
+			CopyMemory (pB, &dw, sizeof (dw));
+			pB += sizeof (dw);
+		}
+
+		DWORD dw = m_dldr.Get_BaseServerPingTime ();
+		CopyMemory (pB, &dw, sizeof (dw));
+		pB += sizeof (dw);
+	}
+
+	*pdwSize = dwNeedSize;
 }
 
-bool fsDownloadMgr::IsQueryStoringDownloadingListEnabled() const
+bool fsDownloadMgr::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer)
 {
-	return !m_bDontQueryStoringDownloadList;
+	#define CHECK_BOUNDS(need) if (need < 0 || need > int(*pdwSize) - (pB - LPBYTE (pb))) return false;
+
+	if (dwVer <= 15)
+		return false;
+
+	DWORD dw = *pdwSize;
+	LPBYTE pB = (LPBYTE) pb;
+
+	CHECK_BOUNDS (sizeof (DWORD));
+
+	CopyMemory (&dw, pB, sizeof (DWORD));
+	pB += sizeof (DWORD);
+
+	CHECK_BOUNDS (int (dw));	
+
+	if (FALSE == m_dldr.RestoreSectionsState (pB, dw, dwVer))
+		return FALSE;
+	pB += dw;
+
+	CHECK_BOUNDS (sizeof (m_dp));
+
+	DWORD dwDP = sizeof (fsDownload_Properties);
+	CopyMemory (&m_dp, pB, dwDP);
+	pB += dwDP;
+
+	fsDownload_NetworkProperties *dnp = GetDNP ();
+	DWORD dwDNP = sizeof (fsDownload_NetworkProperties);
+	CHECK_BOUNDS ((int)dwDNP);
+	CopyMemory (dnp, pB, dwDNP);
+	pB += dwDNP;
+
+	CHECK_BOUNDS (sizeof (m_dwState));
+
+	CopyMemory (&m_dwState, pB, sizeof (m_dwState));
+	pB += sizeof (m_dwState);
+
+	CHECK_BOUNDS (sizeof (m_dwDownloadFileFlags));
+
+	CopyMemory (&m_dwDownloadFileFlags, pB, sizeof (m_dwDownloadFileFlags));
+	pB += sizeof (m_dwDownloadFileFlags);
+
+	int cMirrs = 0;
+	CHECK_BOUNDS (sizeof (int));
+
+	CopyMemory (&cMirrs, pB, sizeof (int));
+	pB += sizeof (int);
+
+	dw = DWORD (m_dp.pszFileName);
+	CHECK_BOUNDS (int (dw));
+	fsnew (m_dp.pszFileName, CHAR, dw+1);
+	CopyMemory (m_dp.pszFileName, pB, dw);
+	m_dp.pszFileName [dw] = 0;
+	pB += dw;
+	if (m_dwDownloadFileFlags & DFF_USE_PORTABLE_DRIVE)
+		m_dp.pszFileName [0] = vmsGetExeDriveLetter ();
+
+	dw = DWORD (m_dp.pszAdditionalExt);
+	CHECK_BOUNDS (int (dw));
+	fsnew (m_dp.pszAdditionalExt, CHAR, dw+1);
+	CopyMemory (m_dp.pszAdditionalExt, pB, dw);
+	m_dp.pszAdditionalExt [dw] = 0;
+	pB += dw;
+
+	
+	dw = DWORD (m_dp.pszCreateExt);
+	CHECK_BOUNDS (int (dw));
+	fsnew (m_dp.pszCreateExt, CHAR, dw+1);
+	CopyMemory (m_dp.pszCreateExt, pB, dw);
+	m_dp.pszCreateExt [dw] = 0;
+	pB += dw;
+	
+
+	dw = DWORD (m_dp.pszCheckSum);
+	CHECK_BOUNDS (int (dw));
+	fsnew (m_dp.pszCheckSum, CHAR, dw+1);
+	CopyMemory (m_dp.pszCheckSum, pB, dw);
+	m_dp.pszCheckSum [dw] = 0;
+	pB += dw;
+
+	int i = 0;
+	for (i = 0; i < cMirrs + 1; i++)
+	{
+		fsDownload_NetworkProperties tmpdnp;
+		BOOL bMirrIsGood;
+
+		if (i)
+		{
+			dnp = &tmpdnp;
+
+			CHECK_BOUNDS ((int)dwDNP);
+			CopyMemory (dnp, pB, dwDNP);
+			pB += dwDNP;
+
+			CHECK_BOUNDS (sizeof (BOOL));
+
+			CopyMemory (&bMirrIsGood, pB, sizeof (BOOL));
+			pB += sizeof (BOOL);
+		}
+
+		dw = DWORD (dnp->pszAgent);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszAgent, CHAR, dw+1);
+		CopyMemory (dnp->pszAgent, pB, dw);
+		dnp->pszAgent [dw] = 0;
+		pB += dw;
+
+		dw = DWORD (dnp->pszPassword);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszPassword, CHAR, dw+1);
+		CopyMemory (dnp->pszPassword, pB, dw);
+		dnp->pszPassword [dw] = 0;
+		pB += dw;
+
+		dw = DWORD (dnp->pszPathName);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszPathName, CHAR, dw+1);
+		CopyMemory (dnp->pszPathName, pB, dw);
+		dnp->pszPathName [dw] = 0;
+		pB += dw;
+
+		dw = DWORD (dnp->pszProxyName);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszProxyName, CHAR, dw+1);
+		CopyMemory (dnp->pszProxyName, pB, dw);
+		dnp->pszProxyName [dw] = 0;
+		pB += dw;
+
+		dw = DWORD (dnp->pszProxyPassword);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszProxyPassword, CHAR, dw+1);
+		CopyMemory (dnp->pszProxyPassword, pB, dw);
+		dnp->pszProxyPassword [dw] = 0;
+		pB += dw;
+
+		dw = DWORD (dnp->pszProxyUserName);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszProxyUserName, CHAR, dw+1);
+		CopyMemory (dnp->pszProxyUserName, pB, dw);
+		dnp->pszProxyUserName [dw] = 0;
+		pB += dw;
+
+		dw = DWORD (dnp->pszReferer);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszReferer, CHAR, dw+1);
+		CopyMemory (dnp->pszReferer, pB, dw);
+		dnp->pszReferer [dw] = 0;
+		pB += dw;
+
+		dw = DWORD (dnp->pszServerName);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszServerName, CHAR, dw+1);
+		CopyMemory (dnp->pszServerName, pB, dw);
+		dnp->pszServerName [dw] = 0;
+		pB += dw;
+
+		dw = DWORD (dnp->pszUserName);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszUserName, CHAR, dw+1);
+		CopyMemory (dnp->pszUserName, pB, dw);
+		dnp->pszUserName [dw] = 0;
+		pB += dw;
+
+		dw = DWORD (dnp->pszASCIIExts);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszASCIIExts, CHAR, dw+1);
+		CopyMemory (dnp->pszASCIIExts, pB, dw);
+		dnp->pszASCIIExts [dw] = 0;
+		pB += dw;
+
+		
+		dw = DWORD (dnp->pszCookies);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszCookies, CHAR, dw+1);
+		CopyMemory (dnp->pszCookies, pB, dw);
+		dnp->pszCookies [dw] = 0;
+		pB += dw;
+
+		dw = DWORD (dnp->pszPostData);
+		CHECK_BOUNDS (int (dw));
+		fsnew (dnp->pszPostData, CHAR, dw+1);
+		CopyMemory (dnp->pszPostData, pB, dw);
+		dnp->pszPostData [dw] = 0;
+		pB += dw;
+
+		if (i)
+			m_dldr.AddMirror (dnp,  TRUE, TRUE);
+	}
+
+	if (cMirrs)
+	{
+		for (i = 0; i < cMirrs; i++)
+		{
+			DWORD dw;
+
+			CHECK_BOUNDS (sizeof (dw));
+
+			CopyMemory (&dw, pB, sizeof (dw));
+			pB += sizeof (dw);
+
+			m_dldr.Set_MirrPingTime (i, dw);
+		}
+
+		DWORD dw;
+
+		CHECK_BOUNDS (sizeof (dw));
+
+		CopyMemory (&dw, pB, sizeof (dw));
+		pB += sizeof (dw);
+
+		m_dldr.Set_BaseServerPingTime (dw);
+	}
+
+	*pdwSize = pB - (LPBYTE) pb;
+
+	return TRUE;
 }
 
 UINT64 fsDownloadMgr::getSpeed(bool bOfDownload)
@@ -3246,16 +3467,29 @@ void fsDownloadMgr::setStateFlags (DWORD dwFlags)
 {
 	vmsAUTOLOCKSECTION (m_csState);
 	m_dwState |= dwFlags;
+	setDirty();
 }
 
 void fsDownloadMgr::setStateFlagsTo (DWORD dwFlags)
 {
 	vmsAUTOLOCKSECTION (m_csState);
 	m_dwState = dwFlags;
+	setDirty();
 }
 
 void fsDownloadMgr::removeStateFlags (DWORD dwFlags)
 {
 	vmsAUTOLOCKSECTION (m_csState);
 	m_dwState &= ~dwFlags;
+	setDirty();
+}
+
+bool fsDownloadMgr::IsFailedToCreateDestinationFile() const
+{
+	return m_bFailedToCreateDestinationFile;
+}
+
+bool fsDownloadMgr::IsNotEnoughDiskSpace() const
+{
+	return m_bIsNotEnoughDiskSpace;
 }

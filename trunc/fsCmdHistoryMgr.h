@@ -10,24 +10,9 @@
 #endif 
 
 #include "list.h"
+#include "vmsPersistObject.h"
 
-#define HISTFILE_CURRENT_VERSION	(1)
-
-#define HISTFILE_SIG "FDM History"
-
-struct fsHistFileHdr
-{
-	char szSig [sizeof (HISTFILE_SIG) + 1];
-	WORD wVer;
-
-	fsHistFileHdr ()
-	{
-		strcpy (szSig, HISTFILE_SIG);
-		wVer = HISTFILE_CURRENT_VERSION;
-	}
-};
-
-class fsCmdHistoryMgr  
+class fsCmdHistoryMgr : public vmsPersistObject 
 {
 public:
 	
@@ -49,24 +34,32 @@ public:
 	
 	BOOL ReadFromFile (HANDLE hFile);
 
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+
 	fsCmdHistoryMgr();
 	virtual ~fsCmdHistoryMgr();
 
 protected:
 	
-	struct fs1DayRecords
+	struct fs1DayRecords : public vmsObject, public vmsPersistObject
 	{
 		FILETIME day;	
 		
 		
 		
 		fs::list <CString> vRecs;
+
+		virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+		virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 	};
+
+	typedef vmsObjectSmartPtr<fs1DayRecords> vms1DayRecordsSmartPtr;
 
 	
 	
 	
-	fs::list <fs1DayRecords> m_vRecs;
+	fs::list <vms1DayRecordsSmartPtr> m_vRecs;
 	int m_cMaxRecords;			
 	SYSTEMTIME m_curday;	
 	BOOL m_bNoHistory;	

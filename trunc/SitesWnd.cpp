@@ -269,6 +269,7 @@ void CSitesWnd::OnSitesAdd()
 	site->dwValidFor = SITE_VALIDFOR_HTTP | SITE_VALIDFOR_HTTPS | SITE_VALIDFOR_FTP | SITE_VALIDFOR_SUBDOMAINS;
 
 	CSitesSheet sheet (LS (L_ADDSITE), this);
+	sheet.SetMode(true);
 	_DlgMgr.OnDoModal (&sheet);
 	sheet.Init (site);
 	UINT nRet = sheet.DoModal ();
@@ -324,6 +325,7 @@ void CSitesWnd::OnSitesProperties()
 	fsSiteInfo *pSite = (fsSiteInfo*) GetItemData (iItem);
 
 	CSitesSheet sheet (LS (L_SITEPROP), this);
+	sheet.SetMode(false);
 	_DlgMgr.OnDoModal (&sheet);
 	sheet.Init (pSite);
 	UINT nRet = sheet.DoModal ();
@@ -343,6 +345,7 @@ void CSitesWnd::OnSitesTemprorary()
 		int iItem = GetNextSelectedItem (pos);
 		fsSiteInfo *pSite = (fsSiteInfo*) GetItemData (iItem);
 		pSite->bTemp = !m_bSelectedIsTemp;
+		_SitesMgr.setDirty();
 		UpdateSite (pSite);
 	}
 }
@@ -417,22 +420,76 @@ void CSitesWnd::LoadSites()
 
 	HANDLE hFile = CreateFile (strFile, GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
 
-	BOOL bOk = hFile != INVALID_HANDLE_VALUE;
+	if (hFile == INVALID_HANDLE_VALUE) {
+		_DldsMgr.RebuildServerList ();
+		return;
+	}
 
 	try {
 
-	if (bOk)
-		bOk = _SitesMgr.LoadFromFile (hFile);
+		fsSitesFileHdr hdr;
+		DWORD dw = 0;
+		DWORD dwRequiredSize = ::GetFileSize(hFile, 0);
+		BOOL bOldVer = FALSE;
 
-	} catch (...) {ASSERT (FALSE); bOk = FALSE;}
-
-        if (hFile != INVALID_HANDLE_VALUE)
-		CloseHandle (hFile);
-
-	if (bOk == FALSE)
-	{
+		if (!ReadFile (hFile, &hdr, sizeof (hdr), &dw, NULL)) {
+			bOldVer = TRUE;
+		} 
 		
+		if (!bOldVer) {
+			if (strcmp (hdr.szSig, SITESFILE_SIG)) {
+				bOldVer = TRUE;
+			} else if (hdr.wVer > SITESFILE_CURRENT_VERSION) {
+				CloseHandle (hFile);
+				_DldsMgr.RebuildServerList ();
+				return;
+			} else if (hdr.wVer < 3) {
+				bOldVer = TRUE;
+			}
+		}
 
+		if (bOldVer) {
+
+			if (!SetFilePointer (hFile, 0, NULL, FILE_BEGIN)) {
+				CloseHandle (hFile);
+				_DldsMgr.RebuildServerList ();
+				return;
+			}
+
+			_SitesMgr.LoadFromFile(hFile);
+
+		} else {
+
+			dwRequiredSize -= sizeof(hdr);
+
+			std::auto_ptr<BYTE> pbtBufferGuard( new BYTE[dwRequiredSize] );
+			LPBYTE pbtBuffer = pbtBufferGuard.get();
+			if (pbtBuffer == 0) {
+				CloseHandle (hFile);
+				_DldsMgr.RebuildServerList ();
+				return;
+			}
+			memset(pbtBuffer, 0, dwRequiredSize);
+
+			if (!ReadFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
+				CloseHandle (hFile);
+				_DldsMgr.RebuildServerList ();
+				return;
+			}
+
+			if (!_SitesMgr.loadFromStateBuffer(pbtBuffer, &dwRequiredSize, hdr.wVer)) {
+				CloseHandle (hFile);
+				_DldsMgr.RebuildServerList ();
+				return;
+			}
+
+		}
+
+		CloseHandle (hFile);
+		_SitesMgr.resetDirty();
+
+	} catch (...) {
+		ASSERT (FALSE); 
 	}
 
 	_DldsMgr.RebuildServerList ();
@@ -440,20 +497,45 @@ void CSitesWnd::LoadSites()
 
 void CSitesWnd::SaveSites()
 {
+	if (!_SitesMgr.isDirty())
+		return;
+
 	CString strFile = fsGetDataFilePath ("sites.sav");
 
 	HANDLE hFile = CreateFile (strFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
 		FILE_ATTRIBUTE_HIDDEN, NULL);
 
-	BOOL bOk = TRUE;
-
 	if (hFile == INVALID_HANDLE_VALUE)
-		bOk = FALSE;
-	else 
-		bOk = _SitesMgr.SaveToFile (hFile);
+		return;
 
-	if (hFile != INVALID_HANDLE_VALUE)
+	DWORD dw;
+	fsSitesFileHdr hdr;
+	DWORD dwRequiredSize = 0;
+
+	if (!WriteFile (hFile, &hdr, sizeof (hdr), &dw, NULL)) {
 		CloseHandle (hFile);
+		return;
+	}
+
+	_SitesMgr.getStateBuffer(0, &dwRequiredSize, false);
+
+	if (dwRequiredSize == 0)
+		return;
+
+	std::auto_ptr<BYTE> apbtBufferGuard( new BYTE[dwRequiredSize] );
+	LPBYTE pbtBuffer = apbtBufferGuard.get();
+	if (pbtBuffer == 0)
+		return;
+	memset(pbtBuffer, 0, dwRequiredSize);
+
+	_SitesMgr.getStateBuffer(pbtBuffer, &dwRequiredSize, true);
+
+	if (FALSE == WriteFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
+		CloseHandle (hFile);
+		return;
+	}
+	CloseHandle (hFile);
+	_SitesMgr.onStateSavedSuccessfully();
 }
 
 void CSitesWnd::Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int* )

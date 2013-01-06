@@ -87,7 +87,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>include.add;include.add\dshow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;CURL_STATICLIB;USE_SSLEAY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;CURL_STATICLIB;USE_SSLEAY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);NOCRYPT;NOUNCRYPT</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Release\FDM.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -99,7 +99,6 @@
       <BasicRuntimeChecks>
       </BasicRuntimeChecks>
       <ExceptionHandling>Async</ExceptionHandling>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -122,12 +121,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>Lib.add;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>PartMediaPreview/Release/PartMediaPreview.lib;FDMCustomized/FDMCustomized_lib/Release/FDMCustomized_lib.lib;InetFile/Release/inetfile.lib;Mswsock.lib;Hash\Release\hash.lib;inetfile/curl_lib/release/curl_lib.lib;dxguid.lib;wininet.lib;rasapi32.lib;Ws2_32.lib;htmlhelp.lib;winmm.lib;strmiids.lib;Version.lib;Iphlpapi.lib;Msimg32.lib;libeay32.lib;ssleay32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PartMediaPreview/Release/PartMediaPreview.lib;FDMCustomized/FDMCustomized_lib/Release/FDMCustomized_lib.lib;InetFile/Release/inetfile.lib;Mswsock.lib;Hash\Release\hash.lib;inetfile/curl_lib/release/curl_lib.lib;dxguid.lib;wininet.lib;rasapi32.lib;Ws2_32.lib;htmlhelp.lib;winmm.lib;strmiids.lib;Version.lib;Iphlpapi.lib;libeay32.lib;ssleay32.lib;Msimg32.lib;%(AdditionalDependencies);zlib\$(Configuration)\zlib.lib;dbghelp.lib</AdditionalDependencies>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalOptions>/MAPINFO:EXPORTS </AdditionalOptions>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
-      <ProgramDatabaseFile>.\Release\$(TargetName).pdb</ProgramDatabaseFile>
       <TypeLibraryFile>.\bin\Release\fdm.tlb</TypeLibraryFile>
       <AdditionalManifestDependencies>type='Win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='X86' publicKeyToken='6595b64144ccf1df' language='*';%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
     </Link>
@@ -143,7 +141,7 @@
       <TreatWarningAsError>false</TreatWarningAsError>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <AdditionalIncludeDirectories>include.add;include.add\dshow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;CURL_STATICLIB;USE_SSLEAY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;CURL_STATICLIB;USE_SSLEAY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);NOCRYPT;NOUNCRYPT</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <AdditionalOptions>
@@ -173,7 +171,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>Lib.add;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>PartMediaPreview/$(Configuration)/PartMediaPreview.lib;FDMCustomized/FDMCustomized_lib/$(Configuration)/FDMCustomized_lib.lib;InetFile/$(Configuration)/inetfile.lib;Mswsock.lib;Hash\$(Configuration)\hash.lib;inetfile/curl_lib/$(Configuration)/curl_lib.lib;dxguid.lib;wininet.lib;rasapi32.lib;Ws2_32.lib;htmlhelp.lib;winmm.lib;strmiids.lib;Version.lib;Iphlpapi.lib;libeay32-md.lib;ssleay32-md.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PartMediaPreview/$(Configuration)/PartMediaPreview.lib;FDMCustomized/FDMCustomized_lib/$(Configuration)/FDMCustomized_lib.lib;InetFile/$(Configuration)/inetfile.lib;alsfolderbrowser.lib;Mswsock.lib;Hash\$(Configuration)\hash.lib;inetfile/curl_lib/$(Configuration)/curl_lib.lib;dxguid.lib;wininet.lib;rasapi32.lib;Ws2_32.lib;htmlhelp.lib;winmm.lib;strmiids.lib;Version.lib;Iphlpapi.lib;libeay32.lib;ssleay32.lib;Msimg32.lib;%(AdditionalDependencies);zlib.lib;dbghelp.lib</AdditionalDependencies>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalOptions>/MAPINFO:EXPORTS </AdditionalOptions>
       <IgnoreSpecificDefaultLibraries>
@@ -193,7 +191,7 @@
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <AdditionalIncludeDirectories>include.add;include.add\dshow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;CURL_STATICLIB;USE_SSLEAY;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;CURL_STATICLIB;USE_SSLEAY;%(PreprocessorDefinitions);NOCRYPT;NOUNCRYPT</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug\FDM.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -225,7 +223,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>Lib.add;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>PartMediaPreview\Debug\PartMediaPreview.lib;FDMCustomized/FDMCustomized_lib/Debug/FDMCustomized_lib.lib;InetFile\Debug\inetfile.lib;Hash\Debug\hash.lib;InetFile\curl_lib\debug\curl_lib.lib;dxguid.lib;wininet.lib;rasapi32.lib;Ws2_32.lib;htmlhelp.lib;winmm.lib;strmiids.lib;Version.lib;Iphlpapi.lib;libeay32d.lib;ssleay32d.lib;Msimg32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>PartMediaPreview\Debug\PartMediaPreview.lib;FDMCustomized/FDMCustomized_lib/Debug/FDMCustomized_lib.lib;InetFile\Debug\inetfile.lib;Hash\Debug\hash.lib;InetFile\curl_lib\debug\curl_lib.lib;dxguid.lib;wininet.lib;rasapi32.lib;Ws2_32.lib;htmlhelp.lib;winmm.lib;strmiids.lib;Version.lib;Iphlpapi.lib;libeay32d.lib;ssleay32d.lib;Msimg32.lib;%(AdditionalDependencies);zlib\$(Configuration)\zlib.lib;dbghelp.lib</AdditionalDependencies>
       <TypeLibraryFile>.\bin\Release\fdm.tlb</TypeLibraryFile>
       <AdditionalManifestDependencies>type='Win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='X86' publicKeyToken='6595b64144ccf1df' language='*';%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
     </Link>
@@ -276,6 +274,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="CmdHistorySaver.cpp" />
     <ClCompile Include="ColumnTreeCtrl.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
@@ -308,6 +307,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="CreateTPDownloadDlg.cpp" />
     <ClCompile Include="CsvParser.cpp" />
     <ClCompile Include="DDRDlg.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
@@ -320,6 +320,7 @@
     <ClCompile Include="DlgConnectionSpeedInfo.cpp" />
     <ClCompile Include="DlgSpecifyNetworkSpeedValue.cpp" />
     <ClCompile Include="DlgTumSettingsPerDirection.cpp" />
+    <ClCompile Include="DlgUnhExc2.cpp" />
     <ClCompile Include="Dlg_CheckFileIntegrity.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
@@ -861,6 +862,7 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="fsDownload.cpp" />
     <ClCompile Include="fsDownloadMgr.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
@@ -1014,10 +1016,39 @@
     <ClCompile Include="IwManagersPropertyPage.cpp" />
     <ClCompile Include="IwProgressPropertyPage.cpp" />
     <ClCompile Include="IwResultPropertyPage.cpp" />
+    <ClCompile Include="Lib.Add\ioapi.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Lib.Add\unzip.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Lib.Add\zip.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="MemHandleGuard.cpp" />
     <ClCompile Include="OrbitSupplier.cpp" />
     <ClCompile Include="orbit_download.cpp" />
+    <ClCompile Include="sqlite\sqlite3.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="StateInfo.cpp" />
     <ClCompile Include="TorrentMoveErrorDlg.cpp" />
+    <ClCompile Include="TpDldSheet.cpp" />
+    <ClCompile Include="TpDld_General.cpp" />
+    <ClCompile Include="vmsAppGlobalObjects.cpp" />
+    <ClCompile Include="vmsCrashReporter.cpp" />
+    <ClCompile Include="vmsElevatedFdm.cpp" />
+    <ClCompile Include="vmsFdmCrashReporter.cpp" />
+    <ClCompile Include="vmsFirefoxExtensionUpdateMgr.cpp" />
+    <ClCompile Include="vmsTpDownloadMgr.cpp" />
     <ClCompile Include="Uploader\FUM\fuminterfaces_i.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
       </PrecompiledHeader>
@@ -1334,10 +1365,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="vmsAppVersion.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
-    </ClCompile>
     <ClCompile Include="vmsArchive.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
@@ -1355,10 +1382,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
     <ClCompile Include="vmsBatchList.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
-    </ClCompile>
-    <ClCompile Include="vmsBinaryFileVersionInfo.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
@@ -1504,6 +1527,8 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
+    <ClCompile Include="vmsPersistableListOfDownloads.cpp" />
+    <ClCompile Include="vmsPersistObject.cpp" />
     <ClCompile Include="vmsPluginSupport.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
@@ -1537,10 +1562,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
     <ClCompile Include="vmsSkinMgr.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
-    </ClCompile>
-    <ClCompile Include="vmsSourceCodeLogger.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
@@ -1723,6 +1744,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AERDlg.h" />
+    <ClInclude Include="AlsFolderBrowser.h" />
     <ClInclude Include="AppStatusBar.h" />
     <ClInclude Include="BtDld_Files.h" />
     <ClInclude Include="BtDld_General.h" />
@@ -1733,6 +1755,7 @@
     <ClInclude Include="CFDM.h" />
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="ClientAreaWnd.h" />
+    <ClInclude Include="CmdHistorySaver.h" />
     <ClInclude Include="ColumnTreeCtrl.h" />
     <ClInclude Include="ComboBox_Ex.h" />
     <ClInclude Include="ComboBoxTreeCtrl.h" />
@@ -1742,6 +1765,7 @@
     <ClInclude Include="CreateDownloadFromTorrentFileDlg.h" />
     <ClInclude Include="CreateDownloadListDlg.h" />
     <ClInclude Include="CreateDownloadsDlg.h" />
+    <ClInclude Include="CreateTPDownloadDlg.h" />
     <ClInclude Include="CsvParser.h" />
     <ClInclude Include="DDRDlg.h" />
     <ClInclude Include="DialDlg.h" />
@@ -1749,6 +1773,7 @@
     <ClInclude Include="DlgConnectionSpeedInfo.h" />
     <ClInclude Include="DlgSpecifyNetworkSpeedValue.h" />
     <ClInclude Include="DlgTumSettingsPerDirection.h" />
+    <ClInclude Include="DlgUnhExc2.h" />
     <ClInclude Include="Dlg_CheckFileIntegrity.h" />
     <ClInclude Include="Dlg_CheckFileIntegrity_Progress.h" />
     <ClInclude Include="Dlg_CheckFileIntegrity_Result.h" />
@@ -1963,7 +1988,18 @@
     <ClInclude Include="PrgSheet.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="StateInfo.h" />
-    <ClInclude Include="vmsBrowsersSharedData.h" />
+    <ClInclude Include="TorrentMoveErrorDlg.h" />
+    <ClInclude Include="TpDldSheet.h" />
+    <ClInclude Include="TpDld_General.h" />
+    <ClInclude Include="vmsAppFileUpdateInfo.h" />
+    <ClInclude Include="vmsAppGlobalObjects.h" />
+    <ClInclude Include="vmsCrashCatcher.h" />
+    <ClInclude Include="vmsCrashReporter.h" />
+    <ClInclude Include="vmsElevatedFdm.h" />
+    <ClInclude Include="vmsFdmCrashReporter.h" />
+    <ClInclude Include="vmsFirefoxExtensionInfo.h" />
+    <ClInclude Include="vmsFirefoxExtensionUpdateMgr.h" />
+    <ClInclude Include="vmsTpDownloadMgr.h" />
     <ClInclude Include="Schedule_AdvancedPage.h" />
     <ClInclude Include="Schedule_HTSPage.h" />
     <ClInclude Include="Schedule_WTSPage.h" />
@@ -1989,7 +2025,6 @@
     <ClInclude Include="supplier_interface.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="ToolBarEx.h" />
-    <ClInclude Include="TorrentMoveErrorDlg.h" />
     <ClInclude Include="Torrents_Tasks.h" />
     <ClInclude Include="TorrentsWnd.h" />
     <ClInclude Include="TreeCtrlEx.h" />
@@ -2009,13 +2044,11 @@
     <ClInclude Include="vmsAppSettingsStore.h" />
     <ClInclude Include="vmsAppTipsMgr.h" />
     <ClInclude Include="vmsAppUtil.h" />
-    <ClInclude Include="vmsAppVersion.h" />
     <ClInclude Include="vmsArchive.h" />
     <ClInclude Include="vmsArchiveCallback.h" />
     <ClInclude Include="vmsArchiveMgr.h" />
     <ClInclude Include="vmsArchiveRAR.h" />
     <ClInclude Include="vmsBatchList.h" />
-    <ClInclude Include="vmsBinaryFileVersionInfo.h" />
     <ClInclude Include="vmsBtDownloadManager.h" />
     <ClInclude Include="vmsBtSupport.h" />
     <ClInclude Include="vmsComDLL.h" />
@@ -2052,17 +2085,17 @@
     <ClInclude Include="vmsMetalinkFile.h" />
     <ClInclude Include="vmsMozillaPrefs.h" />
     <ClInclude Include="vmsNotEverywhereSupportedFunctions.h" />
+    <ClInclude Include="vmsPersistableListOfDownloads.h" />
+    <ClInclude Include="vmsPersistObject.h" />
     <ClInclude Include="vmsPluginSupport.h" />
     <ClInclude Include="vmsProcessesInjector.h" />
     <ClInclude Include="vmsProcessList.h" />
     <ClInclude Include="vmsRegisteredApp.h" />
     <ClInclude Include="vmsRenderer.h" />
     <ClInclude Include="vmsSecurity.h" />
-    <ClInclude Include="vmsSharedData.h" />
     <ClInclude Include="vmsSimpleFileDownloader.h" />
     <ClInclude Include="vmsSingleLineTooltip.h" />
     <ClInclude Include="vmsSkinMgr.h" />
-    <ClInclude Include="vmsSourceCodeLogger.h" />
     <ClInclude Include="vmsSpeedTracker.h" />
     <ClInclude Include="vmsStringList.h" />
     <ClInclude Include="vmsStringParser.h" />

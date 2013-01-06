@@ -32,10 +32,12 @@ void fsIEUserAgent::OpenUAKey()
 
 void fsIEUserAgent::SetPP(LPCSTR pszPP)
 {
-	m_keyUA.SetValue ("", pszPP);
+	if (m_keyUA.m_hKey)
+		m_keyUA.SetValue ("", pszPP);
 }
 
 void fsIEUserAgent::RemovePP(LPCSTR pszPP)
 {
-	m_keyUA.DeleteValue (pszPP);
+	if (m_keyUA.m_hKey)
+		m_keyUA.DeleteValue (pszPP);
 }

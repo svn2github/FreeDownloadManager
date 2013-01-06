@@ -142,7 +142,7 @@ BOOL CDownloaderProperties_MonitorPage::OnApply()
 	{
 		if (bIE2 && _IECatchMgr.IsMonitoringDllRegistered () == FALSE)
 		{
-			if (_IECatchMgr.ActivateIE2 (TRUE) == FALSE)
+			if (_IECatchMgr.InstallIeIntegration (TRUE) == FALSE)
 			{
 				MessageBox (LS (L_ERRIE), LS (L_ERR), MB_ICONERROR);
 				CheckDlgButton (IDC_IE2, bIE2Active ? BST_CHECKED : BST_UNCHECKED);

@@ -84,7 +84,7 @@ LPCSTR vmsFdmAppMgr::getAppVersionedName()
 	{
 		str = getAppName ();
 		str += ' ';
-		str += getVersion ()->m_strProductVersion;
+		str += getVersion ()->m_tstrProductVersion;
 	}
 	return str.c_str ();
 }
@@ -104,7 +104,7 @@ LPCSTR vmsFdmAppMgr::getAppAgentName()
 
 LPCSTR vmsFdmAppMgr::getAppName()
 {
-	return getVersion ()->m_strProductName.c_str ();
+	return getVersion ()->m_tstrProductName.c_str ();
 }
 
 BOOL vmsFdmAppMgr::MakeSureBtInstalled()

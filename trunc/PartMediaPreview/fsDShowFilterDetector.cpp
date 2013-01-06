@@ -27,8 +27,8 @@ fsDShowFilterDetector::~fsDShowFilterDetector()
 const AM_MEDIA_TYPE* fsDShowFilterDetector::DetectMediaType(HANDLE hFile, UINT64 uFileOkLen)
 {
 	HKEY key;
-	if (ERROR_SUCCESS != RegOpenKey (HKEY_CLASSES_ROOT, 
-			"Media Type\\{e436eb83-524f-11ce-9f53-0020af0ba770}", &key))
+	if (ERROR_SUCCESS != RegOpenKeyEx (HKEY_CLASSES_ROOT, 
+			"Media Type\\{e436eb83-524f-11ce-9f53-0020af0ba770}", 0, KEY_READ, &key))
 		return NULL;
 
 	m_uFileOkLen = uFileOkLen;
@@ -67,7 +67,7 @@ const AM_MEDIA_TYPE* fsDShowFilterDetector::DetectMediaType(HANDLE hFile, HKEY h
 		if (dwRes == ERROR_SUCCESS)
 		{
 			HKEY hKey;
-			if (ERROR_SUCCESS != RegOpenKey (hkFilters, szKey, &hKey))
+			if (ERROR_SUCCESS != RegOpenKeyEx (hkFilters, szKey, 0, KEY_READ, &hKey))
 				continue;
 
 			if (IsFilterMeets (hFile, hKey))

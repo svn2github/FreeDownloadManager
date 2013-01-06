@@ -38,6 +38,15 @@ extern CSpiderWnd *_pwndSpider;
 #include "FdmFlvDownload.h"
 #include "vmsIeHelper.h"
 #include "FdmUiWindow.h"
+#include "CmdHistorySaver.h"
+#include "vmsAppMutex.h"
+#include "vmsElevatedFdm.h"
+#include "vmsFdmCrashReporter.h"
+#include "vmsAppGlobalObjects.h"
+#include "vmsFirefoxExtensionInfo.h"
+#include "vmsFirefoxUtil.h"
+#include "vmsTmpFileName.h"
+#include "vmsRegisteredAppPath.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -54,7 +63,6 @@ END_MESSAGE_MAP()
 CFdmApp::CFdmApp()
 {
 	m_bCOMInited = m_bATLInited = m_bATLInited2 = FALSE;
-	m_hAppMutex = NULL;
 	m_bEmbedding = FALSE;
 	m_bStarting = TRUE;
 
@@ -66,15 +74,25 @@ CFdmApp::CFdmApp()
 }
 
 CFdmApp theApp;
+vmsAppMutex _appMutex (_T ("Free Download Manager"));
+
+vmsFdmCrashReporter _CrashReporter;
 
 BOOL CFdmApp::InitInstance()
 {
-	SetUnhandledExceptionFilter (_UEF);
+	
 
 	AfxEnableControlContainer ();
 
 	
 	SetRegistryKey (IDS_COMPANY);
+
+	bool bContinue = true;
+	if (_CrashReporter.CheckIfSubmitDumpIsRequestedByCommandLine (bContinue))
+	{
+		if (!bContinue)
+			return FALSE;
+	}
 
 	CheckRegistry ();
 
@@ -188,36 +206,32 @@ BOOL CFdmApp::InitInstance()
 	
 	m_bCOMInited = TRUE;
 
+	vmsAppGlobalObjects::Create2 ();
+
 	fsFDMCmdLineParser cmdline;
 	cmdline.Parse ();
+
+	if (cmdline.isRunAsElevatedTasksProcessor ())
+	{
+		RunAsElevatedTasksProcessor (cmdline);
+		return FALSE;
+	}
 
 	if (cmdline.isNeedExit ())
 		return FALSE;
 
 	m_bForceSilentSpecified = cmdline.is_ForceSilentSpecified ();
 
-	
-	if (GetVersion () & 0x80000000)
+	if (cmdline.isNeedRegisterServer ())
 	{
-		
-		CFileFind f; 
-		BOOL b = f.FindFile (m_strAppPath + "*.sav");
-		std::vector <CString> v;
-		while (b)
-		{
-			b = f.FindNextFile ();
-			v.push_back (f.GetFileName ());
-		}
-		for (size_t i = 0; i < v.size (); i++)
-			MoveFile (m_strAppPath + v [i], fsGetDataFilePath (v [i]));
-	}
-	MoveFile (fsGetDataFilePath ("uploads.sav"), fsGetDataFilePath ("uploads.1.sav"));
-	
-
-	if (!InitATL())
+		onNeedRegisterServer ();
 		return FALSE;
-
-	_App.StartCount (_App.StartCount () + 1);
+	}
+	else if (cmdline.isNeedUnregisterServer ())
+	{
+		onNeedUnregisterServer ();
+		return FALSE;
+	}
 
 	if (VistaFx::IsVistaOrHigher () && strncmp (m_lpCmdLine, "-nelvcheck", 10) && stricmp (m_lpCmdLine, "-autorun"))
 	{
@@ -229,16 +243,20 @@ BOOL CFdmApp::InitInstance()
 			GetModuleFileName (NULL, sz, MAX_PATH);
 			CString str = "-nelvcheck ";
 			str += m_lpCmdLine;
-			if (m_hAppMutex)
-			{
-				CloseHandle (m_hAppMutex);
-				m_hAppMutex = NULL;
-			}
+			_appMutex.CloseMutex ();
 			if (vf.RunNonElevatedProcess (sz, str, ""))
 				return FALSE;
-			m_hAppMutex = CreateMutex (NULL, TRUE, _pszAppMutex);
+			_appMutex.Create ();
 		}
 	}
+
+	if (CheckFdmStartedAlready (m_bForceSilentSpecified == FALSE))
+		return FALSE;
+
+	if (!InitATL())
+		return FALSE;
+
+	_App.StartCount (_App.StartCount () + 1);
 
 	
 	
@@ -284,6 +302,14 @@ BOOL CFdmApp::InitInstance()
 	{
 		MessageBox (NULL, LS (L_INVALID_BT_MODULE), _T ("Free Download Manager"), MB_ICONERROR);
 		return FALSE;
+	}
+
+	if (!_App.get_SettingsStore ()->GetProfileInt (_T ("State"), _T ("FfExtChecked"), FALSE))
+	{
+		DWORD dwResult;
+		CheckFirefoxExtension (&dwResult);
+		if (!(dwResult & (1 << 1)))
+			_App.get_SettingsStore ()->WriteProfileInt (_T ("State"), _T ("FfExtChecked"), TRUE); 
 	}
 
 	CMainFrame* pFrame = NULL;
@@ -442,7 +468,7 @@ BOOL CAboutDlg::OnInitDialog()
 	
 	CString strVer;
 	char szVer [] = "%s %s build %s";
-	strVer.Format (szVer, LS (L_VERSION), vmsFdmAppMgr::getVersion ()->m_strProductVersion.c_str (), 
+	strVer.Format (szVer, LS (L_VERSION), vmsFdmAppMgr::getVersion ()->m_tstrProductVersion.c_str (), 
 		vmsFdmAppMgr::getBuildNumberAsString ());
 	SetDlgItemText (IDC__VER, strVer);
 
@@ -497,95 +523,27 @@ HBRUSH CAboutDlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 void CFdmApp::LoadHistory()
 {
-	_HsMgr.ReadSettings ();
+	CCmdHistorySaver& chsSaver = CCmdHistorySaver::Instance();
+	chsSaver.Load();
 
 	
-	HANDLE hFile = CreateFile (fsGetDataFilePath ("history.sav"), GENERIC_READ, FILE_SHARE_READ, NULL, 
-		OPEN_EXISTING, 0, NULL);
-
-	if (hFile == INVALID_HANDLE_VALUE)
-	{
-		if (GetLastError () != ERROR_FILE_NOT_FOUND)
-			goto _lErr;
-		return;
-	}
+	
 
 	
-	if (!_LastUrlFiles.ReadFromFile (hFile))
-		goto _lErr;
-
 	
-	if (!_LastUrlPaths.ReadFromFile (hFile))
-		goto _lErr;
-
-	
-	if (!_LastFolders.ReadFromFile (hFile))
-		goto _lErr;
-
-	
-	if (!_LastBatchUrls.ReadFromFile (hFile))
-		goto _lErr;
-
-	
-	if (!_LastFind.ReadFromFile (hFile))
-		goto _lErr;
-
-	if (!_LastFlashVideoUrls.ReadFromFile (hFile))
-		goto _lErr;
-
-	if (!_LastFlashVideoDstFolders.ReadFromFile (hFile))
-		goto _lErr;
-
-	CloseHandle (hFile);
-
-	return;
-
-_lErr:
-	if (hFile != INVALID_HANDLE_VALUE)
-		CloseHandle (hFile);
 	
 }
 
 void CFdmApp::SaveHistory()
 {
-	HANDLE hFile = CreateFile (fsGetDataFilePath ("history.sav"), GENERIC_WRITE, 0, NULL, 
-		CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
+	CCmdHistorySaver& chsSaver = CCmdHistorySaver::Instance();
+	chsSaver.Save();
 
-	if (hFile == INVALID_HANDLE_VALUE)
-	{
-		goto _lErr;
-	}
-
-	if (!_LastUrlFiles.SaveToFile (hFile))
-		goto _lErr;
-
-	if (!_LastUrlPaths.SaveToFile (hFile))
-		goto _lErr;
-
-	if (!_LastFolders.SaveToFile (hFile))
-		goto _lErr;
-
-	if (!_LastBatchUrls.SaveToFile (hFile))
-		goto _lErr;
-
-	if (!_LastFind.SaveToFile (hFile))
-		goto _lErr;
-
-	if (!_LastFlashVideoUrls.SaveToFile (hFile))
-		goto _lErr;
-
-	if (!_LastFlashVideoDstFolders.SaveToFile (hFile))
-		goto _lErr;
-
-	CloseHandle (hFile);
-
-	return;
-
-_lErr:
-	if (hFile != INVALID_HANDLE_VALUE)
-		CloseHandle (hFile);
 	
-		DeleteFile (fsGetDataFilePath ("history.sav"));
+	
+	
+	
+	
 }
 
 	
@@ -636,74 +594,6 @@ BOOL CFdmApp::InitATL()
 {
 	m_bEmbedding = FALSE;
 
-	LPTSTR lpCmdLine = GetCommandLine(); 
-	TCHAR szTokens[] = _T("-/");
-
-	BOOL bRun = TRUE;
-	LPCTSTR lpszToken = _Module.FindOneOf(lpCmdLine, szTokens);
-
-	while (lpszToken != NULL)
-	{
-		if (lstrcmpi(lpszToken, _T("Embedding"))==0)
-		{
-			
-		}
-
-		if (lstrcmpi(lpszToken, _T("UnregServer"))==0)
-		{
-			BOOL bWaitShutdown = FALSE;
-			if (CheckFdmStartedAlready (FALSE))
-			{
-				UINT nMsg = RegisterWindowMessage ("FDM - shutdown");
-				if (nMsg)
-				{
-					PostMessage (HWND_BROADCAST, nMsg, 0, 0);
-					bWaitShutdown = TRUE;
-				}
-				else
-				{
-					MessageBox (NULL, "Unable to shutdown Free Download Manager.\nPlease do that yourself.", "Error", MB_ICONEXCLAMATION);
-				}
-			}
-
-			HANDLE hMxWi = CreateMutex (NULL, FALSE, "FDM - remote control server");
-			if (GetLastError () == ERROR_ALREADY_EXISTS)
-			{
-				UINT nMsg = RegisterWindowMessage ("FDM - remote control server - shutdown");
-				if (nMsg)
-					PostMessage (HWND_BROADCAST, nMsg, 0, 0);
-			}
-			if (hMxWi)
-				CloseHandle (hMxWi);
-
-			if (bWaitShutdown)
-			{
-				while (CheckFdmStartedAlready (FALSE))
-				{
-					Sleep (400);
-				}
-			}
-
-			Install_UnregisterServer ();
-			bRun = FALSE;
-			break;
-		}
-		if (lstrcmpi(lpszToken, _T("RegServer"))==0)
-		{
-			Install_RegisterServer ();
-			bRun = FALSE;
-			break;
-		}
-
-		lpszToken = _Module.FindOneOf(lpszToken, szTokens);
-	}
-
-	if (bRun && CheckFdmStartedAlready (m_bForceSilentSpecified == FALSE))
-		bRun = FALSE;
-
-	if (!bRun)
-		return FALSE;
-
 	if (m_bATLInited == FALSE)
 	{
 		m_bATLInited = TRUE;
@@ -748,14 +638,11 @@ BOOL CFdmApp::InitLanguage()
 BOOL CFdmApp::CheckFdmStartedAlready(BOOL bSetForIfEx)
 {
 	LPCSTR pszMainWnd = "Free Download Manager Main Window";
-
-	m_hAppMutex = CreateMutex (NULL, TRUE, _pszAppMutex);
 	
 	
-	if (GetLastError () == ERROR_ALREADY_EXISTS)
+	if (_appMutex.isAnotherInstanceStartedAlready ())
 	{
-		CloseHandle (m_hAppMutex);
-		m_hAppMutex = NULL;
+		_appMutex.CloseMutex ();
 
 		if (bSetForIfEx)
 		{
@@ -1011,9 +898,9 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 	_IECMM.AddIEMenus ();
 
 	
-	DWORD dwMUSO = _App.Monitor_UserSwitchedOn ();
+	const DWORD dwMUSO = _App.Monitor_UserSwitchedOn ();
 				
-	_IECatchMgr.ActivateIE2 ((dwMUSO & MONITOR_USERSWITCHEDON_IE) != 0);
+	BOOL bIeOK = _IECatchMgr.InstallIeIntegration ((dwMUSO & MONITOR_USERSWITCHEDON_IE) != 0, bRegisterForUserOnly, FALSE);
 
 	vmsFirefoxMonitoring::Install (true);
 	if (vmsFirefoxMonitoring::IsInstalled () == false)
@@ -1031,8 +918,14 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 		_NOMgr.InstallMozillaSuitePlugin ();
 	if (dwMUSO & MONITOR_USERSWITCHEDON_SAFARI)
 		_NOMgr.InstallSafariPlugin ();
-	if (dwMUSO & MONITOR_USERSWITCHEDON_CHROME)
+	if ((dwMUSO & MONITOR_USERSWITCHEDON_CHROME) || _App.Monitor_ForceEnableChromeOnce ())
+	{
+		
+		_NOMgr.DeinstallChromePlugin (); 
+		_NOMgr.Initialize (); 
 		_NOMgr.InstallChromePlugin ();
+		_App.Monitor_ForceEnableChromeOnce (FALSE);
+	}
 
 	CRegKey key;
 	if (ERROR_SUCCESS != key.Create (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Upload Manager"))
@@ -1041,6 +934,9 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 
 	if (bRegisterForUserOnly)
 		vmsNotEverywhereSupportedFunctions::RegOverridePredefKey (HKEY_CLASSES_ROOT, NULL);
+
+	if (!bIeOK && (dwMUSO & MONITOR_USERSWITCHEDON_IE) != 0 && _App.Monitor_IE2 () && IS_PORTABLE_MODE)
+		vmsElevatedFdm::o ().InstallIeIntegration (true);
 
 	return TRUE;
 }
@@ -1124,7 +1020,7 @@ void CFdmApp::Install_UnregisterServer()
 	_NOMgr.DeinstallNetscapePlugin ();
 	_NOMgr.DeinstallOperaPlugin ();
     _NOMgr.DeinstallMozillaSuitePlugin ();
-	_IECatchMgr.ActivateIE2 (FALSE);
+	_IECatchMgr.InstallIeIntegration (FALSE, bUnregisterForUserOnly, FALSE);
 	fsIEUserAgent ua;
 	ua.RemovePP (IE_USERAGENT_ADDITION);
 	UninstallCustomizations ();
@@ -1241,4 +1137,94 @@ void CFdmApp::CheckRegistry()
 AFX_MODULE_STATE* CFdmApp::GetModuleState()
 {
 	return m_pModuleState;
+}
+
+bool CFdmApp::onNeedRegisterServer(void)
+{
+	Install_RegisterServer ();
+	return false;
+}
+
+bool CFdmApp::onNeedUnregisterServer(void)
+{
+	BOOL bWaitShutdown = FALSE;
+	if (CheckFdmStartedAlready (FALSE))
+	{
+		UINT nMsg = RegisterWindowMessage ("FDM - shutdown");
+		if (nMsg)
+		{
+			PostMessage (HWND_BROADCAST, nMsg, 0, 0);
+			bWaitShutdown = TRUE;
+		}
+		else
+		{
+			MessageBox (NULL, "Unable to shutdown Free Download Manager.\nPlease do that yourself.", "Error", MB_ICONEXCLAMATION);
+		}
+	}
+
+	HANDLE hMxWi = CreateMutex (NULL, FALSE, "FDM - remote control server");
+	if (GetLastError () == ERROR_ALREADY_EXISTS)
+	{
+		UINT nMsg = RegisterWindowMessage ("FDM - remote control server - shutdown");
+		if (nMsg)
+			PostMessage (HWND_BROADCAST, nMsg, 0, 0);
+	}
+	if (hMxWi)
+		CloseHandle (hMxWi);
+
+	if (bWaitShutdown)
+	{
+		while (CheckFdmStartedAlready (FALSE))
+		{
+			Sleep (400);
+		}
+	}
+
+	Install_UnregisterServer ();
+
+	return false;
+}
+
+void CFdmApp::RunAsElevatedTasksProcessor(fsFDMCmdLineParser& cmdline)
+{
+	_appMutex.CloseMutex ();
+
+	if (cmdline.isNeedInstallIeIntegration ())
+		_IECatchMgr.InstallIeIntegration (TRUE, TRUE);
+
+	for (;;)
+	{
+		vmsAppMutex appmx (_appMutex.getName ());
+		appmx.CloseMutex ();
+		if (!appmx.isAnotherInstanceStartedAlready ())
+			break;
+		Sleep (1000);
+	}
+
+	if (cmdline.isNeedInstallIeIntegration ())
+		_IECatchMgr.InstallIeIntegration (FALSE, TRUE);
+}
+
+void CFdmApp::CheckFirefoxExtension(LPDWORD pdwResult)
+{
+	if (pdwResult)
+		*pdwResult = 0;
+
+	bool bEnabled;
+	if (!vmsFirefoxMonitoring::IsEnabledInFirefox (bEnabled) || bEnabled)
+		return;
+
+	if (pdwResult)
+		*pdwResult |= 1;
+
+	if (IDYES != MessageBox (NULL, _T ("Free Download Manager extension for Firefox is disabled. You need to enable it in order to use the integration with Firefox. Would you like to enable it?"), 
+			_T ("Free Download Manager"), MB_YESNO))
+		return;
+
+	if (pdwResult)
+		*pdwResult |= (1 << 1);
+
+	MessageBox (NULL, _T ("Firefox addons page will be opened. You need to enable the extension there."), _T ("Free Download Manager"), MB_OK);
+
+	ShellExecute (NULL, _T ("open"), _T ("firefox.exe"), _T ("about:addons"), NULL, SW_SHOWNORMAL);
 }

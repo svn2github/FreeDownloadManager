@@ -59,6 +59,9 @@ void CWPDS_WebPagesPage::DoDataExchange(CDataExchange* pDX)
 	m_wpds->iDepth = iDepth;
 	m_wpds->bNotAllPages = !bDLAll;
 	m_wpds->bSavePagesUnderHTM = bHTM;
+
+	if (m_wpds->m_ppoOwner)
+		m_wpds->m_ppoOwner->setDirty();
 }
 
 BEGIN_MESSAGE_MAP(CWPDS_WebPagesPage, CPropertyPage)

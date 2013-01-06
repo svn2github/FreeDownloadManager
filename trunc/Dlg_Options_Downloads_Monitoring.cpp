@@ -12,6 +12,7 @@
 #include "FolderBrowser.h"
 #include "vistafx/vistafx.h"
 #include "DlgElevateRequired.h"
+#include "vmsElevatedFdm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -63,6 +64,12 @@ BOOL CDlg_Options_Downloads_Monitoring::OnInitDialog()
 	
 	BOOL bFF = _App.Monitor_Firefox () && vmsFirefoxMonitoring::IsInstalled () &&
 		vmsFirefoxMonitoring::IsFlashGotInstalled () == false;
+	if (bFF)
+	{
+		bool bEnabled;
+		if (vmsFirefoxMonitoring::IsEnabledInFirefox (bEnabled) && !bEnabled)
+			bFF = FALSE;
+	}
 	CheckDlgButton (IDC_FIREFOX, bFF ? BST_CHECKED : BST_UNCHECKED);
 	
 	
@@ -139,6 +146,24 @@ BOOL CDlg_Options_Downloads_Monitoring::Apply()
 		bFF = FALSE;
 	}
 	if (bFF)
+	{
+		DWORD dwResult = 0;
+		((CFdmApp*)AfxGetApp ())->CheckFirefoxExtension (&dwResult);
+		if (dwResult)
+		{
+			if (!(dwResult & (1<<1)))
+			{
+				CheckDlgButton (IDC_FIREFOX, BST_UNCHECKED);
+				bFF = FALSE;
+			}
+			else
+			{
+				
+				_App.get_SettingsStore ()->WriteProfileInt (_T ("State"), _T ("FfExtChecked"), FALSE);
+			}
+		}
+	}
+	if (bFF)
 		dwMUSO |= MONITOR_USERSWITCHEDON_FIREFOX;
 	_App.Monitor_Firefox (bFF);
 	if (bFF)
@@ -149,7 +174,10 @@ BOOL CDlg_Options_Downloads_Monitoring::Apply()
 	{
 		if (bIE2 && _IECatchMgr.IsMonitoringDllRegistered () == FALSE)
 		{
-			if (_IECatchMgr.ActivateIE2 (TRUE) == FALSE)
+			BOOL bOK = _IECatchMgr.InstallIeIntegration (TRUE, IS_PORTABLE_MODE);
+			if (!bOK)
+				bOK = vmsElevatedFdm::o ().InstallIeIntegration (true);
+			if (!bOK)
 			{
 				MessageBox (LS (L_ERRIE), LS (L_ERR), MB_ICONERROR);
 				CheckDlgButton (IDC_IE2, bIE2Active ? BST_CHECKED : BST_UNCHECKED);

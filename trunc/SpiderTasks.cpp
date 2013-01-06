@@ -394,7 +394,9 @@ void CSpiderTasks::OnSpiderSchedule()
 	if (vDlds.size () == 0)
 		return;
 
-	fsSchedule task;
+	
+	fsScheduleEx schSheduleParam;
+	fsSchedule& task = schSheduleParam.schTask;
 	fsSchedule* pTask = mgr->GetScheduleDLTask (vDlds, TRUE);
 	BOOL bCreate = pTask == NULL;
 

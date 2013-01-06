@@ -10,6 +10,7 @@
 #endif 
 
 #include "fsDownload.h"
+#include "vmsPersistObject.h"
 
 struct vmsMediaFileConvertSettings
 {
@@ -27,7 +28,7 @@ enum vmsMediaConvertMgr_OptionsSource
 	MCM_OS_SHOW_OPTIONS_UI,
 };
 
-class vmsMediaConvertMgr  
+class vmsMediaConvertMgr : public vmsPersistObject
 {
 public:
 	
@@ -40,7 +41,10 @@ public:
 	BOOL SaveState();
 	
 	void AddTask (vmsDownloadSmartPtr dld, const vmsMediaFileConvertSettings &stgs);
-	void QueryStoringState(); 
+	
+	
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
 
 	vmsMediaConvertMgr();
 	virtual ~vmsMediaConvertMgr();
@@ -48,16 +52,34 @@ public:
 protected:
 	int FindDownload (vmsDownloadSmartPtr dld);
 	static DWORD WINAPI _threadConvertMediaFile(LPVOID lp);
+
+	struct vmsConvertMediaFileContext;
+
 	
-	struct vmsConvertMediaFileContext
+	typedef bool (*CtfxLoadEventHandler)(int nId, vmsMediaConvertMgr::vmsConvertMediaFileContext* ctx, void* pvData);
+	
+	struct vmsConvertMediaFileContext : public vmsObject, public vmsPersistObject
 	{
 		vmsDownloadSmartPtr dld;
 		vmsMediaFileConvertSettings stgs;
-	};
-	std::vector <vmsConvertMediaFileContext> m_vTasks;
 
-	bool m_bIsStateChanged; 
-	vmsCriticalSection m_csStateChangeGuard;
+		
+		void* pvData;
+		CtfxLoadEventHandler clehEventHandler;
+
+		virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+		virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	};
+
+	typedef vmsObjectSmartPtr<vmsMediaConvertMgr::vmsConvertMediaFileContext> vmsConvertMediaFileContextSmartPtr;
+
+	std::vector <vmsConvertMediaFileContextSmartPtr> m_vTasks;
+
+	static bool FdmCtfxLoadEventhandler(int nId, vmsMediaConvertMgr::vmsConvertMediaFileContext* ctx, void* pvData);
+
+	
+	
+	
 
 	
 	#define MCMGRFILE_CURRENT_VERSION	(1)

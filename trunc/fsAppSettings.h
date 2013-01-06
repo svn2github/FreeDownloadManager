@@ -111,6 +111,8 @@ public:
 	CString Monitor_ChromePDInstalledTo();
 	void Monitor_SafariPDInstalledTo (LPCSTR psz);
 	CString Monitor_SafariPDInstalledTo();
+	BOOL Monitor_ForceEnableChromeOnce ();
+	void Monitor_ForceEnableChromeOnce (BOOL);
 	void Firefox_PortableVersionPath (LPCSTR psz);
 	CString Firefox_PortableVersionPath();
 	void Bittorrent_RequiredRatio (float f);
@@ -544,6 +546,8 @@ public:
 	BOOL View_SWBar();
 	void Update_LastCheck (SYSTEMTIME time);
 	BOOL Update_LastCheck (SYSTEMTIME* time);
+	void Update_LastCheck2 (SYSTEMTIME time);
+	BOOL Update_LastCheck2 (SYSTEMTIME* time);
 	void Update_URL (LPCSTR psz);
 	CString Update_URL();
 	void Prg_MinToTray (BOOL b);
@@ -668,6 +672,7 @@ protected:
 	DWORD m_dwWriteCacheSize;
 	DWORD m_dwNonUtf8NameFixed;
 	BOOL m_bPreventStandbyWhileDownloading;
+	BOOL m_bDontSaveLogs;
 	BOOL LoadStringList(LPCSTR pszSubKey, LPCSTR pszValue, CStringList *v);
 	void SaveStringList(LPCSTR pszSubKey, LPCSTR pszValue, CStringList &v);
 public:

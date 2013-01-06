@@ -22,7 +22,8 @@ public:
 
 	~CCreateDownloadsDlg();
 	CString m_strRootUrl;	
-	fsSchedule m_task;
+	
+	fsScheduleEx m_schScheduleParam;
 	BOOL m_bSort;			
 	fs::tree <fsFileInfo*>* m_pFileList;	
 	CCreateDownloadsDlg(CWnd* pParent = NULL);   

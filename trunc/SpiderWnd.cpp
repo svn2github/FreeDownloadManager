@@ -252,7 +252,7 @@ fsWebPageDownloader* CSpiderWnd::AddWebPage(LPCSTR pszStartUrl, BOOL bReqTopMost
 
 	m_mgr.Add (wpd);
 
-	if (wpd->Create (dlg.m_strUrl, dlg.m_bAutoStart, dlg.m_bScheduled ? &dlg.m_task : NULL) == FALSE)
+	if (wpd->Create (dlg.m_strUrl, dlg.m_bAutoStart, dlg.m_bScheduled ? &dlg.m_schScheduleParam.schTask : NULL) == FALSE)
 		m_mgr.Delete (wpd);
 	else
 		m_wndTasks.AddWebPage (wpd);

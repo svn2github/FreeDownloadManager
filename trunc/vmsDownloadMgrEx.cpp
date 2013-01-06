@@ -15,25 +15,48 @@ static char THIS_FILE[]=__FILE__;
 vmsDownloadMgrEx::vmsDownloadMgrEx()
 {
 	m_pMgr = NULL;
+	m_pTpMgr = NULL;
 }
 
 vmsDownloadMgrEx::~vmsDownloadMgrEx()
 {
+	DetachDownloadMgr ();
+}
+
+void vmsDownloadMgrEx::DetachDownloadMgr ()
+{
+	vmsPersistObject *pObj = NULL;
+	if (m_pMgr)
+		pObj = m_pMgr;
+	else if (m_spBtMgr)
+		pObj = m_spBtMgr;
+	else if (m_pTpMgr)
+		pObj = m_pTpMgr;
+	getPersistObjectChildren ()->removePersistObject (pObj);
 	SAFE_DELETE (m_pMgr);
+	m_spBtMgr = NULL;
+	SAFE_DELETE (m_pTpMgr);
 }
 
 void vmsDownloadMgrEx::Attach(fsDownloadMgr *pMgr)
 {
-	SAFE_DELETE (m_pMgr);
-	m_pBtMgr = NULL;
+	DetachDownloadMgr ();
 	m_pMgr = pMgr;
+	getPersistObjectChildren ()->addPersistObject (m_pMgr);
 }
 
 void vmsDownloadMgrEx::Attach(vmsBtDownloadManager *pBtMgr)
 {
-	SAFE_DELETE (m_pMgr);
-	m_pBtMgr = NULL;
-	m_pBtMgr = pBtMgr;
+	DetachDownloadMgr ();
+	m_spBtMgr = pBtMgr;
+	getPersistObjectChildren ()->addPersistObject (m_spBtMgr);
+}
+
+void vmsDownloadMgrEx::Attach(vmsTpDownloadMgr *pTpMgr)
+{
+	DetachDownloadMgr ();
+	m_pTpMgr = pTpMgr;
+	getPersistObjectChildren ()->addPersistObject (m_pTpMgr);
 }
 
 fsDownloadMgr* vmsDownloadMgrEx::GetDownloadMgr()
@@ -43,31 +66,42 @@ fsDownloadMgr* vmsDownloadMgrEx::GetDownloadMgr()
 
 vmsBtDownloadManager* vmsDownloadMgrEx::GetBtDownloadMgr()
 {
-	return m_pBtMgr;
+	return m_spBtMgr;
+}
+
+vmsTpDownloadMgr* vmsDownloadMgrEx::GetTpDownloadMgr()
+{
+	return m_pTpMgr;
 }
 
 fsString vmsDownloadMgrEx::get_OutputFilePathName()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDP ()->pszFileName;
-	else
-		return m_pBtMgr->get_OutputFilePathName ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->get_OutputFilePathName ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->get_OutputFilePathName ();
 }
 
 float vmsDownloadMgrEx::GetPercentDone()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->GetPercentDone ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->GetPercentDone ();
 	else
-		return m_pBtMgr->GetPercentDone ();
+		return m_pTpMgr->GetPercentDone ();
 }
 
 BOOL vmsDownloadMgrEx::IsLaunchWhenDone()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDP ()->dwFlags & DPF_STARTWHENDONE;
-	else
-		return m_pBtMgr->get_Flags () & BTDF_LAUNCH_WHEN_DONE;
+	else if (m_spBtMgr)
+		return m_spBtMgr->get_Flags () & BTDF_LAUNCH_WHEN_DONE;
+	else if (m_pTpMgr)
+		return m_pTpMgr->get_Flags () & BTDF_LAUNCH_WHEN_DONE;
 }
 
 fsResumeSupportType vmsDownloadMgrEx::IsResumeSupported()
@@ -82,16 +116,20 @@ BOOL vmsDownloadMgrEx::IsDone()
 {
 	if (m_pMgr)
 		return m_pMgr->IsDone ();
-	else
-		return m_pBtMgr->IsDone ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->IsDone ();
+	else if (m_pTpMgr)
+		m_pTpMgr->IsDone();
 }
 
 BOOL vmsDownloadMgrEx::IsRunning()
 {
 	if (m_pMgr)
 		return m_pMgr->IsRunning ();
-	else
-		return m_pBtMgr->IsRunning ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->IsRunning ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->IsRunning ();
 }
 
 BOOL vmsDownloadMgrEx::IsFileInitializedOnDisk()
@@ -104,78 +142,86 @@ BOOL vmsDownloadMgrEx::IsFileInitializedOnDisk()
 
 void vmsDownloadMgrEx::set_LaunchWhenDone(BOOL b)
 {
-	if (m_pMgr)
-	{
+	if (m_pMgr) {
 		if (b)
 			m_pMgr->GetDP ()->dwFlags |= DPF_STARTWHENDONE;
 		else
 			m_pMgr->GetDP ()->dwFlags &= ~DPF_STARTWHENDONE;
-	}
-	else
-	{
+
+		m_pMgr->setDirty();
+
+	} else if (m_spBtMgr) {
 		if (b)
-			m_pBtMgr->enable_Flags (BTDF_LAUNCH_WHEN_DONE);
+			m_spBtMgr->enable_Flags (BTDF_LAUNCH_WHEN_DONE);
 		else
-			m_pBtMgr->disable_Flags (BTDF_LAUNCH_WHEN_DONE);
+			m_spBtMgr->disable_Flags (BTDF_LAUNCH_WHEN_DONE);
+	} else if (m_pTpMgr) {
+		if (b)
+			m_pTpMgr->enable_Flags (BTDF_LAUNCH_WHEN_DONE);
+		else
+			m_pTpMgr->disable_Flags (BTDF_LAUNCH_WHEN_DONE);
 	}
-#ifndef FDM_DLDR__RAWCODEONLY
-	bool bIsQueryStoringDownloadListEnabled = false;
-	if (m_pMgr && m_pMgr->IsQueryStoringDownloadingListEnabled()) {
-		bIsQueryStoringDownloadListEnabled = true;
-	} else if (m_pBtMgr && m_pBtMgr->IsQueryStoringDownloadListEnable()) {
-		bIsQueryStoringDownloadListEnabled = true;
-	}
-	if (bIsQueryStoringDownloadListEnabled)
-		_DldsMgr.QueryStoringDownloadList();
-#endif
+
 }
 
 fsString vmsDownloadMgrEx::get_URL(BOOL bInclAuth)
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->get_URL (bInclAuth);
-	else
-		return m_pBtMgr->get_URL ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->get_URL ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->get_URL ();
 }
 
 int vmsDownloadMgrEx::GetNumberOfSections()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->GetNumberOfSections ();
-	else
-		return m_pBtMgr->GetNumberOfSections ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->GetNumberOfSections ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->GetNumberOfSections ();
 }
 
 UINT64 vmsDownloadMgrEx::GetLDFileSize()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->GetLDFileSize ();
-	else
-		return m_pBtMgr->GetTotalFilesSize ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->GetTotalFilesSize ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->GetTotalFilesSize ();
 }
 
 UINT64 vmsDownloadMgrEx::GetDownloadedBytesCount()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->GetDownloadedBytesCount ();
-	else
-		return m_pBtMgr->GetDownloadedBytesCount ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->GetDownloadedBytesCount ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->GetDownloadedBytesCount ();
 }
 
 BOOL vmsDownloadMgrEx::IsDownloading()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->IsDownloading ();
-	else
-		return m_pBtMgr->IsDownloading ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->IsDownloading ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->IsDownloading ();
 }
 
 UINT64 vmsDownloadMgrEx::GetSSFileSize()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->GetSSFileSize ();
-	else
-		return m_pBtMgr->GetTotalFilesSize ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->GetTotalFilesSize ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->GetTotalFilesSize ();
 }
 
 void vmsDownloadMgrEx::GetSectionInfo(int nIndex, vmsSectionInfo *sect, BOOL bNoCacheAccounting)
@@ -188,9 +234,13 @@ void vmsDownloadMgrEx::GetSectionInfo(int nIndex, vmsSectionInfo *sect, BOOL bNo
 		sect->uDCurrent = s.uDCurrent;
 		sect->uDEnd = s.uDEnd;
 	}
-	else
+	else if (m_spBtMgr)
 	{
-		m_pBtMgr->GetSectionInfo (nIndex, sect);
+		m_spBtMgr->GetSectionInfo (nIndex, sect);
+	}
+	else if(m_pTpMgr)
+	{
+		m_pTpMgr->GetSectionInfo (nIndex, sect);
 	}
 }
 
@@ -198,8 +248,10 @@ int vmsDownloadMgrEx::GetDownloadingSectionCount()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->GetDownloadingSectionCount ();
-	else
-		return m_pBtMgr->GetDownloadingSectionCount ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->GetDownloadingSectionCount ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->GetDownloadingSectionCount ();
 }
 
 void vmsDownloadMgrEx::CreateOneMoreSection()
@@ -222,56 +274,66 @@ UINT64 vmsDownloadMgrEx::GetBytesLeft()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->GetBytesLeft ();
-	else
-		return m_pBtMgr->GetTotalFilesSize () - m_pBtMgr->GetDownloadedBytesCount ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->GetTotalFilesSize () - m_spBtMgr->GetDownloadedBytesCount ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->GetTotalFilesSize () - m_pTpMgr->GetDownloadedBytesCount ();
 }
 
 UINT vmsDownloadMgrEx::GetSpeed()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->GetSpeed ();
-	else
-		return m_pBtMgr->GetSpeed ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->GetSpeed ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->GetSpeed ();
 }
 
 BOOL vmsDownloadMgrEx::MoveToFolder(LPCSTR pszPath)
 {
 	if (m_pMgr)
 		return m_pMgr->MoveToFolder (pszPath);
-	else
-		return m_pBtMgr->MoveToFolder (pszPath);
+	else if (m_spBtMgr)
+		return m_spBtMgr->MoveToFolder (pszPath);
+	else if (m_pTpMgr)
+		return m_pTpMgr->MoveToFolder (pszPath);
 }
 
 BOOL vmsDownloadMgrEx::IsStoppedByUser()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->IsStoppedByUser ();
-	else
-		return m_pBtMgr->IsStoppedByUser ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->IsStoppedByUser ();
 }
 
 BOOL vmsDownloadMgrEx::IsCantStart()
 {
 	if (m_pMgr)
 		return m_pMgr->IsCantStart ();
-	else
-		return m_pBtMgr->IsCantStart ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->IsCantStart ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->IsCantStart ();
 }
 
 fsInternetResult vmsDownloadMgrEx::RestartDownloading()
 {
 	if (m_pMgr)
 		return m_pMgr->RestartDownloading ();
-	else
-		return m_pBtMgr->RestartDownloading ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->RestartDownloading ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->RestartDownloading ();
 }
 
 BOOL vmsDownloadMgrEx::IsDescriptionFileShouldBeGenerated()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDP ()->dwFlags & DPF_GENERATEDESCFILE;
-	else
-		return m_pBtMgr->get_Flags () & BTDF_GENERATE_DESC_FILE;
+	else if (m_spBtMgr)
+		return m_spBtMgr->get_Flags () & BTDF_GENERATE_DESC_FILE;
 }
 
 BOOL vmsDownloadMgrEx::IsHtmlSpiderDownload()
@@ -286,32 +348,36 @@ fsInternetResult vmsDownloadMgrEx::StartDownloading()
 {
 	if (m_pMgr)
 		return m_pMgr->StartDownloading ();
-	else
-		return m_pBtMgr->StartDownloading ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->StartDownloading ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->StartDownloading ();
 }
 
 void vmsDownloadMgrEx::StopDownloading()
 {
 	if (m_pMgr)
 		m_pMgr->StopDownloading ();
-	else
-		m_pBtMgr->StopDownloading ();
+	else if (m_spBtMgr)
+		m_spBtMgr->StopDownloading ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->StopDownloading ();
 }
 
 void vmsDownloadMgrEx::LimitTraffic(UINT uLimit)
 {
 	if (m_pMgr)
 		m_pMgr->GetDownloader ()->LimitTraffic (uLimit);
-	else
-		m_pBtMgr->LimitTraffic (uLimit);
+	else if (m_spBtMgr)
+		m_spBtMgr->LimitTraffic (uLimit);
 }
 
 UINT vmsDownloadMgrEx::GetTrafficLimit()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->GetTrafficLimit ();
-	else
-		return m_pBtMgr->GetTrafficLimit ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->GetTrafficLimit ();
 }
 
 void vmsDownloadMgrEx::UseDetailedLog(BOOL b)
@@ -319,39 +385,47 @@ void vmsDownloadMgrEx::UseDetailedLog(BOOL b)
 	if (m_pMgr)
 		m_pMgr->GetDownloader ()->UseDetailedLog (b);
 	else
-		m_pBtMgr->UseDetailedLog (b);
+		m_spBtMgr->UseDetailedLog (b);
 }
 
 BOOL vmsDownloadMgrEx::DeleteFile()
 {
 	if (m_pMgr)
 		return m_pMgr->DeleteFile ();
-	else
-		return m_pBtMgr->DeleteFile ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->DeleteFile ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->DeleteFile ();
 }
 
 BOOL vmsDownloadMgrEx::IsDontConfirmLaunchWhenDone()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDP ()->dwFlags & DPF_STARTWHENDONE_NOCONF;
-	else
-		return m_pBtMgr->get_Flags () & BTDF_LAUNCH_WHEN_DONE_NO_CONFIRM;
+	else if (m_spBtMgr)
+		return m_spBtMgr->get_Flags () & BTDF_LAUNCH_WHEN_DONE_NO_CONFIRM;
+	else if (m_pTpMgr)
+		return m_pTpMgr->get_Flags () & BTDF_LAUNCH_WHEN_DONE_NO_CONFIRM;
 }
 
 fsInternetResult vmsDownloadMgrEx::SetToRestartState()
 {
 	if (m_pMgr)
 		return m_pMgr->SetToRestartState ();
-	else
-		return m_pBtMgr->SetToRestartState ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->SetToRestartState ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->SetToRestartState ();
 }
 
 int vmsDownloadMgrEx::GetConnectionCount()
 {
 	if (m_pMgr)
 		return m_pMgr->GetDownloader ()->GetRunningSectionCount ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->get_ConnectionCount ();
 	else
-		return m_pBtMgr->get_ConnectionCount ();
+		return m_pTpMgr->get_ConnectionCount ();
 }
 
 BOOL vmsDownloadMgrEx::SaveState(LPBYTE pb, DWORD *pdwSize)
@@ -360,7 +434,8 @@ BOOL vmsDownloadMgrEx::SaveState(LPBYTE pb, DWORD *pdwSize)
 		(*pdwSize)--;
 
 	BOOL bOk = m_pMgr ? m_pMgr->SaveState (pb ? pb + 1 : NULL, pdwSize) :
-		m_pBtMgr->SaveState (pb ? pb + 1 : NULL, pdwSize);
+		m_spBtMgr ? m_spBtMgr->SaveState (pb ? pb + 1 : NULL, pdwSize) :
+		m_pTpMgr ? m_pTpMgr->SaveState (pb ? pb + 1 : NULL, pdwSize) : false;
 
 	(*pdwSize)++;
 
@@ -368,7 +443,11 @@ BOOL vmsDownloadMgrEx::SaveState(LPBYTE pb, DWORD *pdwSize)
 		return FALSE;
 
 	if (pb)
-		*pb = m_pMgr == NULL;
+	{
+		if (m_pMgr) *pb = 0;
+		else if (m_spBtMgr) *pb = 1;
+		else if (m_pTpMgr) *pb = 2;
+	}
 
 	return bOk;
 }
@@ -378,25 +457,31 @@ BOOL vmsDownloadMgrEx::LoadState(LPBYTE lpBuffer, LPDWORD lpdwSize, WORD wVer)
 #define CHECK_BOUNDS(need) if (need < 0 || need > int(*lpdwSize) - (pB - LPBYTE (lpBuffer))) return FALSE;
 	LPBYTE pB = LPBYTE (lpBuffer);
 
-	BYTE bBitTorrent = FALSE;
+	BYTE bBitTorrent = FALSE, bTransportProtocol = FALSE;
 	DWORD dwMgrStateSize = *lpdwSize;
 	DWORD dwConsumed = 0;
-
+	
+	BOOL bOk;
 	if (wVer > 9)	
 	{
 		CHECK_BOUNDS (sizeof (BYTE));
-		bBitTorrent = *lpBuffer++;
+		const int nMgr = *lpBuffer++;
+		bBitTorrent = (nMgr == 1);
+		if (wVer > 13) bTransportProtocol = (nMgr == 2);
 		dwConsumed++;
 		dwMgrStateSize--;
 	}
 
-	BOOL bOk;
-
-	if (bBitTorrent)
+	if (bTransportProtocol)
+	{
+		Attach (new vmsTpDownloadMgr);
+		bOk = m_pTpMgr->LoadState (lpBuffer, &dwMgrStateSize, wVer);
+	}
+	else if (bBitTorrent)
 	{
 		vmsBtDownloadManagerPtr spMgr; spMgr.CreateInstance ();
 		Attach (spMgr);
-		bOk = m_pBtMgr->LoadState (lpBuffer, &dwMgrStateSize, wVer);
+		bOk = m_spBtMgr->LoadState (lpBuffer, &dwMgrStateSize, wVer);
 	}
 	else
 	{
@@ -415,7 +500,12 @@ BOOL vmsDownloadMgrEx::LoadState(LPBYTE lpBuffer, LPDWORD lpdwSize, WORD wVer)
 
 BOOL vmsDownloadMgrEx::IsBittorrent()
 {
-	return m_pBtMgr != NULL;
+	return m_spBtMgr != NULL;
+}
+
+BOOL vmsDownloadMgrEx::IsTp()
+{
+	return m_pTpMgr != NULL;
 }
 
 void vmsDownloadMgrEx::GetSplittedSectionsList(std::vector <vmsSectionInfo> &v)
@@ -423,8 +513,8 @@ void vmsDownloadMgrEx::GetSplittedSectionsList(std::vector <vmsSectionInfo> &v)
 	try{
 
 		std::vector <vmsSectionInfo> vBtSects;
-		if (m_pBtMgr)
-			m_pBtMgr->GetSectionsInfo (vBtSects);
+		if (m_spBtMgr)
+			m_spBtMgr->GetSectionsInfo (vBtSects);
 		
 		v.clear ();
 		size_t num = GetNumberOfSections ();
@@ -433,7 +523,7 @@ void vmsDownloadMgrEx::GetSplittedSectionsList(std::vector <vmsSectionInfo> &v)
 		for (size_t i = 0; i < num; i++)
 		{
 			vmsSectionInfo sect;
-			if (m_pBtMgr)
+			if (m_spBtMgr)
 				sect = vBtSects [i];
 			else
 				GetSectionInfo (i, &sect);
@@ -463,16 +553,20 @@ BOOL vmsDownloadMgrEx::IsReservingDiskSpace()
 {
 	if (m_pMgr)
 		return (m_pMgr->get_State () & DS_RESERVINGSPACE) != 0;
-	else
-		return m_pBtMgr->get_State () == BTDSE_ALLOCATING;
+	else if (m_spBtMgr)
+		return m_spBtMgr->get_State () == BTDSE_ALLOCATING;
+	else if (m_pTpMgr)
+		return FALSE;
 }
 
 int vmsDownloadMgrEx::get_ReservingDiskSpaceProgress()
 {
 	if (m_pMgr)
 		return m_pMgr->get_ReservingDiskSpaceProgress ();
-	else
-		return m_pBtMgr->get_CurrentTaskProgress ();
+	else if (m_spBtMgr)
+		return m_spBtMgr->get_CurrentTaskProgress ();
+	else if (m_pTpMgr)
+		return m_pTpMgr->GetPercentDone ();
 }
 
 void vmsDownloadMgrEx::Do_OpenFolder()
@@ -485,8 +579,8 @@ void vmsDownloadMgrEx::Do_OpenFolder()
 	{
 		CString strFileName = get_OutputFilePathName ();
 
-		if (m_pBtMgr && m_pBtMgr->get_FileCount () > 1)
-			strFileName += m_pBtMgr->get_RootFolderName ();
+		if (m_spBtMgr && m_spBtMgr->get_FileCount () > 1)
+			strFileName += m_spBtMgr->get_RootFolderName ();
 
 		if (GetFileAttributes (strFileName) == DWORD (-1))
 		{
@@ -521,8 +615,8 @@ vmsDownloaderWithNetworkUsageAdjustment* vmsDownloadMgrEx::getDownloaderWithNetw
 {
 	if (m_pMgr)
 		return m_pMgr;
-	if (m_pBtMgr)
-		return m_pBtMgr;
+	if (m_spBtMgr)
+		return m_spBtMgr;
 	return NULL;
 }
 

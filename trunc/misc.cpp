@@ -415,6 +415,7 @@ void DPEntry_SetValue (DLDS_LIST *pv, int offset, int size, BOOL bString, const 
 		{
 			memcpy (dp, lpNewVal, size);
 		}
+		pv->at (i)->pMgr->GetDownloadMgr ()->setDirty();
 	}
 }
 
@@ -424,6 +425,7 @@ void DPEntry_SetValue_BitMask (DLDS_LIST *pv, int offset, DWORD dwMask)
 	{
 		LPDWORD dp = (LPDWORD) (LPBYTE (pv->at (i)->pMgr->GetDownloadMgr ()->GetDP ()) + offset);
 		*dp |= dwMask;
+		pv->at (i)->pMgr->GetDownloadMgr ()->setDirty();
 	}
 }
 
@@ -433,6 +435,7 @@ void DPEntry_UnsetValue_BitMask (DLDS_LIST *pv, int offset, DWORD dwMask)
 	{
 		LPDWORD dp = (LPDWORD) (LPBYTE (pv->at (i)->pMgr->GetDownloadMgr ()->GetDP ()) + offset);
 		*dp &= ~dwMask;
+		pv->at (i)->pMgr->GetDownloadMgr ()->setDirty();
 	}
 }
 
@@ -461,6 +464,7 @@ void DNPEntry_SetValue (DLDS_LIST *pv, int offset, int size, BOOL bString, const
 		{
 			memcpy (dnp, lpNewVal, size);
 		}
+		pv->at (i)->pMgr->GetDownloadMgr ()->setDirty();
 	}
 }
 
@@ -491,6 +495,7 @@ void DNPEntry_SetValue_BitMask (DLDS_LIST *pv, int offset, DWORD dwMask)
 	{
 		LPDWORD dnp = (LPDWORD) (LPBYTE (pv->at (i)->pMgr->GetDownloadMgr ()->GetDNP ()) + offset);
 		*dnp |= dwMask;
+		pv->at (i)->pMgr->GetDownloadMgr ()->setDirty();
 	}
 }
 
@@ -500,6 +505,7 @@ void DNPEntry_UnsetValue_BitMask (DLDS_LIST *pv, int offset, DWORD dwMask)
 	{
 		LPDWORD dnp = (LPDWORD) (LPBYTE (pv->at (i)->pMgr->GetDownloadMgr ()->GetDNP ()) + offset);
 		*dnp &= ~dwMask;
+		pv->at (i)->pMgr->GetDownloadMgr ()->setDirty();
 	}
 }
 

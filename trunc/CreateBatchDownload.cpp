@@ -88,15 +88,15 @@ BOOL CCreateBatchDownload::OnInitDialog()
 	m_btnOutFolderSetDefault.SetIcon (SICO (IDI_SETFOLDERDEFAULT));
 
 	
-	m_task.hts.enType = HTS_ONCE;
-	m_task.hts.last.dwHighDateTime = m_task.hts.last.dwLowDateTime = UINT_MAX;
+	m_schScheduleParam.schTask.hts.enType = HTS_ONCE;
+	m_schScheduleParam.schTask.hts.last.dwHighDateTime = m_schScheduleParam.schTask.hts.last.dwLowDateTime = UINT_MAX;
 	SYSTEMTIME time;
 	GetLocalTime (&time);
 	if (++time.wHour > 23)
 		time.wHour = 0;
 	time.wMinute = 0;
-	SystemTimeToFileTime (&time, &m_task.hts.next);
-	m_task.uWaitForConfirmation = 0;
+	SystemTimeToFileTime (&time, &m_schScheduleParam.schTask.hts.next);
+	m_schScheduleParam.schTask.uWaitForConfirmation = 0;
 
 	
 	LPCSTR pszUrl = _ClipbrdMgr.Text ();
@@ -471,7 +471,7 @@ void CCreateBatchDownload::OnSettime()
 {
 	CScheduleSheet sheet (LS (L_SCHEDULEDLDS), this);
 
-	sheet.Init (&m_task, FALSE);
+	sheet.Init (&m_schScheduleParam.schTask, FALSE);
 	
 	_DlgMgr.OnDoModal (&sheet);
 
@@ -715,7 +715,10 @@ void CCreateBatchDownload::OnOK()
 		vmsDownloadsGroupSmartPtr pGrp = _DldsGrps.FindGroup (_App.NewDL_GroupId ());
 		if (pGrp != NULL) {
 			pGrp->strOutFolder = strOutFolder;
-			_DldsGrps.QueryStoringGroupsInformation();
+			pGrp->setDirty();
+			
+			
+			
 		}
 	}
 
@@ -825,7 +828,7 @@ void CCreateBatchDownload::GenerateAndAddDownloads()
 		fsDownloadsMgr::Download_CloneSettings (m_pvDownloads->at (i), m_dld);
 
 	
-	_pwndDownloads->CreateDownloads (*m_pvDownloads, m_bScheduled ? &m_task : NULL);
+	_pwndDownloads->CreateDownloads (*m_pvDownloads, m_bScheduled ? &m_schScheduleParam.schTask : NULL);
 
 	FreeDownloads ();
 }

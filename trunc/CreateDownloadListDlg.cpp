@@ -85,15 +85,15 @@ BOOL CCreateDownloadListDlg::OnInitDialog()
 	m_btnSetTime.SetIcon (SICO (IDI_SETTIME));
 
 	
-	m_task.hts.enType = HTS_ONCE;
-	m_task.hts.last.dwHighDateTime = m_task.hts.last.dwLowDateTime = UINT_MAX;
+	m_schScheduleParam.schTask.hts.enType = HTS_ONCE;
+	m_schScheduleParam.schTask.hts.last.dwHighDateTime = m_schScheduleParam.schTask.hts.last.dwLowDateTime = UINT_MAX;
 	SYSTEMTIME time;
 	GetLocalTime (&time);
 	if (++time.wHour > 23)
 		time.wHour = 0;
 	time.wMinute = 0;
-	SystemTimeToFileTime (&time, &m_task.hts.next);
-	m_task.uWaitForConfirmation = 0;
+	SystemTimeToFileTime (&time, &m_schScheduleParam.schTask.hts.next);
+	m_schScheduleParam.schTask.uWaitForConfirmation = 0;
 
 	
 	
@@ -355,7 +355,10 @@ void CCreateDownloadListDlg::OnOK()
 		vmsDownloadsGroupSmartPtr pGrp = _DldsGrps.FindGroup (_App.NewDL_GroupId ());
 		if (pGrp != NULL) {
 			pGrp->strOutFolder = strOutFolder;
-			_DldsGrps.QueryStoringGroupsInformation();
+			pGrp->setDirty();
+			
+			
+			
 		}
 	}
 
@@ -446,7 +449,7 @@ BOOL CCreateDownloadListDlg::AddDownloads()
 		return FALSE;
 
 	
-	_pwndDownloads->CreateDownloads (*pvpDlds, m_bScheduled ? &m_task : NULL);
+	_pwndDownloads->CreateDownloads (*pvpDlds, m_bScheduled ? &m_schScheduleParam.schTask : NULL);
 
 	delete pvpDlds;
 
@@ -598,7 +601,7 @@ void CCreateDownloadListDlg::OnSettime()
 {
 	CScheduleSheet sheet (LS (L_SCHEDULEDLDS), this);
 
-	sheet.Init (&m_task, FALSE);
+	sheet.Init (&m_schScheduleParam.schTask, FALSE);
 	
 	_DlgMgr.OnDoModal (&sheet);
 

@@ -22,7 +22,8 @@ public:
 	
 	BOOL m_bScheduled;
 	vmsDownloadSmartPtr m_dld;
-	fsSchedule m_task;
+	
+	fsScheduleEx m_schScheduleParam;
 	CCreateDownloadFromTorrentFileDlg(CWnd* pParent = NULL);   
 
 	//{{AFX_DATA(CCreateDownloadFromTorrentFileDlg)

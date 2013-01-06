@@ -78,6 +78,8 @@ BOOL CBtDld_General::OnInitDialog()
 
 	if (i == m_pvDlds->size ())	
 		m_wndGroups.SelectGroup (dld0->pGroup);
+	else
+		m_wndGroups.SelectGroup (NULL);
 
 	for (i = 1; i < m_pvDlds->size (); i++)
 	{
@@ -138,13 +140,6 @@ void CBtDld_General::OnUselogin()
 
 BOOL CBtDld_General::OnApply() 
 {
-	CQueryStoringDownloadListGuard<fsDownloadsMgr> queryGuard(&_DldsMgr);
-
-	bool bDontQueryStoringDownloadList = false;
-	if (m_pvDlds->size () > 0 && m_pvDlds->at(0) && m_pvDlds->at(0)->pMgr && m_pvDlds->at(0)->pMgr->GetBtDownloadMgr()) {
-		bDontQueryStoringDownloadList = m_pvDlds->at(0)->pMgr->GetBtDownloadMgr()->IsQueryStoringDownloadListEnable();
-	}
-
 	vmsDownloadsGroupSmartPtr pGroup = m_wndGroups.GetSelectedGroup ();
 	if (pGroup != NULL)
 	{
@@ -156,8 +151,8 @@ BOOL CBtDld_General::OnApply()
 				m_pvDlds->at (i)->pGroup = pGroup;
 				pGroup->cDownloads++;
 				m_pvDlds->at (i)->pMgr->MoveToFolder (pGroup->strOutFolder);
-				if (!bDontQueryStoringDownloadList)
-					queryGuard.QueryStoringDownloadList(); 
+				
+				m_pvDlds->at (i)->setDirty();
 			}
 		}
 
@@ -175,8 +170,8 @@ BOOL CBtDld_General::OnApply()
 		for (size_t i = 0; i < m_pvDlds->size (); i++)
 		{
 			m_pvDlds->at (i)->strComment = strComment;
-			if (!bDontQueryStoringDownloadList)
-				queryGuard.QueryStoringDownloadList();
+			
+			m_pvDlds->at (i)->setDirty();
 			_pwndDownloads->UpdateDownload (m_pvDlds->at (i));
 		}
 
@@ -194,8 +189,6 @@ BOOL CBtDld_General::OnApply()
 		}
 		for (size_t i = 0; i < m_pvDlds->size (); i++) {
 			m_pvDlds->at (i)->pMgr->GetBtDownloadMgr ()->set_TrackerLogin (strU, strP);
-			if (!bDontQueryStoringDownloadList)
-				queryGuard.QueryStoringDownloadList();
 		}
 	}
 	

@@ -37,7 +37,7 @@ var srcImage = EventElement;
 var srcAnchor = srcImage.parentElement;
 while(vbType(srcAnchor)!='HTMLAnchorElement'){
 var srcAnchor=srcAnchor.parentElement
-if(vbType(srcAnchor)=='Nothing'){
+if(srcAnchor==null || vbType(srcAnchor)=='Nothing'){
 AddLink(srcImage.href);
 return;
 }
@@ -49,8 +49,8 @@ var srcAnchor = EventElement;
 while(vbType(srcAnchor)!='HTMLAnchorElement'){
 //alert(srcAnchor);
 srcAnchor = srcAnchor.parentElement;
-if(vbType(srcAnchor)=="Nothing"){
-AddLink(external.menuArguments.location.href);
+if(srcAnchor==null || vbType(srcAnchor)=="Nothing"){
+AddLink(external.menuArguments.document.URL);
 return;
 }
 }

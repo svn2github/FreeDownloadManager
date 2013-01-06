@@ -13,11 +13,219 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Нейтральный resources
+// Russian (Russia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_OPTIONS_SITEMGR DIALOG 0, 0, 313, 229
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "Use Site Manager to store my passwords",IDC_USE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,15,228,9
+    CONTROL         "Ask me whether to save password or not",IDC_ASK,"Button",BS_AUTORADIOBUTTON,13,29,222,8
+    CONTROL         "Don't ask me",IDC_DONTASK,"Button",BS_AUTORADIOBUTTON,13,42,222,8
+    CONTROL         "Delete all passwords before exit",IDC_AUTODEL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,58,219,9
+    PUSHBUTTON      "Delete all passwords",IDC_DELALL,121,72,114,16
+    GROUPBOX        "Passwords",IDC__PASSWORDS,0,0,313,99
+END
+
+IDD_ELEVATE_REQ DIALOG 0, 0, 202, 65
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Not enough rights"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "Continue",IDOK,89,44,52,14
+    PUSHBUTTON      "Cancel",IDCANCEL,143,44,52,14
+    ICON            "",IDC__ICON,7,7,21,20
+    LTEXT           "You'll need to provide administrator permission",IDC__MSG,39,7,156,25
+END
+
+IDD_IWMANAGERSPROPERTYPAGE DIALOGEX 0, 0, 320, 51
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Import Downloads"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CONTROL         "mTorrent",IDC_MTORRENET_MANAGER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,20,46,12
+    CONTROL         "Orbit Downloader",IDC_ORBIT_MANAGER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,32,69,12
+    LTEXT           "Choose the managers which you want to import the downloads from:",IDC_STATIC_CHOOSE_MANAGERS,7,7,306,13
+END
+
+IDD_IWPROGRESSPROPERTYPAGE DIALOGEX 0, 0, 320, 57
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Import Downloads"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_PROGRESS,"msctls_progress32",WS_BORDER,7,23,306,11
+    LTEXT           "Manager:",IDC_STATIC_MANAGER,7,7,298,10
+    LTEXT           "Processed:",IDC_STATIC_PROCESSED,7,40,95,10
+END
+
+IDD_IWRESULTPROPERTYPAGE DIALOGEX 0, 0, 322, 62
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Import Downloads"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Orbit Downloader",IDC_STATIC_ORBIT,7,33,60,10
+    LTEXT           "Successful:",IDC_ORBIT_SUCCESSFUL,7,44,73,10
+    LTEXT           "Failed:",IDC_ORBIT_FAILED,85,44,62,10
+    LTEXT           "Unprocessed:",IDC_ORBIT_UNPROCESSED,152,45,84,10
+    LTEXT           "Total:",IDC_ORBIT_TOTAL,241,44,74,10
+    LTEXT           "mTorrent",IDC_STATIC_MTORRENT,7,8,60,10
+    LTEXT           "Successful:",IDC_MTORRENT_SUCCESSFUL,7,19,73,10
+    LTEXT           "Failed:",IDC_MTORRENT_FAILED,85,19,62,10
+    LTEXT           "Unprocessed:",IDC_MTORRENT_UNPROCESSED,152,19,84,10
+    LTEXT           "Total:",IDC_MTORRENT_TOTAL,241,19,74,10
+END
+
+IDD_CREATETPDOWNLOAD DIALOGEX 0, 0, 265, 183
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "ОК",IDOK,155,162,50,14
+    PUSHBUTTON      "Отмена",IDCANCEL,208,162,50,14
+    COMBOBOX        IDC_URL,27,7,231,30,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "URL:",IDC_STATIC,8,9,18,8
+    LTEXT           "Download type:",IDC__DLDTYPE,8,24,82,9
+    COMBOBOX        IDC_DLDTYPE,96,22,162,12,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Group",IDC__GROUP,7,42,82,9
+    COMBOBOX        IDC_GROUPS,96,40,142,30,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "",IDC_CREATEGROUP,239,39,17,14,BS_ICON,WS_EX_CLIENTEDGE
+    LTEXT           "Save to folder:",IDC__SAVETO,7,57,175,9
+    COMBOBOX        IDC_OUTFOLDER,7,68,212,15,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "",IDC_CHOOSEFOLDER,221,68,17,14,BS_ICON,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "",IDC_OUTFOLDER_SETDEFAULT,239,68,17,14,BS_ICON,WS_EX_CLIENTEDGE
+    CONTROL         "-",IDC_FILEAUTO,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,96,235,8
+    LTEXT           "Save as",IDC__SAVEAS,7,109,84,8
+    EDITTEXT        IDC_SAVEAS,7,120,120,12,ES_AUTOHSCROLL
+    LTEXT           "Streaming speed:",IDC__STRSPEED,142,109,108,8
+    EDITTEXT        IDC_STRSPEED,142,120,40,12,ES_AUTOHSCROLL | ES_NUMBER | WS_DISABLED
+    CONTROL         "",IDC_STRSPEED_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | WS_DISABLED,182,120,11,13
+    CONTROL         "-",IDC_PLACEATTOP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,133,151,125,8
+    PUSHBUTTON      "Query Size",IDC_QSIZE,6,162,77,14,WS_DISABLED
+END
+
+IDD_TPDLD_GENERAL DIALOGEX 0, 0, 258, 175
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "-"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    GROUPBOX        "General information",IDC__GENERAL,7,7,244,69
+    LTEXT           "Torrent file URL:",IDC__TORRENTURL,17,18,223,8
+    EDITTEXT        IDC_URL,17,29,224,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Currently saved in:",IDC__SAVEDIN,17,44,220,8
+    EDITTEXT        IDC_SAVEIN,17,55,203,12,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "...",IDC_CHOOSEFOLDER,224,54,17,14,BS_ICON,WS_EX_CLIENTEDGE
+    LTEXT           "Group:",IDC__GROUP,17,88,74,9
+    GROUPBOX        "",IDC_STATIC,7,76,244,92
+    COMBOBOX        IDC_GROUPS,98,86,143,30,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_TORRENTMOVE DIALOGEX 0, 0, 363, 135
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Free Download Manager"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Retry",IDC_RETRY,33,114,93,14
+    PUSHBUTTON      "Abort",IDC_ABORT,142,114,75,14
+    PUSHBUTTON      "Abort All",IDC_ABORTALL,231,114,87,14
+    LTEXT           "-",IDC__MSG,34,7,322,106
+    ICON            "",IDC_DLGICON,7,7,21,20
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ELEVATE_REQ, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 195
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 58
+    END
+
+    IDD_IWMANAGERSPROPERTYPAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 44
+    END
+
+    IDD_IWPROGRESSPROPERTYPAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 313
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 50
+    END
+
+    IDD_IWRESULTPROPERTYPAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 315
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 55
+    END
+
+    IDD_CREATETPDOWNLOAD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 258
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 176
+    END
+
+    IDD_TPDLD_GENERAL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 251
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 168
+    END
+
+    IDD_TORRENTMOVE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 356
+        VERTGUIDE, 126
+        VERTGUIDE, 231
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 128
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_FDMFLVDOWNLOAD      REGISTRY                "FdmFlvDownload.rgs"
+#endif    // Russian (Russia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-#pragma code_page(1251)
+#pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1723,16 +1931,16 @@ BEGIN
     ID_INDICATOR_REC        "REC"
 END
 
-#endif    // Нейтральный resources
+#endif    // Neutral resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Нейтральный (по умолчанию) resources
+// Neutral (Default) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUD)
 LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
-#pragma code_page(1251)
+#pragma code_page(1252)
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -2805,6 +3013,10 @@ BEGIN
     BEGIN
     END
 
+    IDD_UNHEXC, DIALOG
+    BEGIN
+    END
+
     IDD_DLDALREXISTS, DIALOG
     BEGIN
     END
@@ -3017,6 +3229,7 @@ BEGIN
     BEGIN
         MENUITEM "Create &new download\tIns",   ID_DLDCREATE
         MENUITEM "batch",                       ID_DLDCREATEBATCH
+        MENUITEM "Create RTSP or MMS download", ID_DLD_TP
         MENUITEM SEPARATOR
         MENUITEM "&Start download",             ID_DLDSTART
         MENUITEM "St&op download",              ID_DLDSTOP
@@ -3371,8 +3584,8 @@ IDC_HAND_               CURSOR                  "res\\hand.cur"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,9,1249,0
- PRODUCTVERSION 3,9,1249,0
+ FILEVERSION 3,9,1281,0
+ PRODUCTVERSION 3,9,1281,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -3389,10 +3602,10 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FreeDownloadManager.ORG"
             VALUE "FileDescription", "Free Download Manager"
-            VALUE "FileVersion", "3.9.1249.0"
+            VALUE "FileVersion", "3.9.1281.0"
             VALUE "LegalCopyright", "Copyright © 2003-2012"
             VALUE "ProductName", "Free Download Manager"
-            VALUE "ProductVersion", "3.9"
+            VALUE "ProductVersion", "3.9.2 "
         END
     END
     BLOCK "VarFileInfo"
@@ -3401,150 +3614,12 @@ BEGIN
     END
 END
 
-#endif    // Нейтральный (по умолчанию) resources
+#endif    // Neutral (Default) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Русский (Россия) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
-LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
-#pragma code_page(1251)
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
-
-IDD_OPTIONS_SITEMGR DIALOG 0, 0, 313, 229
-STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
-FONT 8, "MS Shell Dlg"
-BEGIN
-    CONTROL         "Use Site Manager to store my passwords",IDC_USE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,15,228,9
-    CONTROL         "Ask me whether to save password or not",IDC_ASK,"Button",BS_AUTORADIOBUTTON,13,29,222,8
-    CONTROL         "Don't ask me",IDC_DONTASK,"Button",BS_AUTORADIOBUTTON,13,42,222,8
-    CONTROL         "Delete all passwords before exit",IDC_AUTODEL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,58,219,9
-    PUSHBUTTON      "Delete all passwords",IDC_DELALL,121,72,114,16
-    GROUPBOX        "Passwords",IDC__PASSWORDS,0,0,313,99
-END
-
-IDD_TORRENTMOVE DIALOGEX 0, 0, 363, 135
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Free Download Manager"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    PUSHBUTTON      "Retry",IDC_RETRY,33,114,93,14
-    PUSHBUTTON      "Abort",IDC_ABORT,142,114,75,14
-    PUSHBUTTON      "Abort All",IDC_ABORTALL,231,114,87,14
-    LTEXT           "-",IDC__MSG,34,7,322,106
-    ICON            "",IDC_DLGICON,7,7,21,20
-END
-
-IDD_ELEVATE_REQ DIALOG 0, 0, 202, 65
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Not enough rights"
-FONT 8, "MS Sans Serif"
-BEGIN
-    DEFPUSHBUTTON   "Continue",IDOK,89,44,52,14
-    PUSHBUTTON      "Cancel",IDCANCEL,143,44,52,14
-    ICON            "",IDC__ICON,7,7,21,20
-    LTEXT           "You'll need to provide administrator permission",IDC__MSG,39,7,156,25
-END
-
-IDD_IWMANAGERSPROPERTYPAGE DIALOGEX 0, 0, 320, 51
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Import Downloads"
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    CONTROL         "mTorrent",IDC_MTORRENET_MANAGER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,20,46,12
-    CONTROL         "Orbit Downloader",IDC_ORBIT_MANAGER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,32,69,12
-    LTEXT           "Choose the managers which you want to import the downloads from:",IDC_STATIC_CHOOSE_MANAGERS,7,7,306,13
-END
-
-IDD_IWPROGRESSPROPERTYPAGE DIALOGEX 0, 0, 320, 57
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Import Downloads"
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    CONTROL         "",IDC_PROGRESS,"msctls_progress32",WS_BORDER,7,23,306,11
-    LTEXT           "Manager:",IDC_STATIC_MANAGER,7,7,298,10
-    LTEXT           "Processed:",IDC_STATIC_PROCESSED,7,40,95,10
-END
-
-IDD_IWRESULTPROPERTYPAGE DIALOGEX 0, 0, 322, 62
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Import Downloads"
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    LTEXT           "Orbit Downloader",IDC_STATIC_ORBIT,7,33,60,10
-    LTEXT           "Successful:",IDC_ORBIT_SUCCESSFUL,7,44,73,10
-    LTEXT           "Failed:",IDC_ORBIT_FAILED,85,44,62,10
-    LTEXT           "Unprocessed:",IDC_ORBIT_UNPROCESSED,152,45,84,10
-    LTEXT           "Total:",IDC_ORBIT_TOTAL,241,44,74,10
-    LTEXT           "mTorrent",IDC_STATIC_MTORRENT,7,8,60,10
-    LTEXT           "Successful:",IDC_MTORRENT_SUCCESSFUL,7,19,73,10
-    LTEXT           "Failed:",IDC_MTORRENT_FAILED,85,19,62,10
-    LTEXT           "Unprocessed:",IDC_MTORRENT_UNPROCESSED,152,19,84,10
-    LTEXT           "Total:",IDC_MTORRENT_TOTAL,241,19,74,10
-END
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// DESIGNINFO
-//
-
-#ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO
-BEGIN
-    IDD_ELEVATE_REQ, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 195
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 58
-    END
-
-    IDD_IWMANAGERSPROPERTYPAGE, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 313
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 44
-    END
-
-    IDD_IWPROGRESSPROPERTYPAGE, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 313
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 50
-    END
-
-    IDD_IWRESULTPROPERTYPAGE, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 315
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 55
-    END
-END
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// REGISTRY
-//
-
-IDR_FDMFLVDOWNLOAD      REGISTRY                "FdmFlvDownload.rgs"
-#endif    // Русский (Россия) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// Английский (США) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
@@ -3801,6 +3876,24 @@ BEGIN
     PUSHBUTTON      "Measure again",IDC_MEASUREAGAIN,59,82,115,14
 END
 
+IDD_UNHEXC2 DIALOGEX 0, 0, 325, 207
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Free Download Manager - fatal error occured"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Send report",IDOK,188,186,64,14
+    ICON            "",IDC__UEICON,6,7,21,20
+    PUSHBUTTON      "Don't send",IDCANCEL,254,186,64,14
+    LTEXT           "Free Download Manager (fdm.exe) - fatal error (bug) occurred. Free Download Manager was terminated.",IDC__MSG1,36,7,282,20
+    LTEXT           "This fatal error is the result of unforeseen work of the program. You can help us fix this error by reporting it.",IDC__MSG2,36,34,282,17
+    LTEXT           "Please report this error to us.",IDC__MSG3,36,57,252,9
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,36,28,281,1
+    LTEXT           "Please provide description (if possible) of steps that leads to the bug (optional):",IDC__MSG9,36,70,283,16
+    EDITTEXT        IDC_DESCRIPTION,36,87,282,75,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | WS_VSCROLL | WS_HSCROLL
+    CONTROL         "Restart Free Download Manager automatically",IDC_RESTART,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,36,168,283,9
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3900,6 +3993,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 96
     END
+
+    IDD_UNHEXC2, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 319
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 176
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -3965,7 +4066,7 @@ BEGIN
     "X",            ID_APP_EXIT,            VIRTKEY, ALT, NOINVERT
 END
 
-#endif    // Английский (США) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

@@ -1,3 +1,7 @@
+/*
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+*/
+
 #ifndef __VMS_CRITICAL_SECTION_
 #define __VMS_CRITICAL_SECTION_
 
@@ -6,6 +10,10 @@ class vmsCriticalSection : public CRITICAL_SECTION
 public:
 	vmsCriticalSection () {InitializeCriticalSection (this);}
 	virtual ~vmsCriticalSection () {DeleteCriticalSection (this);}
+
+private:
+	vmsCriticalSection (const vmsCriticalSection&) {assert (false);}
+	vmsCriticalSection& operator = (const vmsCriticalSection&) {assert (false);}
 };
 
 class vmsCriticalSectionAutoLock
@@ -39,7 +47,7 @@ protected:
 
 #define vmsAUTOLOCKSECTION(sect) vmsCriticalSectionAutoLock csal_##sect (&sect)
 #define vmsAUTOLOCKSECTION_PTR(sect) vmsCriticalSectionAutoLock csal_##sect (sect)
-// call this if you want critical section to be unlocked before autolock object will be destroyed
+
 #define vmsAUTOLOCKSECTION_UNLOCK(sect) csal_##sect.Unlock()
 
 class vmsCriticalSectionEx : protected vmsCriticalSection
@@ -68,6 +76,5 @@ public:
 protected:
 	int m_cLocks;
 };
-
 
 #endif

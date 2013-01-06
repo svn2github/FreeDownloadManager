@@ -5,12 +5,14 @@
 #include "StdAfx.h"
 #include "vmsUrlMonRequestCollector.h"
 #include <WinInet.h>
-#include "../../vmsBrowsersSharedData.h"
+#include "../../Include.Add/vmsBrowsersSharedData.h"
+#include "../../Include.Add/vmsInternetExplorerVersion.h"
 
 LPCSTR vmsUrlMonRequestCollector::_protocolData_pData = "PROTOCOLDATA";
 PROTOCOLDATA vmsUrlMonRequestCollector::_protocolData = {PD_FORCE_SWITCH, 0, (LPVOID)_protocolData_pData, 13};
 
 vmsBrowsersSharedData _BrowsersSharedData;
+vmsInternetExplorerVersion _IEVersion;
 
 vmsUrlMonRequestCollector::vmsUrlMonRequestCollector(void)
 {
@@ -81,21 +83,25 @@ void vmsUrlMonRequestCollector::onNewRequest(Request *request)
 
 	request->dwthridStart = GetCurrentThreadId ();
 
-	BINDINFO bi; DWORD dwBindF;
-	bi.cbSize = sizeof (bi);
-	request->spBindInfo->GetBindInfo (&dwBindF, &bi);
-
-	if (bi.dwBindVerb == BINDVERB_POST && bi.cbstgmedData)
+	if (_IEVersion.m_appVersion.empty () || _IEVersion.m_appVersion [0] < 10)
 	{
-		
-		if (bi.stgmedData.tymed == TYMED_HGLOBAL)
+		BINDINFO bi; DWORD dwBindF;
+		ZeroMemory (&bi, sizeof (bi));
+		bi.cbSize = sizeof (bi);
+		request->spBindInfo->GetBindInfo (&dwBindF, &bi);
+
+		if (bi.dwBindVerb == BINDVERB_POST && bi.cbstgmedData)
 		{
-			LPVOID pData = GlobalLock (bi.stgmedData.hGlobal);
-			if (pData)
+			
+			if (bi.stgmedData.tymed == TYMED_HGLOBAL)
 			{
-				request->vbPostData.resize (bi.cbstgmedData);
-				CopyMemory (&request->vbPostData [0], pData, bi.cbstgmedData);
-				GlobalUnlock (bi.stgmedData.hGlobal);
+				LPVOID pData = GlobalLock (bi.stgmedData.hGlobal);
+				if (pData)
+				{
+					request->vbPostData.resize (bi.cbstgmedData);
+					CopyMemory (&request->vbPostData [0], pData, bi.cbstgmedData);
+					GlobalUnlock (bi.stgmedData.hGlobal);
+				}
 			}
 		}
 	}

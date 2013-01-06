@@ -220,7 +220,8 @@ void fsOpNetIntegrationMgr::Initialize()
 
 	
 
-	if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, "Software\\Clients\\StartMenuInternet\\chrome.exe\\shell\\open\\command", KEY_READ))
+	if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, "Software\\Clients\\StartMenuInternet\\chrome.exe\\shell\\open\\command", KEY_READ) || 
+		ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, "Software\\Clients\\StartMenuInternet\\Google Chrome\\shell\\open\\command", KEY_READ))
 	{
 		char szCmd [MY_MAX_PATH] = "";
 		DWORD dw = sizeof (szCmd);
@@ -323,7 +324,8 @@ BOOL fsOpNetIntegrationMgr::InstallOperaPlugin()
 
 	CString str = m_strOpPath;
 	str += "npfdm.dll";
-	fsBuildPathToFile (str);
+	if (!fsBuildPathToFile (str))
+		return FALSE;
 
 	
 	_App.Monitor_OperaPDInstalledTo (m_strOpPath);
@@ -386,7 +388,8 @@ BOOL fsOpNetIntegrationMgr::InstallNetscapePlugin()
 
 	CString str = m_strNetPath;
 	str += "npfdm.dll";
-	fsBuildPathToFile (str);
+	if (!fsBuildPathToFile (str))
+		return FALSE;
 
 	_App.Monitor_NetscapePDInstalledTo (m_strNetPath);
 
@@ -452,7 +455,8 @@ BOOL fsOpNetIntegrationMgr::InstallFirefoxPlugin()
 
 	CString str = m_strFfPath;
 	str += "npfdm.dll";
-	fsBuildPathToFile (str);
+	if (!fsBuildPathToFile (str))
+		return FALSE;
 	if (CopyFile ("npfdm.dll", str, FALSE))
 	{
 		
@@ -503,7 +507,8 @@ BOOL fsOpNetIntegrationMgr::InstallMozillaSuitePlugin()
 
 	CString str = m_strMozSPath;
 	str += "npfdm.dll";
-	fsBuildPathToFile (str);
+	if (!fsBuildPathToFile (str))
+		return FALSE;
 
 	
 	_App.Monitor_MozillaSuitePDInstalledTo (m_strMozSPath);
@@ -570,7 +575,8 @@ BOOL fsOpNetIntegrationMgr::InstallSafariPlugin()
 	
 	CString str = m_strSafariPath;
 	str += "npfdm.dll";
-	fsBuildPathToFile (str);
+	if (!fsBuildPathToFile (str))
+		return FALSE;
 
 	_App.Monitor_SafariPDInstalledTo (m_strSafariPath);
 
@@ -636,7 +642,8 @@ BOOL fsOpNetIntegrationMgr::InstallChromePlugin()
 	
 	CString str = m_strChromePath;
 	str += "npfdm.dll";
-	fsBuildPathToFile (str);
+	if (!fsBuildPathToFile (str))
+		return FALSE;
 
 	_App.Monitor_ChromePDInstalledTo (m_strChromePath);
 

@@ -15,8 +15,9 @@
 
 #include "fsEventsMgr.h"
 #include "plugins.h"
+#include "vmsPersistObject.h"
 
-class CShedulerWnd : public CWnd
+class CShedulerWnd : public CWnd, public vmsPersistObject
 {
 	friend class CScheduler_Log; 
 
@@ -73,7 +74,12 @@ public:
 	static void _ScheduleMgrEventFunc (fsSchedule *task, fsScheduleMgrEvent ev, LPVOID lp);
 	CSheduler_Tasks m_wndTasks;
 	BOOL Create (CWnd *pParent);
+	void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 	virtual ~CShedulerWnd();
+
+protected:
+	virtual void onChildObjectLoadFinished (vmsPersistObject *pObject, bool bResult);
 
 	
 protected:
@@ -96,6 +102,7 @@ protected:
 	static void _ScheduleMgrEventDesc (LPCSTR pszEvent, fsScheduleMgrEventType enType, LPVOID lp);
 	
 	void LoadTasks();
+
 	fsScheduleMgr m_mgr;
 	CWndSplitter m_wndSplitter;
 	CScheduler_Log m_wndLog;
@@ -112,6 +119,9 @@ protected:
 	afx_msg void OnSetFocus(CWnd* pOldWnd);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+	bool m_bIsSchedulerMgrLoadedSuccessfully;
+	bool m_bIsEventsMgrLoadedSuccessfully;
 };
 
 //{{AFX_INSERT_LOCATION}}

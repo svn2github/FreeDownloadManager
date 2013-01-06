@@ -227,10 +227,7 @@ fsInternetResult fsArchiveInternetStream::Open_imp(UINT64 uStartPos)
 
 			
 			ir = fsDNP_ApplyUrl (dnp, pszUrl);
-#ifndef FDM_DLDR__RAWCODEONLY
-			if (m_dldr->IsQueryStoringDownloadListEnabled())
-				_DldsMgr.QueryStoringDownloadList();
-#endif
+			m_dldr->setDirty();
 
 			delete [] pszUrl;
 
@@ -246,10 +243,7 @@ fsInternetResult fsArchiveInternetStream::Open_imp(UINT64 uStartPos)
 				SAFE_DELETE_ARRAY (dnp->pszPassword);
 				dnp->pszPassword = new char [strlen (pszPassword) + 1];
 				strcpy (dnp->pszPassword, pszPassword);
-#ifndef FDM_DLDR__RAWCODEONLY
-				if (m_dldr->IsQueryStoringDownloadListEnabled())
-					_DldsMgr.QueryStoringDownloadList();
-#endif
+				m_dldr->setDirty();
 			}
 
 			delete [] pszUser; delete [] pszPassword;

@@ -12,7 +12,7 @@ void InitializeFdmBtSuppDll ()
 int WINAPI vmsBt_getMinimumFdmBuildRequired ()
 {
 	
-	return 1050;
+	return 1260;
 }
 
 BOOL APIENTRY DllMain( HANDLE hModule, 

@@ -146,30 +146,17 @@ void CBtDld_Seeding::OnLimitByRatio()
 
 BOOL CBtDld_Seeding::OnApply() 
 {
-	CQueryStoringDownloadListGuard <fsDownloadsMgr> queryGuard(&_DldsMgr);
-
-	bool bDontQueryStoringDownloadList = false;
-	if (m_pvDlds->size () > 0 && m_pvDlds->at(0) && m_pvDlds->at(0)->pMgr && m_pvDlds->at(0)->pMgr->GetBtDownloadMgr()) {
-		bDontQueryStoringDownloadList = m_pvDlds->at(0)->pMgr->GetBtDownloadMgr()->IsQueryStoringDownloadListEnable();
-	}
-
 	if (IsDlgButtonChecked (IDC_ENABLE_SEEDING) != BST_INDETERMINATE)
 	{
 		BOOL b = IsDlgButtonChecked (IDC_ENABLE_SEEDING) == BST_CHECKED;
 		for (size_t i = 0; i < m_pvDlds->size (); i++)
 			m_pvDlds->at (i)->pMgr->GetBtDownloadMgr ()->EnableSeeding (b);
-
-		if (!bDontQueryStoringDownloadList && m_pvDlds->size ())
-			queryGuard.QueryStoringDownloadList();
 	}
 
 	if (IsDlgButtonChecked (IDC_UNLIMITED_SEEDING) == BST_CHECKED)
 	{
 		for (size_t i = 0; i < m_pvDlds->size (); i++)
 			m_pvDlds->at (i)->pMgr->GetBtDownloadMgr ()->setRequiredRatio (0);
-
-		if (!bDontQueryStoringDownloadList && m_pvDlds->size ())
-			queryGuard.QueryStoringDownloadList();
 	}
 	else if (IsDlgButtonChecked (IDC_LIMIT_BY_RATIO) == BST_CHECKED)
 	{
@@ -179,9 +166,6 @@ BOOL CBtDld_Seeding::OnApply()
 			float fReqRatio = (float)m_wndRatio.GetItemData (nCur) / 100.0f;
 			for (size_t i = 0; i < m_pvDlds->size (); i++)
 				m_pvDlds->at (i)->pMgr->GetBtDownloadMgr ()->setRequiredRatio (fReqRatio);
-
-			if (!bDontQueryStoringDownloadList && m_pvDlds->size ())
-				queryGuard.QueryStoringDownloadList();
 		}
 	}
 	

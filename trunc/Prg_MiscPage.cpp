@@ -174,12 +174,14 @@ BOOL CPrg_MiscPage::OnApply()
 	{
 		m_bHangupToutChanged = false;
 		_pwndScheduler->GetMgr ()->GetTask (pos)->uWaitForConfirmation = _App.ConfTimeout_Hangup ();
+		_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 	}
 
 	if (m_bExitToutChanged && _pwndScheduler->ExitWhenDone (&pos))
 	{
 		m_bExitToutChanged = false;
 		_pwndScheduler->GetMgr ()->GetTask (pos)->uWaitForConfirmation = _App.ConfTimeout_Exit ();
+		_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 	}
 
 	fsShutdownType enType = (fsShutdownType) _App.WD_LastShutdownType ();
@@ -187,6 +189,7 @@ BOOL CPrg_MiscPage::OnApply()
 	{
 		m_bShutdownToutChanged = false;
 		_pwndScheduler->GetMgr ()->GetTask (pos)->uWaitForConfirmation = _App.ConfTimeout_Shutdown ();
+		_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 	}
 
 	if (m_bDTAEChanged)
@@ -202,6 +205,7 @@ BOOL CPrg_MiscPage::OnApply()
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags |= SCHEDULE_AUTODIS;
 			else
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags &= ~SCHEDULE_AUTODIS;
+			_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 		}
 		
 		_pwndScheduler->ExitWhenDone (&pos);
@@ -210,6 +214,7 @@ BOOL CPrg_MiscPage::OnApply()
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags |= SCHEDULE_AUTODIS;
 			else
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags &= ~SCHEDULE_AUTODIS;
+			_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 		}
 
 		_pwndScheduler->TurnoffWhenDone (enType, &pos);
@@ -218,6 +223,7 @@ BOOL CPrg_MiscPage::OnApply()
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags |= SCHEDULE_AUTODIS;
 			else
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags &= ~SCHEDULE_AUTODIS;
+			_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 		}
 	}
 	

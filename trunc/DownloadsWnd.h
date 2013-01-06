@@ -169,6 +169,8 @@ public:
 	
 	void OnBtDownloadProperties(DLDS_LIST &vDlds, CWnd* pwndParent = NULL);
 	
+	void OnTpDownloadProperties(DLDS_LIST &vDlds, CWnd* pwndParent = NULL);
+	
 	void UpdateNumbersOfDownloadsInGroups();
 	
 	
@@ -286,6 +288,7 @@ public:
 	UINT CreateDownload (LPCSTR pszStartUrl, BOOL bReqTopMostDialog = FALSE, LPCSTR pszComment = NULL, LPCSTR pszReferer = NULL, BOOL bSilent = FALSE, DWORD dwForceAutoLaunch = DWCD_NOFORCEAUTOLAUNCH, BOOL* pbAutoStart = NULL, vmsDWCD_AdditionalParameters* pParams = NULL, UINT* pRes = NULL);
 	
 	afx_msg void OnDownloadCreate();
+	afx_msg void OnTpDownloadCreate();
 	
 	
 	void OnOptimizationWizard();

@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "FdmApp.h"
+#include "Utils.h"
 #include "vmsFileRecentList.h"
 
 #ifdef _DEBUG
@@ -51,7 +52,9 @@ void vmsFileRecentList::Add(LPCSTR pszFileDispName, LPCSTR pszFilePathName, bool
 	}
 
 	if (!bDontQueryStoringStateInformation) {
-		_DldsMgr.QueryStoringStateInformation();
+		
+		
+		setDirty();
 	}
 
 	LeaveCriticalSection (&m_cs);
@@ -128,7 +131,9 @@ void vmsFileRecentList::Clear(bool bDontQueryStoringStateInformation)
 	m_vList.clear ();
 	if (!bDontQueryStoringStateInformation) {
 		if (szCount > 0) {
-			_DldsMgr.QueryStoringStateInformation();
+			
+			
+			setDirty();
 		}
 	}
 	LeaveCriticalSection (&m_cs);
@@ -158,6 +163,76 @@ void vmsFileRecentList::setMaxSize(int i)
 		bHaveRemoved = true;
 	}
 	if (bHaveRemoved) {
-		_DldsMgr.QueryStoringDeletedDownloadList();
+		
+		
+		setDirty();
 	}
+}
+
+void vmsFileRecentList::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	EnterCriticalSection (&m_cs);
+
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	size_t c = m_vList.size ();
+	putVarToBuffer(c, pbtCurrentPos, 0, *pdwSize, &dwRequiredSize);
+	
+	for (size_t i = 0; i < c; i++) {
+		putStrToBuffer(get_FileDispName (i), pbtCurrentPos, 0, *pdwSize, &dwRequiredSize);
+		putStrToBuffer(get_FilePathName (i), pbtCurrentPos, 0, *pdwSize, &dwRequiredSize);
+	}
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize) {
+			*pdwSize = dwRequiredSize;
+		}
+		LeaveCriticalSection (&m_cs);
+		return;
+	}
+
+	putVarToBuffer(c, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	
+	for (size_t i = 0; i < c; i++) {
+		putStrToBuffer(get_FileDispName (i), pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		putStrToBuffer(get_FilePathName (i), pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	}
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	LeaveCriticalSection (&m_cs);
+	return;
+}
+
+bool vmsFileRecentList::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	Clear (true);
+
+	m_nMaxEntries = _App.RecentDownloadsHistorySize ();
+
+	size_t c = 0;
+	DWORD dw;
+
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	if (!getVarFromBuffer(c, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	for (size_t i = 0; i < c; i++) {
+		LPSTR pszDisp, pszPath;
+
+		if (!getStrFromBuffer(&pszDisp, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+
+		if (!getStrFromBuffer(&pszPath, pbtCurrentPos, pbtBuffer, *pdwSize))
+			return false;
+
+		Add (pszDisp, pszPath, true);
+
+		delete [] pszDisp;
+		delete [] pszPath;
+	}
+
+	return true;
 }

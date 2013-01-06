@@ -5,11 +5,13 @@
 #if !defined(AFX_VMSFILERECENTLIST_H__A4B7CD08_47AB_4114_8532_B8287C88932C__INCLUDED_)
 #define AFX_VMSFILERECENTLIST_H__A4B7CD08_47AB_4114_8532_B8287C88932C__INCLUDED_
 
+#include "vmsPersistObject.h"
+
 #if _MSC_VER > 1000
 #pragma once
 #endif 
 
-class vmsFileRecentList  
+class vmsFileRecentList : public vmsPersistObject
 {
 public:
 	void setMaxSize (int i);
@@ -26,6 +28,9 @@ public:
 	BOOL Save (HANDLE hFile);
 	
 	void Add (LPCSTR pszFileDispName, LPCSTR pszFilePathName, bool bDontQueryStoringStateInformation = false);
+
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 
 	vmsFileRecentList();
 	virtual ~vmsFileRecentList();

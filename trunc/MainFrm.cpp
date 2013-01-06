@@ -46,6 +46,8 @@
 #include "Utils.h"
 #include "ImportWizardPropertySheet.h"
 #include "UtorrentSupplier.h"
+#include "vmsElevatedFdm.h"
+#include "vmsAppGlobalObjects.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -1144,7 +1146,10 @@ void CMainFrame::OnMonitorbrowser()
 
 		if (!bMonitor && !_IECatchMgr.IsMonitoringDllRegistered ())
 		{
-			if (_IECatchMgr.ActivateIE2 (TRUE))
+			BOOL bOK = _IECatchMgr.InstallIeIntegration (TRUE, IS_PORTABLE_MODE);
+			if (!bOK)
+				bOK = vmsElevatedFdm::o ().InstallIeIntegration (true);
+			if (bOK)
 			{
 				bRR = TRUE;
 			}
@@ -1798,6 +1803,8 @@ void CMainFrame::SetMenuImages()
 
 DWORD WINAPI CMainFrame::_threadUpdate(LPVOID lp)
 {
+	VERIFY (SUCCEEDED (CoInitialize (NULL)));
+
 	CMainFrame *pThis = (CMainFrame*) lp;
 	DWORD dw;
 
@@ -1805,14 +1812,26 @@ DWORD WINAPI CMainFrame::_threadUpdate(LPVOID lp)
 	while (InternetGetConnectedState (&dw, 0) == FALSE)
 		Sleep (10*60*1000);
 	
-	SYSTEMTIME cur, last;
+	SYSTEMTIME cur, last, last2;
 	GetLocalTime (&cur);
+
+	if (_App.Update_LastCheck2 (&last2) == FALSE || fsGetTimeDelta (&cur, &last2) >= 3*24*60*60) 
+	{
+		if (_spFfExtUpdateMgr->CheckForUpdates ())
+		{
+			_App.Update_LastCheck2 (cur);
+			if (_spFfExtUpdateMgr->isNewVersionAvailable () && _spFfExtUpdateMgr->PerformUpdate ())
+				vmsFirefoxMonitoring::Install (true);
+		}
+	}
+
 	if (_App.Update_LastCheck (&last) == FALSE)
 	{
 		
 		
 		_App.Update_LastCheck (cur);
 		pThis->PostMessage (WM_COMMAND, ID_IMPORT_MTORRENT);
+		CoUninitialize ();
 		return 0;
 	}
 
@@ -1825,6 +1844,8 @@ DWORD WINAPI CMainFrame::_threadUpdate(LPVOID lp)
 
 		vmsAppSmallTipsMgr::o ().UpdateTipsFile ();
 	}
+
+	CoUninitialize ();
 
 	return 0;
 }
@@ -1974,7 +1995,7 @@ void CMainFrame::UpdateSettings()
 	_IECatchMgr.ReadSettings ();
 
 	_pwndDownloads->m_ClpbrdCatch.Enable (_App.Monitor_Clipboard  ());
-	_IECatchMgr.ActivateIE2 (_App.Monitor_IE2 ());
+	_IECatchMgr.InstallIeIntegration (_App.Monitor_IE2 (), IS_PORTABLE_MODE);
 }
 
 void CMainFrame::OnDropBox()
@@ -2711,7 +2732,13 @@ BOOL CMainFrame::ReadCusomizationInfo()
 		NULL, OPEN_EXISTING, 0, NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE)
+	{
+#ifdef DEBUG
+		return TRUE;
+#else 
 		return FALSE;
+#endif
+	}
 
 	
 	if (GetFileSize (hFile, NULL) == 8)
@@ -3743,9 +3770,9 @@ void CMainFrame::SaveAllData (DWORD dwWhat)
 	_pwndHFE->SaveAll (dwWhat);
 	_pwndSites->SaveAll (dwWhat);
 	_pwndSpider->SaveAll (dwWhat);
-	((CFdmApp*)AfxGetApp ())->SaveSettings ();
 	((CFdmApp*) AfxGetApp ())->SaveHistory ();
 	SaveState (dwWhat);
+	((CFdmApp*)AfxGetApp ())->SaveSettings ();
 }
 
 LRESULT CMainFrame::OnSaveAllData (WPARAM wp, LPARAM)

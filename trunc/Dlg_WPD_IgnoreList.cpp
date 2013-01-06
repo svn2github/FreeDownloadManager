@@ -101,6 +101,8 @@ void CDlg_WPD_IgnoreList::OnOK()
 	for (i = 0; i < m_wpds->vIgnoreList.size (); i++)
 		delete m_wpds->vIgnoreList [i];
 	m_wpds->vIgnoreList.clear ();
+	if (m_wpds->m_ppoOwner)
+		m_wpds->m_ppoOwner->setDirty();
 
 	for (i = 0; i < m_wndList.GetItemCount (); i++)
 	{
@@ -112,6 +114,8 @@ void CDlg_WPD_IgnoreList::OnOK()
 			item->dwFlags |=  WPD_ILITEM_SUBFOLDERSALSO;
 
 		m_wpds->vIgnoreList.add (item);
+		if (m_wpds->m_ppoOwner)
+			m_wpds->m_ppoOwner->setDirty();
 	}
 	
 	CDialog::OnOK();

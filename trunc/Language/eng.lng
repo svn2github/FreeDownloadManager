@@ -1773,3 +1773,7 @@ Live Streaming
 Retry
 Abort All
 Tried to move the file:\n %s\n\n to the destination folder under this name:\n %s\n\n%s: %s\n\nPlease close all applications that may be using this file.
+Unsupported content-encoding
+Select all
+Reset all
+Administrator rights are required to integrate FDM into Internet Explorer. Choosing "Cancel" will integrate it partially.

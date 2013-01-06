@@ -9,6 +9,7 @@
 #include "DownloadProperties.h"	
 #include "fsTicksMgr.h"	
 #include "vmsCriticalSection.h"	
+#include "vmsPersistObject.h"
 
 #if _MSC_VER > 1000
 #pragma once
@@ -55,7 +56,7 @@ typedef void (*fntEventDescFunc)(fsDownloadMgr *pMgr, fsDownloadMgr_EventDescTyp
 #define DFF_NEED_INIT_FILE			1
 #define DFF_USE_PORTABLE_DRIVE		2
 
-class fsDownloadMgr : public vmsDownloaderWithNetworkUsageAdjustment
+class fsDownloadMgr : public vmsDownloaderWithNetworkUsageAdjustment, public vmsPersistObject
 {
 public:
 	fsString getFileName();
@@ -160,8 +161,12 @@ public:
 	void SetFileSize(UINT64 uFileSize);
 	DWORD GetDownloadFileFlag() const;
 	void SetDownloadFileFlag(DWORD dwFlag);
-	void EnableQueryStoringDownloadingList(bool bIsEnabled);
-	bool IsQueryStoringDownloadingListEnabled() const;
+	void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+	void SetParentPersistObjectSize(DWORD dwSize);
+
+	bool IsFailedToCreateDestinationFile() const;
+	bool IsNotEnoughDiskSpace() const;
 
 	fsDownloadMgr (struct fsDownload* dld = NULL);
 	virtual ~fsDownloadMgr();
@@ -271,6 +276,7 @@ protected:
 	static DWORD WINAPI _threadDownloadMgr (LPVOID lp);
 	
 	fsInternetResult CreateInternetSession();
+	BOOL InternetAutodial(DWORD dwFlags, HWND hwndParent);
 	fsDownload_Properties m_dp;		
 	fsInternetDownloader m_dldr;	
 	fntDownloadMgrEventFunc m_pfnEvents;	
@@ -278,6 +284,8 @@ protected:
 	BOOL TruncFile(const CString& sFileName);
 	void RenameFile(const char* szFileName, BOOL bFormat1 = 1);
 	void RemoveIncompleteFileExt();
+	bool m_bFailedToCreateDestinationFile;
+	bool m_bIsNotEnoughDiskSpace;
 private:
 	
 	
@@ -288,7 +296,7 @@ private:
 protected:
 	void AdjustKnownFileSharingSiteSupport_RapidShare(void);
 	void AdjustKnownFileSharingSiteSupport_FileSonic(void);
-	bool m_bDontQueryStoringDownloadList;
+
 public:
 	UINT64 getSpeed(bool bOfDownload);
 	void setSpeedLimit(bool bForDownload, UINT64 uLimit);

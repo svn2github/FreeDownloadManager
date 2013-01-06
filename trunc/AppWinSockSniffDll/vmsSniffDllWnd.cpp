@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "vmsSniffDllWnd.h"
-#include "../vmsSharedData.h"
+#include "../include.add/vmsSharedData.h"
 #include "vmsHttpFlvTrafficAnalyzer.h"
 #include "vmsTransferFlvDownloadsToFdm.h"
 #include <objbase.h>

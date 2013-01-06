@@ -11,6 +11,7 @@
 
 #include "list.h"
 #include "fsWebPageDownloader.h"
+#include "vmsPersistObject.h"
 
 #define SPIDERFILE_CURRENT_VERSION	(6)
 #define SPIDERFILE_SIG     "FDM Web Pages  "
@@ -26,7 +27,7 @@ struct fsSpiderFileHdr
 	}
 };
 
-class fsWebPageDownloadsMgr  
+class fsWebPageDownloadsMgr : public vmsPersistObject  
 {
 public:
 	bool IsDownloadsMgrRequired();
@@ -47,6 +48,8 @@ public:
 	void SetEventsFunc (fntWPDEvents pfn, LPVOID lp);
 	
 	void Add (fsWebPageDownloader* wpd);
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 
 	fsWebPageDownloadsMgr();
 	virtual ~fsWebPageDownloadsMgr();

@@ -59,7 +59,8 @@ protected:
 	BOOL m_bAuthChanged;
 	BOOL m_bGroupChanged;
 	BOOL m_bAutoStart;
-	fsSchedule m_task;
+	
+	fsScheduleEx m_schScheduleParam;
 	
 	vmsDownloadSmartPtr m_dld;
 	void PrepareCHMgr(CPoint point);

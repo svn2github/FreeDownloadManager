@@ -9,6 +9,7 @@
 #pragma once
 #endif 
 
+#include "vmsPersistObject.h"
 #include "dldscommon.h"
 
 struct vmsSectionInfo
@@ -19,7 +20,8 @@ struct vmsSectionInfo
 };
 
 class vmsDownloadMgrEx : public vmsObject, 
-	public vmsDownloaderWithNetworkUsageAdjustment
+	public vmsDownloaderWithNetworkUsageAdjustment, 
+	public vmsPersistObject 
 {
 public:
 	void Do_OpenFolder();
@@ -28,6 +30,7 @@ public:
 	void GetSplittedSectionsList (std::vector <vmsSectionInfo> &v);
 	
 	BOOL IsBittorrent();
+	BOOL IsTp();
 	
 	
 	
@@ -71,16 +74,20 @@ public:
 	float GetPercentDone();
 	fsString get_OutputFilePathName();
 	class vmsBtDownloadManager* GetBtDownloadMgr();
+	class vmsTpDownloadMgr* GetTpDownloadMgr();
 	class fsDownloadMgr* GetDownloadMgr();
 	
 	void Attach (vmsBtDownloadManager* pBtMgr);
 	void Attach (fsDownloadMgr *pMgr);
+	void Attach(vmsTpDownloadMgr *pTpMgr);
 	vmsDownloadMgrEx();
 	virtual ~vmsDownloadMgrEx();
 
 protected:
-	vmsObjectSmartPtr <class vmsBtDownloadManager> m_pBtMgr;
+	void DetachDownloadMgr ();
+	vmsObjectSmartPtr <class vmsBtDownloadManager> m_spBtMgr;
 	fsDownloadMgr* m_pMgr;
+	vmsTpDownloadMgr* m_pTpMgr;
 public:
 	UINT64 getSpeed(bool bOfDownload);
 	void setSpeedLimit(bool bOfDownload, UINT64 uLimit);

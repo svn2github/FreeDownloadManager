@@ -372,6 +372,7 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 					dld->pMgr->GetDownloadMgr ()->GetDP ()->dwFlags &= ~ DPF_USEHIDDENATTRIB;
 				else
 					dld->pMgr->GetDownloadMgr ()->GetDP ()->dwFlags |= DPF_USEHIDDENATTRIB;
+				dld->pMgr->GetDownloadMgr ()->setDirty();
 			}
 		}
 	}
@@ -440,8 +441,6 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 		fsDownloadFileErrorProcessing dfep = uChecked == BST_CHECKED ? DFEP_STOP : DFEP_IGNORE;
 		DP_SET_EX (DP_OFFSET (aEP) + DFE_ACCDENIED * sizeof (dfep), sizeof (dfep), FALSE, &dfep);
 	}
-
-	_DldsMgr.QueryStoringDownloadList();
 
 	return CPropertyPage::OnApply();
 }

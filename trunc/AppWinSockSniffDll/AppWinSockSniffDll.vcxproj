@@ -159,6 +159,7 @@
       <ImportLibrary>.\Release\flvsniff.lib</ImportLibrary>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;detours.lib;ws2_32.lib;wininet.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\AppWinSockSniffDll.def</ModuleDefinitionFile>
+      <GenerateMapFile>true</GenerateMapFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'">

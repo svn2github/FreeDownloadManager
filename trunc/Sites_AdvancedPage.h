@@ -20,6 +20,7 @@ public:
 	void FromDialog();
 	
 	BOOL IsUserChangedProtocols();
+	void SetMode(bool bIsAddingSite);
 	fsSiteInfo* m_pSite;	
 	CSites_AdvancedPage();
 	~CSites_AdvancedPage();
@@ -55,6 +56,8 @@ protected:
 	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+	bool m_bIsAddingSite;
 
 };
 

@@ -3,6 +3,7 @@
 */
 
 #include "stdafx.h"
+#include "Utils.h"
 #include "FdmApp.h"
 #include "vmsMediaConvertMgr.h"
 #include "WaitDlg.h"
@@ -17,8 +18,83 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
+bool vmsMediaConvertMgr::vmsConvertMediaFileContext::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	int nId = 0;
+
+	if (!getVarFromBuffer(nId, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&stgs.strFormat.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&stgs.strExtension.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&stgs.strAudioCodec.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getStrFromBuffer(&stgs.strVideoCodec.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(stgs.nAudioBitrate, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(stgs.nVideoBitrate, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!getVarFromBuffer(stgs.sizeVideo, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	if (!clehEventHandler(nId, this, pvData))
+		return false;
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	return true;
+}
+
+void vmsMediaConvertMgr::vmsConvertMediaFileContext::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	putVarToBuffer(dld->nID, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(stgs.strFormat.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(stgs.strExtension.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(stgs.strAudioCodec.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(stgs.strVideoCodec, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(stgs.nAudioBitrate, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(stgs.nVideoBitrate, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(stgs.sizeVideo, pbtCurrentPos, 0, 0, &dwRequiredSize);
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize) {
+			*pdwSize = dwRequiredSize;
+		}
+		return;
+	}
+
+	if (pdwSize == 0)
+		return;
+
+	putVarToBuffer(dld->nID, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	putStrToBuffer(stgs.strFormat.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	putStrToBuffer(stgs.strExtension.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	putStrToBuffer(stgs.strAudioCodec.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	putStrToBuffer(stgs.strVideoCodec, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	putVarToBuffer(stgs.nAudioBitrate, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	putVarToBuffer(stgs.nVideoBitrate, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+	putVarToBuffer(stgs.sizeVideo, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+}
+
 vmsMediaConvertMgr::vmsMediaConvertMgr()
-	: m_bIsStateChanged(false)
+	
+	
 {
 }
 
@@ -29,25 +105,36 @@ vmsMediaConvertMgr::~vmsMediaConvertMgr()
 
 void vmsMediaConvertMgr::AddTask(vmsDownloadSmartPtr dld, const vmsMediaFileConvertSettings &stgs)
 {
-	vmsConvertMediaFileContext ctx;
-	ctx.dld = dld;
-	ctx.stgs = stgs;
-	m_vTasks.push_back (ctx);
-	QueryStoringState();
+	vmsConvertMediaFileContextSmartPtr pCtxPtr;
+	pCtxPtr.CreateInstance();
+
+	
+	pCtxPtr->dld = dld;
+	pCtxPtr->stgs = stgs;
+	m_vTasks.push_back (pCtxPtr);
+	setDirty();
+	m_vTasks.back()->setDirty();
+	getPersistObjectChildren ()->addPersistObject ((vmsConvertMediaFileContext*)m_vTasks.back());
+	
+	
 }
 
 BOOL vmsMediaConvertMgr::SaveState()
 {
-	bool bSaveStateInformation = false;
-	{
-		vmsCriticalSectionAutoLock csalStateInformationChangeGuardAutoLock(&m_csStateChangeGuard);
-		bSaveStateInformation = m_bIsStateChanged;
-		m_bIsStateChanged = false;
-	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-	if (!bSaveStateInformation) {
+	if (!isDirty())
 		return TRUE;
-	}
 
 	CString strFile = fsGetDataFilePath ("mctasks.sav");
 	HANDLE hFile = CreateFile (strFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
@@ -56,45 +143,32 @@ BOOL vmsMediaConvertMgr::SaveState()
 		return FALSE;
 
 	DWORD dw;
+	std::auto_ptr<BYTE> apbtBufferGuard;
 
 	fsMcMgrFileHdr hdr;
 	if (FALSE == WriteFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
 		goto _lErr;
 
-	size_t i; i = m_vTasks.size ();
-	if (FALSE == WriteFile (hFile, &i, sizeof (i), &dw, NULL))
+	DWORD dwRequiredSize = 0;
+
+	getStateBuffer(0, &dwRequiredSize, false);
+
+	if (dwRequiredSize == 0)
 		goto _lErr;
 
-	for (i = 0; i < m_vTasks.size (); i++)
-	{
-		vmsConvertMediaFileContext *ctx = &m_vTasks [i];
+	apbtBufferGuard.reset( new BYTE[dwRequiredSize] );
+	LPBYTE pbtBuffer = apbtBufferGuard.get();
+	if (pbtBuffer == 0)
+		goto _lErr;
+	memset(pbtBuffer, 0, dwRequiredSize);
 
-		if (FALSE == WriteFile (hFile, &ctx->dld->nID, sizeof (UINT), &dw, NULL))
-			goto _lErr;
+	getStateBuffer(pbtBuffer, &dwRequiredSize, true);
 
-		if (FALSE == fsSaveStrToFile (ctx->stgs.strFormat, hFile))
-			goto _lErr;
-
-		if (FALSE == fsSaveStrToFile (ctx->stgs.strExtension, hFile))
-			goto _lErr;
-
-		if (FALSE == fsSaveStrToFile (ctx->stgs.strAudioCodec, hFile))
-			goto _lErr;
-
-		if (FALSE == fsSaveStrToFile (ctx->stgs.strVideoCodec, hFile))
-			goto _lErr;
-
-		if (FALSE == WriteFile (hFile, &ctx->stgs.nAudioBitrate, sizeof (int), &dw, NULL))
-			goto _lErr;
-
-		if (FALSE == WriteFile (hFile, &ctx->stgs.nVideoBitrate, sizeof (int), &dw, NULL))
-			goto _lErr;
-
-		if (FALSE == WriteFile (hFile, &ctx->stgs.sizeVideo, sizeof (CSize), &dw, NULL))
-			goto _lErr;		
+	if (FALSE == WriteFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
+		goto _lErr;
 	}
-
 	CloseHandle (hFile);
+	onStateSavedSuccessfully();
 
 	return TRUE;
 
@@ -112,7 +186,10 @@ BOOL vmsMediaConvertMgr::LoadState()
 	if (hFile == INVALID_HANDLE_VALUE)
 		return GetFileAttributes (strFile) == DWORD (-1);
 
+	DWORD dwRequiredSize = ::GetFileSize(hFile, NULL);
+
 	DWORD dw;
+	std::auto_ptr<BYTE> pbtBufferGuard;
 
 	fsMcMgrFileHdr hdr;
 	if (FALSE == ReadFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
@@ -121,47 +198,25 @@ BOOL vmsMediaConvertMgr::LoadState()
 	if (lstrcmp (hdr.szSig, MCMGRFILE_SIG) || hdr.wVer > MCMGRFILE_CURRENT_VERSION)
 		goto _lErr;
 
-	size_t i;
-	if (FALSE == ReadFile (hFile, &i, sizeof (i), &dw, NULL))
+	dwRequiredSize -= sizeof (hdr);
+	if (dwRequiredSize <= 0) {
 		goto _lErr;
-
-	m_vTasks.clear ();
-
-	while (i--)
-	{
-		vmsConvertMediaFileContext ctx;
-
-		UINT nId;
-		if (FALSE == ReadFile (hFile, &nId, sizeof (UINT), &dw, NULL))
-			goto _lErr;
-
-		if (FALSE == fsReadStrFromFile (&ctx.stgs.strFormat.pszString, hFile))
-			goto _lErr;
-
-		if (FALSE == fsReadStrFromFile (&ctx.stgs.strExtension.pszString, hFile))
-			goto _lErr;
-
-		if (FALSE == fsReadStrFromFile (&ctx.stgs.strAudioCodec.pszString, hFile))
-			goto _lErr;
-
-		if (FALSE == fsReadStrFromFile (&ctx.stgs.strVideoCodec.pszString, hFile))
-			goto _lErr;
-
-		if (FALSE == ReadFile (hFile, &ctx.stgs.nAudioBitrate, sizeof (int), &dw, NULL))
-			goto _lErr;
-
-		if (FALSE == ReadFile (hFile, &ctx.stgs.nVideoBitrate, sizeof (int), &dw, NULL))
-			goto _lErr;
-
-		if (FALSE == ReadFile (hFile, &ctx.stgs.sizeVideo, sizeof (CSize), &dw, NULL))
-			goto _lErr;
-
-		ctx.dld = _DldsMgr.GetDownloadByID (nId);
-		if (ctx.dld != NULL)
-			m_vTasks.push_back (ctx);
 	}
 
+	pbtBufferGuard.reset( new BYTE[dwRequiredSize] );
+	LPBYTE pbtBuffer = pbtBufferGuard.get();
+	if (pbtBuffer == 0) {
+		goto _lErr;
+	}
+	memset(pbtBuffer, 0, dwRequiredSize);
+
+	if (!ReadFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
+		goto _lErr;
+	}
 	CloseHandle (hFile);
+
+	if (!loadFromStateBuffer(pbtBuffer, &dwRequiredSize, hdr.wVer))
+		goto _lErr;
 
 	return TRUE;
 
@@ -211,7 +266,7 @@ DWORD WINAPI vmsMediaConvertMgr::_threadConvertMediaFile(LPVOID lp)
 			delete [] dp->pszFileName;
 			dp->pszFileName = new char [strDst.GetLength () + 1];
 			lstrcpy (dp->pszFileName, strDst);
-			_DldsMgr.QueryStoringDownloadList();
+			pcmfc->dld->pMgr->GetDownloadMgr ()->setDirty();
 		}
 		else
 		{
@@ -291,9 +346,18 @@ void vmsMediaConvertMgr::ConvertMediaFile(vmsDownloadSmartPtr dld, vmsMediaConve
 		if (nIndex == -1)
 			return;
 
-		*pcmfc = m_vTasks [nIndex];
+		vmsConvertMediaFileContext* ctx = (vmsConvertMediaFileContext*)m_vTasks [nIndex];
+		if (ctx == 0)
+			return;
+		pcmfc->dld = ctx->dld;	
+		pcmfc->stgs = ctx->stgs;
+		
+		
 		m_vTasks.erase (m_vTasks.begin () + nIndex);
-		QueryStoringState();
+		setDirty();
+		getPersistObjectChildren ()->removePersistObject (nIndex);
+		
+		
 	}
 	else
 	{
@@ -321,7 +385,10 @@ int vmsMediaConvertMgr::FindDownload(vmsDownloadSmartPtr dld)
 {
 	for (size_t i = 0; i < m_vTasks.size (); i++)
 	{
-		if (m_vTasks [i].dld->nID == dld->nID)
+		
+		
+		
+		if (m_vTasks [i]->dld->nID == dld->nID)
 			return i;
 	}
 
@@ -365,8 +432,72 @@ BOOL vmsMediaConvertMgr::ShowSettingsUI(vmsMediaFileConvertSettings &stgs)
 	return IDOK == _DlgMgr.DoModal (&dlg);
 }
 
-void vmsMediaConvertMgr::QueryStoringState() 
+bool vmsMediaConvertMgr::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
 {
-	vmsCriticalSectionAutoLock csalStateChangeGuard(&m_csStateChangeGuard);
-	m_bIsStateChanged = true;
+	if (pbtBuffer == NULL || pdwSize == NULL)
+		return false;
+
+	if (*pdwSize < sizeof(size_t))
+		return false;
+
+	m_vTasks.clear ();
+
+	size_t* pszBuffer = (size_t*)pbtBuffer;
+	size_t szTaskCount = *pszBuffer;
+
+	size_t szIndex = 0;
+	for (szIndex = 0; szIndex < szTaskCount; szIndex++) {
+		vmsMediaConvertMgr::vmsConvertMediaFileContextSmartPtr pCtxPtr;
+		pCtxPtr.CreateInstance();
+		m_vTasks.push_back(pCtxPtr);
+		vmsMediaConvertMgr::vmsConvertMediaFileContext* ctx = (vmsMediaConvertMgr::vmsConvertMediaFileContext*)m_vTasks.back();
+		if (ctx == 0)
+			return false;
+		ctx->pvData = &m_vTasks;
+		ctx->clehEventHandler = FdmCtfxLoadEventhandler;
+		getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(vmsMediaConvertMgr::vmsConvertMediaFileContext*)m_vTasks.back());
+	}
+
+	*pdwSize = sizeof(size_t);
+
+	return true;
 }
+
+void vmsMediaConvertMgr::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	if (pbtBuffer == NULL) {
+		if (pdwSize) {
+			*pdwSize = sizeof(size_t);
+		}
+		return;
+	}
+
+	size_t* pszBuffer = (size_t*)pbtBuffer;
+	*pszBuffer = m_vTasks.size ();
+	*pdwSize = sizeof(size_t);
+}
+
+bool vmsMediaConvertMgr::FdmCtfxLoadEventhandler(int nId, vmsMediaConvertMgr::vmsConvertMediaFileContext* ctx, void* pvData)
+{
+	if (ctx == 0)
+		return false;
+
+	std::vector <vmsConvertMediaFileContextSmartPtr>* pvTasks = (std::vector <vmsConvertMediaFileContextSmartPtr>*)pvData;
+	if (pvTasks == 0)
+		return false;
+
+	std::vector <vmsConvertMediaFileContextSmartPtr>::iterator iter = pvTasks->begin();
+	while (iter != pvTasks->end()) {
+		if (ctx == (vmsConvertMediaFileContext*)(*iter)) {
+			ctx->dld = _DldsMgr.GetDownloadByID (nId);
+			if (ctx->dld == NULL) {
+				pvTasks->erase(iter);
+			}
+			break;
+		}
+		iter++;
+	}
+
+	return true;
+}
+

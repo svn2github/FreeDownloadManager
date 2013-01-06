@@ -119,18 +119,24 @@ BOOL vmsBtSupport::SaveState()
 		return TRUE;
 
 	vmsBtSession *pBtSession = get_Session ();
+	vmsBtPersistObject *pBtPO = NULL;
+	pBtSession->getPersistObject (&pBtPO);
+	assert (pBtPO != NULL);
+	if (!pBtPO)
+		return FALSE;
+
+	if (!pBtPO->isDirty())
+		return TRUE;
 
 	if (pBtSession->DHT_isStarted ())
 	{
 		SAFE_DELETE_ARRAY (m_pbDHTstate);
 	
-		if (FALSE == pBtSession->DHT_getState (NULL, 0, &m_dwDHTstateSize))
-			return FALSE;
+		pBtPO->getStateBuffer(0, &m_dwDHTstateSize, false);
 
 		m_pbDHTstate = new BYTE [m_dwDHTstateSize];
 
-		if (FALSE == pBtSession->DHT_getState (m_pbDHTstate, m_dwDHTstateSize, &m_dwDHTstateSize))
-			return FALSE;
+		pBtPO->getStateBuffer(m_pbDHTstate, &m_dwDHTstateSize, true);
 	}
 
 	if (m_pbDHTstate == NULL)

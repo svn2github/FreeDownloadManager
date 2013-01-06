@@ -80,6 +80,12 @@ vmsdl_DownloadState vmsdl_GetState (DLHANDLE h)
 	return (vmsdl_DownloadState) dldr->get_State ();
 }
 
+tstring vmsdl_GetLastErrorMessage (DLHANDLE h)
+{
+	vmsDownloader* dldr = (vmsDownloader*) h;
+	return dldr->get_LastErrorMessage ();
+}
+
 UINT vmsdl_GetDownloadingSpeed (DLHANDLE h)
 {
 	vmsDownloader* dldr = (vmsDownloader*) h;

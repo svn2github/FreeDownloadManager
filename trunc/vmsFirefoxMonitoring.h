@@ -18,6 +18,9 @@ public:
 	static bool IsFlashGotInstalled();
 	
 	static bool IsInstalled();
+	
+	
+	static bool IsEnabledInFirefox(bool &bEnabled);
 
 	vmsFirefoxMonitoring();
 	virtual ~vmsFirefoxMonitoring();

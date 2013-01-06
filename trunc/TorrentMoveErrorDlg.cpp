@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "TorrentMoveErrorDlg.h"
+#include "afxdialogex.h"
 
 IMPLEMENT_DYNAMIC(CTorrentMoveErrorDlg, CDialog)
 

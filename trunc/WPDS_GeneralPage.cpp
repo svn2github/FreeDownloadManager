@@ -78,9 +78,11 @@ BOOL CWPDS_GeneralPage::OnApply()
 	if (pGroup->nId != m_wpds->pDLGroup->nId)
 	{
 		m_wpds->pDLGroup = pGroup;
+		if (m_wpds->m_ppoOwner)
+			m_wpds->m_ppoOwner->setDirty();
 		for (int i = 0; i < m_wpd->GetDownloadCount (); i++) {
 			m_wpd->GetDownload (i)->pGroup = pGroup;
-			_DldsMgr.QueryStoringDownloadList();
+			m_wpd->GetDownload (i)->setDirty();
 		}
 
 		_pwndDownloads->OnDownloadsGroupChanged ();
@@ -185,6 +187,9 @@ BOOL CWPDS_GeneralPage::WriteAuthorization()
 		m_wpds->strUserName = "";
 		m_wpds->strPassword = "";
 	}
+
+	if (m_wpds->m_ppoOwner)
+		m_wpds->m_ppoOwner->setDirty();
 
 	return TRUE;
 }

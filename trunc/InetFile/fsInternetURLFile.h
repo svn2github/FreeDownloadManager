@@ -68,6 +68,7 @@ public:
 	void UseHttp11 (BOOL bUse);
 	void SetReferer (LPCSTR pszReferer);
 	UINT64 GetFileSize();
+	LPCSTR GetServerName();
 	fsInternetResult Initialize (class fsInternetSession *pSession, BOOL bAutoDelSession = FALSE);
 	
 	

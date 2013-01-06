@@ -3,6 +3,7 @@
 */
 
 #include "stdafx.h"
+#include "Utils.h"
 #include "FdmApp.h"
 #include "fsDownloadsHistoryMgr.h"
 #include "mfchelp.h"
@@ -60,7 +61,7 @@ void fsDownloadsHistoryMgr::ApplySettings()
 		Event (DHME_RECORDDELETED, r);
 
 		m_vRecords.erase (m_vRecords.begin () + i);
-		_DldsMgr.QueryStoringHistory();
+		setDirty();
 	}
 }
 
@@ -69,7 +70,7 @@ void fsDownloadsHistoryMgr::ClearHistory()
 	vmsAUTOLOCKSECTION (m_csRecords);
 	m_vRecords.clear ();
 	vmsAUTOLOCKSECTION_UNLOCK (m_csRecords);
-	_DldsMgr.QueryStoringHistory();
+	setDirty();
 	Event (DHME_HISTORYCLEARED);
 }
 
@@ -126,8 +127,8 @@ void fsDownloadsHistoryMgr::AddToHistory(vmsDownloadSmartPtr dld)
 	m_vRecords.insert (m_vRecords.begin (), r);
 	vmsAUTOLOCKSECTION_UNLOCK (m_csRecords);
 
-	_DldsMgr.QueryStoringHistory();
-
+	setDirty();
+	
 	Event (DHME_RECORDADDED, m_vRecords [0]);
 }
 
@@ -139,6 +140,9 @@ int fsDownloadsHistoryMgr::GetRecordCount()
 
 BOOL fsDownloadsHistoryMgr::SaveHistory()
 {
+	if (!isDirty())
+		return TRUE;
+
 	HANDLE hFile = CreateFile (fsGetDataFilePath ("downloads.his.sav"), GENERIC_WRITE, 0, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
 
@@ -154,48 +158,74 @@ BOOL fsDownloadsHistoryMgr::SaveHistory()
 		return FALSE;
 	}
 
-	int cRecs = GetRecordCount ();
-	if (FALSE == WriteFile (hFile, &cRecs, sizeof (int), &dw, NULL))
+	DWORD dwBufferSize = 0;
+	getStateBuffer(0, &dwBufferSize, false);
+
+	std::auto_ptr<BYTE> apbtBufferGuard( new BYTE[dwBufferSize] );
+	LPBYTE pbtBuffer = apbtBufferGuard.get();
+
+	if (pbtBuffer == 0) {
+		CloseHandle (hFile);
+		return FALSE;
+	}
+
+	getStateBuffer(pbtBuffer, &dwBufferSize, true);
+
+	if (FALSE == WriteFile (hFile, pbtBuffer, dwBufferSize, &dw, NULL) || dw != dwBufferSize)
 	{
 		CloseHandle (hFile);
 		return FALSE;
 	}
 
-	int i = 0;
-	for (i = 0; i < cRecs; i++)
-	{
-		fsDLHistoryRecord* rec = GetRecord (i);
-		if (FALSE == fsSaveStrToFile (rec->strFileName, hFile))
-			break;
-
-		if (FALSE == fsSaveStrToFile (rec->strSavedTo, hFile))
-			break;
-
-		if (FALSE == fsSaveStrToFile (rec->strURL, hFile))
-			break;
-
-		if (FALSE == fsSaveStrToFile (rec->strComment, hFile))
-			break;
-
-		if (FALSE == WriteFile (hFile, &rec->dateAdded, sizeof (FILETIME), &dw, NULL))
-			break;
-
-		if (FALSE == WriteFile (hFile, &rec->dateDownloaded, sizeof (FILETIME), &dw, NULL))
-			break;
-
-		if (FALSE == WriteFile (hFile, &rec->dateRecordAdded, sizeof (FILETIME), &dw, NULL))
-			break;
-
-		if (FALSE == WriteFile (hFile, &rec->uFileSize, sizeof (UINT64), &dw, NULL))
-			break;
-	}
-
 	CloseHandle (hFile);
 
-	if (i != cRecs)
-		return FALSE;
+	onStateSavedSuccessfully();
 
 	return TRUE;
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 
 BOOL fsDownloadsHistoryMgr::LoadHistory()
@@ -228,6 +258,7 @@ BOOL fsDownloadsHistoryMgr::LoadHistory()
 
 	fsDownloadsHistMgrFileHdr hdr;
 	DWORD dw;
+	DWORD dwRequiredSize = ::GetFileSize(hFile, NULL);
 
 	if (FALSE == ReadFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
 	{
@@ -235,6 +266,9 @@ BOOL fsDownloadsHistoryMgr::LoadHistory()
 		return FALSE;
 	}
 
+	dwRequiredSize -= sizeof(hdr);
+
+	
 	if (hdr.wVer != DLHISTFILE_CURRENT_VERSION ||
 			strnicmp (hdr.szSig, DLHISTFILE_SIG, strlen (DLHISTFILE_SIG)))
 	{
@@ -242,49 +276,67 @@ BOOL fsDownloadsHistoryMgr::LoadHistory()
 		return FALSE;
 	}
 
-	int cRecs;
-	if (FALSE == ReadFile (hFile, &cRecs, sizeof (int), &dw, NULL))
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	std::auto_ptr<BYTE> apbtBufferGuard( new BYTE[dwRequiredSize] );
+	LPBYTE pbtBuffer = apbtBufferGuard.get();
+	if (pbtBuffer == 0)
+		return false;
+	memset(pbtBuffer, 0, dwRequiredSize);
+
+	if (FALSE == ReadFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize)
 	{
 		CloseHandle (hFile);
 		return FALSE;
 	}
-
-	int i = 0;
-	for (i = 0; i < cRecs; i++)
-	{
-		fsDLHistoryRecordPtr rec; rec.CreateInstance ();
-
-		if (FALSE == fsReadStrFromFile (&rec->strFileName.pszString, hFile))
-			break;
-
-		if (FALSE == fsReadStrFromFile (&rec->strSavedTo.pszString, hFile))
-			break;
-
-		if (FALSE == fsReadStrFromFile (&rec->strURL.pszString, hFile))
-			break;
-
-		if (FALSE == fsReadStrFromFile (&rec->strComment.pszString, hFile))
-			break;
-
-		if (FALSE == ReadFile (hFile, &rec->dateAdded, sizeof (FILETIME), &dw, NULL))
-			break;
-
-		if (FALSE == ReadFile (hFile, &rec->dateDownloaded, sizeof (FILETIME), &dw, NULL))
-			break;
-
-		if (FALSE == ReadFile (hFile, &rec->dateRecordAdded, sizeof (FILETIME), &dw, NULL))
-			break;
-
-		if (FALSE == ReadFile (hFile, &rec->uFileSize, sizeof (UINT64), &dw, NULL))
-			break;
-
-		m_vRecords.push_back (rec);
-	}
-
 	CloseHandle (hFile);
 
-	if (i != cRecs)
-		return FALSE;
+	loadFromStateBuffer(pbtBuffer, &dwRequiredSize, hdr.wVer);
 
 	return TRUE;
 }
@@ -303,7 +355,7 @@ void fsDownloadsHistoryMgr::DeleteRecord(fsDLHistoryRecord *rec)
 	{
 		Event (DHME_RECORDDELETED, rec);
 		m_vRecords.erase (m_vRecords.begin () + i);
-		_DldsMgr.QueryStoringHistory();
+		setDirty();
 	}
 }
 
@@ -317,3 +369,127 @@ int fsDownloadsHistoryMgr::FindIndex(fsDLHistoryRecord *rec)
 
 	return -1;
 }
+
+void fsDownloadsHistoryMgr::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwSizeRequired = 0;
+	
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	int cRecs = GetRecordCount ();
+	putVarToBuffer(cRecs, pbtCurrentPos, 0, *pdwSize, &dwSizeRequired);
+
+	int i = 0;
+	for (i = 0; i < cRecs; i++) {
+		fsDLHistoryRecord* rec = GetRecord (i);
+		if (!rec)
+			return;
+
+		
+		putStrToBuffer(rec->strFileName, pbtCurrentPos, 0, *pdwSize, &dwSizeRequired);
+		putStrToBuffer(rec->strSavedTo, pbtCurrentPos, 0, *pdwSize, &dwSizeRequired);
+		putStrToBuffer(rec->strURL, pbtCurrentPos, 0, *pdwSize, &dwSizeRequired);
+		putStrToBuffer(rec->strComment, pbtCurrentPos, 0, *pdwSize, &dwSizeRequired);
+
+		putVarToBuffer(rec->dateAdded, pbtCurrentPos, 0, *pdwSize, &dwSizeRequired);
+		putVarToBuffer(rec->dateDownloaded, pbtCurrentPos, 0, *pdwSize, &dwSizeRequired);
+		putVarToBuffer(rec->dateRecordAdded, pbtCurrentPos, 0, *pdwSize, &dwSizeRequired);
+		putVarToBuffer(rec->uFileSize, pbtCurrentPos, 0, *pdwSize, &dwSizeRequired);
+	}
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize)
+			*pdwSize = dwSizeRequired;
+		return;
+	}
+
+	putVarToBuffer(cRecs, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+
+	for (i = 0; i < cRecs; i++) {
+		fsDLHistoryRecord* rec = GetRecord (i);
+		if (!rec)
+			return;
+
+		putStrToBuffer(rec->strFileName, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		putStrToBuffer(rec->strSavedTo, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		putStrToBuffer(rec->strURL, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		putStrToBuffer(rec->strComment, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+
+		putVarToBuffer(rec->dateAdded, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		putVarToBuffer(rec->dateDownloaded, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		putVarToBuffer(rec->dateRecordAdded, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		putVarToBuffer(rec->uFileSize, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	}
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+}
+
+bool fsDownloadsHistoryMgr::loadHistoryRecordStrAttributes(fsDLHistoryRecordPtr& rec, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwSize, DWORD dwVer)
+{
+	if (!getStrFromBuffer(&rec->strFileName.pszString, pbtCurrentPos, pbtBuffer, dwSize))
+		return false;
+
+	if (!getStrFromBuffer(&rec->strSavedTo.pszString, pbtCurrentPos, pbtBuffer, dwSize))
+		return false;
+
+	if (!getStrFromBuffer(&rec->strURL.pszString, pbtCurrentPos, pbtBuffer, dwSize))
+		return false;
+
+	if (!getStrFromBuffer(&rec->strComment.pszString, pbtCurrentPos, pbtBuffer, dwSize))
+		return false;
+
+	return true;
+}
+
+bool fsDownloadsHistoryMgr::loadHistoryRecordNonStrAttributes(fsDLHistoryRecordPtr& rec, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwSize, DWORD dwVer)
+{
+	if (!getVarFromBuffer(rec->dateAdded, pbtCurrentPos, pbtBuffer, dwSize))
+		return false;
+
+	if (!getVarFromBuffer(rec->dateDownloaded, pbtCurrentPos, pbtBuffer, dwSize))
+		return false;
+
+	if (!getVarFromBuffer(rec->dateRecordAdded, pbtCurrentPos, pbtBuffer, dwSize))
+		return false;
+
+	if (!getVarFromBuffer(rec->uFileSize, pbtCurrentPos, pbtBuffer, dwSize))
+		return false;
+
+	return true;
+}
+
+bool fsDownloadsHistoryMgr::loadHistoryRecordAttributes(fsDLHistoryRecordPtr& rec, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwSize, DWORD dwVer)
+{
+	if (!loadHistoryRecordStrAttributes(rec, pbtCurrentPos, pbtBuffer, dwSize, dwVer))
+		return false;
+
+	if (!loadHistoryRecordNonStrAttributes(rec, pbtCurrentPos, pbtBuffer, dwSize, dwVer))
+		return false;
+
+	return true;
+}
+
+bool fsDownloadsHistoryMgr::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	int cRecs = GetRecordCount ();
+	if (!getVarFromBuffer(cRecs, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	int i = 0;
+	for (i = 0; i < cRecs; i++) {
+
+		fsDLHistoryRecordPtr rec; rec.CreateInstance ();
+
+		if (!loadHistoryRecordAttributes(rec, pbtCurrentPos, pbtBuffer, *pdwSize, dwVer))
+			return false;
+
+		m_vRecords.push_back (rec);
+	}
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	return true;
+}
+

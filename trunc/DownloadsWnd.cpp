@@ -6,6 +6,7 @@
 #include "FdmApp.h"
 #include "DownloadsWnd.h"
 #include "CreateDownloadDlg.h"
+#include "CreateTPDownloadDlg.h"
 #include "fsDownloadMgr.h"
 #include "plugins.h"
 #include "DownloadPropertiesSheet.h"
@@ -32,6 +33,7 @@
 #include "Dlg_CreateNewTorrent.h"
 #include "WndDlDoneNotification.h"
 #include "FdmUiWindow.h"
+#include "TpDldSheet.h"
 
 extern CSpiderWnd* _pwndSpider;
 
@@ -106,6 +108,7 @@ BEGIN_MESSAGE_MAP(CDownloadsWnd, CWnd)
 	ON_COMMAND(ID_DLDCONVERT, OnDldconvert)
 	ON_COMMAND(ID_DLDCREATE, OnDownloadCreate)
 	ON_COMMAND(ID_DLDENABLESEEDING, OnDldenableseeding)
+	ON_COMMAND(ID_DLD_TP, OnTpDownloadCreate)
 	//}}AFX_MSG_MAP
 
 	
@@ -234,6 +237,75 @@ void CDownloadsWnd::OnSize(UINT, int cx, int cy)
 void CDownloadsWnd::OnDownloadCreate() 
 {
 	CreateDownload ((LPCSTR)NULL);
+}
+
+void CDownloadsWnd::OnTpDownloadCreate()
+{
+	LPCSTR pszStartUrl = _ClipbrdMgr.Text ();
+	if (pszStartUrl)
+	{
+		if (_tcsstr (pszStartUrl, "rtsp://") == 0 &&
+			_tcsstr (pszStartUrl, "mmsh://") == 0 &&
+			_tcsstr (pszStartUrl, "mmst://") == 0 &&
+			_tcsstr (pszStartUrl, "mms://") == 0)
+			pszStartUrl = "";
+	}
+
+	vmsDownloadSmartPtr dld;
+	Download_CreateInstance (dld, false, true);
+
+	dld->dwFlags |= DLD_TP_DOWNLOAD;
+
+	if (_App.ReserveDiskSpace ())
+		dld->pMgr->GetTpDownloadMgr ()->enable_Flags (BTDF_RESERVE_DISK_SPACE);
+	if (_App.DownloadFlags () & DPF_GENERATEDESCFILE)
+		dld->pMgr->GetTpDownloadMgr ()->enable_Flags (BTDF_GENERATE_DESC_FILE);
+	if (_App.DownloadFlags () & DPF_STARTWHENDONE)
+		dld->pMgr->GetTpDownloadMgr ()->enable_Flags (BTDF_LAUNCH_WHEN_DONE);
+
+	UINT res = IDOK;
+	BOOL bPlaceToTop = FALSE;
+	BOOL bScheduled = FALSE;
+	
+	fsScheduleEx schScheduleParam;
+	fsSchedule& task = schScheduleParam.schTask;
+
+	vmsDownloadsGroupSmartPtr pGroup = _DldsGrps.FindGroup (_App.NewDL_GroupId ());
+	if (pGroup == NULL)
+		pGroup = _DldsGrps.FindGroup (GRP_OTHER_ID);
+
+	dld->pGroup = pGroup;
+
+	dld->bAutoStart = _App.NewDL_AutoStart ();
+	
+
+	
+
+	CCreateTPDownloadDlg dlg (dld, this);
+	dlg.m_strUrl = pszStartUrl;
+	
+	res = _DlgMgr.DoModal (&dlg);
+
+	if (res != IDOK)
+		return;
+
+	bPlaceToTop = dlg.m_bPlaceAtTop;
+	
+	
+	task.hts.enType = HTS_ONCE;
+	task.hts.last.dwHighDateTime = task.hts.last.dwLowDateTime = UINT_MAX;
+	task.dwFlags = SCHEDULE_ENABLED;
+	task.uWaitForConfirmation = 0;
+	
+	CString strUrl = dlg.m_strUrl;
+	CString strOutFolder = dlg.m_strOutFolder;
+	CString strFileName = dlg.m_strFileName;
+	int nStreamingSpped = dlg.m_nStreamingSpeed;
+
+	vmsTpDownloadMgr *pMgr = dld->pMgr->GetTpDownloadMgr ();
+	if (pMgr == NULL) return;
+	if (pMgr->CreateTPDownload (strUrl, strOutFolder, strFileName, nStreamingSpped))
+		CreateDownload (dld, NULL, FALSE, bPlaceToTop);
 }
 
 void CDownloadsWnd::OnTimer(UINT ) 
@@ -424,6 +496,11 @@ LRESULT CDownloadsWnd::OnAppExit(WPARAM, LPARAM)
 			dld->pMgr->GetBtDownloadMgr ()->SetEventsHandler (NULL, 0);
 			dld->pMgr->GetBtDownloadMgr ()->StopSeeding ();
 		}
+		else if (dld->pMgr->GetTpDownloadMgr ())
+		{
+			dld->pMgr->GetTpDownloadMgr ()->SetEventsHandler (NULL, 0);
+			dld->pMgr->GetTpDownloadMgr ()->SetEventDescFunc (NULL, 0);
+		}
 
 		dld->pMgr->StopDownloading ();
 	}
@@ -542,13 +619,10 @@ void CDownloadsWnd::OnDownloadDefProperties()
 	vmsDownloadSmartPtr http, ftp, https;
 
 	http.CreateInstance ();
-	http->pMgr.CreateInstance ();
 	http->pMgr->Attach (new fsDownloadMgr);
 	https.CreateInstance ();
-	https->pMgr.CreateInstance ();
 	https->pMgr->Attach (new fsDownloadMgr);
 	ftp.CreateInstance ();
-	ftp->pMgr.CreateInstance ();
 	ftp->pMgr->Attach (new fsDownloadMgr);
 
 	http->pMgr->GetDownloadMgr ()->CreateByUrl ("http://");
@@ -705,12 +779,14 @@ void CDownloadsWnd::OnDldstop()
 UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, LPCSTR pszComment, LPCSTR pszReferer, BOOL bSilent, DWORD dwForceAutoLaunch, BOOL *pbAutoStart, vmsDWCD_AdditionalParameters* pParams, UINT* pRes)
 {
 	vmsDownloadSmartPtr dld;
-	Download_CreateInstance (dld);
+	Download_CreateInstance (dld, false);
 
 	UINT res = IDOK;
 	bool bPlaceToTop = false;
 	BOOL bScheduled = FALSE;
-	fsSchedule task;
+	
+	fsScheduleEx schScheduleParam;
+	fsSchedule& task = schScheduleParam.schTask;
 
 	std::string strUrlTmp;
 	if (pszStartUrl == NULL || *pszStartUrl == NULL)
@@ -765,19 +841,11 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 				dlg.m_pGroup = pParams->pGroup;
 		}
 		
-		if (dld->pMgr->GetDownloadMgr () != NULL) {
-			dld->pMgr->GetDownloadMgr ()->EnableQueryStoringDownloadingList(false);
-		}
-
 		res = _DlgMgr.DoModal (&dlg);
-
-		if (dld->pMgr->GetDownloadMgr () != NULL) {
-			dld->pMgr->GetDownloadMgr ()->EnableQueryStoringDownloadingList(true);
-		}
 
 		bPlaceToTop = dlg.m_bPlaceAtTop;
 		bScheduled = dlg.m_bScheduled;
-		task = dlg.m_task;
+		task = dlg.m_schScheduleParam.schTask;
 	}
 	else
 	{
@@ -1574,7 +1642,7 @@ BOOL CDownloadsWnd::IsSizesInBytes()
 BOOL CDownloadsWnd::CreateDownloadWithDefSettings(vmsDownloadSmartPtr dld, LPCSTR pszUrl)
 {
 	if (dld->pMgr == NULL)
-		dld->pMgr = new vmsDownloadMgrEx;
+		dld->setDownloadMgr (new vmsDownloadMgrEx);
 
 	if (dld->pMgr->GetDownloadMgr () == NULL)
 	{
@@ -1819,8 +1887,8 @@ void CDownloadsWnd::RestartDownload(vmsDownloadSmartPtr dld, BOOL bSelThisDld)
 		SystemTimeToFileTime (&time, &dld->dateAdded);
 		ZeroMemory (&dld->dateCompleted, sizeof (dld->dateCompleted));
 
-		_DldsMgr.QueryStoringDownloadList(); 
-
+		dld->setDirty();
+		
 		_DldsMgr.MoveDownloadToEndOfList (dld);
 
 		if (-1 != m_wndDownloads.m_tasks.FindItem (dld))
@@ -1976,6 +2044,8 @@ DWORD WINAPI CDownloadsWnd::_threadCheckDldHasOpinions(LPVOID lp)
 	else
 		dld->dwFlags |= DLD_HASOPINIONS_NO;
 
+	dld->setDirty();
+
 	pthis->OnDldHasOpinions (dld);	
 
 _lExit:
@@ -2082,6 +2152,28 @@ void CDownloadsWnd::OnBtDownloadProperties(DLDS_LIST &vDlds, CWnd *pwndParent)
     _DlgMgr.OnEndDialog (&sheet);
 }
 
+void CDownloadsWnd::OnTpDownloadProperties(DLDS_LIST &vDlds, CWnd *pwndParent)
+{
+	
+	CTpDldSheet sheet (LS (L_DLDPROP), pwndParent ? pwndParent : this);
+
+	sheet.Init (&vDlds);
+
+    _DlgMgr.OnDoModal (&sheet);
+
+	if (sheet.DoModal () == IDOK)
+	{
+		
+		if (sheet.IsNeedUpdateTasks ())
+			OnDownloadsGroupChanged ();
+
+		
+			
+	}
+
+    _DlgMgr.OnEndDialog (&sheet);
+}
+
 BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUrl, BOOL bSilent, BOOL bSeedOnly, LPCSTR pszOutputOrSrcForSeedFolder)
 {
 	if (bSeedOnly)
@@ -2146,21 +2238,13 @@ BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUr
 		CCreateDownloadFromTorrentFileDlg dlg;
 		dlg.m_ptszTorrentFile = pszFile;
 
-		if (dld->pMgr && dld->pMgr->GetBtDownloadMgr()) {
-			dld->pMgr->GetBtDownloadMgr()->EnableQueryStoringDownloadList(false);
-		}
-
 		dlg.m_dld = dld;
 		if (IDOK != _DlgMgr.DoModal (&dlg))
 			return FALSE;
 
 		bPlaceToTop = dlg.m_bPlaceToTop;
 
-		if (dld->pMgr && dld->pMgr->GetBtDownloadMgr()) {
-			dld->pMgr->GetBtDownloadMgr()->EnableQueryStoringDownloadList(true);
-		}
-
-		CreateDownload (dld, dlg.m_bScheduled ? &dlg.m_task : NULL, FALSE, dlg.m_bPlaceToTop != 0);
+		CreateDownload (dld, dlg.m_bScheduled ? &dlg.m_schScheduleParam.schTask : NULL, FALSE, dlg.m_bPlaceToTop != 0);
 	}
 	else
 	{
@@ -2291,8 +2375,7 @@ void CDownloadsWnd::OnBtDownloadDefProperties()
 	vmsDownloadSmartPtr dld;
 	Download_CreateInstance (dld, true);
 	dld->pMgr->GetBtDownloadMgr ()->setRequiredRatio (_App.Bittorrent_RequiredRatio ());
-	dld->pMgr->GetBtDownloadMgr ()->EnableQueryStoringDownloadList(false);
-
+	
 	v.push_back (dld);
 	sheet.Init (&v, BTDS_SEEDING_PAGE);
 	if (IDCANCEL == _DlgMgr.DoModal (&sheet))
@@ -2797,6 +2880,8 @@ void CDownloadsWnd::OnDownloadPreCreate(fsDownload* dld, vmsDWCD_AdditionalParam
 
 void CDownloadsWnd::OnDownloadPreCreate_AdjustFileSharingSiteSupport(fsDownload* dld, vmsDWCD_AdditionalParameters* pParams)
 {
+	
+
 	if (!dld->pMgr->GetDownloadMgr ())
 		return;
 
@@ -2808,7 +2893,7 @@ void CDownloadsWnd::OnDownloadPreCreate_AdjustFileSharingSiteSupport(fsDownload*
 
 	
 	pMgr->GetDNP ()->dwFlags |= DNPF_IMMEDIATELY_SEND_AUTH_AS_BASIC;
-	_DldsMgr.QueryStoringDownloadList();
+	pMgr->setDirty();
 
 	if (!strcmp (pszKnownSite, "filesonic.com"))
 	{
@@ -2824,7 +2909,7 @@ void CDownloadsWnd::OnDownloadPreCreate_AdjustFileSharingSiteSupport(fsDownload*
 			}
 		}
 		pMgr->GetDNP ()->dwFlags |= DNPF_DONT_UPDATE_ORIGINAL_URL_AFTER_REDIRECT;
-		_DldsMgr.QueryStoringDownloadList();
+		pMgr->setDirty();
 	}
 }
 

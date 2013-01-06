@@ -218,16 +218,12 @@ BOOL CDownloadProperties_IntegrityPage::OnApply()
 	{
 		u = u == BST_CHECKED;	
 		DP_SET (bCheckIntegrityWhenDone, FALSE, &u);
-#ifndef FDM_DLDR__RAWCODEONLY
-		_DldsMgr.QueryStoringDownloadList();
-#endif
 	}
 
 	if (m_wndICFR.GetCurSel () != CB_ERR)
 	{
 		vmsIntegrityCheckFailedReaction enICFR = (vmsIntegrityCheckFailedReaction)m_wndICFR.GetCurSel ();
 		DP_SET (enICFR, FALSE, &enICFR);
-		_DldsMgr.QueryStoringDownloadList();
 	}
 
 	if (m_pvDlds->size () == 1)
@@ -241,7 +237,7 @@ BOOL CDownloadProperties_IntegrityPage::OnApply()
 		lstrcpy (dp0->pszCheckSum, str);
 
 		dp0->dwIntegrityCheckAlgorithm = m_wndAlgorithm.GetItemData (m_wndAlgorithm.GetCurSel ());
-		_DldsMgr.QueryStoringDownloadList();
+		m_pvDlds->at (0)->pMgr->GetDownloadMgr ()->setDirty();
 	}
 	
 	return CPropertyPage::OnApply();

@@ -6,6 +6,7 @@
 
 #include "vmsBtDownload.h"
 #include "vmsBtFile.h"
+#include "vmsBtPersistObject.h"
 
 enum vmsBtSessionEventType
 {
@@ -164,4 +165,5 @@ public:
 	virtual void setMultiTracker (bool announce_to_all_trackers, bool announce_to_all_tiers) = NULL;
 	
 	virtual void DisableOsCash() = NULL;
+	virtual void getPersistObject (vmsBtPersistObject **ppObj) = NULL;
 };

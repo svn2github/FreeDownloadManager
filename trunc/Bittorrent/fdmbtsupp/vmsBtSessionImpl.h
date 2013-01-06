@@ -3,11 +3,14 @@
 */
 
 #pragma once
+#include <memory>
 #include "vmsbtsession.h"
 #include "vmsBtDownloadImpl.h"
 #include <libtorrent/alert_types.hpp>
+#include "../../vmsPersistObject.h"
 
-class vmsBtSessionImpl : public vmsBtSession
+class vmsBtSessionImpl : public vmsBtSession, vmsBtPersistObject,
+	protected vmsPersistObject
 {
 public:
 	void SetMaxConnections (int limit);
@@ -39,6 +42,13 @@ public:
 	void SetUserAgent (LPCSTR pszUA);
 	
 	void DisableOsCash();
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+	void getPersistObject (vmsBtPersistObject **ppObj) {*ppObj = this;}
+	virtual bool isDirty () {return vmsPersistObject::isDirty ();}
+	virtual void getStateBuffer (LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage) {
+		vmsPersistObject::getStateBuffer (pb, pdwSize, bSaveToStorage);
+	}
 
 	static vmsBtSessionImpl* Instance ();
 	vmsBtSessionImpl(void);
@@ -49,6 +59,7 @@ public:
 	libtorrent::session m_session;
 
 protected:
+	void CheckIfDhtStateChanged ();
 	static DWORD WINAPI _threadSession (LPVOID lp);
 	bool m_bThreadRunning, m_bNeedStop;
 	fntBtSessionEventsHandler m_pfnEvHandler;
@@ -57,6 +68,8 @@ protected:
 	
 	std::vector <vmsBtDownloadImpl*> m_vDownloads;
 	vmsCriticalSection m_csRestoreTorrentHandle, m_csDownloads, m_csObject;
+	std::auto_ptr<BYTE> m_apbtSessionState;
+	DWORD m_dwSessionStateSize;
 
 private:
 	

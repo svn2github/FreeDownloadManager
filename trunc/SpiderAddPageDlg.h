@@ -28,7 +28,8 @@ public:
 	BOOL m_bAutoStart;
 	BOOL m_bReqTopMost;
 	CString m_strStartUrl;	
-	fsSchedule m_task;
+	
+	fsScheduleEx m_schScheduleParam;
 	class CFdmUiWindow *m_pUiWindow;
 	CSpiderAddPageDlg(CWnd* pParent = NULL);   
 

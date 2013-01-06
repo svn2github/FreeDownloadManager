@@ -52,43 +52,46 @@ NS_IMETHODIMP CFDMUrlReceiver::ShowAddDownloadDialog()
 
 nsresult CFDMUrlReceiver::ApplyUrlToReceiver(IWGUrlReceiver *pUrlRcvr, IFDMUrl *url)
 {
-	wchar_t *wsz;
+	if (!url || !pUrlRcvr)
+		return NS_ERROR_INVALID_POINTER;
+
+	wchar_t *pwsz = NULL;
 	_bstr_t bstr;
 
-	url->GetUrl (&wsz);
-	bstr = wsz;
+	url->GetUrl (&pwsz);
+	bstr = pwsz;
 	CC (pUrlRcvr->put_Url (bstr));
-	nsMemory::Free (wsz);
+	nsMemory::Free (pwsz);
 
-	url->GetOriginalUrl (&wsz);
-	bstr = wsz;
+	url->GetOriginalUrl (&pwsz);
+	bstr = pwsz;
 	CC (pUrlRcvr->put_OriginalURL (bstr));
-	nsMemory::Free (wsz);
+	nsMemory::Free (pwsz);
 
-	url->GetUserAgent (&wsz);
-	bstr = wsz;
+	url->GetUserAgent (&pwsz);
+	bstr = pwsz;
 	CC (pUrlRcvr->put_UserAgent (bstr));
-	nsMemory::Free (wsz);
+	nsMemory::Free (pwsz);
 
-	url->GetReferer (&wsz);
-	bstr = wsz;
+	url->GetReferer (&pwsz);
+	bstr = pwsz;
 	CC (pUrlRcvr->put_Referer (bstr));
-	nsMemory::Free (wsz);
+	nsMemory::Free (pwsz);
 
-	url->GetComment (&wsz);
-	bstr = wsz;
+	url->GetComment (&pwsz);
+	bstr = pwsz;
 	CC (pUrlRcvr->put_Comment (bstr));
-	nsMemory::Free (wsz);
+	nsMemory::Free (pwsz);
 
-	url->GetCookies (&wsz);
-	bstr = wsz;
+	url->GetCookies (&pwsz);
+	bstr = pwsz;
 	CC (pUrlRcvr->put_Cookies (bstr));
-	nsMemory::Free (wsz);
+	nsMemory::Free (pwsz);
 
-	url->GetPostData (&wsz);
-	bstr = wsz;
+	url->GetPostData (&pwsz);
+	bstr = pwsz;
 	CC (pUrlRcvr->put_PostData (bstr));
-	nsMemory::Free (wsz);
+	nsMemory::Free (pwsz);
 
 	return NS_OK;
 }

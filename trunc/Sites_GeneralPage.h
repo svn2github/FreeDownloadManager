@@ -21,6 +21,7 @@ public:
 	CSites_AdvancedPage* m_advanced;	
 	int m_iSiteIndex;		
 	fsSiteInfo* m_pSite;	
+	void SetMode(bool bIsAddingSite);
 
 	CSites_GeneralPage();
 	~CSites_GeneralPage();
@@ -65,6 +66,8 @@ protected:
 	afx_msg void OnDontsendlist2();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+
+	bool m_bIsAddingSite;
 
 };
 

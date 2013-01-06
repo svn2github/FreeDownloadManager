@@ -6,11 +6,13 @@
 #define AFX_VMSAPPSETTINGSSTORE_H__232450C9_092A_49EF_9B4E_3D2DA2B9E736__INCLUDED_
 
 #include "vmsDataFile.h"	
+#include "vmsPersistObject.h"
+
 #if _MSC_VER > 1000
 #pragma once
 #endif 
 
-class vmsAppSettingsStore  
+class vmsAppSettingsStore : public vmsPersistObject
 {
 public:
 	void SaveSettingsToFile(LPCSTR pszFile);
@@ -27,6 +29,9 @@ public:
 
 	BOOL WriteProfileInt (LPCSTR pszSection, LPCSTR pszEntry, int nValue);
 	UINT GetProfileInt (LPCSTR pszSection, LPCSTR pszEntry, INT nDefault);
+
+	void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 
 	vmsAppSettingsStore();
 	virtual ~vmsAppSettingsStore();

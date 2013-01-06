@@ -198,12 +198,16 @@ void CDlg_Options_Downloads_NewDld::OnSetgrpsfldr()
 	if (MessageBox (LS (L_ALLGRPSFLDRSWBCHANGEDTOTHISFLDR), NULL, MB_YESNO) == IDNO)
 		return;
 	
-	for (size_t i = 0; i < _DldsGrps.GetTotalCount (); i++)
+	for (size_t i = 0; i < _DldsGrps.GetTotalCount (); i++) {
 		_DldsGrps.GetGroup (i)->strOutFolder = str;	
-
-	if (_DldsGrps.GetTotalCount () > 0) {
-		_DldsGrps.QueryStoringGroupsInformation();
+		_DldsGrps.GetGroup (i)->setDirty();
+		
 	}
+
+	
+	
+	
+	
 }
 
 void CDlg_Options_Downloads_NewDld::OnNewgrp0() 

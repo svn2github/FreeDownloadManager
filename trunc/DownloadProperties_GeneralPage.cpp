@@ -155,8 +155,6 @@ void CDownloadProperties_GeneralPage::OnChangeComment()
 
 BOOL CDownloadProperties_GeneralPage::OnApply() 
 {
-	CQueryStoringDownloadListGuard<fsDownloadsMgr> queryGuard(&_DldsMgr);
-
 	const int size = m_pvDlds->size ();
 
 	if (size == 1)
@@ -185,10 +183,9 @@ BOOL CDownloadProperties_GeneralPage::OnApply()
 				}
 
 				m_pvDlds->at (0)->pMgr->GetDownloadMgr ()->CreateByUrl (strNewUrl, TRUE);
+				m_pvDlds->at (0)->pMgr->GetDownloadMgr ()->setDirty();
 				if (*m_pvDlds->at (0)->pMgr->GetDownloadMgr ()->GetDNP ()->pszUserName)
 					ReadAuthorization ();
-
-				queryGuard.QueryStoringDownloadList(); 
 			}
 		}
 
@@ -231,7 +228,7 @@ BOOL CDownloadProperties_GeneralPage::OnApply()
 				m_pvDlds->at (i)->pGroup = pGroup;
 				pGroup->cDownloads++;
 				m_pvDlds->at (i)->pMgr->GetDownloadMgr ()->MoveToFolder (pGroup->strOutFolder);
-				queryGuard.QueryStoringDownloadList(); 
+				m_pvDlds->at (i)->setDirty(); 
 			}
 		}
 
@@ -249,11 +246,8 @@ BOOL CDownloadProperties_GeneralPage::OnApply()
 		for (int i = 0; i < size; i++)
 		{
 			m_pvDlds->at (i)->strComment = strComment;
+			m_pvDlds->at (i)->setDirty();
 			_pwndDownloads->UpdateDownload (m_pvDlds->at (i));
-		}
-
-		if (size > 0) {
-			queryGuard.QueryStoringDownloadList(); 
 		}
 
 		m_bNeedUpdateTasks = TRUE;
@@ -374,20 +368,17 @@ void CDownloadProperties_GeneralPage::WriteAuthorization()
 			GetDlgItemText (IDC_USER, str);
 			if (m_bUserChanged || str.GetLength ()) {
 				DNP_SET (pszUserName, TRUE, str);
-				_DldsMgr.QueryStoringDownloadList(); 
 			}
 
 			GetDlgItemText (IDC_PASSWORD, str);
 			if (m_bPasswordChanged || str.GetLength ()) {
 				DNP_SET (pszPassword, TRUE, str);
-				_DldsMgr.QueryStoringDownloadList(); 
 			}
 			break;
 
 		case BST_UNCHECKED:
 			DNP_SET (pszUserName, TRUE, "");
 			DNP_SET (pszPassword, TRUE, "");
-			_DldsMgr.QueryStoringDownloadList(); 
 			break;
 	}
 }

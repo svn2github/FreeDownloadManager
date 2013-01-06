@@ -52,3 +52,9 @@ BOOL CSitesSheet::OnInitDialog()
 	return TRUE;  
 	              
 }
+
+void CSitesSheet::SetMode(bool bIsAddingSite)
+{
+	m_general.SetMode(bIsAddingSite);
+	m_advanced.SetMode(bIsAddingSite);
+}

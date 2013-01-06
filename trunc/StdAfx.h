@@ -94,11 +94,7 @@ extern CFdmModule _Module;
 #include <algorithm>
 #pragma warning (pop)
 
-#ifdef UNICODE
-#define tstring std::wstring
-#else
-#define tstring std::string
-#endif
+#include "Include.Add/tstring.h"
 
 #define delta(a,b) (((a) > (b)) ? ((a)-(b)) : ((b)-(a)))
 
@@ -140,6 +136,10 @@ extern CFdmModule _Module;
 #include "fsDownloadsMgr.h"
 #include "vmsTheme.h"
 #include "fsPluginMgr.h"
+#include "Include.Add/zlib/zlib.h"
+#include "include.add/vmsPostRequest.h"
+#include "Include.Add/vmsZip.h"
+#include "Include.Add/vmsUnZip.h"
 
 #define SBMP(id) _SkinMgr.bmp (id)
 #define SICO(id) _SkinMgr.icon (id)

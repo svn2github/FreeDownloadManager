@@ -11,6 +11,7 @@
 
 #include "fsScheduleMgr.h"
 #include "tree.h"
+#include "vmsPersistObject.h"
 
 enum fsWPDExtsType
 {
@@ -27,6 +28,10 @@ enum fsWPDExtsType
 
 struct fsWPDSettings
 {
+	fsWPDSettings()
+		: m_ppoOwner(0)
+	{}
+
 	fsString strHTMLExts;	
 	BOOL bNotAllPages;		
 	BOOL bNotAllFiles;		
@@ -49,6 +54,8 @@ struct fsWPDSettings
 	DWORD dwFlags;
 	
 	fs::list <struct fsWPDIgnoreListItem*> vIgnoreList;
+
+	vmsPersistObject* m_ppoOwner;
 };
 
 struct fsWPDIgnoreListItem
@@ -98,8 +105,19 @@ struct _WP_UnprocessedLinks
 	_WP_LinkType lt;		
 };
 
-struct fsDLWebPage : public vmsObject
+enum EDlWebPageLoadCase
 {
+	DPLC_CreateId,
+	DPLC_FindDownload,
+	DPLC_InitDownload,
+	DPLC_CreateLeafs
+};
+
+struct fsDLWebPage : public vmsObject, public vmsPersistObject
+{
+	typedef bool (*OnSave)(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwSizeRequired, void* pvData);
+	typedef bool (*OnLoad)(int nCase, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD* pdwSize, void* pvData);
+
 	vmsDownloadSmartPtr dld;	
 	UINT uDldId;		
 	fsString strURL;	
@@ -115,11 +133,25 @@ struct fsDLWebPage : public vmsObject
 	
 	fs::list <fsString> *pvUrls;
 
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+
+	
+	OnSave osOnSaveHandler;
+	OnLoad olOnLoadHandler;
+	void* pvOnSaveHandlerData;
+	void* pvOnLoadHandlerData;
+
 protected:
 	friend class vmsObject;
 	friend class vmsObjectSmartPtr <fsDLWebPage>;
 
-	fsDLWebPage () {
+	fsDLWebPage () 
+		: osOnSaveHandler(0), 
+		  olOnLoadHandler(0), 
+		  pvOnSaveHandlerData(0),
+		  pvOnLoadHandlerData(0)
+	{
 		pvUnpLinks = NULL;
 		pvUrls = NULL;
 	}
@@ -158,7 +190,20 @@ enum vmsWPDPageType
 
 typedef void (*fntWPDEvents) (class fsWebPageDownloader* dldr, fsWPDEvent ev, fsDownload *dld, fsDLWebPage *wp, fsDLWebPageTree wptree, LPVOID lp);
 
-class fsWebPageDownloader : public vmsObject 
+class fsWebPageDownloader;
+
+struct TDlWebPageOnLoadHandlerData
+{
+	TDlWebPageOnLoadHandlerData()
+		: m_pwpdWebPageDownloader(0)
+	{}
+
+	fsDLWebPageTree m_dwpPages;
+	fsDLWebPagePtr m_pDlWebPagePtr;
+	fsWebPageDownloader* m_pwpdWebPageDownloader;
+};
+
+class fsWebPageDownloader : public vmsObject, public vmsPersistObject
 {
 	friend class fsWebPageDownloadsMgr;
 public:
@@ -216,6 +261,21 @@ public:
 	float GetPercentDone();
 	
 	LPCSTR GetStartURL ();
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+	bool loadObjectItselfFromStateBuffer_Old(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer);
+	TDlWebPageOnLoadHandlerData& AddDwpOnLoadHandlerData(const TDlWebPageOnLoadHandlerData& wpldData);
+	void CleanDwpOnLoadHandlerData();
+
+	virtual bool loadFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer)
+	{
+		if (!vmsPersistObject::loadFromStateBuffer (pb, pdwSize, dwVer))
+		{
+			Load_PerformRollback ();
+			return false;
+		}
+		return true;
+	}
 
 	
 	fsDLWebPageTree FindWebPageTree (vmsDownloadSmartPtr dld);
@@ -316,7 +376,10 @@ protected:
 
 	
 	void ApplySettingsToDld (vmsDownloadSmartPtr dld);
+	static bool FdmOnDwpLoad(int nCase, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD* pdwSize, void* pvData);
+	static bool FdmOnDwpSave(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwSizeRequired, void* pvData);
 
+	std::list<TDlWebPageOnLoadHandlerData> m_lstDwpOnLoadHandlerData;
 	fsWPDSettings m_wpds;			
 	fsDLWebPageTreePtr m_pages;	
 	fsString m_strStartServer;		

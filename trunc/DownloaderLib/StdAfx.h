@@ -24,6 +24,7 @@
 #include <vector>
 #include <list>
 #include <assert.h>
+#include <intsafe.h> 
 
 #define LS(s) ""
 #define LOG(x)
@@ -31,9 +32,11 @@
 #include <..\inetfile\inetfile.h>
 #include <fsString.h>
 #include "../common.h"
+#include "../dldscommon.h"
 #include "../system.h"
 #include <stdio.h>
 #include <comdef.h>
+#include <..\dldscommon.h>
 #include <vmsCriticalSection.h>
 #include <vmsReaderWriterLock.h>
 #include <vmsObject.h>

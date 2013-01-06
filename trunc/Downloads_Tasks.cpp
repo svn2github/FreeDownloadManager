@@ -23,6 +23,8 @@
 #include "FolderBrowser.h"
 #include "Dlg_Download.h"
 
+#include <algorithm>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -82,6 +84,7 @@ BEGIN_MESSAGE_MAP(CDownloads_Tasks, CListCtrlEx)
 	ON_COMMAND(ID_DLDCONVERT, OnDldconvert)
 	ON_NOTIFY_REFLECT(LVN_GETDISPINFO, OnGetdispinfo)
 	ON_COMMAND(ID_DLDENABLESEEDING, OnDldenableseeding)
+	ON_COMMAND(ID_DLD_TP, OnDldcreateTP)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -391,6 +394,7 @@ void CDownloads_Tasks::OnDldproperties()
 	POSITION pos = GetFirstSelectedItemPosition ();
 	DLDS_LIST vDlds;
 	DLDS_LIST vBtDlds;
+	DLDS_LIST vTpDlds;
 
 	if (pos == NULL)
 		return;
@@ -403,13 +407,24 @@ void CDownloads_Tasks::OnDldproperties()
 			vDlds.push_back (dld);
 		else if (dld->pMgr->GetBtDownloadMgr () != NULL)
 			vBtDlds.push_back (dld);
+		else if (dld->pMgr->GetTpDownloadMgr () != NULL)
+			vTpDlds.push_back (dld);
 	}
 
-	if (vDlds.size () >= vBtDlds.size ())
+	std::vector<std::pair<int, int>> vDldSizes;
+	vDldSizes.push_back(std::pair<int, int>( vDlds.size (), 0 ));
+	vDldSizes.push_back(std::pair<int, int>( vBtDlds.size (), 1 ));
+	vDldSizes.push_back(std::pair<int, int>( vTpDlds.size (), 2 ));	
+	std::sort(vDldSizes.begin(), vDldSizes.end());
+	
+	const int vDldsType = vDldSizes[vDldSizes.size()-1].second;
+	if (0 == vDldsType)
 		m_pDownloadsWnd->OnDownloadProperties (vDlds);
-	else
+	else if (1 == vDldsType)
 		m_pDownloadsWnd->OnBtDownloadProperties (vBtDlds);
-
+	else if (2 == vDldsType)
+		m_pDownloadsWnd->OnTpDownloadProperties (vTpDlds);
+	 
 	SetFocus ();
 }
 
@@ -444,9 +459,7 @@ void CDownloads_Tasks::OnDldstop()
 		else if (dld->bAutoStart)
 		{
 			dld->bAutoStart = FALSE;
-#ifndef FDM_DLDR__RAWCODEONLY
-			_DldsMgr.QueryStoringDownloadList();
-#endif
+			dld->setDirty();
 			UpdateDownload (dld);
 		}
 	}	
@@ -755,7 +768,7 @@ void CDownloads_Tasks::OnDldautostart()
 	{
 		vmsDownloadSmartPtr dld = m_vDownloads [GetNextSelectedItem (pos)];
 		dld->bAutoStart = m_bAutoStart;
-		_DldsMgr.QueryStoringDownloadList();
+		dld->setDirty();
 		UpdateDownload (dld);
 	}
 
@@ -876,6 +889,8 @@ void CDownloads_Tasks::ApplyLanguageToMenu(CMenu *menu)
 	menu->ModifyMenu (ID_DLDCREATE, MF_BYCOMMAND|MF_STRING, ID_DLDCREATE, str);
 
 	menu->ModifyMenu (ID_DLDCREATEBATCH, MF_BYCOMMAND|MF_STRING, ID_DLDCREATEBATCH, LS (L_CREATEBATCHDLD));
+
+	menu->ModifyMenu (ID_DLD_TP, MF_BYCOMMAND|MF_STRING, ID_DLD_TP, LS (L_CREATETPDLD));
 	
 	str = LS (L_STARTDLDS); str += "\tShift+S";
 	menu->ModifyMenu (ID_DLDSTART, MF_BYCOMMAND|MF_STRING, ID_DLDSTART, str);
@@ -885,7 +900,7 @@ void CDownloads_Tasks::ApplyLanguageToMenu(CMenu *menu)
 	str = LS (L_QUERYSIZE); str += "\tShift+Q";
 	menu->ModifyMenu (ID_DLDQSIZE, MF_BYCOMMAND|MF_STRING, ID_DLDQSIZE, str);
 
-	menu->GetSubMenu (0)->ModifyMenu (9, MF_BYPOSITION|MF_STRING, 0, LS (L_ADVANCED));
+	menu->GetSubMenu (0)->ModifyMenu (10, MF_BYPOSITION|MF_STRING, 0, LS (L_ADVANCED));
 	str = LS (L_RESTARTDL); str += "\tShift+R";
 	menu->ModifyMenu (ID_DLDRESTART, MF_BYCOMMAND|MF_STRING, ID_DLDRESTART, str);
 	str = LS (L_ADDONEMORESECT); str += "\t+";
@@ -893,7 +908,7 @@ void CDownloads_Tasks::ApplyLanguageToMenu(CMenu *menu)
 	str = LS (L_DELSECTION); str += "\t-";
 	menu->ModifyMenu (ID_DLDDELSECTION, MF_BYCOMMAND|MF_STRING, ID_DLDDELSECTION, str);
 	
-	menu->GetSubMenu (0)->ModifyMenu (11, MF_BYPOSITION|MF_STRING, 0, LS (L_SCHEDULE));
+	menu->GetSubMenu (0)->ModifyMenu (12, MF_BYPOSITION|MF_STRING, 0, LS (L_SCHEDULE));
 	menu->ModifyMenu (ID_DLDSCHEDULE, MF_BYCOMMAND|MF_STRING, ID_DLDSCHEDULE, LS (L_SCHEDULE_START));
 	menu->ModifyMenu (ID_DLDSCHEDULESTOP, MF_BYCOMMAND|MF_STRING, ID_DLDSCHEDULESTOP, LS (L_SCHEDULE_STOP));
 	
@@ -1197,6 +1212,21 @@ void CDownloads_Tasks::Sort()
 
 void CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld, LPSTR pszFileName)
 {
+	if (dld->pMgr->GetTpDownloadMgr ())
+	{
+		CString str = dld->pMgr->get_OutputFilePathName ();
+		
+		
+		if (str.IsEmpty ())
+		{	
+			*pszFileName = 0;
+			return;
+		}
+		
+		lstrcpy (pszFileName, str);
+		return;
+	}
+
 	if (dld->pMgr->GetBtDownloadMgr ())
 	{
 		CString str = dld->pMgr->get_OutputFilePathName ();
@@ -1226,9 +1256,16 @@ void CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld, LPSTR pszFileName)
 		fsDownloadMgr *pMgr = dld->pMgr->GetDownloadMgr ();
 
 		CString strFile = dld->pMgr->get_OutputFilePathName ();
+
 		int fl = strFile.GetLength ();
 
 		ASSERT (fl > 0);
+
+		if (!fl)
+		{
+			strcpy (pszFileName, "index.html");
+			return;
+		}
 
 		
 		if (strFile [fl-1] == '\\' || strFile [fl-1] == '/')
@@ -1488,7 +1525,9 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 			float val;
 			char szDim [10];
 			BytesToXBytes (uDone, &val, szDim);
-			if (uSize != _UI64_MAX)
+			if (dld->pMgr->IsTp() && dld->pMgr->GetPercentDone () == -1)
+				str.Format ("%.*g %s [%s]", val > 999 ? 4 : 3, val, szDim, LS (L_LIVESTREAMING));
+			else if (uSize != _UI64_MAX && uSize != 0)
 				str.Format ("%d%% [%.*g %s]", (int)((double)(INT64)uDone / (INT64)uSize * 100), val > 999 ? 4 : 3, val, szDim);
 			else
 				str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
@@ -1525,6 +1564,8 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 			dld->pMgr->GetBtDownloadMgr ()->getPartialDownloadProgress (&nToDownload, &nDownloaded);
 			uLeft = nToDownload - nDownloaded;
 		}
+		else if (dld->pMgr->IsTp() && dld->pMgr->GetPercentDone () == -1)
+			return "";
 
 		return fsTimeInSecondsToStr (UINT (uLeft / uSpeed));
 	}
@@ -1835,7 +1876,7 @@ void CDownloads_Tasks::OnDldcheckintegrity()
 	dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum = new char [dlg.m_strChecksum.GetLength () + 1];
 	lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum, dlg.m_strChecksum);
 	dld->pMgr->GetDownloadMgr ()->GetDP ()->dwIntegrityCheckAlgorithm = MAKELONG (dlg.m_nAlgorithm, dlg.m_nSHA2Strength);
-	_DldsMgr.QueryStoringDownloadList();
+	dld->pMgr->GetDownloadMgr ()->setDirty();
 
 	CDlg_CheckFileIntegrity_Progress dlg2;
 	dlg2.m_enHashAlgorithm = (vmsHashAlgorithm) dlg.m_nAlgorithm;
@@ -1921,7 +1962,9 @@ void CDownloads_Tasks::ScheduleSelectedDlds(BOOL bStart)
 	if (vDlds.size () == 0)
 		return;
 
-	fsSchedule task;
+	
+	fsScheduleEx schScheduleParam;
+	fsSchedule& task = schScheduleParam.schTask;
 	
 	fsSchedule* pTask = mgr->GetScheduleDLTask (vDlds, bStart);
 	BOOL bCreate = pTask == NULL;	
@@ -2021,7 +2064,8 @@ void CDownloads_Tasks::UpdateDownload(size_t nIndex, BOOL bRedraw)
 	else
 	{
 		ASSERT (m_vDownloads [nIndex]->pMgr->GetDownloadMgr () != NULL ||
-			m_vDownloads [nIndex]->pMgr->GetBtDownloadMgr () != NULL);
+			m_vDownloads [nIndex]->pMgr->GetBtDownloadMgr () != NULL ||
+			m_vDownloads [nIndex]->pMgr->GetTpDownloadMgr () != NULL);
 		clr = RGB (0, 0, 0);
 	}
 
@@ -2217,4 +2261,10 @@ int CDownloads_Tasks::_compareDownloadsByDateAdded(LPCVOID p1, LPCVOID p2)
 	vmsDownloadSmartPtr *a2 = (vmsDownloadSmartPtr*)p2;
 
 	return CompareFileTime (&(*a1)->dateAdded, &(*a2)->dateAdded);
+}
+
+void CDownloads_Tasks::OnDldcreateTP() 
+{
+	m_pDownloadsWnd->OnTpDownloadCreate ();
+	SetFocus ();
 }

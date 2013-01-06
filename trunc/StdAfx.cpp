@@ -4,6 +4,12 @@
 
 #include "stdafx.h"
 
+#include "lib.add/vmsPostRequest.cpp"
+#include "lib.Add/vmsZip.cpp"
+#include "lib.Add/vmsUnZip.cpp"
+
+SCL_INITOBJECT (_T ("fdm"), 0);
+
 fsAppSettings _App;
 fsTrayIconMgr _TrayMgr;
 fsDialogsMgr _DlgMgr;

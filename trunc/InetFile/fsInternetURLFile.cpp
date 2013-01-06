@@ -667,3 +667,11 @@ void fsInternetURLFile::SetInterface(LPCSTR psz)
 {
 	m_strInterface = psz;
 }
+
+LPCSTR fsInternetURLFile::GetServerName()
+{
+	if (m_pServer == NULL)
+		return 0;
+
+	return m_pServer->GetServerName();
+}

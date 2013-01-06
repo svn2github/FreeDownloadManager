@@ -6,6 +6,7 @@
 #include "FdmApp.h"
 #include "fsFDMCmdLineParser.h"
 #include "vmsTorrentExtension.h"
+#include "vmsAppMutex.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -13,11 +14,14 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-fsFDMCmdLineParser::fsFDMCmdLineParser()
+fsFDMCmdLineParser::fsFDMCmdLineParser() : 
+	m_bRunAsElevatedTasksProcessor (false),
+	m_bInstallIeIntegration (false)
 {
 	m_bAnotherFDMStarted = FALSE;
 	m_bForceSilent = FALSE;
 	m_bNeedExit = false;
+	m_bNeedRegisterServer = m_bNeedUnregisterServer = false;
 }
 
 fsFDMCmdLineParser::~fsFDMCmdLineParser()
@@ -27,13 +31,9 @@ fsFDMCmdLineParser::~fsFDMCmdLineParser()
 
 void fsFDMCmdLineParser::Parse()
 {
-	HANDLE hAppMutex = CreateMutex (NULL, TRUE, _pszAppMutex);
 	
-	
-	if (GetLastError () == ERROR_ALREADY_EXISTS)
-		m_bAnotherFDMStarted = TRUE;
-
-	CloseHandle (hAppMutex);
+	extern vmsAppMutex _appMutex;
+	m_bAnotherFDMStarted = _appMutex.isAnotherInstanceStartedAlready ();
 
 	if (FALSE == m_parser.Parse ())
 		return;
@@ -119,6 +119,22 @@ void fsFDMCmdLineParser::Parse()
 				vmsTorrentExtension::AssociateWith (_App.Bittorrent_OldTorrentAssociation ());
 			}
 		}
+		else if (!stricmp (pszParam, "RegServer"))
+		{
+			m_bNeedRegisterServer = true;
+		}
+		else if (!stricmp (pszParam, "UnregServer"))
+		{
+			m_bNeedUnregisterServer = true;
+		}
+		else if (!stricmp (pszParam, "runelevated"))
+		{
+			m_bRunAsElevatedTasksProcessor = true;
+		}
+		else if (!stricmp (pszParam, "ie"))
+		{
+			m_bInstallIeIntegration = true;
+		}
 	}
 }
 
@@ -150,4 +166,14 @@ void fsFDMCmdLineParser::AddTorrentFile(LPCSTR pszFile)
 		url.bForceSilent = m_bForceSilent;
 		((CFdmApp*) AfxGetApp ())->m_vTorrentFilesToAdd.add (url);
 	}
+}
+
+bool fsFDMCmdLineParser::isNeedRegisterServer(void)
+{
+	return m_bNeedRegisterServer;
+}
+
+bool fsFDMCmdLineParser::isNeedUnregisterServer(void)
+{
+	return m_bNeedUnregisterServer;
 }

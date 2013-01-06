@@ -24,6 +24,8 @@ public:
 	virtual ~vmsFirefoxExtensionInstaller();
 
 protected:
+public:
+	static bool ExtractExtensionInfo(LPCTSTR ptszRdf, tstring& tstrVersion);
 };
 
 #endif 

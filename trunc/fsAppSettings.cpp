@@ -21,6 +21,7 @@ fsAppSettings::fsAppSettings()
 	m_dwWriteCacheSize = DWORD (-1);
 	m_dwNonUtf8NameFixed = DWORD (-1);
 	m_bPreventStandbyWhileDownloading = BOOL (-1);
+	m_bDontSaveLogs = BOOL (-1);
 }
 
 fsAppSettings::~fsAppSettings()
@@ -634,6 +635,31 @@ BOOL fsAppSettings::Update_LastCheck(SYSTEMTIME *time)
 void fsAppSettings::Update_LastCheck(SYSTEMTIME time)
 {
 	m_stgs.WriteProfileBinary (_T ("Settings\\Update"), _T ("LastCheck"), (LPBYTE) &time, sizeof (time));
+}
+
+BOOL fsAppSettings::Update_LastCheck2(SYSTEMTIME *time)
+{
+	BYTE *pb;
+	UINT sz;
+
+	if (m_stgs.GetProfileBinary (_T ("Settings\\Update"), _T ("LastCheck2"), &pb, &sz))
+	{
+		if (sz == sizeof (SYSTEMTIME))
+		{
+			CopyMemory (time, pb, sz);
+			delete [] pb;
+			return TRUE;
+		}
+
+		delete [] pb;
+	}
+
+	return FALSE;
+}
+
+void fsAppSettings::Update_LastCheck2(SYSTEMTIME time)
+{
+	m_stgs.WriteProfileBinary (_T ("Settings\\Update"), _T ("LastCheck2"), (LPBYTE) &time, sizeof (time));
 }
 
 BOOL fsAppSettings::View_SWBar()
@@ -2079,12 +2105,14 @@ void fsAppSettings::WD_LastShutdownType_DontAsk(BOOL b)
 
 BOOL fsAppSettings::DontSaveLogs()
 {
-	return m_stgs.GetProfileInt (_T ("Settings\\General"), _T ("DontSaveLogs"), TRUE);
+	if (m_bDontSaveLogs == BOOL (-1))
+		m_bDontSaveLogs = m_stgs.GetProfileInt (_T ("Settings\\General"), _T ("DontSaveLogs"), TRUE);
+	return m_bDontSaveLogs;
 }
 
 void fsAppSettings::DontSaveLogs(BOOL b)
 {
-	m_stgs.WriteProfileInt (_T ("Settings\\General"), _T ("DontSaveLogs"), b);
+	m_stgs.WriteProfileInt (_T ("Settings\\General"), _T ("DontSaveLogs"), m_bDontSaveLogs = b);
 }
 
 int fsAppSettings::Export_WhichHist()
@@ -2502,12 +2530,22 @@ void fsAppSettings::LowSpeed_Factor(WORD w)
 DWORD fsAppSettings::Monitor_UserSwitchedOn()
 {
 	return m_stgs.GetProfileInt (_T ("Settings\\Monitor"), _T ("UserSwitchedOn"), 
-		MONITOR_USERSWITCHEDON_IE | MONITOR_USERSWITCHEDON_FIREFOX);
+		MONITOR_USERSWITCHEDON_IE | MONITOR_USERSWITCHEDON_FIREFOX | MONITOR_USERSWITCHEDON_CHROME);
 }
 
 void fsAppSettings::Monitor_UserSwitchedOn(DWORD dw)
 {
 	m_stgs.WriteProfileInt (_T ("Settings\\Monitor"), _T ("UserSwitchedOn"), dw);
+}
+
+void fsAppSettings::Monitor_ForceEnableChromeOnce(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\Monitor"), _T ("ForceEnableChromeOnce"), b);
+}
+
+BOOL fsAppSettings::Monitor_ForceEnableChromeOnce()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\Monitor"), _T ("ForceEnableChromeOnce"), TRUE);
 }
 
 void fsAppSettings::Scheduler_LastTask_save(fsSchedule *task)

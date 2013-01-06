@@ -35,6 +35,7 @@ protected:
 	CBitmap m_bmpProgress;
 	static DWORD WINAPI _threadDraw (LPVOID lp);
 	HANDLE m_hthDraw, m_hevDraw, m_hevShutdown;
+	int m_nCVPcurr;
 	//{{AFX_MSG(CWnd_DownloadProgress)
 	afx_msg void OnPaint();
 	afx_msg void OnDestroy();

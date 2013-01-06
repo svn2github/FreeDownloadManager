@@ -81,7 +81,6 @@ void vmsSimpleFileDownloader::CreateDownloader()
 	fsnew1 (m_dldr, fsDownloadMgr (NULL));
 	m_dldr->SetEventFunc (_DownloadMgrEvents, this);
 	m_dldr->SetEventDescFunc (_DownloadMgrDescEvents, this);
-	m_dldr->EnableQueryStoringDownloadingList(false);
 }
 
 bool vmsSimpleFileDownloader::IsRunning()

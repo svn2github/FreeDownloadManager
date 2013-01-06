@@ -124,6 +124,10 @@ BOOL CSchedule_AdvancedPage::OnApply()
 		else
 			m_task->dwFlags &= ~ SCHEDULE_AUTODIS;
 	}
+
+	fsScheduleEx* pschScheduleParam = (fsScheduleEx*)m_task;
+	if (pschScheduleParam && pschScheduleParam->m_ppoTaskWrapper)
+		pschScheduleParam->m_ppoTaskWrapper->setDirty();
 	
 	return CPropertyPage::OnApply();
 }

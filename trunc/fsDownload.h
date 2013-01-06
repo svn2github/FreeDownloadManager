@@ -8,6 +8,9 @@
 #include "vmsDownloadMgrEx.h"
 #include "vmsDownloadsGroupsMgr.h"
 #include "fsTicksMgr.h"
+#include "vmsPersistObject.h"
+
+extern vmsDownloadsGroupsMgr _DldsGrps;
 
 struct fsDownload;
 
@@ -69,10 +72,12 @@ typedef DWORD (*fntDownloadsMgrEventFunc)(struct fsDownload* dld, struct fsDLHis
 
 #define DLD_WAS_DELETED					(1 << 24)
 
+#define DLD_TP_DOWNLOAD					(1 << 25)
+
 #define DLDS_FILE_WAS_LAUNCHED_AT_LEAST_ONCE	(1 << 0)
 #define DLDS_REGISTERED_IN_TRAFFICUSGMGR		(1 << 1)
 
-struct fsDownload : public vmsObject
+struct fsDownload : public vmsObject, public vmsPersistObject
 {
 	vmsDownloadMgrSmartPtr pMgr;	
 	BOOL bAutoStart;		
@@ -111,7 +116,7 @@ public:
 
 	fsDownload& operator= (fsDownload& dld)
 	{
-		pMgr = dld.pMgr; 
+		setDownloadMgr (dld.pMgr);
 		bAutoStart = dld.bAutoStart;
 		pGroup = dld.pGroup;
 		strComment = dld.strComment;
@@ -128,10 +133,13 @@ public:
 		pfnDownloadEventsFunc = dld.pfnDownloadEventsFunc;
 		lpEventsParam = dld.lpEventsParam;
 
+		setDirty();
+
 		return *this;
 	}
 
-	fsDownload () {
+	fsDownload ()
+	{
 		pfnDownloadEventsFunc = NULL; dwFlags = 0; 
 		pGroup = NULL;
 		dwReserved = 0;
@@ -143,7 +151,21 @@ public:
 		ticksLastStopByProcessDownloadsFn.m_dwTicks = UINT_MAX;
 		ZeroMemory (&dateAdded, sizeof (dateAdded));
 		ZeroMemory (&dateCompleted, sizeof (dateCompleted));
+		pMgr.CreateInstance ();
+		getPersistObjectChildren ()->addPersistObject (pMgr);
 	}
+
+	void setDownloadMgr (vmsDownloadMgrEx *a_pMgr)
+	{
+		if (pMgr)
+			getPersistObjectChildren ()->removePersistObject (pMgr);
+		pMgr = a_pMgr;
+		if (pMgr)
+			getPersistObjectChildren ()->addPersistObject (pMgr);
+	}
+
+	void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 
 	BOOL isTorrent () {return (dwFlags & DLD_TORRENT_DOWNLOAD) != 0 || pMgr->IsBittorrent ();}
 
@@ -157,24 +179,27 @@ public:
 	DWORD getState () const {return dwState;}
 	void setStateFlags (DWORD dwFlags) {LockStateSection (true); dwState |= dwFlags; LockStateSection (false);}
 	void removeStateFlags (DWORD dwFlags) {LockStateSection (true); dwState &= ~dwFlags; LockStateSection (false);}
+
 };
 
 typedef vmsObjectSmartPtr <fsDownload> vmsDownloadSmartPtr;
 
 #include "fsDownloadMgr.h"
 #include "vmsBtDownloadManager.h"
+#include "vmsTpDownloadMgr.h"
 
-inline void Download_CreateInstance (vmsDownloadSmartPtr &ptr, bool bBittorrent = false)
+inline void Download_CreateInstance (vmsDownloadSmartPtr &ptr, bool bBittorrent = false, bool bTp = false)
 {
 	ptr.CreateInstance ();
-	ptr->pMgr.CreateInstance ();
 
-	if (bBittorrent == false)
-		ptr->pMgr->Attach (new fsDownloadMgr (ptr));
-	else
+	if (bBittorrent)
 	{
 		vmsBtDownloadManagerPtr btmgr; btmgr.CreateInstance ();
 		ptr->pMgr->Attach (btmgr);
+	} else if (bTp) {
+		ptr->pMgr->Attach (new vmsTpDownloadMgr);
+	} else {
+		ptr->pMgr->Attach (new fsDownloadMgr (ptr));
 	}
 }
 

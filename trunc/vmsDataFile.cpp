@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "vmsDataFile.h"
+#include "Utils.h"
 using namespace vmsFDM;
 
 #ifdef _DEBUG
@@ -115,6 +116,137 @@ void vmsDataFile::SaveToFile(vmsFile &file, vmsDataFileItem &item)
 	}
 }
 
+void vmsDataFile::SaveToBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwRequiredSize)
+{
+	SaveToBuffer(pbtCurrentPos, pbtBuffer, dwBufferSize, pdwRequiredSize, m_tData);
+}
+
+void vmsDataFile::SaveToBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwRequiredSize, LPDATAFILETREE ptRoot)
+{
+	ASSERT (ptRoot != NULL);
+
+	if (pbtBuffer == NULL) {
+
+		SaveToBuffer (pbtCurrentPos, 0, 0, pdwRequiredSize, ptRoot->GetData ());
+
+		if (ptRoot->GetData ().vt.empty () == false) {
+			return;
+		}
+
+		int nCount = ptRoot->GetLeafCount ();
+		putVarToBuffer(nCount, pbtCurrentPos, 0, 0, pdwRequiredSize);
+
+		for (int i = 0; i < ptRoot->GetLeafCount (); i++) {
+			SaveToBuffer (pbtCurrentPos, 0, 0, pdwRequiredSize, ptRoot->GetLeaf (i));
+		}
+
+		return;
+
+	}
+
+	SaveToBuffer (pbtCurrentPos, pbtBuffer, dwBufferSize, 0, ptRoot->GetData ());
+
+	if (ptRoot->GetData ().vt.empty () == false) {
+		return;
+	}
+
+	int nCount = ptRoot->GetLeafCount ();
+	putVarToBuffer(nCount, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+
+	for (int i = 0; i < ptRoot->GetLeafCount (); i++) {
+		SaveToBuffer (pbtCurrentPos, pbtBuffer, dwBufferSize, 0, ptRoot->GetLeaf (i));
+	}
+}
+
+void vmsDataFile::SaveToBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwRequiredSize, vmsDataFileItem &item)
+{
+	
+	putStrToBuffer(item.strName.pszString, pbtCurrentPos, 0, 0, pdwRequiredSize);
+
+	int i = 0;
+	double dblVal = 0.;
+	__int64 i64Val = 0;
+	int nBufferSize = 0;
+
+	
+
+	
+	int iDT = (int)item.vt.type ();
+	putVarToBuffer(iDT, pbtCurrentPos, 0, 0, pdwRequiredSize);
+
+	
+	switch (item.vt.type ())
+	{
+		case VVT_EMPTY: 
+			break;
+		case VVT_INT:
+			i = item.vt;
+			putVarToBuffer(i, pbtCurrentPos, 0, 0, pdwRequiredSize);
+			break;
+		case VVT_DOUBLE: 
+			dblVal = item.vt;
+			putVarToBuffer(dblVal, pbtCurrentPos, 0, 0, pdwRequiredSize);
+			break;
+		case VVT_INT64:
+			i64Val = item.vt;
+			putVarToBuffer(i64Val, pbtCurrentPos, 0, 0, pdwRequiredSize);
+			break;
+		case VVT_ASTRING: 
+			putStrToBuffer((LPCTSTR)item.vt, pbtCurrentPos, 0, 0, pdwRequiredSize);
+			break;
+		case VVT_LPBYTE: 
+			nBufferSize = item.vt.bytebuffersize ();
+			putVarToBuffer(nBufferSize, pbtCurrentPos, 0, 0, pdwRequiredSize);
+			if (pdwRequiredSize) {
+				*pdwRequiredSize += item.vt.bytebuffersize ();
+			}
+			break;
+		default: 
+			ASSERT (false); 
+	}
+
+	if (pbtBuffer == NULL)
+		return;
+
+	
+	putStrToBuffer(item.strName.pszString, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+
+	
+
+	
+	putVarToBuffer(iDT, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+
+	
+	switch (item.vt.type ())
+	{
+		case VVT_EMPTY: 
+			break;
+		case VVT_INT:
+			i = item.vt;
+			putVarToBuffer(i, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+			break;
+		case VVT_DOUBLE: 
+			dblVal = item.vt;
+			putVarToBuffer(dblVal, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+			break;
+		case VVT_INT64:
+			i64Val = item.vt;
+			putVarToBuffer(i64Val, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+			break;
+		case VVT_ASTRING: 
+			putStrToBuffer((LPCTSTR)item.vt, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+			break;
+		case VVT_LPBYTE: 
+			nBufferSize = item.vt.bytebuffersize ();
+			putVarToBuffer(nBufferSize, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+			memcpy(pbtCurrentPos, (void*)(LPBYTE)item.vt, nBufferSize);
+			pbtCurrentPos += nBufferSize;
+			break;
+		default: 
+			ASSERT (false); 
+	}
+}
+
 void vmsDataFile::LoadFromFile(HANDLE hFile)
 {
 	vmsFile file (hFile, false);
@@ -169,6 +301,91 @@ void vmsDataFile::LoadFromFile(vmsFile &file, vmsDataFileItem &item)
 		break;
 	default: ASSERT (false); 
 	}
+}
+
+void vmsDataFile::LoadFromBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize)
+{
+	LoadFromBuffer(pbtCurrentPos, pbtBuffer, dwBufferSizeSize, m_tData);
+}
+
+bool vmsDataFile::LoadFromBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize, LPDATAFILETREE ptRoot)
+{
+	ASSERT (ptRoot != NULL);
+
+	if (!LoadFromBuffer (pbtCurrentPos, pbtBuffer, dwBufferSizeSize, ptRoot->GetData ()))
+		return false;
+
+	if (ptRoot->GetData ().vt.empty () == false) {
+		return true;	
+	}
+
+	int cLeafs;
+	if (!getVarFromBuffer(cLeafs, pbtCurrentPos, pbtBuffer, dwBufferSizeSize))
+		return false;
+
+	for (int i = 0; i < cLeafs; i++) {
+		if (!LoadFromBuffer (pbtCurrentPos, pbtBuffer, dwBufferSizeSize, ptRoot->AddLeaf (vmsDataFileItem ())))
+			return false;
+	}
+
+	return true;
+}
+
+bool vmsDataFile::LoadFromBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize, vmsDataFileItem &item)
+{
+	
+	if (!getStrFromBuffer(&item.strName.pszString, pbtCurrentPos, pbtBuffer, dwBufferSizeSize))
+		return false;
+
+	
+
+	
+	int enType;
+	if (!getVarFromBuffer(enType, pbtCurrentPos, pbtBuffer, dwBufferSizeSize))
+		return false;
+
+	int i; double f; __int64 i64; fsString str; 
+	LPBYTE pb; int nSize;
+
+	
+	switch (enType)
+	{
+		case VVT_EMPTY: 
+			break;
+		case VVT_INT: 
+			if (!getVarFromBuffer(i, pbtCurrentPos, pbtBuffer, dwBufferSizeSize))
+				return false;
+			item.vt = i;
+			break;
+		case VVT_DOUBLE: 
+			if (!getVarFromBuffer(f, pbtCurrentPos, pbtBuffer, dwBufferSizeSize))
+				return false;
+			item.vt = f; 
+			break;
+		case VVT_INT64: 
+			if (!getVarFromBuffer(i64, pbtCurrentPos, pbtBuffer, dwBufferSizeSize))
+				return false;
+			item.vt = i64; 
+			break;
+		case VVT_ASTRING: 
+			if (!getStrFromBuffer(&str.pszString, pbtCurrentPos, pbtBuffer, dwBufferSizeSize))
+				return false;
+			item.vt = str; 
+			break;
+		case VVT_LPBYTE: 
+			if (!getVarFromBuffer(nSize, pbtCurrentPos, pbtBuffer, dwBufferSizeSize))
+				return false;
+			pb = new BYTE [nSize];
+			memcpy(pb, pbtCurrentPos, nSize);
+			item.vt.set (pb, nSize);
+			delete [] pb;
+			pbtCurrentPos += nSize;
+			break;
+		default: 
+			ASSERT (false); 
+	}
+
+	return true;
 }
 
 LPDATAFILETREE vmsDataFile::CreateSection(LPCSTR pszSection, LPDATAFILETREE ptRoot)
@@ -247,40 +464,54 @@ void vmsDataFile::set_Value(LPCSTR pszSection, LPCSTR pszValueName, LPBYTE pbVal
 	item->set (pbValue, nValueSize);
 }
 
-void vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, int &iValue)
+bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, int &iValue)
 {
 	LPDATAFILETREE item = FindItem (pszSection, pszValueName);
-	if (item)
+	if (item) {
 		iValue = item->GetData ().vt;
+		return true;
+	}
+	return false;
 }
 
-void vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, __int64 &i64Value)
+bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, __int64 &i64Value)
 {
 	LPDATAFILETREE item = FindItem (pszSection, pszValueName);
-	if (item)
+	if (item) {
 		i64Value = item->GetData ().vt;
+		return true;
+	}
+	return false;
 }
 
-void vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, double &fValue)
+bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, double &fValue)
 {
 	LPDATAFILETREE item = FindItem (pszSection, pszValueName);
-	if (item)
+	if (item) {
 		fValue = item->GetData ().vt;
+		return true;
+	}
+	return false;
 }
 
-void vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, LPCSTR &pszValue)
+bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, LPCSTR &pszValue)
 {
 	LPDATAFILETREE item = FindItem (pszSection, pszValueName);
-	if (item)
+	if (item) {
 		pszValue = item->GetData ().vt;
+		return true;
+	}
+	return false;
 }
 
-void vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, LPBYTE &pbValue, UINT &nValueSize)
+bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, LPBYTE &pbValue, UINT &nValueSize)
 {
 	LPDATAFILETREE item = FindItem (pszSection, pszValueName);
 	if (item && item->GetData ().vt.type () != VVT_EMPTY)
 	{
 		pbValue = item->GetData ().vt;
 		nValueSize = item->GetData ().vt.bytebuffersize ();
+		return true;
 	}
+	return false;
 }

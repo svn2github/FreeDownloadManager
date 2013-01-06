@@ -120,20 +120,12 @@ void CBtDld_Misc::DlgToFlag(DWORD dwFlag, UINT nIdCtrl)
 	if (u == BST_INDETERMINATE)
 		return;
 
-	bool bDontQueryStoringDownloadList = false;
-	if (m_pvDlds->size () > 0 && m_pvDlds->at(0) && m_pvDlds->at(0)->pMgr && m_pvDlds->at(0)->pMgr->GetBtDownloadMgr()) {
-		bDontQueryStoringDownloadList = m_pvDlds->at(0)->pMgr->GetBtDownloadMgr()->IsQueryStoringDownloadListEnable();
-	}
-
 	for (size_t i = 0; i < m_pvDlds->size (); i++)
 	{
 		if (u == BST_CHECKED)
 			m_pvDlds->at (i)->pMgr->GetBtDownloadMgr ()->enable_Flags (dwFlag);
 		else
 			m_pvDlds->at (i)->pMgr->GetBtDownloadMgr ()->disable_Flags (dwFlag);
-
-		if (!bDontQueryStoringDownloadList)
-			_DldsMgr.QueryStoringDownloadList();
 	}
 }
 

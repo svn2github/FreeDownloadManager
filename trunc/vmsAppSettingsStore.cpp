@@ -38,7 +38,16 @@ BOOL vmsAppSettingsStore::WriteProfileInt(LPCSTR pszSection, LPCSTR pszEntry, in
 	if (m_bUseRegistry)
 		return m_app->WriteProfileInt (pszSection, pszEntry, nValue);
 
+	bool bIsChanged = false;
+	int iValue = 0;
+	if (!m_file.get_Value (pszSection, pszEntry, iValue) || nValue != iValue) {
+		bIsChanged = true;
+	}
+
 	m_file.set_Value (pszSection, pszEntry, nValue);
+	
+	if (bIsChanged)
+		setDirty();
 	return TRUE;
 }
 
@@ -72,7 +81,20 @@ BOOL vmsAppSettingsStore::WriteProfileString(LPCSTR pszSection, LPCSTR pszEntry,
 	if (m_bUseRegistry)
 		return m_app->WriteProfileString (pszSection, pszEntry, pszValue);
 
+	bool bIsChanged = false;
+	LPCSTR pszOldValue = 0;
+	if (!m_file.get_Value (pszSection, pszEntry, pszOldValue)) {
+		bIsChanged = true;
+	}
+	if ((pszOldValue == NULL && pszValue != NULL) || (pszOldValue != NULL && pszValue == NULL)) {
+		bIsChanged = true;
+	} else if (pszValue != NULL && pszOldValue != NULL) {
+		bIsChanged = (_tcscmp(pszValue, pszOldValue) != 0);
+	}
+
 	m_file.set_Value (pszSection, pszEntry, pszValue);
+	if (bIsChanged)
+		setDirty();
 	return TRUE;
 }
 
@@ -103,7 +125,24 @@ BOOL vmsAppSettingsStore::WriteProfileBinary(LPCSTR pszSection, LPCSTR pszEntry,
 	if (m_bUseRegistry)
 		return m_app->WriteProfileBinary (pszSection, pszEntry, pbData, nBytes);
 
+	UINT nOldBytes = 0;
+	LPBYTE pbOldData = 0;
+	bool bIsChanged = false;
+	if (!m_file.get_Value (pszSection, pszEntry, pbOldData, nOldBytes)) {
+		bIsChanged = true;
+	} else {
+		if (nOldBytes != nBytes) {
+			bIsChanged = true;
+		} else {
+			if (nBytes != 0) {
+				bIsChanged = (memcmp(pbData, pbOldData, nBytes) != 0);
+			}
+		}
+	}
+
 	m_file.set_Value (pszSection, pszEntry, pbData, nBytes);
+	if (bIsChanged)
+		setDirty();
 	return TRUE;
 }
 
@@ -117,22 +156,102 @@ void vmsAppSettingsStore::LoadSettingsFromFile(LPCSTR pszFile)
 		return;
 
 	try {
-		m_file.LoadFromFile (hFile);
-	}catch (...){}
 
-	CloseHandle (hFile);
+		DWORD dwRequiredSize = ::GetFileSize(hFile, NULL);
+		DWORD dw = 0;
+		if (dwRequiredSize <= 0) {
+			CloseHandle (hFile);
+			return;
+		}
+
+		std::auto_ptr<BYTE> pbtBufferGuard( new BYTE[dwRequiredSize] );
+		LPBYTE pbtBuffer = pbtBufferGuard.get();
+		if (pbtBuffer == 0) {
+			CloseHandle (hFile);
+			return;
+		}
+		memset(pbtBuffer, 0, dwRequiredSize);
+
+		if (!ReadFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
+			CloseHandle (hFile);
+			return;
+		}
+
+		if (!loadFromStateBuffer(pbtBuffer, &dwRequiredSize, 0)) {
+			CloseHandle (hFile);
+			return;
+		}
+
+		CloseHandle (hFile);
+		resetDirty();
+
+	} catch (...) {
+	}
 }
 
 void vmsAppSettingsStore::SaveSettingsToFile(LPCSTR pszFile)
 {
+	if (!isDirty())
+		return;
+
 	HANDLE hFile = CreateFile (pszFile, GENERIC_WRITE, 0, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
+
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
 
 	try {
-		m_file.SaveToFile (hFile);
-	}catch (...){}
+		
+		DWORD dwRequiredSize = 0;
+		DWORD dw = 0;
 
-	CloseHandle (hFile);
+		getStateBuffer(0, &dwRequiredSize, false);
+
+		if (dwRequiredSize == 0)
+			return;
+
+		std::auto_ptr<BYTE> apbtBufferGuard( new BYTE[dwRequiredSize] );
+		LPBYTE pbtBuffer = apbtBufferGuard.get();
+		if (pbtBuffer == 0)
+			return;
+		memset(pbtBuffer, 0, dwRequiredSize);
+
+		getStateBuffer(pbtBuffer, &dwRequiredSize, true);
+
+		if (FALSE == WriteFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
+			CloseHandle (hFile);
+			return;
+		}
+		CloseHandle (hFile);
+		onStateSavedSuccessfully();
+
+	} catch (...) {
+	}
+}
+
+void vmsAppSettingsStore::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	m_file.SaveToBuffer(pbtCurrentPos, 0, 0, &dwRequiredSize);
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize != 0) {
+			*pdwSize = dwRequiredSize;
+		}
+		return;
+	}
+
+	m_file.SaveToBuffer(pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+}
+
+bool vmsAppSettingsStore::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	LPBYTE pbtCurrentPos = pbtBuffer;
+	m_file.LoadFromBuffer(pbtCurrentPos, pbtBuffer, *pdwSize);
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+	return true;
 }

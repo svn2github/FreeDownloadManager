@@ -35,6 +35,7 @@
 #define ID_DLDSHOWPROGRESSDLG			50031
 #define ID_DLDCONVERT                   50032
 #define ID_DLDENABLESEEDING             50033
+#define ID_DLD_TP                       50034
 
 #define ID_DLLIST_1                     50100
 #define ID_DLLIST_2                     50101

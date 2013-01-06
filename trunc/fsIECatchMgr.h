@@ -30,7 +30,9 @@ public:
 	HRESULT Initialize ();
 	
 	
-	BOOL ActivateIE2 (BOOL bActivate = TRUE);
+	
+	
+	BOOL InstallIeIntegration (BOOL bInstall = TRUE, BOOL bCurrentUserOnly = FALSE, BOOL bOverrideHKCR = TRUE);
 	BOOL IsIE2Active();
 	void SetEventsFunc (fntIECatchMgrEvents pfn,  LPVOID lpParam);
 	

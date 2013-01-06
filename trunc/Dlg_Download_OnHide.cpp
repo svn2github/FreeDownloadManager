@@ -78,7 +78,7 @@ void CDlg_Download_OnHide::ApplyLanguage()
 	};
 
 	_LngMgr.ApplyLanguage (this, lnginfo, sizeof (lnginfo) / sizeof (fsDlgLngInfo), 0);
-	SetWindowText (vmsFdmAppMgr::getVersion ()->m_strProductName.c_str ());
+	SetWindowText (vmsFdmAppMgr::getVersion ()->m_tstrProductName.c_str ());
 }
 
 BOOL CDlg_Download_OnHide::OnInitDialog() 

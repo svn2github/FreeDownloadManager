@@ -1,3 +1,7 @@
+/*
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+*/
+
 #ifndef __FSLIST_H_
 #define __FSLIST_H_
 

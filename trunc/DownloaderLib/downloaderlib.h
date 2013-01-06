@@ -19,17 +19,18 @@ enum vmsdl_DownloadState
 
 extern BOOL		vmsdl_InitializeLibrary ();
 extern DLHANDLE	vmsdl_CreateDownloader (LPCSTR pszURL, LPCSTR pszOutFile);
-extern void			vmsdl_SetProxy (DLHANDLE h, LPCSTR pszProxy, LPCSTR pszUser, LPCSTR pszPassword);
-extern void			vmsdl_SetMaxRetryCount (DLHANDLE h, int nValue);
+extern void		vmsdl_SetProxy (DLHANDLE h, LPCSTR pszProxy, LPCSTR pszUser, LPCSTR pszPassword);
+extern void		vmsdl_SetMaxRetryCount (DLHANDLE h, int nValue);
 
-extern void			vmsdl_SetRetriesTime (DLHANDLE h, int nValue);
+extern void		vmsdl_SetRetriesTime (DLHANDLE h, int nValue);
 
-extern void			vmsdl_SetTimeout (DLHANDLE h, int nValue);
-extern void			vmsdl_ReleaseDownloader (DLHANDLE);
-extern void			vmsdl_StartDownloading (DLHANDLE);
-extern void			vmsdl_StopDownloading (DLHANDLE);
-extern int			vmsdl_GetProgress (DLHANDLE);
+extern void		vmsdl_SetTimeout (DLHANDLE h, int nValue);
+extern void		vmsdl_ReleaseDownloader (DLHANDLE);
+extern void		vmsdl_StartDownloading (DLHANDLE);
+extern void		vmsdl_StopDownloading (DLHANDLE);
+extern int		vmsdl_GetProgress (DLHANDLE);
 extern	vmsdl_DownloadState vmsdl_GetState (DLHANDLE);
+extern	tstring vmsdl_GetLastErrorMessage (DLHANDLE);
 extern UINT		vmsdl_GetDownloadingSpeed (DLHANDLE);
 extern UINT64	vmsdl_GetFileSize (DLHANDLE);
 extern UINT64	vmsdl_GetDownloadedByteCount (DLHANDLE);

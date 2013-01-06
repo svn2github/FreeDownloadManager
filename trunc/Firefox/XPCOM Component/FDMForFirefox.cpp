@@ -234,6 +234,10 @@ NS_IMETHODIMP CFDMForFirefox::IsLinkShouldBeSkipped(IFDMUrl *url, const PRUnicha
 
 NS_IMETHODIMP CFDMForFirefox::CatchLink(IFDMUrl *url, const PRUnichar *wstrSuggFileName, PRBool *_retval)
 {
+	assert (url != NULL);
+	if (!url || !_retval)
+		return NS_ERROR_INVALID_ARG;
+
 	IsLinkShouldBeSkipped (url, wstrSuggFileName, _retval);
 	if (*_retval)
 		return NS_OK;
@@ -399,6 +403,12 @@ bool CFDMForFirefox::IsServerToSkip (IFDMUrl *url)
 
 bool CFDMForFirefox::IsUrlShouldBeSkipped(IFDMUrl *url, const wchar_t *pwszSuggFileName)
 {
+	assert (url != NULL);
+	if (!url)
+		return false;
+	if (!pwszSuggFileName)
+		return false;
+
 	char szExts [10000] = "pls m3u"; DWORD dw = sizeof (szExts);
 	m_keyFDMMonitor.QueryValue (szExts, "SkipExtensions", &dw);
 
@@ -417,6 +427,10 @@ bool CFDMForFirefox::IsUrlShouldBeSkipped(IFDMUrl *url, const wchar_t *pwszSuggF
 
 PRBool CFDMForFirefox::TransferUrlToFDM(IFDMUrl *url)
 {
+	assert (url != NULL);
+	if (!url)
+		return FALSE;
+
 	IWGUrlReceiverPtr spUrlRcvr;
 	spUrlRcvr.CreateInstance (__uuidof (WGUrlReceiver));
 
@@ -456,9 +470,15 @@ PRBool CFDMForFirefox::TransferUrlToFDM(IFDMUrl *url)
 	BSTR bstrState = NULL;
 	do {
 		if (bstrState)
+		{
 			SysFreeString (bstrState);
+			bstrState = NULL;
+		}
 		Sleep (5);
 		spUrlRcvr->get_UIState (&bstrState);
+		assert (bstrState != NULL);
+		if (!bstrState)
+			return FALSE;
 	} while (wcsicmp (bstrState, L"in_progress") == 0);
 
 	BOOL bAdded = wcsicmp (bstrState, L"added") == 0;

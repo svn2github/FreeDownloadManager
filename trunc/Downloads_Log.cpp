@@ -181,8 +181,8 @@ void CDownloads_Log::OnAutoscroll()
 void CDownloads_Log::OnClear() 
 {
 	m_pActiveDownload->vEvents.clear ();
-	if (_DldsMgr.IsStoringLogTurnedOn())
-		_DldsMgr.QueryStoringDownloadList();
+	
+	m_pActiveDownload->isDirty();
 	DeleteAllItems ();
 }
 

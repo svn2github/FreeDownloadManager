@@ -181,7 +181,10 @@ void CGroupDlg::OnOK()
 	else
 		_pwndDownloads->OnGroupNameChanged (m_pGroup);
 
-	_DldsGrps.QueryStoringGroupsInformation();
+	m_pGroup->setDirty();
+	
+	
+	
 	_DldsGrps.SaveToDisk ();
 	
 	CDialog::OnOK();

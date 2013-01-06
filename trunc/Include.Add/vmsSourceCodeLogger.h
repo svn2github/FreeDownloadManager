@@ -18,6 +18,13 @@ extern class vmsSourceCodeLogger _SourceCodeLoggerObject;
 #define LOGFN(a) vmsSourceCodeLogger_Function _sclgr_fn (a)
 #define LOGERR(e) _SourceCodeLoggerObject.logSysError (e)
 #define LOGRESULT(desc,res) _SourceCodeLoggerObject.logResult (desc, res)
+#define LOG_TIME_BEGIN(name) LARGE_INTEGER liQpCounts##name; QueryPerformanceCounter (&liQpCounts##name)
+#define LOG_TIME_ELAPSED(name, pszDesc) {LARGE_INTEGER liTmp; QueryPerformanceCounter (&liTmp);\
+	liTmp.QuadPart -= liQpCounts##name.QuadPart; \
+	LOG ("%s (%s) taken: %d ms (%d counts)", #name, pszDesc, \
+		_SourceCodeLoggerObject.QpCountsToMilliseconds (liTmp), (int)liTmp.QuadPart); \
+	LOG_TIME_RESET(name);}
+#define LOG_TIME_RESET(name) QueryPerformanceCounter (&liQpCounts##name)
 #define SCL_FLUSH_ALL _SourceCodeLoggerObject.FlushBuffers ()
 #define SCL_DISABLE_LOG_IF(b) vmsSourceCodeLogger_DisableLogIf _sclgr_dlif (b)
 
@@ -30,6 +37,9 @@ extern class vmsSourceCodeLogger _SourceCodeLoggerObject;
 #define LOGFN(a)
 #define LOGERR(e)
 #define LOGRESULT(desc,res)
+#define LOG_TIME_BEGIN(name)
+#define LOG_TIME_ELAPSED(name, pszDesc)
+#define LOG_TIME_RESET(name)
 #define SCL_FLUSH_ALL
 #define SCL_DISABLE_LOG_IF(b)
 #pragma warning (disable: 4002)
@@ -43,6 +53,7 @@ class vmsSourceCodeLogger
 public:
 	vmsSourceCodeLogger (LPCTSTR ptszThisModuleName = _T ("unknown"), int bufSizePerThread = 64*1024)
 	{
+		QueryPerformanceFrequency (&m_liQpFrequency);
 		m_vThreadsLogs.reserve (300);
 		m_nBufSizePerThread = bufSizePerThread;
 		m_tstrThisModuleName = ptszThisModuleName;
@@ -56,6 +67,11 @@ public:
 			FlushThreadLogBuffer (thr);
 			CloseHandle (thr->hLogFile);
 		}
+	}
+
+	int QpCountsToMilliseconds (LARGE_INTEGER liCounts)
+	{
+		return liCounts.QuadPart * 1000 / m_liQpFrequency.QuadPart;
 	}
 
 	void logResult (LPCSTR pszDescription, DWORD dwResultCode)
@@ -286,6 +302,7 @@ protected:
 	std::vector <threadCtx> m_vThreadsLogs;
 	tstring m_tstrThisModuleName;
 	tstring m_tstrLogsFolder;
+	LARGE_INTEGER m_liQpFrequency; 
 };
 
 class vmsSourceCodeLogger_Function
@@ -295,15 +312,19 @@ public:
 	{
 		LOG ("%s started.", pszDesc);
 		m_strDesc = pszDesc;
+		QueryPerformanceCounter (&m_liQpCountsStart);
 	}
 
 	~vmsSourceCodeLogger_Function ()
 	{
-		LOG ("%s has finished.", m_strDesc.c_str ());
+		LARGE_INTEGER liTmp; QueryPerformanceCounter (&liTmp);
+		liTmp.QuadPart -= m_liQpCountsStart.QuadPart;
+		LOG ("%s has finished (run time: %d ms (%d counts)).", m_strDesc.c_str (), _SourceCodeLoggerObject.QpCountsToMilliseconds (liTmp), (int)liTmp.QuadPart);
 	}
 
 protected:
 	std::string m_strDesc;
+	LARGE_INTEGER m_liQpCountsStart;
 };
 
 class vmsSourceCodeLogger_DisableLogIf 

@@ -25,6 +25,8 @@
 #include "fsArchiveRebuilder.h"
 #include "vmsStringRecentList.h"	
 #include "fsDownload.h"
+#include "vmsPersistableListOfDownloads.h"
+#include "StateInfo.h"
 
 enum fsDownloadsMgrEvent
 {
@@ -134,6 +136,7 @@ public:
 	
 	vmsDownloadSmartPtr FindDownloadByBtDownload (vmsBtDownload* pDld);
 	vmsDownloadSmartPtr GetDownloadByBtDownloadMgr (vmsBtDownloadManager *pMgr);
+	vmsDownloadSmartPtr GetDownloadByTpDownloadMgr (vmsTpDownloadMgr *pMgr);
 	
 	void AttachToBtSession();
 	
@@ -267,16 +270,18 @@ public:
 	
 	UINT Add (vmsDownloadSmartPtr dld, BOOL bKeepIDAsIs = FALSE, bool bPlaceToTop = false);
 	
-	void QueryStoringDownloadList(); 
 	bool IsStoringLogTurnedOn();
-	void QueryStoringDeletedDownloadList(); 
-	void QueryStoringHistory(); 
-	void QueryStoringStateInformation(); 
-	void QueryStoringGroupsInformation(); 
+	
+	
+	
+	
+	
+	
+	
 	
 	fsDownloadsMgr();
 	virtual ~fsDownloadsMgr();
-
+	void ProcessDownloads();
 protected:
 	
 	void ApplyTrafficLimit();
@@ -284,7 +289,7 @@ protected:
 	
 	
 	
-	void ProcessDownloads();
+	
 	static DWORD WINAPI _threadEventsDispatcher (LPVOID lp);
 	struct BtDownloadManagerEvent
 	{
@@ -298,6 +303,7 @@ protected:
 	HANDLE m_hevNeedDispatchEvents;
 	HANDLE m_hevShuttingDown;
 	static void findDownloadsIndexes (DLDS_LIST_REF vDldsWhat, DLDS_LIST_REF vDldsWhere, std::vector <int> &vResult);
+	static void findDownloadsIndexes (DLDS_LIST_REF vDldsWhat, vmsDownloadList& vDldsWhere, std::vector <int> &vResult);
 	BOOL CheckIfDownloadIsMirror (fsDownload* dld);
 	bool isAllowedToPDCurrently () const;
 	void ManagePD ();
@@ -317,6 +323,9 @@ protected:
 	void onBtDownloadManagerEvent (vmsBtDownloadManager *pMgr, vmsBtDownloadManagerEvent ev, DWORD dwInfo);
 	
 	static void _BtSessionEventsHandler (class vmsBtSession*, struct vmsBtSessionEvent*, LPVOID lp);
+	
+	static DWORD _TpDownloadManagerEventHandler(vmsTpDownloadMgr *pMgr, fsDownloaderEvent enEvent, UINT uInfo, LPVOID lp);
+	static void _TpDownloadManagerEventDesc(vmsTpDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCSTR pszDesc, LPVOID lp);
 	
 	static DWORD WINAPI _threadDeleteDownloadMgrEx (LPVOID lp);
 	
@@ -343,7 +352,10 @@ protected:
 	
 	static DWORD WINAPI _threadIntegrityCheckAndVirCheckAndLaunch (LPVOID lp);
 	
-	vmsFileRecentList m_LastFilesDownloaded;
+	
+	
+	
+	CStateInfo m_siStateInfo;
 	
 	BOOL SaveStateInformation();
 	BOOL LoadStateInformation();
@@ -408,7 +420,8 @@ protected:
 	void CheckNoActiveDownloads();
 	
 	fs::array <UINT, MAX_SUMMS> m_vSummSpeed;
-	LONG m_nID;	
+	
+	
 	BOOL m_bSkip1Cicle;	
 	
 	void ManageTraffic();
@@ -435,9 +448,11 @@ protected:
 	
 	static void _DownloadMgrEventDesc (fsDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCSTR pszEvent, LPVOID lp);
 	static DWORD _DownloadMgrEvents (fsDownloadMgr *pMgr, fsDownloaderEvent enEvent, UINT uInfo, LPVOID lp);
-	DLDS_LIST m_vDownloads;	
+	vmsDownloadList m_vDownloads;	
 	vmsReaderWriterLock m_rwlDownloads;
-	DLDS_LIST m_vDeletedDownloads;	
+	
+	
+	vmsDownloadList m_vDeletedDownloads;	
 	vmsCriticalSection m_csDeletedDownloads;
 	vmsCriticalSection m_csRegisterDldInTum;
 	
@@ -450,11 +465,14 @@ protected:
 	bool m_bIsDownloadListChanged; 
 	vmsCriticalSection m_csDownloadListChangeGuard;
 	bool m_bIsDeletedDownloadListChanged; 
-	vmsCriticalSection m_csDeletedDownloadListChangeGuard;
-	bool m_bIsHistoryChanged; 
-	vmsCriticalSection m_csHistoryChangeGuard;
+	
+	
+	
+	
+	
 	bool m_bIsStateInformationChanged; 
 	vmsCriticalSection m_csStateInformationChangeGuard;
+	vmsCriticalSection m_csModifiedGuard;
 
 	fsTicksMgr m_ticksNeedStartProcessDownloads;
 	fsTicksMgr m_ticksNeedStartApplyTrafficLimit;

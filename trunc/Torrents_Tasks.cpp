@@ -549,13 +549,11 @@ void CTorrents_Tasks::OnBtdldAutostart()
 	BOOL b = TRUE;
 	vmsDownloadsListHelper::GetStat (v, NULL, NULL, NULL, NULL, &b);
 	
-	for (size_t i = 0; i < v.size (); i++)
+	for (size_t i = 0; i < v.size (); i++) {
 		v [i]->bAutoStart = b;
-
-	if (v.size () > 0) {
-		_DldsMgr.QueryStoringDownloadList();
+		v [i]->setDirty();
 	}
-	
+
 	_pwndDownloads->UpdateAllDownloads ();
 	_DldsMgr.setNeedProcessDownloads ();	
 }
@@ -647,7 +645,7 @@ void CTorrents_Tasks::OnBtdldStop()
 		else if (dld->bAutoStart)
 		{
 			dld->bAutoStart = FALSE;
-			_DldsMgr.QueryStoringDownloadList();
+			dld->setDirty();
 			_pwndDownloads->UpdateDownload (dld);
 		}
 	}

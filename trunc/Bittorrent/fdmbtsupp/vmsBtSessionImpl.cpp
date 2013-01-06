@@ -39,6 +39,7 @@ vmsBtSessionImpl::vmsBtSessionImpl(void)
 	DWORD dw;
 	CloseHandle (
 		CreateThread (NULL, 0, _threadSession, this, 0, &dw));
+	m_dwSessionStateSize = 0;
 }
 
 vmsBtSessionImpl::~vmsBtSessionImpl(void)
@@ -238,7 +239,7 @@ BOOL vmsBtSessionImpl::DHT_getState (LPBYTE pbBuffer, DWORD dwBufferSize, LPDWOR
 
 	std::vector <char> v;
 	libtorrent::bencode (std::back_inserter (v), m_session.dht_state ());
-
+	
 	*pdwDataSize = v.size ();
 
 	if (pbBuffer == NULL)
@@ -318,13 +319,54 @@ void vmsBtSessionImpl::handleUnknownAlertProcessingError(libtorrent::torrent_han
 	ev.pszMsg = 0;
 }
 
+void vmsBtSessionImpl::CheckIfDhtStateChanged ()
+{
+	if (!DHT_isStarted())
+		return;
+
+	DWORD dwNewSize = 0;
+	if (!DHT_getState(NULL, 0, &dwNewSize))
+		return;
+
+	if (m_dwSessionStateSize != dwNewSize) {
+		std::auto_ptr<BYTE> apbtNewStateBuffer( new BYTE[dwNewSize] );
+		LPBYTE pbtNewStateBuffer = apbtNewStateBuffer.get();
+		if (pbtNewStateBuffer > 0) {
+			if (DHT_getState(pbtNewStateBuffer, dwNewSize, &dwNewSize)) {
+				m_apbtSessionState = apbtNewStateBuffer;
+				m_dwSessionStateSize = dwNewSize;
+				setDirty();
+			}
+		}
+	} else {
+		if (m_dwSessionStateSize > 0) {
+			std::auto_ptr<BYTE> apbtNewStateBuffer( new BYTE[dwNewSize] );
+			LPBYTE pbtNewStateBuffer = apbtNewStateBuffer.get();
+			if (pbtNewStateBuffer > 0) {
+				if (DHT_getState(pbtNewStateBuffer, dwNewSize, &dwNewSize)) {
+					LPBYTE pbtStateBuffer = m_apbtSessionState.get();
+					if (memcmp(pbtStateBuffer, pbtNewStateBuffer, m_dwSessionStateSize) != 0) {
+						m_apbtSessionState = apbtNewStateBuffer;
+						m_dwSessionStateSize = dwNewSize;
+						setDirty();
+					}
+				}
+			}
+		}
+	}
+}
+
 DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 {
 	vmsBtSessionImpl* pthis = (vmsBtSessionImpl*)lp;
 
+	pthis->m_apbtSessionState.reset(0);
+
 	while (pthis->m_bNeedStop == false)
 	{
 		Sleep (100);
+
+		pthis->CheckIfDhtStateChanged();
 
 		
 		std::auto_ptr <libtorrent::alert> alert = pthis->m_session.pop_alert ();
@@ -467,6 +509,8 @@ _lRaiseEvent:
 		if (pDld)
 			pDld->Release ();
 	}
+
+	pthis->CheckIfDhtStateChanged();
 
 	pthis->m_bThreadRunning = false;
 	return 0;
@@ -634,4 +678,32 @@ void vmsBtSessionImpl::setMultiTracker (bool announce_to_all_trackers, bool anno
 	settings.announce_to_all_trackers = announce_to_all_trackers;
 	settings.announce_to_all_tiers = announce_to_all_tiers;
 	m_session.set_settings(settings);
+}
+
+void vmsBtSessionImpl::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwRequiredSize = 0;
+	
+	if (!DHT_getState (NULL, 0, &dwRequiredSize))
+		return;
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize) {
+			*pdwSize = dwRequiredSize;
+		}
+		return;
+	}
+
+	if (*pdwSize < dwRequiredSize)
+		return;
+
+	if (!DHT_getState (pbtBuffer, *pdwSize, &dwRequiredSize))
+		return;
+
+	*pdwSize = dwRequiredSize;
+}
+
+bool vmsBtSessionImpl::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer)
+{
+	return false;
 }

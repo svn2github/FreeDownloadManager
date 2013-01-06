@@ -144,6 +144,7 @@ BOOL CDlg_Options_General_Misc::Apply()
 		{
 			m_bHangupToutChanged = false;
 			_pwndScheduler->GetMgr ()->GetTask (pos)->uWaitForConfirmation = _App.ConfTimeout_Hangup ();
+			_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 		}
 	}
 	
@@ -155,6 +156,7 @@ BOOL CDlg_Options_General_Misc::Apply()
 		{
 			m_bExitToutChanged = false;
 			_pwndScheduler->GetMgr ()->GetTask (pos)->uWaitForConfirmation = _App.ConfTimeout_Exit ();
+			_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 		}
 	}
 	
@@ -167,6 +169,7 @@ BOOL CDlg_Options_General_Misc::Apply()
 		{
 			m_bShutdownToutChanged = false;
 			_pwndScheduler->GetMgr ()->GetTask (pos)->uWaitForConfirmation = _App.ConfTimeout_Shutdown ();
+			_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 		}
 	}
 	
@@ -183,6 +186,7 @@ BOOL CDlg_Options_General_Misc::Apply()
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags |= SCHEDULE_AUTODIS;
 			else
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags &= ~SCHEDULE_AUTODIS;
+			_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 		}
 		
 		_pwndScheduler->ExitWhenDone (&pos);
@@ -191,6 +195,7 @@ BOOL CDlg_Options_General_Misc::Apply()
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags |= SCHEDULE_AUTODIS;
 			else
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags &= ~SCHEDULE_AUTODIS;
+			_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 		}
 		
 		_pwndScheduler->TurnoffWhenDone (enType, &pos);
@@ -199,6 +204,7 @@ BOOL CDlg_Options_General_Misc::Apply()
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags |= SCHEDULE_AUTODIS;
 			else
 				_pwndScheduler->GetMgr ()->GetTask (pos)->dwFlags &= ~SCHEDULE_AUTODIS;
+			_pwndScheduler->GetMgr ()->setDirtyFlagForTask(pos);
 		}
 	}
 

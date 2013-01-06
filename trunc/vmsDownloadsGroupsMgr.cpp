@@ -3,6 +3,7 @@
 */
 
 #include "stdafx.h"
+#include "Utils.h"
 #include "FdmApp.h"
 #include "vmsDownloadsGroupsMgr.h"
 #include "mfchelp.h"
@@ -15,11 +16,66 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
+void vmsDownloadsGroup::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	putVarToBuffer(nId, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(strName.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(strOutFolder.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putStrToBuffer(strExts.pszString, pbtCurrentPos, 0, 0, &dwRequiredSize);
+	putVarToBuffer(nChildren, pbtCurrentPos, 0, 0, &dwRequiredSize);
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize) {
+			*pdwSize = dwRequiredSize;
+		}
+		return;
+	}
+
+	putVarToBuffer(nId, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putStrToBuffer(strName.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putStrToBuffer(strOutFolder.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putStrToBuffer(strExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(nChildren, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+}
+
+bool vmsDownloadsGroup::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	getVarFromBuffer(nId, pbtCurrentPos, pbtBuffer, *pdwSize);
+	getStrFromBuffer(&strName.pszString, pbtCurrentPos, pbtBuffer, *pdwSize);
+	getStrFromBuffer(&strOutFolder.pszString, pbtCurrentPos, pbtBuffer, *pdwSize);
+	getStrFromBuffer(&strExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize);
+	getVarFromBuffer(nChildren, pbtCurrentPos, pbtBuffer, *pdwSize);
+
+	
+	if (glehEventHandler)
+		glehEventHandler(pvData);
+
+	if (nChildren > 0 && glehEventHandler) {
+		int i = 0;
+		for (i = 0; i < nChildren; i++) {
+			
+			glehEventHandler(pvData);
+		}
+	}
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	return true;
+}
+
 vmsDownloadsGroupsMgr::vmsDownloadsGroupsMgr()
 {
 	m_nGrpNextId = 1;
 	m_tGroups.CreateInstance ();
-	m_bIsGroupsInformationChanged = false;
+	
+	
 }
 
 vmsDownloadsGroupsMgr::~vmsDownloadsGroupsMgr()
@@ -56,7 +112,7 @@ void vmsDownloadsGroupsMgr::CreateDefaultGroups()
 	grp->strExts = "";
 	grp->nId = GRP_OTHER_ID;
 	Add (grp, NULL, TRUE);
-
+	
 	grp.CreateInstance ();
 	grp->strName = "Video";
 	grp->strOutFolder = strRoot + "Video\\";
@@ -109,6 +165,8 @@ BOOL vmsDownloadsGroupsMgr::LoadFromDisk()
 		return TRUE;
 	}
 
+	DWORD dwRequiredSize = 0;
+
 	
 
 	HANDLE hFile = CreateFile (strFile, GENERIC_READ, FILE_SHARE_READ, NULL, 
@@ -116,6 +174,8 @@ BOOL vmsDownloadsGroupsMgr::LoadFromDisk()
 	
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
+		dwRequiredSize = ::GetFileSize(hFile, NULL);
+
 		vmsDownloadsGroupsFileHdr hdr;
 		DWORD dw;
 		if (ReadFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
@@ -123,10 +183,35 @@ BOOL vmsDownloadsGroupsMgr::LoadFromDisk()
 			if (hdr.wVer == DLDSGRPSFILE_CURRENT_VERSION && 
 					lstrcmp (hdr.szSig,	DLDSGRPSFILE_SIG) == 0)
 			{
-				if (FALSE == ReadFile (hFile, &m_nGrpNextId, sizeof (UINT), &dw, NULL))
-					return FALSE;
+				
+				
+				
+				
+				
 
-				LoadGroupsTreeFromFile (hFile, m_tGroups);
+				dwRequiredSize -= sizeof(hdr);
+				if (dwRequiredSize <= 0) {
+					CloseHandle (hFile);
+					return FALSE;
+				}
+
+				std::auto_ptr<BYTE> pbtBufferGuard( new BYTE[dwRequiredSize] );
+				LPBYTE pbtBuffer = pbtBufferGuard.get();
+				if (pbtBuffer == 0) {
+					CloseHandle (hFile);
+					return FALSE;
+				}
+				memset(pbtBuffer, 0, dwRequiredSize);
+
+				if (!ReadFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
+					CloseHandle (hFile);
+					return FALSE;
+				}
+
+				if (!loadFromStateBuffer(pbtBuffer, &dwRequiredSize, hdr.wVer)) {
+					CloseHandle (hFile);
+					return FALSE;
+				}
 			}
 		}
 		CloseHandle (hFile);
@@ -142,16 +227,20 @@ BOOL vmsDownloadsGroupsMgr::SaveToDisk()
 {
 	fsString strFile = fsGetDataFilePath ("groups.sav");
 
-	bool bSaveGroupsInformation = false;
-	{
-		vmsCriticalSectionAutoLock csalGroupsInformationChangeGuardAutoLock(&m_csGroupsInformationChangeGuard);
-		bSaveGroupsInformation = m_bIsGroupsInformationChanged;
-		m_bIsGroupsInformationChanged = false;
-	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-	if (!bSaveGroupsInformation) {
+	if (!isDirty())
 		return TRUE;
-	}
 
 	HANDLE hFile = CreateFile (strFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 
 		FILE_ATTRIBUTE_HIDDEN, NULL);
@@ -167,15 +256,103 @@ BOOL vmsDownloadsGroupsMgr::SaveToDisk()
 		return FALSE;
 	}
 
-	if (FALSE == WriteFile (hFile, &m_nGrpNextId, sizeof (UINT), &dw, NULL))
-	{
+	DWORD dwRequiredSize = 0;
+
+	getStateBuffer(0, &dwRequiredSize, false);
+
+	if (dwRequiredSize == 0)
+		return FALSE;
+
+	std::auto_ptr<BYTE> apbtBufferGuard( new BYTE[dwRequiredSize] );
+	LPBYTE pbtBuffer = apbtBufferGuard.get();
+	if (pbtBuffer == 0)
+		return FALSE;
+	memset(pbtBuffer, 0, dwRequiredSize);
+
+	getStateBuffer(pbtBuffer, &dwRequiredSize, true);
+
+	if (FALSE == WriteFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
 		CloseHandle (hFile);
 		return FALSE;
 	}
-
-	BOOL bOk = SaveGroupsTreeToFile (hFile, m_tGroups);
 	CloseHandle (hFile);
-	return bOk;
+	onStateSavedSuccessfully();
+
+	return TRUE;
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
+
+void vmsDownloadsGroupsMgr::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	putVarToBuffer(m_nGrpNextId, pbtCurrentPos, 0, *pdwSize, &dwRequiredSize);
+
+	int nChildren = m_tGroups->GetLeafCount();
+	putVarToBuffer(nChildren, pbtCurrentPos, 0, *pdwSize, &dwRequiredSize); 
+
+	
+	
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize) {
+			*pdwSize = dwRequiredSize;
+		}
+		return;
+	}
+
+	putVarToBuffer(m_nGrpNextId, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+	putVarToBuffer(nChildren, pbtCurrentPos, pbtBuffer, *pdwSize, 0); 
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	
+	
+}
+
+bool vmsDownloadsGroupsMgr::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	if (!getVarFromBuffer(m_nGrpNextId, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	int nChildren = 0;
+	getVarFromBuffer(nChildren, pbtCurrentPos, pbtBuffer, *pdwSize); 
+
+	int i = 0;
+	for (i = 0; i < nChildren; i++) {
+		vmsDownloadsGroupSmartPtr pGroup;
+		pGroup.CreateInstance ();
+
+		pGroup->nChildren = 0;
+		pGroup->glehEventHandler = FdmGroupLoadEventHandler;
+		
+		TGroupLoadEventData gledData;
+		gledData.pdgmGroupsMgr = this;
+		gledData.pgtParent = m_tGroups;
+		gledData.pGroupPtr = pGroup;
+		pGroup->pvData = (void*)&AddGroupLoadEventData(gledData);
+		getPersistObjectChildren ()->addPersistObject ((vmsDownloadsGroup*)pGroup);
+	}
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	
+	
+
+	return true;
 }
 
 PDLDS_GROUPS_TREE vmsDownloadsGroupsMgr::Add(vmsDownloadsGroupSmartPtr grp, vmsDownloadsGroupSmartPtr pParentGroup, BOOL bKeepIdAsIs, bool bDontQueryStoringGroupsInformation)
@@ -307,7 +484,10 @@ void vmsDownloadsGroupsMgr::SetGroupsRootOutFolder(PDLDS_GROUPS_TREE pRoot, LPCS
 			pGroup->GetData ()->strOutFolder += '\\';
 		}
 
-		QueryStoringGroupsInformation();
+		pGroup->GetData ()->setDirty();
+		
+		
+		
 
 		SetGroupsRootOutFolder (pGroup, pGroup->GetData ()->strOutFolder);
 	}
@@ -323,7 +503,22 @@ void vmsDownloadsGroupsMgr::DeleteGroup(vmsDownloadsGroupSmartPtr pGroup)
 		{
 			pRoot->DeleteLeaf (i);
 			RebuildGroupsList ();
-			QueryStoringGroupsInformation();
+
+			if (pRoot == m_tGroups) {
+				setDirty();
+				getPersistObjectChildren ()->removePersistObject (i);
+			} else {
+				vmsDownloadsGroupSmartPtr pRootGroupPtr = pRoot->GetData();
+				if ((vmsDownloadsGroup*)pRootGroupPtr != 0) {
+					pRootGroupPtr->nChildren--;
+					pRootGroupPtr->getPersistObjectChildren ()->removePersistObject (i);
+					pRootGroupPtr->setDirty();
+				}
+			}
+
+			
+			
+			
 			return;
 		}
 	}
@@ -355,6 +550,26 @@ BOOL vmsDownloadsGroupsMgr::LoadGroupsTreeFromFile(HANDLE hFile, PDLDS_GROUPS_TR
 	return TRUE;
 }
 
+bool vmsDownloadsGroupsMgr::LoadGroupsTreeFromBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, PDLDS_GROUPS_TREE pRoot)
+{
+	int cGroups = 0;
+	
+	if (!getVarFromBuffer(cGroups, pbtCurrentPos, pbtBuffer, dwBufferSize))
+		return false;
+
+	while (cGroups-- > 0) {
+		vmsDownloadsGroupSmartPtr pGroup;
+		pGroup.CreateInstance ();
+		if (!LoadGroupFromBuffer(pbtCurrentPos, pbtBuffer, dwBufferSize, pGroup))
+			return false;
+		PDLDS_GROUPS_TREE pGroupRoot = Add (pGroup, pRoot, TRUE, true);
+		if (!LoadGroupsTreeFromBuffer(pbtCurrentPos, pbtBuffer, dwBufferSize, pGroupRoot))
+			return false;
+	}
+
+	return true;
+}
+
 BOOL vmsDownloadsGroupsMgr::LoadGroupFromFile(HANDLE hFile, vmsDownloadsGroupSmartPtr pGroup)
 {
 	DWORD dw;
@@ -374,6 +589,23 @@ BOOL vmsDownloadsGroupsMgr::LoadGroupFromFile(HANDLE hFile, vmsDownloadsGroupSma
 	return TRUE;
 }
 
+bool vmsDownloadsGroupsMgr::LoadGroupFromBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, vmsDownloadsGroupSmartPtr pGroup)
+{
+	if (!getVarFromBuffer(pGroup->nId, pbtCurrentPos, pbtBuffer, dwBufferSize))
+		return  false;
+
+	if (!getStrFromBuffer(&pGroup->strName.pszString, pbtCurrentPos, pbtBuffer, dwBufferSize))
+		return  false;
+
+	if (!getStrFromBuffer(&pGroup->strOutFolder.pszString, pbtCurrentPos, pbtBuffer, dwBufferSize))
+		return  false;
+
+	if (!getStrFromBuffer(&pGroup->strExts.pszString, pbtCurrentPos, pbtBuffer, dwBufferSize))
+		return  false;
+
+	return true;
+}
+
 PDLDS_GROUPS_TREE vmsDownloadsGroupsMgr::Add(vmsDownloadsGroupSmartPtr grp, PDLDS_GROUPS_TREE pParentGroup, BOOL bKeepIdAsIs, bool bDontQueryStoringGroupsInformation)
 {
 	if (pParentGroup == NULL)
@@ -391,7 +623,22 @@ PDLDS_GROUPS_TREE vmsDownloadsGroupsMgr::Add(vmsDownloadsGroupSmartPtr grp, PDLD
 	m_vGroups.push_back (pGrp);
 
 	if (!bDontQueryStoringGroupsInformation) {
-		_DldsGrps.QueryStoringGroupsInformation();
+
+		vmsDownloadsGroupSmartPtr pParentPtr = pParentGroup->GetData();
+		if ((vmsDownloadsGroup*)pParentPtr != 0) {
+			pParentPtr->setDirty();
+			pParentPtr->nChildren++;
+			pParentPtr->getPersistObjectChildren ()->addPersistObject ((vmsDownloadsGroup*)grp);
+		} else {
+			getPersistObjectChildren ()->addPersistObject ((vmsDownloadsGroup*)grp);
+			setDirty();
+		}
+		grp->setDirty();
+		grp->nChildren = 0;
+		
+
+		
+		
 	}
 
 	return pGrp;
@@ -456,9 +703,49 @@ BOOL vmsDownloadsGroupsMgr::SaveGroupToFile(HANDLE hFile, vmsDownloadsGroupSmart
 	return TRUE;
 }
 
+void vmsDownloadsGroupsMgr::SaveGroupsTreeToBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwSizeRequired, PDLDS_GROUPS_TREE pRoot)
+{
+	int cGroups = pRoot->GetLeafCount ();
+	putVarToBuffer(cGroups, pbtCurrentPos, 0, dwBufferSize, pdwSizeRequired);
+
+	int i = 0;
+	for (i = 0; i < cGroups; i++) {
+		PDLDS_GROUPS_TREE pGroupTree = pRoot->GetLeaf (i);
+		SaveGroupToBuffer (pbtCurrentPos, 0, dwBufferSize, pdwSizeRequired, pGroupTree->GetData ());
+		SaveGroupsTreeToBuffer (pbtCurrentPos, 0, dwBufferSize, pdwSizeRequired, pGroupTree);
+	}
+
+	if (pbtBuffer == NULL)
+		return;
+
+	putVarToBuffer(cGroups, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+
+	for (i = 0; i < cGroups; i++) {
+		PDLDS_GROUPS_TREE pGroupTree = pRoot->GetLeaf (i);
+		SaveGroupToBuffer (pbtCurrentPos, pbtBuffer, dwBufferSize, 0, pGroupTree->GetData ());
+		SaveGroupsTreeToBuffer (pbtCurrentPos, pbtBuffer, dwBufferSize, 0, pGroupTree);
+	}
+}
+
+void vmsDownloadsGroupsMgr::SaveGroupToBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwSizeRequired, vmsDownloadsGroupSmartPtr pGroup)
+{
+	putVarToBuffer(pGroup->nId, pbtCurrentPos, 0, dwBufferSize, pdwSizeRequired);
+	putStrToBuffer(pGroup->strName.pszString, pbtCurrentPos, 0, dwBufferSize, pdwSizeRequired);
+	putStrToBuffer(pGroup->strOutFolder.pszString, pbtCurrentPos, 0, dwBufferSize, pdwSizeRequired);
+	putStrToBuffer(pGroup->strExts.pszString, pbtCurrentPos, 0, dwBufferSize, pdwSizeRequired);
+
+	if (pbtBuffer == NULL)
+		return;
+
+	putVarToBuffer(pGroup->nId, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+	putStrToBuffer(pGroup->strName.pszString, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+	putStrToBuffer(pGroup->strOutFolder.pszString, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+	putStrToBuffer(pGroup->strExts.pszString, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+}
+
 LPCSTR vmsDownloadsGroupsMgr::GetVideoExts()
 {
-	return "avi mpg mov wmv mpeg vob mpe flv mp4";
+	return "avi mpg mov wmv mpeg vob mpe flv mp4 mkv";
 }
 
 LPCSTR vmsDownloadsGroupsMgr::GetAudioExts()
@@ -483,8 +770,72 @@ void vmsDownloadsGroupsMgr::RebuildGroupsList(PDLDS_GROUPS_TREE pRoot, std::vect
 	}
 }
 
-void vmsDownloadsGroupsMgr::QueryStoringGroupsInformation() 
+TGroupLoadEventData& vmsDownloadsGroupsMgr::AddGroupLoadEventData(const TGroupLoadEventData& gledData)
 {
-	vmsCriticalSectionAutoLock csalGroupsInformationChangeGuard(&m_csGroupsInformationChangeGuard);
-	m_bIsGroupsInformationChanged = true;
+	m_lstGroupLoadEventData.push_back(gledData);
+	return m_lstGroupLoadEventData.back();
+}
+
+void vmsDownloadsGroupsMgr::UpdateIdForNextGroup(int nId)
+{
+	m_nGrpNextId = max(m_nGrpNextId, nId + 1);
+}
+
+void vmsDownloadsGroupsMgr::RemoveGroupCreators()
+{
+	
+	m_lstGroupLoadEventData.swap(std::list<TGroupLoadEventData>());
+}
+
+bool FdmGroupLoadEventHandler(void* pvData)
+{
+	TGroupLoadEventData* gledData = (TGroupLoadEventData*)pvData;
+	if (gledData == 0)
+		return false;
+
+	PDLDS_GROUPS_TREE pgtParent = gledData->pgtParent;
+	vmsDownloadsGroupsMgr* pdgmGroupsMgr = gledData->pdgmGroupsMgr;
+	bool& bIsGroupLoaded = gledData->bIsGroupLoaded;
+
+	if (pgtParent == 0)
+		return false;
+
+	if (pdgmGroupsMgr == 0)
+		return false;
+
+	if (bIsGroupLoaded) {
+
+		
+
+		if ((vmsDownloadsGroup*)gledData->pGroupPtr == 0)
+			return false;
+
+		gledData->pgtParent = pdgmGroupsMgr->Add(gledData->pGroupPtr, pgtParent, TRUE, true);
+		gledData->pGroupPtr = 0;
+		bIsGroupLoaded = false;
+		return true;
+	}
+
+	
+
+	if ((vmsDownloadsGroup*)pgtParent->GetData() == 0)
+		return false;
+
+	vmsDownloadsGroupSmartPtr pNewGroupPtr;
+	pNewGroupPtr.CreateInstance ();
+
+	vmsDownloadsGroupSmartPtr pParentPtr = pgtParent->GetData();
+
+	pNewGroupPtr->nChildren = 0;
+	pNewGroupPtr->glehEventHandler = pParentPtr->glehEventHandler;
+
+	TGroupLoadEventData gledNewGroupData;
+	gledNewGroupData.pdgmGroupsMgr = pdgmGroupsMgr;
+	gledNewGroupData.pgtParent = gledData->pgtParent;
+	gledNewGroupData.pGroupPtr = pNewGroupPtr;
+
+	pNewGroupPtr->pvData = &pdgmGroupsMgr->AddGroupLoadEventData(gledNewGroupData);
+	pParentPtr->getPersistObjectChildren ()->addPersistObject ((vmsDownloadsGroup*)pNewGroupPtr);
+
+	return true;
 }

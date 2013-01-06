@@ -76,16 +76,16 @@ BOOL CCreateDownloadsDlg::OnInitDialog()
 	m_btnSetTime.SetIcon (SICO (IDI_SETTIME));
 	m_btnOutFolderSetDefault.SetIcon (SICO (IDI_SETFOLDERDEFAULT));
 
-	m_task.hts.enType = HTS_ONCE;
-	m_task.hts.last.dwHighDateTime = m_task.hts.last.dwLowDateTime = UINT_MAX;
-	m_task.dwFlags = SCHEDULE_ENABLED;
+	m_schScheduleParam.schTask.hts.enType = HTS_ONCE;
+	m_schScheduleParam.schTask.hts.last.dwHighDateTime = m_schScheduleParam.schTask.hts.last.dwLowDateTime = UINT_MAX;
+	m_schScheduleParam.schTask.dwFlags = SCHEDULE_ENABLED;
 	SYSTEMTIME time;
 	GetLocalTime (&time);
 	if (++time.wHour > 23)
 		time.wHour = 0;
 	time.wMinute = 0;
-	SystemTimeToFileTime (&time, &m_task.hts.next);
-	m_task.uWaitForConfirmation = 0;
+	SystemTimeToFileTime (&time, &m_schScheduleParam.schTask.hts.next);
+	m_schScheduleParam.schTask.uWaitForConfirmation = 0;
 
 	m_wndGroups.Fill ();
 
@@ -175,7 +175,7 @@ void CCreateDownloadsDlg::OnSettime()
 {
 	CScheduleSheet sheet (LS (L_SCHEDULEDLDS), this);
 
-	sheet.Init (&m_task, FALSE);
+	sheet.Init (&m_schScheduleParam.schTask, FALSE);
 	
 	_DlgMgr.OnDoModal (&sheet);
 
@@ -299,7 +299,7 @@ void CCreateDownloadsDlg::OnOK()
 	BOOL bScheduled = IsDlgButtonChecked (IDC_STARTSCHEDULE) == BST_CHECKED;
 
 	
-	_pwndDownloads->CreateDownloads (m_vpDldsToStart, bScheduled ? &m_task : NULL);
+	_pwndDownloads->CreateDownloads (m_vpDldsToStart, bScheduled ? &m_schScheduleParam.schTask : NULL);
 
 	BOOL bUseZipPreview = _App.NewDL_UseZIPPreview ();
 
@@ -309,7 +309,7 @@ void CCreateDownloadsDlg::OnOK()
 			m_vpDldsToStart [i]->pMgr->GetDownloadMgr ()->GetDP ()->dwFlags |= DPF_USEZIPPREVIEW;
 		else
 			m_vpDldsToStart [i]->pMgr->GetDownloadMgr ()->GetDP ()->dwFlags &= ~DPF_USEZIPPREVIEW;
-		_DldsMgr.QueryStoringDownloadList();
+		m_vpDldsToStart [i]->pMgr->GetDownloadMgr ()->setDirty();
 	}
 
 	_App.Last_Autostart (m_iAutostart);

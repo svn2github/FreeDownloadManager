@@ -65,6 +65,9 @@ BOOL CDownloadAlrExistsDlg::OnInitDialog()
 	
 	((CStatic*) GetDlgItem (IDC_DLGICON))->SetIcon (LoadIcon (NULL, IDI_QUESTION));
 
+	if (m_dld->pMgr->GetPercentDone() == -1)
+		GetDlgItem (IDC_RESUME)->EnableWindow (FALSE);
+
 	if (m_dld->pMgr->IsRunning ())
 		GetDlgItem (IDC_RESTART)->EnableWindow (FALSE);
 

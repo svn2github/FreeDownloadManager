@@ -11,6 +11,7 @@
 
 #include "list.h"
 #include "vmsTrafficUsageModeMgr.h"
+#include "vmsPersistObject.h"
 
 enum fsWhatToStartType
 {
@@ -147,7 +148,45 @@ struct fsSchedule
 	fsWhenToStart hts;	
 	DWORD dwFlags;		
 	UINT uWaitForConfirmation; 
+
+	friend class fsScheduleEx;
+	friend class fsScheduleMgr;
+
+	
+private:
+	fsSchedule() {}
+	fsSchedule(const fsSchedule&) {}
 };
+
+struct fsScheduleEx
+{
+	fsScheduleEx()
+		: m_ppoTaskWrapper(0)
+	{}
+	 fsSchedule schTask;
+	 vmsPersistObject* m_ppoTaskWrapper;
+};
+
+typedef bool (*SheduleLoadEventHandler)(fsSchedule* pschTask, void* pvData);
+
+struct vmsPersistableScheduleWrapper : public vmsObject, public vmsPersistObject
+{
+	fsScheduleEx schScheduleParam;
+
+	
+	void* pvData;
+	SheduleLoadEventHandler slehEventHandler;
+
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+	vmsPersistableScheduleWrapper& operator = (const vmsPersistableScheduleWrapper&);
+
+	
+	void putListToBuffer(fs::list<UINT>* pvIds, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize, DWORD* pdwSizeReuiqred);
+	bool getListFromBuffer(fs::list<UINT>* pvIds, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize);
+};
+
+typedef vmsObjectSmartPtr<vmsPersistableScheduleWrapper> vmsPersistableScheduleWrapperSmartPtr;
 
 enum fsScheduleMgrEvent
 {
@@ -188,7 +227,7 @@ struct fsSchedulerFileHdr
 typedef void (*fntScheduleMgrEvents)(fsSchedule *task, fsScheduleMgrEvent ev, LPVOID lp);
 typedef void (*fntScheduleMgrEventDesc)(LPCSTR pszEvent, fsScheduleMgrEventType type, LPVOID lp);
 
-class fsScheduleMgr
+class fsScheduleMgr : public vmsPersistObject
 {
 public:
 	void RepairTasksNextTimes();
@@ -239,6 +278,7 @@ public:
 
 	
 	fsSchedule* GetTask (int i);
+	void setDirtyFlagForTask(int i);
 	
 	int AddTask (fsSchedule *task);
 	
@@ -246,6 +286,9 @@ public:
 
 	
 	BOOL IsWorkStationLocked();
+
+	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
+	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 
 	fsScheduleMgr();
 	virtual ~fsScheduleMgr();
@@ -313,7 +356,11 @@ protected:
 	static DWORD WINAPI _threadScheduleMgr (LPVOID lp);
 	volatile BOOL m_bNeedExit;	
 
-	fs::list <fsSchedule*> m_vTasks;	
+	
+	
+	fs::list <vmsPersistableScheduleWrapperSmartPtr> m_vTasks;	
 };
+
+bool FdmScheduleLoadEventHandler(fsSchedule* pschTask, void* pvData);
 
 #endif 

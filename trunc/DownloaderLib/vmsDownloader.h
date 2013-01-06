@@ -38,9 +38,12 @@ public:
 	UINT get_Speed ();
 	int get_Progress();
 	vmsDownloader_State get_State();
+	fsInternetResult get_LastError();
+	tstring get_LastErrorMessage();
 	void StopDownloading();
 	void StartDownloading();
 	fsInternetResult Initialize (LPCSTR pszURL, LPCSTR pszOutFile);
+	void DumpDownload(LPBYTE pbBuffer, LPDWORD pdwSize);
 	bool RestoreDownload(LPBYTE pbBuffer, LPDWORD pdwSize, DWORD dwVer);
 	void SetResumeMode();
 	bool IsDone();
@@ -50,8 +53,14 @@ public:
 
 protected:
 	static DWORD _DownloadMgrEvents(fsDownloadMgr* pMgr, fsDownloaderEvent ev, UINT uInfo, LPVOID lp);
+	void vmsDownloader::fsIRToStr (fsInternetResult ir, tstring& sMsg);
+
 	fsDownloadMgr m_dldr;
 	vmsDownloader_State m_enState;
+	fsInternetResult m_irLastError;
+public:
+	LPCTSTR getDstFilePathName(void);
+	LPCSTR getContentType(void);
 };
 
 #endif 

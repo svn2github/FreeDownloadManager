@@ -47,7 +47,8 @@ public:
 	
 	static int _CheckDownloadAlrExists (vmsDownloadSmartPtr dld, BOOL bNeedTopMost = FALSE, BOOL bShowUI = TRUE);
 	BOOL m_bReqTopMostDialog;	
-	fsSchedule m_task;			
+	
+	fsScheduleEx m_schScheduleParam;
 	BOOL m_bScheduled;			
 	BOOL m_bAuthorization;		
 	CString m_strUrl;			

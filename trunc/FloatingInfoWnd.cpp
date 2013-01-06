@@ -209,7 +209,19 @@ try{
 	CString str;
 	bool bUpload = m_wndList.GetItemImage (nItem) == 1;
 	if (bUpload == false)
-		str.Format ("%d%%", (int)((fsDownload*) m_wndList.GetItemData (nItem))->pMgr->GetPercentDone ());
+	{
+		const int nPercentDone = (int)((fsDownload*) m_wndList.GetItemData (nItem))->pMgr->GetPercentDone ();
+		if (nPercentDone == -1)
+		{
+			UINT64 uDone = (int)((fsDownload*) m_wndList.GetItemData (nItem))->pMgr->GetDownloadedBytesCount ();
+			float val;
+			char szDim [10];
+			BytesToXBytes (uDone, &val, szDim);
+			str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+		}
+		else
+			str.Format ("%d%%", nPercentDone);
+	}
 	m_wndList.SetItemText (nItem, 1, str);
 }catch (...){}
 }

@@ -692,6 +692,10 @@ BOOL CSchedule_WTSPage::OnApply()
 				m_task->wts.enRAD = RAD_INVERT;			
 		break;
 	}
+
+	fsScheduleEx* pschScheduleParam = (fsScheduleEx*)m_task;
+	if (pschScheduleParam->m_ppoTaskWrapper)
+		pschScheduleParam->m_ppoTaskWrapper->setDirty();
 	
 	return CPropertyPage::OnApply();
 }
@@ -718,6 +722,10 @@ BOOL CSchedule_WTSPage::ApplyProg()
 
 	strcpy (m_task->wts.prog.pszName, strProg);
 	strcpy (m_task->wts.prog.pszArgs, strArgs);
+
+	fsScheduleEx* pschScheduleParam = (fsScheduleEx*)m_task;
+	if (pschScheduleParam->m_ppoTaskWrapper)
+		pschScheduleParam->m_ppoTaskWrapper->setDirty();
 
 	return TRUE;
 }
@@ -747,6 +755,10 @@ BOOL CSchedule_WTSPage::ApplyStartStopDownloads()
 	m_task->wts.dlds.dwFlags = 0;
 	if (IsDlgButtonChecked (IDC_RESTARTDLDIFDONE) == BST_CHECKED)
 		m_task->wts.dlds.dwFlags |= SDI_RESTART_COMPLETED_DOWNLOADS;
+
+	fsScheduleEx* pschScheduleParam = (fsScheduleEx*)m_task;
+	if (pschScheduleParam->m_ppoTaskWrapper)
+		pschScheduleParam->m_ppoTaskWrapper->setDirty();
 
 	return TRUE;
 }
@@ -832,6 +844,10 @@ BOOL CSchedule_WTSPage::ApplyDial()
 	m_task->wts.dial.dwHangupLess = dwHL;
 	m_task->wts.dial.cAgains = cAgains;
 
+	fsScheduleEx* pschScheduleParam = (fsScheduleEx*)m_task;
+	if (pschScheduleParam->m_ppoTaskWrapper)
+		pschScheduleParam->m_ppoTaskWrapper->setDirty();
+
 	return TRUE;
 }
 
@@ -856,6 +872,10 @@ BOOL CSchedule_WTSPage::ApplyHangup()
 		fsnew (m_task->wts.pszHangupConnection, char, strConn.GetLength () + 1);
 		strcpy (m_task->wts.pszHangupConnection, strConn);
 	}
+
+	fsScheduleEx* pschScheduleParam = (fsScheduleEx*)m_task;
+	if (pschScheduleParam->m_ppoTaskWrapper)
+		pschScheduleParam->m_ppoTaskWrapper->setDirty();
 
 	return TRUE;
 }

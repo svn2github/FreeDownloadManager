@@ -1,13 +1,13 @@
-//
-// analogue of IUnknown
-//
+/*
+  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+*/
 
 #if !defined(AFX_VMSOBJECT_H__7595731C_4D83_4B41_A552_4D9EDDC23912__INCLUDED_)
 #define AFX_VMSOBJECT_H__7595731C_4D83_4B41_A552_4D9EDDC23912__INCLUDED_
 
 #if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+#endif 
 
 class vmsObject  
 {
@@ -32,7 +32,6 @@ public:
 protected:
 	long m_cRefs;
 };
-
 
 template <class T = vmsObject>
 class vmsObjectSmartPtr  
@@ -82,4 +81,4 @@ protected:
 	T *m_pObj;
 };
 
-#endif // !defined(AFX_VMSOBJECT_H__7595731C_4D83_4B41_A552_4D9EDDC23912__INCLUDED_)
+#endif 

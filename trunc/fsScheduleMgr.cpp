@@ -3,6 +3,7 @@
 */
 
 #include "stdafx.h"
+#include "Utils.h"
 #include "FdmApp.h"
 #include "fsScheduleMgr.h"
 #include "DownloadsWnd.h"
@@ -25,6 +26,180 @@ static char THIS_FILE[]=__FILE__;
 extern CDownloadsWnd *_pwndDownloads;
 extern fsPluginMgr _PluginMgr;
 extern CShedulerWnd* _pwndScheduler;
+
+void vmsPersistableScheduleWrapper::putListToBuffer(fs::list<UINT>* pvIds, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize, DWORD* pdwSizeRequired)
+{
+	if (pvIds == 0)
+		return;
+
+	pvIds->lock();
+	int nCount = pvIds->size();
+	putVarToBuffer(nCount, pbtCurrentPos, 0, 0, pdwSizeRequired);
+
+	int i = 0;
+	for (i = 0; i < pvIds->size(); i++) {
+		putVarToBuffer(pvIds->at(i), pbtCurrentPos, 0, 0, pdwSizeRequired);
+	}
+
+	if (pbtBuffer == NULL) {
+		pvIds->unlock();
+		return;
+	}
+
+	putVarToBuffer(nCount, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+
+	for (i = 0; i < pvIds->size(); i++) {
+		putVarToBuffer(pvIds->at(i), pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
+	}
+
+	pvIds->unlock();
+}
+
+bool vmsPersistableScheduleWrapper::getListFromBuffer(fs::list<UINT>* pvIds, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSize)
+{
+	if (pvIds == 0)
+		return false;
+
+	pvIds->lock();
+	int nCount = 0;
+	if (!getVarFromBuffer(nCount, pbtCurrentPos, pbtBuffer, dwBufferSize)) {
+		pvIds->unlock();
+		return false;
+	}
+
+	if (nCount < 0) {
+		pvIds->unlock();
+		return false;
+	}
+
+	int i = 0;
+	for (i = 0; i < nCount; i++) {
+		UINT uiId = 0;
+		if (!getVarFromBuffer(uiId, pbtCurrentPos, pbtBuffer, dwBufferSize)) {
+			pvIds->unlock();
+			return false;
+		}
+		pvIds->add(uiId);
+	}
+
+	pvIds->unlock();
+	return true;
+}
+
+void vmsPersistableScheduleWrapper::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	putVarToBuffer(schScheduleParam.schTask, pbtCurrentPos, 0, 0, &dwRequiredSize);
+
+	
+	switch (schScheduleParam.schTask.wts.enType)
+	{
+		case WTS_PROGRAM:
+			putStrToBuffer(schScheduleParam.schTask.wts.prog.pszName, pbtCurrentPos, 0, 0, &dwRequiredSize);
+			putStrToBuffer(schScheduleParam.schTask.wts.prog.pszArgs, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		break;
+
+		case WTS_STARTDOWNLOAD:
+		case WTS_STOPDOWNLOAD:
+			putListToBuffer(schScheduleParam.schTask.wts.dlds.pvIDs, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		break;
+
+		case WTS_DIAL:
+			putStrToBuffer(schScheduleParam.schTask.wts.dial.pszConnection, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		break;
+
+		case WTS_HANGUP:
+			putStrToBuffer(schScheduleParam.schTask.wts.pszHangupConnection, pbtCurrentPos, 0, 0, &dwRequiredSize);
+		break;
+	}
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize) {
+			*pdwSize = dwRequiredSize;
+		}
+		return;
+	}
+
+	putVarToBuffer(schScheduleParam.schTask, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+
+	
+	switch (schScheduleParam.schTask.wts.enType)
+	{
+		case WTS_PROGRAM:
+			putStrToBuffer(schScheduleParam.schTask.wts.prog.pszName, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+			putStrToBuffer(schScheduleParam.schTask.wts.prog.pszArgs, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		break;
+
+		case WTS_STARTDOWNLOAD:
+		case WTS_STOPDOWNLOAD:
+			putListToBuffer(schScheduleParam.schTask.wts.dlds.pvIDs, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		break;
+
+		case WTS_DIAL:
+			putStrToBuffer(schScheduleParam.schTask.wts.dial.pszConnection, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		break;
+
+		case WTS_HANGUP:
+			putStrToBuffer(schScheduleParam.schTask.wts.pszHangupConnection, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+		break;
+	}
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+}
+
+bool vmsPersistableScheduleWrapper::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	LPBYTE pbtCurrentPos = pbtBuffer;
+
+	if (!getVarFromBuffer(schScheduleParam.schTask, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	switch (schScheduleParam.schTask.wts.enType)
+	{
+		case WTS_PROGRAM:
+
+			if (!getStrFromBuffer(&schScheduleParam.schTask.wts.prog.pszName, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+
+			if (!getStrFromBuffer(&schScheduleParam.schTask.wts.prog.pszArgs, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+
+		break;
+
+		case WTS_STARTDOWNLOAD:
+		case WTS_STOPDOWNLOAD:
+			fsnew1 (schScheduleParam.schTask.wts.dlds.pvIDs, fs::list <UINT>);
+			if (!getListFromBuffer(schScheduleParam.schTask.wts.dlds.pvIDs, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+		break;
+
+		case WTS_DIAL:
+			if (!getStrFromBuffer(&schScheduleParam.schTask.wts.dial.pszConnection, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+		break;
+
+		case WTS_HANGUP:
+			if (!getStrFromBuffer(&schScheduleParam.schTask.wts.pszHangupConnection, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+		break;
+	}
+
+	if (slehEventHandler)
+		slehEventHandler(&schScheduleParam.schTask, pvData);
+
+	
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	return true;
+}
+
+vmsPersistableScheduleWrapper& vmsPersistableScheduleWrapper::operator = (const vmsPersistableScheduleWrapper& src)
+{
+	schScheduleParam.schTask = src.schScheduleParam.schTask;
+	return *this;
+}
 
 fsScheduleMgr::fsScheduleMgr()
 {
@@ -73,7 +248,7 @@ void fsScheduleMgr::ManageNotEvents()
 	int i;
 	for (i = m_vTasks.size () - 1; i >= 0; i--)
 	{
-		fsSchedule *task = m_vTasks [i];
+		fsSchedule *task = &m_vTasks [i]->schScheduleParam.schTask;
 
 		if ((task->dwFlags & SCHEDULE_ENABLED) == 0)
 			continue;
@@ -126,6 +301,8 @@ void fsScheduleMgr::StartTask(fsSchedule *task)
 	if ((task->dwFlags & SCHEDULE_ENABLED) == 0)
 		return;
 
+	fsScheduleEx* pschScheduleParam = (fsScheduleEx*)task;
+
 	if (IsTimeBased (task))
 	{
 		task->hts.last = task->hts.next;
@@ -134,6 +311,9 @@ void fsScheduleMgr::StartTask(fsSchedule *task)
 	}
 	else
 		task->hts.last = m_curTime;
+
+	if (pschScheduleParam && pschScheduleParam->m_ppoTaskWrapper)
+		pschScheduleParam->m_ppoTaskWrapper->setDirty();
 
 	if (task->wts.enType == WTS_HANGUP)
 	{
@@ -243,6 +423,8 @@ void fsScheduleMgr::StartTask(fsSchedule *task)
 	else if (task->dwFlags & SCHEDULE_AUTODIS)
 	{
 		task->dwFlags &= ~ SCHEDULE_ENABLED;
+		if (pschScheduleParam && pschScheduleParam->m_ppoTaskWrapper)
+			pschScheduleParam->m_ppoTaskWrapper->setDirty();
 		OnTaskUpdated (task);
 	}
 }
@@ -289,6 +471,10 @@ void fsScheduleMgr::RepairNextTime(fsSchedule *task)
 
 	
 	SystemTimeToFileTime (&time, &task->hts.next);
+
+	fsScheduleEx* pschScheduleParam = (fsScheduleEx*)task;
+	if (pschScheduleParam && pschScheduleParam->m_ppoTaskWrapper)
+		pschScheduleParam->m_ppoTaskWrapper->setDirty();
 
 	
 	
@@ -339,6 +525,10 @@ void fsScheduleMgr::GetNextTime(fsSchedule *task)
 
 	task->hts.next.dwLowDateTime = next.LowPart;
 	task->hts.next.dwHighDateTime = next.HighPart;
+
+	fsScheduleEx* pschScheduleParam = (fsScheduleEx*)task;
+	if (pschScheduleParam && pschScheduleParam->m_ppoTaskWrapper)
+		pschScheduleParam->m_ppoTaskWrapper->setDirty();
 }
 
 BOOL fsScheduleMgr::IsTimeBased(fsSchedule *task)
@@ -366,6 +556,10 @@ void fsScheduleMgr::CalculateStartTime(fsSchedule *task)
 
 	
 	SystemTimeToFileTime (&timeStart, &task->hts.next);
+
+	fsScheduleEx* pschScheduleParam = (fsScheduleEx*)task;
+	if (pschScheduleParam && pschScheduleParam->m_ppoTaskWrapper)
+		pschScheduleParam->m_ppoTaskWrapper->setDirty();
 
 	
 
@@ -412,9 +606,19 @@ void fsScheduleMgr::CalculateStartTime(fsSchedule *task)
 int fsScheduleMgr::AddTask(fsSchedule *task)
 {
 	task->hts.last.dwHighDateTime =  task->hts.last.dwLowDateTime = UINT (-1);
-	fsSchedule *t = new fsSchedule;
+	
+	
+	
+	
+	vmsPersistableScheduleWrapperSmartPtr pTaskPtr;
+	pTaskPtr.CreateInstance();
+	fsSchedule* t = &pTaskPtr->schScheduleParam.schTask;
 	*t = *task;
-	m_vTasks.add (t);
+	m_vTasks.add (pTaskPtr);
+	setDirty();
+	m_vTasks[m_vTasks.size()-1]->setDirty();
+	getPersistObjectChildren ()->addPersistObject ((vmsPersistableScheduleWrapper*)pTaskPtr);
+	pTaskPtr->schScheduleParam.m_ppoTaskWrapper = (vmsPersistObject*)(vmsPersistableScheduleWrapper*)pTaskPtr;
 
 	if (task->wts.enType == WTS_STARTDOWNLOAD)
 	{
@@ -504,7 +708,12 @@ CString fsScheduleMgr::WTSToStr(fsSchedule *task)
 
 fsSchedule* fsScheduleMgr::GetTask(int i)
 {
-	return m_vTasks [i];
+	return (fsSchedule*)&m_vTasks [i]->schScheduleParam;
+}
+
+void fsScheduleMgr::setDirtyFlagForTask(int i)
+{
+	return m_vTasks [i]->setDirty();
 }
 
 CString fsScheduleMgr::HTSToStr(fsSchedule *task)
@@ -675,7 +884,7 @@ BOOL fsScheduleMgr::SaveStateToFile(HANDLE hFile)
 	
 	for (int i = 0; i < cTasks; i++)
 	{
-		fsSchedule *task = m_vTasks [i];
+		fsSchedule *task = &m_vTasks [i]->schScheduleParam.schTask;
 
 		if (!WriteFile (hFile, task, sizeof (fsSchedule), &dw, NULL))
 			return FALSE;
@@ -728,7 +937,11 @@ BOOL fsScheduleMgr::LoadStateFromFile(HANDLE hFile)
 
 	while (cTasks--)
 	{
-		fsSchedule *task = new fsSchedule;
+		
+		
+		vmsPersistableScheduleWrapperSmartPtr pTaskPtr;
+		pTaskPtr.CreateInstance();
+		fsSchedule* task = &pTaskPtr->schScheduleParam.schTask;
 
 		if (!ReadFile (hFile, task, sizeof (fsSchedule), &dw, NULL) || dw != sizeof (fsSchedule))
 			return FALSE;
@@ -762,10 +975,60 @@ BOOL fsScheduleMgr::LoadStateFromFile(HANDLE hFile)
 		}
 
 		RepairNextTime (task);
-		m_vTasks.add (task);
+		m_vTasks.add (pTaskPtr);
+		getPersistObjectChildren ()->addPersistObject ((vmsPersistableScheduleWrapper*)pTaskPtr);
+		pTaskPtr->schScheduleParam.m_ppoTaskWrapper = (vmsPersistObject*)(vmsPersistableScheduleWrapper*)pTaskPtr;
 	}
 
 	return TRUE;
+}
+
+void fsScheduleMgr::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
+{
+	DWORD dwRequiredSize = 0;
+	LPBYTE pbtCurrentPos = pbtBuffer;
+	int cTasks = m_vTasks.size ();
+
+	putVarToBuffer(cTasks, pbtCurrentPos, 0, 0, &dwRequiredSize);
+
+	if (pbtBuffer == NULL) {
+		if (pdwSize) {
+			*pdwSize = dwRequiredSize;
+		}
+		return;
+	}
+
+	putVarToBuffer(cTasks, pbtCurrentPos, pbtBuffer, *pdwSize, 0);
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+}
+
+bool fsScheduleMgr::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
+{
+	LPBYTE pbtCurrentPos = pbtBuffer;
+	FreeTasks ();
+	m_uID = 0;
+
+	int cTasks = 0;
+	if (!getVarFromBuffer(cTasks, pbtCurrentPos, pbtBuffer, *pdwSize))
+		return false;
+
+	int i = 0;
+	for (i = 0; i < cTasks; i++) {
+		vmsPersistableScheduleWrapperSmartPtr pTaskPtr;
+		pTaskPtr.CreateInstance();
+		m_vTasks.add(pTaskPtr);
+		getPersistObjectChildren ()->addPersistObject ((vmsPersistableScheduleWrapper*)pTaskPtr);
+		pTaskPtr->pvData = this;
+		pTaskPtr->slehEventHandler = FdmScheduleLoadEventHandler;
+		pTaskPtr->schScheduleParam.m_ppoTaskWrapper = (vmsPersistObject*)(vmsPersistableScheduleWrapper*)pTaskPtr;
+	}
+
+	UpdateCurrentTime ();
+
+	*pdwSize = pbtCurrentPos - pbtBuffer;
+
+	return true;
 }
 
 void fsScheduleMgr::FreeTask(fsSchedule *task)
@@ -796,8 +1059,11 @@ void fsScheduleMgr::FreeTasks()
 {
 	for (int i = m_vTasks.size () - 1; i >= 0; i--)
 	{
-		FreeTask (m_vTasks [i]);
-		delete m_vTasks [i];
+		FreeTask (&m_vTasks [i]->schScheduleParam.schTask);
+		
+		
+		getPersistObjectChildren ()->removePersistObject (i);
+		m_vTasks [i] = 0;
 	}
 
 	m_vTasks.clear ();
@@ -817,6 +1083,8 @@ void fsScheduleMgr::DeleteTask(fsSchedule *task)
 
 	Event (task, SME_TASK_WILLBEDELETED);
 	m_vTasks.del (index);
+	getPersistObjectChildren ()->removePersistObject (index);
+	setDirty();
 
 	if (task->wts.enType == WTS_STARTDOWNLOAD)
 		UpdateTaskDownloads (task);
@@ -825,7 +1093,7 @@ void fsScheduleMgr::DeleteTask(fsSchedule *task)
 int fsScheduleMgr::FindTask(fsSchedule *task)
 {
 	for (int i = m_vTasks.size () - 1; i >= 0; i--)
-		if (task == m_vTasks [i])
+		if (task == &m_vTasks [i]->schScheduleParam.schTask)
 			return i;
 
 	return -1;
@@ -1088,7 +1356,7 @@ void fsScheduleMgr::ExciteEvent(fsExternalEvent ev)
 	int i = 0;
 	for (i = 0; i < m_vTasks.size (); i++)
 	{
-		fsSchedule *task = m_vTasks [i];
+		fsSchedule *task = &m_vTasks [i]->schScheduleParam.schTask;
 
 		if ((task->dwFlags & SCHEDULE_ENABLED) == 0)
 			continue;
@@ -1106,6 +1374,7 @@ void fsScheduleMgr::ExciteEvent(fsExternalEvent ev)
 			{
 				MessageBox (0, LS (L_SCHEDULERESTOEXIT), LS (L_SCHEDULER), MB_ICONEXCLAMATION);
 				task->dwFlags &= ~ SCHEDULE_ENABLED;
+				m_vTasks [i]->setDirty();
 				continue;
 			}
 
@@ -1156,7 +1425,7 @@ void fsScheduleMgr::ManageHalfEvents()
 	int i;
 	for (i = m_vTasks.size () - 1; i >= 0; i--)
 	{
-		fsSchedule *task = m_vTasks [i];
+		fsSchedule *task = &m_vTasks [i]->schScheduleParam.schTask;
 
 		if ((task->dwFlags & SCHEDULE_ENABLED) == 0)
 			continue;
@@ -1239,7 +1508,7 @@ BOOL fsScheduleMgr::IsDownloadScheduled(vmsDownloadSmartPtr dld)
 {
 	for (int i = m_vTasks.size () - 1; i >= 0; i--)
 	{
-		fsSchedule *task = m_vTasks [i];
+		fsSchedule *task = &m_vTasks [i]->schScheduleParam.schTask;
 		
 		if (task->wts.enType == WTS_STARTDOWNLOAD && (task->dwFlags & SCHEDULE_ENABLED))
 		{
@@ -1275,7 +1544,7 @@ fsSchedule* fsScheduleMgr::GetScheduleDLTask(DLDS_LIST &vDlds, BOOL bStartDL)
 
 	for (int i = m_vTasks.size () - 1; i >= 0; i--)
 	{
-		fsSchedule *task = m_vTasks [i];
+		fsSchedule *task = &m_vTasks [i]->schScheduleParam.schTask;
 		if (task->wts.enType == enWTS)
 		{
 			if (task->wts.dlds.pvIDs->size () == cDlds)
@@ -1312,7 +1581,7 @@ int fsScheduleMgr::FindTask(fsWhatToStartType enType, int iStartPos)
 {
 	for (int i = iStartPos+1; i < m_vTasks.size (); i++)
 	{
-		if (m_vTasks [i]->wts.enType == enType)
+		if (m_vTasks [i]->schScheduleParam.schTask.wts.enType == enType)
 			return i;
 	}
 
@@ -1345,7 +1614,7 @@ void fsScheduleMgr::OnTaskUpdated(fsSchedule *task)
 void fsScheduleMgr::RepairTasksNextTimes()
 {
 	for (int i = 0; i < m_vTasks.size (); i++)
-		RepairNextTime (m_vTasks [i]);
+		RepairNextTime (&m_vTasks [i]->schScheduleParam.schTask);
 }
 
 BOOL fsScheduleMgr::IsWorkStationLocked()
@@ -1363,4 +1632,18 @@ BOOL fsScheduleMgr::IsWorkStationLocked()
 
     CloseDesktop(hDesk);
     return bLocked;
+}
+
+bool FdmScheduleLoadEventHandler(fsSchedule* pschTask, void* pvData)
+{
+	fsScheduleMgr* pschmMgr = (fsScheduleMgr*)pvData;
+	if (pschmMgr == 0)
+		return false;
+
+	if (pschTask == 0)
+		return false;
+
+	pschmMgr->RepairNextTime(pschTask);
+
+	return true;
 }
