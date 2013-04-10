@@ -18,6 +18,7 @@
 #include "detours.h"
 #include <string>
 #include <vector>
+#include <process.h>
 using namespace std;
 #include <assert.h>
 

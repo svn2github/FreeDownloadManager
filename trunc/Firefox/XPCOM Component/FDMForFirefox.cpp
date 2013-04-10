@@ -107,10 +107,9 @@ NS_IMETHODIMP CFDMForFirefox::GetLngString(const char *strIDString, PRUnichar **
 			psz = "Show This Button";
 	}
 
-	USES_CONVERSION;
 	if (psz && *psz)
 	{
-		*_retval = (PRUnichar*) nsMemory::Clone (A2W (psz), 
+		*_retval = (PRUnichar*) nsMemory::Clone (CA2WEX <128> (psz), 
 			(lstrlen (psz)+1) * sizeof (wchar_t));
 	}
 
@@ -388,11 +387,9 @@ fsString DomainFromUrl(LPCSTR pszUrl)
 
 bool CFDMForFirefox::IsServerToSkip (IFDMUrl *url)
 {
-	USES_CONVERSION;
-
 	wchar_t *wsz;
 	url->GetUrl (&wsz);
-	fsString strDomain = DomainFromUrl (W2A (wsz));
+	fsString strDomain = DomainFromUrl (CW2AEX <128> (wsz));
 	nsMemory::Free (wsz);
 
 	char szServers [10000] = ""; DWORD dw = sizeof (szServers);
@@ -553,18 +550,18 @@ NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl3(const PRUnichar *wstrU
 	_threadOnDownloadItBtnClicked_param *p = new _threadOnDownloadItBtnClicked_param;
 	p->pthis = this;
 	this->AddRef ();
-	USES_CONVERSION;
-	p->strUrl = W2A (wstrUrl);
+
+	p->strUrl = CW2AEX<128> (wstrUrl);
 	if (wstrFrameUrl)
-		p->strFrameUrl = W2A (wstrFrameUrl);
+		p->strFrameUrl = CW2AEX<128> (wstrFrameUrl);
 	if (wstrSwfUrl)
-		p->strSwfUrl = W2A (wstrSwfUrl);
+		p->strSwfUrl = CW2AEX<128> (wstrSwfUrl);
 	if (wstrFlashVars)
-		p->strFlashVars = W2A (wstrFlashVars);
+		p->strFlashVars = CW2AEX<128> (wstrFlashVars);
 	if (wstrOtherSwfUrls)
-		p->strOtherSwfUrls = W2A (wstrOtherSwfUrls);
+		p->strOtherSwfUrls = CW2AEX<128> (wstrOtherSwfUrls);
 	if (wstrOtherFlashVars)
-		p->strOtherFlashVars = W2A (wstrOtherFlashVars);
+		p->strOtherFlashVars = CW2AEX<128> (wstrOtherFlashVars);
 	p->hwndParent = GetForegroundWindow ();
 
 	DWORD dw;
@@ -578,12 +575,22 @@ NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl3(const PRUnichar *wstrU
 
 NS_IMETHODIMP CFDMForFirefox::IsVideoFlash(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, PRBool *_retval)
 {
+	if (!wstrFrameUrl)
+		wstrFrameUrl = L"";
+	if (!wstrSwfUrl)
+		wstrSwfUrl = L"";
+	if (!wstrFlashVars)
+		wstrFlashVars = L"";
+	if (!wstrOtherSwfUrls)
+		wstrOtherSwfUrls = L"";
+	if (!wstrOtherFlashVars)
+		wstrOtherFlashVars = L"";
+
 	vmsFlvSniffDll dll;
-	USES_CONVERSION;
-	*_retval = dll.IsVideoFlash (W2A (wstrUrl), wstrFrameUrl ? W2A (wstrFrameUrl) : NULL,
-		wstrSwfUrl ? W2A (wstrSwfUrl) : NULL, wstrFlashVars ? W2A (wstrFlashVars) : NULL,
-		wstrOtherSwfUrls ? W2A (wstrOtherSwfUrls) : NULL, 
-		wstrOtherFlashVars ? W2A (wstrOtherFlashVars) : NULL);
+
+	*_retval = dll.IsVideoFlash (CW2AEX<128> (wstrUrl), CW2AEX<128> (wstrFrameUrl),
+		CW2AEX<128> (wstrSwfUrl), CW2AEX<128> (wstrFlashVars), CW2AEX<128> (wstrOtherSwfUrls), CW2AEX<128> (wstrOtherFlashVars));
+
 	return NS_OK;
 }
 
@@ -648,8 +655,7 @@ NS_IMETHODIMP CFDMForFirefox::OnNewHttpRequest (const PRUnichar *wstrUrl, const 
 	assert (wstrUrl != NULL && wstrSourceTabUrl != NULL);
 	if (!wstrUrl || !wstrSourceTabUrl)
 		return NS_ERROR_INVALID_POINTER;
-	USES_CONVERSION;
-	vmsFlvSniffDll::OnNewHttpRequest (W2CA (wstrUrl), W2CA (wstrSourceTabUrl));
+	vmsFlvSniffDll::OnNewHttpRequest (CW2AEX<128> (wstrUrl), CW2AEX<128> (wstrSourceTabUrl));
 	return NS_OK;
 }
 
@@ -659,9 +665,8 @@ NS_IMETHODIMP CFDMForFirefox::OnHttpRedirect (const PRUnichar *wstrUrl, const PR
 	if (!wstrUrl || !wstrOriginalUrl)
 		return NS_ERROR_INVALID_POINTER;
 	LOGsnl ("Redirect:");
-	USES_CONVERSION;
-	LOG (" source: %s", W2CA (wstrOriginalUrl));
-	LOG (" new: %s", W2CA (wstrUrl));
+	LOG (" source: %s", CW2AEX<128> (wstrOriginalUrl));
+	LOG (" new: %s", CW2AEX<128> (wstrUrl));
 	vmsHttpRedirectList::Redirect r;
 	r.dwTicksRegistered = GetTickCount ();
 	r.wstrUrl = wstrUrl;

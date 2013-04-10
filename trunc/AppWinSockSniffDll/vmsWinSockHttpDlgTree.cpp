@@ -523,16 +523,35 @@ DWORD WINAPI vmsWinSockHttpDlgTree::_threadAddDialogs(LPVOID lp)
 		{
 			EnterCriticalSection (&pthis->m_csModifyAddDialogsList);
 			SPHTTPDLG spDlg = pthis->m_vAddDialogsList [0];
-			pthis->m_vAddDialogsList.erase (pthis->m_vAddDialogsList.begin ());
 			LeaveCriticalSection (&pthis->m_csModifyAddDialogsList);
 			LOG ("ADDING TO TREE ID=%x", spDlg->nID);
 			pthis->InsertDialog (spDlg);
+			EnterCriticalSection (&pthis->m_csModifyAddDialogsList);
+			pthis->m_vAddDialogsList.erase (pthis->m_vAddDialogsList.begin ());
+			LeaveCriticalSection (&pthis->m_csModifyAddDialogsList);
 		}
 
 		Sleep (10);
 	}
 
 	return 0;
+}
+
+bool vmsWinSockHttpDlgTree::UrlExistsInProcessHttpDialogsQueue (LPCSTR pszUrl)
+{
+	bool bExists = false;
+	EnterCriticalSection (&m_csModifyAddDialogsList);
+	for (size_t i = 0; i < m_vAddDialogsList.size (); i++)
+	{
+		SPHTTPDLG spDlg = m_vAddDialogsList [i];
+		if (spDlg->strRequestUrl == pszUrl)
+		{
+			bExists = true;
+			break;
+		}
+	}
+	LeaveCriticalSection (&m_csModifyAddDialogsList);
+	return bExists;
 }
 
 void vmsWinSockHttpDlgTree::ExtractBodyText_html(HTTPDLG pDlg, string &strResult)
@@ -828,6 +847,7 @@ void vmsWinSockHttpDlgTree::FindItemParents_start(HTTPDLG pDlg, _inc_FindItemPar
 	fip.pDlg = pDlg;
 	fip.pszUrl = pDlg->strRequestUrl.c_str ();
 	fip.pszUrlPath = vmsUrl::GetFilePathStart (fip.pszUrl);
+	assert (fip.pszUrlPath != NULL);
 	fip.pszShortenUrlStart = strstr (fip.pszUrl, "://");
 	assert (fip.pszShortenUrlStart != NULL);
 	if (fip.pszShortenUrlStart)
@@ -867,6 +887,7 @@ float vmsWinSockHttpDlgTree::FindItemParents_getParentWeihgt (_inc_FindItemParen
 	if (enStep == _inc_FindItemParents::ALL_STEPS || enStep == _inc_FindItemParents::EXACT_URL_MATCH)
 	{
 		
+		assert (fip.pszUrlPath != NULL);
 		LPCSTR pszFind = strstr (pDlgParentTreeItem->strBodyText.c_str (), fip.pszUrlPath);
 		bool bDontCheckFullUrlExistance = false;
 		

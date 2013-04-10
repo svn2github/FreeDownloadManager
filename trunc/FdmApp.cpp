@@ -47,6 +47,9 @@ extern CSpiderWnd *_pwndSpider;
 #include "vmsFirefoxUtil.h"
 #include "vmsTmpFileName.h"
 #include "vmsRegisteredAppPath.h"
+#include "vmsFdmFilesDeleter.h"
+#include "vmsFdmUiDetails.h"
+#include "vmsWinSecurity.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -233,18 +236,22 @@ BOOL CFdmApp::InitInstance()
 		return FALSE;
 	}
 
-	if (VistaFx::IsVistaOrHigher () && strncmp (m_lpCmdLine, "-nelvcheck", 10) && stricmp (m_lpCmdLine, "-autorun"))
+	
+
+	if (vmsWinSecurity::IsVistaOrHigher () && strncmp (m_lpCmdLine, "-nelvcheck", 10) && stricmp (m_lpCmdLine, "-autorun"))
 	{
-		VistaFx vf;
-		vf.LoadDll (m_strAppPath + "vistafx.dll");
-		if (vf.IsProcessElevated ())
+		if (vmsWinSecurity::IsProcessElevated ())
 		{
-			char sz [MAX_PATH];
-			GetModuleFileName (NULL, sz, MAX_PATH);
-			CString str = "-nelvcheck ";
-			str += m_lpCmdLine;
+			WCHAR wsz [MAX_PATH] = L"";
+			GetModuleFileNameW (NULL, wsz, MAX_PATH);
+			std::wstring wstr = L"\"";
+			wstr += wsz;
+			wstr += L"\" -nelvcheck ";
+			wstr += CT2WEX<> (m_lpCmdLine);
 			_appMutex.CloseMutex ();
-			if (vf.RunNonElevatedProcess (sz, str, ""))
+			STARTUPINFOW si = {0}; PROCESS_INFORMATION pi = {0};
+			si.cb = sizeof (si);
+			if (vmsWinSecurity::RunAsDesktopUser (wsz, (LPWSTR)wstr.c_str (), NULL, si, pi))
 				return FALSE;
 			_appMutex.Create ();
 		}
@@ -908,23 +915,31 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 	else
 		_App.Monitor_Firefox ((dwMUSO & MONITOR_USERSWITCHEDON_FIREFOX) != 0);
 	
-	_NOMgr.DeinstallFirefoxPlugin ();
+	
 
-	if (dwMUSO & MONITOR_USERSWITCHEDON_NETSCAPE)
-		_NOMgr.InstallNetscapePlugin ();
-	if (dwMUSO & MONITOR_USERSWITCHEDON_OPERA)
-		_NOMgr.InstallOperaPlugin ();
-	if (dwMUSO & MONITOR_USERSWITCHEDON_SEAMONKEY)
-		_NOMgr.InstallMozillaSuitePlugin ();
-	if (dwMUSO & MONITOR_USERSWITCHEDON_SAFARI)
-		_NOMgr.InstallSafariPlugin ();
-	if ((dwMUSO & MONITOR_USERSWITCHEDON_CHROME) || _App.Monitor_ForceEnableChromeOnce ())
+	size_t cBrowsers = 0;
+	const vmsFdmUiDetails::KnownBrowserData *pBrowsers = vmsFdmUiDetails::getKnownBrowsersData (cBrowsers);
+
+	for (size_t nBrowser = 0; nBrowser < cBrowsers; nBrowser++)
 	{
-		
-		_NOMgr.DeinstallChromePlugin (); 
-		_NOMgr.Initialize (); 
-		_NOMgr.InstallChromePlugin ();
-		_App.Monitor_ForceEnableChromeOnce (FALSE);
+		const vmsFdmUiDetails::KnownBrowserData& bd = pBrowsers [nBrowser];
+		vmsNpPluginInstaller& pluginInstaller = _NOMgr.getPluginInstaller (bd.enBrowser);
+
+		if (bd.enBrowser == vmsKnownBrowsers::Chrome) 
+		{
+			if ((dwMUSO & bd.dwUserSwitchedOnFlag) || _App.Monitor_ForceEnableChromeOnce ())
+			{
+				
+				pluginInstaller.DeinstallPlugin ();
+				pluginInstaller.Initialize (); 
+				pluginInstaller.InstallPlugin ();
+				_App.Monitor_ForceEnableChromeOnce (FALSE);
+			}
+			continue;
+		}
+
+		if (dwMUSO & bd.dwUserSwitchedOnFlag)
+			pluginInstaller.InstallPlugin ();
 	}
 
 	CRegKey key;
@@ -1017,9 +1032,10 @@ void CFdmApp::Install_UnregisterServer()
 
 	fsIEContextMenuMgr::DeleteAllFDMsIEMenus ();
 	
-	_NOMgr.DeinstallNetscapePlugin ();
-	_NOMgr.DeinstallOperaPlugin ();
-    _NOMgr.DeinstallMozillaSuitePlugin ();
+	std::vector <std::auto_ptr <vmsBrowserPluginFileDeleter> > vBrowserPluginFiles;
+	_NOMgr.DeinstallAllPlugins (vBrowserPluginFiles);
+	if (!vBrowserPluginFiles.empty ())
+		vmsFdmFilesDeleter::DeleteBrowserPluginFiles (vBrowserPluginFiles);
 	_IECatchMgr.InstallIeIntegration (FALSE, bUnregisterForUserOnly, FALSE);
 	fsIEUserAgent ua;
 	ua.RemovePP (IE_USERAGENT_ADDITION);
@@ -1189,20 +1205,33 @@ void CFdmApp::RunAsElevatedTasksProcessor(fsFDMCmdLineParser& cmdline)
 {
 	_appMutex.CloseMutex ();
 
+	if (!IsUserAnAdmin ())
+		return;
+
+	const std::vector <vmsKnownBrowsers::Browser>& vBrowsersToInstall = cmdline.getBrowsersToInstallIntegration (true);
+	const std::vector <vmsKnownBrowsers::Browser>& vBrowsersToDeinstall = cmdline.getBrowsersToInstallIntegration (false);
+
+	if (!vBrowsersToInstall.empty ())
+		_NOMgr.InstallPluginsEx (vBrowsersToInstall);
+
+	if (!vBrowsersToDeinstall.empty ())
+		_NOMgr.DeinstallPluginsEx (vBrowsersToDeinstall);
+
 	if (cmdline.isNeedInstallIeIntegration ())
+	{
 		_IECatchMgr.InstallIeIntegration (TRUE, TRUE);
 
-	for (;;)
-	{
-		vmsAppMutex appmx (_appMutex.getName ());
-		appmx.CloseMutex ();
-		if (!appmx.isAnotherInstanceStartedAlready ())
-			break;
-		Sleep (1000);
-	}
+		for (;;)
+		{
+			vmsAppMutex appmx (_appMutex.getName ());
+			appmx.CloseMutex ();
+			if (!appmx.isAnotherInstanceStartedAlready ())
+				break;
+			Sleep (1000);
+		}
 
-	if (cmdline.isNeedInstallIeIntegration ())
 		_IECatchMgr.InstallIeIntegration (FALSE, TRUE);
+	}
 }
 
 void CFdmApp::CheckFirefoxExtension(LPDWORD pdwResult)

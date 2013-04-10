@@ -2,8 +2,6 @@
   Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
 */
 
-#include "vmsPostRequest.h"
-
 #ifdef DEBUG_SHOW_SERVER_REQUESTS
 	static int _c = 0;
 #endif

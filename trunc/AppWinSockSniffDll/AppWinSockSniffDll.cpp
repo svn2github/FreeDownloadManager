@@ -21,6 +21,8 @@
 #include "vmsUrlMonSpyDll.h"
 #include <dbghelp.h>
 #include "vmsOverlappedWinsockCalls.h"
+#include "../Include.Add/vmsAsyncTaskMgr.h"
+#include "vmsFindFlvDownloadsResultsCacheAsyncRequest.h"
 
 HMODULE _hModule = NULL;
 
@@ -30,6 +32,7 @@ vmsWinInetHttpTrafficCollector _WinInetTrafficCollector (&_HttpTraffic);
 vmsExternalHttpTrafficCollector _ExternalTrafficCollector (&_HttpTraffic);
 vmsFindFlvDownloadsResultsCache _FlvResCache (&_HttpTraffic, &vmsWinSockHttpDlgTree::o ());
 vmsOverlappedWinsockCalls _WinsockAsyncCalls;
+vmsAsyncTaskMgr _AsyncTasks;
 
 LPCSTR strstrn (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc)
 {
@@ -105,7 +108,7 @@ int WINAPI my_send (SOCKET s, const char FAR* buf, int len, int flags)
 void CALLBACK my_WinsockCompletionRoutine (DWORD dwError, DWORD cbTransferred, LPWSAOVERLAPPED lpOverlapped, DWORD dwFlags)
 {
 	_WinsockAsyncCalls.LockList (true);
-	int iCall = _WinsockAsyncCalls.FindCallIndex (lpOverlapped);
+	int iCall = _WinsockAsyncCalls.FindCallIndex (INVALID_SOCKET, lpOverlapped);
 	const vmsOverlappedWinsockCalls::Call *pCall = NULL;
 	if (iCall != -1)
 		pCall = _WinsockAsyncCalls.getCall (iCall);
@@ -119,13 +122,13 @@ void CALLBACK my_WinsockCompletionRoutine (DWORD dwError, DWORD cbTransferred, L
 		if (dwError == 0)
 		{
 			DWORD dwBytesTransferred = cbTransferred;
-			for (int i = 0; i < pCall->dwBufferCount && dwBytesTransferred != 0; i++)
+			for (size_t i = 0; i < pCall->vBuffers.size () && dwBytesTransferred != 0; i++)
 			{
-				DWORD dwL = min (dwBytesTransferred, pCall->lpBuffers [i].len);
+				DWORD dwL = min (dwBytesTransferred, pCall->vBuffers [i].len);
 				if (pCall->bSend)
-					_WinSockTrafficCollector.OnDataSent (pCall->s, pCall->lpBuffers [i].buf, dwL);
+					_WinSockTrafficCollector.OnDataSent (pCall->s, pCall->vBuffers [i].buf, dwL);
 				else
-					_WinSockTrafficCollector.OnDataRcvd (pCall->s, pCall->lpBuffers [i].buf, dwL);
+					_WinSockTrafficCollector.OnDataRcvd (pCall->s, pCall->vBuffers [i].buf, dwL);
 				dwBytesTransferred -= dwL;
 			}
 		}
@@ -144,12 +147,12 @@ BOOL WSAAPI my_WSAGetOverlappedResult (SOCKET s, LPWSAOVERLAPPED lpOverlapped, L
 	try{
 		bResult = Real_WSAGetOverlappedResult (s, lpOverlapped, lpcbTransfer, fWait, lpdwFlags);
 	}
-	catch (...) {return FALSE;}
+	catch (...) {assert (false); return FALSE;}
 
 	if (bResult)
 	{
 		_WinsockAsyncCalls.LockList (true);
-		int iCall = _WinsockAsyncCalls.FindCallIndex (lpOverlapped);
+		int iCall = _WinsockAsyncCalls.FindCallIndex (s, lpOverlapped);
 		const vmsOverlappedWinsockCalls::Call *pCall = NULL;
 		if (iCall != -1)
 			pCall = _WinsockAsyncCalls.getCall (iCall);
@@ -157,17 +160,25 @@ BOOL WSAAPI my_WSAGetOverlappedResult (SOCKET s, LPWSAOVERLAPPED lpOverlapped, L
 		{
 			assert (lpcbTransfer != NULL);
 			DWORD dwBytesTransferred = lpcbTransfer ? *lpcbTransfer : 0;
-			for (int i = 0; i < pCall->dwBufferCount && dwBytesTransferred != 0; i++)
+			for (size_t i = 0; i < pCall->vBuffers.size () && dwBytesTransferred != 0; i++)
 			{
-				DWORD dwL = min (dwBytesTransferred, pCall->lpBuffers [i].len);
+				DWORD dwL = min (dwBytesTransferred, pCall->vBuffers [i].len);
 				if (pCall->bSend)
-					_WinSockTrafficCollector.OnDataSent (s, pCall->lpBuffers [i].buf, dwL);
+					_WinSockTrafficCollector.OnDataSent (s, pCall->vBuffers [i].buf, dwL);
 				else
-					_WinSockTrafficCollector.OnDataRcvd (s, pCall->lpBuffers [i].buf, dwL);
+					_WinSockTrafficCollector.OnDataRcvd (s, pCall->vBuffers [i].buf, dwL);
 				dwBytesTransferred -= dwL;
 			}
 			_WinsockAsyncCalls.RemoveCall (iCall);
 		}
+		_WinsockAsyncCalls.LockList (false);
+	}
+	else if (WSAGetLastError () != WSA_IO_INCOMPLETE)
+	{
+		_WinsockAsyncCalls.LockList (true);
+		int iCall = _WinsockAsyncCalls.FindCallIndex (s, lpOverlapped);
+		if (iCall != -1)
+			_WinsockAsyncCalls.RemoveCall (iCall);
 		_WinsockAsyncCalls.LockList (false);
 	}
 
@@ -228,6 +239,8 @@ int WINAPI my_WSARecv (SOCKET s, LPWSABUF lpBuffers, DWORD dwBufferCount, LPDWOR
 		rv = Real_WSARecv (s, lpBuffers, dwBufferCount, lpNumberOfBytesRecvd, lpFlags, lpOverlapped, lpCompletionRoutine);
 	}
 	catch (...) {return SOCKET_ERROR;}
+
+	assert (rv == 0 || rv == SOCKET_ERROR);
 
 	if (rv == SOCKET_ERROR)
 	{
@@ -304,7 +317,7 @@ void DetourAPIs (bool bDetour)
 	DetourFN ((PVOID*)&Real_InternetReadFile, my_InternetReadFile);
 	DetourFN ((PVOID*)&Real_InternetCloseHandle, my_InternetCloseHandle);
 	DetourFN ((PVOID*)&Real_WSAGetOverlappedResult, my_WSAGetOverlappedResult);
-	
+	DetourFN ((PVOID*)&Real_closesocket, my_closesocket);
 	DetourTransactionCommit ();	
 }
 
@@ -507,9 +520,44 @@ BOOL WINAPI isVideoFlash (LPCSTR pszWebPageUrl, LPCSTR pszFrameUrl,
 						  LPCSTR pszSwfUrl, LPCSTR pszFlashVars,
 						  LPCSTR pszOtherSwfUrls, LPCSTR pszOtherFlashVars)
 {
+	LOGFN ("isVideoFlash");
+	LOG (" Page URL: %s", pszWebPageUrl);
+	LOG (" Frame URL: %s", pszFrameUrl);
+	LOG (" Swf URL: %s", pszSwfUrl);
+	LOG (" Flash Vars: %s", pszFlashVars);
+	LOG (" Other Swf URLs: %s", pszOtherSwfUrls);
+	LOG (" OtherFlashVars: %s", pszOtherFlashVars);
+	
 	vmsFindFlvDownloadsResultsCache::ResultPtr result;
-	_FlvResCache.FindFlvDownloads (pszWebPageUrl, pszFrameUrl, pszSwfUrl, pszFlashVars, pszOtherSwfUrls, 
-		pszOtherFlashVars, result);
+
+	_FlvResCache.CheckNeedCacheReset ();
+	result = _FlvResCache.FindResult (pszWebPageUrl, pszFrameUrl, pszSwfUrl, pszFlashVars);
+
+	if (result)
+		return result->pTa->get_FlvDownloadCount () != 0;
+
+	vmsFindFlvDownloadsResultsCacheAsyncRequest *pRequest = new vmsFindFlvDownloadsResultsCacheAsyncRequest;
+	pRequest->m_strWebPageUrl = pszWebPageUrl;
+	pRequest->m_strFrameUrl = pszFrameUrl;
+	pRequest->m_strSwfUrl = pszSwfUrl;
+	pRequest->m_strFlashVars = pszFlashVars;
+	pRequest->m_strOtherSwfUrls = pszOtherSwfUrls;
+	pRequest->m_strOtherFlashVars = pszOtherFlashVars;
+	if (_AsyncTasks.HasEqualTask (pRequest, NULL))
+		return FALSE;
+
+	HANDLE hevDone = CreateEvent (NULL, TRUE, FALSE, NULL);
+	pRequest->setOnDoneEvent (hevDone);
+	pRequest->setFlags (vmsAsyncTask::RemoveWhenDone);
+
+	tsp_vmsAsyncTask spTask (pRequest);
+	_AsyncTasks.AddTask (spTask);
+
+	if (WAIT_TIMEOUT == WaitForSingleObject (hevDone, 300))
+		return FALSE;
+
+	result = pRequest->m_result;
+	
 	return result != NULL && result->pTa->get_FlvDownloadCount () != 0;
 }
 

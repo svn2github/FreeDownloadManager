@@ -178,7 +178,11 @@ BOOL fsPluginMgr::LoadBuiltIn()
 				
 		plug.hWnd = afnCMW [i] (m_pPluginsFrame->m_hWnd);
 		if (plug.hWnd == NULL)
+		{
+			if (i == 0)
+				return FALSE;
 			continue;
+		}
 		
 		
 		plug.hMenuMain = afnGMM [i] ();

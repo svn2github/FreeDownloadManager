@@ -115,8 +115,6 @@ BOOL fsWebPageDownloadsMgr::Save()
 		CloseHandle (hFile);
 		hFile = INVALID_HANDLE_VALUE;
 		onStateSavedSuccessfully();
-
-		CloseHandle (hFile);
 		
 		return TRUE;
 
@@ -139,6 +137,7 @@ void fsWebPageDownloadsMgr::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD
 		if (pdwSize != 0) {
 			*pdwSize = dwRequiredSize;
 		}
+		return;
 	}
 
 	putVarToBuffer(cWPD, pbtCurrentPos, pbtBuffer, *pdwSize, &dwRequiredSize);
@@ -174,7 +173,7 @@ BOOL fsWebPageDownloadsMgr::Load()
 	}
 	else
 	{
-		if (strcmp (hdr.szSig, SPIDERFILE_SIG))
+		if (dw < sizeof(hdr) || strcmp (hdr.szSig, SPIDERFILE_SIG))
 		{
 			wVer = 1;
 			SetFilePointer (hFile, 0, NULL, FILE_BEGIN);
@@ -182,6 +181,7 @@ BOOL fsWebPageDownloadsMgr::Load()
 		else
 		{
 			wVer = hdr.wVer;
+			dwRequiredSize -= sizeof (hdr);
 		}
 	}
 
@@ -211,11 +211,6 @@ BOOL fsWebPageDownloadsMgr::Load()
 
 	}
 
-	if (dwRequiredSize == 0 || dwRequiredSize < sizeof(hdr)) {
-		CloseHandle (hFile);
-		return FALSE;
-	}
-
 	std::auto_ptr<BYTE> pbtBufferGuard( new BYTE[dwRequiredSize] );
 	LPBYTE pbtBuffer = pbtBufferGuard.get();
 	if (pbtBuffer == 0) {
@@ -230,6 +225,8 @@ BOOL fsWebPageDownloadsMgr::Load()
 	}
 
 	if (!loadFromStateBuffer(pbtBuffer, &dwRequiredSize, hdr.wVer)) {
+		getPersistObjectChildren ()->removeAllPersistObjects ();
+		m_vWPDs.clear ();
 		CloseHandle (hFile);
 		return FALSE;
 	}

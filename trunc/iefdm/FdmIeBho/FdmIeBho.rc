@@ -152,7 +152,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 981,0,0,0
+ FILEVERSION 1280,0,0,0
  PRODUCTVERSION 0,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -169,7 +169,7 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "CompanyName", "FreeDownloadManager.ORG"
-            VALUE "FileVersion", "981.0.0.0"
+            VALUE "FileVersion", "1280.0.0.0"
             VALUE "LegalCopyright", "Copyright (C) FreeDownloadManager.ORG, 2003-2012"
             VALUE "ProductName", "Free Download Manager"
             VALUE "ProductVersion", "0.0.0.0"

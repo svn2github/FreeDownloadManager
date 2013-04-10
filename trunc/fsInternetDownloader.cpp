@@ -3486,6 +3486,7 @@ DWORD WINAPI fsInternetDownloader::_threadOpenUrl(LPVOID lp)
 	DWORD dw;
 	
 	try {
+		fsInternetSession::AdjustWinInetConnectionLimit ();
 		dw = p->pFile->Open (fsNPToScheme (p->dnp->enProtocol), p->dnp->pszServerName,
 				p->dnp->pszUserName, p->dnp->pszPassword, p->dnp->uServerPort, 
 				p->dnp->pszPathName, p->uStartPos, p->dnp->dwFlags & DNPF_IMMEDIATELY_SEND_AUTH_AS_BASIC);

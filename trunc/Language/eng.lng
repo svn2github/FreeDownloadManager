@@ -1777,3 +1777,6 @@ Unsupported content-encoding
 Select all
 Reset all
 Administrator rights are required to integrate FDM into Internet Explorer. Choosing "Cancel" will integrate it partially.
+; %s will be replaced with the actual browser name
+Can't delete the browser plugin while %s is running. Please close the browser and click OK to continue.\nClick Cancel to postpone the deletion of the plugin to system reboot.
+Can't delete the browser plugin for %s. It will be deleted on system reboot.

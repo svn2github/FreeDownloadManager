@@ -287,6 +287,7 @@ protected:
 	virtual ~fsWebPageDownloader();
 
 protected:
+	void setRootWebPage (fsDLWebPagePtr wp);
 	void MakeSureProcessDoneAndRedirEventsThreadStarted();
 	static DWORD WINAPI _threadProcessDoneAndRedirEvents (LPVOID lp);
 	DLDS_LIST m__threadProcessDoneAndRedirEvents__FinishedDownloads;
@@ -381,7 +382,7 @@ protected:
 
 	std::list<TDlWebPageOnLoadHandlerData> m_lstDwpOnLoadHandlerData;
 	fsWPDSettings m_wpds;			
-	fsDLWebPageTreePtr m_pages;	
+	fsDLWebPageTreePtr m_sptPages;	
 	fsString m_strStartServer;		
 
 	
@@ -392,6 +393,7 @@ protected:
 	};
 
 	std::vector <_Conformity> m_vConfs;		
+	vmsCriticalSection m_csConfs;
 };
 
 typedef vmsObjectSmartPtr <fsWebPageDownloader> fsWebPageDownloaderPtr;

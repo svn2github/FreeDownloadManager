@@ -48,6 +48,9 @@ protected:
 	vmsHttpTrafficCollector* m_pHttpTraffic;
 	vmsWinSockHttpDlgTree *m_pDlgTree;
 	vector <ResultPtr> m_vResults;
+public:
+	void CheckNeedCacheReset(void);
+	ResultPtr FindResult(LPCSTR pszUrl, LPCSTR pszFrameUrl, LPCSTR pszSwfUrl, LPCSTR pszFlashVars);
 };
 
 #endif 

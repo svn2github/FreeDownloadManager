@@ -8,6 +8,7 @@
 #include "vmsZlibHelper.h"
 #include "vmsUrlMonSpyDll.h"
 #include <atlbase.h>
+#include "vmsUrl.h"
 
 extern LPCSTR strstrn (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc);
 
@@ -682,7 +683,7 @@ void vmsHttpTrafficCollector::DeleteDialogFromListBySocket(SOCKET s)
 
 void vmsHttpTrafficCollector::ExtractRequestUrlFromSocket(HttpDialog *pDlg)
 {
-	LOGFN ("vmsWinSockHttpTrafficCollector::ExtractRequestUrl");
+	LOGFN ("vmsHttpTrafficCollector::ExtractRequestUrlFromSocket");
 	assert (pDlg->strRequestUrl.empty ());
 	if (!pDlg->strRequestUrl.empty ())
 		return;
@@ -690,7 +691,7 @@ void vmsHttpTrafficCollector::ExtractRequestUrlFromSocket(HttpDialog *pDlg)
 	if (pDlg->strRequestHeaders.empty () || pDlg->pHttpRequest == NULL)
 		return;
 	string strPath = pDlg->pHttpRequest->getPath ();
-	if (strstrn (strPath.c_str (), "://", 15) != NULL)
+	if (vmsUrl::isAbsolute (strPath.c_str ()))
 	{
 		
 		pDlg->strRequestUrl = strPath;

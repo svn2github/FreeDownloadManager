@@ -135,6 +135,19 @@ void fsFDMCmdLineParser::Parse()
 		{
 			m_bInstallIeIntegration = true;
 		}
+		else if (!stricmp (pszParam, "installIntegration") || !stricmp (pszParam, "deinstallIntegration"))
+		{
+			std::vector <int> v;
+			ReadIntVector (pszValue, v);
+			bool bInstall = !stricmp (pszParam, "installIntegration");
+			for (size_t i = 0; i < v.size (); i++)
+			{
+				if (bInstall)
+					m_vBrowsersToInstallIntegration.push_back ((vmsKnownBrowsers::Browser) v [i]);
+				else
+					m_vBrowsersToDeinstallIntegration.push_back ((vmsKnownBrowsers::Browser) v [i]);
+			}
+		}
 	}
 }
 
@@ -176,4 +189,21 @@ bool fsFDMCmdLineParser::isNeedRegisterServer(void)
 bool fsFDMCmdLineParser::isNeedUnregisterServer(void)
 {
 	return m_bNeedUnregisterServer;
+}
+
+void fsFDMCmdLineParser::ReadIntVector(LPCTSTR ptsz, std::vector <int>& v)
+{
+	if (!ptsz)
+		return;
+
+	while (*ptsz)
+	{
+		tstring tstr;
+		while (_istdigit (*ptsz))
+			tstr += *ptsz++;
+		if (!tstr.empty ())
+			v.push_back (_ttoi (tstr.c_str ()));
+		if (*ptsz++ != ',')
+			return;
+	}
 }

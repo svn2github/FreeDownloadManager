@@ -3,7 +3,6 @@
 */
 
 #pragma once
-
 class vmsCrashReporter
 {
 public:
@@ -12,7 +11,7 @@ public:
 	bool SubmitDumpToServer(LPCTSTR ptszServerAddr, LPCTSTR ptszScriptPath, LPCTSTR ptszDumpFileName, LPCSTR pszXml);
 
 protected:
-	static void GenerateXml (LPCTSTR ptszAppName, LPCTSTR ptszVersion, LPCTSTR ptszDescription, LPCSTR pszAdditionalXmlData, std::string& strResult);
+	static void GenerateXml (LPCTSTR ptszAppName, LPCTSTR ptszVersion, LPCTSTR ptszDescription, LPCTSTR ptszFaultModule, DWORD_PTR dwpCrashAddr, LPCSTR pszAdditionalXmlData, std::string& strResult);
 	virtual void onInitializePostRequest (vmsPostRequest& request) {}
 };
 

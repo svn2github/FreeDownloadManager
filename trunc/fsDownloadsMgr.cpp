@@ -85,8 +85,15 @@ fsDownloadsMgr::fsDownloadsMgr()
 
 fsDownloadsMgr::~fsDownloadsMgr()
 {
+	vmsAUTOLOCKSECTION (m_csShuttingDown);
+	m_bShuttingDown = TRUE;
+	vmsAUTOLOCKSECTION_UNLOCK (m_csShuttingDown);
+
 	SetEvent (m_hevShuttingDown);
 	WaitForSingleObject (m_htEventsDispatcher, INFINITE);
+
+	while (m_cThreadsRunning)
+		Sleep (10);
 }
 
 UINT fsDownloadsMgr::Add(vmsDownloadSmartPtr dld, BOOL bKeepIDAsIs, bool bPlaceToTop)

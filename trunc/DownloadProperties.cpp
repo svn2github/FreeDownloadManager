@@ -233,11 +233,17 @@ void fsDNP_SetAuth (fsDownload_NetworkProperties* dnp, LPCSTR pszUser, LPCSTR ps
 	SAFE_DELETE_ARRAY (dnp->pszUserName);
 	SAFE_DELETE_ARRAY (dnp->pszPassword);
 
-	dnp->pszUserName = new char [strlen (pszUser) + 1];
-	strcpy (dnp->pszUserName, pszUser);
+	if (pszUser)
+	{
+		dnp->pszUserName = new char [strlen (pszUser) + 1];
+		strcpy (dnp->pszUserName, pszUser);
+	}
 
-	dnp->pszPassword = new char [strlen (pszPassword) + 1];
-	strcpy (dnp->pszPassword, pszPassword);
+	if (pszPassword)
+	{
+		dnp->pszPassword = new char [strlen (pszPassword) + 1];
+		strcpy (dnp->pszPassword, pszPassword);
+	}
 }
 
 fsInternetResult fsDNP_ApplyUrl (fsDownload_NetworkProperties *dnp, LPCSTR pszUrl)

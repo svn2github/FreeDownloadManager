@@ -268,6 +268,8 @@ void CListCtrlEx::OnDeleteAllItems()
 
 int CListCtrlEx::AddItem(LPCSTR pszItem, COLORREF clrBg, COLORREF clrText, int iImage, BOOL bAddToBeginning)
 {
+	assert (pszItem != NULL);
+
 	int c = bAddToBeginning ? 0 : GetItemCount ();
 
 	ListEx_ItemInfo info;

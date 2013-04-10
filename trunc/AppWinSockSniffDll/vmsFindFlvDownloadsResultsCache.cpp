@@ -24,7 +24,14 @@ HRESULT vmsFindFlvDownloadsResultsCache::FindFlvDownloads(LPCSTR pszUrl, LPCSTR 
 {
 	LOGFN ("vmsFindFlvDownloadsResultsCache::FindFlvDownloads");
 
-	vmsCriticalSectionAutoLock _csal (&m_csResults);
+	result = NULL;
+
+	if (!pszFrameUrl)
+		pszFrameUrl = "";
+	if (!pszSwfUrl)
+		pszSwfUrl = "";
+	if (!pszFlashVars)
+		pszFlashVars = "";
 
 #ifdef LOG_WEBFILES_TREE
 	extern LONG _cInOnGetItBtnClicked;
@@ -37,37 +44,16 @@ HRESULT vmsFindFlvDownloadsResultsCache::FindFlvDownloads(LPCSTR pszUrl, LPCSTR 
 	}
 #endif
 
-	if (m_cFlvsInSession != m_pDlgTree->getFlvsInSessionCount ())
-	{
-		m_cFlvsInSession = m_pDlgTree->getFlvsInSessionCount ();
-		m_vResults.clear ();
-	}
-
-	result = NULL;
-
-	if (!pszFrameUrl)
-		pszFrameUrl = "";
-	if (!pszSwfUrl)
-		pszSwfUrl = "";
-	if (!pszFlashVars)
-		pszFlashVars = "";
+	CheckNeedCacheReset ();
 
 #ifdef LOG_WEBFILES_TREE
 	if (_cInOnGetItBtnClicked)
 		goto _lSkipCacheSearch;
 #endif
 
-	size_t i;
-	for (i = 0; i < m_vResults.size (); i++)
-	{
-		Result *res = m_vResults [i];
-		if (res->strWebPageUrl == pszUrl && res->strFrameUrl == pszFrameUrl &&
-				res->strSwfUrl == pszSwfUrl && res->strFlashVars == pszFlashVars)
-		{
-			result = res;
-			return result->pTa->get_FlvDownloadCount () ? S_OK : S_FALSE;
-		}
-	}
+	result = FindResult (pszUrl, pszFrameUrl, pszSwfUrl, pszFlashVars);
+	if (result)
+		return result->pTa->get_FlvDownloadCount () ? S_OK : S_FALSE;
 
 #ifdef LOG_WEBFILES_TREE
 _lSkipCacheSearch:
@@ -76,7 +62,15 @@ _lSkipCacheSearch:
 #endif
 
 	if (!m_pDlgTree->FindTreeItem (pszUrl, vmsHttpTrafficCollector::HttpDialog::HTML))
-		vmsDownloadForTrafficCollector::MakeDownload (pszUrl);
+	{
+		LOG (" TreeItem was not found. UrlExistsInProcessDlgsQueue: %s.", m_pDlgTree->UrlExistsInProcessHttpDialogsQueue (pszUrl) ? "yes" : "no");
+		if (m_pDlgTree->UrlExistsInProcessHttpDialogsQueue (pszUrl))
+			return S_FALSE;
+		BOOL bRet = vmsDownloadForTrafficCollector::MakeDownload (pszUrl);
+		
+		LOG (" MakeDownload result: %s, TreeItem now exists: %s, UrlExistsInProcessDlgsQueue: %s.", bRet ? "true" : "false", m_pDlgTree->FindTreeItem (pszUrl, vmsHttpTrafficCollector::HttpDialog::HTML) ? "yes" : "no",
+			m_pDlgTree->UrlExistsInProcessHttpDialogsQueue (pszUrl) ? "yes" : "no");
+	}
 
 	if (pszFrameUrl != NULL && strcmp (pszUrl, pszFrameUrl) == 0)
 		pszFrameUrl = NULL;
@@ -134,7 +128,9 @@ _lSkipCacheSearch:
 	if (pTA)	
 		result->pTa->AddFlvDownloads (*pTA);
 
+	EnterCriticalSection (&m_csResults);
 	m_vResults.push_back (result);
+	LeaveCriticalSection (&m_csResults);
 
 	return result->pTa->get_FlvDownloadCount () ? S_OK : S_FALSE;
 }
@@ -159,4 +155,28 @@ void vmsFindFlvDownloadsResultsCache::ExtractUrls(LPCSTR pszUrls, vector <string
 			pszUrls++; 
 		vResult.push_back (strUrl);
 	}
+}
+
+void vmsFindFlvDownloadsResultsCache::CheckNeedCacheReset(void)
+{
+	vmsCriticalSectionAutoLock _csal (&m_csResults);
+
+	if (m_cFlvsInSession != m_pDlgTree->getFlvsInSessionCount ())
+	{
+		m_cFlvsInSession = m_pDlgTree->getFlvsInSessionCount ();
+		m_vResults.clear ();
+	}
+}
+
+vmsFindFlvDownloadsResultsCache::ResultPtr vmsFindFlvDownloadsResultsCache::FindResult(LPCSTR pszUrl, LPCSTR pszFrameUrl, LPCSTR pszSwfUrl, LPCSTR pszFlashVars)
+{
+	vmsCriticalSectionAutoLock _csal (&m_csResults);
+	for (size_t i = 0; i < m_vResults.size (); i++)
+	{
+		ResultPtr res = m_vResults [i];
+		if (res->strWebPageUrl == pszUrl && res->strFrameUrl == pszFrameUrl &&
+				res->strSwfUrl == pszSwfUrl && res->strFlashVars == pszFlashVars)
+			return res;
+	}
+	return NULL;
 }

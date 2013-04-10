@@ -108,11 +108,15 @@ void fsInternetSession::CloseHandle()
 
 void fsInternetSession::InitializeWinInet()
 {
+	AdjustWinInetConnectionLimit ();
+	
+}
+
+void fsInternetSession::AdjustWinInetConnectionLimit()
+{
 	ULONG ul = 500;
 	InternetSetOption (NULL, INTERNET_OPTION_MAX_CONNS_PER_SERVER, &ul, sizeof (ul));
 	InternetSetOption (NULL, INTERNET_OPTION_MAX_CONNS_PER_1_0_SERVER, &ul, sizeof (ul));
-
-	
 }
 
 LPCSTR fsInternetSession::get_UserAgent()

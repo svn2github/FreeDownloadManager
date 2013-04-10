@@ -76,6 +76,7 @@ public:
 };
 extern CFdmModule _Module;
 #include <atlcom.h>
+#include <atlsecurity.h>
 
 #ifndef LONG_PTR
 #define LONG_PTR		LONG
@@ -127,7 +128,7 @@ extern CFdmModule _Module;
 #include "fsMFCLangMgr.h"
 #include "fsSitesMgr.h"
 #include "fsIEContextMenuMgr.h"
-#include "fsOpNetIntegrationMgr.h"
+#include "vmsFdmOpNetIntegrationMgr.h"
 #include "fsIECatchMgr.h"
 #include "fsSoundsMgr.h"
 #include "fsHistoriesMgr.h"
@@ -163,7 +164,7 @@ extern fsContextHelpMgr _CHMgr;
 extern fsMFCLangMgr _LngMgr;
 extern fsSitesMgr _SitesMgr;
 extern fsIEContextMenuMgr _IECMM;
-extern fsOpNetIntegrationMgr _NOMgr;
+extern vmsFdmOpNetIntegrationMgr _NOMgr;
 extern fsIECatchMgr _IECatchMgr;
 extern fsSoundsMgr _Snds;
 extern fsHistoriesMgr _HsMgr;

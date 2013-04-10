@@ -48,6 +48,7 @@
 #include "UtorrentSupplier.h"
 #include "vmsElevatedFdm.h"
 #include "vmsAppGlobalObjects.h"
+#include "vmsFdmUiDetails.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -1129,10 +1130,17 @@ void CMainFrame::OnBuyonline()
 
 void CMainFrame::OnMonitorbrowser() 
 {
-	BOOL bMonitor = _App.Monitor_IE2 () || _App.Monitor_Firefox () ||
-		_NOMgr.IsNetscapePluginInstalled () || _NOMgr.IsOperaPluginInstalled () ||
-		_NOMgr.IsMozillaSuitePluginInstalled () || _NOMgr.IsSafariPluginInstalled () ||
-		_NOMgr.IsChromePluginInstalled ();
+	size_t cBrowsers = 0;
+	const vmsFdmUiDetails::KnownBrowserData *pBrowsers = vmsFdmUiDetails::getKnownBrowsersData (cBrowsers);
+
+	BOOL bMonitor = _App.Monitor_IE2 () || _App.Monitor_Firefox ();
+
+	if (!bMonitor)
+	{
+		for (size_t i = 0; i < cBrowsers && !bMonitor; i++)
+			bMonitor = _NOMgr.getPluginInstaller (pBrowsers [i].enBrowser).IsPluginInstalled ();
+	}
+	
 	
 	BOOL bRR = FALSE; 
 
@@ -1177,233 +1185,44 @@ void CMainFrame::OnMonitorbrowser()
 			dwMonitorNow |= MONITOR_USERSWITCHEDON_FIREFOX;
 	}
 
-	std::vector <CString> vSrc, vDst;
+	std::vector <vmsKnownBrowsers::Browser> vBrowsersToInstall, vBrowsersToDeinstall;
 	std::vector <DWORD> vBrowser;
 
 	if (bMonitor)
 	{
-		if (_NOMgr.IsNetscapePluginInstalled ())
+		for (size_t nBrowser = 0; nBrowser < cBrowsers; nBrowser++)
 		{
-			CString str = _NOMgr.getNetscapePluginPath ();
-			str += "npfdm.dll";
-			if (FALSE == _NOMgr.DeinstallNetscapePlugin () && 
-					GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
-			{
-				vBrowser.push_back (MONITOR_USERSWITCHEDON_NETSCAPE);
-				vSrc.push_back (_T (""));	
-				vDst.push_back (str);
-			}
-			else
-				bRR = TRUE;
-		}
+			const vmsFdmUiDetails::KnownBrowserData& bd = pBrowsers [nBrowser];
+			vmsNpPluginInstaller& pluginInstaller = _NOMgr.getPluginInstaller (bd.enBrowser);
 
-		if (_NOMgr.IsOperaPluginInstalled ())
-		{
-			CString str = _NOMgr.getOperaPluginPath ();
-			str += "npfdm.dll";
-			if (FALSE == _NOMgr.DeinstallOperaPlugin () && 
-					GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
-			{
-				vBrowser.push_back (MONITOR_USERSWITCHEDON_OPERA);
-				vSrc.push_back (_T (""));
-				vDst.push_back (str);
-			}
-			else
-				bRR = TRUE;
-		}
-
-		if (_NOMgr.IsMozillaSuitePluginInstalled ())
-		{
-			CString str = _NOMgr.getMozillaSuitePluginPath ();
-			str += "npfdm.dll";
-			if (FALSE == _NOMgr.DeinstallMozillaSuitePlugin () && 
-					GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
-			{
-				vBrowser.push_back (MONITOR_USERSWITCHEDON_SEAMONKEY);
-				vSrc.push_back (_T (""));	
-				vDst.push_back (str);
-			}
-			else
-				bRR = TRUE;
-		}
-
-		if (_NOMgr.IsSafariPluginInstalled ())
-		{
-			CString str = _NOMgr.getSafariPluginPath ();
-			str += "npfdm.dll";
-			if (FALSE == _NOMgr.DeinstallSafariPlugin () && 
-					GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
-			{
-				vBrowser.push_back (MONITOR_USERSWITCHEDON_SAFARI);
-				vSrc.push_back (_T (""));
-				vDst.push_back (str);
-			}
-			else
-				bRR = TRUE;
-		}
-
-		if (_NOMgr.IsChromePluginInstalled ())
-		{
-			CString str = _NOMgr.getChromePluginPath ();
-			str += "npfdm.dll";
-			if (FALSE == _NOMgr.DeinstallChromePlugin () && 
-					GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
-			{
-				vBrowser.push_back (MONITOR_USERSWITCHEDON_CHROME);
-				vSrc.push_back (_T (""));	
-				vDst.push_back (str);
-			}
-			else
-				bRR = TRUE;
+			if (pluginInstaller.IsPluginInstalled ())
+				vBrowsersToDeinstall.push_back (bd.enBrowser);
 		}
 	}
 	else
 	{
-		if ((dwMUSO & MONITOR_USERSWITCHEDON_OPERA) && 
-				_NOMgr.IsOperaPluginInstalled () == FALSE)
+		for (size_t nBrowser = 0; nBrowser < cBrowsers; nBrowser++)
 		{
-			if (_NOMgr.InstallOperaPlugin ()) {
-				bRR = TRUE;
-				dwMonitorNow |= MONITOR_USERSWITCHEDON_OPERA;
-			}
-			else if (GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
-			{
-				vBrowser.push_back (MONITOR_USERSWITCHEDON_OPERA);
-				vSrc.push_back (_T ("npfdm.dll"));
-				CString str = _NOMgr.getOperaPluginPath ();
-				str += "npfdm.dll";
-				vDst.push_back (str);
-			}
-		}
-		
-		if ((dwMUSO & MONITOR_USERSWITCHEDON_NETSCAPE) && 
-				_NOMgr.IsNetscapePluginInstalled () == FALSE)
-		{
-			if (_NOMgr.InstallNetscapePlugin ()) {
-				bRR = TRUE;
-				dwMonitorNow |= MONITOR_USERSWITCHEDON_NETSCAPE;
-			}
-			else if (GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
-			{
-				vBrowser.push_back (MONITOR_USERSWITCHEDON_NETSCAPE);
-				vSrc.push_back (_T ("npfdm.dll"));
-				CString str = _NOMgr.getNetscapePluginPath ();
-				str += "npfdm.dll";
-				vDst.push_back (str);
-			}
-		}
+			const vmsFdmUiDetails::KnownBrowserData& bd = pBrowsers [nBrowser];
+			vmsNpPluginInstaller& pluginInstaller = _NOMgr.getPluginInstaller (bd.enBrowser);
 
-		if ((dwMUSO & MONITOR_USERSWITCHEDON_SEAMONKEY) && 
-				_NOMgr.IsMozillaSuitePluginInstalled () == FALSE)
-		{
-			if (_NOMgr.InstallMozillaSuitePlugin ()) {
-				bRR = TRUE;
-				dwMonitorNow |= MONITOR_USERSWITCHEDON_SEAMONKEY;
-			}
-			else if (GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
-			{
-				vBrowser.push_back (MONITOR_USERSWITCHEDON_SEAMONKEY);
-				vSrc.push_back (_T ("npfdm.dll"));
-				CString str = _NOMgr.getMozillaSuitePluginPath ();
-				str += "npfdm.dll";
-				vDst.push_back (str);
-			}
-		}
-
-		if ((dwMUSO & MONITOR_USERSWITCHEDON_SAFARI) && 
-			_NOMgr.IsSafariPluginInstalled () == FALSE)
-		{
-			if (_NOMgr.InstallSafariPlugin ()) {
-				bRR = TRUE;
-				dwMonitorNow |= MONITOR_USERSWITCHEDON_SAFARI;
-			}
-			else if (GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
-			{
-				vBrowser.push_back (MONITOR_USERSWITCHEDON_SAFARI);
-				vSrc.push_back (_T ("npfdm.dll"));
-				CString str = _NOMgr.getSafariPluginPath ();
-				str += "npfdm.dll";
-				vDst.push_back (str);
-			}
-		}
-
-		if ((dwMUSO & MONITOR_USERSWITCHEDON_CHROME) && 
-			_NOMgr.IsChromePluginInstalled () == FALSE)
-		{
-			if (_NOMgr.InstallChromePlugin ()) {
-				bRR = TRUE;
-				dwMonitorNow |= MONITOR_USERSWITCHEDON_CHROME;
-			}
-			else if (GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
-			{
-				vBrowser.push_back (MONITOR_USERSWITCHEDON_CHROME);
-				vSrc.push_back (_T ("npfdm.dll"));
-				CString str = _NOMgr.getChromePluginPath ();
-				str += "npfdm.dll";
-				vDst.push_back (str);
-			}
+			if ((dwMUSO & bd.dwUserSwitchedOnFlag) && pluginInstaller.IsPluginInstalled () == FALSE)
+				vBrowsersToInstall.push_back (bd.enBrowser);
 		}
 	}
 
-	CString strTasksArgs;
-	
-	if (!vDst.empty ())
-	{	
-		for (size_t i = 0; i < vSrc.size (); i++)
-		{
-			if (!vSrc [i].IsEmpty ())
-			{
-				strTasksArgs += "-copy \"";
-				strTasksArgs += vSrc [i];
-				strTasksArgs += "\" \"";
-				strTasksArgs += vDst [i];
-				strTasksArgs += "\" ";
-			}
-			else
-			{
-				strTasksArgs += "-del \"";
-				strTasksArgs += vDst [i];
-				strTasksArgs += "\" ";
-			}
-		}
-	}
-	
-	if (!strTasksArgs.IsEmpty ())
+	bool bRR2 = false;
+	_NOMgr.InstallDeinstallPluginsExWithErrMsg (m_hWnd, vBrowsersToInstall, vBrowsersToDeinstall, bRR2);
+	if (bRR2)
+		bRR = TRUE;
+
+	for (size_t nBrowser = 0; nBrowser < cBrowsers; nBrowser++)
 	{
-		CDlgElevateRequired dlg;
-		dlg.m_strMsg = LS (L_ELREQ_MONITORING);
-		
-		if (_DlgMgr.DoModal (&dlg) == IDOK)
-		{
-			bool bError = true;
-			SHELLEXECUTEINFO sei = {0};
-			sei.cbSize = sizeof (sei);
-			sei.fMask = SEE_MASK_FLAG_NO_UI | SEE_MASK_NOCLOSEPROCESS;
-			sei.lpVerb = _T ("runas");
-			sei.lpFile = _T ("etasks.exe");
-			sei.lpParameters = strTasksArgs;
-			sei.nShow = SW_HIDE;
-			
-			if (ShellExecuteEx (&sei))
-			{
-				WaitForSingleObject (sei.hProcess, INFINITE);
-				DWORD dw = 1;
-				GetExitCodeProcess (sei.hProcess, &dw);
-				bError = dw != 0;
-				CloseHandle (sei.hProcess);
-			}
+		const vmsFdmUiDetails::KnownBrowserData& bd = pBrowsers [nBrowser];
+		vmsNpPluginInstaller& pluginInstaller = _NOMgr.getPluginInstaller (bd.enBrowser);
 
-			for (size_t i = 0; i < vDst.size (); i++)
-			{
-				if (GetFileAttributes (vDst [i]) != DWORD (-1))
-					dwMonitorNow |= vBrowser [i];
-			}
-
-			if (bError)
-				MessageBox (LS (L_FAILED_ENDIS_MONITORING), NULL, MB_ICONERROR);	
-			else
-				bRR = TRUE;
-		}
+		if (pluginInstaller.IsPluginInstalled ())
+			dwMonitorNow |= bd.dwUserSwitchedOnFlag;
 	}
 
 	if (dwMonitorNow) {
@@ -1437,9 +1256,17 @@ void CMainFrame::OnMonitorbrowser()
 
 void CMainFrame::OnUpdateMonitorbrowser(CCmdUI* pCmdUI) 
 {
-	BOOL bMonitor = _App.Monitor_IE2 () || _App.Monitor_Firefox () ||
-		_NOMgr.IsNetscapePluginInstalled () || _NOMgr.IsOperaPluginInstalled () ||
-		_NOMgr.IsMozillaSuitePluginInstalled ();
+	BOOL bMonitor = _App.Monitor_IE2 () || _App.Monitor_Firefox ();
+
+	if (!bMonitor)
+	{
+		size_t cBrowsers = 0;
+		const vmsFdmUiDetails::KnownBrowserData *pBrowsers = vmsFdmUiDetails::getKnownBrowsersData (cBrowsers);
+
+		for (size_t i = 0; i < cBrowsers && !bMonitor; i++)
+			bMonitor = _NOMgr.getPluginInstaller (pBrowsers [i].enBrowser).IsPluginInstalled ();
+	}
+
 	pCmdUI->SetCheck (bMonitor ? 1 : 0);	
 }
 

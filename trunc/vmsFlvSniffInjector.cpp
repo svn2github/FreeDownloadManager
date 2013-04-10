@@ -47,7 +47,8 @@ vmsFlvSniffInjector::vmsFlvSniffInjector()
 
 vmsFlvSniffInjector::~vmsFlvSniffInjector()
 {
-
+	Enable (false);
+	assert (m_htJob == NULL);
 }
 
 vmsFlvSniffInjector& vmsFlvSniffInjector::o()

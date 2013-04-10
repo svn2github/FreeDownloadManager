@@ -207,9 +207,9 @@ bool fsDLWebPage::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwS
 
 fsWebPageDownloader::fsWebPageDownloader()
 {
-	m_pages.CreateInstance ();
+	m_sptPages.CreateInstance ();
 	fsDLWebPagePtr wp; wp.CreateInstance ();
-	m_pages->SetData (wp);
+	setRootWebPage (wp);
 
 	m_pfnEvents = NULL;
 	ReadDefaultWPDS (&m_wpds);
@@ -221,10 +221,43 @@ fsWebPageDownloader::fsWebPageDownloader()
 	m__threadProcessDoneAndRedirEvents__NeedCheckDoneOrStopped = false;
 }
 
+void fsWebPageDownloader::setRootWebPage (fsDLWebPagePtr wp)
+{
+	vmsCriticalSectionAutoLock csal (&m_csObj);
+	
+	if (m_sptPages->GetData ())
+		getPersistObjectChildren ()->removePersistObject ((vmsPersistObject*)(fsDLWebPage*)m_sptPages->GetData ());
+
+	m_sptPages->SetData(wp);
+
+	TDlWebPageOnLoadHandlerData wpldData;
+	wpldData.m_dwpPages = (fsDLWebPageTree)m_sptPages;
+
+	wpldData.m_pDlWebPagePtr = wp;
+	wpldData.m_pwpdWebPageDownloader = this;
+
+	wp->olOnLoadHandler = &fsWebPageDownloader::FdmOnDwpLoad;
+	wp->pvOnLoadHandlerData = &AddDwpOnLoadHandlerData(wpldData);
+	wp->osOnSaveHandler = &fsWebPageDownloader::FdmOnDwpSave;
+	wp->pvOnSaveHandlerData = wpldData.m_dwpPages;
+
+	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)wp);
+}
+
 fsWebPageDownloader::~fsWebPageDownloader()
 {
 	while (m_bthreadProcessDoneAndRedirEvents_Running)
 		Sleep (10);
+
+	for (size_t i = 0; i < m_vConfs.size (); i++)
+	{
+		fsDownload *dld = m_vConfs [i].wp ? m_vConfs [i].wp->dld : NULL;
+		if (dld && dld->pfnDownloadEventsFunc == _DldEvents && dld->lpEventsParam == this)
+		{
+			dld->pfnDownloadEventsFunc = NULL;
+			dld->lpEventsParam = NULL;
+		}
+	}
 
 	for (int i = 0; i < m_wpds.vIgnoreList.size (); i++)
 		delete m_wpds.vIgnoreList [i];
@@ -482,7 +515,7 @@ fsDLWebPage* fsWebPageDownloader::AddWebPage(fsDLWebPage *wp, fsDLWebPageTree ro
 		return NULL;
 
 	
-	fsDLWebPageTree wptree = m_pages;
+	fsDLWebPageTree wptree = m_sptPages;
 	
 	fsDLWebPage *wpadded = NULL;
 
@@ -514,8 +547,7 @@ fsDLWebPage* fsWebPageDownloader::AddWebPage(fsDLWebPage *wp, fsDLWebPageTree ro
 	}
 	else
 	{
-		wp->pvOnSaveHandlerData = m_pages;
-		m_pages->SetData (wp);
+		setRootWebPage (wp);
 		wpadded = wp;
 	}
 
@@ -524,6 +556,7 @@ fsDLWebPage* fsWebPageDownloader::AddWebPage(fsDLWebPage *wp, fsDLWebPageTree ro
 		_Conformity conf;	
 		conf.wptree = wptree;
 		conf.wp = wpadded;
+		vmsAUTOLOCKSECTION (m_csConfs);
 		m_vConfs.push_back (conf);
 	}
 
@@ -548,6 +581,8 @@ fsDLWebPageTree fsWebPageDownloader::FindWebPageTree(vmsDownloadSmartPtr dld)
 {
 	
 	
+
+	vmsAUTOLOCKSECTION (m_csConfs);
 
 	for (size_t  i = 0; i < m_vConfs.size (); i++)
 	{
@@ -604,6 +639,8 @@ void fsWebPageDownloader::OnWPDownloadDone(vmsDownloadSmartPtr dld)
 
 int fsWebPageDownloader::FindConfIndex(vmsDownloadSmartPtr dld)
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
+
 	for (size_t i = 0; i < m_vConfs.size (); i++)
 	{
 		if (m_vConfs [i].wp->dld == dld)
@@ -939,6 +976,8 @@ fsDLWebPage* fsWebPageDownloader::FindWebPage(LPCSTR pszFullUrl)
 	if (IR_SUCCESS != url1.Crack (pszFullUrl))
 		return NULL;
 
+	vmsAUTOLOCKSECTION (m_csConfs);
+
 	
 	for (size_t i = 0; i < m_vConfs.size (); i ++)
 	{
@@ -1077,11 +1116,13 @@ int fsWebPageDownloader::ParseHTMLImages(fsHTMLParser &parser, fsDLWebPageTree w
 
 LPCSTR fsWebPageDownloader::GetStartURL()
 {
-	return m_pages->GetData ()->strURL;
+	return m_sptPages->GetData ()->strURL;
 }
 
 float fsWebPageDownloader::GetPercentDone()
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
+
 	float fDone = 0;	
 
 	int cConfs = m_vConfs.size ();
@@ -1108,11 +1149,14 @@ float fsWebPageDownloader::GetPercentDone()
 
 int fsWebPageDownloader::GetFileCount()
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
 	return m_vConfs.size ();
 }
 
 int fsWebPageDownloader::GetDoneFileCount()
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
+
 	int cDone = 0;
 
 	for (int i = m_vConfs.size () - 1; i >= 0; i--)
@@ -1133,6 +1177,8 @@ int fsWebPageDownloader::GetDoneFileCount()
 
 BOOL fsWebPageDownloader::IsRunning()
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
+
 	try {
 	
 	for (int i = m_vConfs.size () - 1; i >= 0; i--)
@@ -1149,6 +1195,8 @@ BOOL fsWebPageDownloader::IsRunning()
 
 BOOL fsWebPageDownloader::IsDone()
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
+
 	for (int i = m_vConfs.size () - 1; i >= 0; i--)
 	{
 		fsDLWebPage *wp = m_vConfs [i].wp;
@@ -1168,6 +1216,8 @@ BOOL fsWebPageDownloader::IsScheduled()
 	if (_pwndScheduler == NULL)
 		return FALSE;
 
+	vmsAUTOLOCKSECTION (m_csConfs);
+
 	for (int i = m_vConfs.size () - 1; i >= 0; i--)
 	{
 		if (m_vConfs [i].wp->dld && (m_vConfs [i].wp->bState & WPSTATE_DLDWASDELETED) == 0 && 
@@ -1180,6 +1230,8 @@ BOOL fsWebPageDownloader::IsScheduled()
 
 BOOL fsWebPageDownloader::IsOnAutoStart()
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
+
 	for (int i = m_vConfs.size () - 1; i >= 0; i--)
 	{
 		vmsDownloadSmartPtr dld = m_vConfs [i].wp->dld;
@@ -1194,6 +1246,8 @@ BOOL fsWebPageDownloader::IsOnAutoStart()
 
 BOOL fsWebPageDownloader::IsDownloading()
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
+
 	for (int i = m_vConfs.size () - 1; i >= 0; i--)
 	{
 		vmsDownloadSmartPtr dld = m_vConfs [i].wp->dld;
@@ -1340,11 +1394,13 @@ int fsWebPageDownloader::ParseHTMLLinkUrls(fsHTMLParser &parser, fsDLWebPageTree
 
 int fsWebPageDownloader::GetDownloadCount()
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
 	return m_vConfs.size ();
 }
 
 vmsDownloadSmartPtr fsWebPageDownloader::GetDownload(int iIndex)
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
 	return m_vConfs [iIndex].wp->dld;
 }
 
@@ -1354,6 +1410,7 @@ void fsWebPageDownloader::StartDownloading()
 	m_bWasShutdownMsg = FALSE;
 
 	DLDS_LIST vDlds;
+	vmsAUTOLOCKSECTION (m_csConfs);
 	for (size_t i = 0; i < m_vConfs.size (); i++)
 	{
 		vmsDownloadSmartPtr dld = m_vConfs [i].wp->dld;
@@ -1361,6 +1418,7 @@ void fsWebPageDownloader::StartDownloading()
 			continue;
 		vDlds.push_back (dld);
 	}
+	vmsAUTOLOCKSECTION_UNLOCK (m_csConfs);
 
 	MakeSureProcessDoneAndRedirEventsThreadStarted ();
 
@@ -1373,6 +1431,8 @@ void fsWebPageDownloader::StopDownloading()
 
 	DLDS_LIST vDlds;
 
+	vmsAUTOLOCKSECTION (m_csConfs);
+
 	size_t sizeWas = m_vConfs.size ();
 
 	size_t i = 0;
@@ -1384,6 +1444,8 @@ void fsWebPageDownloader::StopDownloading()
 		vDlds.push_back (dld);
 	}
 
+	vmsAUTOLOCKSECTION_UNLOCK (m_csConfs);
+
 	if (vDlds.size () == 0)
 		return;
 
@@ -1392,7 +1454,10 @@ void fsWebPageDownloader::StopDownloading()
 	for (i = 0; i < vDlds.size (); i++)
 		_pwndDownloads->UpdateDownload (vDlds [i]);
 
-	if ((size_t)m_vConfs.size () > sizeWas)
+	EnterCriticalSection (&m_csConfs);
+	bool bStopDownloading = m_vConfs.size () > sizeWas;
+	LeaveCriticalSection (&m_csConfs);
+	if (bStopDownloading)
 		StopDownloading ();
 }
 
@@ -1400,7 +1465,10 @@ void fsWebPageDownloader::SetAutoStartDownloading(BOOL b)
 {
 	if (b)
 		m_bStopped = FALSE;
-	
+
+	DLDS_LIST v;
+
+	vmsAUTOLOCKSECTION (m_csConfs);
 	for (size_t i = 0; i < m_vConfs.size (); i++)
 	{
 		vmsDownloadSmartPtr dld = m_vConfs [i].wp->dld;
@@ -1408,9 +1476,13 @@ void fsWebPageDownloader::SetAutoStartDownloading(BOOL b)
 		{
 			dld->bAutoStart = b;
 			dld->setDirty();
-			_pwndDownloads->UpdateDownload (dld);
+			v.push_back (dld);
 		}
 	}
+	vmsAUTOLOCKSECTION_UNLOCK (m_csConfs);
+
+	for (size_t i = 0; i < v.size (); i++)
+		_pwndDownloads->UpdateDownload (v [i]);
 
 	_DldsMgr.setNeedProcessDownloads ();
 }
@@ -1439,20 +1511,25 @@ void fsWebPageDownloader::DeleteAllDownloads(BOOL bByUser)
 
 	StopDownloading ();
 
-	size_t i = 0;
-	for (i = 0; i < m_vConfs.size (); i++)
+	vmsAUTOLOCKSECTION (m_csConfs);
+
+	for (size_t i = 0; i < m_vConfs.size (); i++)
 	{
 		vmsDownloadSmartPtr dld = m_vConfs [i].wp->dld;
 		if (dld)
 			vDlds.push_back (dld);
 	}
 
+	vmsAUTOLOCKSECTION_UNLOCK (m_csConfs);
+
 	if (vDlds.size () == 0)
 		return;
 
 	size_t cDeleted = _DldsMgr.DeleteDownloads (vDlds, bByUser, FALSE);
 
-	for (i = 0; i < m_vConfs.size () && cDeleted; i++)
+	vmsCriticalSectionAutoLock csal (&m_csConfs);
+
+	for (size_t i = 0; i < m_vConfs.size () && cDeleted; i++)
 	{
 		if (m_vConfs [i].wp->dld)
 		{
@@ -1462,12 +1539,15 @@ void fsWebPageDownloader::DeleteAllDownloads(BOOL bByUser)
 		}
 	}
 
+	csal.Unlock ();
+
 	if (vDlds.size () == cDeleted)
 		DeleteAllDownloads (bByUser); 
 }
 
 void fsWebPageDownloader::DetachFromDownloads()
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
 	for (size_t i = 0; i < m_vConfs.size (); i++)
 	{
 		vmsDownloadSmartPtr dld = m_vConfs [i].wp->dld;
@@ -1555,7 +1635,7 @@ BOOL fsWebPageDownloader::Save(HANDLE hFile)
 	}		
 
 	
-	return Save (hFile, m_pages);
+	return Save (hFile, m_sptPages);
 }
 
 void fsWebPageDownloader::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
@@ -1756,8 +1836,8 @@ BOOL fsWebPageDownloader::Load_OLD(HANDLE hFile, BOOL bOldVer)
 
 	m_nMaxID = 0;
 
-	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)m_pages->GetData());
-	return Load (hFile, m_pages, 3);
+	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)m_sptPages->GetData());
+	return Load (hFile, m_sptPages, 3);
 }
 
 bool fsWebPageDownloader::loadObjectItselfFromStateBuffer_Old(LPBYTE pbtBuffer, LPDWORD pdwSize, DWORD dwVer)
@@ -1830,19 +1910,7 @@ bool fsWebPageDownloader::loadObjectItselfFromStateBuffer_Old(LPBYTE pbtBuffer, 
 	m_nMaxID = 0;
 
 	fsDLWebPagePtr wp; wp.CreateInstance ();
-	m_pages->SetData(wp);
-	TDlWebPageOnLoadHandlerData wpldData;
-	wpldData.m_dwpPages = (fsDLWebPageTree)m_pages;
-
-	wpldData.m_pDlWebPagePtr = wp;
-	wpldData.m_pwpdWebPageDownloader = this;
-
-	wp->olOnLoadHandler = &fsWebPageDownloader::FdmOnDwpLoad;
-	wp->pvOnLoadHandlerData = &AddDwpOnLoadHandlerData(wpldData);
-	wp->osOnSaveHandler = &fsWebPageDownloader::FdmOnDwpSave;
-	wp->pvOnSaveHandlerData = wpldData.m_dwpPages;
-	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)wp);
-	
+	setRootWebPage (wp);	
 
 	*pdwSize = pbtCurrentPos - pbtBuffer;
 
@@ -1947,7 +2015,7 @@ BOOL fsWebPageDownloader::Load(HANDLE hFile, fsDLWebPageTree root, WORD wVer)
 
 fsDLWebPageTree fsWebPageDownloader::GetRootPage()
 {
-	return m_pages;
+	return m_sptPages;
 }
 
 BOOL fsWebPageDownloader::IsUrlsEqual(fsURL &url1, LPCSTR pszUrl)
@@ -2044,6 +2112,8 @@ void fsWebPageDownloader::OnDldRedirected(vmsDownloadSmartPtr dld)
 
 fsDLWebPage* fsWebPageDownloader::FindWebPage(UINT nID)
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
+
 	for (size_t i = 0; i < m_vConfs.size (); i++)
 	{
 		if (m_vConfs [i].wp->nID == nID)
@@ -2057,8 +2127,9 @@ void fsWebPageDownloader::DeleteWebPage(fsDLWebPage *wp)
 {
 	fsDLWebPageTree tree = NULL;
 
-	size_t i = 0;
-	for (i = 0; i < m_vConfs.size (); i++)
+	vmsAUTOLOCKSECTION (m_csConfs);
+
+	for (size_t i = 0; i < m_vConfs.size (); i++)
 	{
 		if (m_vConfs [i].wp == wp)
 		{
@@ -2067,6 +2138,8 @@ void fsWebPageDownloader::DeleteWebPage(fsDLWebPage *wp)
 		}
 	}
 
+	vmsAUTOLOCKSECTION_UNLOCK (m_csConfs);
+
 	if (tree == NULL)
 		return;
 
@@ -2074,9 +2147,20 @@ void fsWebPageDownloader::DeleteWebPage(fsDLWebPage *wp)
 
 	Event (WPDE_WEBPAGEWILLBEDELETED, NULL, wp);
 
-	m_vConfs.erase (m_vConfs.begin () + i);
+	vmsCriticalSectionAutoLock csal (&m_csConfs);
 
-	for (i = 0; i < (size_t)root->GetLeafCount (); i++)
+	for (size_t i = 0; i < m_vConfs.size (); i++)
+	{
+		if (m_vConfs [i].wp == wp)
+		{
+			m_vConfs.erase (m_vConfs.begin () + i);
+			break;
+		}
+	}
+
+	csal.Unlock ();
+
+	for (size_t i = 0; i < (size_t)root->GetLeafCount (); i++)
 	{
 		if (root->GetLeaf (i)->GetData ()->nID == wp->nID)
 		{
@@ -2193,8 +2277,9 @@ BOOL fsWebPageDownloader::Load(HANDLE hFile, WORD wVer)
 
 	m_nMaxID = 0;
 
-	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)m_pages->GetData());
-	if (FALSE == Load (hFile, m_pages, wVer))
+	assert (getPersistObjectChildren ()->findPersistObjectIndex ((vmsPersistObject*)(fsDLWebPage*)m_sptPages->GetData()) == -1);
+	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)m_sptPages->GetData());
+	if (FALSE == Load (hFile, m_sptPages, wVer))
 	{
 		Load_PerformRollback ();
 		return FALSE;
@@ -2305,18 +2390,7 @@ bool fsWebPageDownloader::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDW
 	m_nMaxID = 0;
 
 	fsDLWebPagePtr wp; wp.CreateInstance ();
-	m_pages->SetData(wp);
-	TDlWebPageOnLoadHandlerData wpldData;
-	wpldData.m_dwpPages = (fsDLWebPageTree)m_pages;
-
-	wpldData.m_pDlWebPagePtr = wp;
-	wpldData.m_pwpdWebPageDownloader = this;
-
-	wp->olOnLoadHandler = &fsWebPageDownloader::FdmOnDwpLoad;
-	wp->pvOnLoadHandlerData = &AddDwpOnLoadHandlerData(wpldData);
-	wp->osOnSaveHandler = &fsWebPageDownloader::FdmOnDwpSave;
-	wp->pvOnSaveHandlerData = wpldData.m_dwpPages;
-	getPersistObjectChildren ()->addPersistObject ((vmsPersistObject*)(fsDLWebPage*)wp);
+	setRootWebPage (wp);
 
 	*pdwSize = pbtCurrentPos - pbtBuffer;
 
@@ -2402,6 +2476,7 @@ void fsWebPageDownloader::GetDownloadingSiteName(LPSTR psz)
 
 void fsWebPageDownloader::Load_PerformRollback()
 {
+	vmsAUTOLOCKSECTION (m_csConfs);
 	for (size_t i = 0; i < m_vConfs.size (); i++)
 	{
 		vmsDownloadSmartPtr dld = m_vConfs [i].wp->dld;
@@ -2780,7 +2855,7 @@ DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
 {
 	LOGFN ("fsWebPageDownloader::_threadProcessDoneAndRedirEvents");
 
-	fsWebPageDownloader *pthis = (fsWebPageDownloader*)lp;
+	fsWebPageDownloaderPtr pthis = (fsWebPageDownloader*)lp;
 	pthis->m_bthreadProcessDoneAndRedirEvents_Running = true;
 
 	SetThreadPriority (GetCurrentThread (), THREAD_PRIORITY_BELOW_NORMAL);

@@ -208,6 +208,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="vmsFindFlvDownloadsResultsCacheAsyncRequest.cpp" />
     <ClCompile Include="vmsOverlappedWinsockCalls.cpp" />
     <ClCompile Include="zlib\adler32.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -571,6 +572,7 @@
     <ClInclude Include="vmsFile.h" />
     <ClInclude Include="vmsFileUtil.h" />
     <ClInclude Include="vmsFindFlvDownloadsResultsCache.h" />
+    <ClInclude Include="vmsFindFlvDownloadsResultsCacheAsyncRequest.h" />
     <ClInclude Include="vmsHtmlParser.h" />
     <ClInclude Include="vmsHtmlTagParser.h" />
     <ClInclude Include="vmsHttpFlvTrafficAnalyzer.h" />

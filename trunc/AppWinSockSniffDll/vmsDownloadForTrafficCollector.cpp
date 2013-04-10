@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "vmsDownloadForTrafficCollector.h"
 #include <wininet.h>
+#include "vmsWinInetHttpTrafficCollector.h"
 
 vmsDownloadForTrafficCollector::vmsDownloadForTrafficCollector()
 {
@@ -19,6 +20,8 @@ vmsDownloadForTrafficCollector::~vmsDownloadForTrafficCollector()
 BOOL vmsDownloadForTrafficCollector::MakeDownload(LPCSTR pszUrl, vmsHttpTrafficCollector::HttpDialog::ResourceContentType enCT, 
 			vmsHttpTrafficCollector *pTraffic, vmsWinSockHttpDlgTree *pDlgTree)
 {
+	LOGFN ("vmsDownloadForTrafficCollector::MakeDownload");
+
 	if (!MakeWasteDownload (pszUrl))
 		return FALSE;
 
@@ -46,6 +49,7 @@ BOOL vmsDownloadForTrafficCollector::MakeDownload(LPCSTR pszUrl, vmsHttpTrafficC
 
 BOOL vmsDownloadForTrafficCollector::MakeWasteDownload(LPCSTR pszUrl)
 {
+	bool bHTTPS = !strnicmp (pszUrl, "https://", 8);
 	HINTERNET hInet = InternetOpen ("Mozilla/4.05 [en] (WinXP; I)", INTERNET_OPEN_TYPE_PRECONFIG,
 		NULL, NULL, 0);
 	if (hInet == NULL)
@@ -59,9 +63,15 @@ BOOL vmsDownloadForTrafficCollector::MakeWasteDownload(LPCSTR pszUrl)
 		return FALSE;
 	}
 	BYTE ab [1024]; DWORD dw = 0; int iMaxSize = 200*1024/sizeof(ab);
+	extern vmsWinInetHttpTrafficCollector _WinInetTrafficCollector;
 	while (InternetReadFile (hFile, ab, sizeof (ab), &dw) && dw != 0 && --iMaxSize > 0)
-		;
+	{
+		if (bHTTPS)
+			_WinInetTrafficCollector.OnInternetReadFile (hFile, ab, dw);
+	}
 	InternetCloseHandle (hFile);
+	if (bHTTPS)
+		_WinInetTrafficCollector.OnInternetCloseHandle (hFile);
 	InternetCloseHandle (hInet);
 	return TRUE;
 }

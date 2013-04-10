@@ -46,6 +46,7 @@ public:
 	
 	
 	fsInternetResult Create (LPCSTR pszAgent, fsInternetAccessType accType, LPCSTR pszProxy);
+	static void AdjustWinInetConnectionLimit ();
 	fsInternetSession();
 	virtual ~fsInternetSession();
 

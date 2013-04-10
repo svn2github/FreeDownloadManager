@@ -50,14 +50,29 @@ void vmsWinSockHttpTrafficCollector::OnDataSent(SOCKET s, const char *pData, int
 	{
 		
 		if (nLen < 5)
+		{
+			LOGsnl (" too small size");
 			return; 
+		}
 		if (strnicmp (pData, "GET ", 4) && strnicmp (pData, "POST ", 5))
+		{
+			LOGsnl (" not a GET or POST request");
+			char *p = new char [nLen + 1];
+			memcpy (p, pData, nLen);
+			p [nLen] = 0;
+			LOG ("  (contains: %s)", p);
+			delete [] p;
 			return; 
+		}
 		if (strstrn (pData, "HTTP/1.", nLen) == NULL)
+		{
+			LOGsnl (" HTTP/1. not found");
 			return; 
+		}
 		
 		
 		spDlg = m_pHttpTraffic->CreateHttpDialogStore ();
+		LOGsnl (" new dialog store is created.");
 #ifdef _DEBUG
 		spDlg->enProvider = vmsHttpTrafficCollector::HttpDialog::Provider::PROV_WINSOCK;
 #endif
@@ -142,6 +157,7 @@ void vmsWinSockHttpTrafficCollector::OnDataRcvd(SOCKET s, const char *pData, int
 	int nIndex = m_pHttpTraffic->FindDialogIndexBySocket (s);
 	if (nIndex == -1)
 	{
+		LOGsnl (" no dialog found for the specified socket");
 		LeaveCriticalSection (&m_pHttpTraffic->m_csModifyDialogsVector);
 		return;
 	}
@@ -165,6 +181,7 @@ void vmsWinSockHttpTrafficCollector::OnDataRcvd(SOCKET s, const char *pData, int
 	switch (spDlg->enState)
 	{
 	case vmsHttpTrafficCollector::HttpDialog::SENDING_REQUEST_HEADERS:
+		LOGsnl (" invalid dialog state");
 		assert (false); 
 		return;
 

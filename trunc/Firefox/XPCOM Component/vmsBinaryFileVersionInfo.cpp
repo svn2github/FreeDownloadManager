@@ -87,8 +87,7 @@ BOOL vmsBinaryFileVersionInfo::ExtractVersionInfo(LPVOID pvVer, DWORD dwSize)
 				pwsz++;
 			if (*pwsz == 0)
 			{
-				USES_CONVERSION;
-				tstrLng = W2T ((LPWSTR)pb);
+				tstrLng = CW2TEX<128> ((LPWSTR)pb);
 				break;
 			}
 		}

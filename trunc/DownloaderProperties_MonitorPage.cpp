@@ -83,9 +83,9 @@ BOOL CDownloaderProperties_MonitorPage::OnInitDialog()
 	
 	CheckDlgButton (IDC_ALLOWIETODL, _App.Monitor_AllowDownload () ? BST_CHECKED : BST_UNCHECKED);
 
-	CheckDlgButton (IDC_OPERA, _NOMgr.IsOperaPluginInstalled () ? BST_CHECKED : BST_UNCHECKED);
-	CheckDlgButton (IDC_NETSCAPE, _NOMgr.IsNetscapePluginInstalled () ? BST_CHECKED : BST_UNCHECKED);
-	CheckDlgButton (IDC_MOZILLA,  _NOMgr.IsMozillaSuitePluginInstalled () ? BST_CHECKED : BST_UNCHECKED);
+	CheckDlgButton (IDC_OPERA, _NOMgr.getPluginInstaller (vmsKnownBrowsers::Opera).IsPluginInstalled () ? BST_CHECKED : BST_UNCHECKED);
+	CheckDlgButton (IDC_NETSCAPE, _NOMgr.getPluginInstaller (vmsKnownBrowsers::Netscape).IsPluginInstalled () ? BST_CHECKED : BST_UNCHECKED);
+	CheckDlgButton (IDC_MOZILLA,  _NOMgr.getPluginInstaller (vmsKnownBrowsers::MozillaSuite).IsPluginInstalled () ? BST_CHECKED : BST_UNCHECKED);
 
 	CheckDlgButton (IDC_SILENT, _App.Monitor_Silent () ? BST_CHECKED : BST_UNCHECKED);
 
@@ -191,9 +191,9 @@ BOOL CDownloaderProperties_MonitorPage::OnApply()
 		dwMUSO |= MONITOR_USERSWITCHEDON_OPERA;
 
 		
-		if (_NOMgr.IsOperaPluginInstalled (TRUE) == FALSE)
+		if (_NOMgr.getPluginInstaller (vmsKnownBrowsers::Opera).IsPluginInstalled (TRUE) == FALSE)
 		{
-			if (FALSE == _NOMgr.InstallOperaPlugin ())
+			if (FALSE == _NOMgr.getPluginInstaller (vmsKnownBrowsers::Opera).InstallPlugin ())
 			{
 				MessageBox (LS (L_CANTINITOPMONITOR), LS (L_ERR), MB_ICONERROR);
 				CheckDlgButton (IDC_OPERA, BST_UNCHECKED);
@@ -202,9 +202,9 @@ BOOL CDownloaderProperties_MonitorPage::OnApply()
 				bRR = TRUE;
 		}
 	}
-	else if (_NOMgr.IsOperaPluginInstalled (strOpDir.GetLength ()))
+	else if (_NOMgr.getPluginInstaller (vmsKnownBrowsers::Opera).IsPluginInstalled (strOpDir.GetLength () != 0))
 	{
-		if (FALSE == _NOMgr.DeinstallOperaPlugin ())
+		if (FALSE == _NOMgr.getPluginInstaller (vmsKnownBrowsers::Opera).DeinstallPlugin ())
 		{
 			MessageBox (LS (L_CANTDEINITOPMONITOR), LS (L_ERR), MB_ICONERROR);
 			CheckDlgButton (IDC_OPERA, BST_CHECKED);
@@ -219,9 +219,9 @@ BOOL CDownloaderProperties_MonitorPage::OnApply()
 	{
 		dwMUSO |= MONITOR_USERSWITCHEDON_NETSCAPE;
 
-		if (_NOMgr.IsNetscapePluginInstalled (TRUE) == FALSE)
+		if (_NOMgr.getPluginInstaller (vmsKnownBrowsers::Netscape).IsPluginInstalled (TRUE) == FALSE)
 		{
-			if (FALSE == _NOMgr.InstallNetscapePlugin ())
+			if (FALSE == _NOMgr.getPluginInstaller (vmsKnownBrowsers::Netscape).InstallPlugin ())
 			{
 				MessageBox (LS (L_CANTINITNETMONITOR), LS (L_ERR), MB_ICONERROR);
 				CheckDlgButton (IDC_NETSCAPE, BST_UNCHECKED);
@@ -230,9 +230,9 @@ BOOL CDownloaderProperties_MonitorPage::OnApply()
 				bRR = TRUE;
 		}
 	}
-	else if (_NOMgr.IsNetscapePluginInstalled (strNDir.GetLength ()))
+	else if (_NOMgr.getPluginInstaller (vmsKnownBrowsers::Netscape).IsPluginInstalled (strNDir.GetLength () != 0))
 	{
-		if (FALSE == _NOMgr.DeinstallNetscapePlugin ())
+		if (FALSE == _NOMgr.getPluginInstaller (vmsKnownBrowsers::Netscape).DeinstallPlugin ())
 		{
 			MessageBox (LS (L_CANTDEINITNETMONITOR), LS (L_ERR), MB_ICONERROR);
 			CheckDlgButton (IDC_NETSCAPE, BST_CHECKED);
@@ -247,9 +247,9 @@ BOOL CDownloaderProperties_MonitorPage::OnApply()
 	{
 		dwMUSO |= MONITOR_USERSWITCHEDON_SEAMONKEY;
 
-		if (_NOMgr.IsMozillaSuitePluginInstalled (TRUE) == FALSE)
+		if (_NOMgr.getPluginInstaller (vmsKnownBrowsers::MozillaSuite).IsPluginInstalled (TRUE) == FALSE)
 		{
-			if (FALSE == _NOMgr.InstallMozillaSuitePlugin ())
+			if (FALSE == _NOMgr.getPluginInstaller (vmsKnownBrowsers::MozillaSuite).InstallPlugin ())
 			{
 				MessageBox (LS (L_CANTINITMOZMONITOR), LS (L_ERR), MB_ICONERROR);
 				CheckDlgButton (IDC_MOZILLA, BST_UNCHECKED);
@@ -258,9 +258,9 @@ BOOL CDownloaderProperties_MonitorPage::OnApply()
 				bRR = TRUE;
 		}
 	}
-	else if (_NOMgr.IsMozillaSuitePluginInstalled (strMozDir.GetLength ()))
+	else if (_NOMgr.getPluginInstaller (vmsKnownBrowsers::MozillaSuite).IsPluginInstalled (strMozDir.GetLength () != 0))
 	{
-		if (FALSE == _NOMgr.DeinstallMozillaSuitePlugin ())
+		if (FALSE == _NOMgr.getPluginInstaller (vmsKnownBrowsers::MozillaSuite).DeinstallPlugin ())
 		{
 			MessageBox (LS (L_CANTDEINITMOZMONITOR), LS (L_ERR), MB_ICONERROR);
 			CheckDlgButton (IDC_MOZILLA, BST_CHECKED);

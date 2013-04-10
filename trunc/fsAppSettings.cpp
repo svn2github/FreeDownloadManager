@@ -781,21 +781,37 @@ void fsAppSettings::View_ReadWndPlacement(CWnd *pWnd, LPCSTR pszName, ReadWndPla
 	if (m_stgs.GetProfileBinary (_T ("Settings\\View\\Windows"), pszName, &lp, &uSize))
 	{
 		wp = (WINDOWPLACEMENT*) lp;
-		int cx = GetSystemMetrics (SM_CXSCREEN);
-		int cy = GetSystemMetrics (SM_CYSCREEN);
-		if (wp->rcNormalPosition.left >= cx || wp->rcNormalPosition.right <= 0)
-		{
-			wp->rcNormalPosition.left = cx / 2;
-			wp->rcNormalPosition.right = wp->rcNormalPosition.left + 40;
 
-			
+		CRect rcWA;
+
+		HMONITOR hMon = MonitorFromRect (&wp->rcNormalPosition, MONITOR_DEFAULTTONEAREST);
+
+		if (hMon)
+		{
+			MONITORINFO mi;
+			mi.cbSize = sizeof(mi);
+			GetMonitorInfo (hMon, &mi);
+			rcWA = mi.rcWork;
 		}
-		if (wp->rcNormalPosition.top >= cy || wp->rcNormalPosition.bottom <= 0)
+		else
 		{
-			wp->rcNormalPosition.top = cy / 2;
-			wp->rcNormalPosition.bottom = wp->rcNormalPosition.top + 40;
-
-			
+			if (!SystemParametersInfo (SPI_GETWORKAREA, 0, &rcWA, FALSE))
+				rcWA = CRect (0, 0, GetSystemMetrics (SM_CXSCREEN), GetSystemMetrics (SM_CYSCREEN));
+		}
+		
+		CRect rcIntersect;
+		if (!IntersectRect (&rcIntersect, &rcWA, &wp->rcNormalPosition) || rcIntersect.Width () < 50 || rcIntersect.Height () < 50)
+		{
+			if (wp->rcNormalPosition.left >= rcWA.right || wp->rcNormalPosition.right <= rcWA.left)
+			{
+				wp->rcNormalPosition.left = rcWA.left + rcWA.Width () / 2;
+				wp->rcNormalPosition.right = wp->rcNormalPosition.left + 40;
+			}
+			if (wp->rcNormalPosition.top >= rcWA.bottom || wp->rcNormalPosition.bottom <= rcWA.top)
+			{
+				wp->rcNormalPosition.top = rcWA.top + rcWA.Height () / 2;
+				wp->rcNormalPosition.bottom = wp->rcNormalPosition.top + 40;
+			}
 		}
 
 		bool bHide = false;

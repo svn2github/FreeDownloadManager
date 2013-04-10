@@ -1203,6 +1203,15 @@
     <ClCompile Include="sqlite\sqlite3.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vmsFdmFilesDeleter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsFdmUiDetails.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsFdmOpNetIntegrationMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Fdm.idl">
@@ -2398,6 +2407,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsFirefoxExtensionInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsKnownBrowsers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFileDeleter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsBrowserPluginFileDeleter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFdmFilesDeleter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFdmUiDetails.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFdmOpNetIntegrationMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -27,7 +27,7 @@ fsContextHelpMgr _CHMgr;
 fsMFCLangMgr _LngMgr;
 fsSitesMgr _SitesMgr;
 fsIEContextMenuMgr _IECMM;
-fsOpNetIntegrationMgr _NOMgr;
+vmsFdmOpNetIntegrationMgr _NOMgr;
 fsIECatchMgr _IECatchMgr;
 fsSoundsMgr _Snds;
 fsHistoriesMgr _HsMgr;

@@ -17,21 +17,24 @@ void vmsOverlappedWinsockCalls::AddCall(SOCKET s, LPWSABUF lpBuffers, DWORD dwBu
 {
 	Call c;
 	c.s = s;
-	c.lpBuffers = lpBuffers;
-	c.dwBufferCount = dwBufferCount;
+	for (DWORD i = 0; i < dwBufferCount; i++)
+		c.vBuffers.push_back (lpBuffers [i]);
 	c.lpOverlapped = lpOverlapped;
 	c.lpCompletionRoutine = lpCompletionRoutine;
 	c.bSend = bSend;
 	vmsAUTOLOCKSECTION (m_csCalls);
+	int nIndex = FindCallIndex (s, lpOverlapped);
+	if (nIndex != -1)
+		m_vCalls.erase (m_vCalls.begin () + nIndex);
 	m_vCalls.push_back (c);
 }
 
-int vmsOverlappedWinsockCalls::FindCallIndex(LPWSAOVERLAPPED lpOverlapped)
+int vmsOverlappedWinsockCalls::FindCallIndex(SOCKET s, LPWSAOVERLAPPED lpOverlapped)
 {
 	vmsAUTOLOCKSECTION (m_csCalls);
 	for (size_t i = 0; i < m_vCalls.size (); i++)
 	{
-		if (m_vCalls [i].lpOverlapped == lpOverlapped)
+		if (m_vCalls [i].s == s && m_vCalls [i].lpOverlapped == lpOverlapped)
 			return i;
 	}
 	return -1;

@@ -25,7 +25,11 @@ void vmsFdmCrashReporter::onCrashDumpCreated ()
 	cl.setExe (tsz);
 	tstring tstrArgs = _T ("-submitDump=\"");
 	tstrArgs += m_tstrDumpFile;
-	tstrArgs += '"';
+	tstrArgs += _T ("\" -faultModule=\"");
+	tstrArgs += m_tstrFaultModuleName;
+	tstrArgs += _T ("\" -faultModuleCrashAddr=");
+	_stprintf_s <MAX_PATH> (tsz, _T ("%I64x"), (UINT64)m_dwpFaultModuleCrashAddress);
+	tstrArgs += tsz;
 	cl.setArgs (tstrArgs.c_str ());
 	cl.Execute ();
 	
@@ -36,13 +40,16 @@ bool vmsFdmCrashReporter::CheckIfSubmitDumpIsRequestedByCommandLine(bool& bConti
 {
 	vmsCommandLineParser cp;
 
-	const vmsCommandLineParser::Argument *pArg = cp.findArgument (_T ("submitDump"));
-	if (!pArg)
+	const vmsCommandLineParser::Argument *pArgDump = cp.findArgument (_T ("submitDump"));
+	if (!pArgDump)
 		return false;
+
+	const vmsCommandLineParser::Argument *pArgFaultModule = cp.findArgument (_T ("faultModule"));
+	const vmsCommandLineParser::Argument *pArgFaultModuleCrashAddr = cp.findArgument (_T ("faultModuleCrashAddr"));
 
 	bContinue = true;
 
-	if (GetFileAttributes (pArg->second.c_str ()) == DWORD (-1))
+	if (GetFileAttributes (pArgDump->second.c_str ()) == DWORD (-1))
 		return true;
 
 	bContinue = false;
@@ -53,7 +60,7 @@ bool vmsFdmCrashReporter::CheckIfSubmitDumpIsRequestedByCommandLine(bool& bConti
 	CoInitialize (NULL);
 
 	CDlgUnhExc2 dlg;
-	UINT nRes = dlg.DoModal ();
+	INT_PTR nRes = dlg.DoModal ();
 
 	if (dlg.m_bRestartApp)
 	{
@@ -67,13 +74,16 @@ bool vmsFdmCrashReporter::CheckIfSubmitDumpIsRequestedByCommandLine(bool& bConti
 	if (nRes == IDOK)
 	{
 		std::string strXml;
+		UINT64 uCrashAddr = 0;
+		if (pArgFaultModuleCrashAddr)
+			_stscanf (pArgFaultModuleCrashAddr->second.c_str (), _T ("%I64x"), &uCrashAddr);
 		vmsCrashReporter::GenerateXml (_T ("Free Download Manager"), vmsFdmAppMgr::getVersion ()->m_tstrFileVersion.c_str (), 
-			dlg.m_strDescription, NULL, strXml);
+			dlg.m_strDescription, pArgFaultModule ? pArgFaultModule->second.c_str () : NULL, (DWORD_PTR)uCrashAddr, NULL, strXml);
 
-		SubmitDumpToServer (_T ("freedownloadmanager.org"), _T ("/dump.php"), pArg->second.c_str (), strXml.c_str ());
+		SubmitDumpToServer (_T ("freedownloadmanager.org"), _T ("/dump.php"), pArgDump->second.c_str (), strXml.c_str ());
 	}
 
-	DeleteFile (pArg->second.c_str ());
+	DeleteFile (pArgDump->second.c_str ());
 
 	CoUninitialize ();
 

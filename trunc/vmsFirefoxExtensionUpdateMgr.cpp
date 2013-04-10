@@ -151,6 +151,7 @@ bool vmsFirefoxExtensionUpdateMgr::PerformUpdate(void)
 		return false;
 
 	vmsTmpFileName tmpFile;
+	DeleteUrlCacheEntry (m_tstrExtensionNewVerURL.c_str ());
 	HRESULT hr = URLDownloadToFile (NULL, m_tstrExtensionNewVerURL.c_str (), tmpFile, 0, NULL);
 	if (FAILED (hr))
 		return false;

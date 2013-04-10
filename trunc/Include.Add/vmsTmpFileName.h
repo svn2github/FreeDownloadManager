@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <shellapi.h>
+
 class vmsTmpFileName
 {
 public:
@@ -34,5 +36,57 @@ public:
 
 protected:
 	tstring m_tstrTmpFileName1, m_tstrTmpFileName2;
+};
+
+class vmsTmpDirName
+{
+public:
+	vmsTmpDirName (bool bDeleteDirWithContents = true) : 
+	  m_bDeleteDirWithContents (bDeleteDirWithContents)
+	{
+		WCHAR wsz [MAX_PATH] = L"";
+		GetTempPathW (_countof (wsz), wsz);
+		GUID guid;
+		if (FAILED (CoCreateGuid (&guid)))
+			return;
+		wchar_t wszGuid [100] = L"";
+		StringFromGUID2 (guid, wszGuid, _countof (wszGuid));
+		wcscat (wsz, L"\\");
+		wcscat (wsz, wszGuid);
+		CreateDirectoryW (wsz, NULL);
+		USES_CONVERSION;
+		m_tstrTmpDirName = W2CT (wsz);
+	}
+
+	~vmsTmpDirName ()
+	{
+		if (!m_tstrTmpDirName.empty ())
+		{
+			if (!RemoveDirectory (m_tstrTmpDirName.c_str ()))
+			{
+				if (m_bDeleteDirWithContents)
+				{
+					SHFILEOPSTRUCT sh;
+					ZeroMemory (&sh, sizeof (sh));
+					sh.wFunc  = FO_DELETE;
+					sh.fFlags = FOF_NOCONFIRMATION | FOF_SILENT | FOF_NOERRORUI;
+
+					std::vector <TCHAR> vtchFrom;
+					vtchFrom.resize (m_tstrTmpDirName.length () + 1);
+					CopyMemory (&vtchFrom [0], m_tstrTmpDirName.c_str (), (m_tstrTmpDirName.length () + 1) * sizeof (TCHAR));
+					vtchFrom.push_back (0);
+					sh.pFrom  = &vtchFrom [0];
+
+					SHFileOperation (&sh);
+				}
+			}
+		}
+	}
+
+	operator LPCTSTR () const {return m_tstrTmpDirName.c_str ();}
+
+protected:
+	tstring m_tstrTmpDirName;
+	bool m_bDeleteDirWithContents;
 };
 

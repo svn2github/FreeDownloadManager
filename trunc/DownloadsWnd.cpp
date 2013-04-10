@@ -68,7 +68,7 @@ CDownloadsWnd::CDownloadsWnd()
 
 CDownloadsWnd::~CDownloadsWnd()
 {
-	
+	_DldsMgr.SetEventsFunc (NULL, NULL);
 }
 
 BEGIN_MESSAGE_MAP(CDownloadsWnd, CWnd)
@@ -482,6 +482,7 @@ LRESULT CDownloadsWnd::OnAppExit(WPARAM, LPARAM)
 
 		if (dld->pdlg)
 		{
+			dld->pdlg->ShowWindow (SW_HIDE);
 			dld->AddRef (); 
 			PostMessage (WM_DW_CLOSEDLDDIALOG, 0, (LPARAM)(fsDownload*) dld);
 		}
@@ -582,6 +583,10 @@ BOOL CDownloadsWnd::DeleteGroup(vmsDownloadsGroupSmartPtr pGroup)
 
 DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDLHistoryRecord *rec, fsDownloadsMgrEvent ev, LPVOID lp)
 {
+	assert (_pwndDownloads != NULL);
+	if (!_pwndDownloads)
+		return 0;
+
 	CDownloadsWnd* pthis = (CDownloadsWnd*) lp;
 
 	
@@ -1386,7 +1391,8 @@ HWND CDownloadsWnd::Plugin_CreateMainWindow(HWND hParent)
 {
 	fsnew1 (_pwndDownloads, CDownloadsWnd);
 
-	_pwndDownloads->Create (CWnd::FromHandle (hParent));
+	if (!_pwndDownloads->Create (CWnd::FromHandle (hParent)))
+		return NULL;
 
 	return _pwndDownloads->m_hWnd;
 }

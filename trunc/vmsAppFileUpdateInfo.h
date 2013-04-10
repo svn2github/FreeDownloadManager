@@ -29,6 +29,7 @@ public:
 	bool Retrieve ()
 	{
 		vmsTmpFileName tmpFile (_T ("tmp"), _T ("xml"));
+		DeleteUrlCacheEntry (m_tstrUpdateInfoURL.c_str ());
 		HRESULT hr = URLDownloadToFile (NULL, m_tstrUpdateInfoURL.c_str (), tmpFile, 0, NULL);
 		if (FAILED (hr))
 			return false;

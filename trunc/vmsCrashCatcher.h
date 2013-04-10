@@ -8,7 +8,7 @@ class vmsCrashCatcher
 {
 public:
 
-	vmsCrashCatcher() : m_pEP (NULL), m_dwThreadId (0)
+	vmsCrashCatcher() : m_pEP (NULL), m_dwThreadId (0), m_dwpFaultModuleCrashAddress (NULL)
 	{
 		assert (m_pThis == NULL);
 		if (m_pThis != NULL)
@@ -38,6 +38,8 @@ protected:
 	static vmsCrashCatcher* m_pThis;
 	static LPTOP_LEVEL_EXCEPTION_FILTER m_pPrevFilter;
 	tstring m_tstrDumpFile;
+	tstring m_tstrFaultModuleName;
+	DWORD_PTR m_dwpFaultModuleCrashAddress;
 
 	struct threadCreateDumpParams
 	{
@@ -51,6 +53,8 @@ protected:
 	static DWORD WINAPI _threadCreateDump (LPVOID lp)
 	{
 		vmsCrashCatcher *pthis = (vmsCrashCatcher*)lp;
+
+		
 
 		MINIDUMP_EXCEPTION_INFORMATION eInfo;
 		eInfo.ThreadId = pthis->m_dwThreadId;
@@ -73,6 +77,19 @@ protected:
 			&eInfo, NULL, NULL);
 
 		CloseHandle (hFile);
+
+		
+
+		MEMORY_BASIC_INFORMATION mbi;
+		SIZE_T nSize = VirtualQuery (pthis->m_pEP->ExceptionRecord->ExceptionAddress, &mbi, sizeof(mbi));
+		if (nSize)
+		{
+			pthis->m_dwpFaultModuleCrashAddress = (DWORD_PTR)pthis->m_pEP->ExceptionRecord->ExceptionAddress - (DWORD_PTR)mbi.AllocationBase;
+			TCHAR tszModule [MAX_PATH] = _T ("");
+			GetModuleFileName ((HMODULE)mbi.AllocationBase, tszModule, _countof (tszModule));
+			if (*tszModule)
+				pthis->m_tstrFaultModuleName = _tcsrchr (tszModule, '\\') ? _tcsrchr (tszModule, '\\') + 1 : tszModule;			
+		}
 
 		if (bDumpCreated)
 		{

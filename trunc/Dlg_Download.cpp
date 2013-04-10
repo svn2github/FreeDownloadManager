@@ -256,12 +256,20 @@ HBRUSH CDlg_Download::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
 
 void CDlg_Download::OnHide() 
 {
+	HWND hwndThis = m_hWnd;
+
 	if (_App.DownloadDialog_DontAskOnHide () == FALSE && m_dld->pMgr->IsDone () == FALSE && 
 			m_dld->pMgr->IsRunning ())
 	{
 		CDlg_Download_OnHide dlg (this);
 	
 		if (_DlgMgr.DoModal (&dlg) == IDCANCEL)
+			return;
+
+		
+		
+		
+		if (!_pwndDownloads || !IsWindow (hwndThis))
 			return;
 
 		switch (dlg.m_enResult)
@@ -287,10 +295,6 @@ void CDlg_Download::OnHide()
 	{
 		m_dld->AddRef (); 
 		_pwndDownloads->PostMessage (WM_DW_CLOSEDLDDIALOG, 0, (LPARAM)(fsDownload*) m_dld);
-	}
-	else
-	{
-		ShowWindow (SW_HIDE);
 	}
 }
 

@@ -158,6 +158,8 @@ public:
 	vmsWinSockHttpDlgTree();
 	virtual ~vmsWinSockHttpDlgTree();
 
+	bool UrlExistsInProcessHttpDialogsQueue (LPCSTR pszUrl);
+
 protected:
 	LONG m_cFlvsInSession;
 	static int Item_findChildIndexByUrl (const TreeItem *pItem, LPCSTR pszUrl);

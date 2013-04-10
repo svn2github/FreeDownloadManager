@@ -4,6 +4,7 @@
 
 #include "vmsUnZip.h"
 #include "unzip.h"
+#include <fileutil.h>
 
 vmsUnZip::vmsUnZip()
 {
@@ -19,7 +20,7 @@ BOOL vmsUnZip::Unpack(LPCTSTR ptszFileName, LPCTSTR ptszDstFolder)
 {
 	USES_CONVERSION;
 	BOOL result = FALSE;
-    unzFile zipFile = unzOpen (T2A ((LPTSTR)ptszFileName));
+    unzFile zipFile = unzOpen (CT2AEX<> ((LPTSTR)ptszFileName));
     if (NULL != zipFile) 
     {
         if (UNZ_OK == unzGoToFirstFile(zipFile))
@@ -38,9 +39,9 @@ BOOL vmsUnZip::Unpack(LPCTSTR ptszFileName, LPCTSTR ptszDstFolder)
 						assert (fi.uncompressed_size == 0);
 						tstring tstr = ptszDstFolder;
 						tstr += '\\';
-						tstr += filename;
+						tstr += CA2TEX<> (filename);
 						tstr += '1';
-						fsBuildPathToFile (tstr.c_str ());
+						vmsBuildPathToFile (tstr.c_str ());
 						result = TRUE;
 					}
 					else if (UNZ_OK == unzOpenCurrentFile(zipFile))
@@ -55,7 +56,14 @@ BOOL vmsUnZip::Unpack(LPCTSTR ptszFileName, LPCTSTR ptszDstFolder)
                             strcat (filePathName, T2A ((LPTSTR)ptszDstFolder));
                             strcat (filePathName, "\\");
                             strcat (filePathName, filename);
+							while (strchr (filePathName, '/'))
+								*strchr (filePathName, '/') = '\\';
 							FILE* pFile = fopen (filePathName, "wb");
+							if (!pFile)
+							{
+								vmsBuildPathToFile (CA2TEX<> (filePathName));
+								pFile = fopen (filePathName, "wb");
+							}
 							if (pFile)
 							{
 								result = (dataLen == fwrite(fileData, 1, dataLen, pFile));
