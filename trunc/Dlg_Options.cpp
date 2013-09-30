@@ -241,7 +241,7 @@ BOOL CDlg_Options::OptionsTree_Apply(LPOPTIONS_PAGES_TREE ptRoot, bool *pbBrowse
 
 		if (!tstrFdmElevateArgs.IsEmpty ())
 		{
-			tstrFdmElevateArgs += _T (" -exit");
+			tstrFdmElevateArgs += _T (" -nostart");
 
 			if (!m_bDontShowNeedElevateMessage)
 			{
@@ -251,11 +251,14 @@ BOOL CDlg_Options::OptionsTree_Apply(LPOPTIONS_PAGES_TREE ptRoot, bool *pbBrowse
 					return false;
 			}
 
+			TCHAR tsz [MAX_PATH] = _T ("");
+			GetModuleFileName (NULL, tsz, _countof (tsz));
+
 			SHELLEXECUTEINFO sei = {0};
 			sei.cbSize = sizeof (sei);
 			sei.fMask = SEE_MASK_FLAG_NO_UI | SEE_MASK_NOCLOSEPROCESS;
 			sei.lpVerb = _T ("runas");
-			sei.lpFile = _T ("fdm.exe");
+			sei.lpFile = tsz;
 			sei.lpParameters = tstrFdmElevateArgs;
 			sei.nShow = SW_HIDE;
 

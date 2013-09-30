@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "FdmApp.h"
 #include "ListCtrlEx.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -50,165 +51,177 @@ BOOL RGBIsEqual (COLORREF clr1, COLORREF clr2)
 }
 
 void CListCtrlEx::DrawItem(LPDRAWITEMSTRUCT lpDraw)
-{try{
-	int cCols = GetHeaderCtrl ()->GetItemCount ();
-	CDC *dc = CDC::FromHandle (lpDraw->hDC);
-	int xStart = lpDraw->rcItem.left;	
-	CImageList *pImages = GetImageList (LVSIL_SMALL);
-	BOOL bNeedBorder = FALSE;	
-
-	
-
-	CHeaderCtrl* pHdr = GetHeaderCtrl ();
-
-	
-	for (int i = 0; i < cCols; i++)
+{
+	try
 	{
-		LVITEM item;
-		TCHAR szItem [10000];
-		int colWidth = GetColumnWidth (pHdr->OrderToIndex (i));
-
-		xStart += 5;
-		colWidth -= 5;
-
-		item.iItem = lpDraw->itemID;
-		item.iSubItem = i;
-		item.pszText = szItem;
-		item.cchTextMax = sizeof (szItem);
-		item.mask = LVIF_IMAGE | LVIF_TEXT;
-
-		GetItem (&item);
+		int cCols = GetHeaderCtrl ()->GetItemCount ();
+		CDC *dc = CDC::FromHandle (lpDraw->hDC);
+		int xStart = lpDraw->rcItem.left;	
+		CImageList *pImages = GetImageList (LVSIL_SMALL);
+		BOOL bNeedBorder = FALSE;	
 
 		
-		if (i == 0)
+
+		CHeaderCtrl* pHdr = GetHeaderCtrl ();
+
+		
+		for (int i = 0; i < cCols; i++)
 		{
-			item.state = GetItemState (lpDraw->itemID, LVIS_SELECTED|LVIS_FOCUSED);
+			LVITEM item;
+			TCHAR szItem [10000];
+			int colWidth = GetColumnWidth (pHdr->OrderToIndex (i));
 
-			COLORREF clrBg = m_vInfo [lpDraw->itemID].clrBg;
-			COLORREF clrText = m_vInfo [lpDraw->itemID].clrText;
-	
-			
-			
-			if (item.state & LVIS_FOCUSED)
-				bNeedBorder = TRUE;
+			xStart += 5;
+			colWidth -= 5;
 
-			if (item.state & LVIS_SELECTED)
+			item.iItem = lpDraw->itemID;
+			item.iSubItem = i;
+			item.pszText = szItem;
+			item.cchTextMax = sizeof (szItem);
+			item.mask = LVIF_IMAGE | LVIF_TEXT;
+
+			GetItem (&item);
+
+			
+			if (i == 0)
 			{
-				clrBg = GetSysColor (COLOR_HIGHLIGHT);
-				clrText = GetSysColor (COLOR_HIGHLIGHTTEXT);
-				if (bNeedBorder == FALSE)
+				item.state = GetItemState (lpDraw->itemID, LVIS_SELECTED|LVIS_FOCUSED);
+
+				COLORREF clrBg = m_vInfo [lpDraw->itemID].clrBg;
+				COLORREF clrText = m_vInfo [lpDraw->itemID].clrText;
+	
+				
+			
+				if (item.state & LVIS_FOCUSED)
+					bNeedBorder = TRUE;
+
+				if (item.state & LVIS_SELECTED)
 				{
-					if (GetSelectionMark () == (int)lpDraw->itemID)
-						bNeedBorder = TRUE;
+					clrBg = GetSysColor (COLOR_HIGHLIGHT);
+					clrText = GetSysColor (COLOR_HIGHLIGHTTEXT);
+					if (bNeedBorder == FALSE)
+					{
+						if (GetSelectionMark () == (int)lpDraw->itemID)
+							bNeedBorder = TRUE;
+					}
+				}
+		
+				CBrush br;
+				CPen pen;
+				CBrush *oldBr;
+				CPen *oldPen;
+
+				if (RGBIsEqual (clrBg, clrText))
+					clrText = (~clrText) & 0x00FFFFFF;
+
+				dc->SetTextColor (clrText);
+
+				br.CreateSolidBrush (clrBg);
+				pen.CreatePen (PS_SOLID, 1, clrBg);
+
+				oldBr = dc->SelectObject (&br);
+				oldPen = dc->SelectObject (&pen);
+			
+				dc->Rectangle (&lpDraw->rcItem);
+
+				
+				if (m_bGrid)
+				{
+					CPen pen1 (PS_SOLID, 1, m_clrGrid);
+					dc->SelectObject (&pen1);
+					dc->MoveTo (lpDraw->rcItem.left, lpDraw->rcItem.bottom-1);
+					dc->LineTo (lpDraw->rcItem.right, lpDraw->rcItem.bottom-1);
+					dc->SelectObject (oldPen);
+				}
+
+				dc->SelectObject (oldBr);
+				dc->SelectObject (oldPen);
+
+				if (pImages)
+				{
+					
+
+					CPoint pt;
+					pt.x = xStart;
+					pt.y = lpDraw->rcItem.top;
+					if (m_pSelImages && (item.state & LVIS_SELECTED))
+						m_pSelImages->Draw (dc, item.iImage, pt, ILD_TRANSPARENT);
+					else
+						pImages->Draw (dc, item.iImage, pt, ILD_TRANSPARENT);
+
+					IMAGEINFO inf;
+					pImages->GetImageInfo (item.iImage, &inf);
+
+					xStart += inf.rcImage.right - inf.rcImage.left + 5;
+					colWidth -= inf.rcImage.right - inf.rcImage.left + 5;
 				}
 			}
-		
-			CBrush br;
-			CPen pen;
-			CBrush *oldBr;
-			CPen *oldPen;
 
-			if (RGBIsEqual (clrBg, clrText))
-				clrText = (~clrText) & 0x00FFFFFF;
+			if (*item.pszText)
+			{
+				
 
-			dc->SetTextColor (clrText);
+				int needX = GetStringWidth (item.pszText);
+				BOOL bDrawText = TRUE;
 
-			br.CreateSolidBrush (clrBg);
-			pen.CreatePen (PS_SOLID, 1, clrBg);
+				RECT rcText = lpDraw->rcItem;
+				rcText.left = xStart;
+				rcText.right = xStart + colWidth - 5;
 
-			oldBr = dc->SelectObject (&br);
-			oldPen = dc->SelectObject (&pen);
-			
-			dc->Rectangle (&lpDraw->rcItem);
+				
+				if (needX > colWidth-5)
+				{
+					RECT rc = rcText;
+					int dx = GetStringWidth ("...");
+					if (dx <= colWidth-5)
+					{
+						rc.left = rc.right - dx;
+						dc->DrawText ("...", &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+						rcText.right = rc.left - 5;
+					}
+					else
+						bDrawText = FALSE;
+				}
+
+				if (bDrawText)
+					dc->DrawText (szItem, &rcText, DT_SINGLELINE | DT_LEFT | DT_VCENTER | DT_NOPREFIX);
+			}
+
+			xStart += colWidth;
 
 			
 			if (m_bGrid)
 			{
-				CPen pen1 (PS_SOLID, 1, m_clrGrid);
-				dc->SelectObject (&pen1);
-				dc->MoveTo (lpDraw->rcItem.left, lpDraw->rcItem.bottom-1);
-				dc->LineTo (lpDraw->rcItem.right, lpDraw->rcItem.bottom-1);
+				
+				CPen pen (PS_SOLID, 1, m_clrGrid);
+				CPen *oldPen = dc->SelectObject (&pen);
+				dc->MoveTo (xStart-1, lpDraw->rcItem.top);
+				dc->LineTo (xStart-1, lpDraw->rcItem.bottom);
 				dc->SelectObject (oldPen);
 			}
-
-			dc->SelectObject (oldBr);
-			dc->SelectObject (oldPen);
-
-			if (pImages)
-			{
-				
-
-				CPoint pt;
-				pt.x = xStart;
-				pt.y = lpDraw->rcItem.top;
-				if (m_pSelImages && (item.state & LVIS_SELECTED))
-					m_pSelImages->Draw (dc, item.iImage, pt, ILD_TRANSPARENT);
-				else
-					pImages->Draw (dc, item.iImage, pt, ILD_TRANSPARENT);
-
-				IMAGEINFO inf;
-				pImages->GetImageInfo (item.iImage, &inf);
-
-				xStart += inf.rcImage.right - inf.rcImage.left + 5;
-				colWidth -= inf.rcImage.right - inf.rcImage.left + 5;
-			}
 		}
 
-		if (*item.pszText)
+		if (bNeedBorder)
 		{
 			
 
-			int needX = GetStringWidth (item.pszText);
-			BOOL bDrawText = TRUE;
-
-			RECT rcText = lpDraw->rcItem;
-			rcText.left = xStart;
-			rcText.right = xStart + colWidth - 5;
-
-			
-			if (needX > colWidth-5)
-			{
-				RECT rc = rcText;
-				int dx = GetStringWidth ("...");
-				if (dx <= colWidth-5)
-				{
-					rc.left = rc.right - dx;
-					dc->DrawText ("...", &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
-					rcText.right = rc.left - 5;
-				}
-				else
-					bDrawText = FALSE;
-			}
-
-			if (bDrawText)
-				dc->DrawText (szItem, &rcText, DT_SINGLELINE | DT_LEFT | DT_VCENTER | DT_NOPREFIX);
+			dc->SetTextColor (m_vInfo [lpDraw->itemID].clrText);
+			RECT rc = lpDraw->rcItem;
+			rc.bottom--; rc.right--;
+			dc->DrawFocusRect (&rc);
 		}
 
-		xStart += colWidth;
-
-		
-		if (m_bGrid)
-		{
-			
-			CPen pen (PS_SOLID, 1, m_clrGrid);
-			CPen *oldPen = dc->SelectObject (&pen);
-			dc->MoveTo (xStart-1, lpDraw->rcItem.top);
-			dc->LineTo (xStart-1, lpDraw->rcItem.bottom);
-			dc->SelectObject (oldPen);
-		}
 	}
-
-	if (bNeedBorder)
+	catch (const std::exception& ex)
 	{
-		
-
-		dc->SetTextColor (m_vInfo [lpDraw->itemID].clrText);
-		RECT rc = lpDraw->rcItem;
-		rc.bottom--; rc.right--;
-		dc->DrawFocusRect (&rc);
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CListCtrlEx::DrawItem " + tstring(ex.what()));
 	}
-
-}catch (...){}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CListCtrlEx::DrawItem unknown exception");
+	}
 }
 
 void CListCtrlEx::OnClick(NMHDR* , LRESULT* pResult) 

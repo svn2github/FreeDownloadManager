@@ -33,6 +33,7 @@
 #include <Iphlpapi.h>
 #include "Utils.h"
 #include "QueryStoringServiceInfoGuard.h"
+#include "vmsLogger.h"
 
 #ifndef FDM_DLDR__RAWCODEONLY
 extern CDownloadsWnd* _pwndDownloads;
@@ -50,6 +51,9 @@ const double DLD_HP_START_COEFF = 3.0;
 
 fsDownloadsMgr::fsDownloadsMgr()
 {
+	m_errorTimeouts[vmsBtDownloadErrorState::BTDES_BAD_REQUEST_400] = 0;
+	m_errorTimeouts[vmsBtDownloadErrorState::BTDES_SERVER_INTERNAL_ERROR_500] = 10 * 1000;
+
 	m_bShuttingDown = FALSE;
 
 	m_ticksNeedStartProcessDownloads.m_dwTicks = m_ticksNeedStartApplyTrafficLimit.m_dwTicks = 
@@ -157,17 +161,25 @@ UINT fsDownloadsMgr::Add(vmsDownloadSmartPtr dld, BOOL bKeepIDAsIs, bool bPlaceT
 
 void fsDownloadsMgr::_DownloadMgrEventDesc(fsDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCSTR pszEvent, LPVOID lp)
 {
-	try {
+	try 
+	{
+		fsDownloadsMgr* pThis = (fsDownloadsMgr*) lp;
+		vmsDownloadSmartPtr dld = pThis->GetDownloadByDownloadMgr (pMgr);
+		if (dld == NULL)
+			return;
 
-	fsDownloadsMgr* pThis = (fsDownloadsMgr*) lp;
-	vmsDownloadSmartPtr dld = pThis->GetDownloadByDownloadMgr (pMgr);
-	if (dld == NULL)
-		return;
-
-	pThis->OnDownloadDescEventRcvd (dld, enType, pszEvent);
-
+		pThis->OnDownloadDescEventRcvd (dld, enType, pszEvent);
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_DownloadMgrEventDesc " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_DownloadMgrEventDesc unknown exception");
+	}
 }
 
 vmsDownloadSmartPtr fsDownloadsMgr::GetDownloadByDownloadMgr(fsDownloadMgr *pMgr)
@@ -176,13 +188,24 @@ vmsDownloadSmartPtr fsDownloadsMgr::GetDownloadByDownloadMgr(fsDownloadMgr *pMgr
 
 	vmsAUTOLOCKRW_READ (m_rwlDownloads);
 
-	try {
+	try 
+	{
 		for (size_t i = 0; i < m_vDownloads.size (); i++)
 		{
 			if (m_vDownloads [i]->pMgr->GetDownloadMgr () == pMgr)
 				return m_vDownloads [i];
 		}
-	}catch (...){}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByDownloadMgr " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByDownloadMgr unknown exception");
+	}
 
 	return NULL;
 }
@@ -197,117 +220,125 @@ DWORD fsDownloadsMgr::_DownloadMgrEvents(fsDownloadMgr *pMgr, fsDownloaderEvent 
 	if (dld == NULL)
 		return TRUE;
 
-	try {
-
-	switch (enEvent)
+	try 
 	{
-		case DE_SECTIONDONE:
-			pThis->Event (dld, DME_DOWNLOADEREVENTRECEIVED);
-			pThis->OnSectionStop (dld);
-		break;
-
-		case DE_SECTDOWNLOADING:
-			pThis->RegisterDownloadInTum (dld); 
-			pThis->Event (dld, DME_SECTIONDOWNLOADING);
-		break;
-
-		case DE_SECTIONSTOPPED:
-			pThis->OnSectionStop (dld);
-		break;
-
-		case DE_EXTERROR:	
-			switch (uInfo)
-			{
-				case DMEE_FILEWASDELETED:	
-					dld->bAutoStart = FALSE; 
-					dld->setDirty();
-					break;
-
-				case DMEE_STOPPEDORDONE: 
-					pThis->UnregisterDownloadInTum (dld);
-					if (FALSE == pThis->OnDownloadStoppedOrDone (dld))
-						return TRUE;
-					dld = NULL;	
-					break;
-
-				case DMEE_FATALERROR:
-				case DMEE_USERSTOP:
-					pThis->UnregisterDownloadInTum (dld);
-					dld->bAutoStart = FALSE;
-					dld->setDirty();
-					break;
-
-				case DMEE_FILEUPDATED:
-					pThis->Event (dld, DME_FILEUPDATED);
-					dld = NULL;	
-					break;
-
-				case DMEE_STARTING:
-					pThis->RegisterDownloadInTum (dld);
-					if (FALSE == pThis->Event (dld, DME_DLMGRTHREADSTARTING))
-						return FALSE;
-					pThis->Event (dld, DME_CREATEDLDDIALOG);
-					break;
-			}
-		break;
-
-		case DE_QUERYNEWSECTION:	
-			pThis->RebuildServerList ();	
-			return pThis->OnQueryNewSection (dld, uInfo);
-
-		case DE_SECTIONSTARTED:
-			pThis->setNeedApplyTrafficLimit ();
-			pThis->RebuildServerList ();
-			pThis->Event (dld, DME_SECTIONSTARTED);
-		break;
-
-		case DE_ALLSTOPPEDORDONE:
-		break;
-
-		case DE_WRITEERROR:
-			dld->bAutoStart = FALSE;
-			dld->setDirty();
-		break;
-
-		case DE_REDIRECTINGOKCONTINUEOPENING:
-			pThis->Event (dld, DME_REDIRECTED);
-			pThis->Event (dld, DME_UPDATEDLDDIALOG);
-			break;
-
-		case DE_NOMIRRFOUND:
-			dld->dwFlags |= DLD_DONTUSEMIRRORS; 
-			dld->setDirty();
-			pMgr->GetDownloader ()->Set_SearchForMirrors (FALSE);
-			break;
-
-		case DE_FILESIZETOOBIG:
-			dld->bAutoStart = FALSE;
-			dld->setDirty();
-			break;
-
-		case DE_NEEDFILE:
-			return pThis->OnBeforeDownload (dld);
-
-		case DE_CONFIRMARCHIVEDETECTION:
+		switch (enEvent)
 		{
-#ifndef FDM_DLDR__RAWCODEONLY
-			UINT nRes;
-			UIThread *thr = (UIThread*) RUNTIME_CLASS (UIThread)->CreateObject ();
-			thr->set_Thread (_threadConfirmZIP, &nRes);
-			thr->CreateThread ();
-			WaitForSingleObject (thr->m_hThread, INFINITE);
-			return nRes;
-#else
-			return 0;
-#endif
+			case DE_SECTIONDONE:
+				pThis->Event (dld, DME_DOWNLOADEREVENTRECEIVED);
+				pThis->OnSectionStop (dld);
+			break;
+
+			case DE_SECTDOWNLOADING:
+				pThis->RegisterDownloadInTum (dld); 
+				pThis->Event (dld, DME_SECTIONDOWNLOADING);
+			break;
+
+			case DE_SECTIONSTOPPED:
+				pThis->OnSectionStop (dld);
+			break;
+
+			case DE_EXTERROR:	
+				switch (uInfo)
+				{
+					case DMEE_FILEWASDELETED:	
+						dld->bAutoStart = FALSE; 
+						dld->setDirty();
+						break;
+
+					case DMEE_STOPPEDORDONE: 
+						pThis->UnregisterDownloadInTum (dld);
+						if (FALSE == pThis->OnDownloadStoppedOrDone (dld))
+							return TRUE;
+						dld = NULL;	
+						break;
+
+					case DMEE_FATALERROR:
+					case DMEE_USERSTOP:
+						pThis->UnregisterDownloadInTum (dld);
+						dld->bAutoStart = FALSE;
+						dld->setDirty();
+						break;
+
+					case DMEE_FILEUPDATED:
+						pThis->Event (dld, DME_FILEUPDATED);
+						dld = NULL;	
+						break;
+
+					case DMEE_STARTING:
+						pThis->RegisterDownloadInTum (dld);
+						if (FALSE == pThis->Event (dld, DME_DLMGRTHREADSTARTING))
+							return FALSE;
+						pThis->Event (dld, DME_CREATEDLDDIALOG);
+						break;
+				}
+			break;
+
+			case DE_QUERYNEWSECTION:	
+				pThis->RebuildServerList ();	
+				return pThis->OnQueryNewSection (dld, uInfo);
+
+			case DE_SECTIONSTARTED:
+				pThis->setNeedApplyTrafficLimit ();
+				pThis->RebuildServerList ();
+				pThis->Event (dld, DME_SECTIONSTARTED);
+			break;
+
+			case DE_ALLSTOPPEDORDONE:
+			break;
+
+			case DE_WRITEERROR:
+				dld->bAutoStart = FALSE;
+				dld->setDirty();
+			break;
+
+			case DE_REDIRECTINGOKCONTINUEOPENING:
+				pThis->Event (dld, DME_REDIRECTED);
+				pThis->Event (dld, DME_UPDATEDLDDIALOG);
+				break;
+
+			case DE_NOMIRRFOUND:
+				dld->dwFlags |= DLD_DONTUSEMIRRORS; 
+				dld->setDirty();
+				pMgr->GetDownloader ()->Set_SearchForMirrors (FALSE);
+				break;
+
+			case DE_FILESIZETOOBIG:
+				dld->bAutoStart = FALSE;
+				dld->setDirty();
+				break;
+
+			case DE_NEEDFILE:
+				return pThis->OnBeforeDownload (dld);
+
+			case DE_CONFIRMARCHIVEDETECTION:
+			{
+	#ifndef FDM_DLDR__RAWCODEONLY
+				UINT nRes;
+				UIThread *thr = (UIThread*) RUNTIME_CLASS (UIThread)->CreateObject ();
+				thr->set_Thread (_threadConfirmZIP, &nRes);
+				thr->CreateThread ();
+				WaitForSingleObject (thr->m_hThread, INFINITE);
+				return nRes;
+	#else
+				return 0;
+	#endif
+			}
+
+			case DE_ARCHIVEDETECTED:
+				return pThis->OnArchiveDetected (dld, (fsArchiveRebuilder*) uInfo);
 		}
-
-		case DE_ARCHIVEDETECTED:
-			return pThis->OnArchiveDetected (dld, (fsArchiveRebuilder*) uInfo);
 	}
-
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_DownloadMgrEvents " + tstring(ex.what()));
 	}
-	catch (...) {}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_DownloadMgrEvents unknown exception");
+	}
 
 	if (dld) 
 		pThis->Event (dld, DME_DOWNLOADEREVENTRECEIVED);
@@ -359,7 +390,10 @@ void fsDownloadsMgr::ProcessDownloads()
 			continue;
 
 		if (dld->pMgr->IsBittorrent () && 
-				dld->pMgr->GetBtDownloadMgr ()->get_State () == BTDSE_QUEUED)
+			dld->pMgr->GetBtDownloadMgr ()->get_State () == BTDSE_QUEUED)
+			continue;
+
+		if (dld->pMgr->IsBittorrent () && IsDownloadSuspended(dld))
 			continue;
 
 		BOOL bAccept = FALSE, bAcceptAdditionalConnections = FALSE, bNeedCloseSomeConnections = FALSE;	
@@ -531,7 +565,17 @@ void fsDownloadsMgr::ProcessDownloads()
 
 	RebuildServerList (TRUE);
 
-	} catch (...) {}
+	} 
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::ProcessDownloads " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::ProcessDownloads unknown exception");
+	}
 
 	StopDownloads (vDldsToStop);
 	StartDownloads (vDldsToStart);
@@ -539,30 +583,39 @@ void fsDownloadsMgr::ProcessDownloads()
 
 void fsDownloadsMgr::StartDownloads(DLDS_LIST &vpDlds, BOOL )
 {
-	try {
-
-	UINT cRunning = GetRunningDownloadCount (false);
-
-	for (size_t i = 0; i < vpDlds.size (); i++)
+	try 
 	{
-		vmsDownloadSmartPtr dld = vpDlds [i];
+		UINT cRunning = GetRunningDownloadCount (false);
 
-		if (cRunning < _TumMgr.getSettings ().download.uMaxConns && cRunning < _TumMgr.getSettings ().download.uMaxTasks && cRunning < 20)	
+		for (size_t i = 0; i < vpDlds.size (); i++)
 		{
-			if (dld->pMgr->IsDone () == FALSE)
+			vmsDownloadSmartPtr dld = vpDlds [i];
+
+			if (cRunning < _TumMgr.getSettings ().download.uMaxConns && cRunning < _TumMgr.getSettings ().download.uMaxTasks && cRunning < 20)	
 			{
-				dld->pMgr->StartDownloading ();
-				cRunning ++;
+				if (dld->pMgr->IsDone () == FALSE)
+				{
+					dld->pMgr->StartDownloading ();
+					cRunning ++;
+				}
+			}
+			else
+			{
+				dld->bAutoStart = TRUE;
+				dld->setDirty();
 			}
 		}
-		else
-		{
-			dld->bAutoStart = TRUE;
-			dld->setDirty();
-		}
 	}
-
-	}catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::StartDownloads " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::StartDownloads unknown exception");
+	}
 
 	setNeedApplyTrafficLimit ();
 
@@ -571,22 +624,30 @@ void fsDownloadsMgr::StartDownloads(DLDS_LIST &vpDlds, BOOL )
 
 void fsDownloadsMgr::StopDownloads(DLDS_LIST &vDlds, BOOL bByUser)
 {
-	try {
-
-	
-	if (bByUser)
+	try 
 	{
-		for (size_t i = 0; i < vDlds.size (); i++) {
-			vDlds [i]->bAutoStart = FALSE;
-			vDlds [i]->setDirty();
+		
+		if (bByUser)
+		{
+			for (size_t i = 0; i < vDlds.size (); i++) {
+				vDlds [i]->bAutoStart = FALSE;
+				vDlds [i]->setDirty();
+			}
 		}
-	}
 
-	for (size_t i = 0; i < vDlds.size (); i++)
-		vDlds [i]->pMgr->StopDownloading ();
-
+		for (size_t i = 0; i < vDlds.size (); i++)
+			vDlds [i]->pMgr->StopDownloading ();
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::StopDownloads " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::StopDownloads unknown exception");
+	}
 
 	setNeedApplyTrafficLimit ();
 
@@ -617,13 +678,25 @@ vmsDownloadSmartPtr fsDownloadsMgr::GetDownload(size_t iIndex)
 {
 	vmsAUTOLOCKRW_READ (m_rwlDownloads);
 
-	try {
-	if (iIndex >= m_vDownloads.size ())
-		return NULL;
+	try 
+	{
+		if (iIndex >= m_vDownloads.size ())
+			return NULL;
 
-	return m_vDownloads [iIndex];
+		return m_vDownloads [iIndex];
 	}
-	catch (...) { return NULL; }
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownload " + tstring(ex.what()));
+		return NULL;
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownload unknown exception");
+		return NULL;
+	}
 }
 
 BOOL fsDownloadsMgr::LoadDownloads()
@@ -631,8 +704,6 @@ BOOL fsDownloadsMgr::LoadDownloads()
 	vmsAUTOLOCKRW_WRITE (m_rwlDownloads);
 	vmsAUTOLOCKSECTION (m_csDeletedDownloads);
 
-	
-	
 	if (!m_saver.Load (m_vDownloads, "downloads", FALSE))
 		return FALSE;
 
@@ -739,8 +810,8 @@ BOOL fsDownloadsMgr::Save()
 
 	BOOL b = FALSE;
 
-	try {
-
+	try 
+	{
 		
 		vmsAUTOLOCKRW_READ (m_rwlDownloads);
 		if (FALSE == m_saver.Save (m_vDownloads, "downloads"))
@@ -764,7 +835,17 @@ BOOL fsDownloadsMgr::Save()
 		if (FALSE == _BT.SaveState ())
 			b = FALSE;
 
-	}catch (...){}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::Save " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::Save unknown exception");
+	}
 
 	return b;
 }
@@ -788,10 +869,22 @@ int fsDownloadsMgr::DeleteDownloads(DLDS_LIST &vDlds, BOOL bByUser, BOOL bDontCo
 {
 	size_t cMaxDlds = 40;
 
-	try {
+	try 
+	{
 		if (vDlds [0]->pfnDownloadEventsFunc)
 			cMaxDlds = 20;
-	} catch (...) {}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDownloads " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDownloads unknown exception");
+	}
+
 	
 	
 	if (vDlds.size () < cMaxDlds)
@@ -812,62 +905,82 @@ DWORD WINAPI fsDownloadsMgr::_threadDeleteDownloads(LPVOID lp)
 {
 	threadDeleteDownloadsParams *pParams = (threadDeleteDownloadsParams*)lp;
 
-	try {
-
-	
-	size_t i = 0;
-	for (i = 0; i < pParams->vDlds.size (); i++)
+	try 
 	{
-		vmsDownloadMgrSmartPtr mgr = pParams->vDlds [i]->pMgr;
+		
+		size_t i = 0;
+		for (i = 0; i < pParams->vDlds.size (); i++)
+		{
+			vmsDownloadMgrSmartPtr mgr = pParams->vDlds [i]->pMgr;
 
-		if (mgr->GetDownloadMgr ())
-		{
-			mgr->GetDownloadMgr ()->SetEventFunc (NULL, 0);
-			mgr->GetDownloadMgr ()->SetEventDescFunc (NULL, 0);
-		}
-		else if (mgr->GetBtDownloadMgr ())
-		{
-			mgr->GetBtDownloadMgr ()->SetEventsHandler (NULL, 0);
-		}
-		else if (mgr->GetTpDownloadMgr ())
-		{
-			mgr->GetTpDownloadMgr ()->SetEventsHandler (NULL, 0);
-			mgr->GetTpDownloadMgr ()->SetEventDescFunc (NULL, 0);
+			if (mgr->GetDownloadMgr ())
+			{
+				mgr->GetDownloadMgr ()->SetEventFunc (NULL, 0);
+				mgr->GetDownloadMgr ()->SetEventDescFunc (NULL, 0);
+			}
+			else if (mgr->GetBtDownloadMgr ())
+			{
+				mgr->GetBtDownloadMgr ()->SetEventsHandler (NULL, 0);
+			}
+			else if (mgr->GetTpDownloadMgr ())
+			{
+				mgr->GetTpDownloadMgr ()->SetEventsHandler (NULL, 0);
+				mgr->GetTpDownloadMgr ()->SetEventDescFunc (NULL, 0);
+			}
+
+			mgr->StopDownloading ();
 		}
 
-		mgr->StopDownloading ();
+		
+		for (i = 0; i < pParams->vDlds.size (); i++)
+		{
+			vmsDownloadSmartPtr dld = pParams->vDlds [i];
+			while (dld->pMgr->IsRunning ())
+			{
+	#ifdef ADDITIONAL_MSG_LOOPS_REQUIRED
+				MSG msg;
+				while (PeekMessage (&msg, 0, 0, 0, PM_REMOVE))
+					DispatchMessage (&msg);
+	#endif
+
+				Sleep (10);
+			}
+		}
+
+	#ifdef ADDITIONAL_MSG_LOOPS_REQUIRED
+		MSG msg;
+		while (PeekMessage (&msg, 0, 0, 0, PM_REMOVE))
+			DispatchMessage (&msg);
+	#endif
+
 	}
-
-	
-	for (i = 0; i < pParams->vDlds.size (); i++)
+	catch (const std::exception& ex)
 	{
-		vmsDownloadSmartPtr dld = pParams->vDlds [i];
-		while (dld->pMgr->IsRunning ())
-		{
-#ifdef ADDITIONAL_MSG_LOOPS_REQUIRED
-			MSG msg;
-			while (PeekMessage (&msg, 0, 0, 0, PM_REMOVE))
-				DispatchMessage (&msg);
-#endif
-
-			Sleep (10);
-		}
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_threadDeleteDownloads " + tstring(ex.what()));
 	}
-
-#ifdef ADDITIONAL_MSG_LOOPS_REQUIRED
-	MSG msg;
-	while (PeekMessage (&msg, 0, 0, 0, PM_REMOVE))
-		DispatchMessage (&msg);
-#endif
-
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_threadDeleteDownloads unknown exception");
 	}
-	catch (...) {}
 
 	pParams->pthis->ApplyDDRs (pParams->vDlds, pParams->vDldsDDRs, FALSE);
 
-	try {
+	try 
+	{
 		delete pParams;	
-	}catch (...) {}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_threadDeleteDownloads " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_threadDeleteDownloads unknown exception");
+	}
 
 	return 0;
 }
@@ -922,6 +1035,7 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 
 	pThis->m_vSummSpeed.clear ();
 
+	fsTicksMgr lastDldsProc;
 	while (pThis->m_bShuttingDown == FALSE)
 	{
 		if (ticksNow - lastSpeedMeasure >= 5000)	
@@ -940,13 +1054,24 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 			pThis->m_rwlDownloads.AcquireReaderLock ();
 
 			
-			try {
+			try 
+			{
 				for (int i = pThis->m_vDownloads.size () - 1; i >= 0; i--) {
 					summ += pThis->m_vDownloads [i]->pMgr->GetSpeed ();
 					if (pThis->m_vDownloads [i]->pMgr->IsBittorrent () && pThis->m_vDownloads [i]->pMgr->IsRunning ())
 						cBtDownloads++;
 				}
-			}catch (...) {}
+			}
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsDownloadsMgr::_threadDownloadsMgr " + tstring(ex.what()));
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsDownloadsMgr::_threadDownloadsMgr unknown exception");
+			}
 
 			pThis->m_rwlDownloads.ReleaseReaderLock ();
 
@@ -976,19 +1101,30 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 
 		pThis->m_rwlDownloads.AcquireReaderLock ();
 
-		try{
-		for (int i = pThis->m_vDownloads.size () - 1; i >= 0; i--)
+		try
 		{
-			fsDownload *pDld = pThis->m_vDownloads [i];
-			vmsDownloadMgrEx *pDldMgr = pDld->pMgr;
-			if (pDldMgr->IsRunning () || pDld->bAutoStart)
+			for (int i = pThis->m_vDownloads.size () - 1; i >= 0; i--)
 			{
-				pThis->m_totalProgess.uDownloaded += pDldMgr->GetDownloadedBytesCount ();
-				pThis->m_totalProgess.uTotalSize += pDldMgr->GetLDFileSize ();
-				pThis->m_totalProgess.uSpeed += pDldMgr->GetSpeed ();
+				fsDownload *pDld = pThis->m_vDownloads [i];
+				vmsDownloadMgrEx *pDldMgr = pDld->pMgr;
+				if (pDldMgr->IsRunning () || pDld->bAutoStart)
+				{
+					pThis->m_totalProgess.uDownloaded += pDldMgr->GetDownloadedBytesCount ();
+					pThis->m_totalProgess.uTotalSize += pDldMgr->GetLDFileSize ();
+					pThis->m_totalProgess.uSpeed += pDldMgr->GetSpeed ();
+				}
 			}
 		}
-		}catch (...){}
+		catch (const std::exception& ex)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("fsDownloadsMgr::_threadDownloadsMgr " + tstring(ex.what()));
+		}
+		catch (...)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("fsDownloadsMgr::_threadDownloadsMgr unknown exception");
+		}
 
 		pThis->m_rwlDownloads.ReleaseReaderLock ();
 
@@ -1003,6 +1139,7 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 			{
 				bNeedPD = true;
 				pThis->m_ticksNeedStartProcessDownloads.m_dwTicks = 0;
+				lastDldsProc.Now();
 			}
 			if (pThis->m_ticksNeedStartApplyTrafficLimit.m_dwTicks && pThis->m_ticksNeedStartApplyTrafficLimit <= ticksNow)
 			{
@@ -1013,6 +1150,16 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 			{
 				bNeedCNAD = true;
 				pThis->m_ticksNeedCheckNoActiveDownloads.m_dwTicks = 0;
+			}
+			if (!pThis->m_dldErrorsMap.empty())
+			{
+				DWORD now = GetTickCount();
+				if (now - lastDldsProc.m_dwTicks > 10 * 10000)
+				{
+					bNeedPD = true;
+					pThis->m_ticksNeedStartProcessDownloads.m_dwTicks = 0;
+					lastDldsProc.Now();
+				}
 			}
 			LeaveCriticalSection (&pThis->m_csNeedStartXXXX);
 
@@ -1041,7 +1188,8 @@ void fsDownloadsMgr::RebuildServerList(BOOL bUpdateSiteList)
 	vmsCriticalSectionAutoLock csalSites;
 	_SitesMgr.LockList (csalSites);
 
-	try {
+	try 
+	{
 
 	int i = 0;
 	for (i = 0; i < _SitesMgr.GetSiteCount (); i++) {
@@ -1131,9 +1279,19 @@ void fsDownloadsMgr::RebuildServerList(BOOL bUpdateSiteList)
 	vmsAUTOLOCKRW_READ_UNLOCK (m_rwlDownloads);
 
 	}
-	catch (...) { }
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::RebuildServerList " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::RebuildServerList unknown exception");
+	}
 
-	try {
+	try 
+	{
 		
 		if (bUpdateSiteList)
 		{
@@ -1141,7 +1299,16 @@ void fsDownloadsMgr::RebuildServerList(BOOL bUpdateSiteList)
 				_SitesMgr.SiteUpdated (_SitesMgr.GetSite (i));
 		}
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::RebuildServerList " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::RebuildServerList unknown exception");
+	}
 }
 BOOL fsDownloadsMgr::OnQueryNewSection(vmsDownloadSmartPtr dld, UINT nUsingMirror)
 {
@@ -1196,12 +1363,21 @@ UINT fsDownloadsMgr::GetAmountConnections()
 	vmsCriticalSectionAutoLock csal;
 	_SitesMgr.LockList (csal);
 
-	try {
-
-	for (int i = _SitesMgr.GetSiteCount () - 1; i >= 0; i--)
-		nConns += _SitesMgr.GetSite (i)->cConnsNow;
-
-	}catch (...) {}
+	try 
+	{
+		for (int i = _SitesMgr.GetSiteCount () - 1; i >= 0; i--)
+			nConns += _SitesMgr.GetSite (i)->cConnsNow;
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetAmountConnections " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetAmountConnections unknown exception");
+	}
 
 	return nConns;
 }
@@ -1261,16 +1437,24 @@ void fsDownloadsMgr::StartAllDownloads(BOOL bByUser)
 
 	DLDS_LIST vDlds;
 
-	try {
-
-	for (size_t i = 0; i < m_vDownloads.size (); i++)
+	try 
 	{
-		if (m_vDownloads [i]->pMgr->IsDone () == FALSE)
-			vDlds.push_back (m_vDownloads [i]);
+		for (size_t i = 0; i < m_vDownloads.size (); i++)
+		{
+			if (m_vDownloads [i]->pMgr->IsDone () == FALSE)
+				vDlds.push_back (m_vDownloads [i]);
+		}
 	}
-
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::StartAllDownloads " + tstring(ex.what()));
 	}
-	catch (...) {}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::StartAllDownloads unknown exception");
+	}
 
 	vmsAUTOLOCKRW_READ_UNLOCK (m_rwlDownloads);
 
@@ -1284,14 +1468,21 @@ void fsDownloadsMgr::StopAllDownloads(BOOL bByUser)
 
 	DLDS_LIST vDlds;
 
-	try {
-
-	for (size_t i = 0; i < m_vDownloads.size (); i++)
-		vDlds.push_back (m_vDownloads [i]);
-
+	try 
+	{
+		for (size_t i = 0; i < m_vDownloads.size (); i++)
+			vDlds.push_back (m_vDownloads [i]);
 	}
-	catch (...) {}
-
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::StopAllDownloads " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::StopAllDownloads unknown exception");
+	}
 	vmsAUTOLOCKRW_READ_UNLOCK (m_rwlDownloads);
 
 	StopDownloads (vDlds, bByUser);
@@ -1323,12 +1514,22 @@ BOOL fsDownloadsMgr::IsRunning()
 {
 	vmsAUTOLOCKRW_READ (m_rwlDownloads);
 
-	try {
-	for (int i = m_vDownloads.size () - 1; i >= 0; i--)
-		if (m_vDownloads [i]->pMgr->IsRunning ())
-			return TRUE;
+	try 
+	{
+		for (int i = m_vDownloads.size () - 1; i >= 0; i--)
+			if (m_vDownloads [i]->pMgr->IsRunning ())
+				return TRUE;
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::IsRunning " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::IsRunning unknown exception");
+	}
 
 	return FALSE;
 }
@@ -1343,14 +1544,25 @@ vmsDownloadSmartPtr fsDownloadsMgr::GetDownloadByID(UINT nID)
 {
 	vmsAUTOLOCKRW_READ (m_rwlDownloads);
 
-	try{
-	for (int i = m_vDownloads.size () - 1; i >= 0; i--)
+	try
 	{
-		vmsDownloadSmartPtr dld = m_vDownloads [i];
-		if (dld->nID == nID)
-			return dld;
+		for (int i = m_vDownloads.size () - 1; i >= 0; i--)
+		{
+			vmsDownloadSmartPtr dld = m_vDownloads [i];
+			if (dld->nID == nID)
+				return dld;
+		}
 	}
-	}catch(...){}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByID " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByID unknown exception");
+	}
 
 	return NULL;
 }
@@ -1435,8 +1647,8 @@ int fsDownloadsMgr::GetRunningDownloadCount(bool bIncludeBtSeeds)
 
 	int cRunning = 0;
 
-	try {
-
+	try 
+	{
 		for (size_t i = 0; i < m_vDownloads.size (); i++)
 		{
 			if (m_vDownloads [i]->pMgr->IsRunning ())
@@ -1448,7 +1660,16 @@ int fsDownloadsMgr::GetRunningDownloadCount(bool bIncludeBtSeeds)
 			}
 		}
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetRunningDownloadCount " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetRunningDownloadCount unknown exception");
+	}
 
 	return cRunning;
 }
@@ -1507,85 +1728,93 @@ int fsDownloadsMgr::DeleteDownloads2(DLDS_LIST *vDlds, BOOL bByUser, BOOL bDontC
 
 	DeletedDownloads_UseTmpList (TRUE);
 
-	try {
-
-	std::vector <int> vIndexes;
-	findDownloadsIndexes (*vDlds, m_vDownloads, vIndexes);
-
-	for (i = 0; i < (UINT)vDlds->size (); i++)
+	try 
 	{
-		
-		
-		if (pbNeedStop && *pbNeedStop)
-			break;
+		std::vector <int> vIndexes;
+		findDownloadsIndexes (*vDlds, m_vDownloads, vIndexes);
 
-		vmsDownloadSmartPtr dld = vDlds->at (i);
-
-		int iIndex = vIndexes [i];
-		if (iIndex == -1) 
-			continue;
-
-		if (dld->pdlg)
-			Event (dld, DME_CLOSEDLDDIALOG);
-
-		if (piProgress)
-			*piProgress = (int) ((double)i / vDlds->size () * 100);
-
-		if (dld->pMgr->GetDownloadMgr ())
-		{
-			dld->pMgr->GetDownloadMgr ()->SetEventDescFunc (NULL, 0);
-			dld->pMgr->GetDownloadMgr ()->SetEventFunc (NULL, 0);
-		}
-		else if (dld->pMgr->GetBtDownloadMgr ())
-		{
-			dld->pMgr->GetBtDownloadMgr ()->SetEventsHandler (NULL, 0);
-		}
-		else if (dld->pMgr->GetTpDownloadMgr ())
-		{
-			dld->pMgr->GetTpDownloadMgr ()->SetEventsHandler (NULL, 0);
-			dld->pMgr->GetTpDownloadMgr ()->SetEventDescFunc (NULL, 0);
-		}
-
-		Event (dld, DME_DOWNLOADWILLBEDELETED);
-		
-		m_vDownloads [iIndex] = dldFake;
-		dld->pGroup->cDownloads--;
-
-		dld->dwFlags |= DLD_WAS_DELETED;
-		Event (dld, DME_DOWNLOADWASDELETEDFROMLIST);
-		dld->pfnDownloadEventsFunc = NULL;
-
-		UnregisterDownloadInTum (dld);
-
-		fsDeleteDownloadReaction enDDR;
-
-		BOOL bDone = dld->pMgr->IsDone ();
-
-		if (FALSE == bBypassBin && 
-			(m_bBypassBinForCompletedDownloads == FALSE || bDone == FALSE))
+		for (i = 0; i < (UINT)vDlds->size (); i++)
 		{
 			
-			dld = PutDownloadToDeleted (dld);
-			enDDR = m_enDDR; 
-		}
-		else
-		{
 			
-			Event (dld, DME_DLDWILLBEFULLYDELETED);
-			if ((dld->dwFlags & DLD_DONTPUTTOHISTORY) == 0 && bDone == FALSE)
-				m_histmgr.AddToHistory (dld);
-			enDDR = vDldsDDRs [i];
-		}
-		
-		if (dld)
-		{
-			pThreadParams->vDlds.push_back (dld);
-			pThreadParams->vDldsDDRs.push_back (enDDR);
-		}
-	}
+			if (pbNeedStop && *pbNeedStop)
+				break;
 
+			vmsDownloadSmartPtr dld = vDlds->at (i);
+
+			int iIndex = vIndexes [i];
+			if (iIndex == -1) 
+				continue;
+
+			if (dld->pdlg)
+				Event (dld, DME_CLOSEDLDDIALOG);
+
+			if (piProgress)
+				*piProgress = (int) ((double)i / vDlds->size () * 100);
+
+			if (dld->pMgr->GetDownloadMgr ())
+			{
+				dld->pMgr->GetDownloadMgr ()->SetEventDescFunc (NULL, 0);
+				dld->pMgr->GetDownloadMgr ()->SetEventFunc (NULL, 0);
+			}
+			else if (dld->pMgr->GetBtDownloadMgr ())
+			{
+				dld->pMgr->GetBtDownloadMgr ()->SetEventsHandler (NULL, 0);
+			}
+			else if (dld->pMgr->GetTpDownloadMgr ())
+			{
+				dld->pMgr->GetTpDownloadMgr ()->SetEventsHandler (NULL, 0);
+				dld->pMgr->GetTpDownloadMgr ()->SetEventDescFunc (NULL, 0);
+			}
+
+			Event (dld, DME_DOWNLOADWILLBEDELETED);
+			
+			m_vDownloads [iIndex] = dldFake;
+			dld->pGroup->cDownloads--;
+
+			dld->dwFlags |= DLD_WAS_DELETED;
+			Event (dld, DME_DOWNLOADWASDELETEDFROMLIST);
+			dld->pfnDownloadEventsFunc = NULL;
+
+			UnregisterDownloadInTum (dld);
+
+			fsDeleteDownloadReaction enDDR;
+
+			BOOL bDone = dld->pMgr->IsDone ();
+
+			if (FALSE == bBypassBin && 
+				(m_bBypassBinForCompletedDownloads == FALSE || bDone == FALSE))
+			{
+				
+				dld = PutDownloadToDeleted (dld);
+				enDDR = m_enDDR; 
+			}
+			else
+			{
+				
+				Event (dld, DME_DLDWILLBEFULLYDELETED);
+				if ((dld->dwFlags & DLD_DONTPUTTOHISTORY) == 0 && bDone == FALSE)
+					m_histmgr.AddToHistory (dld);
+				enDDR = vDldsDDRs [i];
+			}
+		
+			if (dld)
+			{
+				pThreadParams->vDlds.push_back (dld);
+				pThreadParams->vDldsDDRs.push_back (enDDR);
+			}
+		}
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDownloads2 " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDownloads2 unknown exception");
+	}
 
 	int cDeleted = i;
 
@@ -1761,9 +1990,6 @@ BOOL fsDownloadsMgr::PerformVirusCheck(vmsDownloadSmartPtr dld, BOOL bCheckExtRe
 	}
 	if (i == nFiles)
 		return TRUE; 
-
-	
-	
 
 	Event (dld, LS (L_LAUNCHAVIR), EDT_INQUIRY);
 	
@@ -2121,7 +2347,7 @@ int fsDownloadsMgr::DeleteDeletedDownloads2(DLDS_LIST *vDlds, BOOL bNoCancel, BO
 
 	threadDeleteDownloadsParams *pThreadParams = new threadDeleteDownloadsParams;
 	pThreadParams->pthis = this;
-
+	
 	vmsDownloadSmartPtr dldFake;
 	Download_CreateInstance (dldFake);
 	dldFake->pMgr->GetDownloadMgr ()->CreateByUrl ("http://localhost/", TRUE);
@@ -2130,44 +2356,53 @@ int fsDownloadsMgr::DeleteDeletedDownloads2(DLDS_LIST *vDlds, BOOL bNoCancel, BO
 
 	m_bDeletingDeletedNow = TRUE;
 
-	try {
-
-	ASSERT (m_vDeletedDownloads.size () != 0);
-
-	std::vector <int> vIndexes;
-	findDownloadsIndexes (*vDlds, m_vDeletedDownloads, vIndexes);
-
-	for (i = 0; i < (UINT)vDlds->size (); i++)
+	try 
 	{
-		
-		
-		if (pbNeedStop && *pbNeedStop)
-			break;
+		ASSERT (m_vDeletedDownloads.size () != 0);
 
-		vmsDownloadSmartPtr dld = vDlds->at (i);
+		std::vector <int> vIndexes;
+		findDownloadsIndexes (*vDlds, m_vDeletedDownloads, vIndexes);
 
-		int iIndex = vIndexes [i];
-		if (iIndex == -1)
-			continue;
-
-		if (piProgress)
-			*piProgress = (int) ((double)i / vDlds->size () * 100);
-
-		Event (dld, DME_DLDWILLBEFULLYDELETED);
-		if ((dld->dwFlags & DLD_DONTPUTTOHISTORY) == 0 &&
-				dld->pMgr->IsDone () == FALSE)
-			m_histmgr.AddToHistory (dld);
-
-		m_vDeletedDownloads [iIndex] = dldFake;
-
-		Event (dld, DME_DLDREMOVEDFROMDELETED);
+		for (i = 0; i < (UINT)vDlds->size (); i++)
+		{
 			
-		pThreadParams->vDlds.push_back (dld);
-		pThreadParams->vDldsDDRs.push_back (vDldsDDRs [i]);
-	}
+			
+			if (pbNeedStop && *pbNeedStop)
+				break;
+
+			vmsDownloadSmartPtr dld = vDlds->at (i);
+
+			int iIndex = vIndexes [i];
+			if (iIndex == -1)
+				continue;
+
+			if (piProgress)
+				*piProgress = (int) ((double)i / vDlds->size () * 100);
+
+			Event (dld, DME_DLDWILLBEFULLYDELETED);
+			if ((dld->dwFlags & DLD_DONTPUTTOHISTORY) == 0 &&
+					dld->pMgr->IsDone () == FALSE)
+				m_histmgr.AddToHistory (dld);
+
+			m_vDeletedDownloads [iIndex] = dldFake;
+
+			Event (dld, DME_DLDREMOVEDFROMDELETED);
+			
+			pThreadParams->vDlds.push_back (dld);
+			pThreadParams->vDldsDDRs.push_back (vDldsDDRs [i]);
+		}
 
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDeletedDownloads2 " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDeletedDownloads2 unknown exception");
+	}
 
 	int cDeleted = i;
 
@@ -2285,44 +2520,52 @@ int fsDownloadsMgr::RestoreDownloads2(DLDS_LIST* vDlds, BOOL *pbNeedStop, int *p
 
 	try {
 
-	ASSERT (m_vDeletedDownloads.size () != 0);
+		ASSERT (m_vDeletedDownloads.size () != 0);
 
-	std::vector <int> vIndexes;
-	findDownloadsIndexes (*vDlds, m_vDeletedDownloads, vIndexes);
+		std::vector <int> vIndexes;
+		findDownloadsIndexes (*vDlds, m_vDeletedDownloads, vIndexes);
 
-	for (i = 0; i < (UINT)vDlds->size (); i++)
+		for (i = 0; i < (UINT)vDlds->size (); i++)
+		{
+			
+			
+			if (pbNeedStop && *pbNeedStop)
+				break;
+
+			vmsDownloadSmartPtr dld = vDlds->at (i);
+
+			int iIndex = vIndexes [i];
+			if (iIndex == -1)
+				continue;
+
+			if (dld->pGroup->bAboutToBeDeleted)
+				dld->pGroup = _DldsGrps.FindGroup (GRP_OTHER_ID);
+
+			m_vDeletedDownloads [iIndex] = dldFake;
+			Event (dld, DME_DLDREMOVEDFROMDELETED);
+
+			Add (dld, TRUE);
+			if (dld->dwFlags & DLD_FLASH_VIDEO)
+				_pwndFVDownloads->AddDownload (dld, FALSE);
+			if (_pwndTorrents && dld->isTorrent ())
+				_pwndTorrents->AddDownload (dld, FALSE);
+
+			Event (dld, DME_DLDRESTORED);
+
+			if (piProgress)
+				*piProgress = (int) ((double)i / vDlds->size () * 100);
+		}
+	}
+	catch (const std::exception& ex)
 	{
-		
-		
-		if (pbNeedStop && *pbNeedStop)
-			break;
-
-		vmsDownloadSmartPtr dld = vDlds->at (i);
-
-		int iIndex = vIndexes [i];
-		if (iIndex == -1)
-			continue;
-
-		if (dld->pGroup->bAboutToBeDeleted)
-			dld->pGroup = _DldsGrps.FindGroup (GRP_OTHER_ID);
-
-		m_vDeletedDownloads [iIndex] = dldFake;
-		Event (dld, DME_DLDREMOVEDFROMDELETED);
-
-		Add (dld, TRUE);
-		if (dld->dwFlags & DLD_FLASH_VIDEO)
-			_pwndFVDownloads->AddDownload (dld, FALSE);
-		if (_pwndTorrents && dld->isTorrent ())
-			_pwndTorrents->AddDownload (dld, FALSE);
-
-		Event (dld, DME_DLDRESTORED);
-
-		if (piProgress)
-			*piProgress = (int) ((double)i / vDlds->size () * 100);
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::RestoreDownloads2 " + tstring(ex.what()));
 	}
-
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::RestoreDownloads2 unknown exception");
 	}
-	catch (...) {}
 
 	int cRestored = i;
 
@@ -2608,6 +2851,10 @@ BOOL fsDownloadsMgr::LoadStateInformation()
 	DWORD dwRequiredSize = ::GetFileSize(hFile, NULL);
 
 	fsStateInfoFileHdr hdr;
+
+	if (dwRequiredSize < sizeof (hdr))
+		return FALSE;
+
 	if (FALSE == ReadFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
 	{
 		CloseHandle (hFile);
@@ -3442,6 +3689,21 @@ void fsDownloadsMgr::_BtSessionEventsHandler(vmsBtSession *, vmsBtSessionEvent *
 
 	std::string strTmp;
 
+	if (ev->enType != BTSET_TRACKER_ERROR)
+	{
+		std::map<vmsDownloadSmartPtr, vmsDldErrorStamp>::iterator iter = 
+			pthis->m_dldErrorsMap.find(dld);
+		if (iter != pthis->m_dldErrorsMap.end())
+		{
+			vmsDownloadMgrSmartPtr ptr = iter->first->pMgr;
+			pthis->m_dldErrorsMap.erase(iter);
+			if (ptr != NULL)
+			{
+				ptr->GetBtDownloadMgr()->SetStateError(BTDES_NO_ERROR);
+			}
+		}
+	}
+
 	switch (ev->enType)
 	{
 	case BTSET_FILE_ERROR:
@@ -3464,35 +3726,63 @@ void fsDownloadsMgr::_BtSessionEventsHandler(vmsBtSession *, vmsBtSessionEvent *
 		break;
 
 	case BTSET_TRACKER_ERROR:
-		if (dld->pMgr->IsRunning () == FALSE && dld->pMgr->GetBtDownloadMgr ()->isSeeding () == FALSE)
-			return;
-		strTmp = LS (L_BT_TRACKER_ERROR); strTmp += " ("; strTmp += ev->tracker.pszUrl; strTmp += ")";
-		pthis->Event (dld, strTmp.c_str (), EDT_RESPONSE_E);
-		if (ev->pszMsg)
 		{
-			LPCSTR pszMsg = strchr (ev->pszMsg, '"');
-			if (pszMsg)
-				pszMsg = strchr (pszMsg+1, '"');
-			if (pszMsg)
-				pszMsg += 2;
-			if (pszMsg == NULL)
-				pszMsg = ev->pszMsg;
-			pthis->EventEx (dld, pszMsg, EDT_RESPONSE_E, 70);
-			dld->pMgr->GetBtDownloadMgr ()->setLastTracker (ev->tracker.pszUrl);
-			strTmp = LS (L_FAILED);
-			strTmp += ": "; strTmp += pszMsg;
-			dld->pMgr->GetBtDownloadMgr ()->setLastTrackerStatus (strTmp.c_str ());
+			if (dld->pMgr->IsRunning () == FALSE && dld->pMgr->GetBtDownloadMgr ()->isSeeding () == FALSE)
+				return;
+			strTmp = LS (L_BT_TRACKER_ERROR); strTmp += " ("; strTmp += ev->tracker.pszUrl; strTmp += ")";
+			pthis->Event (dld, strTmp.c_str (), EDT_RESPONSE_E);
+			if (ev->pszMsg)
+			{
+				LPCSTR pszMsg = strchr (ev->pszMsg, '"');
+				if (pszMsg)
+					pszMsg = strchr (pszMsg+1, '"');
+				if (pszMsg)
+					pszMsg += 2;
+				if (pszMsg == NULL)
+					pszMsg = ev->pszMsg;
+				pthis->EventEx (dld, pszMsg, EDT_RESPONSE_E, 70);
+				dld->pMgr->GetBtDownloadMgr ()->setLastTracker (ev->tracker.pszUrl);
+				strTmp = LS (L_FAILED);
+				strTmp += ": "; strTmp += pszMsg;
+				dld->pMgr->GetBtDownloadMgr ()->setLastTrackerStatus (strTmp.c_str ());
+			}
+			char sz [1000];
+			int nNext; nNext = dld->pMgr->GetBtDownloadMgr ()->get_NextAnnounceInterval (ev->tracker.pszUrl);
+			if (nNext)
+			{
+				sprintf (sz, LS (L_NEXT_CONNECT_WITH_TRACKER_IN), nNext);
+				
+				
+			}
+			switch (ev->tracker.err.nHttpStatusCode)
+			{
+			case 500:
+				{
+					vmsBtDownloadManager* btMgr = dld->pMgr->GetBtDownloadMgr();
+					if (btMgr)
+					{
+						btMgr->SetStateError(BTDES_SERVER_INTERNAL_ERROR_500);
+					}
+					vmsDldErrorStamp stamp(BTDES_SERVER_INTERNAL_ERROR_500);
+					pthis->m_dldErrorsMap[dld] = stamp;
+				}
+				break;
+			case 400:
+				{
+					vmsBtDownloadManager* btMgr = dld->pMgr->GetBtDownloadMgr();
+					if (btMgr)
+					{
+						btMgr->SetStateError(BTDES_BAD_REQUEST_400);
+					}
+					vmsDldErrorStamp stamp(BTDES_BAD_REQUEST_400);
+					pthis->m_dldErrorsMap[dld] = stamp;
+				}
+				break;
+			default:
+				break;
+			}
+			break;
 		}
-		char sz [1000];
-		int nNext; nNext = dld->pMgr->GetBtDownloadMgr ()->get_NextAnnounceInterval (ev->tracker.pszUrl);
-		if (nNext)
-		{
-			sprintf (sz, LS (L_NEXT_CONNECT_WITH_TRACKER_IN), nNext);
-			
-			
-		}
-		break;
-
 	case BTSET_TRACKER_REPLY:
 		if (dld->pMgr->IsRunning () == FALSE && dld->pMgr->GetBtDownloadMgr ()->isSeeding () == FALSE)
 			return;
@@ -3534,13 +3824,24 @@ vmsDownloadSmartPtr fsDownloadsMgr::GetDownloadByBtDownloadMgr(vmsBtDownloadMana
 
 	ASSERT (pMgr != NULL);
 
-	try {
+	try 
+	{
 		for (size_t i = 0; i < m_vDownloads.size (); i++)
 		{
 			if (m_vDownloads [i]->pMgr->GetBtDownloadMgr () == pMgr)
 				return m_vDownloads [i];
 		}
-	}catch (...){}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByBtDownloadMgr " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByBtDownloadMgr unknown exception");
+	}
 
 	return NULL;
 }
@@ -3549,13 +3850,24 @@ vmsDownloadSmartPtr fsDownloadsMgr::GetDownloadByTpDownloadMgr(vmsTpDownloadMgr 
 {
 	ASSERT (pMgr != NULL);
 
-	try {
+	try 
+	{
 		for (size_t i = 0; i < m_vDownloads.size (); i++)
 		{
 			if (m_vDownloads [i]->pMgr->GetTpDownloadMgr () == pMgr)
 				return m_vDownloads [i];
 		}
-	}catch (...){}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByTpDownloadMgr " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByTpDownloadMgr unknown exception");
+	}
 
 	return NULL;
 }
@@ -3566,14 +3878,25 @@ vmsDownloadSmartPtr fsDownloadsMgr::FindDownloadByBtDownload(vmsBtDownload *pDld
 
 	ASSERT (pDld != NULL);
 
-	try {
+	try 
+	{
 		for (size_t i = 0; i < m_vDownloads.size (); i++)
 		{
 			if (m_vDownloads [i]->pMgr->GetBtDownloadMgr () != NULL &&
 					m_vDownloads [i]->pMgr->GetBtDownloadMgr ()->get_BtDownload () == pDld)
 				return m_vDownloads [i];
 		}
-	}catch (...){}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::FindDownloadByBtDownload " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::FindDownloadByBtDownload unknown exception");
+	}
 
 	return NULL;
 }
@@ -3666,8 +3989,8 @@ DWORD fsDownloadsMgr::_TpDownloadManagerEventHandler(vmsTpDownloadMgr *pMgr, fsD
 	if (dld == NULL)
 		return TRUE;
 
-	try {
-
+	try 
+	{
 		switch (enEvent)
 		{
 			case DE_EXTERROR:	
@@ -3705,7 +4028,16 @@ DWORD fsDownloadsMgr::_TpDownloadManagerEventHandler(vmsTpDownloadMgr *pMgr, fsD
 		}
 
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_TpDownloadManagerEventHandler " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_TpDownloadManagerEventHandler unknown exception");
+	}
 
 	if (dld) 
 		pThis->Event (dld, DME_DOWNLOADEREVENTRECEIVED);
@@ -3715,17 +4047,25 @@ DWORD fsDownloadsMgr::_TpDownloadManagerEventHandler(vmsTpDownloadMgr *pMgr, fsD
 
 void fsDownloadsMgr::_TpDownloadManagerEventDesc(vmsTpDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCSTR pszEvent, LPVOID lp)
 {
-	try {
-
+	try 
+	{
 		fsDownloadsMgr* pThis = (fsDownloadsMgr*) lp;
 		vmsDownloadSmartPtr dld = pThis->GetDownloadByTpDownloadMgr (pMgr);
 		if (dld == NULL)
 			return;
 
 		pThis->OnDownloadDescEventRcvd (dld, enType, pszEvent);
-
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_TpDownloadManagerEventDesc " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::_TpDownloadManagerEventDesc unknown exception");
+	}
 }
 
 BOOL fsDownloadsMgr::OnDownloadStoppedOrDone(vmsDownloadSmartPtr dld)
@@ -3855,32 +4195,44 @@ BOOL fsDownloadsMgr::OnDownloadStoppedOrDone(vmsDownloadSmartPtr dld)
 
 void fsDownloadsMgr::OnDownloadDescEventRcvd(vmsDownloadSmartPtr dld, fsDownloadMgr_EventDescType enType, LPCSTR pszEvent)
 {
-	try {
+	try 
+	{
+		COLORREF clrBg, clrText;
+		int iImage;
 
-	COLORREF clrBg, clrText;
-	int iImage;
+		GetEventColors (enType, clrText, clrBg, iImage);
 
-	GetEventColors (enType, clrText, clrBg, iImage);
+		fsDownloadEvents event;
+		SYSTEMTIME time;
+		GetLocalTime (&time);
 
-	fsDownloadEvents event;
-	SYSTEMTIME time;
-	GetLocalTime (&time);
+		event.clrBg = clrBg;
+		event.clrText = clrText;
+		event.strEvent = pszEvent;
+		event.iImage = iImage;
+		SystemTimeToFileTime (&time, &event.timeEvent);
 
-	event.clrBg = clrBg;
-	event.clrText = clrText;
-	event.strEvent = pszEvent;
-	event.iImage = iImage;
-	SystemTimeToFileTime (&time, &event.timeEvent);
+		dld->vEvents.add (event);	
 
-	dld->vEvents.add (event);	
+		if (enType ==  EDT_RESPONSE_E)
+			dld->tstrLastErrMsg = pszEvent;
 
-	if (IsStoringLogTurnedOn())
-		dld->setDirty();
+		if (IsStoringLogTurnedOn())
+			dld->setDirty();
 
-	
-	Event (dld, DME_EVENTDESCRIPRIONRECEIVED);
-
-	}catch (...) {}
+		
+		Event (dld, DME_EVENTDESCRIPRIONRECEIVED);
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::OnDownloadDescEventRcvd " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadsMgr::OnDownloadDescEventRcvd unknown exception");
+	}
 }
 
 void fsDownloadsMgr::GetRunningDownloads(DLDS_LIST &v)
@@ -4236,4 +4588,30 @@ void fsDownloadsMgr::UnregisterDownloadInTum(fsDownload* dld)
 	vmsAUTOLOCKSECTION (m_csRegisterDldInTum);
 	dld->removeStateFlags (DLDS_REGISTERED_IN_TRAFFICUSGMGR);
 	_TumMgr.removeManageForSpeedItem (dld->pMgr);
+}
+
+bool fsDownloadsMgr::IsDownloadSuspended(vmsDownloadSmartPtr dld)
+{
+	std::map<vmsDownloadSmartPtr, vmsDldErrorStamp>::iterator iter = m_dldErrorsMap.find(dld);
+	if (iter != m_dldErrorsMap.end())
+	{
+		vmsDldErrorStamp stamp = iter->second;
+		if (m_errorTimeouts.find(stamp.Error) == m_errorTimeouts.end())
+		{
+			return false;
+		}
+		int timeout = m_errorTimeouts[stamp.Error];
+		if (timeout == 0)
+		{
+			
+			return true;
+		}
+
+		DWORD now = GetTickCount();
+		if (now - stamp.TimeStamp < timeout)
+		{
+			return true;
+		}
+	}
+	return false;
 }

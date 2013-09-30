@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "FdmApp.h"
 #include "vmsAppSettingsStore.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -111,8 +112,6 @@ BOOL vmsAppSettingsStore::GetProfileBinary(LPCSTR pszSection, LPCSTR pszEntry, L
 	if (pbValue == NULL || nValueSize == 0)
 		return FALSE;
 
-	
-
 	*ppData = new BYTE [nValueSize];
 	CopyMemory (*ppData, pbValue, nValueSize);
 	*pBytes = nValueSize;
@@ -155,8 +154,8 @@ void vmsAppSettingsStore::LoadSettingsFromFile(LPCSTR pszFile)
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
 
-	try {
-
+	try 
+	{
 		DWORD dwRequiredSize = ::GetFileSize(hFile, NULL);
 		DWORD dw = 0;
 		if (dwRequiredSize <= 0) {
@@ -184,8 +183,16 @@ void vmsAppSettingsStore::LoadSettingsFromFile(LPCSTR pszFile)
 
 		CloseHandle (hFile);
 		resetDirty();
-
-	} catch (...) {
+	} 
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("vmsAppSettingsStore::LoadSettingsFromFile " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("vmsAppSettingsStore::LoadSettingsFromFile unknown exception");
 	}
 }
 
@@ -200,8 +207,8 @@ void vmsAppSettingsStore::SaveSettingsToFile(LPCSTR pszFile)
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
 
-	try {
-		
+	try 
+	{
 		DWORD dwRequiredSize = 0;
 		DWORD dw = 0;
 
@@ -224,8 +231,16 @@ void vmsAppSettingsStore::SaveSettingsToFile(LPCSTR pszFile)
 		}
 		CloseHandle (hFile);
 		onStateSavedSuccessfully();
-
-	} catch (...) {
+	} 
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("vmsAppSettingsStore::SaveSettingsToFile " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("vmsAppSettingsStore::SaveSettingsToFile unknown exception");
 	}
 }
 
@@ -236,7 +251,8 @@ void vmsAppSettingsStore::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD p
 
 	m_file.SaveToBuffer(pbtCurrentPos, 0, 0, &dwRequiredSize);
 
-	if (pbtBuffer == NULL) {
+	if (pbtBuffer == NULL) 
+	{
 		if (pdwSize != 0) {
 			*pdwSize = dwRequiredSize;
 		}

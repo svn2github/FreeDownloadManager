@@ -1212,6 +1212,15 @@
     <ClCompile Include="vmsFdmOpNetIntegrationMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vmsMagnetExtension.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Fdm.idl">
@@ -2425,6 +2434,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsFdmOpNetIntegrationMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsMagnetExtension.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsLogger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFdmUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

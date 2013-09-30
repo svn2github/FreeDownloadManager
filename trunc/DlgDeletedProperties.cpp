@@ -6,6 +6,7 @@
 #include "FdmApp.h"
 #include "DlgDeletedProperties.h"
 #include "DownloadsWnd.h"
+#include "vmsLogger.h"
 
 extern CDownloadsWnd* _pwndDownloads;
 
@@ -178,9 +179,21 @@ void CDlgDeletedProperties::OnOK()
 
 	if (_pwndDownloads->Get_DWWN () == DWWN_DELETED)
 		_pwndDownloads->m_wndDeleted.ShowWindow (SW_HIDE);
-	try {
+	try 
+	{
 		_DldsMgr.ReadDeletedSettings ();
-	}catch (...) {}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDlgDeletedProperties::OnOK " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDlgDeletedProperties::OnOK unknown exception");
+	}
+
 	if (_pwndDownloads->Get_DWWN () == DWWN_DELETED)
 		_pwndDownloads->m_wndDeleted.ShowWindow (SW_SHOW);
 	

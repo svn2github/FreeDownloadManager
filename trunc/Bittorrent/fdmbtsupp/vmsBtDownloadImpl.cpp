@@ -12,7 +12,13 @@
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 #endif
 
-vmsBtDownloadImpl::vmsBtDownloadImpl(void)
+vmsBtDownloadImpl::vmsBtDownloadImpl(
+	const libtorrent::torrent_handle& handle, 
+	vmsBtFileImplPtr spTorrent, 
+	const std::string& strOutputPath)
+	: m_handle(handle)
+	, m_spTorrent(spTorrent)
+	, m_strOutputPath(strOutputPath)
 {
 	m_iDownloadSpeedLimit = -1;
 	m_iUploadSpeedLimit = -1;
@@ -24,6 +30,21 @@ vmsBtDownloadImpl::vmsBtDownloadImpl(void)
 
 vmsBtDownloadImpl::~vmsBtDownloadImpl(void)
 {
+}
+
+libtorrent::torrent_handle& vmsBtDownloadImpl::GetHandle()
+{
+	return m_handle;
+}
+
+std::string vmsBtDownloadImpl::GetOutputPath()
+{
+	return m_strOutputPath;
+}
+
+vmsBtFileImplPtr vmsBtDownloadImpl::GetTorrentImpl()
+{
+	return m_spTorrent;
 }
 
 vmsBtDownloadState vmsBtDownloadImpl::GetState ()
@@ -53,6 +74,9 @@ vmsBtDownloadState vmsBtDownloadImpl::GetState ()
 
 	case libtorrent::torrent_status::allocating:
 		return BTDS_ALLOCATING;
+
+	case libtorrent::torrent_status::downloading_metadata:
+		return BTDS_DOWNLOADING_METADATA;
 
 	default:
 		assert (FALSE);
@@ -391,6 +415,10 @@ void vmsBtDownloadImpl::get_FileProgress (float *p)
 
 BOOL vmsBtDownloadImpl::is_HandleValid ()
 {
+	if (m_spTorrent->IsMagnetLink() && m_handle.is_valid ())
+	{
+		return m_handle.has_metadata();
+	}
 	return m_handle.is_valid ();
 }
 
@@ -443,4 +471,15 @@ void vmsBtDownloadImpl::get_CurrentTracker2 (LPSTR pszRes, DWORD dwBuffSize)
 	{
 		*pszRes = 0;
 	}
+}
+
+BOOL vmsBtDownloadImpl::SetMagnetMetadata(vmsBtFile* torrentFile)
+{
+	if (m_spTorrent->IsMagnetLink() == FALSE || m_handle.has_metadata() == false)
+	{
+		return FALSE;
+	}
+	vmsBtFileImpl* torrentImpl = static_cast<vmsBtFileImpl*>(torrentFile);
+	torrentImpl->m_torrent = new libtorrent::torrent_info(m_handle.get_torrent_info());
+	return TRUE;
 }

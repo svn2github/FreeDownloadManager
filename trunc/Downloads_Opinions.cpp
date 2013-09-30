@@ -7,6 +7,7 @@
 #include "Downloads_Opinions.h"
 #include "vmsMaliciousDownloadChecker.h"
 #include <mshtml.h>
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -99,59 +100,68 @@ BOOL CDownloads_Opinions::PreTranslateMessage(MSG* pMsg)
 
 LRESULT CDownloads_Opinions::OnUpdateContent(WPARAM, LPARAM)
 {
-try{
-
-	if (m_dld == NULL)
+	try
 	{
-		if (m_enCS != DOCS_BLANK)
+		if (m_dld == NULL)
 		{
-			
-			m_enCS = DOCS_BLANK;
-			m_wb.Navigate ("about:blank", NULL, NULL, NULL, NULL);
-		}
-	}
-	else
-	{
-		bool bShowOpinions = false;
-		if (m_dld->pMgr->IsDownloading () &&
-				_App.Community_DisplayOpinionsAtDlding ())
-		{
-			
-			
-			if (m_dld->dwFlags & (DLD_HASOPINIONS_YES | DLD_HASOPINIONS_NO))
-				bShowOpinions = (m_dld->dwFlags & DLD_HASOPINIONS_YES) != 0;
-			else
-				_pwndDownloads->CheckDldHasOpinions (m_dld); 
-		}
-
-		if (bShowOpinions == false)
-		{
-			
-			
-			m_enCS = DOCS_OPINION;
-			m_wb.Navigate ("http://fdm.freedownloadmanager.org/fromfdm/opinion.html", NULL, NULL, NULL, NULL);
+			if (m_enCS != DOCS_BLANK)
+			{
+				
+				m_enCS = DOCS_BLANK;
+				m_wb.Navigate ("about:blank", NULL, NULL, NULL, NULL);
+			}
 		}
 		else
 		{
-			
-			if (m_enCS != DOCS_OPINIONS)
+			bool bShowOpinions = false;
+			if (m_dld->pMgr->IsDownloading () &&
+					_App.Community_DisplayOpinionsAtDlding ())
 			{
 				
-
-				m_enCS = DOCS_OPINIONS;
-				CString str;
-				CString strUrl;
-				if (m_dld->pMgr->IsBittorrent ())
-					strUrl = m_dld->pMgr->GetBtDownloadMgr ()->get_InfoHash ();
+				
+				if (m_dld->dwFlags & (DLD_HASOPINIONS_YES | DLD_HASOPINIONS_NO))
+					bShowOpinions = (m_dld->dwFlags & DLD_HASOPINIONS_YES) != 0;
 				else
-					strUrl = vmsMaliciousDownloadChecker::EncodeUrl (m_dld->pMgr->get_URL ());
-				str.Format ("http://fdm.freedownloadmanager.org/fromfdm/showopinions.html?url=%s", strUrl);
-				m_wb.Navigate (str, NULL, NULL, NULL, NULL);
+					_pwndDownloads->CheckDldHasOpinions (m_dld); 
+			}
+
+			if (bShowOpinions == false)
+			{
+				
+				
+				m_enCS = DOCS_OPINION;
+				m_wb.Navigate ("http://fdm.freedownloadmanager.org/fromfdm/opinion.html", NULL, NULL, NULL, NULL);
+			}
+			else
+			{
+				
+				if (m_enCS != DOCS_OPINIONS)
+				{
+					
+
+					m_enCS = DOCS_OPINIONS;
+					CString str;
+					CString strUrl;
+					if (m_dld->pMgr->IsBittorrent ())
+						strUrl = m_dld->pMgr->GetBtDownloadMgr ()->get_InfoHash ();
+					else
+						strUrl = vmsMaliciousDownloadChecker::EncodeUrl (m_dld->pMgr->get_URL ());
+					str.Format ("http://fdm.freedownloadmanager.org/fromfdm/showopinions.html?url=%s", strUrl);
+					m_wb.Navigate (str, NULL, NULL, NULL, NULL);
+				}
 			}
 		}
 	}
-
-}catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Opinions::OnUpdateContent " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Opinions::OnUpdateContent unknown exception");
+	}
 
 	return 0;
 }

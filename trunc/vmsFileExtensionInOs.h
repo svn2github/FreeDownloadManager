@@ -16,8 +16,10 @@ public:
 	static BOOL CreateAssociation (LPCSTR pszExt, LPCSTR pszProgId);
 	
 	
-	static BOOL SetAssociation(LPCSTR pszExt, LPCSTR pszVerb, LPCSTR pszValue);
-	static fsString GetAssociation (LPCSTR pszExt, LPCSTR pszVerb);
+	static BOOL SetAssociation(LPCTSTR pszExt, LPCTSTR pszVerb, LPCTSTR pszValue, BOOL appendDot = TRUE);
+	static fsString GetAssociation (LPCTSTR pszExt, LPCTSTR pszVerb, BOOL appendDot = TRUE);
+
+	static LONG OpenAssociationKey(CRegKey &key, const tstring& tstrExt, bool bCreateIfDoesNotExist, REGSAM samDesired);
 
 	vmsFileExtensionInOs();
 	virtual ~vmsFileExtensionInOs();

@@ -12,6 +12,7 @@
 #include "ScheduleSheet.h"
 #include "DownloadsWnd.h"
 #include "plugincmds.h"
+#include "vmsLogger.h"
 
 extern CSpiderWnd *_pwndSpider;
 extern CShedulerWnd *_pwndScheduler;
@@ -432,14 +433,13 @@ void CSpiderTasks::OnSpiderSchedule()
 				pTask->wts.dlds.pvIDs->add (vDlds [i]->nID);
 
 			_pwndScheduler->AddTask (pTask);
-		 }
-		 else
-		 {
-			 if (sheet.IsNeedRecalculateStartTime ())
+		}
+		else
+		{
+			if (sheet.IsNeedRecalculateStartTime ())
 				mgr->CalculateStartTime (pTask);
-			 _pwndScheduler->GetMgr ()->OnTaskUpdated (pTask);
-		 }
-
+			_pwndScheduler->GetMgr ()->OnTaskUpdated (pTask);
+		}
 	}
          
 	pos = GetFirstSelectedItemPosition ();
@@ -482,7 +482,20 @@ void CSpiderTasks::OnSpiderDelete()
 		if (iRet == IDYES)
 		{
 			ShowWindow (SW_HIDE);
-			try {wpd->DeleteAllDownloads (TRUE);}catch (...){}
+			try 
+			{
+				wpd->DeleteAllDownloads (TRUE);
+			}
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("CSpiderTasks::OnSpiderDelete " + tstring(ex.what()));
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("CSpiderTasks::OnSpiderDelete unknown exception");
+			}
 			ShowWindow (SW_SHOW);
 		}
 		else

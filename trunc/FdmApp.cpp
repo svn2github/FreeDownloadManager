@@ -26,6 +26,7 @@
 #include "FDMUploader.h"
 #include "FDMUploadPackage.h"
 #include "vmsTorrentExtension.h"
+#include "vmsMagnetExtension.h"
 #include "FdmTorrentFilesRcvr.h"
 #include "FDMFlashVideoDownloads.h"
 #include "vmsUploadsDllCaller.h"
@@ -50,6 +51,7 @@ extern CSpiderWnd *_pwndSpider;
 #include "vmsFdmFilesDeleter.h"
 #include "vmsFdmUiDetails.h"
 #include "vmsWinSecurity.h"
+#include "vmsFdmUtils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -212,7 +214,8 @@ BOOL CFdmApp::InitInstance()
 	vmsAppGlobalObjects::Create2 ();
 
 	fsFDMCmdLineParser cmdline;
-	cmdline.Parse ();
+
+	cmdline.Parse (fsFDMCmdLineParser::Elevated);
 
 	if (cmdline.isRunAsElevatedTasksProcessor ())
 	{
@@ -236,8 +239,6 @@ BOOL CFdmApp::InitInstance()
 		return FALSE;
 	}
 
-	
-
 	if (vmsWinSecurity::IsVistaOrHigher () && strncmp (m_lpCmdLine, "-nelvcheck", 10) && stricmp (m_lpCmdLine, "-autorun"))
 	{
 		if (vmsWinSecurity::IsProcessElevated ())
@@ -256,6 +257,8 @@ BOOL CFdmApp::InitInstance()
 			_appMutex.Create ();
 		}
 	}
+
+	cmdline.Parse (fsFDMCmdLineParser::Normal);
 
 	if (CheckFdmStartedAlready (m_bForceSilentSpecified == FALSE))
 		return FALSE;
@@ -893,6 +896,12 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 					vmsTorrentExtension::Associate ();
 				}
 			}
+
+			if (vmsMagnetExtension::IsAssociatedWithUs () == FALSE)
+			{
+				if (_App.Bittorrent_Enable () || vmsMagnetExtension::IsAssociationExist () == FALSE)
+					vmsFdmUtils::AssociateFdmWithMagnetLinks (true);
+			}
 		}
 	}
 
@@ -1045,6 +1054,7 @@ void CFdmApp::Install_UnregisterServer()
 	
 	if (vmsTorrentExtension::IsAssociatedWithUs ())
 		vmsTorrentExtension::AssociateWith (_App.Bittorrent_OldTorrentAssociation ());
+	vmsFdmUtils::AssociateFdmWithMagnetLinks (false);
 
 	if (bUnregisterForUserOnly)
 		vmsNotEverywhereSupportedFunctions::RegOverridePredefKey (HKEY_CLASSES_ROOT, NULL);

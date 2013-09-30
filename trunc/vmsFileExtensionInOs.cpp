@@ -22,9 +22,9 @@ vmsFileExtensionInOs::~vmsFileExtensionInOs()
 
 }
 
-fsString vmsFileExtensionInOs::GetAssociation(LPCSTR pszExt, LPCSTR pszVerb)
+fsString vmsFileExtensionInOs::GetAssociation(LPCTSTR pszExt, LPCTSTR pszVerb, BOOL appendDot)
 {
-	fsString strExt; strExt = "."; strExt += pszExt;
+	fsString strExt; strExt = appendDot ? _T(".") : _T(""); strExt += pszExt;
 
 	CRegKey key;
 	if (ERROR_SUCCESS != key.Open (HKEY_CLASSES_ROOT, strExt, KEY_READ))
@@ -32,7 +32,7 @@ fsString vmsFileExtensionInOs::GetAssociation(LPCSTR pszExt, LPCSTR pszVerb)
 
 	char sz [1000];
 	DWORD dw = sizeof (sz);
-	if (ERROR_SUCCESS == key.QueryValue (sz, NULL, &dw))
+	if (ERROR_SUCCESS == key.QueryValue (sz, NULL, &dw) && appendDot == TRUE)
 		return GetAssociation_2 (sz, pszVerb);
 	else
 		return GetAssociation_2 (strExt, pszVerb);
@@ -56,9 +56,10 @@ fsString vmsFileExtensionInOs::GetAssociation_2(LPCSTR pszProgId, LPCSTR pszVerb
 	return sz;
 }
 
-BOOL vmsFileExtensionInOs::SetAssociation(LPCSTR pszExt, LPCSTR pszVerb, LPCSTR pszValue)
+BOOL vmsFileExtensionInOs::SetAssociation(LPCTSTR pszExt, LPCTSTR pszVerb, LPCTSTR pszValue, BOOL appendDot)
 {
-	fsString strExt; strExt = "."; strExt += pszExt;
+	fsString strExt; strExt = appendDot ? _T(".") : _T(""); strExt += pszExt;
+
 	LONG lErr;
 
 	CRegKey key;
@@ -73,7 +74,7 @@ BOOL vmsFileExtensionInOs::SetAssociation(LPCSTR pszExt, LPCSTR pszVerb, LPCSTR 
 
 	char sz [1000];
 	DWORD dw = sizeof (sz);
-	if (ERROR_SUCCESS == key.QueryValue (sz, NULL, &dw) && *sz)
+	if (ERROR_SUCCESS == key.QueryValue (sz, NULL, &dw) && *sz && appendDot)
 		return SetAssociation_2 (sz, pszVerb, pszValue);
 	else
 		return SetAssociation_2 (strExt, pszVerb, pszValue);
@@ -125,4 +126,14 @@ BOOL vmsFileExtensionInOs::CreateAssociation(LPCSTR pszExt, LPCSTR pszProgId)
 	}
 
 	return TRUE;
+}
+
+LONG vmsFileExtensionInOs::OpenAssociationKey(CRegKey &key, const tstring& tstrExt, bool bCreateIfDoesNotExist, REGSAM samDesired)
+{
+	LONG lResult = key.Open (HKEY_CLASSES_ROOT, tstrExt.c_str (), samDesired);
+
+	if (lResult != ERROR_SUCCESS && bCreateIfDoesNotExist)
+		lResult = key.Create (HKEY_CLASSES_ROOT, tstrExt.c_str (), NULL, 0, samDesired);
+
+	return lResult;
 }

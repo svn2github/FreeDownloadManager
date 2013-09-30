@@ -49,6 +49,7 @@
 #include "vmsElevatedFdm.h"
 #include "vmsAppGlobalObjects.h"
 #include "vmsFdmUiDetails.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -552,6 +553,7 @@ void CMainFrame::OnTumHeavy()
 		_TBMgr.GetToolBarCtrl ().SetState (ID_TUM_LIGHT, TBSTATE_ENABLED);
 		PostMessage (WM_COMMAND, ID_TUM_CHANGED);
 	}
+	UpadateTumToolbarState();
 }
 
 void CMainFrame::OnUpdateTumHeavy(CCmdUI* pCmdUI) 
@@ -573,6 +575,7 @@ void CMainFrame::OnTumLight()
 		_TBMgr.GetToolBarCtrl ().SetState (ID_TUM_MEDIUM, TBSTATE_ENABLED);
 		PostMessage (WM_COMMAND, ID_TUM_CHANGED);
 	}
+	UpadateTumToolbarState();
 }
 
 void CMainFrame::OnUpdateTumLight(CCmdUI* pCmdUI) 
@@ -594,6 +597,7 @@ void CMainFrame::OnTumMedium()
 		_TBMgr.GetToolBarCtrl ().SetState (ID_TUM_LIGHT, TBSTATE_ENABLED);
 		PostMessage (WM_COMMAND, ID_TUM_CHANGED);
 	}
+	UpadateTumToolbarState();
 }
 
 void CMainFrame::OnUpdateTumMedium(CCmdUI* pCmdUI) 
@@ -2133,34 +2137,45 @@ void CMainFrame::Balloon_ShowDLInfo(BOOL bCheckSettings)
 		return;
 
 	const fsDownloadsMgr::TotalProgress &tp = _DldsMgr.getTotalProgress ();
-	try{
-	if (tp.uTotalSize)
+	try
 	{
-		CString str2;
-
-		double fDownloaded = (double)(__int64)tp.uDownloaded;
-		fDownloaded /= (__int64)tp.uTotalSize; 
-		fDownloaded *= 100.0;
-
-		str2.Format (LS (L_PERC_DOWNLOADED_INTOTAL), (int)fDownloaded);
-
-		str += str2;
-
-		if (tp.uSpeed)
+		if (tp.uTotalSize)
 		{
-			double fTimeLeft = (double) ((__int64)(tp.uTotalSize-tp.uDownloaded));
-			fTimeLeft /= (__int64)tp.uSpeed;
-			str2.Format (LS (L_LEFT_TO_DOWNLOAD_AT), (LPCSTR)fsTimeInSecondsToStr((int)fTimeLeft));
-			str += ", "; str += str2; str += ' ';
-			str += (LPCSTR)BytesToString (tp.uSpeed); 
-			str += '/'; str += LS (L_S);
-		}
-		else
-		{
-			str += '.';
+			CString str2;
+
+			double fDownloaded = (double)(__int64)tp.uDownloaded;
+			fDownloaded /= (__int64)tp.uTotalSize; 
+			fDownloaded *= 100.0;
+
+			str2.Format (LS (L_PERC_DOWNLOADED_INTOTAL), (int)fDownloaded);
+
+			str += str2;
+
+			if (tp.uSpeed)
+			{
+				double fTimeLeft = (double) ((__int64)(tp.uTotalSize-tp.uDownloaded));
+				fTimeLeft /= (__int64)tp.uSpeed;
+				str2.Format (LS (L_LEFT_TO_DOWNLOAD_AT), (LPCSTR)fsTimeInSecondsToStr((int)fTimeLeft));
+				str += ", "; str += str2; str += ' ';
+				str += (LPCSTR)BytesToString (tp.uSpeed); 
+				str += '/'; str += LS (L_S);
+			}
+			else
+			{
+				str += '.';
+			}
 		}
 	}
-	}catch (...){}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CMainFrame::Balloon_ShowDLInfo " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CMainFrame::Balloon_ShowDLInfo unknown exception");
+	}
 
 	if (!str.IsEmpty ())
 		str += "\n";
@@ -2334,7 +2349,7 @@ void CMainFrame::OnProceedFurherInitialization()
 	{
 		BOOL bSilent = app->m_vTorrentFilesToAdd [i].bForceSilent ? TRUE : _App.Monitor_Silent ();
 		CString str = "file://"; str += app->m_vTorrentFilesToAdd [i].strUrl;
-		BOOL bAdded = _pwndDownloads->CreateBtDownloadFromFile (app->m_vTorrentFilesToAdd [i].strUrl, str, bSilent);
+		BOOL bAdded = _pwndDownloads->CreateBtDownload(app->m_vTorrentFilesToAdd [i].strUrl, str, bSilent);
 		
 		if (bAdded && bSilent)
 			ShowTimeoutBalloon (app->m_vTorrentFilesToAdd [i].strUrl, LS (L_DOWNLOADADDED), NIIF_INFO, TRUE);
@@ -2427,13 +2442,14 @@ void CMainFrame::appendErrorCode(CString& sMsg, HRESULT hr) const
 
 void CMainFrame::OnImportDownloadsFromOtherManagers()
 {
-	try {
-
+	try 
+	{
 		CImportWizardPropertySheet sheetImportWizard(LS (L_FILE_IMPORT_OTHER_CLIENTS), this);
 		_DlgMgr.DoModal(&sheetImportWizard);
-
-	} catch (std::runtime_error& exc) {
-
+	} 
+	catch (std::runtime_error& exc) 
+	{
+		vmsLogger::WriteLog("CMainFrame::OnImportDownloadsFromOtherManagers runtime_error");
 		CString sMsg = LS (L_CANT_IMPORT_DOWNLODS);
 
 		CString sFmt = LS (L_DETAILS_FMT);
@@ -2443,9 +2459,10 @@ void CMainFrame::OnImportDownloadsFromOtherManagers()
 		sMsg += sDetails;
 
 		MessageBox (sMsg, LS (L_ERR), MB_ICONERROR);
-
-	} catch (CException* pExc) {
-
+	} 
+	catch (CException* pExc) 
+	{
+		vmsLogger::WriteLog("CMainFrame::OnImportDownloadsFromOtherManagers CException");
 		CString sMsg = LS (L_CANT_IMPORT_DOWNLODS);
 
 		TCHAR szMsg[1024] = {0,};
@@ -2456,8 +2473,11 @@ void CMainFrame::OnImportDownloadsFromOtherManagers()
 		pExc->Delete();
 
 		MessageBox (sMsg, LS (L_ERR), MB_ICONWARNING);
+	} 
+	catch (...) 
+	{
+		vmsLogger::WriteLog("CMainFrame::OnImportDownloadsFromOtherManagers unknown exception");
 
-	} catch (...) {
 		CString sMsg = LS (L_CANT_IMPORT_DOWNLODS);
 		MessageBox (sMsg, LS (L_ERR), MB_ICONWARNING);
 	}
@@ -2571,9 +2591,20 @@ BOOL CMainFrame::ReadCusomizationInfo()
 	if (GetFileSize (hFile, NULL) == 8)
 		return TRUE;
 
-	try {
+	try 
+	{
 		m_Customizations.Load (hFile);
-	}catch (LPCSTR){
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog(" " + tstring(ex.what()));
+		return FALSE;
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog(" unknown exception");
 		return FALSE;
 	}
 
@@ -3082,22 +3113,32 @@ void CMainFrame::OnUpdatePausealldlds(CCmdUI* pCmdUI)
 
 void CMainFrame::OnUpdateTrafficThisMonth(CCmdUI *pCmdUI)
 {
-	try {
-	vmsBtSession *pS = _BT.is_Initialized () ? _BT.get_Session () : NULL;
-	UINT64 u = pS ? pS->get_TotalDownloadedByteCount () : 0;
-	UINT64 u2 = pS ? pS->get_TotalUploadedByteCount () : 0;
-	CString str; 
-	str.Format ("%s; %s", 
-		BytesToString (m_nTrafficUsedThisMonth + fsInternetDownloader::get_TotalTraffic () + u),
-		BytesToString (m_nTrafficUpldThisMonth + u2));
-	pCmdUI->SetText (str);
+	try 
+	{
+		vmsBtSession *pS = _BT.is_Initialized () ? _BT.get_Session () : NULL;
+		UINT64 u = pS ? pS->get_TotalDownloadedByteCount () : 0;
+		UINT64 u2 = pS ? pS->get_TotalUploadedByteCount () : 0;
+		CString str; 
+		str.Format ("%s; %s", 
+			BytesToString (m_nTrafficUsedThisMonth + fsInternetDownloader::get_TotalTraffic () + u),
+			BytesToString (m_nTrafficUpldThisMonth + u2));
+		pCmdUI->SetText (str);
 	
-	CString str2;
-	str2.Format ("%s; %s", BytesToString (m_nTrafficUsedPrevMonth), BytesToString (m_nTrafficUpldPrevMonth));
-	str.Format (LS (L_TRAFF_USED_SBTEXT), str2);
-	m_wndStatusBar.SetToolTipText (ID_SB_TRAFFIC_THISMONTH, str);
+		CString str2;
+		str2.Format ("%s; %s", BytesToString (m_nTrafficUsedPrevMonth), BytesToString (m_nTrafficUpldPrevMonth));
+		str.Format (LS (L_TRAFF_USED_SBTEXT), str2);
+		m_wndStatusBar.SetToolTipText (ID_SB_TRAFFIC_THISMONTH, str);
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CMainFrame::OnUpdateTrafficThisMonth " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CMainFrame::OnUpdateTrafficThisMonth unknown exception");
+	}
 }
 
 void CMainFrame::OnUpdateTotalSpeed(CCmdUI *pCmdUI)
@@ -3525,7 +3566,8 @@ LRESULT CMainFrame::OnDoModal(WPARAM, LPARAM lp)
 
 void CMainFrame::ConfirmImportDownloadsFromOtherManagers()
 {
-	try {
+	try 
+	{
 		CImportManager imManager;
 		imManager.Init(0, 0, 0, 0, 0);
 
@@ -3537,8 +3579,10 @@ void CMainFrame::ConfirmImportDownloadsFromOtherManagers()
 			CImportWizardPropertySheet sheetImportWizard(LS (L_FILE_IMPORT_OTHER_CLIENTS), this);
 			_DlgMgr.DoModal(&sheetImportWizard);
 		}
-
-	} catch (std::runtime_error& exc) {
+	}
+	catch (std::runtime_error& exc) 
+	{
+		vmsLogger::WriteLog("CMainFrame::ConfirmImportDownloadsFromOtherManagers " + tstring(exc.what()));
 
 		CString sMsg = LS (L_CANT_IMPORT_DOWNLODS);
 
@@ -3549,8 +3593,10 @@ void CMainFrame::ConfirmImportDownloadsFromOtherManagers()
 		sMsg += sDetails;
 
 		MessageBox (sMsg, LS (L_ERR), MB_ICONERROR);
-
-	} catch (CException* pExc) {
+	} 
+	catch (CException* pExc) 
+	{
+		vmsLogger::WriteLog("CMainFrame::ConfirmImportDownloadsFromOtherManagers exception");
 
 		CString sMsg = LS (L_CANT_IMPORT_DOWNLODS);
 
@@ -3562,8 +3608,20 @@ void CMainFrame::ConfirmImportDownloadsFromOtherManagers()
 		pExc->Delete();
 
 		MessageBox (sMsg, LS (L_ERR), MB_ICONERROR);
+	} 
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CMainFrame::ConfirmImportDownloadsFromOtherManagers " + tstring(ex.what()));
 
-	} catch (...) {
+		CString sMsg = LS (L_CANT_IMPORT_DOWNLODS);
+		MessageBox (sMsg, LS (L_ERR), MB_ICONERROR);
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CMainFrame::ConfirmImportDownloadsFromOtherManagers unknown exception");
+
 		CString sMsg = LS (L_CANT_IMPORT_DOWNLODS);
 		MessageBox (sMsg, LS (L_ERR), MB_ICONERROR);
 	}
@@ -3654,4 +3712,14 @@ bool CMainFrame::onExit(bool bQueryExit)
 	m_bExitHandlerPerformed = true;
 
 	return true;
+}
+
+void CMainFrame::UpadateTumToolbarState()
+{
+	fsTUM FStum = _TumMgr.GetTUM ();
+	CToolBarCtrl& toolBar = _TBMgr.GetToolBarCtrl ();
+
+	toolBar.SetState(ID_TUM_HEAVY, FStum == TUM_HEAVY ? TBSTATE_PRESSED : TBSTATE_ENABLED);
+	toolBar.SetState(ID_TUM_MEDIUM, FStum == TUM_MEDIUM ? TBSTATE_PRESSED : TBSTATE_ENABLED);
+	toolBar.SetState(ID_TUM_LIGHT, FStum == TUM_LIGHT ? TBSTATE_PRESSED : TBSTATE_ENABLED);
 }

@@ -15,7 +15,7 @@
 
 typedef DLDS_LIST t_downloads;
 
-#define DLFILE_CURRENT_VERSION	(17)
+#define DLFILE_CURRENT_VERSION	(18)
 
 #define DLFILE_SIG "FDM Downloads  "
 
@@ -53,7 +53,6 @@ public:
 	fsDLLoadResult Load (t_downloads* vDownloads, LPCSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt = DLLFT_SAV, BOOL bErrIfNotExists = FALSE);
 	
 	fsDLLoadResult Load (vmsDownloadList& vDownloads, LPCSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt = DLLFT_SAV, BOOL bErrIfNotExists = FALSE);
-	BOOL Save (t_downloads* vDownloads, LPCSTR pszFileName);
 	
 	BOOL Save(vmsDownloadList& vDownloads, LPCSTR pszFileName);
 	bool IsStoringLogTurnedOn();
@@ -68,7 +67,6 @@ protected:
 	
 	
 	BOOL LoadDownload (vmsDownloadSmartPtr dld, LPVOID lpBuffer, LPDWORD lpdwSize, WORD wVer);
-	BOOL SaveDownload (vmsDownloadSmartPtr dld, LPVOID pBuffer, LPDWORD pdwSize);
 
 	
 	

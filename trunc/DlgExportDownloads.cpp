@@ -6,6 +6,7 @@
 #include "FdmApp.h"
 #include "DlgExportDownloads.h"
 #include "DownloadsWnd.h"
+#include "vmsLogger.h"
 
 extern CDownloadsWnd* _pwndDownloads;
 
@@ -120,13 +121,25 @@ void CDlgExportDownloads::ExportDownloads(int iWhich, BOOL bNoDone, BOOL bAppend
 			{
 				vmsDownloadSmartPtr dld;
 
-				try {
+				try 
+				{
 					dld = (fsDownload*) list->GetItemData (i);
 
 					if (bNoDone && dld->pMgr->IsDone ())
 						dld = NULL;
 				}
-				catch (...) {dld = NULL;}
+				catch (const std::exception& ex)
+				{
+					ASSERT (FALSE);
+					vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads " + tstring(ex.what()));
+					dld = NULL;
+				}
+				catch (...)
+				{
+					ASSERT (FALSE);
+					vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads unknown exception");
+					dld = NULL;
+				}
 
 				if (dld)
 					vpDlds.push_back (dld);
@@ -143,13 +156,25 @@ void CDlgExportDownloads::ExportDownloads(int iWhich, BOOL bNoDone, BOOL bAppend
 				int iItem = list->GetNextSelectedItem (pos);
 				vmsDownloadSmartPtr dld;
 
-				try {
+				try 
+				{
 					dld = (fsDownload*) list->GetItemData (iItem);
 					
 					if (bNoDone && dld->pMgr->IsDone ())
 						dld = NULL;
 				}
-				catch (...) {dld = NULL;}
+				catch (const std::exception& ex)
+				{
+					ASSERT (FALSE);
+					vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads " + tstring(ex.what()));
+					dld = NULL;
+				}
+				catch (...)
+				{
+					ASSERT (FALSE);
+					vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads unknown exception");
+					dld = NULL;
+				}
 
 				if (dld)
 					vpDlds.push_back (dld);
@@ -203,12 +228,21 @@ BOOL CDlgExportDownloads::ExportDownloads_ToURLListFile(LPCSTR pszFile, DLDS_LIS
 
 	for (size_t i = 0; i < pvpDlds->size (); i++)
 	{
-		try {
+		try 
+		{
 			file.WriteString (pvpDlds->at (i)->pMgr->get_URL ());
 			file.WriteString ("\n");
 		} 
+		catch (const std::exception& ex)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads_ToURLListFile " + tstring(ex.what()));
+			return FALSE;
+		}
 		catch (...)
 		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads_ToURLListFile unknown exception");
 			return FALSE;
 		}
 	}

@@ -23,6 +23,15 @@ public:
 	LPCSTR Get_Parameter(int iIndex);
 	
 	LPCSTR Get_ParameterValue (int iIndex);
+	size_t FindParameterIndex (const tstring& tstrParam) const 
+	{
+		for (size_t i = 0; i < m_vPars.size (); i++)
+		{
+			if (!_tcsicmp (m_vPars [i].strParam, tstrParam.c_str ()))
+				return i;
+		}
+		return SIZE_T_MAX;
+	}
 	
 	fsCommandLineParser();
 	virtual ~fsCommandLineParser();
@@ -34,7 +43,7 @@ protected:
 		fsString strValue;	
 	};
 	
-	fs::list <fsCmdLineParameter> m_vPars;
+	std::vector <fsCmdLineParameter> m_vPars;
 };
 
 #endif 

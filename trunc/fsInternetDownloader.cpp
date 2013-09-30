@@ -15,6 +15,7 @@
 #include "vmsInternetSession.h"
 #include "InetFile/base64.h"
 #include "QueryStoringServiceInfoGuard.h"
+#include "vmsLogger.h"
 
 using namespace fsArchive;
 
@@ -529,11 +530,22 @@ BOOL fsInternetDownloader::__threadDownload_flushdata (fsSectionEx* sect,
 		
 		if (pbCache == NULL && dwNewCacheSize) 
 		{
-			try {
+			try 
+			{
 				pbCache = new BYTE [dwNewCacheSize];
 				if (pbCache)
 					dwCacheSize = dwNewCacheSize;	
-			}catch (...) {}
+			}
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog(" " + tstring(ex.what()));
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog(" unknown exception");
+			}
 		}
 #endif
 
@@ -1621,34 +1633,89 @@ void fsInternetDownloader::StopDownloading()
 
 	m_cThreads++;
 
-	try {
-	if (m_pOpeningFile)
+	try 
 	{
-		m_pOpeningFile->CloseHandle ();
+		if (m_pOpeningFile)
+		{
+			m_pOpeningFile->CloseHandle ();
+		}
 	}
-	}catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading unknown exception");
+	}
 
-	try {
+	try 
+	{
 		if (m_pZipPreviewStream)
 			m_pZipPreviewStream->Stop ();
-	}catch (...) {}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading unknown exception");
+	}
 	
 
-	try{
-	if (m_pMirrURLMgr)
-		m_pMirrURLMgr->Abort ();
-	}catch (...) {}
-
-	try{
-	for (int i = 0; i < m_vSections.size (); i++)
+	try
 	{
-		fsSection *sect = &m_vSections [i];
-		try{
-		if (sect->file)
-			sect->file->CloseHandle ();
-		}catch (...) {ASSERT (FALSE);}
+		if (m_pMirrURLMgr)
+			m_pMirrURLMgr->Abort ();
 	}
-	}catch (...){ASSERT (FALSE);}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading unknown exception");
+	}
+
+	try
+	{
+		for (int i = 0; i < m_vSections.size (); i++)
+		{
+			fsSection *sect = &m_vSections [i];
+			try
+			{
+				if (sect->file)
+					sect->file->CloseHandle ();
+			}
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + tstring(ex.what()));
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsInternetDownloader::StopDownloading unknown exception");
+			}
+		}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading unknown exception");
+	}
 
 	m_cThreads--;
 }
@@ -2342,23 +2409,36 @@ int fsInternetDownloader::GetDoneSectionCount()
 
 UINT64 fsInternetDownloader::GetBytesLeft()
 {
-try{
-	UINT64 uLeft = 0;
-	int cSections = m_vSections.size ();
-
-	for (int i = cSections - 1; i >= 0; i--)
+	try
 	{
-		fsSection *sect = &m_vSections [i];
+		UINT64 uLeft = 0;
+		int cSections = m_vSections.size ();
 
-		if (sect->uDEnd == _UI64_MAX)
-			return _UI64_MAX;
+		for (int i = cSections - 1; i >= 0; i--)
+		{
+			fsSection *sect = &m_vSections [i];
 
-		if (sect->uDEnd > sect->uDCurrent)
-			uLeft += sect->uDEnd - sect->uDCurrent;
+			if (sect->uDEnd == _UI64_MAX)
+				return _UI64_MAX;
+
+			if (sect->uDEnd > sect->uDCurrent)
+				uLeft += sect->uDEnd - sect->uDCurrent;
+		}
+
+		return uLeft - m_dwDataLenInCache;
 	}
-
-	return uLeft - m_dwDataLenInCache;
-}catch (...) {return _UI64_MAX;}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::GetBytesLeft " + tstring(ex.what()));
+		return _UI64_MAX;
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::GetBytesLeft unknown exception");
+		return _UI64_MAX;
+	}
 }
 
 void fsInternetDownloader::SetOutputFile(HANDLE hOutFile)
@@ -3485,13 +3565,23 @@ DWORD WINAPI fsInternetDownloader::_threadOpenUrl(LPVOID lp)
 
 	DWORD dw;
 	
-	try {
+	try 
+	{
 		fsInternetSession::AdjustWinInetConnectionLimit ();
 		dw = p->pFile->Open (fsNPToScheme (p->dnp->enProtocol), p->dnp->pszServerName,
 				p->dnp->pszUserName, p->dnp->pszPassword, p->dnp->uServerPort, 
 				p->dnp->pszPathName, p->uStartPos, p->dnp->dwFlags & DNPF_IMMEDIATELY_SEND_AUTH_AS_BASIC);
 	}
-	catch (...) {
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::_threadOpenUrl " + tstring(ex.what()));
+		dw = IR_ERROR;
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetDownloader::_threadOpenUrl unknown exception");
 		dw = IR_ERROR;
 	}
 

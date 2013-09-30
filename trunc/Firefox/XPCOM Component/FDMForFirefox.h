@@ -5,7 +5,7 @@
 #ifndef __FDMFORFIREFOX_H_
 #define __FDMFORFIREFOX_H_
 
-#include "ivmsfdmff.h"
+#include "common.h"
 #include <atlbase.h>
 #include <string>
 #include <vector>
@@ -58,7 +58,7 @@ protected:
 		HWND hwndParent;
 	};
 	static DWORD WINAPI _threadOnDownloadItBtnClicked (LPVOID lp);
-	PRBool TransferUrlToFDM (IFDMUrl* url);
+	XULSDK_PRBool TransferUrlToFDM (IFDMUrl* url);
 	bool IsUrlShouldBeSkipped (IFDMUrl *url, const wchar_t* pwszSuggFileName);
 	bool IsServerToSkip (IFDMUrl *url);
 	CRegKey m_keyFDM, m_keyFDMMonitor, m_keyFDMFfStgs;

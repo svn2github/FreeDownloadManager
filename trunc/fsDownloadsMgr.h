@@ -16,17 +16,16 @@
 #include "vmsFileRecentList.h"
 
 #ifndef FDM_DLDR__RAWCODEONLY
-#endif
-
-#ifndef FDM_DLDR__RAWCODEONLY
 #include "fsIECatchMgr.h"
 #include "fsDownloadsHistoryMgr.h"	
 #endif
+
 #include "fsArchiveRebuilder.h"
 #include "vmsStringRecentList.h"	
 #include "fsDownload.h"
 #include "vmsPersistableListOfDownloads.h"
 #include "StateInfo.h"
+#include <map>
 
 enum fsDownloadsMgrEvent
 {
@@ -74,6 +73,34 @@ struct fsServerConnections
 {
 	CString strName;	
 	UINT cConns;		
+};
+
+enum vmsBtDownloadErrorState
+{
+	BTDES_SERVER_INTERNAL_ERROR_500 = BTDS_SERVER_INTERNAL_ERROR_500,
+	BTDES_BAD_REQUEST_400 = BTDS_BAD_REQUEST_400,
+	BTDES_NO_ERROR,
+};
+
+struct vmsDldErrorStamp
+{
+	vmsBtDownloadErrorState Error;
+	DWORD TimeStamp;
+
+	vmsDldErrorStamp()
+	{}
+
+	vmsDldErrorStamp(const vmsDldErrorStamp& st)
+	{
+		Error = st.Error;
+		TimeStamp = st.TimeStamp;
+	}
+
+	vmsDldErrorStamp(vmsBtDownloadErrorState error)
+	{
+		Error = error;
+		TimeStamp = GetTickCount();
+	}
 };
 
 const UINT MAX_SUMMS = 24*60*(60/5);
@@ -393,31 +420,34 @@ protected:
 	
 	DWORD OnBeforeDownload (vmsDownloadSmartPtr dld);
 	
+	static DWORD WINAPI _threadWaitDelDlds (LPVOID lp);
+	
+	int DeleteDownloads2 (DLDS_LIST *vDlds, BOOL bByUser, BOOL bDontConfirmFileDeleting, BOOL bDontDeleteFiles = FALSE, BOOL* pbNeedStop = NULL, int* piProgress = NULL);
+
+	
+	BOOL IsMaxConnsReached();
+	
+	
+	BOOL IsServerFilled (LPCSTR pszServer, DWORD dwReqProtocols);
+
+	
+	
+	void CheckNoActiveDownloads();
+
+	
 	BOOL m_bMirrDontSearchIfSizeUnk;
 	UINT m_uMirrRecalcSpeedTime;
 	UINT m_cMaxMirrs;
 	BOOL m_bMirrCalcSpeed;
 	UINT m_uMirrFileMinSize;
 	BOOL m_bMirrAutoSearch;
-	
-	static DWORD WINAPI _threadWaitDelDlds (LPVOID lp);
-	
-	int DeleteDownloads2 (DLDS_LIST *vDlds, BOOL bByUser, BOOL bDontConfirmFileDeleting, BOOL bDontDeleteFiles = FALSE, BOOL* pbNeedStop = NULL, int* piProgress = NULL);
 	BOOL m_bVirCheck;			
 	fsString m_strVirName, m_strVirArgs, m_strVirExts;	
 	BOOL m_bDetLog;		
 	BOOL m_bDeletingNow, m_bDeletingDeletedNow;		
-	
-	BOOL IsMaxConnsReached();
-	
-	
-	BOOL IsServerFilled (LPCSTR pszServer, DWORD dwReqProtocols);
 	vmsCriticalSection m_csQSection;	
 	BOOL m_bAllowStart;				
 	BOOL m_bDisablePD;	
-	
-	
-	void CheckNoActiveDownloads();
 	
 	fs::array <UINT, MAX_SUMMS> m_vSummSpeed;
 	
@@ -502,6 +532,13 @@ public:
 protected:
 	void RegisterDownloadInTum(fsDownload* dld);
 	void UnregisterDownloadInTum(fsDownload* dld);
+
+	
+	bool IsDownloadSuspended(vmsDownloadSmartPtr);
+
+	
+	std::map<vmsBtDownloadErrorState, int> m_errorTimeouts;
+	std::map<vmsDownloadSmartPtr, vmsDldErrorStamp> m_dldErrorsMap;
 };
 
 #endif 

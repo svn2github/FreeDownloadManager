@@ -6,6 +6,7 @@
 #include "UtorrentSupplier.h"
 #include "Utils.h"
 #include "vmsFileUtil.h"
+#include "vmsLogger.h"
 
 CUtorrentSupplier::CUtorrentSupplier()
 {
@@ -23,17 +24,18 @@ bool CUtorrentSupplier::CheckSupplier() const
 
 void CUtorrentSupplier::Import(informer fnInformer, void* pData, TImportResult& tImportResult) const
 {
-	try {
-
+	try 
+	{
 		char szPath [MAX_PATH];
 		if(!UtorrentInstalled(szPath)) {
 			CString sMsg = LS (L_UTORRENT_SAVEFOLDER_NOTFOUND);
 			throw std::runtime_error((const char*)sMsg);
 		}
 		ImportUtorrentDownloads(fnInformer, pData, tImportResult, this, szPath);
-
-	} catch (CException* pExc) {
-
+	}
+	catch (CException* pExc) 
+	{
+		vmsLogger::WriteLog("CUtorrentSupplier::Import exception");
 		CString sMsg;
 
 		TCHAR szMsg[1024] = {0,};
@@ -46,7 +48,6 @@ void CUtorrentSupplier::Import(informer fnInformer, void* pData, TImportResult& 
 		pExc->Delete();
 
 		throw std::runtime_error((const char*)sMsg);
-
 	}
 }
 
@@ -108,7 +109,7 @@ void CUtorrentSupplier::ImportUtorrentDownloads(informer fnInformer, void* pData
 		CString pszFile = uTorrentPath + dl->strTorrentFileName.c_str();
 		CString pszTorrentUrl = "file://"; pszTorrentUrl += pszFile;
 		CString outputFolder = dl->strOutputPath.c_str();
-		_pwndDownloads->CreateBtDownloadFromFile (pszFile, pszTorrentUrl, TRUE, FALSE, outputFolder);
+		_pwndDownloads->CreateBtDownload(pszFile, pszTorrentUrl, TRUE, FALSE, outputFolder);
 
 		resultGuard.Success(true);
 

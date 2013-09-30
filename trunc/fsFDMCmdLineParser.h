@@ -16,12 +16,13 @@ public:
 	bool isNeedExit () const {return m_bNeedExit;}
 	BOOL is_ForceSilentSpecified();
 	
-	void Parse();
+	enum PerformTasksOfType {Elevated, Normal};
+	void Parse(PerformTasksOfType enPTT);
 	fsFDMCmdLineParser();
 	virtual ~fsFDMCmdLineParser();
 
 protected:
-	void AddTorrentFile (LPCSTR pszFile);
+	void AddTorrent (LPCSTR pszTorrent);
 	BOOL m_bAnotherFDMStarted;	
 	fsCommandLineParser m_parser;	
 	BOOL m_bForceSilent;		

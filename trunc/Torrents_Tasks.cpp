@@ -11,6 +11,7 @@
 #include "Dlg_Download.h"
 #include "MainFrm.h"
 #include "vmsDownloadsListHelper.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -140,8 +141,8 @@ void CTorrents_Tasks::OnGetdispinfo(NMHDR *pNMHDR, LRESULT *pResult)
 	LV_DISPINFO* pDispInfo = (LV_DISPINFO*)pNMHDR;
 	LV_ITEM* pItem = &(pDispInfo)->item;
 	
-	try{
-		
+	try
+	{
 		vmsDownloadSmartPtr dld = m_vDlds [pItem->iItem];
 		
 		if (pItem->mask & LVIF_IMAGE)
@@ -169,8 +170,17 @@ void CTorrents_Tasks::OnGetdispinfo(NMHDR *pNMHDR, LRESULT *pResult)
 				}
 			}
 		}
-		
-	}catch (...) {}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CTorrents_Tasks::OnGetdispinfo " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CTorrents_Tasks::OnGetdispinfo unknown exception");
+	}
 }
 
 int CTorrents_Tasks::SubItemToDlSubItem(int nIndex)
@@ -224,8 +234,8 @@ void CTorrents_Tasks::OnItemChanged(NM_LISTVIEW *pLV)
 
 void CTorrents_Tasks::UpdateActiveDownload(int adjSelected)
 {
-	try {
-		
+	try 
+	{
 		POSITION pos = GetFirstSelectedItemPosition ();
 		vmsDownloadSmartPtr dld;	
 		
@@ -267,9 +277,17 @@ void CTorrents_Tasks::UpdateActiveDownload(int adjSelected)
 			m_pActiveDownload = dld;
 			_pwndTorrents->SetActiveDownload (m_pActiveDownload);
 		}
-		
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CTorrents_Tasks::UpdateActiveDownload " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CTorrents_Tasks::UpdateActiveDownload unknown exception");
+	}
 }
 
 void CTorrents_Tasks::OnClick()
@@ -527,7 +545,7 @@ void CTorrents_Tasks::OnBtdldAddfromfile()
 	if (dlg.DoModal () != IDOK)
 		return;
 	CString strUrl = "file://"; strUrl += dlg.GetPathName ();
-	_pwndDownloads->CreateBtDownloadFromFile (dlg.GetPathName (), strUrl, FALSE);	
+	_pwndDownloads->CreateBtDownload(dlg.GetPathName (), strUrl, FALSE);	
 }
 
 void CTorrents_Tasks::OnBtdldAddfromurl() 

@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "fdm.h"
 #include "Dlg_Options_General_History.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -183,9 +184,21 @@ BOOL CDlg_Options_General_History::Apply()
 	
 	if (_pwndDownloads->Get_DWWN () == DWWN_HISTORY)
 		_pwndDownloads->m_wndHistory.ShowWindow (SW_HIDE);
-	try {
+	try 
+	{
 		_DldsMgr.m_histmgr.ReadSettings ();
-	}catch (...) {}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDlg_Options_General_History::Apply " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDlg_Options_General_History::Apply unknown exception");
+	}
+
 	if (_pwndDownloads->Get_DWWN () == DWWN_HISTORY)
 		_pwndDownloads->m_wndHistory.ShowWindow (SW_SHOW);
 

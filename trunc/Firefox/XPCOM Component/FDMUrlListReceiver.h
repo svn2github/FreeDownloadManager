@@ -5,7 +5,7 @@
 #ifndef __FDMURLLISTRECEIVER_H_
 #define __FDMURLLISTRECEIVER_H_
 
-#include "ivmsfdmff.h"
+#include "common.h"
 
 #define FDMURLLISTRECEIVER_CONTRACTID "@freedownloadmanager.org/FDMUrlListReceiver;1"
 #define FDMURLLISTRECEIVER_CLASSNAME "Free Download Manager Url List rcvr component for Firefox"

@@ -12,6 +12,7 @@
 #include "CreateDownloadsDlg.h"
 #include "HFESheet.h"
 #include "MainFrm.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -547,7 +548,17 @@ fs::tree <fsFileInfo*>* CHFE_FileList::BuildList(LPCSTR pszFolder, BOOL *pbNeedS
 			if (mgr->GetFileCount () != cFiles) 
 				throw 1;
 			}
-			catch (...) {
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog(" " + tstring(ex.what()));
+				SAFE_DELETE (pRoot);
+				throw 1;
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog(" unknown exception");
 				SAFE_DELETE (pRoot);
 				throw 1;
 			}
@@ -639,12 +650,23 @@ DWORD WINAPI CHFE_FileList::_threadBuildList(LPVOID lp)
 		pCur->Data (apfiFileInfoGuard.release());
 		if (file->bFolder)
 		{
-			try {
-			fs::tree <fsFileInfo*>* pChildren = BuildList (file->strName, &info->bNeedStop,
-				&info->iProgress, 100/cItems); 
-			pCur->Right (pChildren);
+			try 
+			{
+				fs::tree <fsFileInfo*>* pChildren = BuildList (file->strName, &info->bNeedStop,
+					&info->iProgress, 100/cItems); 
+				pCur->Right (pChildren);
 			}
-			catch (...) {
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog(" " + tstring(ex.what()));
+				bFatalError = true;
+				break;
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog(" unknown exception");
 				bFatalError = true;
 				break;
 			}

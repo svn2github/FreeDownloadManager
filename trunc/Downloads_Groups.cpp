@@ -13,6 +13,7 @@
 #include "DlgDownloadsHistory.h"
 #include "DlgT1ToT2.h"
 #include "FolderBrowser.h"
+#include "vmsLogger.h"
 
 extern CShedulerWnd* _pwndScheduler;
 
@@ -735,9 +736,21 @@ void CDownloads_Groups::OnDeletedClear()
 	{
 		if (_pwndDownloads->Get_DWWN () == DWWN_DELETED)
 			_pwndDownloads->m_wndDeleted.ShowWindow (SW_HIDE);
-		try {
+		try 
+		{
 			_DldsMgr.ClearDeleted ();	
-		}catch (...) {}
+		}
+		catch (const std::exception& ex)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("CDownloads_Groups::OnDeletedClear " + tstring(ex.what()));
+		}
+		catch (...)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("CDownloads_Groups::OnDeletedClear unknown exception");
+		}
+
 		if (_pwndDownloads->Get_DWWN () == DWWN_DELETED)
 			_pwndDownloads->m_wndDeleted.ShowWindow (SW_SHOW);
 	}
@@ -1081,7 +1094,17 @@ void CDownloads_Groups::UpdateNumbersOfDownloadsInGroups()
 		SetItemText (m_hAllGroups, str);
 	}
 
-	}catch (...) {}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Groups::UpdateNumbersOfDownloadsInGroups " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Groups::UpdateNumbersOfDownloadsInGroups unknown exception");
+	}
 }
 
 void CDownloads_Groups::OnGrpdeletealldeaddlds() 

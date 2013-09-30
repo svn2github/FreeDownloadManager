@@ -8,6 +8,7 @@
 #include <libtorrent/alert_types.hpp>
 #include <libtorrent/extensions/ut_pex.hpp>
 #include <atlbase.h>
+#include <magnet_uri.hpp>
 
 bool _bWasShutdown = false;
 
@@ -133,14 +134,29 @@ vmsBtDownload* vmsBtSessionImpl::CreateDownload (vmsBtFile *torrent, LPCSTR pszO
 		LPCWSTR pwszOutputPath = A2CW (pszOutputPath);
 		std::string utf8;
 		libtorrent::wchar_utf8 (pwszOutputPath, utf8);
-		th = m_session.add_torrent (*torrentimpl->m_torrent, utf8, entryFastResume, sm);
+		
+		if (torrentimpl->IsMagnetLink())
+		{
+			boost::system::error_code err;
+
+			libtorrent::add_torrent_params p;
+			p.save_path = utf8;
+			p.storage_mode = (libtorrent::storage_mode_t)libtorrent::storage_mode_allocate;
+			p.paused = true;
+			p.duplicate_is_error = false;
+			p.auto_managed = true;
+
+			th = libtorrent::add_magnet_uri(m_session, torrentimpl->GetMagnetLink(), p, err);
+		}
+		else
+		{
+			th = m_session.add_torrent (*torrentimpl->m_torrent, utf8, entryFastResume, sm);
+		}
+
 		th.set_ratio (1);
 
-		vmsBtDownloadImpl *pDld = new vmsBtDownloadImpl;
+		vmsBtDownloadImpl *pDld = new vmsBtDownloadImpl(th, torrentimpl, utf8);
 		pDld->AddRef ();
-		pDld->m_handle = th;
-		pDld->m_spTorrent = torrentimpl;
-		pDld->m_strOutputPath = szPath;
 		
 		m_vDownloads.push_back (pDld);
 		return pDld;
@@ -155,16 +171,20 @@ void vmsBtSessionImpl::DeleteDownload (vmsBtDownload* pDld)
 {
 	vmsAUTOLOCKSECTION (m_csDownloads);
 
-	vmsBtDownloadImpl *p = dynamic_cast <vmsBtDownloadImpl*> (pDld);
-	if (p)
+	vmsBtDownloadImpl *downloadImpl = dynamic_cast <vmsBtDownloadImpl*>(pDld);
+	if (downloadImpl)
 	{
-		int nIndex = FindDownloadIndex (p->m_handle);
+		int nIndex = FindDownloadIndex (downloadImpl->GetHandle());
 		if (nIndex != -1)
+		{
 			m_vDownloads.erase (m_vDownloads.begin () + nIndex);
-		try {
-			m_session.remove_torrent (p->m_handle);
-		}catch (...) {}
-		p->Release ();
+		}
+		try 
+		{
+			m_session.remove_torrent (downloadImpl->GetHandle());
+		}
+		catch (...) {}
+		downloadImpl->Release ();
 	}
 }
 
@@ -527,7 +547,8 @@ int vmsBtSessionImpl::FindDownloadIndex (const libtorrent::torrent_handle &h)
 {
 	for (size_t i = 0; i < m_vDownloads.size (); i++)
 	{
-		if (m_vDownloads [i]->m_handle == h)
+		vmsBtDownloadImpl* dwnld = m_vDownloads.at(i);
+		if (dwnld != NULL && dwnld->GetHandle() == h)
 			return i;
 	}
 
@@ -561,14 +582,24 @@ void vmsBtSessionImpl::RestoreDownloadHandle (vmsBtDownloadImpl* dld)
 {
 	vmsAUTOLOCKSECTION (m_csRestoreTorrentHandle);
 
-	if (dld->m_handle.is_valid ())
+	if (dld == NULL || dld->GetHandle().is_valid ())
 		return;
 
-	try {
-		dld->m_handle = m_session.add_torrent (*dld->m_spTorrent->m_torrent, dld->m_strOutputPath);
-		dld->m_handle.pause ();
+	try 
+	{
+		vmsBtFileImplPtr dldImpl = dld->GetTorrentImpl();
+		if (dldImpl == NULL || dldImpl->m_torrent == NULL)
+		{
+			return;
+		}
+		libtorrent::torrent_handle& handleLink = dld->GetHandle();
+		handleLink = m_session.add_torrent(*dldImpl->m_torrent, dld->GetOutputPath());
+		dld->GetHandle().pause();
 	}
-	catch (...) {return;}
+	catch (...) 
+	{
+		return;
+	}
 
 	vmsAUTOLOCKSECTION_UNLOCK (m_csRestoreTorrentHandle);
 

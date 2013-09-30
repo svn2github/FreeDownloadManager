@@ -6,6 +6,7 @@
 #include "FdmApp.h"
 #include "FloatingInfoWnd.h"
 #include "DownloadsWnd.h"
+#include "vmsLogger.h"
 
 extern CDownloadsWnd* _pwndDownloads;
 
@@ -147,36 +148,45 @@ void CFloatingInfoWnd::RebuildList()
 
 	m_wndList.DeleteAllItems ();
 
-	try{
-
-	DLDS_LIST vAddToList, v;
-
-	_DldsMgr.LockList (true);
-	size_t nCount = _DldsMgr.GetCount ();
-	for (size_t i = 0; i < nCount; i++)
+	try
 	{
-		vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);
-		if (dld->pMgr->IsRunning ())
+		DLDS_LIST vAddToList, v;
+
+		_DldsMgr.LockList (true);
+		size_t nCount = _DldsMgr.GetCount ();
+		for (size_t i = 0; i < nCount; i++)
 		{
-			bDownloading = true;
-			vAddToList.push_back (dld);
+			vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);
+			if (dld->pMgr->IsRunning ())
+			{
+				bDownloading = true;
+				vAddToList.push_back (dld);
+			}
+			if (dld->pMgr->IsBittorrent () && 
+					dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ())
+			{
+				v.push_back (dld);
+			}
 		}
-		if (dld->pMgr->IsBittorrent () && 
-				dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ())
-		{
-			v.push_back (dld);
-		}
-	}
-	_DldsMgr.UnlockList (true);
+		_DldsMgr.UnlockList (true);
 
-	for (size_t i = 0; i < vAddToList.size (); i++)
-		AddDownloadToList (vAddToList [i], false);
+		for (size_t i = 0; i < vAddToList.size (); i++)
+			AddDownloadToList (vAddToList [i], false);
 
-	for (size_t i = 0; i < v.size (); i++)
-		AddDownloadToList (v [i], true);
+		for (size_t i = 0; i < v.size (); i++)
+			AddDownloadToList (v [i], true);
 
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CFloatingInfoWnd::RebuildList " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CFloatingInfoWnd::RebuildList unknown exception");
+	}
 	
 	m_mxList.Unlock ();
 
@@ -205,25 +215,35 @@ void CFloatingInfoWnd::AddDownloadToList(vmsDownloadSmartPtr dld, bool bUploadIn
 
 void CFloatingInfoWnd::UpdateDownloadProgress(int nItem)
 {
-try{
-	CString str;
-	bool bUpload = m_wndList.GetItemImage (nItem) == 1;
-	if (bUpload == false)
+	try
 	{
-		const int nPercentDone = (int)((fsDownload*) m_wndList.GetItemData (nItem))->pMgr->GetPercentDone ();
-		if (nPercentDone == -1)
+		CString str;
+		bool bUpload = m_wndList.GetItemImage (nItem) == 1;
+		if (bUpload == false)
 		{
-			UINT64 uDone = (int)((fsDownload*) m_wndList.GetItemData (nItem))->pMgr->GetDownloadedBytesCount ();
-			float val;
-			char szDim [10];
-			BytesToXBytes (uDone, &val, szDim);
-			str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+			const int nPercentDone = (int)((fsDownload*) m_wndList.GetItemData (nItem))->pMgr->GetPercentDone ();
+			if (nPercentDone == -1)
+			{
+				UINT64 uDone = (int)((fsDownload*) m_wndList.GetItemData (nItem))->pMgr->GetDownloadedBytesCount ();
+				float val;
+				char szDim [10];
+				BytesToXBytes (uDone, &val, szDim);
+				str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+			}
+			else
+				str.Format ("%d%%", nPercentDone);
 		}
-		else
-			str.Format ("%d%%", nPercentDone);
+		m_wndList.SetItemText (nItem, 1, str);
 	}
-	m_wndList.SetItemText (nItem, 1, str);
-}catch (...){}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CFloatingInfoWnd::UpdateDownloadProgress " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		vmsLogger::WriteLog("CFloatingInfoWnd::UpdateDownloadProgress unknown exception");
+	}
 }
 
 int CFloatingInfoWnd::FindIndex(vmsDownloadSmartPtr dld)
@@ -245,16 +265,24 @@ void CFloatingInfoWnd::OnTimer(UINT nIDEvent)
 		return;
 	}
 	
-	try {
-
-	for (int i = 0; i < m_wndList.GetItemCount (); i++)
+	try 
 	{
-		UpdateDownloadProgress (i);
-		UpdateDownloadSpeed (i);
+		for (int i = 0; i < m_wndList.GetItemCount (); i++)
+		{
+			UpdateDownloadProgress (i);
+			UpdateDownloadSpeed (i);
+		}
 	}
-
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CFloatingInfoWnd::OnTimer " + tstring(ex.what()));
 	}
-	catch (...) {}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CFloatingInfoWnd::OnTimer unknown exception");
+	}
 
 	BOOL bFS = fsIsSystemInFullScreenMode ();	
 	if (!m_bWasFS != !bFS) 
@@ -291,20 +319,31 @@ void CFloatingInfoWnd::NeedToShow(BOOL b)
 
 void CFloatingInfoWnd::UpdateDownloadSpeed(int nItem)
 {
-try{
-	CString str;
-	CHAR szDim [10];
-	float val;
+	try
+	{
+		CString str;
+		CHAR szDim [10];
+		float val;
 
-	bool bUpload = m_wndList.GetItemImage (nItem) == 1;
+		bool bUpload = m_wndList.GetItemImage (nItem) == 1;
 
-	fsDownload *dld = (fsDownload*)m_wndList.GetItemData (nItem);
+		fsDownload *dld = (fsDownload*)m_wndList.GetItemData (nItem);
 
-	BytesToXBytes (bUpload ? dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed () : 
-		dld->pMgr->GetSpeed (), &val, szDim);
-	str.Format ("%.*g %s/s", val > 999 ? 4 : 3, val, szDim);
-	m_wndList.SetItemText (nItem, 2, str);
-}catch (...){}
+		BytesToXBytes (bUpload ? dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed () : 
+			dld->pMgr->GetSpeed (), &val, szDim);
+		str.Format ("%.*g %s/s", val > 999 ? 4 : 3, val, szDim);
+		m_wndList.SetItemText (nItem, 2, str);
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CFloatingInfoWnd::UpdateDownloadSpeed " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CFloatingInfoWnd::UpdateDownloadSpeed unknown exception");
+	}
 }
 
 void CFloatingInfoWnd::TurnOffWindow()

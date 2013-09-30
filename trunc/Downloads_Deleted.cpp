@@ -6,6 +6,7 @@
 #include "FdmApp.h"
 #include "Downloads_Deleted.h"
 #include "DownloadsWnd.h"
+#include "vmsLogger.h"
 
 extern CDownloadsWnd* _pwndDownloads;
 
@@ -261,10 +262,21 @@ void CDownloads_Deleted::OnDeletedDelete()
 		{
 			if (_pwndDownloads->Get_DWWN () == DWWN_DELETED)
 				_pwndDownloads->m_wndDeleted.ShowWindow (SW_HIDE);
-			try {
+			try 
+			{
 				_DldsMgr.DeleteDeletedDownloads (v);
 			}
-			catch (...) {}
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("CDownloads_Deleted::OnDeletedDelete " + tstring(ex.what()));
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("CDownloads_Deleted::OnDeletedDelete unknown exception");
+			}
+
 			if (_pwndDownloads->Get_DWWN () == DWWN_DELETED)
 				_pwndDownloads->m_wndDeleted.ShowWindow (SW_SHOW);
 		}
@@ -286,10 +298,21 @@ void CDownloads_Deleted::OnDeletedRestore()
 	{
 		if (_pwndDownloads->Get_DWWN () == DWWN_DELETED)
 			_pwndDownloads->m_wndDeleted.ShowWindow (SW_HIDE);
-		try {
+		try 
+		{
 			_DldsMgr.RestoreDownloads (v);
 		}
-		catch (...) {}
+		catch (const std::exception& ex)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("CDownloads_Deleted::OnDeletedRestore " + tstring(ex.what()));
+		}
+		catch (...)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("CDownloads_Deleted::OnDeletedRestore unknown exception");
+		}
+
 		if (_pwndDownloads->Get_DWWN () == DWWN_DELETED)
 			_pwndDownloads->m_wndDeleted.ShowWindow (SW_SHOW);
 	}	

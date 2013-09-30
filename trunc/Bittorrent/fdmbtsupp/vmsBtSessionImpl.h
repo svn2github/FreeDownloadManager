@@ -13,6 +13,10 @@ class vmsBtSessionImpl : public vmsBtSession, vmsBtPersistObject,
 	protected vmsPersistObject
 {
 public:
+	vmsBtSessionImpl();
+	virtual ~vmsBtSessionImpl();
+	static vmsBtSessionImpl* Instance ();
+
 	void SetMaxConnections (int limit);
 	void setWriteCacheSize (DWORD cache_size);
 	void setMultiTracker (bool announce_to_all_trackers, bool announce_to_all_tiers);
@@ -49,12 +53,7 @@ public:
 	virtual void getStateBuffer (LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage) {
 		vmsPersistObject::getStateBuffer (pb, pdwSize, bSaveToStorage);
 	}
-
-	static vmsBtSessionImpl* Instance ();
-	vmsBtSessionImpl(void);
-public:
-	virtual ~vmsBtSessionImpl(void);
-
+	
 public:
 	libtorrent::session m_session;
 

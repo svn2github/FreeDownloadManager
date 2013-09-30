@@ -24,6 +24,7 @@
 #include "MyMessageBox.h"
 #include "mfchelp.h"
 #include "FdmUiWindow.h"
+#include "vmsLogger.h"
 
 extern CDownloadsWnd *_pwndDownloads;
 
@@ -164,7 +165,7 @@ void CCreateDownloadDlg::OnOK()
 	
 	if (_App.CheckIfDownloadWithSameUrlExists ())
 	{
-		int ret = _CheckDownloadAlrExists (m_dld);
+		int ret = _CheckDownloadAlrExists (m_dld, 0, 1, this);
 		if (ret)
 		{
 			SAFE_DELETE_ARRAY (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
@@ -804,66 +805,75 @@ DWORD WINAPI CCreateDownloadDlg::_threadQSize(LPVOID lp)
 {
 	CCreateDownloadDlg *pThis = (CCreateDownloadDlg*) lp;
 
-try{
-
-	if (pThis->m_pszCookies)
+	try
 	{
-		SAFE_DELETE_ARRAY (pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies);
-		pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies = new char [lstrlen (pThis->m_pszCookies) + 1];
-		lstrcpy (pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies, pThis->m_pszCookies);
-	}
+		if (pThis->m_pszCookies)
+		{
+			SAFE_DELETE_ARRAY (pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies);
+			pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies = new char [lstrlen (pThis->m_pszCookies) + 1];
+			lstrcpy (pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies, pThis->m_pszCookies);
+		}
 
-	if (pThis->m_pszPostData)
-	{
-		SAFE_DELETE_ARRAY (pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszPostData);
-		pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszPostData = new char [lstrlen (pThis->m_pszPostData) + 1];
-		lstrcpy (pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszPostData, pThis->m_pszPostData);
-	}
+		if (pThis->m_pszPostData)
+		{
+			SAFE_DELETE_ARRAY (pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszPostData);
+			pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszPostData = new char [lstrlen (pThis->m_pszPostData) + 1];
+			lstrcpy (pThis->m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszPostData, pThis->m_pszPostData);
+		}
 
-	fsInternetResult ir = pThis->m_dld->pMgr->GetDownloadMgr ()->QuerySize ();
+		fsInternetResult ir = pThis->m_dld->pMgr->GetDownloadMgr ()->QuerySize ();
 	
-	if (ir != IR_SUCCESS)
-	{
-		char szMsg [1000];
-		fsIRToStr (ir, szMsg, sizeof (szMsg));
+		if (ir != IR_SUCCESS)
+		{
+			char szMsg [1000];
+			fsIRToStr (ir, szMsg, sizeof (szMsg));
+			if (pThis->m_bNeedExit == FALSE)
+			{
+				pThis->MessageBox (szMsg, LS (L_ERR), MB_ICONERROR);
+				pThis->SetDlgItemText (IDC_QSIZE, LS (L_QUERYSIZE));
+				pThis->GetDlgItem (IDC_QSIZE)->EnableWindow (TRUE);
+			}
+			pThis->m_bThread = FALSE;
+			return 0;
+		}
+
+		CString strSize;
+		UINT64 uSize = pThis->m_dld->pMgr->GetDownloadMgr ()->GetDownloader ()->GetSSFileSize ();
+
 		if (pThis->m_bNeedExit == FALSE)
 		{
-			pThis->MessageBox (szMsg, LS (L_ERR), MB_ICONERROR);
-			pThis->SetDlgItemText (IDC_QSIZE, LS (L_QUERYSIZE));
+			if (uSize == _UI64_MAX)
+				strSize = LS (L_UNKNOWN);
+			else
+			{
+				if (_pwndDownloads->IsSizesInBytes () == FALSE)
+				{
+					char szDim [50];
+					float fSize;
+					BytesToXBytes (uSize, &fSize, szDim);
+					strSize.Format ("%.*g %s", fSize > 999 ? 4 : 3, fSize, szDim);
+				}
+				else
+					strSize = fsBytesToStr (uSize); 
+			}
+
+			
+			pThis->SetDlgItemText (IDC_QSIZE, strSize);
 			pThis->GetDlgItem (IDC_QSIZE)->EnableWindow (TRUE);
 		}
+
 		pThis->m_bThread = FALSE;
-		return 0;
 	}
-
-	CString strSize;
-	UINT64 uSize = pThis->m_dld->pMgr->GetDownloadMgr ()->GetDownloader ()->GetSSFileSize ();
-
-	if (pThis->m_bNeedExit == FALSE)
+	catch (const std::exception& ex)
 	{
-		if (uSize == _UI64_MAX)
-			strSize = LS (L_UNKNOWN);
-		else
-		{
-			if (_pwndDownloads->IsSizesInBytes () == FALSE)
-			{
-				char szDim [50];
-				float fSize;
-				BytesToXBytes (uSize, &fSize, szDim);
-				strSize.Format ("%.*g %s", fSize > 999 ? 4 : 3, fSize, szDim);
-			}
-			else
-				strSize = fsBytesToStr (uSize); 
-		}
-
-		
-		pThis->SetDlgItemText (IDC_QSIZE, strSize);
-		pThis->GetDlgItem (IDC_QSIZE)->EnableWindow (TRUE);
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CCreateDownloadDlg::_threadQSize " + tstring(ex.what()));
 	}
-
-	pThis->m_bThread = FALSE;
-
-}catch (...) {} 
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CCreateDownloadDlg::_threadQSize unknown exception");
+	}
 
 	return 0;
 }
@@ -900,7 +910,8 @@ void CCreateDownloadDlg::OnFileauto()
 	UpdateEnabled ();
 }
 
-int CCreateDownloadDlg::_CheckDownloadAlrExists(vmsDownloadSmartPtr dld, BOOL bNeedTopMost, BOOL bShowUI)
+int CCreateDownloadDlg::_CheckDownloadAlrExists(
+	vmsDownloadSmartPtr dld, BOOL bNeedTopMost, BOOL bShowUI, CCreateDownloadDlg* const cddlg)
 {
 	fsURL url1, url2;
 
@@ -963,9 +974,28 @@ int CCreateDownloadDlg::_CheckDownloadAlrExists(vmsDownloadSmartPtr dld, BOOL bN
 			break;
 
 		case IDC_RESTART:
-			_pwndDownloads->RestartDownload (dldSame, TRUE);
-			break;
+			{
+				if (cddlg != NULL)
+				{
+					
+					fsDownload_NetworkProperties* props = dldSame->pMgr->GetDownloadMgr()->GetDNP();
+					
+					if (cddlg->m_pszCookies != NULL)
+					{
+						props->pszCookies = new char[strlen(cddlg->m_pszCookies)];
+						strcpy(props->pszCookies, cddlg->m_pszCookies);
+					}
+					
+					if (cddlg->m_pszPostData != NULL)
+					{
+						props->pszPostData = new char[strlen(cddlg->m_pszPostData)];
+						strcpy(props->pszPostData, cddlg->m_pszPostData);
+					}
+				}
 
+				_pwndDownloads->RestartDownload (dldSame, TRUE);
+				break;
+			}
 		case IDC_LAUNCH:
 			if (dldSame->pMgr->GetDownloadMgr ()->IsDone ())
 				ShellExecute (::GetDesktopWindow (), "open", dldSame->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, 

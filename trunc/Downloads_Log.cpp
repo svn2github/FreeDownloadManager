@@ -6,6 +6,7 @@
 #include "FdmApp.h"
 #include "Downloads_Log.h"
 #include "DownloadsWnd.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -131,11 +132,22 @@ void CDownloads_Log::SetActiveDownload(vmsDownloadSmartPtr dld)
 	if (b)
 		ShowWindow (SW_HIDE);
 
-	try {
+	try 
+	{
 		
 		for (int i = 0; i < cEvs; i++)
 			AddRecord (&dld->vEvents [i]);
-	}catch (...){}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Log::SetActiveDownload " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Log::SetActiveDownload unknown exception");
+	}
 
 	if (b)
 		ShowWindow (SW_SHOW);

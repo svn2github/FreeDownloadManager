@@ -6,8 +6,10 @@
 #include "fdm.h"
 #include "Dlg_Options_Downloads_Bittorrent.h"
 #include "vmsTorrentExtension.h"
+#include "vmsMagnetExtension.h"
 #include "vmsDialogHelper.h"
 #include "vistafx/vistafx.h"
+#include "vmsFdmUtils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -40,6 +42,7 @@ BEGIN_MESSAGE_MAP(CDlg_Options_Downloads_Bittorrent, CDlg_Options_Page)
 	ON_BN_CLICKED(IDC_ENABLE, OnEnable)
 	ON_BN_CLICKED(IDC_LIMITCONNS, OnLimitconns)
 	ON_BN_CLICKED(IDC_ASSOCWITHTORRENT, OnAssocwithtorrent)
+	ON_BN_CLICKED(IDC_ASSOCWITHMAGNET, OnAssocwithMagnet)
 	ON_EN_CHANGE(IDC_CONNSLIMITVAL, OnChangeConnslimitval)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
@@ -93,6 +96,9 @@ BOOL CDlg_Options_Downloads_Bittorrent::OnInitDialog()
 	
 	CheckDlgButton (IDC_ASSOCWITHTORRENT, 
 		vmsTorrentExtension::IsAssociatedWithUs () ? BST_CHECKED : BST_UNCHECKED);
+
+	CheckDlgButton (IDC_ASSOCWITHMAGNET, 
+		vmsMagnetExtension::IsAssociatedWithUs () ? BST_CHECKED : BST_UNCHECKED);
 		
 	ApplyLanguage ();
 	
@@ -137,7 +143,7 @@ BOOL CDlg_Options_Downloads_Bittorrent::Apply()
 		if (FALSE == vmsTorrentExtension::AssociateWith (_App.Bittorrent_OldTorrentAssociation ()) && 
 				GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
 		{
-			m_tstrFdmElevateArgs = _T ("-assocwithtorrent=0");
+			m_tstrFdmElevateArgs += _T ("-assocwithtorrent=0 ");
 			setElevateRequired (true);
 		}
 	}
@@ -146,9 +152,17 @@ BOOL CDlg_Options_Downloads_Bittorrent::Apply()
 		_App.Bittorrent_OldTorrentAssociation (vmsTorrentExtension::GetCurrentAssociation ());
 		if (FALSE == vmsTorrentExtension::Associate () && GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
 		{
-			m_tstrFdmElevateArgs = _T ("-assocwithtorrent=1");
+			m_tstrFdmElevateArgs += _T ("-assocwithtorrent=1 ");
 			setElevateRequired (true);
 		}
+	}
+
+	bAssoc = IsDlgButtonChecked (IDC_ASSOCWITHMAGNET) == BST_CHECKED;
+	if (!vmsFdmUtils::AssociateFdmWithMagnetLinks (bAssoc) && 
+			GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
+	{
+		m_tstrFdmElevateArgs += bAssoc ? _T ("-assocwithmagnet=1 ") : _T ("-assocwithmagnet=0 ");
+		setElevateRequired (true);
 	}
 	
 	if (bEn == FALSE)
@@ -299,6 +313,7 @@ void CDlg_Options_Downloads_Bittorrent::ApplyLanguage()
 		fsDlgLngInfo (IDC__TO, L_TO, TRUE),
 		fsDlgLngInfo (IDC_USE_DHT, L_ENABLE_DHT),
 		fsDlgLngInfo (IDC_ASSOCWITHTORRENT, L_ASSOCWITHTORRENT),
+		fsDlgLngInfo (IDC_ASSOCWITHMAGNET, L_ASSOCWITHMAGNET),
 		fsDlgLngInfo (IDC__MAXHALFS, L_MAXHALFCONNS, TRUE),
 	};
 	
@@ -335,6 +350,22 @@ void CDlg_Options_Downloads_Bittorrent::OnAssocwithtorrent()
 		if (!bAssoc && vmsTorrentExtension::IsAssociatedWithUs ())
 			bNeedElevate = true;
 		else if (bAssoc && !vmsTorrentExtension::IsAssociatedWithUs ())
+			bNeedElevate = true;
+
+		setElevateRequired (bNeedElevate);
+	}
+}
+
+void CDlg_Options_Downloads_Bittorrent::OnAssocwithMagnet()
+{
+	if (VistaFx::IsVistaOrHigher () && !vmsTorrentExtension::CheckAccessRights ())
+	{
+		bool bAssoc = IsDlgButtonChecked (IDC_ASSOCWITHMAGNET) == BST_CHECKED;
+		bool bNeedElevate = false;
+
+		if (!bAssoc && vmsMagnetExtension::IsAssociatedWithUs ())
+			bNeedElevate = true;
+		else if (bAssoc && !vmsMagnetExtension::IsAssociatedWithUs ())
 			bNeedElevate = true;
 
 		setElevateRequired (bNeedElevate);

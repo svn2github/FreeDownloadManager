@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "FdmApp.h"
 #include "vmsDownloadMgrEx.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -428,30 +429,6 @@ int vmsDownloadMgrEx::GetConnectionCount()
 		return m_pTpMgr->get_ConnectionCount ();
 }
 
-BOOL vmsDownloadMgrEx::SaveState(LPBYTE pb, DWORD *pdwSize)
-{
-	if (pb)
-		(*pdwSize)--;
-
-	BOOL bOk = m_pMgr ? m_pMgr->SaveState (pb ? pb + 1 : NULL, pdwSize) :
-		m_spBtMgr ? m_spBtMgr->SaveState (pb ? pb + 1 : NULL, pdwSize) :
-		m_pTpMgr ? m_pTpMgr->SaveState (pb ? pb + 1 : NULL, pdwSize) : false;
-
-	(*pdwSize)++;
-
-	if (bOk == FALSE)
-		return FALSE;
-
-	if (pb)
-	{
-		if (m_pMgr) *pb = 0;
-		else if (m_spBtMgr) *pb = 1;
-		else if (m_pTpMgr) *pb = 2;
-	}
-
-	return bOk;
-}
-
 BOOL vmsDownloadMgrEx::LoadState(LPBYTE lpBuffer, LPDWORD lpdwSize, WORD wVer)
 {
 #define CHECK_BOUNDS(need) if (need < 0 || need > int(*lpdwSize) - (pB - LPBYTE (lpBuffer))) return FALSE;
@@ -510,8 +487,8 @@ BOOL vmsDownloadMgrEx::IsTp()
 
 void vmsDownloadMgrEx::GetSplittedSectionsList(std::vector <vmsSectionInfo> &v)
 {
-	try{
-
+	try
+	{
 		std::vector <vmsSectionInfo> vBtSects;
 		if (m_spBtMgr)
 			m_spBtMgr->GetSectionsInfo (vBtSects);
@@ -543,10 +520,19 @@ void vmsDownloadMgrEx::GetSplittedSectionsList(std::vector <vmsSectionInfo> &v)
 				
 			}
 		}
-		
-	}catch (...) {v.clear ();}	
-	
-	
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("vmsDownloadMgrEx::GetSplittedSectionsList " + tstring(ex.what()));
+		v.clear ();
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("vmsDownloadMgrEx::GetSplittedSectionsList unknown exception");
+		v.clear ();
+	}
 }
 
 BOOL vmsDownloadMgrEx::IsReservingDiskSpace()

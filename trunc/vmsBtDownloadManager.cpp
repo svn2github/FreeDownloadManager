@@ -8,6 +8,7 @@
 #include "FdmApp.h"
 #include "vmsBtDownloadManager.h"
 #include "TorrentMoveErrorDlg.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -23,6 +24,8 @@ LONG vmsBtDownloadManager::m_cStatDataRefs = 0;
 HANDLE vmsBtDownloadManager::m_hmxStaticObj = CreateMutex (NULL, FALSE, NULL);
 
 vmsBtDownloadManager::vmsBtDownloadManager()
+	: m_errorState(BTDES_NO_ERROR)	
+	, m_downloadMagnetMetadata(false)
 {
 	WaitForSingleObject (m_hmxStaticObj, INFINITE);
 	if (InterlockedIncrement (&m_cStatDataRefs) == 1)
@@ -104,7 +107,7 @@ BOOL vmsBtDownloadManager::CreateByTorrentFile(LPCSTR pszTorrentFile, LPCSTR psz
 
 	vmsAUTOLOCKSECTION (m_csTorrentFile);
 
-	if (!LoadTorrentFile (pszTorrentFile))
+	if (!LoadTorrent(pszTorrentFile))
 		return FALSE;
 
 	if (bSeedOnly)
@@ -124,16 +127,11 @@ BOOL vmsBtDownloadManager::CreateByTorrentFile(LPCSTR pszTorrentFile, LPCSTR psz
 		enable_Flags (BTDF_NEVER_DELETE_FILES_ON_DISK);
 	}
 
-	m_info.strTorrentUrl = pszTorrentUrl;
-	m_info.strOutputPath = pszOutputPath;
-	if (m_info.strOutputPath [m_info.strOutputPath.GetLength () - 1] != '\\')
-		m_info.strOutputPath += '\\';
-
 	m_info.pfProgress = new float [get_FileCount () * sizeof (float)];
 	for (int i = get_FileCount () - 1; i >= 0; i--)
 		m_info.pfProgress [i] = bSeedOnly ? 1.0f : 0;
 
-	setDirty();
+	SetTorrentInfo(pszTorrentFile, pszOutputPath);
 
 	vmsAUTOLOCKSECTION_UNLOCK (m_csTorrentFile);
 
@@ -143,6 +141,61 @@ BOOL vmsBtDownloadManager::CreateByTorrentFile(LPCSTR pszTorrentFile, LPCSTR psz
 	setDirty();
 
 	return TRUE;
+}
+
+BOOL vmsBtDownloadManager::CreateByMagnetLink (LPCTSTR pszMagnetLink, LPCTSTR pszOutputPath)
+{
+	assert (pszMagnetLink != NULL);
+	if (!pszMagnetLink)
+		return FALSE;
+
+	vmsAUTOLOCKSECTION (m_csTorrentFile);
+
+	if (!LoadTorrent(pszMagnetLink, TRUE))
+		return FALSE;
+
+	SetTorrentInfo(pszMagnetLink, pszOutputPath);
+	m_fRequiredRatio = _App.Bittorrent_RequiredRatio();
+
+	vmsAUTOLOCKSECTION_UNLOCK (m_csTorrentFile);
+	return TRUE;
+}
+
+BOOL vmsBtDownloadManager::CreateByMagnetMetadata (vmsBtFile* vmsFile, LPCTSTR pszOutputPath)
+{
+	assert (vmsFile != NULL);
+	if (!vmsFile)
+	{
+		return FALSE;
+	}
+	vmsAUTOLOCKSECTION (m_csTorrentFile);
+
+	if (!LoadTorrent(NULL, TRUE, vmsFile))
+		return FALSE;
+
+	LPCTSTR magnetLink;
+#ifdef UNICODE
+	std::wstring wtemp = (LPCWSTR)vmsFile->GetMagnetLink();
+	m_magnetLink.assign(wtemp.begin(), wtemp.end());
+#else
+	magnetLink = (LPCSTR)vmsFile->GetMagnetLink();
+#endif
+
+	SetTorrentInfo(magnetLink, pszOutputPath);
+	m_fRequiredRatio = _App.Bittorrent_RequiredRatio();
+
+	vmsAUTOLOCKSECTION_UNLOCK (m_csTorrentFile);
+	return TRUE;
+}
+
+void vmsBtDownloadManager::SetTorrentInfo(LPCTSTR pszTorrentFile, LPCTSTR pszOutputPath)
+{
+	m_info.strTorrentUrl = pszTorrentFile;
+	m_info.strOutputPath = pszOutputPath;
+	if (m_info.strOutputPath [m_info.strOutputPath.GetLength () - 1] != '\\')
+		m_info.strOutputPath += '\\';
+
+	setDirty();
 }
 
 BOOL vmsBtDownloadManager::CreateBtDownload()
@@ -258,6 +311,10 @@ void vmsBtDownloadManager::DeleteBtDownload()
 vmsBtDownloadStateEx vmsBtDownloadManager::get_State()
 {
 	vmsAUTOLOCKSECTION (m_csDownload);
+	if (m_errorState != BTDES_NO_ERROR)
+	{
+		return (vmsBtDownloadStateEx)m_errorState;
+	}
 	vmsBtDownloadStateEx enState = m_pDownload ?
 		(vmsBtDownloadStateEx) m_pDownload->GetState () : BTDSE_STOPPED;
 	return enState;
@@ -869,10 +926,17 @@ fsInternetResult vmsBtDownloadManager::StartDownloading()
 {
 	vmsAUTOLOCKSECTION (m_csDownload);
 
+	if (m_downloadMagnetMetadata && m_pDownload != NULL && m_pDownload->is_HandleValid())
+	{
+		return IR_SUCCESS;
+	}
+
 	
 	m_bStoppedByUser = TRUE;
 
-	if (m_info.bDone || m_bDlThreadRunning)
+	
+	
+	if (m_info.bDone || m_bDlThreadRunning && (m_pTorrent != NULL && m_pTorrent->IsValid() == TRUE))
 		return IR_S_FALSE;
 
 	if (m_pDownload == NULL && FALSE == CreateBtDownload ())
@@ -923,191 +987,6 @@ int vmsBtDownloadManager::get_ConnectionCount()
 {
 	vmsAUTOLOCKSECTION (m_csDownload);
 	return m_pDownload ? m_pDownload->get_ConnectionCount () : 0;
-}
-
-BOOL vmsBtDownloadManager::SaveState(LPBYTE pb, LPDWORD pdwSize)
-{
-	vmsAUTOLOCKSECTION (m_csDownload);
-	vmsAUTOLOCKSECTION (m_csTorrentFile);
-	vmsAUTOLOCKSECTION (m_csMisc);
-
-	if (m_pDownload && pb == NULL)
-		SaveBtDownloadState (false);
-
-	#define CHECK_SIZE(need) {if (pb != NULL && *pdwSize < (UINT)(pb + need - pbOld)) goto _lSizeErr;}
-
-	LPBYTE pbOld = pb;
-
-	DWORD dwNeedSize = sizeof (DWORD); 
-
-	dwNeedSize += sizeof (int) + m_info.strOutputPath.GetLength ();
-	dwNeedSize += sizeof (int) + m_info.strTorrentUrl.GetLength ();
-	dwNeedSize += sizeof (int) + m_info.strTrackerUser.GetLength ();
-	dwNeedSize += sizeof (int) + m_info.strTrackerPassword.GetLength ();
-
-	dwNeedSize += sizeof (float) * get_FileCount (); 
-	dwNeedSize += sizeof (int) + m_info.strLastTracker.GetLength ();
-	dwNeedSize += sizeof (m_info.nUploadedBytes);
-	dwNeedSize += sizeof (m_info.fShareRating);
-	dwNeedSize += sizeof (m_info.nWastedBytes);
-	dwNeedSize += sizeof (m_info.fPercentDone);
-	dwNeedSize += sizeof (m_info.bDone);
-	dwNeedSize += sizeof (int) + sizeof (BYTE) * m_info.vPieces.size ();
-	dwNeedSize += sizeof (m_info.nDownloadedBytes);
-	dwNeedSize += sizeof (int) + sizeof (BYTE) * m_info.vFilesPriorities.size ();
-	dwNeedSize += sizeof (m_fRequiredRatio);
-
-	dwNeedSize += sizeof (m_uLowSpeedMaxTime) + sizeof (m_uTrafficLimit);
-
-	if (pb == NULL)
-	{
-		DWORD dw;
-		if (FALSE == m_pTorrent->get_TorrentBuffer (NULL, 0, &dw))
-			return FALSE;
-		*pdwSize = dw + sizeof (DWORD);
-		*pdwSize += m_info.dwFastResumeDataSize + sizeof (DWORD);
-		*pdwSize += dwNeedSize;
-		return TRUE;
-	}
-
-	int i;
-
-	
-	i = m_info.strTorrentUrl.GetLength ();
-	CHECK_SIZE (sizeof (int));
-	CopyMemory (pb, &i, sizeof (int));
-	pb += sizeof (int);
-	CHECK_SIZE (i);
-	CopyMemory (pb, m_info.strTorrentUrl, i);
-	pb += i;
-
-	
-	i = m_info.strOutputPath.GetLength ();
-	CHECK_SIZE (sizeof (int));
-	CopyMemory (pb, &i, sizeof (int));
-	pb += sizeof (int);
-	CHECK_SIZE (i);
-	CopyMemory (pb, m_info.strOutputPath, i);
-	pb += i;
-
-	
-	i = m_info.strTrackerUser.GetLength ();
-	CHECK_SIZE (sizeof (int));
-	CopyMemory (pb, &i, sizeof (int));
-	pb += sizeof (int);
-	CHECK_SIZE (i);
-	CopyMemory (pb, m_info.strTrackerUser, i);
-	pb += i;
-
-	i = m_info.strTrackerPassword.GetLength ();
-	CHECK_SIZE (sizeof (int));
-	CopyMemory (pb, &i, sizeof (int));
-	pb += sizeof (int);
-	CHECK_SIZE (i);
-	CopyMemory (pb, m_info.strTrackerPassword, i);
-	pb += i;
-
-	
-	CHECK_SIZE (sizeof (DWORD));
-	DWORD dw; dw = *pdwSize - (pb - pbOld - sizeof (DWORD));
-	if (FALSE == m_pTorrent->get_TorrentBuffer (pb + sizeof (DWORD), dw, &dw))
-		goto _lSizeErr;
-	*((LPDWORD)pb) = dw;
-	pb += sizeof (DWORD) + dw;
-
-	
-	CHECK_SIZE (sizeof (DWORD));
-	*((LPDWORD)pb) = m_info.dwFastResumeDataSize;
-	pb += sizeof (DWORD);
-	if (m_info.dwFastResumeDataSize != 0)
-	{
-		CHECK_SIZE (m_info.dwFastResumeDataSize);
-		CopyMemory (pb, m_info.pbFastResumeData, m_info.dwFastResumeDataSize);
-		pb += m_info.dwFastResumeDataSize;
-	}
-
-	
-	CHECK_SIZE (get_FileCount () * sizeof (float));
-	ASSERT (m_info.pfProgress != NULL);
-	CopyMemory (pb, m_info.pfProgress, get_FileCount () * sizeof (float));
-	pb += get_FileCount () * sizeof (float);
-
-	i = m_info.strLastTracker.GetLength ();
-	CHECK_SIZE (sizeof (int));
-	CopyMemory (pb, &i, sizeof (int));
-	pb += sizeof (int);
-	CHECK_SIZE (i);
-	CopyMemory (pb, m_info.strLastTracker, i);
-	pb += i;
-
-	UINT64 nUploadedBytes; nUploadedBytes = get_TotalUploadedByteCount ();
-	CHECK_SIZE (sizeof (nUploadedBytes));
-	CopyMemory (pb, &nUploadedBytes, sizeof (nUploadedBytes));
-	pb += sizeof (nUploadedBytes);
-
-	CHECK_SIZE (sizeof (m_info.fShareRating));
-	CopyMemory (pb, &m_info.fShareRating, sizeof (m_info.fShareRating));
-	pb += sizeof (m_info.fShareRating);
-
-	UINT64 nWastedBytes; nWastedBytes = get_WastedByteCount ();
-	CHECK_SIZE (sizeof (nWastedBytes));
-	CopyMemory (pb, &nWastedBytes, sizeof (nWastedBytes));
-	pb += sizeof (nWastedBytes);
-
-	CHECK_SIZE (sizeof (m_info.fPercentDone));
-	CopyMemory (pb, &m_info.fPercentDone, sizeof (m_info.fPercentDone));
-	pb += sizeof (m_info.fPercentDone);
-
-	CHECK_SIZE (sizeof (m_info.bDone));
-	CopyMemory (pb, &m_info.bDone, sizeof (m_info.bDone));
-	pb += sizeof (m_info.bDone);
-
-	i = m_info.vPieces.size ();
-	CHECK_SIZE (sizeof (int));
-	CopyMemory (pb, &i, sizeof (int));
-	pb += sizeof (int);
-	CHECK_SIZE (i);
-	int j;
-	for (j = 0; j < i; j++)
-		*pb++ = m_info.vPieces [j];
-
-	CHECK_SIZE (sizeof (m_info.nDownloadedBytes));
-	CopyMemory (pb, &m_info.nDownloadedBytes, sizeof (m_info.nDownloadedBytes));
-	pb += sizeof (m_info.nDownloadedBytes);
-
-	i = m_info.vFilesPriorities.size ();
-	CHECK_SIZE (sizeof (int));
-	CopyMemory (pb, &i, sizeof (int));
-	pb += sizeof (int);
-	CHECK_SIZE (i);
-	for (j = 0; j < i; j++)
-		*pb++ = m_info.vFilesPriorities [j];
-
-	
-
-	CHECK_SIZE (sizeof (m_fRequiredRatio));
-	*((float*)pb) = m_fRequiredRatio;
-	pb += sizeof (m_fRequiredRatio);
-	
-	CHECK_SIZE (sizeof (m_info.dwFlags));
-	*((LPDWORD)pb) = m_info.dwFlags;
-	pb += sizeof (m_info.dwFlags);
-
-	CHECK_SIZE (sizeof (m_uLowSpeedMaxTime));
-	*((LPDWORD)pb) = m_uLowSpeedMaxTime;
-	pb += sizeof (m_uLowSpeedMaxTime);
-
-	CHECK_SIZE (sizeof (m_uTrafficLimit));
-	*((LPDWORD)pb) = m_uTrafficLimit;
-	pb += sizeof (m_uTrafficLimit);
-
-	*pdwSize = pb - pbOld;
-
-	return TRUE;
-
-_lSizeErr:
-	SaveState (NULL, pdwSize);
-	return FALSE;
 }
 
 std::wstring _tmpfix_convert_to_wstring(std::string & s)
@@ -1437,6 +1316,30 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 	pthis->m_cache.nDownloadingSectionCount = 0;
 	pthis->m_cache.nDownloadingSectionCount_time.Now ();
 
+	vmsBtDownload* downLoad = pthis->get_BtDownload();
+	if (downLoad->get_Torrent()->IsMagnetLink() && downLoad->is_HandleValid() == false)
+	{
+		pthis->RaiseEvent (BTDME_DOWNLOADING_METADATA);
+
+		while (downLoad->is_HandleValid() == false && pthis->m_bDlThreadNeedStop == false)
+		{
+			Sleep(200);
+		}
+		pthis->checkMagnetMetadata();
+		pthis->PostCreateTorrentObject();
+
+		if (pthis->m_downloadMagnetMetadata)
+		{
+			pthis->m_bDlThreadDoJob = false;
+			pthis->m_bDlThreadRunning = false;
+			return 0;
+		}
+	}
+	else 
+	{
+		pthis->checkMagnetMetadata();
+	}
+
 	pthis->RaiseEvent (BTDME_DOWNLOAD_STARTED);
 
 	while (pthis->get_State () == BTDSE_QUEUED && pthis->m_bDlThreadNeedStop == false)
@@ -1484,6 +1387,8 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 				break;
 
 			case BTDSE_DOWNLOADING:
+				pthis->GetDownloadingSectionCount (false);
+				pthis->GetDownloadedBytesCount (false);
 				
 				
 				_DldsMgr.setNeedProcessDownloads ();
@@ -1510,8 +1415,6 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 				pthis->GetDownloadingSectionCount (false);
 				pthis->GetDownloadedBytesCount (false);
 			}
-
-			
 		}
 	}
 
@@ -1539,7 +1442,20 @@ DWORD WINAPI vmsBtDownloadManager::_threadBtDownloadManager(LPVOID lp)
 
 	pthis->m_bDlThreadDoJob = false;
 
-	try{pthis->RaiseEvent (BTDME_DOWNLOAD_STOPPED_OR_DONE);}catch(...){}
+	try
+	{
+		pthis->RaiseEvent (BTDME_DOWNLOAD_STOPPED_OR_DONE);
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("vmsBtDownloadManager::_threadBtDownloadManager " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("vmsBtDownloadManager::_threadBtDownloadManager unknown exception");
+	}
 
 	if (pthis->isSeeding ())
 	{
@@ -1611,10 +1527,12 @@ void vmsBtDownloadManager::SaveBtDownloadState_FileProgress()
 {
 	if (m_info.pfProgress == NULL)
 	{
-		if (m_pDownload == NULL)
+		const int nFiles = get_FileCount();
+		if (m_pDownload == NULL || nFiles == 0)
+		{
 			return;
-		m_info.pfProgress = new float [get_FileCount ()];
-
+		}
+		m_info.pfProgress = new float[nFiles];
 		setDirty();
 	}
 		
@@ -1651,8 +1569,9 @@ BOOL vmsBtDownloadManager::IsDownloadStatCanBeRead()
 	
 	
 	vmsAUTOLOCKSECTION (m_csDownload);
-	return m_pDownload && get_State () != BTDSE_QUEUED &&
-		get_State () != BTDSE_CHECKING_FILES && get_State () != BTDSE_CHECKING_RESUME_DATA && get_State () != BTDSE_ALLOCATING;
+	return m_pDownload && 
+		(get_State () == BTDSE_CONNECTING_TRACKER || get_State () == BTDSE_DOWNLOADING || 
+		get_State () == BTDSE_FINISHED || get_State () == BTDSE_SEEDING);
 }
 
 void vmsBtDownloadManager::EnableSeeding(BOOL bEnable)
@@ -1866,6 +1785,10 @@ void vmsBtDownloadManager::GetSectionsInfo(std::vector <vmsSectionInfo> &v)
 
 	UINT64 uTotal = GetTotalFilesSize ();
 	int ns = GetNumberOfSections ();
+	if (ns == 0)
+	{
+		return;
+	}
 	UINT64 uPerPiece = uTotal / ns;
 
 	for (int i = 0; i < ns; i++)
@@ -1956,6 +1879,12 @@ void vmsBtDownloadManager::GetFilesTree(fs::ListTree <vmsFile> *tree)
 
 	int cFiles = get_FileCount ();
 
+	if (cFiles == 0)
+	{
+		
+		return;
+	}
+
 	for (int i = 0; i < cFiles; i++)
 	{
 		fsString strFile = get_FileName (i);
@@ -2014,7 +1943,7 @@ void vmsBtDownloadManager::calculateFoldersSizesInTree(fs::ListTree <vmsFile> *p
 	ASSERT (pTree->GetData ().nIndex == -1);
 	if (pTree->GetData ().nIndex != -1)
 		return;
-
+	
 	pTree->GetData ().nFileSize = 0;
 
 	for (int i = 0; i < pTree->GetLeafCount (); i++)
@@ -2025,7 +1954,7 @@ void vmsBtDownloadManager::calculateFoldersSizesInTree(fs::ListTree <vmsFile> *p
 	}
 }
 
-BOOL vmsBtDownloadManager::LoadTorrentFile(LPCSTR pszFile)
+BOOL vmsBtDownloadManager::LoadTorrent(LPCSTR pszFile, BOOL isMagnet, vmsBtFile* tempTorrent)
 {
 	vmsAUTOLOCKSECTION (m_csTorrentFile);
 
@@ -2035,8 +1964,25 @@ BOOL vmsBtDownloadManager::LoadTorrentFile(LPCSTR pszFile)
 	m_pTorrent = _BT.CreateTorrentFileObject ();
 	if (m_pTorrent == NULL)
 		return FALSE;
+
+	BOOL result = FALSE;
+	if (isMagnet)
+	{
+		if (tempTorrent == NULL)
+		{
+			result = m_pTorrent->LoadFromMagnetLink(pszFile);
+		}
+		else
+		{
+			result = m_pTorrent->LoadFromMagnetMetadata(tempTorrent);
+		}
+	}
+	else
+	{
+		result = m_pTorrent->LoadFromFile(pszFile);
+	}
 	
-	if (FALSE == m_pTorrent->LoadFromFile (pszFile))
+	if (FALSE == result)
 	{
 		m_pTorrent->Release ();
 		m_pTorrent = NULL;
@@ -2364,33 +2310,32 @@ void vmsBtDownloadManager::getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize
 	dwNeedSize += sizeof (int) + m_info.strTrackerUser.GetLength ();
 	dwNeedSize += sizeof (int) + m_info.strTrackerPassword.GetLength ();
 
-	dwNeedSize += sizeof (float) * get_FileCount (); 
-	dwNeedSize += sizeof (int) + m_info.strLastTracker.GetLength ();
-	dwNeedSize += sizeof (m_info.nUploadedBytes);
-	dwNeedSize += sizeof (m_info.fShareRating);
-	dwNeedSize += sizeof (m_info.nWastedBytes);
-	dwNeedSize += sizeof (m_info.fPercentDone);
-	dwNeedSize += sizeof (m_info.bDone);
-	dwNeedSize += sizeof (int) + sizeof (BYTE) * m_info.vPieces.size ();
-	dwNeedSize += sizeof (m_info.nDownloadedBytes);
-	dwNeedSize += sizeof (int) + sizeof (BYTE) * m_info.vFilesPriorities.size ();
-	dwNeedSize += sizeof (m_fRequiredRatio);
-
-	dwNeedSize += sizeof (m_uLowSpeedMaxTime) + sizeof (m_uTrafficLimit);
-
-	DWORD dw;
-	if (FALSE == m_pTorrent->get_TorrentBuffer (NULL, 0, &dw))
+	DWORD dwTorrentSize = 0;
+	if (FALSE == m_pTorrent->get_TorrentBuffer (NULL, 0, &dwTorrentSize))
 		return;
-	dwNeedSize += dw + sizeof (DWORD);
-	dwNeedSize += m_info.dwFastResumeDataSize + sizeof (DWORD);
+	dwNeedSize += dwTorrentSize + sizeof (DWORD);
 
+	if (dwTorrentSize)
+	{
+		dwNeedSize += sizeof (float) * get_FileCount (); 
+		dwNeedSize += sizeof (int) + m_info.strLastTracker.GetLength ();
+		dwNeedSize += sizeof (m_info.nUploadedBytes);
+		dwNeedSize += sizeof (m_info.fShareRating);
+		dwNeedSize += sizeof (m_info.nWastedBytes);
+		dwNeedSize += sizeof (m_info.fPercentDone);
+		dwNeedSize += sizeof (m_info.bDone);
+		dwNeedSize += sizeof (int) + sizeof (BYTE) * m_info.vPieces.size ();
+		dwNeedSize += sizeof (m_info.nDownloadedBytes);
+		dwNeedSize += sizeof (int) + sizeof (BYTE) * m_info.vFilesPriorities.size ();
+		dwNeedSize += m_info.dwFastResumeDataSize + sizeof (DWORD);
+	}
+	
+	dwNeedSize += sizeof (m_fRequiredRatio);
+	dwNeedSize += sizeof (m_uLowSpeedMaxTime) + sizeof (m_uTrafficLimit);
+	
 	if (pb == NULL)
 	{
 		*pdwSize = dwNeedSize;
-
-		
-		
-		
 		return;
 	}
 
@@ -2433,79 +2378,92 @@ void vmsBtDownloadManager::getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize
 
 	
 	CHECK_SIZE (sizeof (DWORD));
-	dw = *pdwSize - (pb - pbOld - sizeof (DWORD));
-	if (FALSE == m_pTorrent->get_TorrentBuffer (pb + sizeof (DWORD), dw, &dw))
+	DWORD dw = *pdwSize - (pb - pbOld - sizeof (DWORD));
+	if (dw < dwTorrentSize)
 		goto _lSizeErr;
-	*((LPDWORD)pb) = dw;
-	pb += sizeof (DWORD) + dw;
-
-	
-	CHECK_SIZE (sizeof (DWORD));
-	*((LPDWORD)pb) = m_info.dwFastResumeDataSize;
-	pb += sizeof (DWORD);
-	if (m_info.dwFastResumeDataSize != 0)
+	if (dwTorrentSize)
 	{
-		CHECK_SIZE (m_info.dwFastResumeDataSize);
-		CopyMemory (pb, m_info.pbFastResumeData, m_info.dwFastResumeDataSize);
-		pb += m_info.dwFastResumeDataSize;
+		if (FALSE == m_pTorrent->get_TorrentBuffer (pb + sizeof (DWORD), dw, &dw))
+			goto _lSizeErr;
+		*((LPDWORD)pb) = dw;
+		pb += sizeof (DWORD) + dw;
+	}
+	else
+	{
+		*((LPDWORD)pb) = 0;
+		pb += sizeof (DWORD);
 	}
 
-	
-	CHECK_SIZE (get_FileCount () * sizeof (float));
-	ASSERT (m_info.pfProgress != NULL);
-	CopyMemory (pb, m_info.pfProgress, get_FileCount () * sizeof (float));
-	pb += get_FileCount () * sizeof (float);
+	if (dwTorrentSize)
+	{
+		
+		CHECK_SIZE (sizeof (DWORD));
+		*((LPDWORD)pb) = m_info.dwFastResumeDataSize;
+		pb += sizeof (DWORD);
+		if (m_info.dwFastResumeDataSize != 0)
+		{
+			CHECK_SIZE (m_info.dwFastResumeDataSize);
+			CopyMemory (pb, m_info.pbFastResumeData, m_info.dwFastResumeDataSize);
+			pb += m_info.dwFastResumeDataSize;
+		}
 
-	i = m_info.strLastTracker.GetLength ();
-	CHECK_SIZE (sizeof (int));
-	CopyMemory (pb, &i, sizeof (int));
-	pb += sizeof (int);
-	CHECK_SIZE (i);
-	CopyMemory (pb, m_info.strLastTracker, i);
-	pb += i;
+		
+		CHECK_SIZE (get_FileCount () * sizeof (float));
+		ASSERT (m_info.pfProgress != NULL);
+		CopyMemory (pb, m_info.pfProgress, get_FileCount () * sizeof (float));
+		pb += get_FileCount () * sizeof (float);
 
-	UINT64 nUploadedBytes; nUploadedBytes = get_TotalUploadedByteCount ();
-	CHECK_SIZE (sizeof (nUploadedBytes));
-	CopyMemory (pb, &nUploadedBytes, sizeof (nUploadedBytes));
-	pb += sizeof (nUploadedBytes);
+		i = m_info.strLastTracker.GetLength ();
+		CHECK_SIZE (sizeof (int));
+		CopyMemory (pb, &i, sizeof (int));
+		pb += sizeof (int);
+		CHECK_SIZE (i);
+		CopyMemory (pb, m_info.strLastTracker, i);
+		pb += i;
 
-	CHECK_SIZE (sizeof (m_info.fShareRating));
-	CopyMemory (pb, &m_info.fShareRating, sizeof (m_info.fShareRating));
-	pb += sizeof (m_info.fShareRating);
+		UINT64 nUploadedBytes; nUploadedBytes = get_TotalUploadedByteCount ();
+		CHECK_SIZE (sizeof (nUploadedBytes));
+		CopyMemory (pb, &nUploadedBytes, sizeof (nUploadedBytes));
+		pb += sizeof (nUploadedBytes);
 
-	UINT64 nWastedBytes; nWastedBytes = get_WastedByteCount ();
-	CHECK_SIZE (sizeof (nWastedBytes));
-	CopyMemory (pb, &nWastedBytes, sizeof (nWastedBytes));
-	pb += sizeof (nWastedBytes);
+		CHECK_SIZE (sizeof (m_info.fShareRating));
+		CopyMemory (pb, &m_info.fShareRating, sizeof (m_info.fShareRating));
+		pb += sizeof (m_info.fShareRating);
 
-	CHECK_SIZE (sizeof (m_info.fPercentDone));
-	CopyMemory (pb, &m_info.fPercentDone, sizeof (m_info.fPercentDone));
-	pb += sizeof (m_info.fPercentDone);
+		UINT64 nWastedBytes; nWastedBytes = get_WastedByteCount ();
+		CHECK_SIZE (sizeof (nWastedBytes));
+		CopyMemory (pb, &nWastedBytes, sizeof (nWastedBytes));
+		pb += sizeof (nWastedBytes);
 
-	CHECK_SIZE (sizeof (m_info.bDone));
-	CopyMemory (pb, &m_info.bDone, sizeof (m_info.bDone));
-	pb += sizeof (m_info.bDone);
+		CHECK_SIZE (sizeof (m_info.fPercentDone));
+		CopyMemory (pb, &m_info.fPercentDone, sizeof (m_info.fPercentDone));
+		pb += sizeof (m_info.fPercentDone);
 
-	i = m_info.vPieces.size ();
-	CHECK_SIZE (sizeof (int));
-	CopyMemory (pb, &i, sizeof (int));
-	pb += sizeof (int);
-	CHECK_SIZE (i);
-	int j;
-	for (j = 0; j < i; j++)
-		*pb++ = m_info.vPieces [j];
+		CHECK_SIZE (sizeof (m_info.bDone));
+		CopyMemory (pb, &m_info.bDone, sizeof (m_info.bDone));
+		pb += sizeof (m_info.bDone);
 
-	CHECK_SIZE (sizeof (m_info.nDownloadedBytes));
-	CopyMemory (pb, &m_info.nDownloadedBytes, sizeof (m_info.nDownloadedBytes));
-	pb += sizeof (m_info.nDownloadedBytes);
+		i = m_info.vPieces.size ();
+		CHECK_SIZE (sizeof (int));
+		CopyMemory (pb, &i, sizeof (int));
+		pb += sizeof (int);
+		CHECK_SIZE (i);
+		int j;
+		for (j = 0; j < i; j++)
+			*pb++ = m_info.vPieces [j];
 
-	i = m_info.vFilesPriorities.size ();
-	CHECK_SIZE (sizeof (int));
-	CopyMemory (pb, &i, sizeof (int));
-	pb += sizeof (int);
-	CHECK_SIZE (i);
-	for (j = 0; j < i; j++)
-		*pb++ = m_info.vFilesPriorities [j];
+		CHECK_SIZE (sizeof (m_info.nDownloadedBytes));
+		CopyMemory (pb, &m_info.nDownloadedBytes, sizeof (m_info.nDownloadedBytes));
+		pb += sizeof (m_info.nDownloadedBytes);
+
+		i = m_info.vFilesPriorities.size ();
+		CHECK_SIZE (sizeof (int));
+		CopyMemory (pb, &i, sizeof (int));
+		pb += sizeof (int);
+		CHECK_SIZE (i);
+		for (j = 0; j < i; j++)
+			*pb++ = m_info.vFilesPriorities [j];
+	}
 
 	
 
@@ -2530,7 +2488,8 @@ void vmsBtDownloadManager::getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize
 	return;
 
 _lSizeErr:
-	SaveState (NULL, pdwSize);
+	assert ("not enough buffer" == 0);
+	getObjectItselfStateBuffer (NULL, pdwSize, false);
 	return;
 }
 
@@ -2563,27 +2522,20 @@ bool vmsBtDownloadManager::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pd
 {
 	vmsAUTOLOCKSECTION (m_csTorrentFile);
 
-	ASSERT (dwVer >= 10);
+	ASSERT (dwVer >= 16);
 
 	LPBYTE pB = pb;
 
 	int i;
 	char sz [10000];
 
-	if (dwVer > 10)
-	{
-		CopyMemory (&i, pB, sizeof (int));
-		pB += sizeof (int);
-		CopyMemory (sz, pB, i);
-		sz [i] = 0;
-		pB += i;
-		m_info.strTorrentUrl = sz;
-	}
-	else
-	{
-		m_info.strTorrentUrl = "";
-	}
-
+	CopyMemory (&i, pB, sizeof (int));
+	pB += sizeof (int);
+	CopyMemory (sz, pB, i);
+	sz [i] = 0;
+	pB += i;
+	m_info.strTorrentUrl = sz;
+	
 	CopyMemory (&i, pB, sizeof (int));
 	pB += sizeof (int);
 	CopyMemory (sz, pB, i);
@@ -2605,28 +2557,43 @@ bool vmsBtDownloadManager::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pd
 	pB += i;
 	m_info.strTrackerPassword = sz;
 
-	DWORD dwTorrentSize = *((LPDWORD)pB);
-	LPBYTE pbTorrent = pB + sizeof (DWORD);
-	pB += sizeof (DWORD) + dwTorrentSize;
-
 	m_pTorrent = _BT.CreateTorrentFileObject ();
 	if (m_pTorrent == NULL)
 		return false;
-	if (FALSE == m_pTorrent->LoadFromBuffer (pbTorrent, dwTorrentSize))
-		return false;
 
-	m_info.dwFastResumeDataSize = *((LPDWORD)pB);
-	pB += sizeof (DWORD);
-	SAFE_DELETE_ARRAY (m_info.pbFastResumeData);
-	if (m_info.dwFastResumeDataSize)
+	DWORD dwTorrentSize = *((LPDWORD)pB);
+
+	if (!dwTorrentSize)
 	{
-		m_info.pbFastResumeData = new BYTE [m_info.dwFastResumeDataSize];
-		CopyMemory (m_info.pbFastResumeData, pB, m_info.dwFastResumeDataSize);
-		pB += m_info.dwFastResumeDataSize;
+		if (_tcsstr (m_info.strTorrentUrl, _T("magnet:")) == m_info.strTorrentUrl) {
+			m_pTorrent->LoadFromMagnetLink(m_info.strTorrentUrl);
+		}
+		else {
+			assert (!"invalid torrent type");
+			return false;
+		}
+	}
+	else
+	{
+		LPBYTE pbTorrent = pB + sizeof (DWORD);
+		if (FALSE == m_pTorrent->LoadFromBuffer (pbTorrent, dwTorrentSize))
+			return false;
 	}
 
-	if (dwVer > 11)
+	pB += sizeof (DWORD) + dwTorrentSize;
+
+	if (dwTorrentSize)
 	{
+		m_info.dwFastResumeDataSize = *((LPDWORD)pB);
+		pB += sizeof (DWORD);
+		SAFE_DELETE_ARRAY (m_info.pbFastResumeData);
+		if (m_info.dwFastResumeDataSize)
+		{
+			m_info.pbFastResumeData = new BYTE [m_info.dwFastResumeDataSize];
+			CopyMemory (m_info.pbFastResumeData, pB, m_info.dwFastResumeDataSize);
+			pB += m_info.dwFastResumeDataSize;
+		}
+
 		m_info.pfProgress = new float [get_FileCount () * sizeof (float)];
 		CopyMemory (m_info.pfProgress, pB, get_FileCount () * sizeof (float));
 		pB += get_FileCount () * sizeof (float);
@@ -2658,33 +2625,19 @@ bool vmsBtDownloadManager::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pd
 		m_info.vPieces.clear ();
 		while (i--)
 			m_info.vPieces.push_back ((*pB++) != 0);
-		
+
 		CopyMemory (&m_info.nDownloadedBytes, pB, sizeof (m_info.nDownloadedBytes));
 		pB += sizeof (m_info.nDownloadedBytes);
 
-		if (dwVer > 12)
-		{
-			CopyMemory (&i, pB, sizeof (int));
-			pB += sizeof (int);
-			m_info.vFilesPriorities.clear ();
-			while (i--)
-				m_info.vFilesPriorities.push_back (*pB++);
-
-			if (dwVer > 13)
-			{
-				m_fRequiredRatio = *((float*)pB);
-				pB += sizeof (float);	
-			}
-		}
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		m_info.vFilesPriorities.clear ();
+		while (i--)
+			m_info.vFilesPriorities.push_back (*pB++);
 	}
-	else
-	{
-		m_info.pfProgress = new float [get_FileCount () * sizeof (float)];
-		for (int i = get_FileCount () - 1; i >= 0; i--)
-			m_info.pfProgress [i] = 0;
 
-		PostCreateTorrentObject ();
-	}
+	m_fRequiredRatio = *((float*)pB);
+	pB += sizeof (float);	
 
 	m_info.dwFlags = *((LPDWORD)pB);
 	pB += sizeof (DWORD);
@@ -2699,8 +2652,6 @@ bool vmsBtDownloadManager::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pd
 	pB += sizeof (UINT);
 
 	*pdwSize = pB - pb;
-
-	
 
 	if (!_App.NonUtf8NameFixed ())
 		FixDir (m_info.strOutputPath, m_pTorrent);
@@ -2745,4 +2696,55 @@ UINT64 vmsBtDownloadManager::getSpeedLimit(bool bOfDownload)
 bool vmsBtDownloadManager::isRequiresTraffic(bool bForDownload)
 {
 	return bForDownload ? !IsDone () : true;
+}
+
+vmsBtFile* vmsBtDownloadManager::GetTorrentFile()
+{
+	return m_pTorrent;
+}
+
+BOOL vmsBtDownloadManager::DownloadMagnetMetadata(LPCTSTR pszMagnetLink, LPCTSTR pszOutputPath)
+{
+	if (pszMagnetLink != _T("") || pszOutputPath != _T(""))
+	{
+		BOOL createResult = CreateByMagnetLink(pszMagnetLink, pszOutputPath);
+		if (createResult == FALSE)
+		{
+			return FALSE;
+		}
+	}
+	m_downloadMagnetMetadata = true;
+	return (StartDownloading() == IR_SUCCESS);
+}
+
+BOOL vmsBtDownloadManager::checkMagnetMetadata()
+{
+	vmsAUTOLOCKSECTION (m_csDownload);
+	vmsAUTOLOCKSECTION (m_csTorrentFile);
+	if (m_pDownload->is_HandleValid() && m_pTorrent->IsValid() == FALSE)
+	{
+		if (m_pDownload->SetMagnetMetadata(m_pTorrent))
+		{
+			const int nFiles = get_FileCount();
+			m_info.pfProgress = new float [nFiles * sizeof (float)];
+			for (int i = nFiles - 1; i >= 0; i--)
+				m_info.pfProgress [i] = 0;
+
+			return TRUE;
+		}
+		return FALSE;
+	}
+	else if (m_pTorrent->IsValid())
+	{
+		return TRUE;
+	}
+	return FALSE;
+}
+void vmsBtDownloadManager::SetStateError(vmsBtDownloadErrorState err)
+{
+	if (err != BTDES_NO_ERROR)
+	{
+		StopDownloading();
+	}
+	m_errorState = err;
 }

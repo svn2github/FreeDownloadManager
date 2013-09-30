@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "FdmApp.h"
 #include "fsLangMgr.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -41,26 +42,36 @@ BOOL fsLangMgr::Initialize()
 
 	while (bFind)
 	{
-		try {
-		fsLngFileInfo info;
-		info.strFileName = wfd.cFileName;
-		info.strFileNameWoExt = wfd.cFileName;
-		ASSERT (info.strFileNameWoExt.GetLength () > 4);
-		info.strFileNameWoExt.Delete (info.strFileNameWoExt.GetLength ()-4, 4);
-
-		CStdioFile file (m_strLngFolder + info.strFileName, CFile::modeRead | CFile::typeText | CFile::shareDenyNone);
-
-		
-		while (file.ReadString (info.strLngName))
+		try 
 		{
-			if (info.strLngName.GetLength () && info.strLngName [0] != LNG_COMMENT_CHAR)
+			fsLngFileInfo info;
+			info.strFileName = wfd.cFileName;
+			info.strFileNameWoExt = wfd.cFileName;
+			ASSERT (info.strFileNameWoExt.GetLength () > 4);
+			info.strFileNameWoExt.Delete (info.strFileNameWoExt.GetLength ()-4, 4);
+
+			CStdioFile file (m_strLngFolder + info.strFileName, CFile::modeRead | CFile::typeText | CFile::shareDenyNone);
+
+			
+			while (file.ReadString (info.strLngName))
 			{
-				AddLngFileInfo (info);
-				break;
+				if (info.strLngName.GetLength () && info.strLngName [0] != LNG_COMMENT_CHAR)
+				{
+					AddLngFileInfo (info);
+					break;
+				}
 			}
 		}
+		catch (const std::exception& ex)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("fsLangMgr::Initialize " + tstring(ex.what()));
 		}
-		catch (...){}
+		catch (...)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("fsLangMgr::Initialize unknown exception");
+		}
 
 		bFind = FindNextFile (hFind, &wfd);
 	}
@@ -86,42 +97,49 @@ LPCSTR fsLangMgr::GetLngName(int iIndex)
 
 BOOL fsLangMgr::LoadLng(int iIndex)
 {
-	try {
-	
-	CStdioFile file (m_strLngFolder + m_vLngFiles [iIndex].strFileName, CFile::modeRead | CFile::typeText | CFile::shareDenyNone);
-	CString str;
-
-	
-	do
+	try 
 	{
-		if (FALSE == file.ReadString (str))
-			return FALSE;
+		CStdioFile file (m_strLngFolder + m_vLngFiles [iIndex].strFileName, CFile::modeRead | CFile::typeText | CFile::shareDenyNone);
+		CString str;
 
-		if (str.GetLength () && str [0] != LNG_COMMENT_CHAR)
-			break;
+		
+		do
+		{
+			if (FALSE == file.ReadString (str))
+				return FALSE;
+
+			if (str.GetLength () && str [0] != LNG_COMMENT_CHAR)
+				break;
+		}
+		while (TRUE);
+
+		m_vStrings.clear ();
+
+		
+		while (file.ReadString (str))
+		{
+			if (str.GetLength () == 0 || str [0] == LNG_COMMENT_CHAR)
+				continue; 
+
+			PreprocessLanguageString (str);
+
+			m_vStrings.add (str);
+		}
+
+		m_iCurLng = iIndex;
+
+		return m_vStrings.size () != 0;
 	}
-	while (TRUE);
-
-	m_vStrings.clear ();
-
-	
-	while (file.ReadString (str))
+	catch (const std::exception& ex)
 	{
-		if (str.GetLength () == 0 || str [0] == LNG_COMMENT_CHAR)
-			continue; 
-
-		PreprocessLanguageString (str);
-
-		m_vStrings.add (str);
-	}
-
-	m_iCurLng = iIndex;
-
-	return m_vStrings.size () != 0;
-
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsLangMgr::LoadLng " + tstring(ex.what()));
+		return FALSE;
 	}
 	catch (...)
 	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsLangMgr::LoadLng unknown exception");
 		return FALSE;
 	}
 }
@@ -149,17 +167,27 @@ LPCSTR fsLangMgr::GetString(int iIndex)
 {
 	static char szNull [1] = {0};
 
-	try{
-
-	if (iIndex < m_vStrings.size ()) 
-		return m_vStrings [iIndex];
-	else if (iIndex < m_vBuiltInStrings.size ()) 
-		return m_vBuiltInStrings [iIndex];
-	else
-		return szNull;
-
+	try
+	{
+		if (iIndex < m_vStrings.size ()) 
+			return m_vStrings [iIndex];
+		else if (iIndex < m_vBuiltInStrings.size ()) 
+			return m_vBuiltInStrings [iIndex];
+		else
+			return szNull;
 	}
-	catch (...) {ASSERT (FALSE); return szNull;}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsLangMgr::GetString " + tstring(ex.what()));
+		return szNull;
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsLangMgr::GetString unknown exception");
+		return szNull;
+	}
 }
 
 int fsLangMgr::GetCurLng()

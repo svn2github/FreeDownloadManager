@@ -137,10 +137,15 @@ void CDlg_Download::Update()
 
 	SetDlgItemText2 (IDC__FILESIZE, CDownloads_Tasks::GetDownloadText (m_dld, 1));
 
-	int nProgress = (int)m_dld->pMgr->GetPercentDone ();
-
+	int nProgress = (int) m_dld->pMgr->GetPercentDone ();
+	
 	if (m_dld->pMgr->IsBittorrent ())
 	{
+		UINT64 nToDownload, nDownloaded;
+		m_dld->pMgr->GetBtDownloadMgr ()->getPartialDownloadProgress (&nToDownload, &nDownloaded);
+		if (nToDownload != m_dld->pMgr->GetLDFileSize ())
+			nProgress = nToDownload ? (int)((double)(INT64)nDownloaded / (INT64)nToDownload * 100) : 100;
+
 		switch (m_dld->pMgr->GetBtDownloadMgr ()->get_State ())
 		{
 		case BTDS_CHECKING_RESUME_DATA:
@@ -198,18 +203,25 @@ void CDlg_Download::Update()
 	CDownloads_Tasks::GetFileName (m_dld, szName);
 	CString str;
 
-	if (nProgress == 100)
-		str.Format ("%s - %s", szName, LS (L_DONE));
-	else if (nProgress == -1)
+	switch (nProgress)
 	{
+	case 100:
+		str.Format ("%s - %s", szName, LS (L_DONE));
+		break;
+	case -1: {
 		UINT64 uDone = m_dld->pMgr->GetDownloadedBytesCount ();
 		float val;
 		char szDim [10];
 		BytesToXBytes (uDone, &val, szDim);
 		str.Format ("%s - %.*g %s", szName, val > 999 ? 4 : 3, val, szDim);
-	}
-	else
+		break;
+			}
+
+	default:
 		str.Format ("[%d%%] - %s", nProgress, szName);
+		break;
+	}
+
 	SetWindowText (str);
 
 	m_wndProgress.Invalidate (FALSE);

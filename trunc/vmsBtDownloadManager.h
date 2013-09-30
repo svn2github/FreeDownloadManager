@@ -35,7 +35,10 @@ enum vmsBtDownloadManagerEvent
 	BTDME_SEEDING,
 	BTDME_FATAL_ERROR,
 	BTDME_STOP_SEEDING,
+	BTDME_DOWNLOADING_METADATA,
 };
+
+enum vmsBtDownloadErrorState;
 
 typedef DWORD (*fntBtDownloadManagerEventHandler)(class vmsBtDownloadManager*, vmsBtDownloadManagerEvent, DWORD, LPVOID);
 
@@ -50,12 +53,17 @@ enum vmsBtDownloadStateEx
 	BTDSE_ALLOCATING = BTDS_ALLOCATING,
 	BTDSE_CHECKING_RESUME_DATA = BTDS_CHECKING_RESUME_DATA,
 	BTDSE_LT_UNKNOWN_STATE = BTDS_LT_UNKNOWN_STATE,
+	BTDSE_DOWNLOADING_METADATA = BTDS_DOWNLOADING_METADATA,
+	BTDSE_SERVER_INTERNAL_ERROR_500 = BTDS_SERVER_INTERNAL_ERROR_500,
+	BTDSE_BAD_REQUEST_400 = BTDS_BAD_REQUEST_400,
 	BTDSE_STOPPED,
-
 };
 
 class vmsBtDownloadManager : public vmsObject, public vmsDownloaderWithNetworkUsageAdjustment, public vmsPersistObject 
 {
+	
+	bool m_downloadMagnetMetadata;
+
 public:
 	bool isHashEqual (const vmsBtDownloadManager *pMgr2);
 	void setOutputPath (LPCTSTR ptszPath);
@@ -67,7 +75,7 @@ public:
 	int getFilePriority (int nFileIndex);
 	void getPartialDownloadProgress (UINT64 *pnBytesToDownload, UINT64 *pnBytesDownloaded);
 	void PrioritizeFiles (int *piPriorities);
-	BOOL LoadTorrentFile (LPCSTR pszFile);
+	BOOL LoadTorrent(LPCSTR pszFile, BOOL isMagnet = FALSE, vmsBtFile* tempTorrent = NULL);
 	struct vmsFile {
 		fsString strName;
 		UINT64 nFileSize;
@@ -86,7 +94,6 @@ public:
 	BOOL IsStoppedByUser();
 	void setStoppedByUser (bool b);
 	BOOL LoadState(LPBYTE lpBuffer, LPDWORD pdwSize, WORD wVer);
-	BOOL SaveState(LPBYTE pb, LPDWORD pdwSize);
 	int get_ConnectionCount();
 	void UseDetailedLog(BOOL bUse);
 	UINT GetTrafficLimit();
@@ -140,8 +147,17 @@ public:
 	UINT GetUploadSpeed();
 	fsString get_TorrentName();
 	vmsBtDownloadStateEx get_State();
+	vmsBtFile* GetTorrentFile();
+
 	BOOL CreateByTorrentFile (LPCSTR pszTorrentFile, LPCSTR pszOutputPath, LPCSTR pszTorrentUrl, BOOL bSeedOnly = FALSE);
+	BOOL CreateByMagnetLink (LPCTSTR pszMagnetLink, LPCTSTR pszOutputPath);
+	BOOL CreateByMagnetMetadata (vmsBtFile* vmsfile, LPCTSTR pszOutputPath);
 	void DeleteBtDownload();
+	
+	BOOL DownloadMagnetMetadata(LPCTSTR pszMagnetLink = _T(""), LPCTSTR pszOutputPath = _T(""));
+	BOOL checkMagnetMetadata();
+	void SetTorrentInfo(LPCTSTR pszTorrentFile, LPCTSTR pszOutputPath);
+
 	
 	void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
 	bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
@@ -238,6 +254,8 @@ protected:
 	static HANDLE m_hevStopDldsThread;
 	static HANDLE m_hmxStaticObj;
 	static LONG m_cStatDataRefs;
+
+	vmsBtDownloadErrorState m_errorState;
 public:
 	void setLastTracker(LPCSTR pszUrl);
 	void setLastTrackerStatus(LPCSTR pszStatus);
@@ -246,6 +264,8 @@ public:
 	void setSpeedLimit(bool bOfDownload, UINT64 uLimit);
 	UINT64 getSpeedLimit(bool bOfDownload);
 	bool isRequiresTraffic(bool bForDownload);
+	
+	void SetStateError(vmsBtDownloadErrorState err);
 };
 
 typedef vmsObjectSmartPtr <vmsBtDownloadManager> vmsBtDownloadManagerPtr;

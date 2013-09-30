@@ -5,7 +5,7 @@
 #ifndef __FDMURL_H_
 #define __FDMURL_H_
 
-#include "ivmsfdmff.h"
+#include "common.h"
 
 #define FDMURL_CONTRACTID "@freedownloadmanager.org/FDMUrl;1"
 #define FDMURL_CLASSNAME "Free Download Manager Url component for Firefox"

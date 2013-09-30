@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "FdmApp.h"
 #include "fsShellWindowsEvents.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -62,14 +63,25 @@ HRESULT fsShellWindowsEvents::Attach(SHDocVw::IShellWindowsPtr& spSHWnds)
 
 void fsShellWindowsEvents::Detach()
 {
-	try {
+	try 
+	{
 		if (m_pConnPt)
 		{
 			m_pConnPt->Unadvise (m_dwCookie);
 			m_pConnPt->Release ();
 			m_pConnPt = NULL;
 		}
-	}catch (...){}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsShellWindowsEvents::Detach " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsShellWindowsEvents::Detach unknown exception");
+	}
 }
 
 void fsShellWindowsEvents::OnWindowRegistered(long lCookie)

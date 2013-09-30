@@ -8,9 +8,17 @@
 
 class vmsBtFileImpl : public vmsBtFile
 {
+	std::string m_magnetLink;
+	BOOL m_isMagnet;
+	std::string m_strMagnetDisplayName;
 public:
+	vmsBtFileImpl();
+	virtual ~vmsBtFileImpl();
+
 	virtual BOOL LoadFromFile (LPCSTR pszTorrentFile);
 	virtual BOOL LoadFromBuffer (LPBYTE pbTorrent, DWORD dwTorrentSize);
+	virtual BOOL LoadFromMagnetLink (LPCSTR pszMagnetLink);
+	virtual BOOL LoadFromMagnetMetadata (vmsBtFile* torrentFile);
 
 	int get_FileCount ();
 	void get_FileName (int nIndex, LPSTR pszRes);
@@ -39,10 +47,9 @@ public:
 	void get_TorrentComment2 (LPSTR pszRes, DWORD dwBuffSize);
 	virtual BOOL CreateNewTorrent2 (LPCWSTR pszSrcPath, LPCSTR pszTrackers, LPCSTR pszUrlSeeds, 
 		LPCSTR pszCreator, LPCSTR pszComment, int iPieceSize, int *pnCreateProgress, BOOL *pbNeedCancel);
-
-	vmsBtFileImpl(void);
-public:
-	virtual ~vmsBtFileImpl(void);
+	BOOL IsMagnetLink();
+	LPCSTR GetMagnetLink();
+	BOOL IsValid();
 
 public:
 	libtorrent::torrent_info *m_torrent;

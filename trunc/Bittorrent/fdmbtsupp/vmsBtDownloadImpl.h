@@ -10,7 +10,20 @@
 
 class vmsBtDownloadImpl : public vmsBtDownload
 {
+	libtorrent::torrent_handle m_handle; 
+	
+	
+	
+	vmsBtFileImplPtr m_spTorrent;
+	std::string m_strOutputPath;
 public:
+	vmsBtDownloadImpl(
+		const libtorrent::torrent_handle& handle, vmsBtFileImplPtr spTorrent, const std::string& strOutputPath);
+
+	libtorrent::torrent_handle& GetHandle();
+	vmsBtFileImplPtr GetTorrentImpl();
+	std::string GetOutputPath();
+
 	void check_handle_is_valid (); 
 	vmsBtDownloadState GetState ();
 	BOOL IsPaused ();
@@ -50,21 +63,13 @@ public:
 	int get_NextAnnounceInterval (LPCSTR pszTrackerUrl);
 	UINT GetDownloadSpeedIncludingServiceTraffic ();
 	UINT GetUploadSpeedIncludingServiceTraffic ();
+	BOOL SetMagnetMetadata(vmsBtFile* torrentFile);
 
 	void AddRef () {InterlockedIncrement (&m_cRefs);}
 	void Release () {if (0 == InterlockedDecrement (&m_cRefs)) delete this;}
 
-	vmsBtDownloadImpl(void);
 protected:
 	virtual ~vmsBtDownloadImpl(void);
-
-public:
-	libtorrent::torrent_handle m_handle; 
-	
-	
-	
-	vmsBtFileImplPtr m_spTorrent;
-	std::string m_strOutputPath;
 
 protected:
 	int m_iDownloadSpeedLimit, m_iUploadSpeedLimit;

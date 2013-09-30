@@ -11,6 +11,7 @@
 #include "FolderBrowser.h"
 #include "DownloadAlrExistsDlg.h"
 #include "MyMessageBox.h"
+#include "vmsLogger.h"
 
 extern CDownloadsWnd *_pwndDownloads;
 
@@ -686,8 +687,8 @@ DWORD WINAPI CCreateTPDownloadDlg::_threadQSize(LPVOID lp)
 {
 	CCreateTPDownloadDlg *pThis = (CCreateTPDownloadDlg*) lp;
 
-	try{
-
+	try
+	{
 		CString strSize;
 		UINT64 uSize = 0;
 		vmsTpDownloadMgr* pMgr = pThis->m_dld->pMgr->GetTpDownloadMgr ();
@@ -729,8 +730,17 @@ DWORD WINAPI CCreateTPDownloadDlg::_threadQSize(LPVOID lp)
 		}
 
 		pThis->m_bThread = FALSE;
-
-	}catch (...) {} 
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CCreateTPDownloadDlg::_threadQSize " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CCreateTPDownloadDlg::_threadQSize unknown exception");
+	}
 
 	return 0;
 }

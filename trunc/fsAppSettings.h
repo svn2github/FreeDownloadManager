@@ -172,6 +172,10 @@ public:
 	BOOL View_AskRemoveFromAutostartAtAppExit();
 	void Bittorrent_OldTorrentAssociation (LPCSTR psz);
 	CString Bittorrent_OldTorrentAssociation();
+	void Bittorrent_OldMagnetAssociation(LPCTSTR psz);
+	CString Bittorrent_OldMagnetAssociation();
+	void Bittorrent_OldMagnetUrlProtocol(LPCTSTR psz);
+	CString Bittorrent_OldMagnetUrlProtocol();
 	void Bittorrent_EnableDHT (BOOL b);
 	BOOL Bittorrent_EnableDHT();
 	void Bittorrent_ListenPort_To (int);

@@ -37,7 +37,6 @@ public:
 	
 	
 	BOOL LoadState (LPBYTE pb, LPDWORD pdwSize, WORD wVer);
-	BOOL SaveState (LPBYTE pb, DWORD *pdwSize);
 	int GetConnectionCount();
 	fsInternetResult SetToRestartState();
 	BOOL IsDontConfirmLaunchWhenDone();

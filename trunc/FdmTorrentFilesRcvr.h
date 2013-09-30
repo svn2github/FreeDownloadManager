@@ -30,14 +30,14 @@ END_COM_MAP()
 public:
 	STDMETHOD(get_ForceSilent)( BOOL *pVal);
 	STDMETHOD(put_ForceSilent)( BOOL newVal);
-	STDMETHOD(CreateBtDownloadFromFile)( BSTR bstrFile);
+	STDMETHOD(CreateBtDownload)( BSTR bstrFile);
 protected:
 	struct _inc_CBRFF_ctx {
 		CString strFileUrl;
 		CString strFile;
 		BOOL bForceSilent;
 	};
-	static DWORD WINAPI _threadCreateBtDownloadFromFile (LPVOID lp);
+	static DWORD WINAPI _threadCreateBtDownload(LPVOID lp);
 	BOOL m_bForceSilent;
 };
 

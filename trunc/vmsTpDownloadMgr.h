@@ -74,7 +74,7 @@ public:
 	int GetNumberOfSections(bool bSetDirtyFlag = true);
 	int GetDownloadingSectionCount();
 	int GetStreamingSpeed(bool bSetDirtyFlag = true);
-	BOOL SaveState(LPBYTE lpBuffer, LPDWORD pdwSize);
+	
 	BOOL LoadState(LPBYTE lpBuffer, LPDWORD pdwSize, WORD wVer);
 	
 	BOOL MoveToFolder (LPCSTR pszFolder);

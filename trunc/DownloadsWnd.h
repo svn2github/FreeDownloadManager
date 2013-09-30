@@ -165,7 +165,17 @@ public:
 	int DeleteDownloads(DLDS_LIST_REF v, BOOL bByUser, BOOL bDontConfirmFileDeleting);
 	void ShowDownloads (DLDS_LIST_REF v);
 	
-	BOOL CreateBtDownloadFromFile (LPCSTR pszFile, LPCSTR pszTorrentUrl, BOOL bSilent = FALSE, BOOL bSeedOnly = FALSE, LPCSTR pszOutputOrSrcForSeedFolder = NULL);
+	BOOL CreateBtDownload(
+		LPCTSTR pszFile, 
+		LPCTSTR pszTorrentUrl, 
+		BOOL bSilent = FALSE, 
+		BOOL bSeedOnly = FALSE, 
+		LPCTSTR pszOutputOrSrcForSeedFolder = NULL, 
+		LPCTSTR ptszUserName = NULL, 
+		LPCTSTR ptszPassword = NULL, 
+		int* pnProirities = 0,
+		vmsBtFile* tempTorrent = NULL,
+		UINT *pnDownloadId = NULL);
 	
 	void OnBtDownloadProperties(DLDS_LIST &vDlds, CWnd* pwndParent = NULL);
 	

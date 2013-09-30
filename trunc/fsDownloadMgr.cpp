@@ -18,6 +18,7 @@
 
 #include "fsdownloadsmgr.h"
 #include <mlang.h>
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -815,166 +816,6 @@ BOOL fsDownloadMgr::IsDone()
 	return m_dldr.IsDone ();
 }
 
-BOOL fsDownloadMgr::SaveState(LPVOID lpBuffer, LPDWORD pdwSize)
-{
-	DWORD dwNeedSize;
-	fsDownload_Properties dp = m_dp;
-	fsDownload_NetworkProperties dnp = *GetDNP ();
-	std::vector <fsDownload_NetworkProperties> vDNPs;
-
-	
-	
-	
-	
-	LPCSTR ToSave    [3000];
-	DWORD  ToSaveLen [3000];
-	UINT   cToSave = 0;
-
-	if (FALSE == m_dldr.SaveSectionsState (NULL, &dwNeedSize))
-		return FALSE;
-
-	dwNeedSize += sizeof (DWORD); 
-	dwNeedSize += sizeof (dp);
-	dwNeedSize += sizeof (dnp);
-	dwNeedSize += sizeof (m_dwState);
-	dwNeedSize += sizeof (m_dwDownloadFileFlags);
-	dwNeedSize += sizeof (int);		
-
-	
-
-	dp.pszFileName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dp.pszFileName));
-	dwNeedSize += (DWORD) dp.pszFileName;
-
-	dp.pszAdditionalExt = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dp.pszAdditionalExt));
-	dwNeedSize += (DWORD) dp.pszAdditionalExt;
-
-	dp.pszCreateExt = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dp.pszCreateExt));
-	dwNeedSize += (DWORD) dp.pszCreateExt;
-
-	dp.pszCheckSum = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dp.pszCheckSum));
-	dwNeedSize += (DWORD) dp.pszCheckSum;
-
-	int cDPStrings = cToSave;
-
-	UINT i = 0;
-	for (i = 0; int (i) < m_dldr.GetMirrorURLCount () + 1; i++)
-	{
-		if (i)
-		{
-			dnp = *m_dldr.MirrorDNP (i-1);
-			dwNeedSize += sizeof (dnp);
-		}
-		
-		dnp.pszAgent = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszAgent));
-		dnp.pszPassword = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszPassword));
-		dnp.pszPathName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszPathName));
-		dnp.pszProxyName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszProxyName));
-		dnp.pszProxyPassword = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszProxyPassword));
-		dnp.pszProxyUserName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszProxyUserName));
-		dnp.pszReferer = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszReferer));
-		dnp.pszServerName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszServerName));
-		dnp.pszUserName = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszUserName));
-		dnp.pszASCIIExts = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszASCIIExts));
-		dnp.pszCookies = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszCookies));
-		dnp.pszPostData = LPSTR (ToSaveLen [cToSave++] = strlen (ToSave [cToSave] = dnp.pszPostData));
-
-		vDNPs.push_back (dnp);
-
-		dwNeedSize += (DWORD) dnp.pszAgent + (DWORD) dnp.pszPassword + 
-			(DWORD) dnp.pszPathName + (DWORD) dnp.pszProxyName + 
-			(DWORD) dnp.pszProxyPassword + (DWORD) dnp.pszProxyUserName + 
-			(DWORD) dnp.pszReferer + (DWORD) dnp.pszServerName + (DWORD) dnp.pszUserName + 
-			(DWORD) dnp.pszASCIIExts + (DWORD) dnp.pszCookies + (DWORD) dnp.pszPostData;
-	}
-
-	dwNeedSize += m_dldr.GetMirrorURLCount () * sizeof (BOOL);	
-
-	if (m_dldr.GetMirrorURLCount ())
-	{
-		dwNeedSize += m_dldr.GetMirrorURLCount () * sizeof (DWORD); 
-		dwNeedSize += sizeof (DWORD); 
-	}
-
-	if (lpBuffer == NULL)
-	{
-		*pdwSize = dwNeedSize;
-		return TRUE;
-	}
-
-	if (*pdwSize < dwNeedSize)
-	{
-		*pdwSize = dwNeedSize;
-		return FALSE;
-	}
-
-	int cDNPStrings;	
-	cDNPStrings = (cToSave - cDPStrings) / (m_dldr.GetMirrorURLCount () + 1);
-
-	
-	DWORD dw = *pdwSize;
-	LPBYTE pB = (LPBYTE) lpBuffer;
-
-	if (FALSE == m_dldr.SaveSectionsState (pB + sizeof (DWORD), &dw))
-		return FALSE;
-
-	CopyMemory (pB, &dw, sizeof (dw));
-	pB += dw + sizeof (dw);
-
-	CopyMemory (pB, &dp, sizeof (dp));
-	pB += sizeof (dp);
-
-	CopyMemory (pB, &vDNPs [0], sizeof (dnp));
-	pB += sizeof (dnp);
-
-	DWORD state = (m_dwState & DS_DONE) ? DS_DONE : 0;
-	CopyMemory (pB, &state, sizeof (state));
-	pB += sizeof (state);
-
-	if ((m_dwDownloadFileFlags & DFF_USE_PORTABLE_DRIVE) &&
-			m_dp.pszFileName [0] != vmsGetExeDriveLetter ())
-		m_dwDownloadFileFlags &= ~DFF_USE_PORTABLE_DRIVE;
-	CopyMemory (pB, &m_dwDownloadFileFlags, sizeof (m_dwDownloadFileFlags));
-	pB += sizeof (m_dwDownloadFileFlags);
-
-	int cMirrs = m_dldr.GetMirrorURLCount ();
-	CopyMemory (pB, &cMirrs, sizeof (cMirrs));
-	pB += sizeof (cMirrs);
-
-	for (i = 0; i < cToSave; i++)
-	{
-		if (i > UINT (cDPStrings) && ((i-cDPStrings) % cDNPStrings) == 0)
-		{
-			CopyMemory (pB, &vDNPs [(i-cDPStrings) / cDNPStrings], sizeof (dnp));
-			pB += sizeof (dnp);
-
-			BOOL b = m_dldr.GetMirrorIsGood ((i-cDPStrings) / cDNPStrings - 1);
-			CopyMemory (pB, &b, sizeof (b));
-			pB += sizeof (b);
-		}
-
-		CopyMemory (pB, ToSave [i], ToSaveLen [i]);
-		pB += ToSaveLen [i];
-	}
-
-	if (cMirrs)
-	{
-		for (i = 0; i < UINT (cMirrs); i++)
-		{
-			DWORD dw = m_dldr.GetMirrorPingTime (i);
-			CopyMemory (pB, &dw, sizeof (dw));
-			pB += sizeof (dw);
-		}
-
-		DWORD dw = m_dldr.Get_BaseServerPingTime ();
-		CopyMemory (pB, &dw, sizeof (dw));
-		pB += sizeof (dw);
-	}
-
-	*pdwSize = dwNeedSize;
-
-	return TRUE;
-}
-
 BOOL fsDownloadMgr::LoadState(LPVOID lpBuffer, LPDWORD pdwSize, WORD wVer)
 {
 #define CHECK_BOUNDS(need) if (need < 0 || need > int(*pdwSize) - (pB - LPBYTE (lpBuffer))) return FALSE;
@@ -1735,7 +1576,7 @@ BOOL fsDownloadMgr::BuildFileName(LPCSTR pszSetExt)
 
 	
 	
-	if (m_dp.pszFileName [fl - 1] != '/' && m_dp.pszFileName [fl - 1] != '\\')
+	if (fl > 1 && m_dp.pszFileName [fl - 1] != '/' && m_dp.pszFileName [fl - 1] != '\\')
 		return TRUE;
 
 	
@@ -2109,7 +1950,10 @@ BOOL fsDownloadMgr::InitFile(BOOL bCreateOnDisk, LPCSTR pszSetExt)
 {
 	CString strFileName;
 
-	InitFile_ProcessMacroses ();
+	if (strlen(m_dp.pszFileName) > 0)
+	{
+		InitFile_ProcessMacroses ();
+	}
 
 	
 	if (FALSE == BuildFileName (pszSetExt))
@@ -2216,6 +2060,13 @@ fsInternetResult fsDownloadMgr::RestartDownloading()
 {
 	fsInternetResult ir = SetToRestartState ();
 
+	std::string dir = m_dp.pszFileName;
+	int dirEnd = dir.rfind("\\");
+	if (dirEnd != -1 && dirEnd < dir.length() - 1)
+	{
+		m_dp.pszFileName[dirEnd + 1] = 0;
+	}
+
 	if (ir != IR_SUCCESS)
 		return ir;
 
@@ -2286,19 +2137,31 @@ void fsDownloadMgr::QuerySize2()
 DWORD WINAPI fsDownloadMgr::_threadQSize(LPVOID lp)
 {
 	fsDownloadMgr *pThis = (fsDownloadMgr*) lp;
-try{
-	pThis->Event (LS (L_QUERINGSIZE));
-	fsInternetResult ir = pThis->QuerySize (FALSE);
-	if (ir != IR_SUCCESS)
+	try
 	{
-		char szErr [10000];
-		fsIRToStr (ir, szErr, sizeof (szErr));
-		pThis->Event (szErr, EDT_RESPONSE_E);
+		pThis->Event (LS (L_QUERINGSIZE));
+		fsInternetResult ir = pThis->QuerySize (FALSE);
+		if (ir != IR_SUCCESS)
+		{
+			char szErr [10000];
+			fsIRToStr (ir, szErr, sizeof (szErr));
+			pThis->Event (szErr, EDT_RESPONSE_E);
+		}
+		else
+			pThis->Event (LS (L_DONE), EDT_DONE);
+		pThis->Event (DE_EXTERROR, DMEE_FILEUPDATED);	
 	}
-	else
-		pThis->Event (LS (L_DONE), EDT_DONE);
-	pThis->Event (DE_EXTERROR, DMEE_FILEUPDATED);	
-}catch (...){}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadMgr::_threadQSize " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadMgr::_threadQSize unknown exception");
+	}
+
 	InterlockedDecrement (&pThis->m_iThread);
 	return 0;
 }
@@ -2442,11 +2305,20 @@ DWORD WINAPI fsDownloadMgr::_threadCalcMirrSpeed(LPVOID lp)
 {
 	fsDownloadMgr* pThis = (fsDownloadMgr*) lp;
 
-try {
-
-	pThis->MeasureMirrorsSpeed ();
-
-} catch (...) {}
+	try 
+	{
+		pThis->MeasureMirrorsSpeed ();
+	} 
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadMgr::_threadCalcMirrSpeed " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadMgr::_threadCalcMirrSpeed unknown exception");
+	}
 
 	InterlockedDecrement (&pThis->m_iThread);
 

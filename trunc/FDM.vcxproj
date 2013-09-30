@@ -86,7 +86,7 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>false</TreatWarningAsError>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <AdditionalIncludeDirectories>include.add;include.add\dshow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include.add;include.add\dshow;E:\Informer Technologies\FDM 3.9\Bittorrent\boost_1_44;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;_WINDOWS;CURL_STATICLIB;USE_SSLEAY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions);NOCRYPT;NOUNCRYPT</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Release\FDM.pch</PrecompiledHeaderOutputFile>
@@ -190,7 +190,7 @@
       <WarningLevel>Level4</WarningLevel>
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>include.add;include.add\dshow;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include.add;include.add\dshow;E:\Informer Technologies\FDM 3.9\Bittorrent\boost_1_44;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_DEBUG;WIN32;_WINDOWS;CURL_STATICLIB;USE_SSLEAY;%(PreprocessorDefinitions);NOCRYPT;NOUNCRYPT</PreprocessorDefinitions>
       <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug\FDM.pch</PrecompiledHeaderOutputFile>
@@ -1051,6 +1051,8 @@
     <ClCompile Include="vmsFdmOpNetIntegrationMgr.cpp" />
     <ClCompile Include="vmsFdmUiDetails.cpp" />
     <ClCompile Include="vmsFirefoxExtensionUpdateMgr.cpp" />
+    <ClCompile Include="vmsLogger.cpp" />
+    <ClCompile Include="vmsMagnetExtension.cpp" />
     <ClCompile Include="vmsTpDownloadMgr.cpp" />
     <ClCompile Include="Uploader\FUM\fuminterfaces_i.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -2004,10 +2006,13 @@
     <ClInclude Include="vmsFdmFilesDeleter.h" />
     <ClInclude Include="vmsFdmOpNetIntegrationMgr.h" />
     <ClInclude Include="vmsFdmUiDetails.h" />
+    <ClInclude Include="vmsFdmUtils.h" />
     <ClInclude Include="vmsFileDeleter.h" />
     <ClInclude Include="vmsFirefoxExtensionInfo.h" />
     <ClInclude Include="vmsFirefoxExtensionUpdateMgr.h" />
     <ClInclude Include="vmsKnownBrowsers.h" />
+    <ClInclude Include="vmsMagnetExtension.h" />
+    <ClInclude Include="vmsLogger.h" />
     <ClInclude Include="vmsTpDownloadMgr.h" />
     <ClInclude Include="Schedule_AdvancedPage.h" />
     <ClInclude Include="Schedule_HTSPage.h" />

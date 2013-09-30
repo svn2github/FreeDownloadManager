@@ -4,6 +4,7 @@
 
 #include "StdAfx.h"
 #include "MemHandleGuard.h"
+#include "vmsLogger.h"
 
 CMemHandleGuard::CMemHandleGuard(LPVOID& pMemPtr, bool& bFailedToRelease)
 	: m_pMemPtr(pMemPtr),
@@ -13,7 +14,8 @@ CMemHandleGuard::CMemHandleGuard(LPVOID& pMemPtr, bool& bFailedToRelease)
 
 CMemHandleGuard::~CMemHandleGuard()
 {
-	try {
+	try 
+	{
 		HLOCAL hMem = (HLOCAL)m_pMemPtr;
 		if (hMem != 0) {
 			if (LocalFree(hMem) != 0) {
@@ -23,9 +25,17 @@ CMemHandleGuard::~CMemHandleGuard()
 			}
 			m_pMemPtr = 0;
 		}
-	} catch (...) {
-
+	} 
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CMemHandleGuard::~CMemHandleGuard " + tstring(ex.what()));
 		m_bFailedToRelease = true;
-
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CMemHandleGuard::~CMemHandleGuard unknown exception");
+		m_bFailedToRelease = true;
 	}
 }

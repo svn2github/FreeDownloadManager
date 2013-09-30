@@ -7,6 +7,7 @@
 #include "Downloads_History.h"
 #include "DownloadsWnd.h"
 #include "WaitDlg.h"
+#include "vmsLogger.h"
 
 extern CDownloadsWnd* _pwndDownloads;
 
@@ -213,26 +214,34 @@ void CDownloads_History::ApplyFilter(fsDldHistRecFilter* filter)
 void CDownloads_History::ApplyFilter_imp(fsDldHistRecFilter *f, int *piProgress)
 {
 	DeleteAllRecords ();
-
 	ShowWindow (SW_HIDE);
-
 	std::vector <fsDLHistoryRecordPtr> v;
-
 	m_mgr->Lock ();
 
-	try {
-	int cRecs = m_mgr->GetRecordCount ();
-	for (int i = cRecs-1; i >= 0; i--)
+	try 
 	{
-		fsDLHistoryRecord* rec = m_mgr->GetRecord (i);
-		if (f->IsSatisfies (rec))
-			v.push_back (rec);
+		int cRecs = m_mgr->GetRecordCount ();
+		for (int i = cRecs-1; i >= 0; i--)
+		{
+			fsDLHistoryRecord* rec = m_mgr->GetRecord (i);
+			if (f->IsSatisfies (rec))
+				v.push_back (rec);
 
-		if (piProgress)
-			*piProgress = int (float (cRecs-i) / cRecs * 100);
+			if (piProgress)
+				*piProgress = int (float (cRecs-i) / cRecs * 100);
 
+		}
 	}
-	} catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_History::ApplyFilter_imp " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_History::ApplyFilter_imp unknown exception");
+	}
 
 	m_mgr->Unlock ();
 
@@ -465,12 +474,21 @@ void CDownloads_History::OnHstitemDelete()
 
 	ShowWindow (SW_HIDE);
 
-	try {
-
-	for (int i = 0; i < v.size (); i++)
-		_DldsMgr.m_histmgr.DeleteRecord (v [i]);
-
-	}catch (...) {}
+	try 
+	{
+		for (int i = 0; i < v.size (); i++)
+			_DldsMgr.m_histmgr.DeleteRecord (v [i]);
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_History::OnHstitemDelete " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_History::OnHstitemDelete unknown exception");
+	}
 
 	ShowWindow (SW_SHOW);
 	SetFocus ();

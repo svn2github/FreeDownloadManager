@@ -2865,9 +2865,29 @@ void fsAppSettings::Bittorrent_ListenPort_To(int i)
 	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "ListenPortTo", i);
 }
 
+CString fsAppSettings::Bittorrent_OldMagnetAssociation()
+{
+	return m_stgs.GetProfileString (_T("Settings\\Network\\Bittorrent"), _T("OldMagnetAssocString"), _T(""));
+}
+
+void fsAppSettings::Bittorrent_OldMagnetAssociation(LPCTSTR psz)
+{
+	m_stgs.WriteProfileString (_T("Settings\\Network\\Bittorrent"), _T("OldMagnetAssocString"), psz);
+}
+
+CString fsAppSettings::Bittorrent_OldMagnetUrlProtocol()
+{
+	return m_stgs.GetProfileString (_T("Settings\\Network\\Bittorrent"), _T("OldMagnetUrlProtocol"), _T(""));
+}
+
+void fsAppSettings::Bittorrent_OldMagnetUrlProtocol(LPCTSTR psz)
+{
+	m_stgs.WriteProfileString (_T("Settings\\Network\\Bittorrent"), _T("OldMagnetUrlProtocol"), psz);
+}
+
 BOOL fsAppSettings::Bittorrent_EnableDHT()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "EnableDHT", FALSE);
+	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "EnableDHT", TRUE);
 }
 
 void fsAppSettings::Bittorrent_EnableDHT(BOOL b)

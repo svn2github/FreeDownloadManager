@@ -28,7 +28,7 @@ bool vmsBtDownloadPeerInfoListImpl::UpdateList ()
 {
 	m_dld->check_handle_is_valid ();
 	std::vector<libtorrent::peer_info> v;
-	m_dld->m_handle.get_peer_info (v);
+	m_dld->GetHandle().get_peer_info (v);
 	std::vector <vmsBtDownloadPeerInfoImpl> vPeers;
 
 	for (size_t i = 0; i < v.size (); i++)

@@ -9,6 +9,7 @@
 #include "fsDownloadMgr.h"
 #include "system.h"
 #include "mfchelp.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -24,107 +25,6 @@ fsDownloadRegSaver::fsDownloadRegSaver()
 fsDownloadRegSaver::~fsDownloadRegSaver()
 {
 
-}
-
-BOOL fsDownloadRegSaver::Save(t_downloads* vDownloads, LPCSTR pszFileName)
-{
-	
-
-	m_bDontSaveLogs = _App.DontSaveLogs ();
-
-	fsString strFileName = pszFileName;
-	fsString strFileNameBak = pszFileName;
-
-	strFileName += ".sav";
-	strFileNameBak += ".bak";
-
-	strFileName = fsGetDataFilePath (strFileName);
-	strFileNameBak = fsGetDataFilePath (strFileNameBak);
-
-	
-	HANDLE hFile = CreateFile (strFileNameBak, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
-		FILE_ATTRIBUTE_HIDDEN, NULL);
-
-	if (hFile == INVALID_HANDLE_VALUE)
-		return FALSE;
-
-	DWORD dw;
-
-	
-	fsDLFileHdr hdr;
-	if (FALSE == WriteFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
-	{
-		CloseHandle (hFile);
-		return FALSE;
-	}
-	
-	for (size_t i = 0; i < vDownloads->size (); i++)
-	{
-		LPBYTE pBuffer = NULL;
-		DWORD  dwSize;
-
-		try {
-
-		vmsDownloadSmartPtr dld = vDownloads->at (i);
-
-		
-		if (FALSE == SaveDownload (dld, NULL, &dwSize))
-		{
-			CloseHandle (hFile);
-			return FALSE;
-		}
-
-		fsnew (pBuffer, BYTE, dwSize);
-
-		
-		if (FALSE == SaveDownload (dld, pBuffer, &dwSize))
-		{
-			delete [] pBuffer;
-			CloseHandle (hFile);
-			return FALSE;
-		}
-
-		}
-		catch (...) {
-			if (pBuffer)
-				delete [] pBuffer;
-			CloseHandle (hFile);
-			return FALSE;
-		}
-
-		
-
-		
-		if (FALSE == WriteFile (hFile, &dwSize, sizeof (dwSize), &dw, NULL))
-		{
-			CloseHandle (hFile);
-			return FALSE;
-		}
-
-		if (FALSE == WriteFile (hFile, pBuffer, dwSize, &dw, NULL))
-		{
-			CloseHandle (hFile);
-			return FALSE;
-		}
-
-		delete [] pBuffer;
-	}
-
-	BOOL bOK = FlushFileBuffers (hFile);
-	BOOL bOK2 = CloseHandle (hFile);
-
-	if (!bOK || !bOK2)
-		return FALSE;
-
-	if (GetFileAttributes (strFileName) != DWORD (-1))
-	{
-		
-		SetFileAttributes (strFileName, FILE_ATTRIBUTE_HIDDEN);
-		DeleteFile (strFileName);
-	}
-
-	
-	return MoveFile (strFileNameBak, strFileName);
 }
 
 fsDLLoadResult fsDownloadRegSaver::Load (vmsDownloadList& vDownloads, LPCSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt, BOOL bErrIfNotExists)
@@ -351,22 +251,35 @@ BOOL fsDownloadRegSaver::Save(vmsDownloadList& vDownloads, LPCSTR pszFileName)
 	DWORD dwSize = 0;
 	LPBYTE pBuffer = NULL;
 
-	try {
-
+	try 
+	{
 		vDownloads.getStateBuffer(0, &dwSize, false);
 		fsnew (pBuffer, BYTE, dwSize);
 		vDownloads.getStateBuffer(pBuffer, &dwSize, true);
-
-	} catch (...) {
+	} 
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadRegSaver::Save " + tstring(ex.what()));
 
 		if (pBuffer)
 			delete [] pBuffer;
 		CloseHandle (hFile);
 		return FALSE;
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDownloadRegSaver::Save unknown exception");
 
+		if (pBuffer)
+			delete [] pBuffer;
+		CloseHandle (hFile);
+		return FALSE;
 	}
 
-	if (FALSE == WriteFile (hFile, pBuffer, dwSize, &dw, NULL)) {
+	if (FALSE == WriteFile (hFile, pBuffer, dwSize, &dw, NULL)) 
+	{
 		if (pBuffer)
 			delete [] pBuffer;
 		CloseHandle (hFile);
@@ -504,20 +417,31 @@ fsDLLoadResult fsDownloadRegSaver::Load(t_downloads *vDownloads, LPCSTR pszFileN
 
 		
 
-		try{
-
-		if (bUseOLD)
+		try
 		{
-			if (FALSE == OLD_LoadDownload (dld, pBuffer, &dwSize))
-				goto _lErr;
+			if (bUseOLD)
+			{
+				if (FALSE == OLD_LoadDownload (dld, pBuffer, &dwSize))
+					goto _lErr;
+			}
+			else
+			{
+				if (FALSE == LoadDownload (dld, pBuffer, &dwSize, wVer))
+					goto _lErr;
+			}
 		}
-		else
+		catch (const std::exception& ex)
 		{
-			if (FALSE == LoadDownload (dld, pBuffer, &dwSize, wVer))
-				goto _lErr;
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("fsDownloadRegSaver::Load " + tstring(ex.what()));
+			goto _lErr;
 		}
-
-		}catch (...) {goto _lErr;}
+		catch (...)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("fsDownloadRegSaver::Load unknown exception");
+			goto _lErr;
+		}
 
 		delete [] pBuffer;
 
@@ -543,121 +467,6 @@ _lErr:
 		
 	
 	return Load (vDownloads, pszFileName, bDontLoadIfTooLarge, nlt, bErrIfNotExists);
-}
-
-BOOL fsDownloadRegSaver::SaveDownload(vmsDownloadSmartPtr dld, LPVOID pBuffer, LPDWORD pdwSize)
-{
-	DWORD dwNeedSize;
-
-	if (FALSE == dld->pMgr->SaveState (NULL, &dwNeedSize))
-		return FALSE;
-
-	
-
-	dwNeedSize += sizeof (dld->bAutoStart);
-	
-	int iReserved = 0;
-	dwNeedSize += sizeof (iReserved);
-	dwNeedSize += sizeof (dld->nID);
-	dwNeedSize += dld->strComment.GetLength () + sizeof (DWORD);
-	dwNeedSize += sizeof (UINT);	
-	dwNeedSize += sizeof (dld->dwFlags);
-	dwNeedSize += sizeof (dld->dwReserved);
-	dwNeedSize += sizeof (dld->dateAdded);
-	dwNeedSize += sizeof (dld->dateCompleted);
-
-	DWORD cEvents = dld->vEvents.size ();
-	if (m_bDontSaveLogs)
-		cEvents = 0;
-	dwNeedSize += sizeof (DWORD);  
-
-	DWORD i = 0;
-	for (i = 0; i < cEvents; i++)
-		dwNeedSize += 2*sizeof (COLORREF) + sizeof (FILETIME) + sizeof (int) + dld->vEvents [i].strEvent.GetLength () + sizeof (DWORD);
-
-	if (pBuffer == NULL)
-	{
-		*pdwSize = dwNeedSize;
-		return TRUE;
-	}
-
-	if (*pdwSize < dwNeedSize)
-	{
-		*pdwSize = dwNeedSize;
-		return FALSE;
-	}
-
-	LPBYTE pB = LPBYTE (pBuffer);
-
-	
-	DWORD dw = *pdwSize;
-	if (FALSE == dld->pMgr->SaveState (pB, &dw))
-		return FALSE;
-	pB += dw;
-
-	CopyMemory (pB, &dld->bAutoStart, sizeof (dld->bAutoStart));
-	pB += sizeof (dld->bAutoStart);
-
-	
-
-	CopyMemory (pB, &iReserved, sizeof (iReserved));
-	pB += sizeof (iReserved);
-
-	CopyMemory (pB, &dld->nID, sizeof (dld->nID));
-	pB += sizeof (dld->nID);
-
-	dw = dld->strComment.GetLength ();
-	CopyMemory (pB, &dw, sizeof (dw));
-	pB += sizeof (dw);
-	CopyMemory (pB, dld->strComment, dw);
-	pB += dw;
-
-	CopyMemory (pB, &dld->pGroup->nId, sizeof (UINT));
-	pB += sizeof (UINT);
-
-	CopyMemory (pB, &dld->dwFlags, sizeof (dld->dwFlags));
-	pB += sizeof (dld->dwFlags);
-
-	CopyMemory (pB, &dld->dwReserved, sizeof (dld->dwReserved));
-	pB += sizeof (dld->dwReserved);
-
-	CopyMemory (pB, &dld->dateAdded, sizeof (dld->dateAdded));
-	pB += sizeof (dld->dateAdded);
-
-	CopyMemory (pB, &dld->dateCompleted, sizeof (dld->dateCompleted));
-	pB += sizeof (dld->dateCompleted);
-
-	CopyMemory (pB, &cEvents, sizeof (DWORD));
-	pB += sizeof (DWORD);
-
-	
-
-	for (i = 0; i < cEvents; i++)
-	{
-		fsDownloadEvents *ev = &dld->vEvents [i];
-		
-		CopyMemory (pB, &ev->clrBg, sizeof (ev->clrBg));
-		pB += sizeof (ev->clrBg);
-
-		CopyMemory (pB, &ev->clrText, sizeof (ev->clrText));
-		pB += sizeof (ev->clrText);
-
-		CopyMemory (pB, &ev->timeEvent, sizeof (ev->timeEvent));
-		pB += sizeof (ev->timeEvent);
-
-		CopyMemory (pB, &ev->iImage, sizeof (ev->iImage));
-		pB += sizeof (ev->iImage);
-
-		dw = ev->strEvent.GetLength ();
-		CopyMemory (pB, &dw, sizeof (dw));
-		pB += sizeof (dw);
-		CopyMemory (pB, dld->vEvents [i].strEvent, dw);
-		pB += dw;
-	}
-
-	*pdwSize = dwNeedSize;
-
-	return TRUE;
 }
 
 BOOL fsDownloadRegSaver::LoadDownload(vmsDownloadSmartPtr dld, LPVOID lpBuffer, LPDWORD lpdwSize, WORD wVer)

@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "FdmApp.h"
 #include "fsShellBrowsersEvents.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -55,33 +56,43 @@ HRESULT fsShellBrowsersEvents::Attach(SHDocVw::IShellWindowsPtr& spSHWnds)
 	
 	for (LONG i = 0; i < cItems; i++)
 	{
-		try {
-		IDispatchPtr spDisp;
-		_variant_t va (i, VT_I4);
-		
-		spDisp = spSHWnds->Item (va);
-
-		SHDocVw::IWebBrowser2Ptr spBrowser (spDisp);
-
-		if (spBrowser == NULL)
-			continue;
-
-		
-		fsShellBrowsersEvents* pBrowser = new fsShellBrowsersEvents;
-		
-		hr = pBrowser->Attach (spBrowser); 
-
-		if (FAILED (hr))
+		try 
 		{
-			delete pBrowser;
-			return hr;
-		}
+			IDispatchPtr spDisp;
+			_variant_t va (i, VT_I4);
+		
+			spDisp = spSHWnds->Item (va);
 
-		pBrowser->SetEventFunc (m_pfnEvents, m_lpEventsParam);
+			SHDocVw::IWebBrowser2Ptr spBrowser (spDisp);
 
-		m_vBrowsers.add (pBrowser);
+			if (spBrowser == NULL)
+				continue;
+
+			
+			fsShellBrowsersEvents* pBrowser = new fsShellBrowsersEvents;
+		
+			hr = pBrowser->Attach (spBrowser); 
+
+			if (FAILED (hr))
+			{
+				delete pBrowser;
+				return hr;
+			}
+
+			pBrowser->SetEventFunc (m_pfnEvents, m_lpEventsParam);
+
+			m_vBrowsers.add (pBrowser);
 		}
-		catch (...) {}
+		catch (const std::exception& ex)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("fsShellBrowsersEvents::Attach " + tstring(ex.what()));
+		}
+		catch (...)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("fsShellBrowsersEvents::Attach unknown exception");
+		}
 	}
 	
 	return S_OK;
@@ -117,32 +128,41 @@ void fsShellBrowsersEvents::Detach()
 {
 	m_bDetaching = true;
 
-	try {
-
-	if (m_vBrowsers.size () != 0)
+	try 
 	{
-		int i = 0;
-		for (i = 0; i < m_vBrowsers.size (); i++)
-			m_vBrowsers [i]->SetEventFunc (NULL, 0);
-
-		for (i = 0; i < m_vBrowsers.size (); i++)
+		if (m_vBrowsers.size () != 0)
 		{
-			m_vBrowsers [i]->Detach ();
-			delete m_vBrowsers [i];
-		}
+			int i = 0;
+			for (i = 0; i < m_vBrowsers.size (); i++)
+				m_vBrowsers [i]->SetEventFunc (NULL, 0);
 
-		m_vBrowsers.clear ();
+			for (i = 0; i < m_vBrowsers.size (); i++)
+			{
+				m_vBrowsers [i]->Detach ();
+				delete m_vBrowsers [i];
+			}
+
+			m_vBrowsers.clear ();
+		}
+		else
+		{
+			if (m_spConnPt != NULL)
+			{
+				m_spConnPt->Unadvise (m_dwCookie);
+				m_spConnPt = NULL;	
+			}
+		}
 	}
-	else
+	catch (const std::exception& ex)
 	{
-		if (m_spConnPt != NULL)
-		{
-			m_spConnPt->Unadvise (m_dwCookie);
-			m_spConnPt = NULL;	
-		}
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsShellBrowsersEvents::Detach " + tstring(ex.what()));
 	}
-
-	}catch (...) {}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsShellBrowsersEvents::Detach unknown exception");
+	}
 
 	m_bDetaching = false;
 }

@@ -9,6 +9,7 @@
 #include "DownloadsWnd.h"
 #include "inetutil.h"
 #include "ShedulerWnd.h"
+#include "vmsLogger.h"
 
 extern CShedulerWnd *_pwndScheduler;
 
@@ -459,22 +460,44 @@ DWORD fsWebPageDownloader::_DldEvents(fsDownload* dld, fsDLHistoryRecord*, enum 
 		{
 			fsDLWebPage* wp = pThis->FindWebPage (dld);
 	
-			try {
-			if (wp)
+			try 
 			{
-				try {
-					if (dld->pMgr->IsDone () == FALSE)
-						pThis->CorrectUnpUrls (wp, NULL);
-				}catch (...) {}
+				if (wp)
+				{
+					try 
+					{
+						if (dld->pMgr->IsDone () == FALSE)
+							pThis->CorrectUnpUrls (wp, NULL);
+					}
+					catch (const std::exception& ex)
+					{
+						ASSERT (FALSE);
+						vmsLogger::WriteLog("fsWebPageDownloader::_DldEvents " + tstring(ex.what()));
+					}
+					catch (...)
+					{
+						ASSERT (FALSE);
+						vmsLogger::WriteLog("fsWebPageDownloader::_DldEvents unknown exception");
+					}
 
-				wp->strFile = wp->dld->pMgr->get_OutputFilePathName (); 
-				wp->uDldId = UINT (-1);	
-				wp->dld = NULL;	
-				wp->setDirty();
-				
-				SAFE_DELETE (wp->pvUnpLinks);
+					wp->strFile = wp->dld->pMgr->get_OutputFilePathName (); 
+					wp->uDldId = UINT (-1);	
+					wp->dld = NULL;	
+					wp->setDirty();
+					
+					SAFE_DELETE (wp->pvUnpLinks);
+				}
+			} 
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsWebPageDownloader::_DldEvents " + tstring(ex.what()));
 			}
-			} catch (...) {}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsWebPageDownloader::_DldEvents unknown exception");
+			}
 			dld = NULL;
 		}
 		break;
@@ -496,7 +519,16 @@ DWORD fsWebPageDownloader::_DldEvents(fsDownload* dld, fsDLHistoryRecord*, enum 
 	}
 
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsWebPageDownloader::_DldEvents " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsWebPageDownloader::_DldEvents unknown exception");
+	}
 
 	if (dld)
 	{
@@ -1179,16 +1211,29 @@ BOOL fsWebPageDownloader::IsRunning()
 {
 	vmsAUTOLOCKSECTION (m_csConfs);
 
-	try {
-	
-	for (int i = m_vConfs.size () - 1; i >= 0; i--)
+	try 
 	{
-		if (m_vConfs [i].wp->dld && (m_vConfs [i].wp->bState & WPSTATE_DLDWASDELETED) == 0 && 
+		for (int i = m_vConfs.size () - 1; i >= 0; i--)
+		{
+			if (m_vConfs [i].wp->dld && (m_vConfs [i].wp->bState & WPSTATE_DLDWASDELETED) == 0 && 
 				m_vConfs [i].wp->dld->pMgr->IsRunning ())
-			return TRUE;
+				return TRUE;
+		}
 	}
-
-	}catch (...) {Sleep (0); return IsRunning ();}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsWebPageDownloader::IsRunning " + tstring(ex.what()));
+		Sleep (0); 
+		return IsRunning ();
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsWebPageDownloader::IsRunning unknown exception");
+		Sleep (0); 
+		return IsRunning ();
+	}
 
 	return FALSE;
 }
@@ -1495,11 +1540,21 @@ void fsWebPageDownloader::SetEventFunc(fntWPDEvents pfn, LPVOID lp)
 
 void fsWebPageDownloader::Event(fsWPDEvent ev, fsDownload *dld, fsDLWebPage *wp, fsDLWebPageTree wptree)
 {
-	try {
-	if (m_pfnEvents)
-		m_pfnEvents (this, ev, dld, wp, wptree, m_lpEventsParam);
+	try 
+	{
+		if (m_pfnEvents)
+			m_pfnEvents (this, ev, dld, wp, wptree, m_lpEventsParam);
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsWebPageDownloader::Event " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsWebPageDownloader::Event unknown exception");
+	}
 }
 
 void fsWebPageDownloader::DeleteAllDownloads(BOOL bByUser)
@@ -2869,10 +2924,10 @@ DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
 		pthis->m__threadProcessDoneAndRedirEvents__NeedCheckDoneOrStopped)
 	{
 		if (pthis->m__threadProcessDoneAndRedirEvents__FinishedDownloads.size () == 0 && 
-				pthis->m__threadProcessDoneAndRedirEvents__RedirDownloads.size () == 0 &&
-				pthis->m__threadProcessDoneAndRedirEvents__RcvdEventDownloads.size () == 0 && 
-				pthis->m__threadProcessDoneAndRedirEvents__WillBeDeletedDownloads.size () == 0 &&
-				pthis->m__threadProcessDoneAndRedirEvents__NeedCheckDoneOrStopped == false)
+			pthis->m__threadProcessDoneAndRedirEvents__RedirDownloads.size () == 0 &&
+			pthis->m__threadProcessDoneAndRedirEvents__RcvdEventDownloads.size () == 0 && 
+			pthis->m__threadProcessDoneAndRedirEvents__WillBeDeletedDownloads.size () == 0 &&
+			pthis->m__threadProcessDoneAndRedirEvents__NeedCheckDoneOrStopped == false)
 		{
 			Sleep (100);
 			continue;
@@ -2889,7 +2944,8 @@ DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
 		
 			fsDLWebPage* wp = pthis->FindWebPage (dld);
 			
-			try {
+			try 
+			{
 				if (wp)
 				{
 					wp->strFile = wp->dld->pMgr->get_OutputFilePathName (); 
@@ -2900,7 +2956,17 @@ DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
 					wp->dld = NULL;	
 					wp->setDirty();
 				}
-			} catch (...) {}
+			} 
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsWebPageDownloader::_threadProcessDoneAndRedirEvents " + tstring(ex.what()));
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsWebPageDownloader::_threadProcessDoneAndRedirEvents unknown exception");
+			}
 		}
 
 		LOGsnl ("Processing redir downloads...");
@@ -2912,9 +2978,20 @@ DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
 			pthis->m__threadProcessDoneAndRedirEvents__RedirDownloads.erase (pthis->m__threadProcessDoneAndRedirEvents__RedirDownloads.begin ());
 			LeaveCriticalSection (&pthis->m_csthreadProcessDoneAndRedirEventsAccLists);
 
-			try {
+			try 
+			{
 				pthis->OnDldRedirected (dld);
-			}catch (...) {}			
+			}
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsWebPageDownloader::_threadProcessDoneAndRedirEvents " + tstring(ex.what()));
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsWebPageDownloader::_threadProcessDoneAndRedirEvents unknown exception");
+			}
 		}
 
 		LOGsnl ("Processing finished downloads...");
@@ -2928,9 +3005,20 @@ DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
 			pthis->m__threadProcessDoneAndRedirEvents__FinishedDownloads.erase (pthis->m__threadProcessDoneAndRedirEvents__FinishedDownloads.begin ());
 			LeaveCriticalSection (&pthis->m_csthreadProcessDoneAndRedirEventsAccLists);
 			
-			try {
+			try 
+			{
 				pthis->OnWPDownloadDone (dld);
-			}catch (...) {}			
+			}
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsWebPageDownloader::_threadProcessDoneAndRedirEvents " + tstring(ex.what()));
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("fsWebPageDownloader::_threadProcessDoneAndRedirEvents unknown exception");
+			}
 		}
 
 		_pwndDownloads->EndCreateDownloads ();
@@ -2954,10 +3042,21 @@ DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
 
 			if (i == vProceeded.size ())
 			{
-				try {
+				try 
+				{
 					pthis->Event (WPDE_DLDEVENTRECEIVED, dld);
 					vProceeded.push_back (dld->nID);
-				}catch (...) {}
+				}
+				catch (const std::exception& ex)
+				{
+					ASSERT (FALSE);
+					vmsLogger::WriteLog("fsWebPageDownloader::_threadProcessDoneAndRedirEvents " + tstring(ex.what()));
+				}
+				catch (...)
+				{
+					ASSERT (FALSE);
+					vmsLogger::WriteLog("fsWebPageDownloader::_threadProcessDoneAndRedirEvents unknown exception");
+				}
 			}
 
 			if (vProceeded.size () > 50)
@@ -2987,8 +3086,17 @@ DWORD WINAPI fsWebPageDownloader::_threadProcessDoneAndRedirEvents(LPVOID lp)
 
 		LOGsnl ("Once cycle done");
 	}
-
-	}catch (...) {ASSERT (FALSE);}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsWebPageDownloader::_threadProcessDoneAndRedirEvents " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsWebPageDownloader::_threadProcessDoneAndRedirEvents unknown exception");
+	}
 
 	pthis->m_bthreadProcessDoneAndRedirEvents_Running = false;
 	return 0;

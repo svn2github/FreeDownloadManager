@@ -197,7 +197,10 @@ function freeDldMgr_checkURL (url)
 
 function freeDldMgr_dllink ()
 {
-  freeDldMgr_dlURL (freeDldMgr_getURL (document.popupNode));
+  if (document.popupNode instanceof HTMLAnchorElement)
+    document.popupNode.click();
+  else
+    freeDldMgr_dlURL (freeDldMgr_getURL (document.popupNode));
 }
 
 function freeDldMgr_dlvideo ()

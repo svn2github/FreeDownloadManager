@@ -13,7 +13,7 @@
 #include "Bittorrent\fdmbtsupp\vmsBtSession.h"
 #include "Bittorrent\fdmbtsupp\vmsUTorrentDownloadsDb.h"
 
-#define BTSUPP_DLL_MINVERREQ	1020
+#define BTSUPP_DLL_MINVERREQ	1026
 
 class vmsBtSupport  
 {

@@ -45,7 +45,8 @@ public:
 	
 	
 	
-	static int _CheckDownloadAlrExists (vmsDownloadSmartPtr dld, BOOL bNeedTopMost = FALSE, BOOL bShowUI = TRUE);
+	static int _CheckDownloadAlrExists (
+		vmsDownloadSmartPtr dld, BOOL bNeedTopMost = FALSE, BOOL bShowUI = TRUE, CCreateDownloadDlg* const cddlg = NULL);
 	BOOL m_bReqTopMostDialog;	
 	
 	fsScheduleEx m_schScheduleParam;

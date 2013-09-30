@@ -7,6 +7,7 @@
 #include "fsWebPageDownloadsMgr.h"
 #include "mfchelp.h"
 #include "Utils.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -82,8 +83,8 @@ BOOL fsWebPageDownloadsMgr::Save()
 	if (hFile == INVALID_HANDLE_VALUE)
 		return FALSE;
 
-	try{
-
+	try
+	{
 		DWORD dw = 0;
 		fsSpiderFileHdr hdr;
 
@@ -118,7 +119,19 @@ BOOL fsWebPageDownloadsMgr::Save()
 		
 		return TRUE;
 
-	}catch (...) {
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsWebPageDownloadsMgr::Save " + tstring(ex.what()));
+		if (hFile != INVALID_HANDLE_VALUE)
+			CloseHandle (hFile);
+		return FALSE;
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsWebPageDownloadsMgr::Save unknown exception");
 		if (hFile != INVALID_HANDLE_VALUE)
 			CloseHandle (hFile);
 		return FALSE;

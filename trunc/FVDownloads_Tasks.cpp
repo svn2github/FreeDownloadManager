@@ -12,6 +12,7 @@
 #include "plugincmds.h"
 #include "vmsDownloadsListHelper.h"
 #include "Dlg_Download.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -106,24 +107,34 @@ void CFVDownloads_Tasks::OnGetdispinfo(NMHDR* pNMHDR, LRESULT* pResult)
 	LV_DISPINFO* pDispInfo = (LV_DISPINFO*)pNMHDR;
 	LV_ITEM* pItem = &(pDispInfo)->item;
 
-	try{
-
-	vmsDownloadSmartPtr dld = m_vDlds [pItem->iItem];
-
-	if (pItem->mask & LVIF_IMAGE)
+	try
 	{
-        pItem->iImage = CDownloads_Tasks::GetDownloadImage (dld);
-		
-	}
+		vmsDownloadSmartPtr dld = m_vDlds [pItem->iItem];
 
-	if (pItem->mask & LVIF_TEXT)
+		if (pItem->mask & LVIF_IMAGE)
+		{
+			pItem->iImage = CDownloads_Tasks::GetDownloadImage (dld);
+			
+		}
+
+		if (pItem->mask & LVIF_TEXT)
+		{
+			int nSubItem = SubItemToSubItem (pItem->iSubItem);
+			if (nSubItem != -1)
+				lstrcpy (pItem->pszText, CDownloads_Tasks::GetDownloadText (dld, nSubItem));
+		}
+
+	}
+	catch (const std::exception& ex)
 	{
-		int nSubItem = SubItemToSubItem (pItem->iSubItem);
-		if (nSubItem != -1)
-			lstrcpy (pItem->pszText, CDownloads_Tasks::GetDownloadText (dld, nSubItem));
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CFVDownloads_Tasks::OnGetdispinfo " + tstring(ex.what()));
 	}
-
-	}catch (...) {}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CFVDownloads_Tasks::OnGetdispinfo unknown exception");
+	}
 }
 
 void CFVDownloads_Tasks::ApplyLanguage()
@@ -661,34 +672,17 @@ void CFVDownloads_Tasks::SaveState()
 
 void CFVDownloads_Tasks::UpdateActiveDownload(int adjSelected)
 {
-	try {
-	
-	POSITION pos = GetFirstSelectedItemPosition ();
-	vmsDownloadSmartPtr dld;	
-
-	
-	if (pos && GetSelectedCount () == 1)
+	try 
 	{
-		int iItem = GetNextSelectedItem (pos);
+		POSITION pos = GetFirstSelectedItemPosition ();
+		vmsDownloadSmartPtr dld;	
 
-		iItem += adjSelected;	
-		if (iItem < 0)
-			iItem = 0;
-		else if (iItem >= GetItemCount ())
-			iItem = GetItemCount () - 1;
-
-		dld = m_vDlds [iItem];
-	}
-	else
-	{
-		int iItem = GetSelectionMark ();
-
-		if (iItem == -1)
-			dld = NULL;	
-		else
+		
+		if (pos && GetSelectedCount () == 1)
 		{
-			iItem += adjSelected;	
+			int iItem = GetNextSelectedItem (pos);
 
+			iItem += adjSelected;	
 			if (iItem < 0)
 				iItem = 0;
 			else if (iItem >= GetItemCount ())
@@ -696,17 +690,43 @@ void CFVDownloads_Tasks::UpdateActiveDownload(int adjSelected)
 
 			dld = m_vDlds [iItem];
 		}
-	}
+		else
+		{
+			int iItem = GetSelectionMark ();
 
-	
-	if (dld != m_pActiveDownload)
+			if (iItem == -1)
+				dld = NULL;	
+			else
+			{
+				iItem += adjSelected;	
+
+				if (iItem < 0)
+					iItem = 0;
+				else if (iItem >= GetItemCount ())
+					iItem = GetItemCount () - 1;
+
+				dld = m_vDlds [iItem];
+			}
+		}
+
+		
+		if (dld != m_pActiveDownload)
+		{
+			m_pActiveDownload = dld;
+			_pwndFVDownloads->SetActiveDownload (m_pActiveDownload);
+		}
+
+	}
+	catch (const std::exception& ex)
 	{
-		m_pActiveDownload = dld;
-		_pwndFVDownloads->SetActiveDownload (m_pActiveDownload);
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CFVDownloads_Tasks::UpdateActiveDownload " + tstring(ex.what()));
 	}
-
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CFVDownloads_Tasks::UpdateActiveDownload unknown exception");
 	}
-	catch (...) {}
 }
 
 void CFVDownloads_Tasks::OnClick()

@@ -301,8 +301,7 @@ DWORD WINAPI CDlg_CreateNewTorrent::_threadCreateNewTorrent(LPVOID lp)
 								strSavePath.Right (1) != '/')
 							strSavePath.Delete (strSavePath.GetLength () - 1);
 						CString strUrl = "file://"; strUrl += dlg.GetPathName ();
-						_pwndDownloads->CreateBtDownloadFromFile (dlg.GetPathName (), 
-							strUrl, TRUE, TRUE, strSavePath);
+						_pwndDownloads->CreateBtDownload(dlg.GetPathName (), strUrl, TRUE, TRUE, strSavePath);
 					}
 				}
 				else

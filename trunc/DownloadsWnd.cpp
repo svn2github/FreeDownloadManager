@@ -34,6 +34,7 @@
 #include "WndDlDoneNotification.h"
 #include "FdmUiWindow.h"
 #include "TpDldSheet.h"
+#include "vmsLogger.h"
 
 extern CSpiderWnd* _pwndSpider;
 
@@ -323,69 +324,79 @@ void CDownloadsWnd::OnTimer(UINT )
 	DLDS_LIST v;
 	BOOL bHasRunning = FALSE;
 
-	try {
-	for (int i = 0; i < cDownloads; i++)
+	try 
 	{
-		vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);
+		for (int i = 0; i < cDownloads; i++)
+		{
+			vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);
 
-		if (dld == m_wndDownloads.m_info.Get_ActiveDownload ())
-		{
-			m_wndDownloads.m_info.UpdateActiveDownload ();
-			m_wndDownloads.m_info.m_video.m_vidman.Update ();
-			m_wndDownloads.m_info.m_bt.m_general.UpdateUploadStat ();
-			m_wndDownloads.m_info.m_bt.UpdatePeersStat ();
-			m_wndDownloads.m_info.m_bt.m_general.UpdateWastedStat ();
-			if (dld->pMgr->IsDownloading ())
-				m_wndDownloads.m_info.m_bt.m_files.UpdateProgress ();
-		}
+			if (dld == m_wndDownloads.m_info.Get_ActiveDownload ())
+			{
+				m_wndDownloads.m_info.UpdateActiveDownload ();
+				m_wndDownloads.m_info.m_video.m_vidman.Update ();
+				m_wndDownloads.m_info.m_bt.m_general.UpdateUploadStat ();
+				m_wndDownloads.m_info.m_bt.UpdatePeersStat ();
+				m_wndDownloads.m_info.m_bt.m_general.UpdateWastedStat ();
+				if (dld->pMgr->IsDownloading ())
+					m_wndDownloads.m_info.m_bt.m_files.UpdateProgress ();
+			}
 
-		if (_pwndTorrents && dld == _pwndTorrents->m_wndBtTab.getActiveDownload ())
-		{
-			_pwndTorrents->m_wndBtTab.m_general.UpdateUploadStat ();
-			_pwndTorrents->m_wndBtTab.UpdatePeersStat ();
-			_pwndTorrents->m_wndBtTab.m_general.UpdateWastedStat ();
-			if (dld->pMgr->IsDownloading ())
-				_pwndTorrents->m_wndBtTab.m_files.UpdateProgress ();
-		}
+			if (_pwndTorrents && dld == _pwndTorrents->m_wndBtTab.getActiveDownload ())
+			{
+				_pwndTorrents->m_wndBtTab.m_general.UpdateUploadStat ();
+				_pwndTorrents->m_wndBtTab.UpdatePeersStat ();
+				_pwndTorrents->m_wndBtTab.m_general.UpdateWastedStat ();
+				if (dld->pMgr->IsDownloading ())
+					_pwndTorrents->m_wndBtTab.m_files.UpdateProgress ();
+			}
 
-		if (dld->pMgr->IsDownloading ()) 
-		{
-			uTotalSpeed += dld->pMgr->GetSpeed ();
-			m_wndDownloads.m_tasks.UpdateDownload (dld);
-			if (dld->dwFlags & DLD_FLASH_VIDEO)
-				_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
-			if (_pwndTorrents && dld->isTorrent ())
-				_pwndTorrents->m_wndTasks.UpdateDownload (dld);
-		}
-		else if (dld->pMgr->IsReservingDiskSpace ())
-		{
-			m_wndDownloads.m_tasks.UpdateDownload (dld);
-			if (dld->dwFlags & DLD_FLASH_VIDEO)
-				_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
-			if (_pwndTorrents && dld->isTorrent ())
-				_pwndTorrents->m_wndTasks.UpdateDownload (dld);
-		}
-
-		if (dld->pMgr->IsBittorrent () && 
-				dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ())
-		{
-			v.push_back (dld);
-			if (dld->pMgr->IsDownloading () == FALSE)
+			if (dld->pMgr->IsDownloading ()) 
+			{
+				uTotalSpeed += dld->pMgr->GetSpeed ();
+				m_wndDownloads.m_tasks.UpdateDownload (dld);
+				if (dld->dwFlags & DLD_FLASH_VIDEO)
+					_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
+				if (_pwndTorrents && dld->isTorrent ())
+					_pwndTorrents->m_wndTasks.UpdateDownload (dld);
+			}
+			else if (dld->pMgr->IsReservingDiskSpace ())
 			{
 				m_wndDownloads.m_tasks.UpdateDownload (dld);
 				if (dld->dwFlags & DLD_FLASH_VIDEO)
 					_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
-				if (_pwndTorrents)
+				if (_pwndTorrents && dld->isTorrent ())
 					_pwndTorrents->m_wndTasks.UpdateDownload (dld);
 			}
-		}
 
-		if (dld->pMgr->IsRunning ())
-			bHasRunning = TRUE;
+			if (dld->pMgr->IsBittorrent () && 
+					dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ())
+			{
+				v.push_back (dld);
+				if (dld->pMgr->IsDownloading () == FALSE)
+				{
+					m_wndDownloads.m_tasks.UpdateDownload (dld);
+					if (dld->dwFlags & DLD_FLASH_VIDEO)
+						_pwndFVDownloads->m_wndTasks.UpdateDownload (dld);
+					if (_pwndTorrents)
+						_pwndTorrents->m_wndTasks.UpdateDownload (dld);
+				}
+			}
+
+			if (dld->pMgr->IsRunning ())
+				bHasRunning = TRUE;
+		}
+		m_uTotalSpeed = uTotalSpeed;
 	}
-	m_uTotalSpeed = uTotalSpeed;
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::OnTimer " + tstring(ex.what()));
 	}
-	catch (...) {}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::OnTimer unknown exception");
+	}
 
 	_DldsMgr.UnlockList (true);
 
@@ -401,10 +412,20 @@ void CDownloadsWnd::OnTimer(UINT )
 
 void CDownloadsWnd::SetActiveDownload(vmsDownloadSmartPtr dld)
 {
-	try {
+	try 
+	{
 		m_wndDownloads.m_info.Set_ActiveDownload (dld);
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::SetActiveDownload " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::SetActiveDownload unknown exception");
+	}
 }
 
 void CDownloadsWnd::OnDownloadProperties(DLDS_LIST &vDlds, CWnd* pwndParent)
@@ -432,9 +453,19 @@ void CDownloadsWnd::OnDownloadProperties(DLDS_LIST &vDlds, CWnd* pwndParent)
 
 BOOL CDownloadsWnd::LoadDownloads()
 {
-	if (!_DldsMgr.LoadDownloads ())
+	BOOL retVal = FALSE;
+	try
 	{
-		if (IDCANCEL == MessageBox (LS (L_ERROR_LOADING_DOWNLOADS__CANCEL_TO_EXIT), NULL, MB_ICONERROR | MB_OKCANCEL))
+		retVal = _DldsMgr.LoadDownloads ();
+	}
+	catch (...)
+	{
+		vmsLogger::WriteLog("CDownloadsWnd::LoadDownloads unknown exception");
+		retVal = FALSE;
+	}
+	if (retVal == FALSE)
+	{
+		if (IDCANCEL == MessageBox (LS (L_ERROR_LOADING_DOWNLOADS__CANCEL_TO_EXIT), NULL, MB_ICONERROR | MB_OKCANCEL | MB_SYSTEMMODAL))
 			TerminateProcess (GetCurrentProcess (), 1);
 		return FALSE;
 	}
@@ -781,18 +812,9 @@ void CDownloadsWnd::OnDldstop()
 	m_wndDownloads.m_tasks.OnDldstop ();	
 }
 
-UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, LPCSTR pszComment, LPCSTR pszReferer, BOOL bSilent, DWORD dwForceAutoLaunch, BOOL *pbAutoStart, vmsDWCD_AdditionalParameters* pParams, UINT* pRes)
+UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, LPCSTR pszComment, LPCSTR pszReferer, 
+	BOOL bSilent, DWORD dwForceAutoLaunch, BOOL *pbAutoStart, vmsDWCD_AdditionalParameters* pParams, UINT* pRes)
 {
-	vmsDownloadSmartPtr dld;
-	Download_CreateInstance (dld, false);
-
-	UINT res = IDOK;
-	bool bPlaceToTop = false;
-	BOOL bScheduled = FALSE;
-	
-	fsScheduleEx schScheduleParam;
-	fsSchedule& task = schScheduleParam.schTask;
-
 	std::string strUrlTmp;
 	if (pszStartUrl == NULL || *pszStartUrl == NULL)
 	{
@@ -802,8 +824,15 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 		{
 			LPCSTR psz = _ClipbrdMgr.Text ();
 			if (psz)
+			{
 				strUrlTmp = psz;
-			if (!strUrlTmp.empty ())
+			}
+			
+			if (strUrlTmp.find("magnet:") == 0)
+			{
+				pszStartUrl = strUrlTmp.c_str();
+			}
+			else if (!strUrlTmp.empty ())
 			{
 				fsURL url;
 				if (url.Crack (strUrlTmp.c_str ()) == IR_SUCCESS && *url.GetHostName ())
@@ -811,6 +840,31 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 			}
 		}
 	}
+
+	
+	if (!_tcsnicmp (pszStartUrl, _T ("magnet:"), 7))
+	{
+		UINT nDownloadId = 0;
+		if (!CreateBtDownload (pszStartUrl, _T(""), bSilent, FALSE, NULL, NULL, NULL, NULL, NULL, &nDownloadId))
+		{
+			if (pRes)
+				*pRes = IDCANCEL;
+			return UINT_MAX;
+		}
+		if (pRes)
+			*pRes = IDOK;
+		return nDownloadId;
+	}
+
+	vmsDownloadSmartPtr dld;
+	Download_CreateInstance (dld, false);
+
+	UINT res = IDOK;
+	bool bPlaceToTop = false;
+	BOOL bScheduled = FALSE;
+	
+	fsScheduleEx schScheduleParam;
+	fsSchedule& task = schScheduleParam.schTask;
 
 	if (FALSE == CreateDownloadWithDefSettings (dld, pszStartUrl))
 		return UINT_MAX;
@@ -848,6 +902,15 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 		
 		res = _DlgMgr.DoModal (&dlg);
 
+		if (res == IDOK && !dlg.m_strUrl.Find (_T ("magnet:")))
+		{
+			
+			
+			assert (dlg.m_strUrl != pszStartUrl); 
+			if (dlg.m_strUrl != pszStartUrl)
+				return CreateDownload (dlg.m_strUrl, bReqTopMostDialog, pszComment, pszReferer, bSilent, dwForceAutoLaunch, pbAutoStart, pParams, pRes);
+		}
+		
 		bPlaceToTop = dlg.m_bPlaceAtTop;
 		bScheduled = dlg.m_bScheduled;
 		task = dlg.m_schScheduleParam.schTask;
@@ -1197,28 +1260,39 @@ void CDownloadsWnd::CreateDownloads(DLDS_LIST &vDlds, fsSchedule *task, BOOL bDo
 
 void CDownloadsWnd::SaveAll(DWORD dwWhat)
 {
-try{
-	if (dwWhat & 1)
+	try
 	{
-		_DldsGrps.SaveToDisk ();
-		_DldsMgr.Save ();
-		_TumMgr.SaveSettings ();
-		_DldsMgr.SaveSettings ();
-		_MediaConvertMgr.SaveState ();
-	}
+		if (dwWhat & 1)
+		{
+			_DldsGrps.SaveToDisk ();
+			_DldsMgr.Save ();
+			_TumMgr.SaveSettings ();
+			_DldsMgr.SaveSettings ();
+			_MediaConvertMgr.SaveState ();
+		}
 
-	if (dwWhat & 2)
+		if (dwWhat & 2)
+		{
+			ASSERT (::IsWindow (m_hWnd));
+
+			_App.View_SaveWndSize (&m_wndGroups, "DownloadsGroups");
+			m_wndDownloads.SaveState ();
+			m_wndHistory.SaveState ("DownloadsHistory");
+			m_wndDeleted.SaveState ("DownloadsDeleted");
+			_App.View_SizesInBytes (m_wndDownloads.m_tasks.m_bSizesInBytes);
+			_App.View_DWWN (m_enDWWN);
+		}
+	}
+	catch (const std::exception& ex)
 	{
-		ASSERT (::IsWindow (m_hWnd));
-
-		_App.View_SaveWndSize (&m_wndGroups, "DownloadsGroups");
-		m_wndDownloads.SaveState ();
-		m_wndHistory.SaveState ("DownloadsHistory");
-		m_wndDeleted.SaveState ("DownloadsDeleted");
-		_App.View_SizesInBytes (m_wndDownloads.m_tasks.m_bSizesInBytes);
-		_App.View_DWWN (m_enDWWN);
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::SaveAll " + tstring(ex.what()));
 	}
-}catch (...){}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::SaveAll unknown exception");
+	}
 }
 
 LRESULT CDownloadsWnd::OnUpdateToolBar(WPARAM wp, LPARAM)
@@ -1231,77 +1305,85 @@ void CDownloadsWnd::UpdateTrayIconPlusOthers()
 	if (m_bDontUpdateTIPO)
 		return;
 
-	try {
-
-	BOOL bRun = FALSE;	
-	BOOL bRunOk = FALSE;	
-	BOOL bWaitRunOk = FALSE;	
-	BOOL bUploading = FALSE;
-
-	_DldsMgr.LockList (true);
-
-	size_t nCount = _DldsMgr.GetCount ();
-
-	for (size_t i = 0; i < nCount; i++)
+	try 
 	{
-		vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);
-		vmsDownloadMgrSmartPtr pMgr = dld->pMgr;
+		BOOL bRun = FALSE;	
+		BOOL bRunOk = FALSE;	
+		BOOL bWaitRunOk = FALSE;	
+		BOOL bUploading = FALSE;
 
-		if (pMgr->IsRunning () && pMgr->IsDone () == FALSE)
+		_DldsMgr.LockList (true);
+
+		size_t nCount = _DldsMgr.GetCount ();
+
+		for (size_t i = 0; i < nCount; i++)
 		{
-			bRun = TRUE;	
+			vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);
+			vmsDownloadMgrSmartPtr pMgr = dld->pMgr;
 
-			if (pMgr->GetDownloadingSectionCount () || pMgr->GetSpeed ())
-				bRunOk = TRUE;	
+			if (pMgr->IsRunning () && pMgr->IsDone () == FALSE)
+			{
+				bRun = TRUE;	
 
-			if (pMgr->IsCantStart () == FALSE)
-				bWaitRunOk = TRUE;	
+				if (pMgr->GetDownloadingSectionCount () || pMgr->GetSpeed ())
+					bRunOk = TRUE;	
+
+				if (pMgr->IsCantStart () == FALSE)
+					bWaitRunOk = TRUE;	
+			}
+
+			if (bUploading == FALSE && dld->pMgr->IsBittorrent () && 
+					dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ())
+				bUploading = TRUE;
+
+			if (bRunOk)
+				break; 
+			
 		}
 
-		if (bUploading == FALSE && dld->pMgr->IsBittorrent () && 
-				dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ())
-			bUploading = TRUE;
+		_DldsMgr.UnlockList (true);
+
+		if (_App.View_FloatingInfoWindow ())
+		{
+			CMainFrame* pFrm = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
+			if (bRun || bUploading)
+			{
+				if (pFrm->IsFloatingInfoWindowVisible () == FALSE)
+					pFrm->ShowFloatingInfoWindow (TRUE);
+			}
+			else
+			{
+				if (pFrm->IsFloatingInfoWindowVisible ())
+					pFrm->ShowFloatingInfoWindow (FALSE);
+			}
+		}
 
 		if (bRunOk)
-			break; 
-		
-	}
-
-	_DldsMgr.UnlockList (true);
-
-	if (_App.View_FloatingInfoWindow ())
-	{
-		CMainFrame* pFrm = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
-		if (bRun || bUploading)
 		{
-			if (pFrm->IsFloatingInfoWindowVisible () == FALSE)
-				pFrm->ShowFloatingInfoWindow (TRUE);
+			_TrayMgr.ShowIcon (TRAY_ICON_DOWNLOADING);
+		}
+		else if (bRun)
+		{
+			if (bWaitRunOk)
+				_TrayMgr.ShowIcon (TRAY_ICON_UNKNOWN);
+			else
+				_TrayMgr.ShowIcon (TRAY_ICON_ERRORS);
 		}
 		else
 		{
-			if (pFrm->IsFloatingInfoWindowVisible ())
-				pFrm->ShowFloatingInfoWindow (FALSE);
+			_TrayMgr.ShowIcon (TRAY_ICON_NORMAL);
 		}
 	}
-
-	if (bRunOk)
+	catch (const std::exception& ex)
 	{
-		_TrayMgr.ShowIcon (TRAY_ICON_DOWNLOADING);
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::UpdateTrayIconPlusOthers " + tstring(ex.what()));
 	}
-	else if (bRun)
+	catch (...)
 	{
-		if (bWaitRunOk)
-			_TrayMgr.ShowIcon (TRAY_ICON_UNKNOWN);
-		else
-			_TrayMgr.ShowIcon (TRAY_ICON_ERRORS);
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::UpdateTrayIconPlusOthers unknown exception");
 	}
-	else
-	{
-		_TrayMgr.ShowIcon (TRAY_ICON_NORMAL);
-	}
-
-	}
-	catch (...) {}
 }
 
 void CDownloadsWnd::OnShowAllGroups()
@@ -1581,42 +1663,49 @@ void CDownloadsWnd::FilterDownloads2(fsDldFilter *filter, int *pProgress)
 
 	pList->LockList ();
 	
-	try {
-
-	pList->DeleteAllItems ();
-
-	pList->BeginAddDownloads ();
-
-	_DldsMgr.LockList (true);
-
-	vmsDownloadSmartPtr dldSel;
-
-	size_t nCount = _DldsMgr.GetCount ();
-
-	for (size_t i = 0; i < nCount; i++)
+	try 
 	{
-		vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);
-		if (filter->IsSatisfies (dld)) {
-			pList->AddDownloadToList (dld, FALSE);
-			if (dldSel == NULL)
-				dldSel = dld;
+		pList->DeleteAllItems ();
+
+		pList->BeginAddDownloads ();
+
+		_DldsMgr.LockList (true);
+
+		vmsDownloadSmartPtr dldSel;
+
+		size_t nCount = _DldsMgr.GetCount ();
+
+		for (size_t i = 0; i < nCount; i++)
+		{
+			vmsDownloadSmartPtr dld = _DldsMgr.GetDownload (i);
+			if (filter->IsSatisfies (dld)) {
+				pList->AddDownloadToList (dld, FALSE);
+				if (dldSel == NULL)
+					dldSel = dld;
+			}
+			if (pProgress)
+				*pProgress = (int) ((double) i / (double) _DldsMgr.GetCount () * 100);
 		}
-		if (pProgress)
-			*pProgress = (int) ((double) i / (double) _DldsMgr.GetCount () * 100);
+
+		_DldsMgr.UnlockList (true);
+
+		if (dldSel != NULL)
+			pList->SelectDownload (dldSel);
+
+	} 
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::FilterDownloads2 " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::FilterDownloads2 unknown exception");
 	}
 
-	_DldsMgr.UnlockList (true);
-
-	if (dldSel != NULL)
-		pList->SelectDownload (dldSel);
-
-	} catch (...) {}
-
 	pList->EndAddDownloads ();
-
 	pList->UnlockList ();
-
-	
 }
 
 DWORD WINAPI CDownloadsWnd::_threadFilterDownloads(LPVOID lp)
@@ -1680,12 +1769,23 @@ BOOL CDownloadsWnd::CreateDownloadWithDefSettings(vmsDownloadSmartPtr dld, LPCST
 			CHAR szFile [10000];
 			*szFile = 0;
 
-			fsFileNameFromUrlPath (dnp->pszPathName, dnp->enProtocol == NP_FTP, 
-				TRUE, szFile, sizeof (szFile));
+			
+			bool isMagnet = false;
+			const char* magnetStart = _tcsstr (pszUrl, _T("magnet:"));
+			if (magnetStart != 0 && pszUrl == magnetStart)
+			{
+				isMagnet = true;
+				strcpy(szFile, pszUrl);
+			}
+			else
+			{
+				fsFileNameFromUrlPath(
+					dnp->pszPathName, dnp->enProtocol == NP_FTP, TRUE, szFile, sizeof (szFile));
+			}
 
 			int len = strlen (szFile);
 
-			if (len)
+			if (len && isMagnet == false)
 			{
 				int i;
 				for (i = len-1; i > 0; i--)
@@ -1917,6 +2017,13 @@ void CDownloadsWnd::set_DontUpdateTIPO(BOOL b)
 LRESULT CDownloadsWnd::OnDWCreateDldDialog(WPARAM wp, LPARAM lp)
 {
 	vmsDownloadSmartPtr dld = (fsDownload*) lp;
+
+	vmsBtDownloadManager* btMgr = dld->pMgr->GetBtDownloadMgr();
+	if (btMgr && btMgr->get_State() == BTDS_SERVER_INTERNAL_ERROR_500)
+	{
+		return 2;
+	}
+
 	dld->Release (); 
 
 	if (_App.DownloadDialog_Use () == FALSE)
@@ -2131,7 +2238,21 @@ void CDownloadsWnd::DeleteDeadDownloadsInList()
 		return;
 
 	tasks->ShowWindow (SW_HIDE);
-	try {_DldsMgr.DeleteDownloads (vDlds, TRUE, FALSE);} catch (...){}
+	try 
+	{
+		_DldsMgr.DeleteDownloads (vDlds, TRUE, FALSE);
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::DeleteDeadDownloadsInList " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::DeleteDeadDownloadsInList unknown exception");
+	}
+
 	tasks->ShowWindow (SW_SHOW);
 }
 
@@ -2172,15 +2293,22 @@ void CDownloadsWnd::OnTpDownloadProperties(DLDS_LIST &vDlds, CWnd *pwndParent)
 		
 		if (sheet.IsNeedUpdateTasks ())
 			OnDownloadsGroupChanged ();
-
-		
-			
 	}
 
     _DlgMgr.OnEndDialog (&sheet);
 }
 
-BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUrl, BOOL bSilent, BOOL bSeedOnly, LPCSTR pszOutputOrSrcForSeedFolder)
+BOOL CDownloadsWnd::CreateBtDownload(
+	LPCTSTR pszFile, 
+	LPCTSTR pszTorrentUrl, 
+	BOOL bSilent, 
+	BOOL bSeedOnly, 
+	LPCTSTR pszOutputOrSrcForSeedFolder, 
+	LPCTSTR ptszUserName, 
+	LPCTSTR ptszPassword, 
+	int* pnProirities,
+	vmsBtFile* tempTorrent,
+	UINT *pnDownloadId)
 {
 	if (bSeedOnly)
 	{
@@ -2213,17 +2341,43 @@ BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUr
 
 	vmsBtDownloadManager *pMgr = dld->pMgr->GetBtDownloadMgr ();
 
-	CString tstrTorrentUrl;
-	if (pszTorrentUrl == NULL || *pszTorrentUrl == 0)
+	BOOL isMagnet = FALSE;
+	const char* magnetStart = _tcsstr (pszFile, _T("magnet:"));
+	if (magnetStart != 0 && pszFile == magnetStart)
 	{
-		tstrTorrentUrl = _T ("file://");
-		tstrTorrentUrl += pszFile;
-		pszTorrentUrl = tstrTorrentUrl;
+		isMagnet = TRUE;
 	}
 
-	if (FALSE == pMgr->CreateByTorrentFile (pszFile, pszOutputOrSrcForSeedFolder ?
-			pszOutputOrSrcForSeedFolder : dld->pGroup->strOutFolder, pszTorrentUrl, bSeedOnly))
+	LPCTSTR outputPath = pszOutputOrSrcForSeedFolder ? pszOutputOrSrcForSeedFolder : dld->pGroup->strOutFolder;
+
+	BOOL result = FALSE;
+	if (isMagnet == FALSE)
+	{
+		CString tstrTorrentUrl;
+		if (isMagnet == FALSE && (pszTorrentUrl == NULL || *pszTorrentUrl == 0))
+		{
+			tstrTorrentUrl = _T ("file://");
+			tstrTorrentUrl += pszFile;
+			pszTorrentUrl = tstrTorrentUrl;
+		}
+
+		result = pMgr->CreateByTorrentFile (pszFile, outputPath, pszTorrentUrl, bSeedOnly);
+	}
+	else
+	{
+		if (tempTorrent != NULL && tempTorrent->IsMagnetLink())
+		{
+			result = pMgr->CreateByMagnetMetadata(tempTorrent, outputPath);
+		}
+		else
+		{
+			result = pMgr->CreateByMagnetLink(pszFile, outputPath);
+		}
+	}
+	if (result == FALSE)
+	{
 		return FALSE;
+	}
 
 	if (NULL != _DldsMgr.findBtDownloadByHash (pMgr))
 	{
@@ -2248,6 +2402,13 @@ BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUr
 		if (IDOK != _DlgMgr.DoModal (&dlg))
 			return FALSE;
 
+		
+		if (NULL != _DldsMgr.findBtDownloadByHash (pMgr))
+		{
+			onBtDownloadWithSameInfoHashExistsAlready ();
+			return FALSE;
+		}
+
 		bPlaceToTop = dlg.m_bPlaceToTop;
 
 		CreateDownload (dld, dlg.m_bScheduled ? &dlg.m_schScheduleParam.schTask : NULL, FALSE, dlg.m_bPlaceToTop != 0);
@@ -2262,6 +2423,9 @@ BOOL CDownloadsWnd::CreateBtDownloadFromFile(LPCSTR pszFile, LPCSTR pszTorrentUr
 	
 	if (bSeedOnly)
 		dld->pMgr->GetBtDownloadMgr ()->EnableSeeding (TRUE);
+
+	if (pnDownloadId)
+		*pnDownloadId = dld->nID;
 	
 	return TRUE;
 }
@@ -2280,26 +2444,31 @@ void CDownloadsWnd::ShowDownloads(DLDS_LIST_REF vDlds)
 {
 	m_wndDownloads.m_tasks.LockList ();
 
-	try{
-
-	fsDldFilter *filter = m_wndGroups.GetCurrentFilter ();
-	
-	
-	BOOL bNeedAdd = filter != NULL && filter->IsSatisfies (vDlds [0]);
-
-	if (bNeedAdd == FALSE)
+	try
 	{
-		m_wndDownloads.m_tasks.UnlockList ();
-		m_wndGroups.SetGroupFilter (vDlds [0]->pGroup);
-		m_wndDownloads.m_tasks.LockList ();
+		fsDldFilter *filter = m_wndGroups.GetCurrentFilter ();
+		
+		
+		BOOL bNeedAdd = filter != NULL && filter->IsSatisfies (vDlds [0]);
+
+		if (bNeedAdd == FALSE)
+		{
+			m_wndDownloads.m_tasks.UnlockList ();
+			m_wndGroups.SetGroupFilter (vDlds [0]->pGroup);
+			m_wndDownloads.m_tasks.LockList ();
+		}
+		m_wndDownloads.m_tasks.SelectDownload (vDlds [0]);
 	}
-	else
+	catch (const std::exception& ex)
 	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::ShowDownloads " + tstring(ex.what()));
 	}
-
-	m_wndDownloads.m_tasks.SelectDownload (vDlds [0]);
-
-	}catch (...) {}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::ShowDownloads unknown exception");
+	}
 
 	m_wndDownloads.m_tasks.UnlockList ();
 }
@@ -2308,9 +2477,21 @@ int CDownloadsWnd::DeleteDownloads(DLDS_LIST_REF v, BOOL bByUser, BOOL bDontConf
 {
 	int nRes = 0;
 	m_wndDownloads.m_tasks.ShowWindow (SW_HIDE);
-	try {
+	try 
+	{
 		nRes = _DldsMgr.DeleteDownloads (v, bByUser, bDontConfirmFileDeleting);
-	} catch (...){}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::DeleteDownloads " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::DeleteDownloads unknown exception");
+	}
+
 	UpdateTrayIconPlusOthers ();
 	m_wndDownloads.m_tasks.UpdateActiveDownload (0);
 	m_wndDownloads.m_tasks.ShowWindow (SW_SHOW);
@@ -2462,8 +2643,6 @@ void CDownloadsWnd::onDownloadsHasBeenAdded_imp(DLDS_LIST &vDlds, bool bPlaceToT
 			m_wndDownloads.m_tasks.SelectDownload (bPlaceToTop ? vDlds [0] : vDlds [vDlds.size () - 1]);
 	}
 
-	
-
 	m_wndDownloads.m_tasks.UnlockList ();
 
     if (bDontUseSounds == FALSE)
@@ -2512,8 +2691,8 @@ void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 	BOOL bUpdateTIPO = TRUE;
 	bool bApplyNotGroupFilterForDownload = dld != NULL;
 
-	try {
-
+	try 
+	{
 		switch (ev)
 		{
 		case DME_DOWNLOADEREVENTRECEIVED:
@@ -2645,13 +2824,13 @@ void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 				char szFile [MY_MAX_PATH];
 				CDownloads_Tasks::GetFileName (dld, szFile);
 
-				LPCSTR pszMsg = NULL;
+				tstring tstrMsg;
 				bool bOnDoneBalloon = false;
 
 				if (dld->pMgr->IsDone ())
 				{
 					bOnDoneBalloon = true;
-					pszMsg = LS (L_DONE);
+					tstrMsg = LS (L_DONE);
 
 					bool bNotif = true; 
 
@@ -2694,12 +2873,16 @@ void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 				{
 					if (dld->bAutoStart == FALSE)
 					{
-						pszMsg = LS (L_STOPPED);
+						tstrMsg = LS (L_STOPPED);
+						if (!dld->tstrLastErrMsg.empty ()) {
+							tstrMsg += _T ("\n");
+							tstrMsg += dld->tstrLastErrMsg;
+						}
 						_Snds.Event (SME_DOWNLOADFAILED);
 					}
 					else
 					{
-						pszMsg = LS (L_WAITING);
+						tstrMsg = LS (L_WAITING);
 						if (dld->dwFlags & DLD_NOTIFICATIONS_LL)
 							bNoBalloon = TRUE;
 						else if ((dld->dwFlags & DLD_BATCH) && _App.Notif_DisableForBatchDownloads ())
@@ -2725,7 +2908,7 @@ void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 					if (bShowUsualBalloon)
 					{
 						CString str;
-						str.Format ("%s - %s", szFile, pszMsg);
+						str.Format ("%s - %s", szFile, tstrMsg.c_str ());
 						CMainFrame::ShowTimeoutBalloon (str, vmsFdmAppMgr::getAppName ());
 					}
 				}
@@ -2856,13 +3039,20 @@ void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 			UpdateTrayIconPlusOthers ();
 
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::onEvents " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloadsWnd::onEvents unknown exception");
+	}
 }
 
 LRESULT CDownloadsWnd::OnDwDldsMgrEvent(WPARAM wp, LPARAM lp)
 {
-	
-
 	size_t nEvent = 0;
 
 	for (;;)

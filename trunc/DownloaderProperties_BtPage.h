@@ -69,6 +69,7 @@ protected:
 	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
 	afx_msg void OnWhatisthis();
 	afx_msg void OnAssocwithtorrent();
+	afx_msg void OnAssocwithMagnet();
 	afx_msg void OnDisableSeeding();
 	afx_msg void OnChangeMaxhalfsval();
 	//}}AFX_MSG

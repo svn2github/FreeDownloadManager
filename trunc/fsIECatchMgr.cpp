@@ -8,10 +8,10 @@
 #include "misc.h"
 #include "inetutil.h"
 #include "DownloadsWnd.h"
-
 #include "iefdm/iefdmdm/iefdmdm.h"
 #include "iefdm/fdmiebho/iecooks.h"
 #include "vmsBrowsersSharedData.h"
+#include "vmsLogger.h"
 
 extern CDownloadsWnd* _pwndDownloads;
 
@@ -45,53 +45,57 @@ HRESULT fsIECatchMgr::Initialize()
 		CreateThread (NULL, 0, _threadMonitorIEActivity, this, 0, &dw));
 
 	return S_OK;
-
-	
 }
 
 BOOL fsIECatchMgr::OnBeforeNavigate(LPCSTR pszUrl, BOOL bCheckALT)
 {
-	try {
-
-	CHAR szFile [MY_MAX_PATH] = "";
-	LPCSTR pszExt;
-	fsURL url;
-
-	if (bCheckALT)
+	try 
 	{
-		if ( (GetKeyState (VK_MENU) & 0x8000) == FALSE && m_bALTShouldPressed)
+		CHAR szFile [MY_MAX_PATH] = "";
+		LPCSTR pszExt;
+		fsURL url;
+
+		if (bCheckALT)
+		{
+			if ( (GetKeyState (VK_MENU) & 0x8000) == FALSE && m_bALTShouldPressed)
+				return TRUE;
+		}
+
+		if (url.Crack (pszUrl) != IR_SUCCESS)
 			return TRUE;
+
+		
+
+		fsFileNameFromUrlPath (url.GetPath (), url.GetInternetScheme () == INTERNET_SCHEME_FTP,
+			TRUE, szFile, sizeof (szFile));
+
+		if (*szFile == 0)
+			return TRUE;
+
+		pszExt = strrchr (szFile, '.');
+		if (pszExt) 
+			pszExt++;
+		else
+			return TRUE;
+
+		BOOL bExtPresent = IsExtInExtsStr (m_strSkipExts, pszExt);
+
+		if (bExtPresent)
+			return TRUE;	
+
+		return UINT_MAX == _pwndDownloads->CreateDownload (pszUrl, TRUE);
+
 	}
-
-	if (url.Crack (pszUrl) != IR_SUCCESS)
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsIECatchMgr::OnBeforeNavigate " + tstring(ex.what()));
 		return TRUE;
-
-	
-
-	fsFileNameFromUrlPath (url.GetPath (), url.GetInternetScheme () == INTERNET_SCHEME_FTP,
-		TRUE, szFile, sizeof (szFile));
-
-	if (*szFile == 0)
-		return TRUE;
-
-	
-
-	pszExt = strrchr (szFile, '.');
-	if (pszExt) 
-		pszExt++;
-	else
-		return TRUE;
-
-	BOOL bExtPresent = IsExtInExtsStr (m_strSkipExts, pszExt);
-
-	if (bExtPresent)
-		return TRUE;	
-
-	return UINT_MAX == _pwndDownloads->CreateDownload (pszUrl, TRUE);
-
 	}
 	catch (...)
 	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsIECatchMgr::OnBeforeNavigate unknown exception");
 		return TRUE;
 	}
 }

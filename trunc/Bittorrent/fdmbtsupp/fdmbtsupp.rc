@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Русский (Россия) resources
+// Russian (Russia) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
 LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
@@ -51,7 +51,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,9,1020,0
+ FILEVERSION 3,9,1026,0
  PRODUCTVERSION 0,0,0,0
  FILEFLAGSMASK 0x0L
 #ifdef _DEBUG
@@ -65,7 +65,7 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
 END
 
-#endif    // Русский (Россия) resources
+#endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

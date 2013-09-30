@@ -9,7 +9,7 @@
 #pragma once
 #endif 
 
-#include "ivmsfdmff.h"
+#include "common.h"
 
 #define FDMFFCACHEMONITOR_CONTRACTID "@freedownloadmanager.org/FDMFfCacheMonitor;1"
 #define FDMFFCACHEMONITOR_CLASSNAME "Free Download Manager cache monitor component for Firefox"

@@ -8,6 +8,7 @@
 #include "inetutil.h"
 #include "LoginDlg.h"
 #include "fsSitesMgr.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -77,14 +78,51 @@ void fsInternetFileListMgr::Stop(BOOL bWaitStop)
 {
 	m_bAbort = TRUE;
 
-	try {
-	if (m_files)
-		m_files->Abort ();
-	}catch (...){}
+	try 
+	{
+		if (m_files)
+			m_files->Abort ();
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetFileListMgr::Stop " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetFileListMgr::Stop unknown exception");
+	}
 
-	try {m_server.CloseHandle ();} catch (...) {}
+	try 
+	{
+		m_server.CloseHandle ();
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetFileListMgr::Stop " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetFileListMgr::Stop unknown exception");
+	}
 
-	try {m_session.CloseHandle ();} catch (...) {}
+	try 
+	{
+		m_session.CloseHandle ();
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetFileListMgr::Stop " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsInternetFileListMgr::Stop unknown exception");
+	}
 
 	m_bConnected = FALSE;
 

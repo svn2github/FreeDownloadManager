@@ -259,6 +259,8 @@ BOOL fsDownloadsHistoryMgr::LoadHistory()
 	fsDownloadsHistMgrFileHdr hdr;
 	DWORD dw;
 	DWORD dwRequiredSize = ::GetFileSize(hFile, NULL);
+	if (dwRequiredSize < sizeof (hdr))
+		return FALSE;
 
 	if (FALSE == ReadFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
 	{

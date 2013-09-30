@@ -5,7 +5,7 @@
 #ifndef __FDMFIREFOXEXTENSION_H_
 #define __FDMFIREFOXEXTENSION_H_
 
-#include "ivmsfdmff.h"
+#include "common.h"
 
 #define FDMFIREFOXEXTENSION_CONTRACTID "@freedownloadmanager.org/FDMFirefoxExtension;1"
 #define FDMFIREFOXEXTENSION_CLASSNAME "Free Download Manager extension component for Firefox"

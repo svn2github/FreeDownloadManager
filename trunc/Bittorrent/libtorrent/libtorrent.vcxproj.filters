@@ -243,6 +243,9 @@
     <ClCompile Include="zlib\zutil.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\magnet_uri.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />

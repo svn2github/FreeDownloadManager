@@ -12,6 +12,7 @@
 #include "DownloadsWnd.h"
 #include "mfchelp.h"
 #include "plugincmds.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -425,8 +426,8 @@ void CSitesWnd::LoadSites()
 		return;
 	}
 
-	try {
-
+	try 
+	{
 		fsSitesFileHdr hdr;
 		DWORD dw = 0;
 		DWORD dwRequiredSize = ::GetFileSize(hFile, 0);
@@ -457,9 +458,9 @@ void CSitesWnd::LoadSites()
 			}
 
 			_SitesMgr.LoadFromFile(hFile);
-
-		} else {
-
+		} 
+		else 
+		{
 			dwRequiredSize -= sizeof(hdr);
 
 			std::auto_ptr<BYTE> pbtBufferGuard( new BYTE[dwRequiredSize] );
@@ -482,14 +483,21 @@ void CSitesWnd::LoadSites()
 				_DldsMgr.RebuildServerList ();
 				return;
 			}
-
 		}
 
 		CloseHandle (hFile);
 		_SitesMgr.resetDirty();
 
-	} catch (...) {
-		ASSERT (FALSE); 
+	} 
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CSitesWnd::LoadSites " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CSitesWnd::LoadSites unknown exception");
 	}
 
 	_DldsMgr.RebuildServerList ();

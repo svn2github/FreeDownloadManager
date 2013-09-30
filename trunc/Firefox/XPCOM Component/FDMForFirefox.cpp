@@ -116,7 +116,7 @@ NS_IMETHODIMP CFDMForFirefox::GetLngString(const char *strIDString, PRUnichar **
 	return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::IsContextMenuItemShouldBeHidden(const char *strMenuItemID, PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::IsContextMenuItemShouldBeHidden(const char *strMenuItemID, XULSDK_PRBool *_retval)
 {
 	if (is_FlashGotInstalled ())
 	{
@@ -188,7 +188,7 @@ bool CFDMForFirefox::is_FlashGotInstalled()
 	return _isInstalled != 0;
 }
 
-NS_IMETHODIMP CFDMForFirefox::IsALTShouldBePressed(PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::IsALTShouldBePressed(XULSDK_PRBool *_retval)
 {
 	if (is_FlashGotInstalled ())
 	{
@@ -208,7 +208,7 @@ NS_IMETHODIMP CFDMForFirefox::IsALTShouldBePressed(PRBool *_retval)
 	return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::IsLinkShouldBeSkipped(IFDMUrl *url, const PRUnichar *wstrSuggFileName, PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::IsLinkShouldBeSkipped(IFDMUrl *url, const PRUnichar *wstrSuggFileName, XULSDK_PRBool *_retval)
 {
 	*_retval = TRUE;
 
@@ -231,7 +231,7 @@ NS_IMETHODIMP CFDMForFirefox::IsLinkShouldBeSkipped(IFDMUrl *url, const PRUnicha
     return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::CatchLink(IFDMUrl *url, const PRUnichar *wstrSuggFileName, PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::CatchLink(IFDMUrl *url, const PRUnichar *wstrSuggFileName, XULSDK_PRBool *_retval)
 {
 	assert (url != NULL);
 	if (!url || !_retval)
@@ -422,7 +422,7 @@ bool CFDMForFirefox::IsUrlShouldBeSkipped(IFDMUrl *url, const wchar_t *pwszSuggF
 		IsServerToSkip (url);
 }
 
-PRBool CFDMForFirefox::TransferUrlToFDM(IFDMUrl *url)
+XULSDK_PRBool CFDMForFirefox::TransferUrlToFDM(IFDMUrl *url)
 {
 	assert (url != NULL);
 	if (!url)
@@ -502,7 +502,7 @@ NS_IMETHODIMP CFDMForFirefox::SetProxy(const char *strProtocol, const char *strA
     return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::IsDomainSupportedForVideoDownloads(const PRUnichar *wstrDomain, PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::IsDomainSupportedForVideoDownloads(const PRUnichar *wstrDomain, XULSDK_PRBool *_retval)
 {
 	if (_wcsnicmp (wstrDomain, L"www.", 4) == 0)
 		wstrDomain += 4;
@@ -512,7 +512,7 @@ NS_IMETHODIMP CFDMForFirefox::IsDomainSupportedForVideoDownloads(const PRUnichar
     return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::ProcessVideoDocument(const PRUnichar *wstrDomain, const PRUnichar *wstrReferer, const PRUnichar *wstrHTML, PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::ProcessVideoDocument(const PRUnichar *wstrDomain, const PRUnichar *wstrReferer, const PRUnichar *wstrHTML, XULSDK_PRBool *_retval)
 {
 	*_retval = FALSE;
 
@@ -533,17 +533,17 @@ NS_IMETHODIMP CFDMForFirefox::ProcessVideoDocument(const PRUnichar *wstrDomain, 
     return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl(const PRUnichar *wstrUrl, PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl(const PRUnichar *wstrUrl, XULSDK_PRBool *_retval)
 {
 	return CreateVideoDownloadFromUrl2 (wstrUrl, NULL, NULL, _retval);
 }
 
-NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl2(const PRUnichar *wstrUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl2(const PRUnichar *wstrUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, XULSDK_PRBool *_retval)
 {
 	return CreateVideoDownloadFromUrl3 (wstrUrl, NULL, wstrSwfUrl, wstrFlashVars, NULL, NULL, _retval);
 }
 
-NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl3(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl3(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, XULSDK_PRBool *_retval)
 {
 	*_retval = TRUE;
 
@@ -573,7 +573,7 @@ NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl3(const PRUnichar *wstrU
     return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::IsVideoFlash(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::IsVideoFlash(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, XULSDK_PRBool *_retval)
 {
 	if (!wstrFrameUrl)
 		wstrFrameUrl = L"";

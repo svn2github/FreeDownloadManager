@@ -11,6 +11,7 @@
 #include "vmsSecurity.h"
 #include "FdmApp.h"
 #include "MainFrm.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -56,92 +57,98 @@ void vmsAppSmallTipsMgr::Load_imp(LPCTSTR ptszFile, std::vector <tstring> &vTips
 {
 	vTips.clear ();
 
-	try{
-
-	CStdioFile file (ptszFile, CFile::modeRead | CFile::typeText | CFile::shareDenyNone);
-
-	CString str; 
-	bool b1stLine = true;
-	bool bForceShow = false;
-	int iForceTipIndex = -1;
-
-	while (file.ReadString (str) && str.IsEmpty () == FALSE)
+	try
 	{
-		if (b1stLine)
+		CStdioFile file (ptszFile, CFile::modeRead | CFile::typeText | CFile::shareDenyNone);
+
+		CString str; 
+		bool b1stLine = true;
+		bool bForceShow = false;
+		int iForceTipIndex = -1;
+
+		while (file.ReadString (str) && str.IsEmpty () == FALSE)
 		{
-			if (str.GetLength () >= 3 && BYTE (str [0]) == 0xEF && BYTE (str [1]) == 0xBB && BYTE (str [2]) == 0xBF)
-				str.Delete (0, 3); 
-			b1stLine = false;
-			if (str.IsEmpty ())
-				continue;
-		}
-
-		if (str [0] == ';')
-			continue; 
-
-		vmsUtf8ToAscii (str.GetBuffer (str.GetLength ()));
-		str.ReleaseBuffer ();
-
-		if (_tcsnicmp (str, _T ("ForceShow"), 9) == 0)
-		{
-			if (bIgnoreServiceInformation)
-				continue;
-
-			LPCTSTR ptsz = str;
-			ptsz += 9;
-			vmsStringParser::SkipWhiteChars (ptsz);
-			if (*ptsz == '=')
+			if (b1stLine)
 			{
-				ptsz++;
+				if (str.GetLength () >= 3 && BYTE (str [0]) == 0xEF && BYTE (str [1]) == 0xBB && BYTE (str [2]) == 0xBF)
+					str.Delete (0, 3); 
+				b1stLine = false;
+				if (str.IsEmpty ())
+					continue;
+			}
+
+			if (str [0] == ';')
+				continue; 
+
+			vmsUtf8ToAscii (str.GetBuffer (str.GetLength ()));
+			str.ReleaseBuffer ();
+
+			if (_tcsnicmp (str, _T ("ForceShow"), 9) == 0)
+			{
+				if (bIgnoreServiceInformation)
+					continue;
+
+				LPCTSTR ptsz = str;
+				ptsz += 9;
 				vmsStringParser::SkipWhiteChars (ptsz);
-				tstring tstr;
-				vmsStringParser::GetWord (ptsz, tstr);
-				if (!tstr.empty ())
+				if (*ptsz == '=')
 				{
-					CString strOld = _App.SmallTips_ForceShow ();
-					if (strOld.CompareNoCase (tstr.c_str ()))
+					ptsz++;
+					vmsStringParser::SkipWhiteChars (ptsz);
+					tstring tstr;
+					vmsStringParser::GetWord (ptsz, tstr);
+					if (!tstr.empty ())
 					{
-						_App.SmallTips_Show (TRUE);
-						_App.SmallTips_ForceShow (tstr.c_str ());
-						bForceShow = true;
+						CString strOld = _App.SmallTips_ForceShow ();
+						if (strOld.CompareNoCase (tstr.c_str ()))
+						{
+							_App.SmallTips_Show (TRUE);
+							_App.SmallTips_ForceShow (tstr.c_str ());
+							bForceShow = true;
+						}
 					}
 				}
-			}
 
-			continue;
-		}
-		else if (_tcsnicmp (str, _T ("ForceTipIndex"), 13) == 0)
-		{
-			if (bIgnoreServiceInformation)
 				continue;
-
-			LPCTSTR ptsz = str;
-			ptsz += 13;
-			vmsStringParser::SkipWhiteChars (ptsz);
-			if (*ptsz == '=')
+			}
+			else if (_tcsnicmp (str, _T ("ForceTipIndex"), 13) == 0)
 			{
-				ptsz++;
+				if (bIgnoreServiceInformation)
+					continue;
+
+				LPCTSTR ptsz = str;
+				ptsz += 13;
 				vmsStringParser::SkipWhiteChars (ptsz);
-				tstring tstr;
-				vmsStringParser::GetWord (ptsz, tstr);
-				if (!tstr.empty ())
-					iForceTipIndex = _ttoi (tstr.c_str ());
+				if (*ptsz == '=')
+				{
+					ptsz++;
+					vmsStringParser::SkipWhiteChars (ptsz);
+					tstring tstr;
+					vmsStringParser::GetWord (ptsz, tstr);
+					if (!tstr.empty ())
+						iForceTipIndex = _ttoi (tstr.c_str ());
+				}
+
+				continue;
 			}
 
-			continue;
+			vTips.push_back ((LPCTSTR)str);
 		}
 
-		vTips.push_back ((LPCTSTR)str);
-	}
+		if (!bIgnoreServiceInformation && bForceShow && iForceTipIndex != -1)
+		{
+			_App.SmallTips_CurrentTip (iForceTipIndex);
+			FILETIME ft; ZeroMemory (&ft, sizeof (ft));
+			_App.SmallTips_LastTime (ft);
+		}
 
-	if (!bIgnoreServiceInformation && bForceShow && iForceTipIndex != -1)
+	}
+	catch (const std::exception& ex)
 	{
-		_App.SmallTips_CurrentTip (iForceTipIndex);
-		FILETIME ft; ZeroMemory (&ft, sizeof (ft));
-		_App.SmallTips_LastTime (ft);
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("vmsAppSmallTipsMgr::Load_imp " + tstring(ex.what()));
 	}
-
-	}catch (...){}
+	catch (...)	{}
 }
 
 void vmsAppSmallTipsMgr::Load()

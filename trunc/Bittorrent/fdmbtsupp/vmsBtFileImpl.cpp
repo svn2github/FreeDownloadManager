@@ -21,19 +21,25 @@ vmsBtFile* WINAPI vmsBt_CreateTorrentFileObject ()
 	return p;
 }
 
-vmsBtFileImpl::vmsBtFileImpl(void)
+vmsBtFileImpl::vmsBtFileImpl()
+	: m_isMagnet(FALSE)
+	, m_torrent(NULL)
+	, m_pCreate_torrent(NULL)
+	, m_cRefs(0)
 {
-	m_torrent = NULL;
-	m_pCreate_torrent = NULL;
-	m_cRefs = 0;
 }
 
-vmsBtFileImpl::~vmsBtFileImpl(void)
+vmsBtFileImpl::~vmsBtFileImpl()
 {
 	if (m_torrent)
 		delete m_torrent;
 	if (m_pCreate_torrent)
 		delete m_pCreate_torrent;
+}
+
+BOOL vmsBtFileImpl::IsMagnetLink()
+{
+	return m_isMagnet;
 }
 
 BOOL vmsBtFileImpl::LoadFromFile (LPCSTR pszTorrentFile)
@@ -75,6 +81,92 @@ BOOL vmsBtFileImpl::LoadFromBuffer (LPBYTE pbTorrent, DWORD dwTorrentSize)
 	return TRUE;
 }
 
+BOOL vmsBtFileImpl::LoadFromMagnetLink (LPCSTR pszMagnetLink)
+{
+	
+	m_magnetLink = pszMagnetLink;
+
+	libtorrent::sha1_hash hash;
+	std::vector<std::string> trackers;
+
+	boost::system::error_code ec;
+	boost::optional<std::string> display_name = libtorrent::url_has_argument(m_magnetLink, "dn");
+	if (display_name) 
+		m_strMagnetDisplayName = libtorrent::unescape_string(display_name->c_str(), ec);
+	else
+		m_strMagnetDisplayName.clear ();
+
+	std::string temp = m_magnetLink;
+	boost::optional<std::string> tracker_string = libtorrent::url_has_argument(m_magnetLink, "tr");
+	while (tracker_string.is_initialized())
+	{
+		trackers.push_back(libtorrent::unescape_string(tracker_string->c_str(), ec));
+
+		int start = temp.find("tr");
+		int end = temp.find("tr", start);
+
+		if (start == -1 || end == -1)
+		{
+			break;
+		}
+		temp.erase(start, end);
+		tracker_string = libtorrent::url_has_argument(temp, "tr");
+	}
+
+	boost::optional<std::string> btih = libtorrent::url_has_argument(m_magnetLink, "xt");
+	if (!btih) 
+	{
+		return FALSE;
+	}
+	if (btih->compare(0, 9, "urn:btih:") != 0)
+	{
+		return FALSE;
+	}
+
+	if (btih->size() == 40 + 9) 
+	{
+		libtorrent::from_hex(&(*btih)[9], 40, (char*)&hash[0]);
+	}
+	else 
+	{
+		hash.assign(libtorrent::base32decode(btih->substr(9)));
+	}
+
+	libtorrent::torrent_info newTorrentInfo = libtorrent::torrent_info(hash);
+	for (std::vector<std::string>::iterator iter = trackers.begin(); iter != trackers.end(); ++iter)
+	{
+		newTorrentInfo.add_tracker(*iter);
+	}
+
+	m_torrent = new libtorrent::torrent_info(newTorrentInfo);
+
+	m_isMagnet = TRUE;
+	return TRUE;
+}
+
+BOOL vmsBtFileImpl::LoadFromMagnetMetadata (vmsBtFile* torrentFile)
+{
+	if (torrentFile == NULL || torrentFile->IsMagnetLink() == FALSE)
+	{
+		return FALSE;
+	}
+	vmsBtFileImpl* impl = static_cast<vmsBtFileImpl*>(torrentFile);
+	if (impl->m_torrent == NULL || impl->m_torrent->is_valid() == false)
+	{
+		return FALSE;
+	}
+	m_torrent = new libtorrent::torrent_info(*impl->m_torrent);
+	m_magnetLink = torrentFile->GetMagnetLink();
+	m_isMagnet = TRUE;
+
+	return TRUE;
+}
+
+LPCSTR vmsBtFileImpl::GetMagnetLink()
+{
+	return m_magnetLink.c_str();
+}
+
 void vmsBtFileImpl::Release ()
 {
 	if (InterlockedDecrement (&m_cRefs) == 0)
@@ -108,7 +200,10 @@ UINT64 vmsBtFileImpl::get_TotalFilesSize ()
 
 void vmsBtFileImpl::get_TorrentName (LPSTR pszRes)
 {
-	strcpy (pszRes, m_torrent->name ().c_str ());
+	if (!m_torrent->name ().empty ())
+		strcpy (pszRes, m_torrent->name ().c_str ());
+	else
+		strcpy (pszRes, m_strMagnetDisplayName.c_str ());
 }
 
 BOOL vmsBtFileImpl::get_TorrentBuffer (LPBYTE pbRes, DWORD dwSize, DWORD *pdwTorrentSize)
@@ -319,13 +414,20 @@ BOOL vmsBtFileImpl::GenerateFastResumeDataForSeed (LPCSTR pszSrcFolderOrFile, LP
 
 void vmsBtFileImpl::get_FileName2 (int nIndex, LPSTR pszRes, DWORD dwBuffSize)
 {
+	if (m_torrent == NULL || nIndex >= m_torrent->num_files())
+	{
+		return;
+	}
 	strncpy (pszRes, m_torrent->file_at (nIndex).path.string ().c_str (), dwBuffSize - 1);
 	pszRes [dwBuffSize - 1] = 0;
 }
 
 void vmsBtFileImpl::get_TorrentName2 (LPSTR pszRes, DWORD dwBuffSize)
 {
-	strncpy (pszRes, m_torrent->name ().c_str (), dwBuffSize - 1);
+	if (!m_torrent->name ().empty ())
+		strncpy (pszRes, m_torrent->name ().c_str (), dwBuffSize - 1);
+	else
+		strncpy (pszRes, m_strMagnetDisplayName.c_str (), dwBuffSize - 1);
 	pszRes [dwBuffSize - 1] = 0;
 }
 
@@ -447,4 +549,9 @@ BOOL vmsBtFileImpl::CreateNewTorrent2 (LPCWSTR pszSrcPath, LPCSTR pszTrackers, L
 	}
 
 	return TRUE;
+}
+
+BOOL vmsBtFileImpl::IsValid()
+{
+	return m_torrent != NULL ? m_torrent->is_valid() : FALSE;
 }

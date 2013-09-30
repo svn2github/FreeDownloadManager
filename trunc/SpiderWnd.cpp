@@ -10,6 +10,7 @@
 #include "MainFrm.h"
 #include "plugincmds.h"
 #include "FdmUiWindow.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -283,11 +284,22 @@ void CSpiderWnd::OnTimer(UINT nIDEvent)
 	
 	for (int i = 0; i < m_mgr.GetWPDCount (); i++)
 	{
-		try{ 
+		try
+		{ 
 			fsWebPageDownloader *wpd = m_mgr.GetWPD (i);
 			if (wpd->IsDownloading ())
 				m_wndTasks.UpdateWebPage (wpd);
-		}catch (...){}
+		}
+		catch (const std::exception& ex)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("CSpiderWnd::OnTimer " + tstring(ex.what()));
+		}
+		catch (...)
+		{
+			ASSERT (FALSE);
+			vmsLogger::WriteLog("CSpiderWnd::OnTimer unknown exception");
+		}
 	}
 	
 	CWnd::OnTimer(nIDEvent);

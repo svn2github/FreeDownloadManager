@@ -11,9 +11,8 @@ if err<>0 then
 Alert("Free Download Manager not properly installed! Please reinstall Free Download Manager")
 else
 obj.Url = Url
-obj.UserAgent = window.navigator.userAgent
 
-if SelectedText <> "" then 
+if SelectedText <> "" then
 	obj.Comment = SelectedText
 else
 	obj.Comment = Info
@@ -29,8 +28,22 @@ end sub
 <script type="text/javascript">
 function OnContextMenu(){
 var srcEvent = external.menuArguments.event;
-var EventElement = external.menuArguments.document.elementFromPoint ( srcEvent.clientX, srcEvent.clientY );
-var strComment = external.menuArguments.document.selection.createRange().text;
+var EventElement;
+var newIE = false;
+var strComment;
+/*@cc_on
+newIE = (@_jscript_version >= 9);
+@*/
+if (newIE)
+{
+    EventElement = srcEvent.srcElement;
+    strComment = EventElement.text;
+}
+else
+{
+    EventElement = external.menuArguments.document.elementFromPoint(srcEvent.clientX, srcEvent.clientY);
+    strComment = external.menuArguments.document.selection.createRange().text;
+}
 //alert(srcEvent.type);
 //alert(vbType(EventElement));
 if (srcEvent.type == 'MenuExtAnchor'){

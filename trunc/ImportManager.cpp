@@ -7,6 +7,7 @@
 #include "Utils.h"
 #include "OrbitSupplier.h"
 #include "UtorrentSupplier.h"
+#include "vmsLogger.h"
 
 TSupplier::TSupplier()
 	: pSupplier(0),
@@ -175,10 +176,21 @@ void CImportManager::Run()
 				m_fnWizardInformer(-1, -1, sSupplierName, m_pData);
 				
 				pSupplier->Import(m_fnWizardInformer, m_pData, tSupplier.tImportResult);
-			} catch (std::runtime_error& exc) {
+			} 
+			catch (std::runtime_error& exc) 
+			{
+				vmsLogger::WriteLog("CImportManager::Run std::runtime_error " + tstring(exc.what()));
+
 				if (procErr(exc, sSupplierName, bIsLast) != IDYES)
 					break;
-			} catch (CException* pExc) {
+			}
+			catch (CException* pExc)
+			{
+				tstring bufa;
+				bufa.resize(1024);
+				pExc->GetErrorMessage(&bufa.front(), 1024);
+				vmsLogger::WriteLog("CImportManager::Run " + tstring(bufa));
+
 				if (procErr(pExc, sSupplierName, bIsLast) != IDYES)
 					break;
 			}

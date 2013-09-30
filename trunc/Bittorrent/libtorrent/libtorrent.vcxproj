@@ -178,6 +178,7 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\magnet_uri.cpp" />
     <ClCompile Include="zlib\adler32.c" />
     <ClCompile Include="src\alert.cpp" />
     <ClCompile Include="src\allocator.cpp" />

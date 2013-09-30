@@ -132,11 +132,6 @@ public:
 	
 	
 	
-	
-	
-	BOOL SaveState (LPVOID lpBuffer, LPDWORD pdwSize);
-	
-	
 	BOOL LoadState (LPVOID lpBuffer, LPDWORD pdwSize, WORD wVer);
 	
 	void CloneSettings (fsDownloadMgr* src);

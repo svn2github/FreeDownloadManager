@@ -6,6 +6,8 @@
 #include "vmsFirefoxExtensionInstaller.h"
 #include "vmsFirefoxUtil.h"
 #include "vmsFile.h"
+#include "vmsLogger.h"
+
 using namespace vmsFDM;
 
 vmsFirefoxExtensionInstaller::vmsFirefoxExtensionInstaller()
@@ -47,14 +49,23 @@ bool vmsFirefoxExtensionInstaller::Do(LPCSTR pszCID, LPCSTR pszExtPath, bool bIn
 		{
 			fsBuildPathToFile (sz);
 
-			try{
-
-			vmsFile file;
-			file.Create (sz, GENERIC_WRITE, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL);
-			file.Write (pszExtPath, lstrlen (pszExtPath));
-			file.Close ();
-			
-			}catch (...) {
+			try
+			{
+				vmsFile file;
+				file.Create (sz, GENERIC_WRITE, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL);
+				file.Write (pszExtPath, lstrlen (pszExtPath));
+				file.Close ();
+			}
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("vmsFirefoxExtensionInstaller::Do " + tstring(ex.what()));
+				return false;
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("vmsFirefoxExtensionInstaller::Do unknown exception");
 				return false;
 			}
 		}

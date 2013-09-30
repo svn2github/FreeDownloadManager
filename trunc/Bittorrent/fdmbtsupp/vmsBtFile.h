@@ -9,6 +9,9 @@ class vmsBtFile
 public:
 	virtual BOOL LoadFromFile (LPCSTR pszTorrentFile) = NULL;
 	virtual BOOL LoadFromBuffer (LPBYTE pbTorrent, DWORD dwTorrentSize) = NULL;
+	virtual BOOL LoadFromMagnetLink (LPCSTR pszTorrentFile) = NULL;
+	virtual BOOL LoadFromMagnetMetadata (vmsBtFile* torrentFile) = NULL;
+	virtual LPCSTR GetMagnetLink() = NULL;
 
 	
 	virtual int get_FileCount () = NULL;
@@ -56,4 +59,8 @@ public:
 		LPCSTR pszCreator, LPCSTR pszComment, int iPieceSize, int *pnCreateProgress, BOOL *pbNeedCancel) = NULL;
 
 	virtual BOOL getInfoHash2 (LPBYTE pb, LPDWORD pdwBufSize) = NULL;
+
+	virtual BOOL IsMagnetLink() = NULL;
+
+	virtual BOOL IsValid() = NULL;
 };

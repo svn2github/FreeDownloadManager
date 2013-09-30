@@ -7,6 +7,7 @@
 #include "DownloaderProperties_BtPage.h"
 #include "vmsDialogHelper.h"
 #include "vmsTorrentExtension.h"
+#include "vmsMagnetExtension.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -52,6 +53,7 @@ BEGIN_MESSAGE_MAP(CDownloaderProperties_BtPage, CPropertyPage)
 	ON_WM_HELPINFO()
 	ON_COMMAND(ID_WHATISTHIS, OnWhatisthis)
 	ON_BN_CLICKED(IDC_ASSOCWITHTORRENT, OnAssocwithtorrent)
+	ON_BN_CLICKED(IDC_ASSOCWITHMAGNET, OnAssocwithMagnet)
 	ON_BN_CLICKED(IDC_DISABLE_SEEDING, OnDisableSeeding)
 	ON_EN_CHANGE(IDC_MAXHALFSVAL, OnChangeMaxhalfsval)
 	//}}AFX_MSG_MAP
@@ -105,6 +107,9 @@ BOOL CDownloaderProperties_BtPage::OnInitDialog()
 	CheckDlgButton (IDC_ASSOCWITHTORRENT, 
 		vmsTorrentExtension::IsAssociatedWithUs () ? BST_CHECKED : BST_UNCHECKED);
 
+	CheckDlgButton (IDC_ASSOCWITHMAGNET, 
+		vmsMagnetExtension::IsAssociatedWithUs () ? BST_CHECKED : BST_UNCHECKED);
+
 	CheckDlgButton (IDC_DISABLE_SEEDING, 
 		_App.Bittorrent_DisableSeedingByDef () ? BST_CHECKED : BST_UNCHECKED);
 
@@ -127,13 +132,14 @@ BOOL CDownloaderProperties_BtPage::OnApply()
 	BOOL bEn = IsDlgButtonChecked (IDC_ENABLE) == BST_CHECKED;
 	_App.Bittorrent_Enable (bEn);
 
-	BOOL bAssoc = IsDlgButtonChecked (IDC_ASSOCWITHTORRENT) == BST_CHECKED;
+	BOOL bTorrentAssoc = IsDlgButtonChecked (IDC_ASSOCWITHTORRENT) == BST_CHECKED;
+	BOOL bMagnetAssoc = IsDlgButtonChecked (IDC_ASSOCWITHTORRENT) == BST_CHECKED;
 
-	if (bAssoc == FALSE && vmsTorrentExtension::IsAssociatedWithUs ())
+	if (bTorrentAssoc == FALSE && vmsTorrentExtension::IsAssociatedWithUs ())
 	{
 		vmsTorrentExtension::AssociateWith (_App.Bittorrent_OldTorrentAssociation ());
 	}
-	else if (bAssoc && vmsTorrentExtension::IsAssociatedWithUs () == FALSE)
+	else if (bTorrentAssoc && vmsTorrentExtension::IsAssociatedWithUs () == FALSE)
 	{
 		_App.Bittorrent_OldTorrentAssociation (vmsTorrentExtension::GetCurrentAssociation ());
 		vmsTorrentExtension::Associate ();
@@ -321,6 +327,7 @@ void CDownloaderProperties_BtPage::ApplyLanguage()
 		fsDlgLngInfo (IDC__TO, L_TO, TRUE),
 		fsDlgLngInfo (IDC_USE_DHT, L_ENABLE_DHT),
 		fsDlgLngInfo (IDC_ASSOCWITHTORRENT, L_ASSOCWITHTORRENT),
+		fsDlgLngInfo (IDC_ASSOCWITHMAGNET, L_ASSOCWITHMAGNET),
 		fsDlgLngInfo (IDC_DISABLE_SEEDING, L_DISABLE_SEEDING_BYDEF),
 		fsDlgLngInfo (IDC__MAXHALFS, L_MAXHALFCONNS, TRUE),
 	};
@@ -379,6 +386,11 @@ void CDownloaderProperties_BtPage::PrepareCHMgr(CPoint point)
 }
 
 void CDownloaderProperties_BtPage::OnAssocwithtorrent() 
+{
+	SetModified ();	
+}
+
+void CDownloaderProperties_BtPage::OnAssocwithMagnet() 
 {
 	SetModified ();	
 }

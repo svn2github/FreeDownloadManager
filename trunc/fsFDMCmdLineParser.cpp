@@ -6,7 +6,9 @@
 #include "FdmApp.h"
 #include "fsFDMCmdLineParser.h"
 #include "vmsTorrentExtension.h"
+#include "vmsMagnetExtension.h"
 #include "vmsAppMutex.h"
+#include "vmsFdmUtils.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -29,7 +31,7 @@ fsFDMCmdLineParser::~fsFDMCmdLineParser()
 
 }
 
-void fsFDMCmdLineParser::Parse()
+void fsFDMCmdLineParser::Parse(PerformTasksOfType enPTT)
 {
 	
 	extern vmsAppMutex _appMutex;
@@ -47,7 +49,7 @@ void fsFDMCmdLineParser::Parse()
 		LPCSTR pszParam = m_parser.Get_Parameter (i);
 		LPCSTR pszValue = m_parser.Get_ParameterValue (i);
 
-		if (strcmp (pszParam, "?") == 0)
+		if (strcmp (pszParam, "?") == 0 && enPTT == Normal)
 		{
 			MessageBox (0, "fdm.exe [-fs] [-url=]url1 [-url=]url2 ...\n\n-fs - force silent mode.\nIf url contains spaces it should be in quotes.\n\nExample:\nfdm.exe -fs \"http://site.com/read me.txt\"", "Command line usage", 0);
 		}
@@ -55,7 +57,7 @@ void fsFDMCmdLineParser::Parse()
 		{
 			m_bForceSilent = TRUE;
 		}
-		else if (stricmp (pszParam, "URL") == 0 || *pszParam == 0)
+		else if ((stricmp (pszParam, "URL") == 0 || *pszParam == 0) && enPTT == Normal)
 		{
 			fsURL url;
 			BOOL bUrl = IR_SUCCESS == url.Crack (pszValue) && pszValue [1] != ':';
@@ -65,6 +67,11 @@ void fsFDMCmdLineParser::Parse()
 			{
 				bTorrent = strlen (pszValue) > 8 && 
 					0 == stricmp (pszValue + strlen (pszValue) - 8, ".torrent");
+
+				if (_tcsstr(pszValue, _T("magnet:")) != 0)
+				{
+					bTorrent = TRUE;
+				}
 			}
 
 			if (bUrl == FALSE && bTorrent == FALSE)
@@ -74,7 +81,7 @@ void fsFDMCmdLineParser::Parse()
 			{
 				static BOOL bBtI = vmsFdmAppMgr::MakeSureBtInstalled ();
 				if (bBtI)
-					AddTorrentFile (pszValue);
+					AddTorrent (pszValue);
 				continue;
 			}
 
@@ -106,7 +113,7 @@ void fsFDMCmdLineParser::Parse()
 		{
 			m_bNeedExit = true;
 		}
-		else if (stricmp (pszParam, "assocwithtorrent") == 0)
+		else if (stricmp (pszParam, "assocwithtorrent") == 0 && enPTT == Elevated)
 		{
 			bool bAssoc = strcmp (pszValue, "0") != 0;
 			if (bAssoc)
@@ -118,6 +125,11 @@ void fsFDMCmdLineParser::Parse()
 			{
 				vmsTorrentExtension::AssociateWith (_App.Bittorrent_OldTorrentAssociation ());
 			}
+		}
+		else if (stricmp (pszParam, "assocwithmagnet") == 0 && enPTT == Elevated)
+		{
+			bool bAssoc = strcmp (pszValue, "0") != 0;
+			vmsFdmUtils::AssociateFdmWithMagnetLinks (bAssoc);
 		}
 		else if (!stricmp (pszParam, "RegServer"))
 		{
@@ -135,7 +147,7 @@ void fsFDMCmdLineParser::Parse()
 		{
 			m_bInstallIeIntegration = true;
 		}
-		else if (!stricmp (pszParam, "installIntegration") || !stricmp (pszParam, "deinstallIntegration"))
+		else if (!stricmp (pszParam, "installIntegration") || !stricmp (pszParam, "deinstallIntegration") && enPTT == Elevated)
 		{
 			std::vector <int> v;
 			ReadIntVector (pszValue, v);
@@ -156,7 +168,7 @@ BOOL fsFDMCmdLineParser::is_ForceSilentSpecified()
 	return m_bForceSilent;
 }
 
-void fsFDMCmdLineParser::AddTorrentFile(LPCSTR pszFile)
+void fsFDMCmdLineParser::AddTorrent(LPCSTR pszTorrent)
 {
 	if (m_bAnotherFDMStarted)
 	{
@@ -166,16 +178,16 @@ void fsFDMCmdLineParser::AddTorrentFile(LPCSTR pszFile)
 
 		if (pAdd)
 		{
-			CComBSTR file = pszFile;
+			CComBSTR file = pszTorrent;
 			pAdd->put_ForceSilent (m_bForceSilent);
-			pAdd->CreateBtDownloadFromFile (file);
+			pAdd->CreateBtDownload(file);
 			pAdd->Release ();
 		}
 	}
 	else
 	{
 		CFdmApp::_inc_UrlToAdd url;
-		url.strUrl = pszFile;
+		url.strUrl = pszTorrent;
 		url.bForceSilent = m_bForceSilent;
 		((CFdmApp*) AfxGetApp ())->m_vTorrentFilesToAdd.add (url);
 	}

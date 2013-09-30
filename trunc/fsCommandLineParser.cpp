@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "FdmApp.h"
 #include "fsCommandLineParser.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -24,6 +25,8 @@ fsCommandLineParser::~fsCommandLineParser()
 
 BOOL fsCommandLineParser::Parse()
 {
+	m_vPars.clear ();
+
 	LPCSTR pszCmdLine = GetCommandLine ();
 
 	if (*pszCmdLine == '"')
@@ -40,76 +43,84 @@ BOOL fsCommandLineParser::Parse()
 			pszCmdLine++;
 	}
 
-	try{
-
-	while (*pszCmdLine)
+	try
 	{
-		char szParam [10000], szValue [10000];
-		*szParam = *szValue = 0;
-		bool bHasValue = true;
-
-		
-		while (*pszCmdLine && (*pszCmdLine == ' ' || *pszCmdLine == '\r' || *pszCmdLine == '\n'))
-			pszCmdLine++;
-
-		if (*pszCmdLine == '/' || *pszCmdLine == '-')
+		while (*pszCmdLine)
 		{
-			int i = 0;
-			while (*++pszCmdLine && *pszCmdLine != ' ' && *pszCmdLine != '=')
-				szParam [i++] = *pszCmdLine;
+			char szParam [10000], szValue [10000];
+			*szParam = *szValue = 0;
+			bool bHasValue = true;
 
-			szParam [i] = 0;
-
-			while (*pszCmdLine == ' ')
+			
+			while (*pszCmdLine && (*pszCmdLine == ' ' || *pszCmdLine == '\r' || *pszCmdLine == '\n'))
 				pszCmdLine++;
 
-			
-			if (*pszCmdLine == '=')
-			{
-				pszCmdLine++;
-				while (*pszCmdLine == ' ')
-					pszCmdLine++;
-			}
-			else
-				bHasValue = false;
-		}
-
-		if (bHasValue)
-		{
-			char cSp = ' ';	
-			char cSp1 = '\n', cSp2 = '\r';
-			
-			if (*pszCmdLine == '"' || *pszCmdLine == '\'')
-			{
-				cSp = *pszCmdLine++;
-				cSp1 = cSp2 = 0;
-			}
-
-			
-			if (*pszCmdLine != '/' && *pszCmdLine != '-')
+			if (*pszCmdLine == '/' || *pszCmdLine == '-')
 			{
 				int i = 0;
-				while (*pszCmdLine && *pszCmdLine != cSp && *pszCmdLine != cSp1 && *pszCmdLine != cSp2)
-					szValue [i++] = *pszCmdLine++;
+				while (*++pszCmdLine && *pszCmdLine != ' ' && *pszCmdLine != '=')
+					szParam [i++] = *pszCmdLine;
 
-				szValue [i] = 0;
+				szParam [i] = 0;
 
-				while (*pszCmdLine && (*pszCmdLine == cSp || *pszCmdLine == cSp1 || *pszCmdLine == cSp2))
+				while (*pszCmdLine == ' ')
 					pszCmdLine++;
+
+				
+				if (*pszCmdLine == '=')
+				{
+					pszCmdLine++;
+					while (*pszCmdLine == ' ')
+						pszCmdLine++;
+				}
+				else
+					bHasValue = false;
+			}
+
+			if (bHasValue)
+			{
+				char cSp = ' ';	
+				char cSp1 = '\n', cSp2 = '\r';
+				
+				if (*pszCmdLine == '"' || *pszCmdLine == '\'')
+				{
+					cSp = *pszCmdLine++;
+					cSp1 = cSp2 = 0;
+				}
+
+				
+				if (*pszCmdLine != '/' && *pszCmdLine != '-')
+				{
+					int i = 0;
+					while (*pszCmdLine && *pszCmdLine != cSp && *pszCmdLine != cSp1 && *pszCmdLine != cSp2)
+						szValue [i++] = *pszCmdLine++;
+
+					szValue [i] = 0;
+
+					while (*pszCmdLine && (*pszCmdLine == cSp || *pszCmdLine == cSp1 || *pszCmdLine == cSp2))
+						pszCmdLine++;
+				}
+			}
+
+			if (*szParam || *szValue)
+			{
+				fsCmdLineParameter par;
+				par.strParam = szParam;
+				par.strValue = szValue;
+				m_vPars.push_back (par);
 			}
 		}
-
-		if (*szParam || *szValue)
-		{
-			fsCmdLineParameter par;
-			par.strParam = szParam;
-			par.strValue = szValue;
-			m_vPars.add (par);
-		}
 	}
-
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsCommandLineParser::Parse " + tstring(ex.what()));
 	}
-	catch (...) {}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsCommandLineParser::Parse unknown exception");
+	}
 
 	return TRUE;
 }

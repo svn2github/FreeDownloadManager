@@ -84,6 +84,7 @@ struct fsDownload : public vmsObject, public vmsPersistObject
 	vmsDownloadsGroupSmartPtr pGroup;			
 	CString strComment;		
 	fs::list <fsDownloadEvents> vEvents;	
+	tstring tstrLastErrMsg;
 	UINT nID;			
 	DWORD dwFlags;				
 	DWORD dwReserved;

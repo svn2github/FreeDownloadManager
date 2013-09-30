@@ -41,83 +41,92 @@ fsInternetResult fsURL::Crack(LPCSTR pszUrl, BOOL bCheckScheme)
 		strUrl [strUrl.Length () - 1] = 0;
 		pszUrl = strUrl;
 	}
-	
+		
 	fsnew (pszCanUrl, CHAR, urlLen);
-	if (pszUrl [0] == '\\' && pszUrl [1] == '\\') 
+	bool isMagnet = false;
+	const char* magnetStart = _tcsstr (pszUrl, _T("magnet:"));
+	isMagnet = (magnetStart != 0 && pszUrl == magnetStart);
+
+	
+	if ((pszUrl [0] == '\\' && pszUrl [1] == '\\') || isMagnet)
 	{
 		m_url.nScheme = INTERNET_SCHEME_FILE; 
 		strcpy (m_szPath, pszUrl);
 		strcpy (m_szScheme, "file");
-		*m_szUser = *m_szPassword = 0;
+		*m_szUser = 0;
+		*m_szPassword = 0;
 		m_url.nPort = 0;
-		goto _lFileUrl;
+		if (isMagnet)
+		{
+			m_szHost[0] = 0;
+		}
 	}
-
-	if (strnicmp (pszUrl, "file://", 7)) 
+	else 
 	{
+		if (strnicmp (pszUrl, "file://", 7)) 
+		{
+			
+			if (!InternetCanonicalizeUrl (pszUrl, pszCanUrl, &urlLen, ICU_BROWSER_MODE))
+			{
+				delete pszCanUrl;
+
+				if (GetLastError () == ERROR_INSUFFICIENT_BUFFER)
+				{
+					fsnew (pszCanUrl, CHAR, urlLen+1);
+					if (!InternetCanonicalizeUrl (pszUrl, pszCanUrl, &urlLen, ICU_BROWSER_MODE))
+					{
+						delete pszCanUrl;
+						return fsWinInetErrorToIR ();
+					}
+				}
+				else
+					return fsWinInetErrorToIR ();
+			}
+		}
+		else
+		{
+			
+			strcpy (pszCanUrl, pszUrl);
+		}
+
+		ZeroMemory (&m_url, sizeof (m_url));
+		m_url.dwStructSize = sizeof (m_url);
+	
+		m_url.lpszHostName = m_szHost;
+		m_url.lpszPassword = m_szPassword;
+		m_url.lpszScheme = m_szScheme;
+		m_url.lpszUrlPath = m_szPath;
+		m_url.lpszUserName = m_szUser;
+
+		m_url.dwHostNameLength = URL_HOSTNAME_SIZE;
+		m_url.dwPasswordLength = URL_PASSWORD_SIZE;
+		m_url.dwSchemeLength = URL_SCHEME_SIZE;
+		m_url.dwUrlPathLength = URL_PATH_SIZE;
+		m_url.dwUserNameLength = URL_USERNAME_SIZE;
+
 		
-		if (!InternetCanonicalizeUrl (pszUrl, pszCanUrl, &urlLen, ICU_BROWSER_MODE))
+		if (!InternetCrackUrl (pszCanUrl, urlLen, 
+				_strnicmp (pszCanUrl, "ftp://", 6) == 0 ? ICU_DECODE : 0, &m_url))
 		{
 			delete pszCanUrl;
-
-			if (GetLastError () == ERROR_INSUFFICIENT_BUFFER)
-			{
-				fsnew (pszCanUrl, CHAR, urlLen+1);
-				if (!InternetCanonicalizeUrl (pszUrl, pszCanUrl, &urlLen, ICU_BROWSER_MODE))
-				{
-					delete pszCanUrl;
-					return fsWinInetErrorToIR ();
-				}
-			}
-			else
-				return fsWinInetErrorToIR ();
+			return fsWinInetErrorToIR ();
 		}
-	}
-	else
-	{
+
 		
-		strcpy (pszCanUrl, pszUrl);
-	}
 
-	ZeroMemory (&m_url, sizeof (m_url));
-	m_url.dwStructSize = sizeof (m_url);
-	
-	m_url.lpszHostName = m_szHost;
-	m_url.lpszPassword = m_szPassword;
-	m_url.lpszScheme = m_szScheme;
-	m_url.lpszUrlPath = m_szPath;
-	m_url.lpszUserName = m_szUser;
-
-	m_url.dwHostNameLength = URL_HOSTNAME_SIZE;
-	m_url.dwPasswordLength = URL_PASSWORD_SIZE;
-	m_url.dwSchemeLength = URL_SCHEME_SIZE;
-	m_url.dwUrlPathLength = URL_PATH_SIZE;
-	m_url.dwUserNameLength = URL_USERNAME_SIZE;
-
-	
-	if (!InternetCrackUrl (pszCanUrl, urlLen, 
-			_strnicmp (pszCanUrl, "ftp://", 6) == 0 ? ICU_DECODE : 0, &m_url))
-	{
 		delete pszCanUrl;
-		return fsWinInetErrorToIR ();
-	}
-
 	
-
-	delete pszCanUrl;
-	
-	if (bCheckScheme)	
-	{
-		if (m_url.nScheme != INTERNET_SCHEME_HTTP && m_url.nScheme != INTERNET_SCHEME_FTP &&
-			 m_url.nScheme != INTERNET_SCHEME_HTTPS && m_url.nScheme != INTERNET_SCHEME_FILE)
+		if (bCheckScheme)	
 		{
-			return IR_BADURL;
+			if (m_url.nScheme != INTERNET_SCHEME_HTTP && m_url.nScheme != INTERNET_SCHEME_FTP &&
+				 m_url.nScheme != INTERNET_SCHEME_HTTPS && m_url.nScheme != INTERNET_SCHEME_FILE)
+			{
+				return IR_BADURL;
+			}
 		}
+		FixWinInetBug ();
 	}
-
-	FixWinInetBug ();
-
-_lFileUrl:
+	
 	if (m_url.nScheme == INTERNET_SCHEME_FILE)
 	{
 		
@@ -212,7 +221,12 @@ fsInternetResult fsURL::Create(INTERNET_SCHEME nScheme, LPCTSTR lpszHostName, IN
 			strPath = str;
 		}
 
-		strcpy (lpszUrl, "file://"); 
+		
+		const char* magnetStart = _tcsstr (strPath, _T("magnet:"));
+		if (magnetStart == 0 || strPath != magnetStart)
+		{
+			strcpy (lpszUrl, "file://");
+		}
 		strcat (lpszUrl, strPath);	
 		return IR_SUCCESS;
 	}

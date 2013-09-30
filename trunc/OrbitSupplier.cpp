@@ -5,6 +5,7 @@
 #include "StdAfx.h"
 #include "OrbitSupplier.h"
 #include "Utils.h"
+#include "vmsLogger.h"
 
 COrbitSupplier::COrbitSupplier()
 {
@@ -27,8 +28,8 @@ bool COrbitSupplier::CheckSupplier() const
 
 void COrbitSupplier::Import(informer fnInformer, void* pData, TImportResult& tImportResult) const
 {
-	try {
-
+	try 
+	{
 		CString sMsg;
 
 		
@@ -48,7 +49,10 @@ void COrbitSupplier::Import(informer fnInformer, void* pData, TImportResult& tIm
 		
 		processDldsImportedFromOrbit(arrDownloads, fnInformer, pData, tImportResult);
 
-	} catch (CException* pExc) {
+	} 
+	catch (CException* pExc) 
+	{
+		vmsLogger::WriteLog("COrbitSupplier::Import exception");
 
 		CString sMsg;
 
@@ -62,7 +66,6 @@ void COrbitSupplier::Import(informer fnInformer, void* pData, TImportResult& tIm
 		pExc->Delete();
 
 		throw std::runtime_error((const char*)sMsg);
-
 	}
 }
 

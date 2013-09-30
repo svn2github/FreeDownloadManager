@@ -1031,6 +1031,7 @@
 #define IDC__TRANCPARENCY2              1305
 #define IDC__TRANCPARENCY2_VAL          1306
 #define IDC__PVDESC                     1307
+#define IDC_ASSOCWITHMAGNET             1308
 #define IDC_ASSOCWITHTORRENT            1309
 #define IDC__S0                         1310
 #define IDC_S_SITES                     1311

@@ -6,6 +6,7 @@
 #include "FdmApp.h"
 #include "fsDialogsMgr.h"
 #include "MainFrm.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -48,12 +49,22 @@ int fsDialogsMgr::FindDialog(CWnd* pWnd)
 
 void fsDialogsMgr::EndAllDialogs()
 {
-	try {
-	
-	for (int i = m_vDlgs.size () - 1; i >= 0; i--)
-		m_vDlgs [i]->SendMessage (WM_COMMAND, IDCANCEL);
+	try 
+	{
+		
+		for (int i = m_vDlgs.size () - 1; i >= 0; i--)
+			m_vDlgs [i]->SendMessage (WM_COMMAND, IDCANCEL);
 	}
-	catch (...) {}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDialogsMgr::EndAllDialogs " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("fsDialogsMgr::EndAllDialogs unknown exception");
+	}
 }
 
 void fsDialogsMgr::OnDoModal(CPropertySheet *pSheet)

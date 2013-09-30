@@ -60,6 +60,7 @@ protected:
 	afx_msg void OnEnable();
 	afx_msg void OnLimitconns();
 	afx_msg void OnAssocwithtorrent();
+	afx_msg void OnAssocwithMagnet();
 	afx_msg void OnChangeConnslimitval();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

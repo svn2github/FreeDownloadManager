@@ -6,6 +6,7 @@
 #include "FdmApp.h"
 #include "DlgDownloadsHistory.h"
 #include "DownloadsWnd.h"
+#include "vmsLogger.h"
 
 extern CDownloadsWnd* _pwndDownloads;
 
@@ -188,9 +189,22 @@ void CDlgDownloadsHistory::OnOK()
 
 	if (_pwndDownloads->Get_DWWN () == DWWN_HISTORY)
 		_pwndDownloads->m_wndHistory.ShowWindow (SW_HIDE);
-	try {
+	
+	try 
+	{
 		_DldsMgr.m_histmgr.ReadSettings ();
-	}catch (...) {}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDlgDownloadsHistory::OnOK " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDlgDownloadsHistory::OnOK unknown exception");
+	}
+
 	if (_pwndDownloads->Get_DWWN () == DWWN_HISTORY)
 		_pwndDownloads->m_wndHistory.ShowWindow (SW_SHOW);
 	

@@ -8,7 +8,7 @@
 #include "DownloadsWnd.h"
 #include "UIThread.h"
 
-STDMETHODIMP CFdmTorrentFilesRcvr::CreateBtDownloadFromFile(BSTR bstrFile)
+STDMETHODIMP CFdmTorrentFilesRcvr::CreateBtDownload(BSTR bstrFile)
 {
 	USES_CONVERSION;
 
@@ -25,7 +25,7 @@ STDMETHODIMP CFdmTorrentFilesRcvr::CreateBtDownloadFromFile(BSTR bstrFile)
 	p->bForceSilent = m_bForceSilent;
 
 	UIThread *thr = (UIThread*) RUNTIME_CLASS (UIThread)->CreateObject ();
-	thr->set_Thread (_threadCreateBtDownloadFromFile, p);
+	thr->set_Thread (_threadCreateBtDownload, p);
 	thr->CreateThread ();
 
 	return S_OK;
@@ -43,11 +43,11 @@ STDMETHODIMP CFdmTorrentFilesRcvr::put_ForceSilent(BOOL newVal)
 	return S_OK;
 }
 
-DWORD WINAPI CFdmTorrentFilesRcvr::_threadCreateBtDownloadFromFile(LPVOID lp)
+DWORD WINAPI CFdmTorrentFilesRcvr::_threadCreateBtDownload(LPVOID lp)
 {
 	_inc_CBRFF_ctx *p = (_inc_CBRFF_ctx*) lp;
 
-	_pwndDownloads->CreateBtDownloadFromFile (p->strFile, p->strFileUrl,
+	_pwndDownloads->CreateBtDownload (p->strFile, p->strFileUrl,
 		p->bForceSilent ? TRUE : _App.Monitor_Silent ());
 
 	delete p;

@@ -11,7 +11,7 @@ fdm_FDM = fdm_FDM.QueryInterface (Components.interfaces.IFDMForFirefox);
 window.addEventListener("load",  fdm_DM_load, false);
 
 // extract HTTP POST data of the last download
-function fdm_extractPostData(channel) 
+function fdm_extractPostData(channel, url)
 {
     if(channel instanceof Components.interfaces.nsIUploadChannel &&
        channel.uploadStream instanceof Components.interfaces.nsISeekableStream) {
@@ -21,14 +21,49 @@ function fdm_extractPostData(channel)
           '@mozilla.org/scriptableinputstream;1'].createInstance(
           Components.interfaces.nsIScriptableInputStream);
         sis.init(channel.uploadStream);
-        var postData=sis.read(sis.available()).replace(/\s$/,'').split(/[\r\n]/);
-        return postData[postData.length-1];
+        var index;
+        var postData=sis.read(sis.available());
+        if (postData.indexOf ("application/x-www-form-urlencoded") >= 0 &&
+            url && (index=url.indexOf ("?")) >= 0) {
+          // For Content-Type: application/x-www-form-urlencoded
+          // get the parameters from the URL after the question mark.
+            return url.substring (index+1);
+        } else {
+          postData=postData.replace(/\s$/,'').split(/[\r\n]/);
+          return postData[postData.length-1];
+        }
       } catch(ex) {
       } finally {
          sis.close();
       }
     }
     return null;
+}
+
+// extract HTTP Cookies of the last download
+function fdm_extractCookie(channel, _cookieWeHave)
+{
+    var _cookie = _cookieWeHave;
+
+    if(channel instanceof Components.interfaces.nsIUploadChannel &&
+       channel.uploadStream instanceof Components.interfaces.nsISeekableStream) {
+      var cookies = channel.getRequestHeader("Cookie");
+      if (cookies) {
+        cookies = cookies.split(/\s*;\s*/);
+        if (cookies.length > 0) {
+          for (var i = 0, l = cookies.length; i < l; i++) {
+            if (_cookie.indexOf (cookies[i]) == -1)
+            {
+              if (_cookie.length)
+                _cookie += "; ";
+              _cookie += cookies[i];
+            }
+          }
+        }
+      }
+    }
+
+    return _cookie;
 }
 
 function fdm_gatherCookieForHost (_host, _cookieWeHave)
@@ -39,6 +74,7 @@ function fdm_gatherCookieForHost (_host, _cookieWeHave)
 
    for (var iter = fdm_cookieManager.enumerator; iter.hasMoreElements();) 
    {
+      var objCookie;
       if ((objCookie = iter.getNext()) instanceof Components.interfaces.nsICookie) 
       {
         var cookieHost = objCookie.host;
@@ -93,8 +129,6 @@ function fdm_DM_load (ev)
     cookie = fdm_gatherCookieForHost (doc.location.hostname, cookie);
   } catch (err) {}
 
-  url.Cookies = cookie;
-
   var fdm_Ext = Components.classes["@freedownloadmanager.org/FDMFirefoxExtension;1"].createInstance ();
   fdm_Ext = fdm_Ext.QueryInterface (Components.interfaces.IFDMFirefoxExtension);
 
@@ -104,9 +138,17 @@ function fdm_DM_load (ev)
   if (lastPost != null)
   {
     lastPost = lastPost.QueryInterface (Components.interfaces.nsIHttpChannel)
-    if (lastPost.isPending () && url.Url == lastPost.URI.spec)
-      url.PostData = fdm_extractPostData (lastPost);
+    // This used to check for lastPost.isPending ()
+    // but often isPending returns false when true is expected.
+    if (url.Url == lastPost.URI.spec) {
+      url.PostData = fdm_extractPostData (lastPost, url.Url);
+      try {
+        cookie = fdm_extractCookie (lastPost, cookie);
+      } catch (err) {}
+    }
   }
+
+  url.Cookies = cookie;
 
   if (fdm_FDM.CatchLink (url, dialog.mLauncher.suggestedFileName))
     document.documentElement.cancelDialog(); // download was forwared to FDM. cancel processing by browser.

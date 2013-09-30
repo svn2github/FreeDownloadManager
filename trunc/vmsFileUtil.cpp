@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "vmsFileUtil.h"
 #include <shlobj.h>
+#include "vmsLogger.h"
 
 void vmsFileUtil::WriteString(vmsFile &file, LPCSTR psz)
 {
@@ -22,10 +23,15 @@ void vmsFileUtil::ReadString(vmsFile &file, fsString &str)
 		throw ERROR_BAD_FORMAT;
 
 	char* psz = new char [l+1];
-	try {
+	try 
+	{
 		file.Read (psz, l);
 		psz [l] = 0;
-	} catch (DWORD dw) {
+	} 
+	catch (DWORD dw) 
+	{
+		vmsLogger::WriteLog("vmsFileUtil::ReadString exception");
+
 		delete [] psz;
 		throw dw;
 	}

@@ -35,6 +35,11 @@ enum vmsBtDownloadState
 	
 	
 	BTDS_CHECKING_RESUME_DATA,
+	
+	BTDS_DOWNLOADING_METADATA,
+	
+	BTDS_SERVER_INTERNAL_ERROR_500,
+	BTDS_BAD_REQUEST_400,
 };
 
 class vmsBtDownload
@@ -100,4 +105,5 @@ public:
 	virtual int  GetUploadLimit () = NULL;
 	virtual UINT GetDownloadSpeedIncludingServiceTraffic () = NULL;
 	virtual UINT GetUploadSpeedIncludingServiceTraffic () = NULL;
+	virtual BOOL SetMagnetMetadata(vmsBtFile* torrentFile) = NULL;
 };

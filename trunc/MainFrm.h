@@ -378,6 +378,9 @@ protected:
 
 public:
 	bool onExit(bool bQueryExit);
+
+private:
+	void UpadateTumToolbarState();
 };
 
 //{{AFX_INSERT_LOCATION}}

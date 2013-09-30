@@ -22,6 +22,7 @@
 #include "Dlg_CheckFileIntegrity_Result.h"
 #include "FolderBrowser.h"
 #include "Dlg_Download.h"
+#include "vmsLogger.h"
 
 #include <algorithm>
 
@@ -250,32 +251,15 @@ void CDownloads_Tasks::UpdateActiveDownload(int adjSelected)
 {
 	try {
 	
-	POSITION pos = GetFirstSelectedItemPosition ();
-	vmsDownloadSmartPtr dld;	
+		POSITION pos = GetFirstSelectedItemPosition ();
+		vmsDownloadSmartPtr dld;	
 
-	
-	if (pos && GetSelectedCount () == 1)
-	{
-		int iItem = GetNextSelectedItem (pos);
-
-		iItem += adjSelected;	
-		if (iItem < 0)
-			iItem = 0;
-		else if (iItem >= GetItemCount ())
-			iItem = GetItemCount () - 1;
-
-		dld = m_vDownloads [iItem];
-	}
-	else
-	{
-		int iItem = GetSelectionMark ();
-
-		if (iItem == -1)
-			dld = NULL;	
-		else
+		
+		if (pos && GetSelectedCount () == 1)
 		{
-			iItem += adjSelected;	
+			int iItem = GetNextSelectedItem (pos);
 
+			iItem += adjSelected;	
 			if (iItem < 0)
 				iItem = 0;
 			else if (iItem >= GetItemCount ())
@@ -283,17 +267,43 @@ void CDownloads_Tasks::UpdateActiveDownload(int adjSelected)
 
 			dld = m_vDownloads [iItem];
 		}
-	}
+		else
+		{
+			int iItem = GetSelectionMark ();
 
-	
-	if (dld != m_pActiveDownload)
+			if (iItem == -1)
+				dld = NULL;	
+			else
+			{
+				iItem += adjSelected;	
+
+				if (iItem < 0)
+					iItem = 0;
+				else if (iItem >= GetItemCount ())
+					iItem = GetItemCount () - 1;
+
+				dld = m_vDownloads [iItem];
+			}
+		}
+
+		
+		if (dld != m_pActiveDownload)
+		{
+			m_pActiveDownload = dld;
+			m_pDownloadsWnd->SetActiveDownload (m_pActiveDownload);
+		}
+
+	}
+	catch (const std::exception& ex)
 	{
-		m_pActiveDownload = dld;
-		m_pDownloadsWnd->SetActiveDownload (m_pActiveDownload);
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Tasks::UpdateActiveDownload " + tstring(ex.what()));
 	}
-
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Tasks::UpdateActiveDownload unknown exception");
 	}
-	catch (...) {}
 }
 
 int CDownloads_Tasks::FindItem(vmsDownloadSmartPtr dld)
@@ -346,9 +356,20 @@ void CDownloads_Tasks::DeleteSelected(BOOL bDontConfirmFileDeleting)
 	
 	ShowWindow (SW_HIDE);
 
-	try {
+	try 
+	{
 		_DldsMgr.DeleteDownloads (vpDlds, TRUE, bDontConfirmFileDeleting);
-	}catch (...) {}
+	}
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Tasks::DeleteSelected " + tstring(ex.what()));
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Tasks::DeleteSelected unknown exception");
+	}
 
 	ShowWindow (SW_SHOW);
 
@@ -512,159 +533,170 @@ void CDownloads_Tasks::OnDldopenfolder()
 
 void CDownloads_Tasks::UpdateMenu(CMenu *pPopup)
 {
-	try{
-	if (_pwndDownloads->Get_DWWN () != DWWN_LISTOFDOWNLOADS || GetSelectedCount () == 0)
+	try
 	{
-		pPopup->EnableMenuItem (ID_DLDSTART, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDSTOP, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDRESTART, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDADDSECTION, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDDELSECTION, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDDELETE, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDOPENFOLDER, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDPROPERTIES, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDLAUNCH, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDAUTOSTART, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDSCHEDULE, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDQSIZE, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDCHECKVIR, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDUNPACK, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDCONVERT, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDMOVEUP, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDMOVEDOWN, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDMOVETOP, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDMOVEBOTTOM, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDCHECKINTEGRITY, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDMOVETOFOLDER, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDSCHEDULESTOP, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDGRANTBANDWIDTHFORDLD, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDSHOWPROGRESSDLG, MF_BYCOMMAND | MF_GRAYED);
-		pPopup->EnableMenuItem (ID_DLDENABLESEEDING, MF_BYCOMMAND | MF_GRAYED);
-	}
-	else
-	{
-		POSITION pos = GetFirstSelectedItemPosition ();
-		
-		
-		
-		int iAutoStart = 3; 
-		
-		BOOL bRunning = FALSE;
-		
-		BOOL bStopped = FALSE; 
-		
-		BOOL bCanQuery = FALSE;
-		
-		BOOL bDone = FALSE;
-		BOOL b1stDone = FALSE;
-		bool b1st = true;
-		bool b1stGranted = false;
-		bool bHasEnableSeedingDlds = false;
-		bool bHasBtDlds = false;
-
-		
-		while (pos)
-		{
-			int iItem = GetNextSelectedItem (pos);
-			vmsDownloadSmartPtr dld = m_vDownloads [iItem];
-
-			if (b1st) {
-				b1stDone = dld->pMgr->IsDone ();
-				b1st = false;
-				b1stGranted = dld == _DldsMgr.get_HighestPriorityDownload ();
-			}
-
-			if (bHasEnableSeedingDlds == false && dld->pMgr->IsBittorrent ())
-			{
-				bHasBtDlds = true;
-
-				if ((dld->pMgr->GetBtDownloadMgr ()->get_Flags () & BTDF_DISABLE_SEEDING) == 0 ||
-						dld->pMgr->GetBtDownloadMgr ()->isSeeding ())
-					bHasEnableSeedingDlds = true;
-			}
-
-			if (iAutoStart == 3)
-				iAutoStart = dld->bAutoStart ? 1 : 0;
-			else if (iAutoStart == 1 && dld->bAutoStart == FALSE || iAutoStart == 0 && dld->bAutoStart)
-				iAutoStart = 2;	
-
-			if (bRunning == FALSE && dld->pMgr->IsRunning ())
-				bRunning = TRUE;
-
-			if (bStopped == FALSE && dld->pMgr->IsRunning () == FALSE && dld->pMgr->IsDone () == FALSE)
-				bStopped = TRUE;
-
-			if (bDone == FALSE && dld->pMgr->IsDone ())
-				bDone = TRUE;
-	
-			if (bCanQuery == FALSE && dld->pMgr->GetNumberOfSections () == 0)
-				bCanQuery = TRUE;
-		}
-
-		
-		if (bRunning == FALSE)
-		{
-			if (iAutoStart == 0)
-				pPopup->EnableMenuItem (ID_DLDSTOP, MF_BYCOMMAND | MF_GRAYED);
-			pPopup->EnableMenuItem (ID_DLDADDSECTION, MF_BYCOMMAND | MF_GRAYED);
-			pPopup->EnableMenuItem (ID_DLDDELSECTION, MF_BYCOMMAND | MF_GRAYED);
-			pPopup->EnableMenuItem (ID_DLDGRANTBANDWIDTHFORDLD, MF_BYCOMMAND | MF_GRAYED);
-			pPopup->EnableMenuItem (ID_DLDSHOWPROGRESSDLG, MF_BYCOMMAND | MF_GRAYED);
-		}
-		else if (GetSelectedCount () != 1)
-		{
-			pPopup->EnableMenuItem (ID_DLDGRANTBANDWIDTHFORDLD, MF_BYCOMMAND | MF_GRAYED);
-		}
-
-		
-		if (bStopped == FALSE)
+		if (_pwndDownloads->Get_DWWN () != DWWN_LISTOFDOWNLOADS || GetSelectedCount () == 0)
 		{
 			pPopup->EnableMenuItem (ID_DLDSTART, MF_BYCOMMAND | MF_GRAYED);
-			if (bDone == FALSE)
-				pPopup->EnableMenuItem (ID_DLDRESTART, MF_BYCOMMAND | MF_GRAYED);
-			pPopup->EnableMenuItem (ID_DLDQSIZE, MF_BYCOMMAND | MF_GRAYED);
-		}
-
-		
-		if (bRunning == FALSE && bStopped == FALSE)
-		{
-			pPopup->EnableMenuItem (ID_DLDSCHEDULE, MF_BYCOMMAND | MF_GRAYED);
-			pPopup->EnableMenuItem (ID_DLDSCHEDULESTOP, MF_BYCOMMAND | MF_GRAYED);
-		}
-
-		
-		if (bDone == FALSE)
-		{
+			pPopup->EnableMenuItem (ID_DLDSTOP, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDRESTART, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDADDSECTION, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDDELSECTION, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDDELETE, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDOPENFOLDER, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDPROPERTIES, MF_BYCOMMAND | MF_GRAYED);
 			pPopup->EnableMenuItem (ID_DLDLAUNCH, MF_BYCOMMAND | MF_GRAYED);
-			pPopup->EnableMenuItem (ID_DLDCHECKVIR, MF_BYCOMMAND | MF_GRAYED);
-		}
-
-		
-		if (bCanQuery == FALSE)
+			pPopup->EnableMenuItem (ID_DLDAUTOSTART, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDSCHEDULE, MF_BYCOMMAND | MF_GRAYED);
 			pPopup->EnableMenuItem (ID_DLDQSIZE, MF_BYCOMMAND | MF_GRAYED);
-
-		
-		if (iAutoStart == 1)
-			pPopup->CheckMenuItem (ID_DLDAUTOSTART, MF_CHECKED | MF_BYCOMMAND);
-
-		m_bAutoStart = iAutoStart != 1;
-
-		if (GetSelectedCount () != 1 || b1stDone == FALSE) {
+			pPopup->EnableMenuItem (ID_DLDCHECKVIR, MF_BYCOMMAND | MF_GRAYED);
 			pPopup->EnableMenuItem (ID_DLDUNPACK, MF_BYCOMMAND | MF_GRAYED);
 			pPopup->EnableMenuItem (ID_DLDCONVERT, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDMOVEUP, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDMOVEDOWN, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDMOVETOP, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDMOVEBOTTOM, MF_BYCOMMAND | MF_GRAYED);
 			pPopup->EnableMenuItem (ID_DLDCHECKINTEGRITY, MF_BYCOMMAND | MF_GRAYED);
-		}
-
-		if (GetSelectedCount () == 1 && b1stGranted)
-			pPopup->CheckMenuItem (ID_DLDGRANTBANDWIDTHFORDLD, MF_CHECKED | MF_BYCOMMAND);
-
-		m_bHasEnableSeedingDlds = bHasEnableSeedingDlds;
-		if (bHasBtDlds == false)
+			pPopup->EnableMenuItem (ID_DLDMOVETOFOLDER, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDSCHEDULESTOP, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDGRANTBANDWIDTHFORDLD, MF_BYCOMMAND | MF_GRAYED);
+			pPopup->EnableMenuItem (ID_DLDSHOWPROGRESSDLG, MF_BYCOMMAND | MF_GRAYED);
 			pPopup->EnableMenuItem (ID_DLDENABLESEEDING, MF_BYCOMMAND | MF_GRAYED);
-		else if (bHasEnableSeedingDlds)
-			pPopup->CheckMenuItem (ID_DLDENABLESEEDING, MF_CHECKED | MF_BYCOMMAND);
+		}
+		else
+		{
+			POSITION pos = GetFirstSelectedItemPosition ();
+			
+			
+			
+			int iAutoStart = 3; 
+			
+			BOOL bRunning = FALSE;
+			
+			BOOL bStopped = FALSE; 
+			
+			BOOL bCanQuery = FALSE;
+			
+			BOOL bDone = FALSE;
+			BOOL b1stDone = FALSE;
+			bool b1st = true;
+			bool b1stGranted = false;
+			bool bHasEnableSeedingDlds = false;
+			bool bHasBtDlds = false;
+
+			
+			while (pos)
+			{
+				int iItem = GetNextSelectedItem (pos);
+				vmsDownloadSmartPtr dld = m_vDownloads [iItem];
+
+				if (b1st) {
+					b1stDone = dld->pMgr->IsDone ();
+					b1st = false;
+					b1stGranted = dld == _DldsMgr.get_HighestPriorityDownload ();
+				}
+
+				if (bHasEnableSeedingDlds == false && dld->pMgr->IsBittorrent ())
+				{
+					bHasBtDlds = true;
+
+					if ((dld->pMgr->GetBtDownloadMgr ()->get_Flags () & BTDF_DISABLE_SEEDING) == 0 ||
+							dld->pMgr->GetBtDownloadMgr ()->isSeeding ())
+						bHasEnableSeedingDlds = true;
+				}
+
+				if (iAutoStart == 3)
+					iAutoStart = dld->bAutoStart ? 1 : 0;
+				else if (iAutoStart == 1 && dld->bAutoStart == FALSE || iAutoStart == 0 && dld->bAutoStart)
+					iAutoStart = 2;	
+
+				if (bRunning == FALSE && dld->pMgr->IsRunning ())
+					bRunning = TRUE;
+
+				if (bStopped == FALSE && dld->pMgr->IsRunning () == FALSE && dld->pMgr->IsDone () == FALSE)
+					bStopped = TRUE;
+
+				if (bDone == FALSE && dld->pMgr->IsDone ())
+					bDone = TRUE;
+	
+				if (bCanQuery == FALSE && dld->pMgr->GetNumberOfSections () == 0)
+					bCanQuery = TRUE;
+			}
+
+			
+			if (bRunning == FALSE)
+			{
+				if (iAutoStart == 0)
+					pPopup->EnableMenuItem (ID_DLDSTOP, MF_BYCOMMAND | MF_GRAYED);
+				pPopup->EnableMenuItem (ID_DLDADDSECTION, MF_BYCOMMAND | MF_GRAYED);
+				pPopup->EnableMenuItem (ID_DLDDELSECTION, MF_BYCOMMAND | MF_GRAYED);
+				pPopup->EnableMenuItem (ID_DLDGRANTBANDWIDTHFORDLD, MF_BYCOMMAND | MF_GRAYED);
+				pPopup->EnableMenuItem (ID_DLDSHOWPROGRESSDLG, MF_BYCOMMAND | MF_GRAYED);
+			}
+			else if (GetSelectedCount () != 1)
+			{
+				pPopup->EnableMenuItem (ID_DLDGRANTBANDWIDTHFORDLD, MF_BYCOMMAND | MF_GRAYED);
+			}
+
+			
+			if (bStopped == FALSE)
+			{
+				pPopup->EnableMenuItem (ID_DLDSTART, MF_BYCOMMAND | MF_GRAYED);
+				if (bDone == FALSE)
+					pPopup->EnableMenuItem (ID_DLDRESTART, MF_BYCOMMAND | MF_GRAYED);
+				pPopup->EnableMenuItem (ID_DLDQSIZE, MF_BYCOMMAND | MF_GRAYED);
+			}
+
+			
+			if (bRunning == FALSE && bStopped == FALSE)
+			{
+				pPopup->EnableMenuItem (ID_DLDSCHEDULE, MF_BYCOMMAND | MF_GRAYED);
+				pPopup->EnableMenuItem (ID_DLDSCHEDULESTOP, MF_BYCOMMAND | MF_GRAYED);
+			}
+
+			
+			if (bDone == FALSE)
+			{
+				pPopup->EnableMenuItem (ID_DLDLAUNCH, MF_BYCOMMAND | MF_GRAYED);
+				pPopup->EnableMenuItem (ID_DLDCHECKVIR, MF_BYCOMMAND | MF_GRAYED);
+			}
+
+			
+			if (bCanQuery == FALSE)
+				pPopup->EnableMenuItem (ID_DLDQSIZE, MF_BYCOMMAND | MF_GRAYED);
+
+			
+			if (iAutoStart == 1)
+				pPopup->CheckMenuItem (ID_DLDAUTOSTART, MF_CHECKED | MF_BYCOMMAND);
+
+			m_bAutoStart = iAutoStart != 1;
+
+			if (GetSelectedCount () != 1 || b1stDone == FALSE) {
+				pPopup->EnableMenuItem (ID_DLDUNPACK, MF_BYCOMMAND | MF_GRAYED);
+				pPopup->EnableMenuItem (ID_DLDCONVERT, MF_BYCOMMAND | MF_GRAYED);
+				pPopup->EnableMenuItem (ID_DLDCHECKINTEGRITY, MF_BYCOMMAND | MF_GRAYED);
+			}
+
+			if (GetSelectedCount () == 1 && b1stGranted)
+				pPopup->CheckMenuItem (ID_DLDGRANTBANDWIDTHFORDLD, MF_CHECKED | MF_BYCOMMAND);
+
+			m_bHasEnableSeedingDlds = bHasEnableSeedingDlds;
+			if (bHasBtDlds == false)
+				pPopup->EnableMenuItem (ID_DLDENABLESEEDING, MF_BYCOMMAND | MF_GRAYED);
+			else if (bHasEnableSeedingDlds)
+				pPopup->CheckMenuItem (ID_DLDENABLESEEDING, MF_CHECKED | MF_BYCOMMAND);
+		}
 	}
-	} catch (...) {
+	catch (const std::exception& ex)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Tasks::UpdateMenu " + tstring(ex.what()));
+		UpdateMenu (pPopup);
+	}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Tasks::UpdateMenu unknown exception");
 		UpdateMenu (pPopup);
 	}
 }
@@ -826,7 +858,8 @@ int CDownloads_Tasks::OnUpdateToolBar(UINT nID)
 
 		while (pos)
 		{
-			try {
+			try 
+			{
 				int iItem = GetNextSelectedItem (pos);
 				vmsDownloadSmartPtr dld = m_vDownloads [iItem];
 				if (dld->pMgr->IsRunning ())
@@ -839,25 +872,34 @@ int CDownloads_Tasks::OnUpdateToolBar(UINT nID)
 				else if (iAutoStart == 1 && dld->bAutoStart == FALSE || iAutoStart == 0 && dld->bAutoStart)
 					iAutoStart = 2;	
 			}
-			catch (...) {}
+			catch (const std::exception& ex)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("CDownloads_Tasks::OnUpdateToolBar " + tstring(ex.what()));
+			}
+			catch (...)
+			{
+				ASSERT (FALSE);
+				vmsLogger::WriteLog("CDownloads_Tasks::OnUpdateToolBar unknown exception");
+			}
 		}
 
 		switch (nID)
 		{
 			case ID_DLDSTART:
-					if (bStopped == FALSE)
-							bEnabled = FALSE;
+				if (bStopped == FALSE)
+						bEnabled = FALSE;
 				break;
 
 			case ID_DLDSTOP:
 				if (bRunning == FALSE && iAutoStart == 0)
 					bEnabled = FALSE;
-			break;
+				break;
 
 			case ID_DLDSCHEDULE:
 			case ID_DLDSCHEDULESTOP:
-					if (bRunning == FALSE && bStopped == FALSE)
-						bEnabled = FALSE;
+				if (bRunning == FALSE && bStopped == FALSE)
+					bEnabled = FALSE;
 				break;
 		}
 
@@ -866,8 +908,10 @@ int CDownloads_Tasks::OnUpdateToolBar(UINT nID)
 	}
 
 	int iState = bEnabled ? WGP_CMDITEMSTATE_ENABLED : WGP_CMDITEMSTATE_DISABLED;
-	if (bChecked) iState |= WGP_CMDITEMSTATE_CHECKED;
-
+	if (bChecked) 
+	{
+		iState |= WGP_CMDITEMSTATE_CHECKED;
+	}
 	return iState;
 }
 
@@ -1408,24 +1452,34 @@ void CDownloads_Tasks::OnGetdispinfo(NMHDR *pNMHDR, LRESULT *pResult)
 	LV_DISPINFO* pDispInfo = (LV_DISPINFO*)pNMHDR;
 	LV_ITEM* pItem = &(pDispInfo)->item;
 
-	try{
-
-	vmsDownloadSmartPtr dld = m_vDownloads [pItem->iItem];
-
-	if (pItem->mask & LVIF_IMAGE)
+	try
 	{
-        pItem->iImage = GetDownloadImage (dld);
-		UpdateDownload (dld, FALSE);
-	}
+		vmsDownloadSmartPtr dld = m_vDownloads [pItem->iItem];
 
-	if (pItem->mask & LVIF_TEXT)
+		if (pItem->mask & LVIF_IMAGE)
+		{
+			pItem->iImage = GetDownloadImage (dld);
+			UpdateDownload (dld, FALSE);
+		}
+
+		if (pItem->mask & LVIF_TEXT)
+		{
+			int nSubItem = SubItemToSubItem (pItem->iSubItem);
+			if (nSubItem != -1)
+				lstrcpy (pItem->pszText, GetDownloadText (dld, nSubItem));		
+		}
+
+	}
+	catch (const std::exception& ex)
 	{
-		int nSubItem = SubItemToSubItem (pItem->iSubItem);
-		if (nSubItem != -1)
-			lstrcpy (pItem->pszText, GetDownloadText (dld, nSubItem));		
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Tasks::OnGetdispinfo " + tstring(ex.what()));
 	}
-
-	}catch (...) {}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDownloads_Tasks::OnGetdispinfo unknown exception");
+	}
 }
 
 CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)

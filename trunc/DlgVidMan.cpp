@@ -7,6 +7,7 @@
 #include "DlgVidMan.h"
 #include "Downloads_VideoPreview.h"
 #include "plugincmds.h"
+#include "vmsLogger.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -152,56 +153,66 @@ void CDlgVidMan::UpdateEnabled()
 }
 
 void CDlgVidMan::Update()
-{try{
-
-	if (IsWindowVisible () == FALSE)
-		return;
-
-	BOOL bPlaying = m_parent->IsPlaying ();
-
-	UINT nIdNow, nStyle; int iImage;
-	m_barMan.GetButtonInfo (0, nIdNow, nStyle, iImage);
-	UINT nIdReq = bPlaying ? ID_DLD_VID_PAUSE : ID_DLD_VID_PLAY;
-	if (nIdNow != nIdReq)
-		m_barMan.SetButtonInfo (0, nIdReq, nStyle, bPlaying ? 2 : 0);
-
-	SetDlgItemText (IDC__FILENAME, m_parent->Get_FileName ());
-
-	char szDim [100];
-	CString str;
-	UINT64 u;
-	float val;
-
-	u = m_parent->Get_FileSize ();
-	if (u)
+{
+	try
 	{
-		if (u == _UI64_MAX)
-			str = "?";
+		if (IsWindowVisible () == FALSE)
+			return;
+
+		BOOL bPlaying = m_parent->IsPlaying ();
+
+		UINT nIdNow, nStyle; int iImage;
+		m_barMan.GetButtonInfo (0, nIdNow, nStyle, iImage);
+		UINT nIdReq = bPlaying ? ID_DLD_VID_PAUSE : ID_DLD_VID_PLAY;
+		if (nIdNow != nIdReq)
+			m_barMan.SetButtonInfo (0, nIdReq, nStyle, bPlaying ? 2 : 0);
+
+		SetDlgItemText (IDC__FILENAME, m_parent->Get_FileName ());
+
+		char szDim [100];
+		CString str;
+		UINT64 u;
+		float val;
+
+		u = m_parent->Get_FileSize ();
+		if (u)
+		{
+			if (u == _UI64_MAX)
+				str = "?";
+			else
+			{
+				BytesToXBytes (u, &val, szDim);
+				str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+			}
+		}
 		else
+			str = "";
+		SetDlgItemText (IDC__SIZEVAL, str);
+
+		u = m_parent->Get_AvailFileSize ();
+		if (u || m_parent->Get_FileSize ())
 		{
 			BytesToXBytes (u, &val, szDim);
 			str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
 		}
-	}
-	else
-		str = "";
-	SetDlgItemText (IDC__SIZEVAL, str);
+		else
+			str = "";
+		SetDlgItemText (IDC__SIZEAVAILVAL, str);
 
-	u = m_parent->Get_AvailFileSize ();
-	if (u || m_parent->Get_FileSize ())
+		SetDlgItemText (IDC__DURATIONVAL, m_parent->GetDuration ());
+
+		UpdateEnabled ();
+	}
+	catch (const std::exception& ex)
 	{
-		BytesToXBytes (u, &val, szDim);
-		str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDlgVidMan::Update " + tstring(ex.what()));
 	}
-	else
-		str = "";
-	SetDlgItemText (IDC__SIZEAVAILVAL, str);
-
-	SetDlgItemText (IDC__DURATIONVAL, m_parent->GetDuration ());
-
-	UpdateEnabled ();
-
-}catch (...){}
+	catch (...)
+	{
+		ASSERT (FALSE);
+		vmsLogger::WriteLog("CDlgVidMan::Update unknown exception");
+	}
 }
 
 void CDlgVidMan::OnPlay() 

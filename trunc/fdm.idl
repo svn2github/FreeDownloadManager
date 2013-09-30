@@ -134,7 +134,7 @@ import "ocidl.idl";
 	]
 	interface IFdmTorrentFilesRcvr : IDispatch
 	{
-		[id(1), helpstring("method CreateBtDownloadFromFile")] HRESULT CreateBtDownloadFromFile([in] BSTR bstrFile);
+		[id(1), helpstring("method CreateBtDownload")] HRESULT CreateBtDownload([in] BSTR bstrFile);
 		[propget, id(2), helpstring("property ForceSilent")] HRESULT ForceSilent([out, retval] BOOL *pVal);
 		[propput, id(2), helpstring("property ForceSilent")] HRESULT ForceSilent([in] BOOL newVal);
 	};
