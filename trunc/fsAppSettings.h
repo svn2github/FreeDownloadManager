@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSAPPSETTINGS_H__33EC2FD8_44AF_484F_AC12_A498B479BD50__INCLUDED_)
@@ -74,6 +74,8 @@ protected:
 		fsTrafficUsageModeSettings () {uMaxTasks = 3; uMaxConns = 3; uMaxConnsPS = 3; uTrafficLimit = UINT_MAX;}
 	};
 public:
+	void RecentVersionRun (const tstring&);
+	tstring RecentVersionRun ();
 	void SmallTips_CurrentTip (int n);
 	int SmallTips_CurrentTip();
 	void SmallTips_LastTime (FILETIME ft);
@@ -178,6 +180,12 @@ public:
 	CString Bittorrent_OldMagnetUrlProtocol();
 	void Bittorrent_EnableDHT (BOOL b);
 	BOOL Bittorrent_EnableDHT();
+	void Bittorrent_EnableLocalPeerDiscovery (BOOL b);
+	void Bittorrent_EnableUPnP (BOOL b);
+	void Bittorrent_EnableNATPMP (BOOL b);
+	BOOL Bittorrent_EnableLocalPeerDiscovery ();
+	BOOL Bittorrent_EnableUPnP ();
+	BOOL Bittorrent_EnableNATPMP ();
 	void Bittorrent_ListenPort_To (int);
 	int Bittorrent_ListenPort_To();
 	void Bittorrent_ListenPort_From (int);
@@ -235,6 +243,8 @@ public:
 	CString View_LastDldMoveToFolder();
 	void Monitor_Firefox (BOOL b);
 	BOOL Monitor_Firefox();
+	void Monitor_Chrome (BOOL b);
+	BOOL Monitor_Chrome();
 	void FileWriteCacheSize (DWORD dw);
 	DWORD FileWriteCacheSize();
 	void Community_DisplayOpinionsAtDlding (BOOL b);

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSBROWSERCACHEDFLVTRAFFICCOLLECTOR_H__FB0DF659_AFE5_4B10_A8E1_03D2CE8A1F0D__INCLUDED_)

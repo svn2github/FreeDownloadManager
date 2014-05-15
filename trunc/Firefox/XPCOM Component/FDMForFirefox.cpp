@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "FDMForFirefox.h"
@@ -59,7 +59,7 @@ CFDMForFirefox::~CFDMForFirefox()
 	CoUninitialize ();
 }
 
-NS_IMETHODIMP CFDMForFirefox::GetLngString(const char *strIDString, PRUnichar **_retval)
+NS_IMETHODIMP CFDMForFirefox::GetLngString(const char *strIDString, PRUnicharIDL **_retval)
 {
 	*_retval = NULL;
 
@@ -109,7 +109,7 @@ NS_IMETHODIMP CFDMForFirefox::GetLngString(const char *strIDString, PRUnichar **
 
 	if (psz && *psz)
 	{
-		*_retval = (PRUnichar*) nsMemory::Clone (CA2WEX <128> (psz), 
+		*_retval = (PRUnicharIDL*) nsMemory::Clone (CA2WEX <128> (psz), 
 			(lstrlen (psz)+1) * sizeof (wchar_t));
 	}
 
@@ -208,7 +208,7 @@ NS_IMETHODIMP CFDMForFirefox::IsALTShouldBePressed(XULSDK_PRBool *_retval)
 	return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::IsLinkShouldBeSkipped(IFDMUrl *url, const PRUnichar *wstrSuggFileName, XULSDK_PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::IsLinkShouldBeSkipped(IFDMUrl *url, const PRUnicharIDL *wstrSuggFileName, XULSDK_PRBool *_retval)
 {
 	*_retval = TRUE;
 
@@ -231,7 +231,7 @@ NS_IMETHODIMP CFDMForFirefox::IsLinkShouldBeSkipped(IFDMUrl *url, const PRUnicha
     return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::CatchLink(IFDMUrl *url, const PRUnichar *wstrSuggFileName, XULSDK_PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::CatchLink(IFDMUrl *url, const PRUnicharIDL *wstrSuggFileName, XULSDK_PRBool *_retval)
 {
 	assert (url != NULL);
 	if (!url || !_retval)
@@ -387,9 +387,9 @@ fsString DomainFromUrl(LPCSTR pszUrl)
 
 bool CFDMForFirefox::IsServerToSkip (IFDMUrl *url)
 {
-	wchar_t *wsz;
+	wchar_t_IDL *wsz;
 	url->GetUrl (&wsz);
-	fsString strDomain = DomainFromUrl (CW2AEX <128> (wsz));
+	fsString strDomain = DomainFromUrl (CW2AEX <128> (pwchar_t_IDL_to_pwchar_t (wsz)));
 	nsMemory::Free (wsz);
 
 	char szServers [10000] = ""; DWORD dw = sizeof (szServers);
@@ -398,7 +398,7 @@ bool CFDMForFirefox::IsServerToSkip (IFDMUrl *url)
 	return IsServerInServersStr (szServers, strDomain) != 0;
 }
 
-bool CFDMForFirefox::IsUrlShouldBeSkipped(IFDMUrl *url, const wchar_t *pwszSuggFileName)
+bool CFDMForFirefox::IsUrlShouldBeSkipped(IFDMUrl *url, const PRUnicharIDL *pwszSuggFileName)
 {
 	assert (url != NULL);
 	if (!url)
@@ -410,9 +410,9 @@ bool CFDMForFirefox::IsUrlShouldBeSkipped(IFDMUrl *url, const wchar_t *pwszSuggF
 	m_keyFDMMonitor.QueryValue (szExts, "SkipExtensions", &dw);
 
 	char szFile [1000] = "";
-	WideCharToMultiByte (CP_ACP, 0, pwszSuggFileName, -1, szFile, sizeof (szFile), 
+	WideCharToMultiByte (CP_ACP, 0, pwchar_t_IDL_to_pwchar_t (pwszSuggFileName), -1, szFile, sizeof (szFile), 
 		NULL, NULL);
-	szFile [wcslen (pwszSuggFileName)] = 0;
+	szFile [wcslen (pwchar_t_IDL_to_pwchar_t (pwszSuggFileName))] = 0;
 
 	LPCSTR pszExt = strrchr (szFile, '.');
 	if (pszExt++ == NULL) 
@@ -502,17 +502,17 @@ NS_IMETHODIMP CFDMForFirefox::SetProxy(const char *strProtocol, const char *strA
     return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::IsDomainSupportedForVideoDownloads(const PRUnichar *wstrDomain, XULSDK_PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::IsDomainSupportedForVideoDownloads(const PRUnicharIDL *wstrDomain, XULSDK_PRBool *_retval)
 {
-	if (_wcsnicmp (wstrDomain, L"www.", 4) == 0)
+	if (_wcsnicmp (pwchar_t_IDL_to_pwchar_t (wstrDomain), L"www.", 4) == 0)
 		wstrDomain += 4;
 
-	*_retval = wcsicmp (wstrDomain, L"youtube.com") == 0;
+	*_retval = wcsicmp (pwchar_t_IDL_to_pwchar_t (wstrDomain), L"youtube.com") == 0;
 
     return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::ProcessVideoDocument(const PRUnichar *wstrDomain, const PRUnichar *wstrReferer, const PRUnichar *wstrHTML, XULSDK_PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::ProcessVideoDocument(const PRUnicharIDL *wstrDomain, const PRUnicharIDL *wstrReferer, const PRUnicharIDL *wstrHTML, XULSDK_PRBool *_retval)
 {
 	*_retval = FALSE;
 
@@ -523,8 +523,8 @@ NS_IMETHODIMP CFDMForFirefox::ProcessVideoDocument(const PRUnichar *wstrDomain, 
 	if (spFVDownloads == NULL)
 		return NS_OK;
 		          
-	BSTR bstrDomain = SysAllocString (wstrDomain);
-	BSTR bstrHtml = SysAllocString (wstrHTML);
+	BSTR bstrDomain = SysAllocString (pwchar_t_IDL_to_pwchar_t (wstrDomain));
+	BSTR bstrHtml = SysAllocString (pwchar_t_IDL_to_pwchar_t (wstrHTML));
 
 	spFVDownloads->ProcessHtml (bstrDomain, bstrHtml);
 
@@ -533,17 +533,17 @@ NS_IMETHODIMP CFDMForFirefox::ProcessVideoDocument(const PRUnichar *wstrDomain, 
     return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl(const PRUnichar *wstrUrl, XULSDK_PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl(const PRUnicharIDL *wstrUrl, XULSDK_PRBool *_retval)
 {
 	return CreateVideoDownloadFromUrl2 (wstrUrl, NULL, NULL, _retval);
 }
 
-NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl2(const PRUnichar *wstrUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, XULSDK_PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl2(const PRUnicharIDL *wstrUrl, const PRUnicharIDL *wstrSwfUrl, const PRUnicharIDL *wstrFlashVars, XULSDK_PRBool *_retval)
 {
 	return CreateVideoDownloadFromUrl3 (wstrUrl, NULL, wstrSwfUrl, wstrFlashVars, NULL, NULL, _retval);
 }
 
-NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl3(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, XULSDK_PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl3(const PRUnicharIDL *wstrUrl, const PRUnicharIDL *wstrFrameUrl, const PRUnicharIDL *wstrSwfUrl, const PRUnicharIDL *wstrFlashVars, const PRUnicharIDL *wstrOtherSwfUrls, const PRUnicharIDL *wstrOtherFlashVars, XULSDK_PRBool *_retval)
 {
 	*_retval = TRUE;
 
@@ -551,17 +551,17 @@ NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl3(const PRUnichar *wstrU
 	p->pthis = this;
 	this->AddRef ();
 
-	p->strUrl = CW2AEX<128> (wstrUrl);
+	p->strUrl = CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrUrl));
 	if (wstrFrameUrl)
-		p->strFrameUrl = CW2AEX<128> (wstrFrameUrl);
+		p->strFrameUrl = CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrFrameUrl));
 	if (wstrSwfUrl)
-		p->strSwfUrl = CW2AEX<128> (wstrSwfUrl);
+		p->strSwfUrl = CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrSwfUrl));
 	if (wstrFlashVars)
-		p->strFlashVars = CW2AEX<128> (wstrFlashVars);
+		p->strFlashVars = CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrFlashVars));
 	if (wstrOtherSwfUrls)
-		p->strOtherSwfUrls = CW2AEX<128> (wstrOtherSwfUrls);
+		p->strOtherSwfUrls = CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrOtherSwfUrls));
 	if (wstrOtherFlashVars)
-		p->strOtherFlashVars = CW2AEX<128> (wstrOtherFlashVars);
+		p->strOtherFlashVars = CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrOtherFlashVars));
 	p->hwndParent = GetForegroundWindow ();
 
 	DWORD dw;
@@ -573,23 +573,24 @@ NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl3(const PRUnichar *wstrU
     return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::IsVideoFlash(const PRUnichar *wstrUrl, const PRUnichar *wstrFrameUrl, const PRUnichar *wstrSwfUrl, const PRUnichar *wstrFlashVars, const PRUnichar *wstrOtherSwfUrls, const PRUnichar *wstrOtherFlashVars, XULSDK_PRBool *_retval)
+NS_IMETHODIMP CFDMForFirefox::IsVideoFlash(const PRUnicharIDL *wstrUrl, const PRUnicharIDL *wstrFrameUrl, const PRUnicharIDL *wstrSwfUrl, const PRUnicharIDL *wstrFlashVars, const PRUnicharIDL *wstrOtherSwfUrls, const PRUnicharIDL *wstrOtherFlashVars, XULSDK_PRBool *_retval)
 {
 	if (!wstrFrameUrl)
-		wstrFrameUrl = L"";
+		wstrFrameUrl = pwchar_t_to_pwchar_t_IDL (L"");
 	if (!wstrSwfUrl)
-		wstrSwfUrl = L"";
+		wstrSwfUrl = pwchar_t_to_pwchar_t_IDL (L"");
 	if (!wstrFlashVars)
-		wstrFlashVars = L"";
+		wstrFlashVars = pwchar_t_to_pwchar_t_IDL (L"");
 	if (!wstrOtherSwfUrls)
-		wstrOtherSwfUrls = L"";
+		wstrOtherSwfUrls = pwchar_t_to_pwchar_t_IDL (L"");
 	if (!wstrOtherFlashVars)
-		wstrOtherFlashVars = L"";
+		wstrOtherFlashVars = pwchar_t_to_pwchar_t_IDL (L"");
 
 	vmsFlvSniffDll dll;
 
-	*_retval = dll.IsVideoFlash (CW2AEX<128> (wstrUrl), CW2AEX<128> (wstrFrameUrl),
-		CW2AEX<128> (wstrSwfUrl), CW2AEX<128> (wstrFlashVars), CW2AEX<128> (wstrOtherSwfUrls), CW2AEX<128> (wstrOtherFlashVars));
+	*_retval = dll.IsVideoFlash (CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrUrl)), CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrFrameUrl)),
+		CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrSwfUrl)), CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrFlashVars)), 
+		CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrOtherSwfUrls)), CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrOtherFlashVars)));
 
 	return NS_OK;
 }
@@ -650,16 +651,16 @@ DWORD WINAPI CFDMForFirefox::_threadOnDownloadItBtnClicked_a(LPVOID lp)
 	return 0;
 }
 
-NS_IMETHODIMP CFDMForFirefox::OnNewHttpRequest (const PRUnichar *wstrUrl, const PRUnichar *wstrSourceTabUrl)
+NS_IMETHODIMP CFDMForFirefox::OnNewHttpRequest (const PRUnicharIDL *wstrUrl, const PRUnicharIDL *wstrSourceTabUrl)
 {
 	assert (wstrUrl != NULL && wstrSourceTabUrl != NULL);
 	if (!wstrUrl || !wstrSourceTabUrl)
 		return NS_ERROR_INVALID_POINTER;
-	vmsFlvSniffDll::OnNewHttpRequest (CW2AEX<128> (wstrUrl), CW2AEX<128> (wstrSourceTabUrl));
+	vmsFlvSniffDll::OnNewHttpRequest (CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrUrl)), CW2AEX<128> (pwchar_t_IDL_to_pwchar_t (wstrSourceTabUrl)));
 	return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::OnHttpRedirect (const PRUnichar *wstrUrl, const PRUnichar *wstrOriginalUrl)
+NS_IMETHODIMP CFDMForFirefox::OnHttpRedirect (const PRUnicharIDL *wstrUrl, const PRUnicharIDL *wstrOriginalUrl)
 {
 	assert (wstrUrl != NULL && wstrOriginalUrl != NULL);
 	if (!wstrUrl || !wstrOriginalUrl)
@@ -669,26 +670,26 @@ NS_IMETHODIMP CFDMForFirefox::OnHttpRedirect (const PRUnichar *wstrUrl, const PR
 	LOG (" new: %s", CW2AEX<128> (wstrUrl));
 	vmsHttpRedirectList::Redirect r;
 	r.dwTicksRegistered = GetTickCount ();
-	r.wstrUrl = wstrUrl;
-	r.wstrOriginalUrl = wstrOriginalUrl;
+	r.wstrUrl = pwchar_t_IDL_to_pwchar_t (wstrUrl);
+	r.wstrOriginalUrl = pwchar_t_IDL_to_pwchar_t (wstrOriginalUrl);
 	vmsHttpRedirectList::o ().addRedirect (r);
 	return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::DownloadBegin(const PRUnichar *wstrUrl)
+NS_IMETHODIMP CFDMForFirefox::DownloadBegin(const PRUnicharIDL *wstrUrl)
 {
-	vmsBrowserActivityMonitor::o ().onDownloadBegin (wstrUrl);
+	vmsBrowserActivityMonitor::o ().onDownloadBegin (pwchar_t_IDL_to_pwchar_t (wstrUrl));
 	return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::DownloadComplete(const PRUnichar *wstrUrl)
+NS_IMETHODIMP CFDMForFirefox::DownloadComplete(const PRUnicharIDL *wstrUrl)
 {
-	vmsBrowserActivityMonitor::o ().onDownloadEnd (wstrUrl);
+	vmsBrowserActivityMonitor::o ().onDownloadEnd (pwchar_t_IDL_to_pwchar_t (wstrUrl));
 	return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::OnHttpActivity(const PRUnichar *wstrUrl)
+NS_IMETHODIMP CFDMForFirefox::OnHttpActivity(const PRUnicharIDL *wstrUrl)
 {
-	vmsBrowserActivityMonitor::o ().onActivity (wstrUrl);
+	vmsBrowserActivityMonitor::o ().onActivity (pwchar_t_IDL_to_pwchar_t (wstrUrl));
 	return NS_OK;
 }

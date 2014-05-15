@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSFILEEXTENSIONINOS_H__C040E944_2841_4F64_AEA3_6E2766A7D277__INCLUDED_)

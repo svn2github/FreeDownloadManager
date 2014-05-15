@@ -3,8 +3,8 @@ content fdm_ffext chrome/content/
 overlay chrome://browser/content/browser.xul chrome://fdm_ffext/content/fdm_ffext.xul
 overlay	chrome://mozapps/content/downloads/unknownContentType.xul chrome://fdm_ffext/content/fdm_ffextDM.xul
 
-interfaces components/ivmsfdmff.xpt appversion<22
-binary-component components/vmsfdmff.dll appversion<22
+interfaces components/ivmsfdmff22.xpt appversion<30a
+binary-component components/vmsfdmff22.dll appversion<30a
 
-interfaces components/ivmsfdmff22.xpt appversion>=22
-binary-component components/vmsfdmff22.dll appversion>=22
+interfaces components/ivmsfdmff30.xpt appversion>=30a
+binary-component components/vmsfdmff30.dll appversion>=30a

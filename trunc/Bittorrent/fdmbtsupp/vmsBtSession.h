@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -147,6 +147,12 @@ public:
 	virtual void DHT_stop () = NULL;
 	virtual BOOL DHT_getState (LPBYTE pbBuffer, DWORD dwBufferSize, LPDWORD pdwDataSize) = NULL;
 	virtual BOOL DHT_isStarted () = NULL;
+	virtual void LocalPeers_start () = NULL;
+	virtual void LocalPeers_stop () = NULL;	
+	virtual void UPNP_start () = NULL;
+	virtual void UPNP_stop () = NULL;	
+	virtual void NATPMP_start () = NULL;
+	virtual void NATPMP_stop () = NULL;	
 	
 	
 	virtual void set_EventsHandler (fntBtSessionEventsHandler pfn, LPVOID pData) = NULL;
@@ -166,4 +172,5 @@ public:
 	
 	virtual void DisableOsCash() = NULL;
 	virtual void getPersistObject (vmsBtPersistObject **ppObj) = NULL;
+	virtual void addDHTRouter( std::pair<std::string, int> const& node ) = NULL;
 };

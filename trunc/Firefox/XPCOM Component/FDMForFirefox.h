@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #ifndef __FDMFORFIREFOX_H_
@@ -59,7 +59,7 @@ protected:
 	};
 	static DWORD WINAPI _threadOnDownloadItBtnClicked (LPVOID lp);
 	XULSDK_PRBool TransferUrlToFDM (IFDMUrl* url);
-	bool IsUrlShouldBeSkipped (IFDMUrl *url, const wchar_t* pwszSuggFileName);
+	bool IsUrlShouldBeSkipped (IFDMUrl *url, const PRUnicharIDL* pwszSuggFileName);
 	bool IsServerToSkip (IFDMUrl *url);
 	CRegKey m_keyFDM, m_keyFDMMonitor, m_keyFDMFfStgs;
 };

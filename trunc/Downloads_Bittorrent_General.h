@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DOWNLOADS_BITTORRENT_GENERAL_H__58AC4EA6_ABD4_4A93_85A9_3DCE594805F1__INCLUDED_)

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "FDMUrlListReceiver.h"
@@ -29,26 +29,26 @@ NS_IMETHODIMP CFDMUrlListReceiver::AddUrl(IFDMUrl *url)
     if (m_spUrlListRcvr == NULL)
 		return NS_ERROR_FAILURE;
 
-	wchar_t *wsz;
+	wchar_t_IDL *wsz;
 	_bstr_t bstr;
 
 	url->GetUrl (&wsz);
-	bstr = wsz;
+	bstr = pwchar_t_IDL_to_pwchar_t (wsz);
 	CC (m_spUrlListRcvr->put_Url (bstr));
 	nsMemory::Free (wsz);
 
 	url->GetReferer (&wsz);
-	bstr = wsz;
+	bstr = pwchar_t_IDL_to_pwchar_t (wsz);
 	CC (m_spUrlListRcvr->put_Referer (bstr));
 	nsMemory::Free (wsz);
 
 	url->GetComment (&wsz);
-	bstr = wsz;
+	bstr = pwchar_t_IDL_to_pwchar_t (wsz);
 	CC (m_spUrlListRcvr->put_Comment (bstr));
 	nsMemory::Free (wsz);
 
 	url->GetCookies (&wsz);
-	bstr = wsz;
+	bstr = pwchar_t_IDL_to_pwchar_t (wsz);
 	CC (m_spUrlListRcvr->put_Cookies (bstr));
 	nsMemory::Free (wsz);
 

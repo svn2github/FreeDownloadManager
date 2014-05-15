@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -93,7 +93,16 @@ BOOL CDlg_Options_Downloads_Bittorrent::OnInitDialog()
 	
 	CheckDlgButton (IDC_USE_DHT,
 		_App.Bittorrent_EnableDHT () ? BST_CHECKED : BST_UNCHECKED);
-	
+
+	CheckDlgButton (IDC_LOCAL_PEER,
+		_App.Bittorrent_EnableLocalPeerDiscovery () ? BST_CHECKED : BST_UNCHECKED);
+
+	CheckDlgButton (IDC_ENABLE_UPNP,
+		_App.Bittorrent_EnableUPnP () ? BST_CHECKED : BST_UNCHECKED);
+
+	CheckDlgButton (IDC_ENABLE_NAT_PMP,
+		_App.Bittorrent_EnableNATPMP () ? BST_CHECKED : BST_UNCHECKED);
+
 	CheckDlgButton (IDC_ASSOCWITHTORRENT, 
 		vmsTorrentExtension::IsAssociatedWithUs () ? BST_CHECKED : BST_UNCHECKED);
 
@@ -191,6 +200,10 @@ BOOL CDlg_Options_Downloads_Bittorrent::Apply()
 	_BT.ApplyListenPortSettings ();
 	
 	_App.Bittorrent_EnableDHT (IsDlgButtonChecked (IDC_USE_DHT) == BST_CHECKED);
+	_App.Bittorrent_EnableLocalPeerDiscovery (IsDlgButtonChecked (IDC_LOCAL_PEER) == BST_CHECKED);
+	_App.Bittorrent_EnableUPnP (IsDlgButtonChecked (IDC_ENABLE_UPNP) == BST_CHECKED);
+	_App.Bittorrent_EnableNATPMP (IsDlgButtonChecked (IDC_ENABLE_NATPMP) == BST_CHECKED);
+
 	_BT.ApplyDHTSettings ();
 	
 	return TRUE;
@@ -277,7 +290,8 @@ void CDlg_Options_Downloads_Bittorrent::UpdateEnabled()
 			IDC_LIMITUPLOADS, IDC_UPLLIMITVAL, IDC_UPLLIMITVALSPIN,
 			IDC_LIMITCONNS, IDC_CONNSLIMITVAL, IDC_CONNSLIMITVALSPIN,
 			IDC__USEPORTS, IDC_PORT_FROM, IDC_PORT_FROM_SPIN, IDC__TO,
-			IDC_PORT_TO, IDC_PORT_TO_SPIN, IDC_USE_DHT,
+			IDC_PORT_TO, IDC_PORT_TO_SPIN, IDC_USE_DHT,IDC_LOCAL_PEER,
+			IDC_ENABLE_UPNP, IDC_ENABLE_NATPMP,
 			IDC__MAXHALFS, IDC_MAXHALFSVAL, IDC_MAXHALFSSPIN,
 	};
 	for (int i = 0; i < sizeof (aIDs) / sizeof (UINT); i++)
@@ -312,6 +326,9 @@ void CDlg_Options_Downloads_Bittorrent::ApplyLanguage()
 		fsDlgLngInfo (IDC__USEPORTS, L_USE_PORTS_IN_RANGE_FROM, TRUE),
 		fsDlgLngInfo (IDC__TO, L_TO, TRUE),
 		fsDlgLngInfo (IDC_USE_DHT, L_ENABLE_DHT),
+		fsDlgLngInfo (IDC_LOCAL_PEER, L_ENABLE_LOCAL_PEERS),
+		fsDlgLngInfo (IDC_ENABLE_UPNP, L_ENABLE_UPNP),
+		fsDlgLngInfo (IDC_ENABLE_NATPMP, L_ENABLE_NATPMP),
 		fsDlgLngInfo (IDC_ASSOCWITHTORRENT, L_ASSOCWITHTORRENT),
 		fsDlgLngInfo (IDC_ASSOCWITHMAGNET, L_ASSOCWITHMAGNET),
 		fsDlgLngInfo (IDC__MAXHALFS, L_MAXHALFCONNS, TRUE),

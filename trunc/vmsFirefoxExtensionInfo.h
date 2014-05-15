@@ -1,10 +1,14 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #pragma once
 
+#include <iterator>
+#include <fstream>
+
 #include "sqlite/sqlite3.h"
+#include "picojson.h"
 
 class vmsFirefoxExtensionInfo
 {
@@ -19,7 +23,7 @@ public:
 	{
 	}
 
-	bool Read (LPCTSTR ptszDbFile, LPCTSTR ptszExtensionId)
+	virtual bool Read (LPCTSTR ptszDbFile, LPCTSTR ptszExtensionId)
 	{
 		USES_CONVERSION;
 		sqlite3 *db = NULL;
@@ -61,3 +65,42 @@ protected:
 	}
 };
 
+class vmsFirefox26ExtensionInfo : public vmsFirefoxExtensionInfo
+{
+public:
+	vmsFirefox26ExtensionInfo(void)
+	{
+	}
+
+	virtual bool Read (LPCTSTR ptszDbFile, LPCTSTR ptszExtensionId)
+	{
+		std::ifstream file(ptszDbFile);
+		if(!file)
+			return false;
+
+		std::istream_iterator<char> input(file);
+		picojson::value v;
+		std::string err;
+		picojson::parse(v, input, std::istream_iterator<char>(), &err);
+		if (!err.empty())
+			return false;
+		if(!v.is<picojson::object>())
+			return false;
+		picojson::array addons = v.get<picojson::object>()["addons"].get<picojson::array>();
+		for(auto addon = addons.begin(); addon != addons.end(); ++addon)
+		{
+			picojson::object obj = (*addon).get<picojson::object>();
+			if(obj["id"].to_str() == std::string(ptszExtensionId))
+			{
+				if(obj.count("softDisabled") && obj.count("appDisabled") && obj.count("userDisabled"))
+				{
+					m_iSoftDisabled = obj["softDisabled"].get<bool>();
+					m_iAppDisabled  = obj["appDisabled" ].get<bool>();
+					m_iUserDisabled = obj["userDisabled"].get<bool>();
+				}
+				break;
+			}
+		}
+		return true;
+	}
+};

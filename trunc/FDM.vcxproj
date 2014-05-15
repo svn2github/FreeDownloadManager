@@ -1044,6 +1044,7 @@
     <ClCompile Include="TpDldSheet.cpp" />
     <ClCompile Include="TpDld_General.cpp" />
     <ClCompile Include="vmsAppGlobalObjects.cpp" />
+    <ClCompile Include="vmsChromeExtensionInstaller.cpp" />
     <ClCompile Include="vmsCrashReporter.cpp" />
     <ClCompile Include="vmsElevatedFdm.cpp" />
     <ClCompile Include="vmsFdmCrashReporter.cpp" />
@@ -1999,6 +2000,7 @@
     <ClInclude Include="vmsAppFileUpdateInfo.h" />
     <ClInclude Include="vmsAppGlobalObjects.h" />
     <ClInclude Include="vmsBrowserPluginFileDeleter.h" />
+    <ClInclude Include="vmsChromeExtensionInstaller.h" />
     <ClInclude Include="vmsCrashCatcher.h" />
     <ClInclude Include="vmsCrashReporter.h" />
     <ClInclude Include="vmsElevatedFdm.h" />

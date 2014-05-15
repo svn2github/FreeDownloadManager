@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -21,6 +21,7 @@
 #include "vmsFilesToDelete.h"
 #include "vmsDLL.h"
 #include "vmsFirefoxMonitoring.h"
+#include "vmsChromeExtensionInstaller.h"
 #include "FDMDownloadsStat.h"
 #include "FDMDownload.h"
 #include "FDMUploader.h"
@@ -211,7 +212,12 @@ BOOL CFdmApp::InitInstance()
 	
 	m_bCOMInited = TRUE;
 
-	vmsAppGlobalObjects::Create2 ();
+	const tstring currentVersion = vmsFdmAppMgr::getVersion ()->m_fileVersion.ToString ();
+	bool currentVersionFirstRun = currentVersion != _App.RecentVersionRun ();
+	if (currentVersionFirstRun)
+		_App.RecentVersionRun (currentVersion);
+
+	vmsAppGlobalObjects::Create2 (currentVersionFirstRun);
 
 	fsFDMCmdLineParser cmdline;
 
@@ -926,6 +932,15 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 	
 	
 
+	if (!vmsChromeExtensionInstaller::IsInstalled())
+		vmsChromeExtensionInstaller::Install ();
+	if (!vmsChromeExtensionInstaller::IsInstalled())
+		_App.Monitor_Chrome (FALSE);
+	else
+		_App.Monitor_Chrome (TRUE);
+	
+	_NOMgr.getPluginInstaller(vmsKnownBrowsers::Chrome).DeinstallPlugin ();
+
 	size_t cBrowsers = 0;
 	const vmsFdmUiDetails::KnownBrowserData *pBrowsers = vmsFdmUiDetails::getKnownBrowsersData (cBrowsers);
 
@@ -1050,6 +1065,7 @@ void CFdmApp::Install_UnregisterServer()
 	ua.RemovePP (IE_USERAGENT_ADDITION);
 	UninstallCustomizations ();
 	vmsFirefoxMonitoring::Install (false);
+	vmsChromeExtensionInstaller::Uninstall();
 
 	
 	if (vmsTorrentExtension::IsAssociatedWithUs ())

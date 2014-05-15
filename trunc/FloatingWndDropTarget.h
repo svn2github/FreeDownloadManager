@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FLOATINGWNDDROPTARGET_H__A40C2620_2C75_41B4_AD8B_174FE4F1F32F__INCLUDED_)

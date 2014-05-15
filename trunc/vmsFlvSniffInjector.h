@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSFLVSNIFFINJECTOR_H__BFBC515D_DC0A_4CC6_832C_CD40E08A1D97__INCLUDED_)

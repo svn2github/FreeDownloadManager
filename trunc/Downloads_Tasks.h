@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DOWNLOADS_TASKS_H__510D187D_8CB0_40F0_BE64_6B11DF08C7F9__INCLUDED_)
@@ -64,6 +64,7 @@ public:
 	
 	void CallSelectedDownload();
 	static void GetFileName (vmsDownloadSmartPtr dld, LPSTR pszFile);
+	static std::string GetFileName (vmsDownloadSmartPtr dld);
 
 	
 	

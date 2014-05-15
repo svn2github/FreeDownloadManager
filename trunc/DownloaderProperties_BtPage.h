@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DOWNLOADERPROPERTIES_BTPAGE_H__D0AE310B_373D_4D46_B06F_37634BB7AB9A__INCLUDED_)
@@ -65,6 +65,9 @@ protected:
 	afx_msg void OnChangePortFrom();
 	afx_msg void OnChangePortTo();
 	afx_msg void OnUseDht();
+	afx_msg void OnUseLocalPeer();
+	afx_msg void OnUseUPnP();
+	afx_msg void OnUseNATPMP();
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg BOOL OnHelpInfo(HELPINFO* pHelpInfo);
 	afx_msg void OnWhatisthis();

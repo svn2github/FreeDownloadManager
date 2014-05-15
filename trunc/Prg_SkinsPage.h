@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_PRG_SKINSPAGE_H__33701C5E_A134_4875_9D30_1F869A332F18__INCLUDED_)

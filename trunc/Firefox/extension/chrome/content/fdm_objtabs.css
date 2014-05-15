@@ -36,7 +36,7 @@
   height: auto !important;
   right: auto !important;
   bottom: auto !important;
-  z-index: 65535 !important;
+  z-index: 10000000000 !important;
   float: left !important;
   border-color: black !important;
   border-style: solid !important;

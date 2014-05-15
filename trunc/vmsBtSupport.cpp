@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -62,6 +62,7 @@ vmsBtSession* vmsBtSupport::get_Session()
 			_pSession->DisableOsCash();
 			ApplyListenPortSettings ();
 			ApplyDHTSettings ();
+			ApplyAdditionalTorrentSettings();
 			_pSession->SetDownloadLimit (-1);
 			_pSession->SetUploadLimit (-1);
 			ApplyProxySettings ();
@@ -103,13 +104,48 @@ void vmsBtSupport::ApplyDHTSettings()
 
 	if (_App.Bittorrent_EnableDHT ())
 	{
-		if (pBtSession->DHT_isStarted () == FALSE)
+		if (pBtSession->DHT_isStarted () == FALSE){
 			pBtSession->DHT_start (m_pbDHTstate, m_dwDHTstateSize);
+		}
 	}
 	else
 	{
 		if (pBtSession->DHT_isStarted ())
 			pBtSession->DHT_stop ();
+	}
+}
+
+void vmsBtSupport::ApplyAdditionalTorrentSettings(){
+	if (is_Initialized () == FALSE)
+		return;
+
+	vmsBtSession *pBtSession = get_Session ();
+
+	if (_App.Bittorrent_EnableLocalPeerDiscovery())
+	{
+		pBtSession->LocalPeers_start ();
+	}
+	else
+	{
+		pBtSession->LocalPeers_stop ();
+	}
+
+	if (_App.Bittorrent_EnableUPnP())
+	{
+		pBtSession->UPNP_start ();
+	}
+	else
+	{
+		pBtSession->UPNP_stop ();
+	}
+
+	if (_App.Bittorrent_EnableNATPMP())
+	{
+		pBtSession->NATPMP_start ();
+	}
+	else
+	{
+		pBtSession->NATPMP_stop ();
 	}
 }
 

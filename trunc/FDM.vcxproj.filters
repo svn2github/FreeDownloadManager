@@ -1221,6 +1221,9 @@
     <ClCompile Include="vmsLogger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vmsChromeExtensionInstaller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Midl Include="Fdm.idl">
@@ -2446,6 +2449,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsFdmUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsChromeExtensionInstaller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -737,7 +737,7 @@ BEGIN
     CONTROL         "Spin1",IDC_PORT_TO_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,224,107,11,13
     LTEXT           "to",IDC__TO,171,109,21,9
     CONTROL         "Enable DHT",IDC_USE_DHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,127,270,9
-    CONTROL         ".torrent",IDC_ASSOCWITHTORRENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,142,295,10
+    CONTROL         ".torrent",IDC_ASSOCWITHTORRENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,144,295,10
     CONTROL         "Magnet",IDC_ASSOCWITHMAGNET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,157,295,10
     CONTROL         "dis seeding",IDC_DISABLE_SEEDING,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,158,295,9
 END
@@ -1069,13 +1069,16 @@ BEGIN
     LTEXT           "Use ports in range from",IDC__USEPORTS,0,117,113,10
     EDITTEXT        IDC_PORT_FROM,117,115,37,13,ES_AUTOHSCROLL | ES_NUMBER
     EDITTEXT        IDC_PORT_TO,188,115,37,13,ES_AUTOHSCROLL | ES_NUMBER
-    CONTROL         "Enable DHT",IDC_USE_DHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,135,270,9
-    CONTROL         ".torrent",IDC_ASSOCWITHTORRENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,150,295,10
-    CONTROL         ".torrent",IDC_ASSOCWITHMAGNET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,165,295,10
+    CONTROL         "Enable DHT",IDC_USE_DHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,135,160,9
+    CONTROL         ".torrent",IDC_ASSOCWITHTORRENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,166,295,10
+    CONTROL         ".torrent",IDC_ASSOCWITHMAGNET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,181,295,10
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,14,313,1
     CONTROL         "Spin1",IDC_PORT_FROM_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,146,115,11,13
     CONTROL         "Spin1",IDC_PORT_TO_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,217,115,11,13
     LTEXT           "to",IDC__TO,164,117,21,9
+    CONTROL         "Enable Local Peer Discovery",IDC_LOCAL_PEER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,148,160,10
+    CONTROL         "Enable UPnP",IDC_ENABLE_UPNP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,188,135,120,10
+    CONTROL         "Enable NAT-PMP",IDC_ENABLE_NATPMP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,188,149,119,10
 END
 
 IDD_OPTIONS_DOWNLOADS_MIRRORS DIALOG 0, 0, 313, 228
@@ -1111,6 +1114,7 @@ BEGIN
     GROUPBOX        "",IDC_STATIC,5,25,302,94
     CONTROL         "Internet Explorer 6.x - 11.x",IDC_IE2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,25,100,9,WS_EX_TRANSPARENT
     CONTROL         "Firefox",IDC_FIREFOX,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,127,25,35,8,WS_EX_TRANSPARENT
+    CONTROL         "Google Chrome",IDC_CHROME,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,182,25,77,8,WS_EX_TRANSPARENT
     CONTROL         "Alt",IDC_ALTPRESSED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,41,267,8
     CONTROL         "Allow",IDC_ALLOWIETODL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,53,274,8
     CONTROL         "don't monitor for files smaller than",IDC_DONTMONSMALL,
@@ -1120,11 +1124,10 @@ BEGIN
     PUSHBUTTON      "Skip list",IDC_SKIPLIST,229,79,73,14
     CONTROL         "Add",IDC_ADDTOIEMENU,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,99,215,9
     PUSHBUTTON      "Customize",IDC_CUSTOMIZE,229,97,73,14
-    CONTROL         "Opera 6.x - 10.x",IDC_OPERA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,127,68,8
+    CONTROL         "Opera 6.x - 12.x",IDC_OPERA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,127,68,8
     CONTROL         "Netscape 6.x - 9.x",IDC_NETSCAPE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,79,127,77,8
     CONTROL         "SeaMonkey (Mozilla Suite)",IDC_MOZILLA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,169,127,128,8
     CONTROL         "Apple Safari",IDC_SAFARI,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,140,68,8
-    CONTROL         "Google Chrome",IDC_CHROME,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,79,140,77,8
     CONTROL         "Silent",IDC_SILENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,154,277,8
     PUSHBUTTON      "I have Firefox portable",IDC_FFPORTVER,193,177,120,16,NOT WS_VISIBLE
 END
@@ -2504,7 +2507,7 @@ BEGIN
     LTEXT           "Copyright (c)",IDC_STATIC,36,31,40,9
     LTEXT           "Version",IDC__VER,36,18,160,9
     LTEXT           "FreeDownloadManager.ORG",IDC__FIRM,78,31,92,9,SS_NOTIFY
-    LTEXT           ", 2003-2013",IDC_STATIC,173,31,40,8
+    LTEXT           ", 2003-2014",IDC_STATIC,173,31,40,8
     LTEXT           "-",IDC__WARN,7,80,266,31
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,6,73,266,1
     LTEXT           "Click here to contact us",IDC__SUPPORT,36,45,239,8,SS_NOTIFY
@@ -3040,23 +3043,6 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 //
-// REGISTRY
-//
-
-IDR_FDMAPP              REGISTRY                "FdmApp.rgs"
-IDR_WGURLRECEIVER       REGISTRY                "WGUrlReceiver.rgs"
-IDR_WGURLLISTRECEIVER   REGISTRY                "WgUrlListReceiver.rgs"
-IDR_FDM                 REGISTRY                "FDM.rgs"
-IDR_FDMDOWNLOADSSTAT    REGISTRY                "FDMDownloadsStat.rgs"
-IDR_FDMDOWNLOAD         REGISTRY                "FDMDownload.rgs"
-IDR_FDMUPLOADER         REGISTRY                "FDMUploader.rgs"
-IDR_FDMUPLOADPACKAGE    REGISTRY                "FDMUploadPackage.rgs"
-IDR_FDMTORRENTFILESRCVR REGISTRY                "FdmTorrentFilesRcvr.rgs"
-IDR_FDMFLASHVIDEODOWNLOADS REGISTRY                "FDMFlashVideoDownloads.rgs"
-IDR_FDMUIWINDOW         REGISTRY                "FdmUiWindow.rgs"
-
-/////////////////////////////////////////////////////////////////////////////
-//
 // Menu
 //
 
@@ -3536,6 +3522,23 @@ IDI_TRAY_ERRORS         ICON                    "res\\tray_err.ico"
 IDI_TRAY_UNKNOWN        ICON                    "res\\tray_unk.ico"
 IDI_CLOSEBTN            ICON                    "res\\closebtn.ico"
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_FDMAPP              REGISTRY                "FdmApp.rgs"
+IDR_WGURLRECEIVER       REGISTRY                "WGUrlReceiver.rgs"
+IDR_WGURLLISTRECEIVER   REGISTRY                "WgUrlListReceiver.rgs"
+IDR_FDM                 REGISTRY                "FDM.rgs"
+IDR_FDMDOWNLOADSSTAT    REGISTRY                "FDMDownloadsStat.rgs"
+IDR_FDMDOWNLOAD         REGISTRY                "FDMDownload.rgs"
+IDR_FDMUPLOADER         REGISTRY                "FDMUploader.rgs"
+IDR_FDMUPLOADPACKAGE    REGISTRY                "FDMUploadPackage.rgs"
+IDR_FDMTORRENTFILESRCVR REGISTRY                "FdmTorrentFilesRcvr.rgs"
+IDR_FDMFLASHVIDEODOWNLOADS REGISTRY                "FDMFlashVideoDownloads.rgs"
+IDR_FDMUIWINDOW         REGISTRY                "FdmUiWindow.rgs"
+
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3586,8 +3589,8 @@ IDC_HAND_               CURSOR                  "res\\hand.cur"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,9,1358,0
- PRODUCTVERSION 3,9,1358,0
+ FILEVERSION 3,9,1473,0
+ PRODUCTVERSION 3,9,1473,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -3604,10 +3607,10 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FreeDownloadManager.ORG"
             VALUE "FileDescription", "Free Download Manager"
-            VALUE "FileVersion", "3.9.1358.0"
-            VALUE "LegalCopyright", "Copyright © 2003-2013"
+            VALUE "FileVersion", "3.9.1473.0"
+            VALUE "LegalCopyright", "Copyright © 2003-2014"
             VALUE "ProductName", "Free Download Manager"
-            VALUE "ProductVersion", "3.9.3 "
+            VALUE "ProductVersion", "3.9.4 "
         END
     END
     BLOCK "VarFileInfo"

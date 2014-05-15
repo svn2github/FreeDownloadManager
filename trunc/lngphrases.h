@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #ifndef __LNGPHRASES_H_
@@ -1668,6 +1668,9 @@ enum LangPhrase
 	L_CANT_DEL_BR_PLUG_BR_IS_RUNNING,
 	L_CANT_DEL_BR_PLUG_WILL_BE_DEL_AT_REBOOT,
 	L_ASSOCWITHMAGNET,
+	L_ENABLE_LOCAL_PEERS,
+	L_ENABLE_UPNP,
+	L_ENABLE_NATPMP
 };
 
 #endif

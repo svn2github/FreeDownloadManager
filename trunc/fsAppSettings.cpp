@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -2492,6 +2492,16 @@ void fsAppSettings::Monitor_Firefox(BOOL b)
 	m_stgs.WriteProfileInt (_T ("Settings\\Monitor"), _T ("Firefox"), b);
 }
 
+void fsAppSettings::Monitor_Chrome (BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\Monitor"), _T ("Chrome"), b);
+}
+
+BOOL fsAppSettings::Monitor_Chrome()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\Monitor"), _T ("Chrome"), FALSE);
+}
+
 CString fsAppSettings::View_LastDldMoveToFolder()
 {
 	return m_stgs.GetProfileString (_T ("Settings\\View"), _T ("LastDldMoveToFolder"), "");
@@ -2893,6 +2903,36 @@ BOOL fsAppSettings::Bittorrent_EnableDHT()
 void fsAppSettings::Bittorrent_EnableDHT(BOOL b)
 {
 	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "EnableDHT", b);
+}
+
+BOOL fsAppSettings::Bittorrent_EnableLocalPeerDiscovery()
+{
+	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "EnableLocalPeer", TRUE);
+}
+
+void fsAppSettings::Bittorrent_EnableLocalPeerDiscovery(BOOL b)
+{
+	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "EnableLocalPeer", b);
+}
+
+BOOL fsAppSettings::Bittorrent_EnableUPnP()
+{
+	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "EnableUPnP", TRUE);
+}
+
+void fsAppSettings::Bittorrent_EnableUPnP(BOOL b)
+{
+	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "EnableUPnP", b);
+}
+
+BOOL fsAppSettings::Bittorrent_EnableNATPMP()
+{
+	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "EnableNATPMP", TRUE);
+}
+
+void fsAppSettings::Bittorrent_EnableNATPMP(BOOL b)
+{
+	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "EnableNATPMP", b);
 }
 
 CString fsAppSettings::Bittorrent_OldTorrentAssociation()
@@ -3591,4 +3631,14 @@ void fsAppSettings::NonUtf8NameFixed(DWORD dw)
 {
 	m_dwNonUtf8NameFixed = dw;
 	m_stgs.WriteProfileInt (_T ("Settings\\Update"), _T ("NonUtf8NameFixed"), dw);
+}
+
+void fsAppSettings::RecentVersionRun (const tstring& val)
+{
+	m_stgs.WriteProfileString (_T (""), _T ("RecentVersionRun"), val.c_str ());
+}
+
+tstring fsAppSettings::RecentVersionRun ()
+{
+	return (LPCTSTR) m_stgs.GetProfileString (_T (""), _T ("RecentVersionRun"), _T (""));
 }

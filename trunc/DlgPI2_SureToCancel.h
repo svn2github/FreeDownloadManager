@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DLGPI2_SURETOCANCEL_H__ADFCECA4_D294_4763_9FCA_54F64C798C04__INCLUDED_)

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "FDMUrlReceiver.h"
@@ -55,41 +55,41 @@ nsresult CFDMUrlReceiver::ApplyUrlToReceiver(IWGUrlReceiver *pUrlRcvr, IFDMUrl *
 	if (!url || !pUrlRcvr)
 		return NS_ERROR_INVALID_POINTER;
 
-	wchar_t *pwsz = NULL;
+	wchar_t_IDL *pwsz = NULL;
 	_bstr_t bstr;
 
 	url->GetUrl (&pwsz);
-	bstr = pwsz;
+	bstr = pwchar_t_IDL_to_pwchar_t (pwsz);
 	CC (pUrlRcvr->put_Url (bstr));
 	nsMemory::Free (pwsz);
 
 	url->GetOriginalUrl (&pwsz);
-	bstr = pwsz;
+	bstr = pwchar_t_IDL_to_pwchar_t (pwsz);
 	CC (pUrlRcvr->put_OriginalURL (bstr));
 	nsMemory::Free (pwsz);
 
 	url->GetUserAgent (&pwsz);
-	bstr = pwsz;
+	bstr = pwchar_t_IDL_to_pwchar_t (pwsz);
 	CC (pUrlRcvr->put_UserAgent (bstr));
 	nsMemory::Free (pwsz);
 
 	url->GetReferer (&pwsz);
-	bstr = pwsz;
+	bstr = pwchar_t_IDL_to_pwchar_t (pwsz);
 	CC (pUrlRcvr->put_Referer (bstr));
 	nsMemory::Free (pwsz);
 
 	url->GetComment (&pwsz);
-	bstr = pwsz;
+	bstr = pwchar_t_IDL_to_pwchar_t (pwsz);
 	CC (pUrlRcvr->put_Comment (bstr));
 	nsMemory::Free (pwsz);
 
 	url->GetCookies (&pwsz);
-	bstr = pwsz;
+	bstr = pwchar_t_IDL_to_pwchar_t (pwsz);
 	CC (pUrlRcvr->put_Cookies (bstr));
 	nsMemory::Free (pwsz);
 
 	url->GetPostData (&pwsz);
-	bstr = pwsz;
+	bstr = pwchar_t_IDL_to_pwchar_t (pwsz);
 	CC (pUrlRcvr->put_PostData (bstr));
 	nsMemory::Free (pwsz);
 

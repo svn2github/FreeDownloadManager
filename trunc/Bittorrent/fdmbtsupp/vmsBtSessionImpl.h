@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -32,6 +32,12 @@ public:
 	void DeleteDownload (vmsBtDownload*);
 	void DHT_start (LPBYTE pbState, DWORD dwStateSize);
 	void DHT_stop ();
+	void LocalPeers_start ();
+	void LocalPeers_stop ();	
+	void UPNP_start ();
+	void UPNP_stop ();	
+	void NATPMP_start ();
+	void NATPMP_stop ();	
 	BOOL DHT_getState (LPBYTE pbBuffer, DWORD dwBufferSize, LPDWORD pdwDataSize);
 	BOOL DHT_isStarted ();
 	void set_EventsHandler (fntBtSessionEventsHandler pfn, LPVOID pData);
@@ -53,6 +59,7 @@ public:
 	virtual void getStateBuffer (LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage) {
 		vmsPersistObject::getStateBuffer (pb, pdwSize, bSaveToStorage);
 	}
+	void addDHTRouter( std::pair<std::string, int> const& node );
 	
 public:
 	libtorrent::session m_session;

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -28,6 +28,13 @@ vmsBtSessionImpl::vmsBtSessionImpl(void)
 	m_session.set_severity_level (libtorrent::alert::info);
 	m_session.add_extension (libtorrent::create_ut_pex_plugin);
 	m_session.set_max_half_open_connections (7);
+	if ( m_session.is_dht_running() == TRUE ){
+		m_session.stop_dht();
+		m_session.add_dht_router(std::make_pair(std::string("router.bittorrent.com"), 6881));
+		m_session.add_dht_router(std::make_pair(std::string("router.utorrent.com"), 6881));
+		m_session.add_dht_router(std::make_pair(std::string("dht.transmissionbt.com"), 6881));
+		m_session.add_dht_router(std::make_pair(std::string("dht.aelitis.com"), 6881)); 
+	}
 
 	libtorrent::session_settings ss = m_session.settings ();
 	ss.active_downloads = ss.active_seeds = ss.active_limit = 100000;
@@ -248,6 +255,54 @@ void vmsBtSessionImpl::DHT_stop ()
 		return;
 	try {
 		m_session.stop_dht ();
+	}catch (...){}
+}
+
+void vmsBtSessionImpl::LocalPeers_start ()
+{
+	try {
+		m_session.start_lsd();
+	}catch (...){}
+}
+
+void vmsBtSessionImpl::LocalPeers_stop ()
+{
+	try {
+		m_session.stop_lsd();
+	}catch (...){}
+}
+
+void vmsBtSessionImpl::UPNP_start ()
+{
+	try {
+		m_session.start_upnp();
+	}catch (...){}
+}
+
+void vmsBtSessionImpl::UPNP_stop ()
+{
+	try {
+		m_session.stop_upnp();
+	}catch (...){}
+}
+
+void vmsBtSessionImpl::NATPMP_start ()
+{
+	try {
+		m_session.start_natpmp();
+	}catch (...){}
+}
+
+void vmsBtSessionImpl::NATPMP_stop ()
+{
+	try {
+		m_session.stop_natpmp();
+	}catch (...){}
+}
+
+void vmsBtSessionImpl::addDHTRouter( std::pair<std::string, int> const& node ){
+	try {
+		m_session.add_dht_router( node );
 	}catch (...){}
 }
 

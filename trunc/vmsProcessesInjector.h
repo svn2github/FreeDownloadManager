@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSPROCESSESINJECTOR_H__CE05CDB8_274C_4898_8BDC_85719C353D4E__INCLUDED_)

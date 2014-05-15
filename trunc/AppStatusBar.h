@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_APPSTATUSBAR_H__7600D4AD_0967_4536_AEBB_667CC84F3D9C__INCLUDED_)

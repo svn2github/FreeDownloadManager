@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMS7ZIPFORMATDLL_H__088B0073_2E34_4ABB_B1B2_76A6276ED383__INCLUDED_)

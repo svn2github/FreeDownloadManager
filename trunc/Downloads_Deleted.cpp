@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -104,12 +104,10 @@ void CDownloads_Deleted::UpdateDownload(int iItem)
 {
 	vmsDownloadSmartPtr dld = (fsDownload*)GetItemData (iItem);
 
-	CHAR szFile [10000];	
-	CDownloads_Tasks::GetFileName (dld, szFile);
-	lstrcat (szFile, " (");
-	lstrcat (szFile, dld->pMgr->get_URL ());
-	lstrcat (szFile, ")");
-	SetItemText (iItem, 0, szFile);
+	std::stringstream ssFile;	
+	ssFile << CDownloads_Tasks::GetFileName (dld) << " (" << 
+		dld->pMgr->get_URL () << ")";
+	SetItemText (iItem, 0, ssFile.str ().c_str ());
 
 	int cSects = dld->pMgr->GetNumberOfSections ();
 	UINT64 uSize = dld->pMgr->GetLDFileSize ();

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSSPEEDTRACKER_H__1E7A996C_6CF4_4DC0_A19B_4C5ED97450A4__INCLUDED_)

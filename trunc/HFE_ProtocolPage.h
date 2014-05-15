@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_HFE_PROTOCOLPAGE_H__73CA96B6_2F6C_44BA_A1C9_614A0E140F18__INCLUDED_)

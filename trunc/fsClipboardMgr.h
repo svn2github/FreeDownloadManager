@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSCLIPBOARDMGR_H__7D232619_1541_409D_A94A_F6B2CCFF7456__INCLUDED_)

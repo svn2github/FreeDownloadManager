@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -49,6 +49,9 @@ BEGIN_MESSAGE_MAP(CDownloaderProperties_BtPage, CPropertyPage)
 	ON_EN_CHANGE(IDC_PORT_FROM, OnChangePortFrom)
 	ON_EN_CHANGE(IDC_PORT_TO, OnChangePortTo)
 	ON_BN_CLICKED(IDC_USE_DHT, OnUseDht)
+	ON_BN_CLICKED(IDC_LOCAL_PEER, OnUseLocalPeer)
+	ON_BN_CLICKED(IDC_ENABLE_UPNP, OnUseUPnP)
+	ON_BN_CLICKED(IDC_ENABLE_NATPMP, OnUseNATPMP)
 	ON_WM_CONTEXTMENU()
 	ON_WM_HELPINFO()
 	ON_COMMAND(ID_WHATISTHIS, OnWhatisthis)
@@ -103,6 +106,15 @@ BOOL CDownloaderProperties_BtPage::OnInitDialog()
 
 	CheckDlgButton (IDC_USE_DHT,
 		_App.Bittorrent_EnableDHT () ? BST_CHECKED : BST_UNCHECKED);
+
+	CheckDlgButton (IDC_LOCAL_PEER,
+		_App.Bittorrent_EnableLocalPeerDiscovery () ? BST_CHECKED : BST_UNCHECKED);
+
+	CheckDlgButton (IDC_ENABLE_UPNP,
+		_App.Bittorrent_EnableUPnP () ? BST_CHECKED : BST_UNCHECKED);
+
+	CheckDlgButton (IDC_ENABLE_NAT_PMP,
+		_App.Bittorrent_EnableNATPMP () ? BST_CHECKED : BST_UNCHECKED);
 
 	CheckDlgButton (IDC_ASSOCWITHTORRENT, 
 		vmsTorrentExtension::IsAssociatedWithUs () ? BST_CHECKED : BST_UNCHECKED);
@@ -170,6 +182,9 @@ BOOL CDownloaderProperties_BtPage::OnApply()
 	_BT.ApplyListenPortSettings ();
 
 	_App.Bittorrent_EnableDHT (IsDlgButtonChecked (IDC_USE_DHT) == BST_CHECKED);
+	_App.Bittorrent_EnableLocalPeerDiscovery (IsDlgButtonChecked (IDC_LOCAL_PEER) == BST_CHECKED);
+	_App.Bittorrent_EnableUPnP (IsDlgButtonChecked (IDC_ENABLE_UPNP) == BST_CHECKED);
+	_App.Bittorrent_EnableNATPMP (IsDlgButtonChecked (IDC_ENABLE_NATPMP) == BST_CHECKED);
 	_BT.ApplyDHTSettings ();
 
 	_App.Bittorrent_DisableSeedingByDef (IsDlgButtonChecked (IDC_DISABLE_SEEDING) == BST_CHECKED);
@@ -246,7 +261,8 @@ void CDownloaderProperties_BtPage::UpdateEnabled()
 		IDC_TRAFFICMODESTAB, IDC_LIMIT, IDC_LIMITVAL, IDC_LIMITDIM,
 		IDC_LIMITUPLOADS, IDC_UPLLIMITVAL, IDC_UPLLIMITVALSPIN,
 		IDC__USEPORTS, IDC_PORT_FROM, IDC_PORT_FROM_SPIN, IDC__TO,
-		IDC_PORT_TO, IDC_PORT_TO_SPIN, IDC_USE_DHT
+		IDC_PORT_TO, IDC_PORT_TO_SPIN, IDC_USE_DHT, IDC_LOCAL_PEER, 
+		IDC_ENABLE_UPNP, IDC_ENABLE_NATPMP
 	};
 	for (int i = 0; i < sizeof (aIDs) / sizeof (UINT); i++)
 	{
@@ -314,6 +330,18 @@ void CDownloaderProperties_BtPage::OnChangePortTo()
 
 void CDownloaderProperties_BtPage::OnUseDht() 
 {
+	SetModified ();	
+}
+
+void CDownloaderProperties_BtPage::OnUseLocalPeer(){
+	SetModified ();	
+}
+
+void CDownloaderProperties_BtPage::OnUseUPnP(){
+	SetModified ();	
+}
+
+void CDownloaderProperties_BtPage::OnUseNATPMP(){
 	SetModified ();	
 }
 

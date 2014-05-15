@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSSCHEDULEMGR_H__D5B62542_F8EA_4F9C_BC88_C3E2BB4E1B9D__INCLUDED_)

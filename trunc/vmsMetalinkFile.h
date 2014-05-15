@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSMETALINKFILE_H__D69EE721_C692_46B8_B91E_1F7A24B5C3A6__INCLUDED_)

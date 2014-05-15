@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSWINSOCKHTTPDLGTREE_H__B0F43D06_A18D_40C8_8DE3_3127E0043FF2__INCLUDED_)

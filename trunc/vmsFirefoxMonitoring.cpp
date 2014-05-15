@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -58,17 +58,30 @@ bool vmsFirefoxMonitoring::Install(bool bInstall)
 
 bool vmsFirefoxMonitoring::IsEnabledInFirefox(bool &bEnabled)
 {
-	bEnabled = false;
-
 	TCHAR tszPath [MAX_PATH] = _T ("");
 	if (!vmsFirefoxUtil::GetDefaultProfilePath (tszPath))
 		return false;
 	if (!*tszPath)
 		return false;
 
-	_tcscat (tszPath, _T ("\\extensions.sqlite"));
+	vmsFirefox26ExtensionInfo fei26;
+	if(CheckEnabled(fei26, tszPath, _T ("\\extensions.json"), bEnabled))
+		return true;
 
 	vmsFirefoxExtensionInfo fei;
+	if(CheckEnabled(fei, tszPath, _T ("\\extensions.sqlite"), bEnabled))
+		return true;
+
+	return false;
+}
+
+bool vmsFirefoxMonitoring::CheckEnabled(vmsFirefoxExtensionInfo& fei,
+		LPCTSTR profile, LPCTSTR file, bool& bEnabled)
+{
+	bEnabled = false;
+	TCHAR tszPath[MAX_PATH];
+	_tcsncpy(tszPath, profile, MAX_PATH);
+	_tcsncat(tszPath, file, MAX_PATH);
 
 	if (!fei.Read (tszPath, FDM_CID))
 	{
@@ -80,6 +93,6 @@ bool vmsFirefoxMonitoring::IsEnabledInFirefox(bool &bEnabled)
 	}
 
 	bEnabled = !fei.m_iAppDisabled && !fei.m_iSoftDisabled && !fei.m_iUserDisabled;
-	
+
 	return true;
 }

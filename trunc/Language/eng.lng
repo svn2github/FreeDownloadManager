@@ -395,7 +395,7 @@ Clipboard
 Monitor files with the extensions
 Ignore files with the extensions
 ALT must not be pressed
-ALT must be pressed
+ALT must be pressed (Internet Explorer and Firefox only)
 Please specify extensions
 Check this box if you want FDM to catch clicks in the Internet Explorer
 Check this box if you want FDM to monitor your clipboard
@@ -1446,7 +1446,7 @@ Show download progress window
 Create portable version
 Portable version of Free Download Manager can be used on different computers without the need to install and configure it on each computer.\n\nIt can be conveniently placed on a flash disk, for example.\n\nOnce launched, it registers itself in the computer's system and integrates to browsers. At exit it will unregister itself automatically.\n\nSpecify here the path where you would like to create this version. It should be a folder on some removable drive.\n\nE.g. "I:\My portable programs\".
 Integration
-Associate Free Download Manager with .torrent files
+Associate with torrent files
 Always use this group for new downloads
 Always use this group and remember the last output folder each time
 Flash video downloads
@@ -1780,4 +1780,7 @@ Administrator rights are required to integrate FDM into Internet Explorer. Choos
 ; %s will be replaced with the actual browser name
 Can't delete the browser plugin while %s is running. Please close the browser and click OK to continue.\nClick Cancel to postpone the deletion of the plugin to system reboot.
 Can't delete the browser plugin for %s. It will be deleted on system reboot.
-Associate Free Download Manager with Magnet links
+Associate with magnet links
+Enable Local Peer Discovery
+Enable UPnP
+Enable NAT-PMP

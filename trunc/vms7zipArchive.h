@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMS7ZIPARCHIVE_H__20D226EB_843A_4611_9967_99E67DCD3CF1__INCLUDED_)

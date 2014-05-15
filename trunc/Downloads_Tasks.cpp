@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -1256,19 +1256,16 @@ void CDownloads_Tasks::Sort()
 
 void CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld, LPSTR pszFileName)
 {
+	strcpy (pszFileName, GetFileName (dld).c_str ());
+}
+
+std::string CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld)
+{
+	std::string strResult;
+
 	if (dld->pMgr->GetTpDownloadMgr ())
 	{
-		CString str = dld->pMgr->get_OutputFilePathName ();
-		
-		
-		if (str.IsEmpty ())
-		{	
-			*pszFileName = 0;
-			return;
-		}
-		
-		lstrcpy (pszFileName, str);
-		return;
+		return dld->pMgr->get_OutputFilePathName ();
 	}
 
 	if (dld->pMgr->GetBtDownloadMgr ())
@@ -1277,10 +1274,8 @@ void CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld, LPSTR pszFileName)
 		
 		
 		if (str.IsEmpty ())
-		{	
-			*pszFileName = 0;
-			return;
-		}
+			return "";
+
 		if (str [str.GetLength () - 1] != '\\')
 		{
 			LPCSTR psz = strrchr (str, '\\');
@@ -1291,8 +1286,8 @@ void CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld, LPSTR pszFileName)
 		{
 			str = dld->pMgr->GetBtDownloadMgr ()->get_TorrentName ();
 		}
-		lstrcpy (pszFileName, str);
-		return;
+
+		return str;
 	}
 
 	if (dld->pMgr->GetDownloadMgr ())
@@ -1306,10 +1301,7 @@ void CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld, LPSTR pszFileName)
 		ASSERT (fl > 0);
 
 		if (!fl)
-		{
-			strcpy (pszFileName, "index.html");
-			return;
-		}
+			return "index.html";
 
 		
 		if (strFile [fl-1] == '\\' || strFile [fl-1] == '/')
@@ -1317,22 +1309,25 @@ void CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld, LPSTR pszFileName)
 			LPCSTR psz = pMgr->GetDownloader ()->Get_FileName ();
 
 			if (psz && *psz)
-				strcpy (pszFileName, psz);
+				strResult = psz;
 			else
 			{
+				char sz [10000] = "";
 				
 				fsFileNameFromUrlPath (pMgr->GetDNP ()->pszPathName, 
-					pMgr->GetDNP ()->enProtocol == NP_FTP, TRUE, pszFileName, 10000);
+					pMgr->GetDNP ()->enProtocol == NP_FTP, TRUE, sz, 10000);
+				strResult = sz;
 			}
 		}
 		else
 		{
+			char sz [10000] = "";
 			
 			
-			fsGetFileName (strFile, pszFileName);
+			fsGetFileName (strFile, sz);
 			if (pMgr->GetDP ()->pszAdditionalExt && *pMgr->GetDP ()->pszAdditionalExt)
 			{
-				char* pszAddExt = pszFileName;
+				char* pszAddExt = sz;
 				while (TRUE)
 				{
 					pszAddExt = strstr (pszAddExt, pMgr->GetDP ()->pszAdditionalExt);
@@ -1348,11 +1343,14 @@ void CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld, LPSTR pszFileName)
 				if (pszAddExt)
 					*(pszAddExt-1) = 0;
 			}
+			strResult = sz;
 		}
 
-		if (*pszFileName == 0)	
-			strcpy (pszFileName, "index.html");	
+		if (strResult.empty ())	
+			strResult = "index.html";	
 	}
+
+	return strResult;
 }
 
 int CDownloads_Tasks::OnCreate(LPCREATESTRUCT lpCreateStruct) 

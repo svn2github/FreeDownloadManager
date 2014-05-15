@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSBINDSTATUSCALLBACK_H__CC76B3A9_8772_4121_ABA6_BF1213528E52__INCLUDED_)

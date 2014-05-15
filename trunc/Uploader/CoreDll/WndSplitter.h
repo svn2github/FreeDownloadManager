@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_WNDSPLITTER_H__8B4B2B4B_98FF_4C3E_A094_FB4162F63469__INCLUDED_)

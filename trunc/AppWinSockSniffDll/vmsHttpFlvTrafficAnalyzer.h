@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSHTTPFLVTRAFFICANALYZER_H__208C8F65_B847_4DFF_9921_F56BF5510E99__INCLUDED_)

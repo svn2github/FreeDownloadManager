@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 //{{NO_DEPENDENCIES}}
@@ -415,6 +415,7 @@
 #define IDC_ASKFORST                    1032
 #define IDC_CHECKIFMAL                  1032
 #define IDC_SET_AS_DEF                  1032
+#define IDC_ENABLE_UPNP                 1032
 #define IDC_COMBO1                      1033
 #define IDC_USERAGENT                   1033
 #define IDC_SECTMINSIZEDIM              1033
@@ -513,6 +514,8 @@
 #define IDC_USE2                        1035
 #define IDC_M_FIREFOX                   1035
 #define IDC_ORBIT_MANAGER               1035
+#define IDC_ENABLE_NAT_PMP              1035
+#define IDC_ENABLE_NATPMP               1035
 #define IDC_USEZIPPREVIEW               1036
 #define IDC_RADIO1                      1036
 #define IDC_BINARY                      1036
@@ -893,8 +896,6 @@
 #define IDC__MSG7                       1189
 #define IDC__SEC                        1190
 #define IDC__MSG8                       1190
-#define IDC__MSG9                       1276
-#define IDC_DESCRIPTION                 1300
 #define IDC_MAXMIRRORSVAL               1191
 #define IDC__SEC2                       1191
 #define IDC_MAXMIRRORSSPIN              1192
@@ -995,6 +996,7 @@
 #define IDC__ICON                       1273
 #define IDC__RESULTMSG                  1274
 #define IDC__MSG3                       1275
+#define IDC__MSG9                       1276
 #define IDC_EXPLORER1                   1277
 #define IDC__WC_MB                      1278
 #define IDC_PERFORMCHECKWHENDONE        1279
@@ -1018,6 +1020,7 @@
 #define IDC_PORT_TO_SPIN                1297
 #define IDC_USE_DHT                     1298
 #define IDC__USEPORTS                   1299
+#define IDC_DESCRIPTION                 1300
 #define IDC__FILE                       1300
 #define IDC_MAXHALFSVAL                 1300
 #define IDC_DROPBOX                     1301
@@ -1110,6 +1113,7 @@
 #define IDC__UPLOADSPEED                1379
 #define IDC_INBITS                      1380
 #define IDC_ABORTALL                    1558
+#define IDC_LOCAL_PEER                  1559
 #define IDC__COPYRIGHT                  1900
 #define IDC__REGTO                      1901
 #define IDC_USEMAXCONNS                 2034
@@ -1261,7 +1265,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        496
 #define _APS_NEXT_COMMAND_VALUE         33236
-#define _APS_NEXT_CONTROL_VALUE         1559
+#define _APS_NEXT_CONTROL_VALUE         1560
 #define _APS_NEXT_SYMED_VALUE           137
 #endif
 #endif

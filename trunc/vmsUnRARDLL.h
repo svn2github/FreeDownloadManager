@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSUNRARDLL_H__3C62C56A_FEA7_4A2A_A83A_D6F5809CB142__INCLUDED_)

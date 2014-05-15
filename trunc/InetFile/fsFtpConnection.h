@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSFTPCONNECTION_H__7A93846D_5A0C_4B2F_B07E_765B21315FB7__INCLUDED_)

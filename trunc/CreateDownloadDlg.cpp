@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -982,13 +982,13 @@ int CCreateDownloadDlg::_CheckDownloadAlrExists(
 					
 					if (cddlg->m_pszCookies != NULL)
 					{
-						props->pszCookies = new char[strlen(cddlg->m_pszCookies)];
+						props->pszCookies = new char[strlen(cddlg->m_pszCookies)+1];
 						strcpy(props->pszCookies, cddlg->m_pszCookies);
 					}
 					
 					if (cddlg->m_pszPostData != NULL)
 					{
-						props->pszPostData = new char[strlen(cddlg->m_pszPostData)];
+						props->pszPostData = new char[strlen(cddlg->m_pszPostData)+1];
 						strcpy(props->pszPostData, cddlg->m_pszPostData);
 					}
 				}

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSUPLOADSDLLCALLER_H__0DB1F7B9_7EE8_4D15_8ABE_68D1D244F6D7__INCLUDED_)

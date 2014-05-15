@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_OPTSPROXYPAGE_H__52021EB8_498D_4587_9FBA_320F205EB035__INCLUDED_)

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -14,6 +14,7 @@
 #include "DlgElevateRequired.h"
 #include "vmsElevatedFdm.h"
 #include "vmsFdmUiDetails.h"
+#include "vmsChromeExtensionInstaller.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -72,6 +73,11 @@ BOOL CDlg_Options_Downloads_Monitoring::OnInitDialog()
 			bFF = FALSE;
 	}
 	CheckDlgButton (IDC_FIREFOX, bFF ? BST_CHECKED : BST_UNCHECKED);
+
+	bool bChromeEnabled = true;
+	vmsChromeExtensionInstaller::Enabled(bChromeEnabled);
+	BOOL bChrome = _App.Monitor_Chrome() && vmsChromeExtensionInstaller::IsInstalled() && bChromeEnabled;
+	CheckDlgButton (IDC_CHROME, bChrome ? BST_CHECKED : BST_UNCHECKED);
 	
 	
 	_IECMM.ReadState ();
@@ -169,6 +175,39 @@ BOOL CDlg_Options_Downloads_Monitoring::Apply()
 	_App.Monitor_Firefox (bFF);
 	if (bFF)
 		vmsFirefoxMonitoring::Install (true); 
+
+	BOOL bChrome = IsDlgButtonChecked(IDC_CHROME) == BST_CHECKED;
+	bool bChromeEnabled = true;
+	vmsChromeExtensionInstaller::Enabled(bChromeEnabled);
+	BOOL bOldChrome = _App.Monitor_Chrome() && vmsChromeExtensionInstaller::IsInstalled() && bChromeEnabled;
+	_App.Monitor_Chrome (bChrome);
+	if(bChrome)
+	{
+		if(!bOldChrome && !vmsChromeExtensionInstaller::IsInstalled())
+		{
+			if(!vmsChromeExtensionInstaller::Install())
+				MessageBox (LS (L_CANTINITCHROMEMONITOR), LS (L_ERR), MB_ICONERROR);
+			if(!vmsChromeExtensionInstaller::IsInstalled())
+			{
+				_App.Monitor_Chrome (FALSE);
+				bChrome = FALSE;
+			}
+		}
+		else
+		{
+			if(!bOldChrome && vmsChromeExtensionInstaller::IsInstalled() && bChromeEnabled)
+				bRR = TRUE;
+		}
+	}
+	else
+	{
+		
+		if(bOldChrome)
+			bRR = TRUE;
+	}
+	if(bChrome)
+		if(!bChromeEnabled)
+			vmsChromeExtensionInstaller::Enable();
 
 	
 	if ((bIE2 == FALSE && bIE2Active) || (bIE2 && bIE2Active == FALSE))
@@ -281,7 +320,8 @@ void CDlg_Options_Downloads_Monitoring::ApplyLanguage()
 void CDlg_Options_Downloads_Monitoring::UpdateEnabled()
 {
 	BOOL bIE = IsDlgButtonChecked (IDC_IE2) == BST_CHECKED ||
-		IsDlgButtonChecked (IDC_FIREFOX) == BST_CHECKED;
+		IsDlgButtonChecked (IDC_FIREFOX) == BST_CHECKED ||
+		IsDlgButtonChecked (IDC_CHROME) == BST_CHECKED;
 	
 	GetDlgItem (IDC_ALTPRESSED)->EnableWindow (bIE);
 	GetDlgItem (IDC_ALLOWIETODL)->EnableWindow (bIE);
@@ -362,7 +402,7 @@ void CDlg_Options_Downloads_Monitoring::OnSafari()
 
 void CDlg_Options_Downloads_Monitoring::OnChrome() 
 {
-	UpdateElevateReq ();	
+	UpdateEnabled ();
 }
 
 void CDlg_Options_Downloads_Monitoring::UpdateElevateReq()

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSUPDATEMGR_H__287BFC6A_1FC7_42E5_9BC8_9DEAA3381DCC__INCLUDED_)
@@ -35,6 +35,11 @@ class fsUpdateMgr
 {
 	friend class CPrg_UpdatePage;
 public:
+	enum Flags
+	{
+		IgnoreUpdateInAutomaticMode		= 1,
+	};
+
 	
 	void CheckForUpdate(bool bByUser);
 	
@@ -110,6 +115,7 @@ protected:
 	CString m_strFullSize;	
 	CString m_strVersion;	
 	CString m_strBN;		
+	DWORD m_dwFlags;
 	fs::list <CString> m_vWN; 
 	
 	

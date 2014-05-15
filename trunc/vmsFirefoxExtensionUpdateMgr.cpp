@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -9,9 +9,10 @@
 #include "vmsSecurity.h"
 #include "FdmApp.h"
 
-vmsFirefoxExtensionUpdateMgr::vmsFirefoxExtensionUpdateMgr(void)
+vmsFirefoxExtensionUpdateMgr::vmsFirefoxExtensionUpdateMgr(bool currentBuildFirstRun) :
+	m_bExtensionPathChanged (false)
 {
-	LoadState ();
+	LoadState (currentBuildFirstRun);
 }
 
 vmsFirefoxExtensionUpdateMgr::~vmsFirefoxExtensionUpdateMgr(void)
@@ -23,26 +24,39 @@ LPCTSTR vmsFirefoxExtensionUpdateMgr::getExtensionPath(void)
 	return m_tstrExtensionPath.c_str ();
 }
 
-void vmsFirefoxExtensionUpdateMgr::LoadState(void)
+void vmsFirefoxExtensionUpdateMgr::LoadState(bool currentBuildFirstRun)
 {
 	vmsAppSettingsStore *pstgs = _App.get_SettingsStore ();
-	m_tstrExtensionPath = pstgs->GetProfileString (_T ("Settings\\Update\\FirefoxExt"), _T ("Path"), _T (""));
-	m_extensionVersion.FromString (pstgs->GetProfileString (_T ("Settings\\Update\\FirefoxExt"), _T ("Version"), _T ("")));
 
-	if (IS_PORTABLE_MODE && !m_tstrExtensionPath.empty ())
+	tstring extensionPath = pstgs->GetProfileString (_T ("Settings\\Update\\FirefoxExt"), _T ("Path"), _T (""));
+	vmsAppVersion extensionVersion;
+	extensionVersion.FromString (pstgs->GetProfileString (_T ("Settings\\Update\\FirefoxExt"), _T ("Version"), _T ("")));
+
+	if (!currentBuildFirstRun)
 	{
-		TCHAR tsz [MAX_PATH] = _T ("");
-		GetModuleFileName (NULL, tsz, _countof (tsz));
-		m_tstrExtensionPath [0] = tsz [0]; 
+		m_tstrExtensionPath = extensionPath;
+		m_extensionVersion = extensionVersion;
+
+		if (IS_PORTABLE_MODE && !m_tstrExtensionPath.empty ())
+		{
+			TCHAR tsz [MAX_PATH] = _T ("");
+			GetModuleFileName (NULL, tsz, _countof (tsz));
+			m_tstrExtensionPath [0] = tsz [0]; 
+		}
 	}
+	
 
 	if (m_tstrExtensionPath.empty () || m_extensionVersion.empty () || GetFileAttributes (m_tstrExtensionPath.c_str ()) == DWORD (-1))
 	{
 		LocateFirefoxExtension ();
+
 		if (!m_tstrExtensionPath.empty ())
 		{
 			pstgs->WriteProfileString (_T ("Settings\\Update\\FirefoxExt"), _T ("Path"), m_tstrExtensionPath.c_str ());
 			pstgs->WriteProfileString (_T ("Settings\\Update\\FirefoxExt"), _T ("Version"), m_extensionVersion.ToString ().c_str ());
+
+			if (extensionPath != m_tstrExtensionPath)
+				m_bExtensionPathChanged = true;
 		}
 	}
 }
@@ -50,57 +64,79 @@ void vmsFirefoxExtensionUpdateMgr::LoadState(void)
 void vmsFirefoxExtensionUpdateMgr::LocateFirefoxExtension(void)
 {
 	vmsAppVersion verMax;
-	tstring tstrExtFolderName;
+	tstring tstrExtensionPath;
+	tstring tstrPath, tstr;
 
 	m_tstrExtensionPath = _T ("");
+	m_extensionVersion.clear ();
 
-	tstring tstrPath;
-	GetExtensionsInstallationPath (tstrPath);
-
-	tstring tstr = tstrPath + _T ("\\*.*");
-
-	WIN32_FIND_DATA wfd;
-	HANDLE hFind = FindFirstFile (tstr.c_str (), &wfd);
-	if (hFind == INVALID_HANDLE_VALUE)
-		goto _lNoUpdatedExtensions;
-
-	while (FindNextFile (hFind, &wfd))
-	{
-		if (!(wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-			continue;
-		if (!_tcscmp (wfd.cFileName, _T ("..")) || _tcscmp (wfd.cFileName, _T (".")))
-			continue;
-		vmsAppVersion ver;
-		ver.FromString (wfd.cFileName);
-		if (ver.empty ())
-			continue;
-		if (verMax < ver)
-		{
-			verMax = ver;
-			tstrExtFolderName = wfd.cFileName;
-		}
-	}
-
-	FindClose (hFind);
-
-	if (!tstrExtFolderName.empty ())
-	{
-		m_tstrExtensionPath = tstrPath + '\\' + tstrExtFolderName;
-		m_extensionVersion = verMax;
-		return;
-	}
-
-_lNoUpdatedExtensions:
 	
-	tstrPath = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
+
+	TCHAR tszExeDir [MY_MAX_PATH], tszExeFile [MY_MAX_PATH];
+	GetModuleFileName (NULL, tszExeFile, sizeof (tszExeFile));
+	fsGetPath (tszExeFile, tszExeDir);
+	tstrPath = tszExeDir;
 	tstrPath += _T ("Firefox\\Extension");
 	tstr = tstrPath + _T ("\\install.rdf");
 	tstring tstrVer;
-	if (!vmsFirefoxExtensionInstaller::ExtractExtensionInfo (tstr.c_str (), tstrVer))
-		return;
+	if (vmsFirefoxExtensionInstaller::ExtractExtensionInfo (tstr.c_str (), tstrVer))
+	{
+		verMax.FromString (tstrVer.c_str ());
+		tstrExtensionPath = tstrPath;
+	}
 
-	m_tstrExtensionPath = tstrPath;
-	m_extensionVersion.FromString (tstrVer.c_str ());
+	if (tstrExtensionPath.empty ())
+	{
+		vmsAppSettingsStore *pstgs = _App.get_SettingsStore ();
+		tstrPath = pstgs->GetProfileString (_T (""), _T("Path"), _T (""));
+		if (!tstrPath.empty ())
+		{
+			tstrPath += _T ("\\Firefox\\Extension");
+			tstr = tstrPath + _T ("\\install.rdf");
+			if (vmsFirefoxExtensionInstaller::ExtractExtensionInfo (tstr.c_str (), tstrVer))
+			{
+				verMax.FromString (tstrVer.c_str ());
+				tstrExtensionPath = tstrPath;
+			}
+		}
+	}
+
+	
+
+	GetExtensionsInstallationPath (tstrPath);
+
+	tstr = tstrPath + _T ("\\*.*");
+
+	WIN32_FIND_DATA wfd;
+	HANDLE hFind = FindFirstFile (tstr.c_str (), &wfd);
+
+	if (hFind != INVALID_HANDLE_VALUE)
+	{
+		while (FindNextFile (hFind, &wfd))
+		{
+			if (!(wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+				continue;
+			if (!_tcscmp (wfd.cFileName, _T ("..")) || _tcscmp (wfd.cFileName, _T (".")))
+				continue;
+			vmsAppVersion ver;
+			ver.FromString (wfd.cFileName);
+			if (ver.empty ())
+				continue;
+			if (verMax < ver)
+			{
+				verMax = ver;
+				tstrExtensionPath = tstrPath + _T ("\\") + wfd.cFileName;
+			}
+		}
+
+		FindClose (hFind);
+	}
+
+	if (!tstrExtensionPath.empty ())
+	{
+		m_tstrExtensionPath = tstrExtensionPath;
+		m_extensionVersion = verMax;
+	}
 }
 
 void vmsFirefoxExtensionUpdateMgr::GetExtensionsInstallationPath(tstring& tstrResult)
@@ -151,12 +187,14 @@ bool vmsFirefoxExtensionUpdateMgr::PerformUpdate(void)
 		return false;
 
 	vmsTmpFileName tmpFile;
-	DeleteUrlCacheEntry (m_tstrExtensionNewVerURL.c_str ());
 	HRESULT hr = URLDownloadToFile (NULL, m_tstrExtensionNewVerURL.c_str (), tmpFile, 0, NULL);
 	if (FAILED (hr))
 		return false;
 
-	tstring tstrKeyFile = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
+	TCHAR tszExeDir [MY_MAX_PATH], tszExeFile [MY_MAX_PATH];
+	GetModuleFileName (NULL, tszExeFile, sizeof (tszExeFile));
+	fsGetPath (tszExeFile, tszExeDir);
+	tstring tstrKeyFile = tszExeDir;
 	tstrKeyFile += _T ("sigkey.dat");
 	if (!vmsSecurity::VerifySign (tmpFile, tstrKeyFile.c_str ()))
 	{

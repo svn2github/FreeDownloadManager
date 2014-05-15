@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -21,9 +21,6 @@ public:
 	}
 
 	
-	static void Create2 ()
-	{
-		_spFfExtUpdateMgr.reset (new vmsFirefoxExtensionUpdateMgr);
-	}
+	static void Create2 (bool currentBuildFirstRun);
 };
 

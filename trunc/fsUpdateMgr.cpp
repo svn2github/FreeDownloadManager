@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -21,6 +21,7 @@ fsUpdateMgr::fsUpdateMgr()
 	m_bRunning = FALSE;
 	m_pfnEvents = NULL;
 	m_pfnDescEvents= NULL;
+	m_dwFlags = 0;
 }
 
 fsUpdateMgr::~fsUpdateMgr()
@@ -84,7 +85,7 @@ void fsUpdateMgr::CheckForUpdate(bool bByUser)
 
 	CString strUrl = m_strUpdateUrl;
 
-	strUrl += "proupd.lst";
+	strUrl += "proupd2.lst";
 
 	LPCSTR pszCustomizer = pFrm->get_Customizations ()->get_Customizer ();
 	if (pszCustomizer != NULL && lstrlen (pszCustomizer) != 0)
@@ -202,15 +203,15 @@ void fsUpdateMgr::ProcessUpdateLstFile()
 	char szValues [10000];
 
 	if (::GetVersion () & 0x80000000)
-		FixIniFileFor9x (fsGetDataFilePath ("Update\\proupd.lst"));
+		FixIniFileFor9x (fsGetDataFilePath ("Update\\proupd2.lst"));
 
 	
 	
 	if (0 == GetPrivateProfileSectionNames (szSections, sizeof (szSections), 
-		fsGetDataFilePath ("Update\\proupd.lst")) || 
+		fsGetDataFilePath ("Update\\proupd2.lst")) || 
 		atoi (szSections) <= (int)vmsFdmAppMgr::getVersion ()->m_appVersion [2].dwVal)
 	{
-		ASSERT (GetPrivateProfileSectionNames (szSections, sizeof (szSections), fsGetDataFilePath ("Update\\proupd.lst")));
+		ASSERT (GetPrivateProfileSectionNames (szSections, sizeof (szSections), fsGetDataFilePath ("Update\\proupd2.lst")));
 		
 		_App.NewVerExists (FALSE);
 		Event (UME_NEWVERSIONNOTAVAIL);
@@ -234,7 +235,7 @@ void fsUpdateMgr::ProcessUpdateLstFile()
 	{
 		
 		GetPrivateProfileSection (pszSect, szValues, sizeof (szValues), 
-			fsGetDataFilePath ("Update\\proupd.lst"));
+			fsGetDataFilePath ("Update\\proupd2.lst"));
 		LPSTR pszValue = szValues;
 
 		
@@ -305,6 +306,8 @@ void fsUpdateMgr::ProcessUpdateLstFile()
 						return;
 					}
 				}
+				else if (!stricmp (pszValue, "Flags"))
+					m_dwFlags = strtoul (pszVVal, NULL, 10);
 			}
 
 			
@@ -317,6 +320,15 @@ void fsUpdateMgr::ProcessUpdateLstFile()
 		}
 
 		while (*pszSect++); 
+	}
+
+	if ((m_dwFlags & IgnoreUpdateInAutomaticMode) && !m_bCheckingByUser)
+	{
+		
+		_App.NewVerExists (FALSE);
+		Event (UME_NEWVERSIONNOTAVAIL);
+		m_bRunning = FALSE;
+		return;
 	}
 
 	Event (UME_NEWVERSIONAVAIL);

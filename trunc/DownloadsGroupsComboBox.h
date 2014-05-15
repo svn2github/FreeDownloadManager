@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2011 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DOWNLOADSGROUPSCOMBOBOX_H__6EBB97AC_6FA4_488D_8411_8BC1A862C579__INCLUDED_)
