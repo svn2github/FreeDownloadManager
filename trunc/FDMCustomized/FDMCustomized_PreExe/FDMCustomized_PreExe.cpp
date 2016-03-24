@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -7,13 +7,13 @@
 #include <objbase.h>
 #include <shlobj.h>
 
-char _szInstName [MAX_PATH];
-char _szPostVersion [1000];
+vmsTmpDirName g_tmpDir (true, _T("{119D1570-8853-4FC9-9343-FA5C72E55D20}"));
+tstring g_instName;
+tstring g_postVersion;
 DWORD _dwFlags;
 
 HKEY _hFDMKey;
-char _szFDMPath [MAX_PATH];
-char _szCustSite [10000];
+tstring g_custSite;
 
 char LABEL [100];
 
@@ -24,53 +24,9 @@ void BuildLABEL ()
 	strcat (LABEL, "###");
 }
 
-void fsGetPath (LPCSTR pszFile, LPSTR pszPath)
-{
-	strcpy (pszPath, pszFile);
-	
-	int len = lstrlen (pszPath) - 1;
-
-	while (len >= 0 && pszPath [len] != '\\' && pszPath [len] != '/')
-		len--;
-
-	pszPath [len+1] = 0;
-}
-
-BOOL fsBuildPathToFile (LPCSTR pszFileName)
-{
-	CHAR szPath [MAX_PATH];
-	
-	fsGetPath (pszFileName, szPath);
-
-	int len = lstrlen (szPath);
-	int start = 0;
-
-	if (szPath [1] == ':')
-		start = 3;
-
-	for (int i = start; i < len; i++)
-	{
-		if (szPath [i] == '\\' || szPath [i] == '/')
-		{
-			CHAR szPath2 [MAX_PATH];
-
-			CopyMemory (szPath2, szPath, i);
-			szPath2 [i] = 0;
-
-			if (FALSE == CreateDirectory (szPath2, NULL))
-			{
-				if (GetLastError () != ERROR_ALREADY_EXISTS)
-					return FALSE;
-			}
-		}
-	}
-
-	return TRUE;
-}
-
 LPCSTR bufbuf (LPCSTR where, LPCSTR what, int maxpos)
 {
-	int len = lstrlen (what);
+	int len = strlen (what);
 	while (memcmp (where, what, len))
 	{
 		where ++;
@@ -81,9 +37,9 @@ LPCSTR bufbuf (LPCSTR where, LPCSTR what, int maxpos)
 	return maxpos == 0 ? NULL : where;
 }
 
-BOOL CreateInstaller (LPCSTR pszFile, LPCSTR pszStart, DWORD dwSize)
+BOOL CreateInstaller (LPCTSTR pszFile, LPCVOID pszStart, DWORD dwSize)
 {
-	if (FALSE == fsBuildPathToFile (pszFile))
+	if (FALSE == vmsBuildPathToFile (pszFile))
 		return FALSE;
 
 	HANDLE hFile = CreateFile (pszFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
@@ -106,83 +62,57 @@ BOOL CreateInstaller (LPCSTR pszFile, LPCSTR pszStart, DWORD dwSize)
 	return TRUE;
 }
 
-BOOL AddURLToDownload (LPCSTR pszUrl, LPCSTR pszReferer, LPCSTR pszComment, BOOL bAutoStart)
+BOOL AddURLToDownload (LPCTSTR pszUrl, LPCTSTR pszReferer, LPCTSTR pszComment, BOOL bAutoStart)
 {
 	DWORD dwErr;
 	HKEY key;
 	static int _iKey = 0;
 
-	char szKey [1000];
-	wsprintf (szKey, "URLsToDownload\\FdmSetupInstaller_%d", _iKey++);
+	TCHAR szKey [1000];
+	_stprintf (szKey, _T("URLsToDownload\\FdmSetupInstaller_%d"), _iKey++);
 
 	dwErr = RegCreateKey (_hFDMKey, szKey, &key);
 
 	if (dwErr != ERROR_SUCCESS && dwErr)
 		return FALSE;
 
-	RegSetValueEx (key, "URL", NULL, REG_SZ, LPBYTE (pszUrl), lstrlen (pszUrl));
-	RegSetValueEx (key, "Referer", NULL, REG_SZ, LPBYTE (pszReferer), lstrlen (pszReferer));
-	RegSetValueEx (key, "Comment", NULL, REG_SZ, LPBYTE (pszComment), lstrlen (pszComment));
+	RegSetValueEx (key, _T("URL"), NULL, REG_SZ, LPBYTE (pszUrl), (lstrlen (pszUrl)+1)*sizeof (TCHAR));
+	RegSetValueEx (key, _T("Referer"), NULL, REG_SZ, LPBYTE (pszReferer), (lstrlen (pszReferer)+1)*sizeof (TCHAR));
+	RegSetValueEx (key, _T("Comment"), NULL, REG_SZ, LPBYTE (pszComment), (lstrlen (pszComment)+1)*sizeof (TCHAR));
 	DWORD dw = TRUE;
-	RegSetValueEx (key, "Silent", NULL, REG_DWORD, (LPBYTE)&dw, sizeof (dw));
-	RegSetValueEx (key, "zlr", 0, REG_DWORD, (LPBYTE)&dw, sizeof (dw));
+	RegSetValueEx (key, _T("Silent"), NULL, REG_DWORD, (LPBYTE)&dw, sizeof (dw));
+	RegSetValueEx (key, _T("zlr"), 0, REG_DWORD, (LPBYTE)&dw, sizeof (dw));
 	
 	if (bAutoStart)
 		dw = TRUE;
 	else
 		dw = FALSE;
 
-	RegSetValueEx (key, "AutoStart", NULL, REG_DWORD, (LPBYTE)&dw, sizeof (dw));
+	RegSetValueEx (key, _T("AutoStart"), NULL, REG_DWORD, (LPBYTE)&dw, sizeof (dw));
 	
 	RegCloseKey (key);
 
 	return TRUE;
 }
 
-HANDLE StartProcess (LPCSTR pszName)
+LPCSTR DoJob_ExtractInstaller (LPCSTR psz)
 {
-	STARTUPINFO si;
-	PROCESS_INFORMATION pi;
+	g_instName = (LPCTSTR)g_tmpDir;
 
-	ZeroMemory (&si, sizeof (si));
-	si.cb = sizeof (si);
-	ZeroMemory (&pi, sizeof (pi));
-
-	if (FALSE == CreateProcess (pszName, NULL, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
-		return NULL;
-
-	return pi.hProcess;
-}
-
-DWORD LaunchInstaller (LPCSTR pszFile)
-{
-	HANDLE hInstaller = StartProcess (pszFile);
-	if (hInstaller == NULL)
-		return 0xffffffff;	
-
-	WaitForSingleObject (hInstaller, INFINITE);
-
-	DWORD dwCode;
-	
-	GetExitCodeProcess (hInstaller, &dwCode);
-	CloseHandle (hInstaller);
-
-	return dwCode;
-}
-
-LPCSTR DoJob_Step1 (LPCSTR psz)
-{
-	char szTmpPath [MAX_PATH];
-	if (0 == GetTempPath (sizeof (szTmpPath), szTmpPath))
-		GetCurrentDirectory (sizeof (szTmpPath), szTmpPath);
-	GetTempFileName (szTmpPath, "fdm", 0, _szInstName);
+	{
+		wchar_t wszPath [MAX_PATH] = L"";
+		GetModuleFileName (NULL, wszPath, _countof (wszPath));
+		LPCWSTR pwsz = wcsrchr (wszPath, '\\');
+		assert (pwsz);
+		g_instName += pwsz ? pwsz : _T("\\fdminst.exe");
+	}
 
 	DWORD dwSize = *(LPDWORD(psz));
 	psz += sizeof (DWORD);
 
-	if (FALSE == CreateInstaller (_szInstName, psz, dwSize))
+	if (FALSE == CreateInstaller (g_instName.c_str (), psz, dwSize))
 	{
-		DeleteFile (_szInstName);
+		DeleteFile (g_instName.c_str ());
 		return NULL;
 	}
 
@@ -207,39 +137,49 @@ LPCSTR DoJob_Step1 (LPCSTR psz)
 #define FC_IEBTN_OPTIONAL		(1L << 11)
 #define FC_IEBTN_CHECKEDBYDEF	(1L << 12)
 
-LPCSTR DoJob_Step2 (LPCSTR psz)
+LPCSTR DoJob_SetupInstallerRegistryParameters (LPCSTR psz)
 {
 	DWORD dwSize = *(LPDWORD(psz));
 	psz += sizeof (DWORD);
 
-	CopyMemory (_szPostVersion, psz, dwSize);
-	_szPostVersion [dwSize] = 0;
+	char sz [10000];
+	CopyMemory (sz, psz, dwSize);
+	sz [dwSize] = 0;
 	psz += dwSize;
+	g_postVersion = wideFromUtf8 (sz);
 
 	DWORD dwErr;
 	dwErr = RegCreateKey (HKEY_CURRENT_USER, 
-				"Software\\FreeDownloadManager.ORG\\Free Download Manager", 
+				_T("Software\\FreeDownloadManager.ORG\\Free Download Manager"), 
 				&_hFDMKey);
 
 	if (dwErr == ERROR_SUCCESS)
-		RegSetValueEx (_hFDMKey, "PostVersion", NULL, REG_SZ, LPBYTE (_szPostVersion), lstrlen (_szPostVersion));
+		RegSetValueEx (_hFDMKey, _T("PostVersion"), NULL, REG_SZ, LPBYTE (g_postVersion.c_str ()), (g_postVersion.length ()+1)*sizeof(TCHAR));
 
-	char szCustomizer [1000];
+	tstring customizer;
+	
+	{
+		char szCustomizer [1000];
+		dwSize = *((LPDWORD) psz);
+		psz += sizeof (DWORD);
+		CopyMemory (szCustomizer, psz, dwSize);
+		szCustomizer [dwSize] = 0;
+		psz += dwSize;
+		customizer = wideFromUtf8 (szCustomizer);
+	}
 
-	dwSize = *((LPDWORD) psz);
-	psz += sizeof (DWORD);
-	CopyMemory (szCustomizer, psz, dwSize);
-	szCustomizer [dwSize] = 0;
-	psz += dwSize;
+	{
+		char sz [10000];
+		dwSize = *((LPDWORD) psz);
+		psz += sizeof (DWORD);
+		CopyMemory (sz, psz, dwSize);
+		sz [dwSize] = 0;
+		psz += dwSize;
+		g_custSite = wideFromUtf8 (sz);
+	}
 
-	dwSize = *((LPDWORD) psz);
-	psz += sizeof (DWORD);
-	CopyMemory (_szCustSite, psz, dwSize);
-	_szCustSite [dwSize] = 0;
-	psz += dwSize;
-
-	RegSetValueEx (_hFDMKey, "Customizer", NULL, REG_SZ, LPBYTE (szCustomizer), lstrlen (szCustomizer));
-	RegSetValueEx (_hFDMKey, "CustSite", NULL, REG_SZ, LPBYTE (_szCustSite), lstrlen (_szCustSite));
+	RegSetValueEx (_hFDMKey, _T("Customizer"), NULL, REG_SZ, LPBYTE (customizer.c_str ()), (customizer.length ()+1)*sizeof(TCHAR));
+	RegSetValueEx (_hFDMKey, _T("CustSite"), NULL, REG_SZ, LPBYTE (g_custSite.c_str ()), (g_custSite.length ()+1)*sizeof(TCHAR));
 
 	_dwFlags = *((LPDWORD) psz);
 	psz += sizeof (DWORD);
@@ -256,7 +196,7 @@ LPCSTR DoJob_Step2 (LPCSTR psz)
 				if (_dwFlags & FC_FAV_CHECKEDBYDEF)
 					dw = 3;
 			}
-			RegSetValueEx (_hFDMKey, "CreateLFM", 0, REG_DWORD, (LPBYTE)&dw, 4);
+			RegSetValueEx (_hFDMKey, _T("CreateLFM"), 0, REG_DWORD, (LPBYTE)&dw, 4);
 			dw = 1;
 		}
 
@@ -268,7 +208,7 @@ LPCSTR DoJob_Step2 (LPCSTR psz)
 				if (_dwFlags & FC_SM_CHECKEDBYDEF)
 					dw = 3;
 			}
-			RegSetValueEx (_hFDMKey, "CreateLSM", 0, REG_DWORD, (LPBYTE)&dw, 4);
+			RegSetValueEx (_hFDMKey, _T("CreateLSM"), 0, REG_DWORD, (LPBYTE)&dw, 4);
 			dw = 1;
 		}
 	}
@@ -278,8 +218,8 @@ LPCSTR DoJob_Step2 (LPCSTR psz)
 		dw = 2;
 		if (_dwFlags & FC_MHP_CHECKEDBYDEF)
 			dw = 3;
-		RegSetValueEx (_hFDMKey, "UseHPage", 0, REG_DWORD, (LPBYTE)&dw, sizeof (dw));
-		RegSetValueEx (_hFDMKey, "HPageTo", 0, REG_SZ, (LPBYTE)_szCustSite, lstrlen (_szCustSite));
+		RegSetValueEx (_hFDMKey, _T("UseHPage"), 0, REG_DWORD, (LPBYTE)&dw, sizeof (dw));
+		RegSetValueEx (_hFDMKey, _T("HPageTo"), 0, REG_SZ, (LPBYTE)g_custSite.c_str (), (g_custSite.length ()+1)*sizeof(TCHAR));
 		dw = 1;
 	}
 	
@@ -291,14 +231,14 @@ LPCSTR DoJob_Step2 (LPCSTR psz)
 			if (_dwFlags & FC_IEBTN_CHECKEDBYDEF)
 				dw = 3;
 		}
-		RegSetValueEx (_hFDMKey, "IEBtn", 0, REG_DWORD, (LPBYTE)&dw, sizeof (dw));
+		RegSetValueEx (_hFDMKey, _T("IEBtn"), 0, REG_DWORD, (LPBYTE)&dw, sizeof (dw));
 		dw = 1;
 	}
 
 	return psz;
 }
 
-LPCSTR ExtractFile (LPCSTR psz, LPCSTR pszFile, BOOL bDontCreateIfSize0 = FALSE)
+LPCSTR ExtractFile (LPCSTR psz, LPCTSTR pszFile, BOOL bDontCreateIfSize0 = FALSE)
 {
 	DWORD dwSize = *((LPDWORD) psz);
 	psz += sizeof (DWORD);
@@ -327,13 +267,17 @@ LPCSTR ExtractFile (LPCSTR psz, LPCSTR pszFile, BOOL bDontCreateIfSize0 = FALSE)
 	return psz;
 }
 
-LPCSTR DoJob_Step3 (LPCSTR psz)
+LPCSTR ExtractFdmCsIcon (LPCSTR psz)
 {
-	char szIco [MAX_PATH];
-	strcpy (szIco, _szFDMPath);
-	strcat (szIco, "fdmcs.ico");
+	TCHAR szIco [MAX_PATH];
+	lstrcpy (szIco, g_tmpDir);
+	lstrcat (szIco, _T ("\\fdmcs.ico"));
 	psz = ExtractFile (psz, szIco, TRUE);
+	return psz;
+}
 
+void DoJob_PerformPostInstallIeCustomization ()
+{
 	if (_dwFlags & (FC_ADDLINKTOFAVOR | FC_ADDLINKTOSTARTMENU))
 	{
 		
@@ -343,7 +287,7 @@ LPCSTR DoJob_Step3 (LPCSTR psz)
 	{
 		DWORD dw = 0;
 		DWORD dwSize = sizeof (dw);
-		RegQueryValueEx (_hFDMKey, "HPageDo", NULL, NULL, (LPBYTE)&dw, &dwSize);
+		RegQueryValueEx (_hFDMKey, _T("HPageDo"), NULL, NULL, (LPBYTE)&dw, &dwSize);
 		if (dw == 0)
 			_dwFlags &= ~FC_MODIFYHOMEPAGE;
 	}
@@ -351,27 +295,25 @@ LPCSTR DoJob_Step3 (LPCSTR psz)
 	if (_dwFlags & FC_MODIFYHOMEPAGE)
 	{
 		HKEY hKey;
-		RegOpenKey (HKEY_CURRENT_USER, "Software\\Microsoft\\Internet Explorer\\Main", &hKey);
+		RegOpenKey (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Internet Explorer\\Main"), &hKey);
 
-		char sz [10000] = "about:blank";
+		TCHAR sz [10000] = _T("about:blank");
 		DWORD dw = sizeof (sz);
 
 		
 		if (ERROR_SUCCESS != RegQueryValueEx (
-				_hFDMKey, "CIEOP", NULL, NULL, (LPBYTE)sz, &dw))
+				_hFDMKey, _T("CIEOP"), NULL, NULL, (LPBYTE)sz, &dw))
 		{
-			RegQueryValueEx (hKey, "Start Page", NULL, NULL, (LPBYTE)sz, &dw);
-			RegSetValueEx (_hFDMKey, "CIEOP", 0, REG_SZ, (LPBYTE)sz, lstrlen (sz));
+			RegQueryValueEx (hKey, _T("Start Page"), NULL, NULL, (LPBYTE)sz, &dw);
+			RegSetValueEx (_hFDMKey, _T("CIEOP"), 0, REG_SZ, (LPBYTE)sz, (lstrlen (sz)+1)*sizeof(TCHAR));
 		}
 
-		RegSetValueEx (hKey, "Start Page", 0, REG_SZ, (LPBYTE)_szCustSite, lstrlen (_szCustSite));
+		RegSetValueEx (hKey, _T("Start Page"), 0, REG_SZ, (LPBYTE)g_custSite.c_str (), (g_custSite.length ()+1)*sizeof(TCHAR));
 		RegCloseKey (hKey);
 	}
-
-	return psz;
 }
 
-BOOL RegisterDLL (LPCSTR pszDLL)
+BOOL RegisterDLL (LPCTSTR pszDLL)
 {
 	typedef HRESULT (_stdcall *fntDllRegUnregServer)(void);
 	HMODULE hLib = LoadLibrary (pszDLL);
@@ -388,19 +330,24 @@ BOOL RegisterDLL (LPCSTR pszDLL)
 	return TRUE;
 }
 
-LPCSTR DoJob_Step4 (LPCSTR psz)
+LPCSTR ExtractFdmCsIeBtnIfRequired (LPCSTR psz)
 {
 	if (_dwFlags & FC_ADDBUTTONTOIE)
 	{
-		char szFile [MAX_PATH];
+		TCHAR szFile [MAX_PATH];
 
 		
 
-		strcpy (szFile, _szFDMPath);
-		strcat (szFile, "fdmcsiebtn.ico");
+		lstrcpy (szFile, g_tmpDir);
+		lstrcat (szFile, _T("\\fdmcsiebtn.ico"));
 		psz = ExtractFile (psz, szFile);
 	}
 
+	return psz;
+}
+
+LPCSTR DoJob_AddDownloads (LPCSTR psz)
+{
 	if (_dwFlags & FC_ADDDOWNLOADS)
 	{
 		DWORD dwDLCount = *((LPDWORD) psz);
@@ -432,18 +379,19 @@ LPCSTR DoJob_Step4 (LPCSTR psz)
 			BOOL bAutoStart = *((LPBOOL) psz);
 			psz += sizeof (BOOL);
 
-			AddURLToDownload (szURL, szReferer, szComment, bAutoStart);
+			AddURLToDownload (wideFromUtf8 (szURL).c_str (), wideFromUtf8 (szReferer).c_str (),
+				wideFromUtf8 (szComment).c_str (), bAutoStart);
 		}
 	}
 
 	return psz;
 }
 
-LPCSTR DoJob_Step5 (LPCSTR psz)
+LPCSTR ExtractFdmCs (LPCSTR psz)
 {
-	char szFile [MAX_PATH];
-	strcpy (szFile, _szFDMPath);
-	strcat (szFile, "fdmcs.dat");
+	TCHAR szFile [MAX_PATH];
+	lstrcpy (szFile, g_tmpDir);
+	lstrcat (szFile, _T("\\fdmcs.dat"));
 	psz = ExtractFile (psz, szFile);
 	return psz;
 }
@@ -459,47 +407,52 @@ BOOL DoJob (LPCSTR psz, int iBufSize)
 	pszStart = bufbuf (psz, LABEL, iBufSize);
 	if (pszStart == NULL)
 		return FALSE;
-	pszStart += lstrlen (LABEL);
+	pszStart += strlen (LABEL);
 
-	pszStart = DoJob_Step1 (pszStart);
+	pszStart = DoJob_ExtractInstaller (pszStart);
 	if (NULL == pszStart)
 		return FALSE;
 
-	pszStart = DoJob_Step2 (pszStart);
+	pszStart = DoJob_SetupInstallerRegistryParameters (pszStart);
 	if (NULL == pszStart)
 		return FALSE;
 
-	DWORD dwRet = LaunchInstaller (_szInstName);
-	DeleteFile (_szInstName);
-	RegDeleteValue (_hFDMKey, "PostVersion");
-	RegDeleteValue (_hFDMKey, "CreateLFM");
-	RegDeleteValue (_hFDMKey, "CreateLSM");
-	RegDeleteValue (_hFDMKey, "UseHPage");
-	RegDeleteValue (_hFDMKey, "HPageTo");
-	RegDeleteValue (_hFDMKey, "IEBtn");
+	pszStart = ExtractFdmCsIcon (pszStart);
+	if (NULL == pszStart)
+		return FALSE;
 
-	if (dwRet == 0xffffffff)
+	pszStart = ExtractFdmCsIeBtnIfRequired (pszStart);
+	if (NULL == pszStart)
+		return FALSE;
+
+	pszStart = DoJob_AddDownloads (pszStart);
+	if (NULL == pszStart)
+		return FALSE;
+
+	pszStart = ExtractFdmCs (pszStart);
+	if (NULL == pszStart)
+		return FALSE;
+
+	DWORD dwRet;
+	vmsCommandLine cl (g_instName, _T(""));
+	bool execOK = cl.Execute (
+		vmsCommandLine::RunElevatedIfRequired | vmsCommandLine::WaitForCompletion,
+		&dwRet);
+
+	DeleteFile (g_instName.c_str ());
+	RegDeleteValue (_hFDMKey, _T("PostVersion"));
+	RegDeleteValue (_hFDMKey, _T("CreateLFM"));
+	RegDeleteValue (_hFDMKey, _T("CreateLSM"));
+	RegDeleteValue (_hFDMKey, _T("UseHPage"));
+	RegDeleteValue (_hFDMKey, _T("HPageTo"));
+	RegDeleteValue (_hFDMKey, _T("IEBtn"));
+
+	if (!execOK)
 		return FALSE;
 	if (dwRet != 0)
 		return TRUE;
 
-	DWORD dwSize = MAX_PATH;
-	RegQueryValueEx (_hFDMKey, "Path", NULL, NULL, (LPBYTE)_szFDMPath, &dwSize);
-	_szFDMPath [dwSize] = 0;
-	if (_szFDMPath [dwSize-1] != '\\')
-		strcat (_szFDMPath, "\\");
-
-	pszStart = DoJob_Step3 (pszStart);
-	if (NULL == pszStart)
-		return FALSE;
-
-	pszStart = DoJob_Step4 (pszStart);
-	if (NULL == pszStart)
-		return FALSE;
-
-	pszStart = DoJob_Step5 (pszStart);
-	if (NULL == pszStart)
-		return FALSE;
+	DoJob_PerformPostInstallIeCustomization ();
 
 	return TRUE;
 }
@@ -509,7 +462,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
                      LPSTR     lpCmdLine,
                      int       nCmdShow)
 {
- 	char szMyFileName [10000];
+ 	TCHAR szMyFileName [10000];
 	HANDLE hFile = INVALID_HANDLE_VALUE;
 
 	CoInitialize (NULL);
@@ -534,7 +487,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
 	psz [dwFileLen] = 0; 
 
-	CreateMutex (NULL, FALSE, "_mx_FDM_Lock_Start_");
+	CreateMutex (NULL, FALSE, _T("_mx_FDM_Lock_Start_"));
 
 	if (FALSE == DoJob (psz, dwFileLen))
 		goto _lErr;
@@ -548,15 +501,15 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 _lErr:
 	CoUninitialize ();
 
-	char szError [10000];
+	TCHAR szError [10000];
 
 	if (hFile != INVALID_HANDLE_VALUE)
 		CloseHandle (hFile);
 
-	sprintf (szError, "Failed to start FDM installer!\nError code is %d", 
+	_stprintf (szError, _T("Failed to start FDM installer!\nError code is %d"), 
 		GetLastError ());
 
-	MessageBox (NULL, szError, "Error", MB_ICONERROR);
+	MessageBox (NULL, szError, nullptr, MB_ICONERROR);
 
 	return GetLastError ();
 }

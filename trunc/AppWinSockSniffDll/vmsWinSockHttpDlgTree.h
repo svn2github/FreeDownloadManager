@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSWINSOCKHTTPDLGTREE_H__B0F43D06_A18D_40C8_8DE3_3127E0043FF2__INCLUDED_)
@@ -197,7 +197,7 @@ protected:
 #else
 	void Item_addParentItem (TreeItem *item, TreeItem *pParent, float fParentWeight, bool bAddChildToParent);
 #endif
-	vmsCriticalSection m_csModifyTree, m_csRemoveOldDialogs, m_csModifyAddDialogsList;
+	mutable vmsCriticalSection m_csModifyTree, m_csRemoveOldDialogs, m_csModifyAddDialogsList;
 	static void GetChildItems_imp (const TreeItem* item, vector <const TreeItem*> &vChildren, vmsHttpTrafficCollector::HttpDialog::ResourceContentType enCT, int nDepth);
 	static void GetChildItemsWithPath_imp (const TreeItem* item, vector <vector <const TreeItem*> > &vChildren, vmsHttpTrafficCollector::HttpDialog::ResourceContentType enCT, int nDepth, vector <const TreeItem*> vPath);
 	static void ExtractUrlParameters (HTTPDLG pDlg, string &strResult);

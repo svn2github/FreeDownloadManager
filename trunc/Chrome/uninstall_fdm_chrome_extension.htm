@@ -1,0 +1,17 @@
+<html>
+<head>
+	<script>
+		var landing = "http://freedownloadmanager.org"; 
+		try {
+			chrome.runtime.sendMessage("ahmpjcflkgiildlgicmcieglgoilbfdp", "uninstall", {}, function(r) { location=landing;} );
+		}
+		finally {
+			location=landing;
+		}
+	</script>
+</head>
+<body>
+	<!-- TODO : some fancy spinner maybe -->
+	Uninstalling Free Download Manager Chrome extension...
+</body>
+</html>

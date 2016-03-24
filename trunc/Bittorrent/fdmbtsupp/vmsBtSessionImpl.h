@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -38,6 +38,7 @@ public:
 	void UPNP_stop ();	
 	void NATPMP_start ();
 	void NATPMP_stop ();	
+	void addExtensionUTPEX();
 	BOOL DHT_getState (LPBYTE pbBuffer, DWORD dwBufferSize, LPDWORD pdwDataSize);
 	BOOL DHT_isStarted ();
 	void set_EventsHandler (fntBtSessionEventsHandler pfn, LPVOID pData);
@@ -60,6 +61,7 @@ public:
 		vmsPersistObject::getStateBuffer (pb, pdwSize, bSaveToStorage);
 	}
 	void addDHTRouter( std::pair<std::string, int> const& node );
+	void setSequentialDownloads(bool bEnableSequential);
 	
 public:
 	libtorrent::session m_session;

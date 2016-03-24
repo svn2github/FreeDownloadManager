@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,35 +30,33 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "libtorrent/pch.hpp"
-
 #include <string>
 #include <cctype>
 #include <algorithm>
-#include <limits>
+#include <boost/limits.hpp>
 #include <cstring>
 
 #include <boost/optional.hpp>
 #include <boost/array.hpp>
 #include <boost/tuple/tuple.hpp>
 
+#include "libtorrent/config.hpp"
 #include "libtorrent/assert.hpp"
 #include "libtorrent/escape_string.hpp"
 #include "libtorrent/parse_url.hpp"
+#include "libtorrent/random.hpp"
 
 #ifdef TORRENT_WINDOWS
-#if TORRENT_USE_WPATH
 #ifndef WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
 #endif
-#endif
 
 #include "libtorrent/utf8.hpp"
-#include <boost/thread.hpp>
+#include "libtorrent/thread.hpp"
 
-#if TORRENT_USE_LOCALE_FILENAMES
+#if TORRENT_USE_ICONV
 #include <iconv.h>
 #include <locale.h>
 #endif 
@@ -68,63 +66,20 @@ namespace libtorrent
 
 	// lexical_cast's result depends on the locale. We need
 	// a well defined result
-	boost::array<char, 3 + std::numeric_limits<size_type>::digits10> to_string(size_type n)
+	boost::array<char, 4 + std::numeric_limits<size_type>::digits10> to_string(size_type n)
 	{
-		boost::array<char, 3 + std::numeric_limits<size_type>::digits10> ret;
-		char *p = &ret.back();;
+		boost::array<char, 4 + std::numeric_limits<size_type>::digits10> ret;
+		char *p = &ret.back();
 		*p = '\0';
 		unsigned_size_type un = n;
-		if (n < 0)  un = -un;
+		if (n < 0)  un = -un; // TODO: warning C4146: unary minus operator applied to unsigned type, result still unsigned
 		do {
 			*--p = '0' + un % 10;
 			un /= 10;
 		} while (un);
 		if (n < 0) *--p = '-';
-		std::memmove(&ret.front(), p, sizeof(ret.elems));
+		std::memmove(&ret[0], p, &ret.back() - p + 1);
 		return ret;
-	}
-
-	bool is_digit(char c)
-	{
-		return c >= '0' && c <= '9';
-	}
-
-	bool is_print(char c)
-	{
-		return c >= 32 && c < 127;
-	}
-
-	bool is_space(char c)
-	{
-		const static char* ws = " \t\n\r\f\v";
-		return bool(std::strchr(ws, c));
-	}
-
-	char to_lower(char c)
-	{
-		return (c >= 'A' && c <= 'Z') ? c - 'A' + 'a' : c;
-	}
-
-	bool string_begins_no_case(char const* s1, char const* s2)
-	{
-		while (*s1 != 0)
-		{
-			if (to_lower(*s1) != to_lower(*s2)) return false;
-			++s1;
-			++s2;
-		}
-		return true;
-	}
-
-	bool string_equal_no_case(char const* s1, char const* s2)
-	{
-		while (to_lower(*s1) == to_lower(*s2))
-		{
-			if (*s1 == 0) return true;
-			++s1;
-			++s2;
-		}
-		return false;
 	}
 
 	std::string unescape_string(std::string const& s, error_code& ec)
@@ -205,7 +160,7 @@ namespace libtorrent
 		TORRENT_ASSERT(str != 0);
 		TORRENT_ASSERT(len >= 0);
 		TORRENT_ASSERT(offset >= 0);
-		TORRENT_ASSERT(offset < int(sizeof(unreserved_chars)-1));
+		TORRENT_ASSERT(offset < int(sizeof(unreserved_chars))-1);
 
 		std::string ret;
 		for (int i = 0; i < len; ++i)
@@ -246,6 +201,13 @@ namespace libtorrent
 		return false;
 	}
 	
+	void convert_path_to_posix(std::string& path)
+	{
+		for (std::string::iterator i = path.begin()
+			, end(path.end()); i != end; ++i)
+			if (*i == '\\') *i = '/';
+	}
+
 	std::string read_until(char const*& str, char delim, char const* end)
 	{
 		TORRENT_ASSERT(str <= end);
@@ -273,9 +235,11 @@ namespace libtorrent
 		if (!need_encoding(path.c_str(), path.size()))
 			return url;
 
-		char msg[NAME_MAX*4];
-		snprintf(msg, sizeof(msg), "%s://%s%s%s:%d%s", protocol.c_str(), auth.c_str()
-			, auth.empty()?"":"@", host.c_str(), port
+		char msg[TORRENT_MAX_PATH*4];
+		snprintf(msg, sizeof(msg), "%s://%s%s%s%s%s%s", protocol.c_str(), auth.c_str()
+			, auth.empty()?"":"@", host.c_str()
+			, port == -1 ? "" : ":"
+			, port == -1 ? "" : to_string(port).elems
 			, escape_path(path.c_str(), path.size()).c_str());
 		return msg;
 	}
@@ -442,11 +406,11 @@ namespace libtorrent
 		return ret;
 	}
 
-	boost::optional<std::string> url_has_argument(
-		std::string const& url, std::string argument, size_t* out_pos)
+	std::string url_has_argument(
+		std::string const& url, std::string argument, std::string::size_type* out_pos)
 	{
 		size_t i = url.find('?');
-		if (i == std::string::npos) return boost::optional<std::string>();
+		if (i == std::string::npos) return std::string();
 		++i;
 
 		argument += '=';
@@ -459,13 +423,13 @@ namespace libtorrent
 		}
 		argument.insert(0, "&");
 		i = url.find(argument, i);
-		if (i == std::string::npos) return boost::optional<std::string>();
+		if (i == std::string::npos) return std::string();
 		size_t pos = i + argument.size();
 		if (out_pos) *out_pos = pos;
 		return url.substr(pos, url.find('&', pos) - pos);
 	}
 
-	TORRENT_EXPORT std::string to_hex(std::string const& s)
+	TORRENT_EXTRA_EXPORT std::string to_hex(std::string const& s)
 	{
 		std::string ret;
 		for (std::string::const_iterator i = s.begin(); i != s.end(); ++i)
@@ -476,7 +440,7 @@ namespace libtorrent
 		return ret;
 	}
 
-	TORRENT_EXPORT void to_hex(char const *in, int len, char* out)
+	TORRENT_EXTRA_EXPORT void to_hex(char const *in, int len, char* out)
 	{
 		for (char const* end = in + len; in < end; ++in)
 		{
@@ -486,7 +450,7 @@ namespace libtorrent
 		*out = '\0';
 	}
 
-	int hex_to_int(char in)
+	TORRENT_EXTRA_EXPORT int hex_to_int(char in)
 	{
 		if (in >= '0' && in <= '9') return int(in) - '0';
 		if (in >= 'A' && in <= 'F') return int(in) - 'A' + 10;
@@ -494,7 +458,7 @@ namespace libtorrent
 		return -1;
 	}
 
-	TORRENT_EXPORT bool is_hex(char const *in, int len)
+	TORRENT_EXTRA_EXPORT bool is_hex(char const *in, int len)
 	{
 		for (char const* end = in + len; in < end; ++in)
 		{
@@ -504,7 +468,7 @@ namespace libtorrent
 		return true;
 	}
 
-	TORRENT_EXPORT bool from_hex(char const *in, int len, char* out)
+	TORRENT_EXTRA_EXPORT bool from_hex(char const *in, int len, char* out)
 	{
 		for (char const* end = in + len; in < end; ++in, ++out)
 		{
@@ -519,14 +483,11 @@ namespace libtorrent
 		return true;
 	}
 
-#if TORRENT_USE_WPATH
+#if defined TORRENT_WINDOWS && TORRENT_USE_WSTRING
 	std::wstring convert_to_wstring(std::string const& s)
 	{
 		std::wstring ret;
 		int result = libtorrent::utf8_wchar(s, ret);
-#ifndef BOOST_WINDOWS
-		return ret;
-#else
 		if (result == 0) return ret;
 
 		ret.clear();
@@ -534,27 +495,45 @@ namespace libtorrent
 		for (const char* i = &s[0]; i < end;)
 		{
 			wchar_t c = '.';
-			int result = std::mbtowc(&c, i, end - i);
+			result = std::mbtowc(&c, i, end - i);
 			if (result > 0) i += result;
 			else ++i;
 			ret += c;
 		}
 		return ret;
-#endif
+	}
+
+	std::string convert_from_wstring(std::wstring const& s)
+	{
+		std::string ret;
+		int result = libtorrent::wchar_utf8(s, ret);
+		if (result == 0) return ret;
+
+		ret.clear();
+		const wchar_t* end = &s[0] + s.size();
+		for (const wchar_t* i = &s[0]; i < end;)
+		{
+			char c[10];
+			TORRENT_ASSERT(sizeof(c) >= MB_CUR_MAX);
+			result = std::wctomb(c, *i);
+			if (result > 0)
+			{
+				i += result;
+				ret.append(c, result);
+			}
+			else
+			{
+				++i;
+				ret += ".";
+			}
+		}
+		return ret;
 	}
 #endif
 
-#if TORRENT_USE_LOCALE_FILENAMES
-
-	std::string convert_to_native(std::string const& s)
+#if TORRENT_USE_ICONV
+	std::string iconv_convert_impl(std::string const& s, iconv_t h)
 	{
-		// only one thread can use this handle at a time
-		static boost::mutex iconv_mutex;
-		boost::mutex::scoped_lock l(iconv_mutex);
-
-		// the empty string represents the local dependent encoding
-		static iconv_t iconv_handle = iconv_open("", "UTF-8");
-		if (iconv_handle == iconv_t(-1)) return s;
 		std::string ret;
 		size_t insize = s.size();
 		size_t outsize = insize * 4;
@@ -564,7 +543,7 @@ namespace libtorrent
 		// posix has a weird iconv signature. implementations
 		// differ on what this signature should be, so we use
 		// a macro to let config.hpp determine it
-		size_t retval = iconv(iconv_handle, TORRENT_ICONV_ARG &in, &insize,
+		size_t retval = iconv(h, TORRENT_ICONV_ARG &in, &insize,
 			&out, &outsize);
 		if (retval == (size_t)-1) return s;
 		// if this string has an invalid utf-8 sequence in it, don't touch it
@@ -577,31 +556,83 @@ namespace libtorrent
 		return ret;
 	}
 
+	std::string convert_to_native(std::string const& s)
+	{
+		static mutex iconv_mutex;
+		// only one thread can use this handle at a time
+		mutex::scoped_lock l(iconv_mutex);
+
+		// the empty string represents the local dependent encoding
+		static iconv_t iconv_handle = iconv_open("", "UTF-8");
+		if (iconv_handle == iconv_t(-1)) return s;
+		return iconv_convert_impl(s, iconv_handle);
+	}
+
+	std::string convert_from_native(std::string const& s)
+	{
+		static mutex iconv_mutex;
+		// only one thread can use this handle at a time
+		mutex::scoped_lock l(iconv_mutex);
+
+		// the empty string represents the local dependent encoding
+		static iconv_t iconv_handle = iconv_open("UTF-8", "");
+		if (iconv_handle == iconv_t(-1)) return s;
+		return iconv_convert_impl(s, iconv_handle);
+	}
+
 #elif defined TORRENT_WINDOWS
 
 	std::string convert_to_native(std::string const& s)
 	{
-#ifndef BOOST_NO_EXCEPTIONS
-		try
-		{
-#endif
-			std::wstring ws;
-			libtorrent::utf8_wchar(s, ws);
-			std::size_t size = wcstombs(0, ws.c_str(), 0);
-			if (size == std::size_t(-1)) return s;
-			std::string ret;
-			ret.resize(size);
-			size = wcstombs(&ret[0], ws.c_str(), size + 1);
-			if (size == std::size_t(-1)) return s;
-			ret.resize(size);
-			return ret;
-#ifndef BOOST_NO_EXCEPTIONS
-		}
-		catch(std::exception)
-		{
-			return s;
-		}
-#endif
+		std::wstring ws;
+		libtorrent::utf8_wchar(s, ws);
+		std::string ret;
+		ret.resize(ws.size() * 4 + 1);
+		std::size_t size = WideCharToMultiByte(CP_ACP, 0, ws.c_str(), -1, &ret[0], ret.size(), NULL, NULL);
+		if (size == std::size_t(-1)) return s;
+		if (size != 0 && ret[size - 1] == '\0') --size;
+		ret.resize(size);
+		return ret;
+	}
+
+	std::string convert_from_native(std::string const& s)
+	{
+		std::wstring ws;
+		ws.resize(s.size() + 1);
+		std::size_t size = MultiByteToWideChar(CP_ACP, 0, s.c_str(), -1, &ws[0], ws.size());
+		if (size == std::size_t(-1)) return s;
+		if (size != 0 && ws[size - 1] == '\0') --size;
+		ws.resize(size);
+		std::string ret;
+		libtorrent::wchar_utf8(ws, ret);
+		return ret;
+	}
+
+#elif TORRENT_USE_LOCALE
+
+	std::string convert_to_native(std::string const& s)
+	{
+		std::wstring ws;
+		libtorrent::utf8_wchar(s, ws);
+		std::size_t size = wcstombs(0, ws.c_str(), 0);
+		if (size == std::size_t(-1)) return s;
+		std::string ret;
+		ret.resize(size);
+		size = wcstombs(&ret[0], ws.c_str(), size + 1);
+		if (size == std::size_t(-1)) return s;
+		ret.resize(size);
+		return ret;
+	}
+
+	std::string convert_from_native(std::string const& s)
+	{
+		std::wstring ws;
+		ws.resize(s.size());
+		std::size_t size = mbstowcs(&ws[0], s.c_str(), s.size());
+		if (size == std::size_t(-1)) return s;
+		std::string ret;
+		libtorrent::wchar_utf8(ws, ret);
+		return ret;
 	}
 
 #endif

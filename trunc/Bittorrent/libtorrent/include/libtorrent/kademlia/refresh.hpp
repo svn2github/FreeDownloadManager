@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2006, Arvid Norberg & Daniel Wallin
+Copyright (c) 2006-2014, Arvid Norberg & Daniel Wallin
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -33,118 +33,37 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef REFRESH_050324_HPP
 #define REFRESH_050324_HPP
 
-#include <vector>
-
 #include <libtorrent/kademlia/traversal_algorithm.hpp>
 #include <libtorrent/kademlia/node_id.hpp>
-#include <libtorrent/kademlia/observer.hpp>
-#include <libtorrent/kademlia/msg.hpp>
-
-#include <boost/function.hpp>
+#include <libtorrent/kademlia/get_peers.hpp>
 
 namespace libtorrent { namespace dht
 {
 
-#ifdef TORRENT_DHT_VERBOSE_LOGGING
-TORRENT_DECLARE_LOG(refresh);
-#endif
-
 class routing_table;
 class rpc_manager;
 
-class refresh : public traversal_algorithm
+class bootstrap : public get_peers
 {
 public:
-	typedef std::vector<node_entry>::iterator InIt;
-	typedef boost::function<void()> done_callback;
+	typedef get_peers::nodes_callback done_callback;
 
-	void ping_reply(node_id id);
-	void ping_timeout(node_id id, bool prevent_request = false);
-
-	refresh(node_impl& node, node_id target, InIt first, InIt last
+	bootstrap(node_impl& node, node_id target
 		, done_callback const& callback);
+	virtual char const* name() const;
 
-	virtual char const* name() const { return "refresh"; }
+	observer_ptr new_observer(void* ptr, udp::endpoint const& ep
+		, node_id const& id);
 
-private:
+	void trim_seed_nodes();
 
-	void done();
-	void invoke(node_id const& id, udp::endpoint addr);
+protected:
 
-	void invoke_pings_or_finish(bool prevent_request = false);
+	virtual bool invoke(observer_ptr o);
 
-	int m_max_active_pings;
-	int m_active_pings;
+	virtual void done();
 
-	done_callback m_done_callback;
-	
-	std::vector<result>::iterator m_leftover_nodes_iterator;
 };
-
-class refresh_observer : public observer
-{
-public:
-	refresh_observer(
-		boost::intrusive_ptr<refresh> const& algorithm
-		, node_id self)
-		: observer(algorithm->allocator())
-		, m_algorithm(algorithm)
-		, m_self(self)
-	{}
-	~refresh_observer();
-
-	void send(msg& m)
-	{
-		m.info_hash = m_algorithm->target();
-	}
-
-	void timeout();
-	void reply(msg const& m);
-	void abort() { m_algorithm = 0; }
-
-
-private:
-	boost::intrusive_ptr<refresh> m_algorithm;
-	node_id const m_self;
-};
-
-class ping_observer : public observer
-{
-public:
-	ping_observer(
-		boost::intrusive_ptr<refresh> const& algorithm
-		, node_id self)
-		: observer(algorithm->allocator())
-		, m_self(self)
-		, m_algorithm(algorithm)
-	{}
-	~ping_observer();
-
-	void send(msg& p) {}
-	void timeout();
-	void reply(msg const& m);
-	void abort() { m_algorithm = 0; }
-
-
-private:
-	node_id const m_self;
-	boost::intrusive_ptr<refresh> m_algorithm;
-};
-
-inline refresh::refresh(
-	node_impl& node
-	, node_id target
-	, refresh::InIt first
-	, refresh::InIt last
-	, done_callback const& callback)
-	: traversal_algorithm(node, target, first, last)
-	, m_max_active_pings(10)
-	, m_active_pings(0)
-	, m_done_callback(callback)
-{
-	boost::intrusive_ptr<refresh> self(this);
-	add_requests();
-}
 
 } } // namespace libtorrent::dht
 

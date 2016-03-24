@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -101,6 +101,8 @@ struct vmsBtSessionEvent
 
 	
 	LPCSTR pszIp;
+
+	int error_code;
 	};
 };
 
@@ -153,6 +155,7 @@ public:
 	virtual void UPNP_stop () = NULL;	
 	virtual void NATPMP_start () = NULL;
 	virtual void NATPMP_stop () = NULL;	
+	virtual void addExtensionUTPEX() = NULL;
 	
 	
 	virtual void set_EventsHandler (fntBtSessionEventsHandler pfn, LPVOID pData) = NULL;
@@ -173,4 +176,6 @@ public:
 	virtual void DisableOsCash() = NULL;
 	virtual void getPersistObject (vmsBtPersistObject **ppObj) = NULL;
 	virtual void addDHTRouter( std::pair<std::string, int> const& node ) = NULL;
+	virtual void setSequentialDownloads(bool bEnableSequential) = NULL;
+	virtual ~vmsBtSession(){};
 };

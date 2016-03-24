@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -94,7 +94,7 @@ HRESULT vmsHttpFlvTrafficAnalyzer2::FindFlvDownloadsInHtmlPage_imp(LPCSTR pszHtm
 	if (vFlvs.empty ()) 
 	{
 		
-		LPCSTR pszHtml = (LPCSTR)pDlg->getBodyText ();
+		LPCSTR pszHtml = pDlg->getBodyText ();
 		vector <string> v1, v2;
 		vmsHtmlParser::findAllTagsHeads (pszHtml, "iframe", v1);
 		vmsHtmlParser::findAllTagsHeads (pszHtml, "frame", v2);

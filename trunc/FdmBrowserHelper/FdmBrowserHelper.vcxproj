@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F43CE010-E5F0-45D1-89C5-3DCE111C2187}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>FdmBrowserHelper</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120_xp</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\bin\$(Configuration)\</OutDir>
+    <ExecutablePath>$(VC_ExecutablePath_x86);$(WindowsSdk_ExecutablePath);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_IncludePath);</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSdk_LibraryPath_x86);</LibraryPath>
+    <ExcludePath>$(VC_IncludePath);$(WindowsSdk_IncludePath);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x86);</ExcludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\bin\$(Configuration)\</OutDir>
+    <ExecutablePath>$(VC_ExecutablePath_x86);$(WindowsSdk_ExecutablePath);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(SystemRoot)\SysWow64;$(FxCopDir);$(PATH);</ExecutablePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSdk_IncludePath);</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSdk_LibraryPath_x86);</LibraryPath>
+    <ExcludePath>$(VC_IncludePath);$(WindowsSdk_IncludePath);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x86);</ExcludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../include.add;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalIncludeDirectories>../include.add;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="vmsFdmBhIpcBrowserProxyInfo.h" />
+    <ClInclude Include="vmsFdmBhIpcBrowserProxyTaskProcessor.h" />
+    <ClInclude Include="vmsFdmBhIpcCreateDownloadsTaskProcessor.h" />
+    <ClInclude Include="vmsFdmBhIpcDownloadInfo.h" />
+    <ClInclude Include="vmsFdmBhIpcDownloadStateReportTaskProcessor.h" />
+    <ClInclude Include="vmsFdmBhIpcHandshakeTaskProcessor.h" />
+    <ClInclude Include="vmsFdmBhIpcNetworkRequestNotificationTaskProcessor.h" />
+    <ClInclude Include="vmsFdmBhIpcQuerySettingsTaskProcessor.h" />
+    <ClInclude Include="vmsFdmBhIpcQuerySettingsTaskResponse.h" />
+    <ClInclude Include="vmsFdmBhIpcTask.h" />
+    <ClInclude Include="vmsFdmBhIpcTaskCreateDownloads.h" />
+    <ClInclude Include="vmsFdmBhIpcTaskDownloadState.h" />
+    <ClInclude Include="vmsFdmBhIpcTaskHandshake.h" />
+    <ClInclude Include="vmsFdmBhIpcTaskNetworkRequestNotification.h" />
+    <ClInclude Include="vmsFdmBhIpcTaskProcessor.h" />
+    <ClInclude Include="vmsFdmBhIpcTaskProcessorManager.h" />
+    <ClInclude Include="vmsFdmBhIpcTaskResponse.h" />
+    <ClInclude Include="vmsFdmBhIpcTaskVideoSniffer.h" />
+    <ClInclude Include="vmsFdmBhIpcTaskWindow.h" />
+    <ClInclude Include="vmsFdmBhIpcUiStringsTaskProcessor.h" />
+    <ClInclude Include="vmsFdmBhIpcUiStringsTaskResponse.h" />
+    <ClInclude Include="vmsFdmBhIpcVideoSnifferTaskProcessor.h" />
+    <ClInclude Include="vmsFdmBhIpcVideoSnifferTaskResponse.h" />
+    <ClInclude Include="vmsFdmBhIpcWindowTaskProcessor.h" />
+    <ClInclude Include="vmsFdmBhSniffDllProxyManager.h" />
+    <ClInclude Include="vmsFdmBrowserHelperApp.h" />
+    <ClInclude Include="vmsFdmBrowserMenuSettings.h" />
+    <ClInclude Include="vmsFdmBrowserMonitorSettings.h" />
+    <ClInclude Include="vmsFdmBrowserSettings.h" />
+    <ClInclude Include="vmsFdmSettings.h" />
+    <ClInclude Include="vmsFdmSettingsManager.h" />
+    <ClInclude Include="vmsFdmVideoMonitoringSettings.h" />
+    <ClInclude Include="vmsParentBrowserProcessManager.h" />
+    <ClInclude Include="vmsSimpleIpcItem.h" />
+    <ClInclude Include="vmsSimpleIpcItemReceiver.h" />
+    <ClInclude Include="vmsSimpleIpcItemSender.h" />
+    <ClInclude Include="vmsSimpleIpcManager.h" />
+    <ClInclude Include="vmsSimpleIpcStringItem.h" />
+    <ClInclude Include="vmsSimpleIpcTaskItem.h" />
+    <ClInclude Include="vmsSimpleIpcTaskManager.h" />
+    <ClInclude Include="WindowsTasksManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="FdmBrowserHelper.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="vmsFdmBhIpcBrowserProxyTaskProcessor.cpp" />
+    <ClCompile Include="vmsFdmBhIpcCreateDownloadsTaskProcessor.cpp" />
+    <ClCompile Include="vmsFdmBhIpcDownloadStateReportTaskProcessor.cpp" />
+    <ClCompile Include="vmsFdmBhIpcHandshakeTaskProcessor.cpp" />
+    <ClCompile Include="vmsFdmBhIpcNetworkRequestNotificationTaskProcessor.cpp" />
+    <ClCompile Include="vmsFdmBhIpcQuerySettingsTaskProcessor.cpp" />
+    <ClCompile Include="vmsFdmBhIpcTask.cpp" />
+    <ClCompile Include="vmsFdmBhIpcTaskProcessorManager.cpp" />
+    <ClCompile Include="vmsFdmBhIpcUiStringsTaskProcessor.cpp" />
+    <ClCompile Include="vmsFdmBhIpcVideoSnifferTaskProcessor.cpp" />
+    <ClCompile Include="vmsFdmBhIpcWindowTaskProcessor.cpp" />
+    <ClCompile Include="vmsFdmBrowserHelperApp.cpp" />
+    <ClCompile Include="vmsFdmSettingsManager.cpp" />
+    <ClCompile Include="vmsParentBrowserProcessManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="FdmBrowserHelper.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

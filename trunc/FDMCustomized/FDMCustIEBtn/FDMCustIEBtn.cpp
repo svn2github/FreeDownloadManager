@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -42,22 +42,27 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
 STDAPI DllRegisterServer(void)
 {
    	HKEY key;
-	char szIco [MAX_PATH];
-	char szCustomizer [1000];
+	TCHAR szIco [MAX_PATH];
+	TCHAR szCustomizer [1000];
 	DWORD dwSize = MAX_PATH;
+	DWORD dwBuffSize = dwSize * sizeof(TCHAR);
 
-	if (ERROR_SUCCESS != RegOpenKey (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Download Manager", &key))
+	if (ERROR_SUCCESS != RegOpenKey (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG\\Free Download Manager"), &key))
 		return E_FAIL;
-	if (ERROR_SUCCESS != RegQueryValueEx (key, "Path", NULL, NULL, (LPBYTE) szIco, &dwSize))
+	
+	
+	if (ERROR_SUCCESS != RegQueryValueEx (key, _T("Path"), NULL, NULL, (LPBYTE) szIco, &dwBuffSize))
 		return E_FAIL;
+	dwSize = dwBuffSize / sizeof(TCHAR);
 	szIco [dwSize] = 0;
-	if (szIco [dwSize-1] != '\\')
-		lstrcat (szIco, "\\");
-	lstrcat (szIco, "fdmcsiebtn.ico");
+	if (szIco [dwSize-1] != _T('\\'))
+		_tcscat_s (szIco, MAX_PATH, _T("\\"));
+	_tcscat_s (szIco, MAX_PATH, _T("fdmcsiebtn.ico"));
 
 	dwSize = 1000;
-	if (ERROR_SUCCESS != RegQueryValueEx (key, "Customizer", NULL, NULL, (LPBYTE) szCustomizer, &dwSize))
+	if (ERROR_SUCCESS != RegQueryValueEx (key, _T("Customizer"), NULL, NULL, (LPBYTE) szCustomizer, &dwBuffSize))
 		return E_FAIL;
+	dwSize = dwBuffSize / sizeof(TCHAR);
 	szCustomizer [dwSize] = 0;
 
 	RegCloseKey (key);
@@ -67,10 +72,10 @@ STDAPI DllRegisterServer(void)
 	if (FAILED (hr))
 		return hr;
 
-	RegOpenKey (HKEY_CURRENT_USER, "Software\\Microsoft\\Internet Explorer\\Extensions\\{DAC360AF-9FD0-432D-B2F2-ED3220F4CAD9}", &key);
-	RegSetValueEx (key, "Icon", 0, REG_SZ, (LPBYTE)szIco, lstrlen (szIco));
-	RegSetValueEx (key, "HotIcon", 0, REG_SZ, (LPBYTE)szIco, lstrlen (szIco));
-	RegSetValueEx (key, "ButtonText", 0, REG_SZ, (LPBYTE)szCustomizer, lstrlen (szCustomizer));
+	RegOpenKey (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Internet Explorer\\Extensions\\{DAC360AF-9FD0-432D-B2F2-ED3220F4CAD9}"), &key);
+	RegSetValueEx (key, _T("Icon"), 0, REG_SZ, (LPBYTE)szIco, _tcslen (szIco));
+	RegSetValueEx (key, _T("HotIcon"), 0, REG_SZ, (LPBYTE)szIco, _tcslen (szIco));
+	RegSetValueEx (key, _T("ButtonText"), 0, REG_SZ, (LPBYTE)szCustomizer, _tcslen (szCustomizer));
 	RegCloseKey (key);
 	
 	return hr;

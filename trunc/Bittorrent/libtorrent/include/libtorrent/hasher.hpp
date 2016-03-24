@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -38,84 +38,100 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/peer_id.hpp"
 #include "libtorrent/config.hpp"
 #include "libtorrent/assert.hpp"
-#include "zlib.h"
 
-#ifdef TORRENT_USE_OPENSSL
+#ifdef TORRENT_USE_GCRYPT
+#include <gcrypt.h>
+
+#elif TORRENT_USE_COMMONCRYPTO
+
+#include <CommonCrypto/CommonDigest.h>
+
+#elif defined TORRENT_USE_OPENSSL
+
 extern "C"
 {
 #include <openssl/sha.h>
 }
+
 #else
 // from sha1.cpp
-struct TORRENT_EXPORT SHA_CTX
+namespace libtorrent
 {
-	boost::uint32_t state[5];
-	boost::uint32_t count[2];
-	boost::uint8_t buffer[64];
-};
 
-TORRENT_EXPORT void SHA1_Init(SHA_CTX* context);
-TORRENT_EXPORT void SHA1_Update(SHA_CTX* context, boost::uint8_t const* data, boost::uint32_t len);
-TORRENT_EXPORT void SHA1_Final(boost::uint8_t* digest, SHA_CTX* context);
+	struct TORRENT_EXTRA_EXPORT sha_ctx
+	{
+		boost::uint32_t state[5];
+		boost::uint32_t count[2];
+		boost::uint8_t buffer[64];
+	};
+
+	TORRENT_EXTRA_EXPORT void SHA1_init(sha_ctx* context);
+	TORRENT_EXTRA_EXPORT void SHA1_update(sha_ctx* context, boost::uint8_t const* data, boost::uint32_t len);
+	TORRENT_EXTRA_EXPORT void SHA1_final(boost::uint8_t* digest, sha_ctx* context);
+} // namespace libtorrent
 
 #endif
 
 namespace libtorrent
 {
-
-	class adler32_crc
-	{
-	public:
-		adler32_crc(): m_adler(adler32(0, 0, 0)) {}
-
-		void update(const char* data, int len)
-		{
-			TORRENT_ASSERT(data != 0);
-			TORRENT_ASSERT(len > 0);
-			m_adler = adler32(m_adler, (const Bytef*)data, len);
-		}
-		unsigned long final() const { return m_adler; }
-		void reset() { m_adler = adler32(0, 0, 0); }
-
-	private:
-
-		unsigned long m_adler;
-
-	};
-
-	class hasher
+	// this is a SHA-1 hash class.
+	// 
+	// You use it by first instantiating it, then call ``update()`` to feed it
+	// with data. i.e. you don't have to keep the entire buffer of which you want to
+	// create the hash in memory. You can feed the hasher parts of it at a time. When
+	// You have fed the hasher with all the data, you call ``final()`` and it
+	// will return the sha1-hash of the data.
+	// 
+	// The constructor that takes a ``char const*`` and an integer will construct the
+	// sha1 context and feed it the data passed in.
+	// 
+	// If you want to reuse the hasher object once you have created a hash, you have to
+	// call ``reset()`` to reinitialize it.
+	// 
+	// The sha1-algorithm used was implemented by Steve Reid and released as public domain.
+	// For more info, see ``src/sha1.cpp``.
+	class TORRENT_EXPORT hasher
 	{
 	public:
 
-		hasher() { SHA1_Init(&m_context); }
-		hasher(const char* data, int len)
-		{
-			SHA1_Init(&m_context);
-			TORRENT_ASSERT(data != 0);
-			TORRENT_ASSERT(len > 0);
-			SHA1_Update(&m_context, reinterpret_cast<unsigned char const*>(data), len);
-		}
-		void update(std::string const& data) { update(&data[0], data.size()); }
-		void update(const char* data, int len)
-		{
-			TORRENT_ASSERT(data != 0);
-			TORRENT_ASSERT(len > 0);
-			SHA1_Update(&m_context, reinterpret_cast<unsigned char const*>(data), len);
-		}
+		hasher();
 
-		sha1_hash final()
-		{
-			sha1_hash digest;
-			SHA1_Final(digest.begin(), &m_context);
-			return digest;
-		}
+		// this is the same as default constructing followed by a call to
+		// ``update(data, len)``.
+		hasher(const char* data, int len);
 
-		void reset() { SHA1_Init(&m_context); }
+#ifdef TORRENT_USE_GCRYPT
+		hasher(hasher const& h);
+		hasher& operator=(hasher const& h);
+#endif
+
+		// append the following bytes to what is being hashed
+		hasher& update(std::string const& data) { update(data.c_str(), int(data.size())); return *this; }
+		hasher& update(const char* data, int len);
+		
+		// returns the SHA-1 digest of the buffers previously passed to
+		// update() and the hasher constructor.
+		sha1_hash final();
+
+		// restore the hasher state to be as if the hasher has just been
+		// default constructed.
+		void reset();
+
+#ifdef TORRENT_USE_GCRYPT
+		~hasher();
+#endif
 
 	private:
 
+#ifdef TORRENT_USE_GCRYPT
+		gcry_md_hd_t m_context;
+#elif TORRENT_USE_COMMONCRYPTO
+		CC_SHA1_CTX m_context;
+#elif defined TORRENT_USE_OPENSSL
 		SHA_CTX m_context;
-
+#else
+		sha_ctx m_context;
+#endif
 	};
 }
 

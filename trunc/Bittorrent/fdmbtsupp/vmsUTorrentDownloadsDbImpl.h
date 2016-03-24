@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -10,7 +10,7 @@ class vmsUTorrentDownloadsDbImpl :
 	public vmsFdmBtObjectImpl <vmsUTorrentDownloadsDb>
 {
 public:
-	virtual BOOL ImportUtorrentDownloads (LPCSTR pszTorrentFile);
+	virtual BOOL ImportUtorrentDownloads (LPCTSTR pszTorrentFile);
 	virtual int getDownloadCount ()
 	{
 		return m_vDownloads.size ();

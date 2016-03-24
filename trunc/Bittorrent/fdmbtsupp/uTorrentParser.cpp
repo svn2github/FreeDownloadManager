@@ -1,9 +1,8 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
-#include "libtorrent/pch.hpp"
 
 #include <ctime>
 

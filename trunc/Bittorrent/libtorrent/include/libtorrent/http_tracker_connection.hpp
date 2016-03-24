@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -49,7 +49,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/lazy_entry.hpp"
 #include "libtorrent/peer_id.hpp"
 #include "libtorrent/tracker_manager.hpp"
-#include "libtorrent/config.hpp"
+#include "libtorrent/i2p_stream.hpp"
 
 namespace libtorrent
 {
@@ -61,7 +61,7 @@ namespace libtorrent
 	struct session_settings;
 	namespace aux { struct session_impl; }
 
-	class TORRENT_EXPORT http_tracker_connection
+	class TORRENT_EXTRA_EXPORT http_tracker_connection
 		: public tracker_connection
 	{
 	friend class tracker_manager;
@@ -75,7 +75,11 @@ namespace libtorrent
 			, boost::weak_ptr<request_callback> c
 			, aux::session_impl const& ses
 			, proxy_settings const& ps
-			, std::string const& password = "");
+			, std::string const& password = ""
+#if TORRENT_USE_I2P
+			, i2p_connection* i2p_conn = 0
+#endif
+			);
 
 		void start();
 		void close();
@@ -102,6 +106,9 @@ namespace libtorrent
 		proxy_settings const& m_ps;
 		connection_queue& m_cc;
 		io_service& m_ios;
+#if TORRENT_USE_I2P
+		i2p_connection* m_i2p_conn;
+#endif
 	};
 
 }

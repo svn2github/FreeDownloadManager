@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -49,12 +49,12 @@ BOOL vmsDownloadForTrafficCollector::MakeDownload(LPCSTR pszUrl, vmsHttpTrafficC
 
 BOOL vmsDownloadForTrafficCollector::MakeWasteDownload(LPCSTR pszUrl)
 {
-	bool bHTTPS = !strnicmp (pszUrl, "https://", 8);
-	HINTERNET hInet = InternetOpen ("Mozilla/4.05 [en] (WinXP; I)", INTERNET_OPEN_TYPE_PRECONFIG,
+	HINTERNET hInet = InternetOpen (_T("Mozilla/4.05 [en] (WinXP; I)"), INTERNET_OPEN_TYPE_PRECONFIG,
 		NULL, NULL, 0);
 	if (hInet == NULL)
 		return FALSE;
-	HINTERNET hFile = InternetOpenUrl (hInet, pszUrl, NULL, 0, INTERNET_FLAG_IGNORE_CERT_CN_INVALID | 
+	HINTERNET hFile = InternetOpenUrl (hInet, tstringFromString (pszUrl).c_str (), NULL, 0, 
+		INTERNET_FLAG_IGNORE_CERT_CN_INVALID | 
 		INTERNET_FLAG_IGNORE_CERT_DATE_INVALID | INTERNET_FLAG_IGNORE_REDIRECT_TO_HTTP | 
 		INTERNET_FLAG_KEEP_CONNECTION | INTERNET_FLAG_NO_UI | INTERNET_FLAG_RELOAD, NULL);
 	if (hFile == NULL)
@@ -65,13 +65,8 @@ BOOL vmsDownloadForTrafficCollector::MakeWasteDownload(LPCSTR pszUrl)
 	BYTE ab [1024]; DWORD dw = 0; int iMaxSize = 200*1024/sizeof(ab);
 	extern vmsWinInetHttpTrafficCollector _WinInetTrafficCollector;
 	while (InternetReadFile (hFile, ab, sizeof (ab), &dw) && dw != 0 && --iMaxSize > 0)
-	{
-		if (bHTTPS)
-			_WinInetTrafficCollector.OnInternetReadFile (hFile, ab, dw);
-	}
-	InternetCloseHandle (hFile);
-	if (bHTTPS)
-		_WinInetTrafficCollector.OnInternetCloseHandle (hFile);
+		_WinInetTrafficCollector.OnInternetReadFile (hFile, ab, dw);
+	_WinInetTrafficCollector.OnInternetCloseHandle (hFile);
 	InternetCloseHandle (hInet);
 	return TRUE;
 }

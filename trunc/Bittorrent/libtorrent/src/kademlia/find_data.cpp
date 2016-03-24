@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2006, Arvid Norberg & Daniel Wallin
+Copyright (c) 2006-2014, Arvid Norberg & Daniel Wallin
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,117 +30,149 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "libtorrent/pch.hpp"
-
 #include <libtorrent/kademlia/find_data.hpp>
 #include <libtorrent/kademlia/routing_table.hpp>
 #include <libtorrent/kademlia/rpc_manager.hpp>
 #include <libtorrent/kademlia/node.hpp>
 #include <libtorrent/io.hpp>
 #include <libtorrent/socket.hpp>
+#include <libtorrent/socket_io.hpp>
+#include <vector>
 
 namespace libtorrent { namespace dht
 {
 
-find_data_observer::~find_data_observer()
-{
-	if (m_algorithm) m_algorithm->failed(m_self);
-}
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+	TORRENT_DECLARE_LOG(traversal);
+#endif
+
+using detail::read_endpoint_list;
+using detail::read_v4_endpoint;
+#if TORRENT_USE_IPV6
+using detail::read_v6_endpoint;
+#endif
 
 void find_data_observer::reply(msg const& m)
 {
-	if (!m_algorithm)
+	lazy_entry const* r = m.message.dict_find_dict("r");
+	if (!r)
 	{
-		TORRENT_ASSERT(false);
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+		TORRENT_LOG(traversal) << "[" << m_algorithm.get() << "] missing response dict";
+#endif
 		return;
 	}
 
-	if (!m.write_token.empty())
-		m_algorithm->got_write_token(m.id, m.write_token);
-
-	if (!m.peers.empty())
-		m_algorithm->got_data(&m);
-
-	if (!m.nodes.empty())
+	lazy_entry const* id = r->dict_find_string("id");
+	if (!id || id->string_length() != 20)
 	{
-		for (msg::nodes_t::const_iterator i = m.nodes.begin()
-			, end(m.nodes.end()); i != end; ++i)
-		{
-			m_algorithm->traverse(i->id, udp::endpoint(i->addr, i->port));
-		}
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+		TORRENT_LOG(traversal) << "[" << m_algorithm.get() << "] invalid id in response";
+#endif
+		return;
 	}
-	m_algorithm->finished(m_self);
-	m_algorithm = 0;
+	lazy_entry const* token = r->dict_find_string("token");
+	if (token)
+	{
+		static_cast<find_data*>(m_algorithm.get())->got_write_token(
+			node_id(id->string_ptr()), token->string_value());
+	}
+
+	traversal_observer::reply(m);
+	done();
 }
 
-void find_data_observer::timeout()
+void add_entry_fun(void* userdata, node_entry const& e)
 {
-	if (!m_algorithm) return;
-	m_algorithm->failed(m_self);
-	m_algorithm = 0;
+	traversal_algorithm* f = (traversal_algorithm*)userdata;
+	f->add_entry(e.id, e.ep(), observer::flag_initial);
 }
-
 
 find_data::find_data(
 	node_impl& node
 	, node_id target
-	, data_callback const& dcallback
 	, nodes_callback const& ncallback)
-	: traversal_algorithm(node, target, node.m_table.begin(), node.m_table.end())
-	, m_data_callback(dcallback)
+	: traversal_algorithm(node, target)
 	, m_nodes_callback(ncallback)
-	, m_target(target)
 	, m_done(false)
 {
-	boost::intrusive_ptr<find_data> self(this);
-	add_requests();
 }
 
-void find_data::invoke(node_id const& id, udp::endpoint addr)
+void find_data::start()
 {
-	if (m_done)
-	{
-		m_invoke_count = -1;
-		return;
-	}
+	// if the user didn't add seed-nodes manually, grab a bunch of nodes from the
+	// routing table
+	if (m_results.empty())
+		m_node.m_table.for_each_node(&add_entry_fun, 0, (traversal_algorithm*)this);
 
-	TORRENT_ASSERT(m_node.m_rpc.allocation_size() >= sizeof(find_data_observer));
-	void* ptr = m_node.m_rpc.allocator().malloc();
-	if (ptr == 0)
-	{
-		done();
-		return;
-	}
-	m_node.m_rpc.allocator().set_next_size(10);
-	observer_ptr o(new (ptr) find_data_observer(this, id));
-#ifdef TORRENT_DEBUG
+	traversal_algorithm::start();
+}
+
+void find_data::got_write_token(node_id const& n, std::string const& write_token)
+{
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+	TORRENT_LOG(traversal) << "[" << this << "] adding write "
+		"token '" << to_hex(write_token) << "' under id '" << to_hex(n.to_string()) << "'";
+#endif
+	m_write_tokens[n] = write_token;
+}
+
+observer_ptr find_data::new_observer(void* ptr
+	, udp::endpoint const& ep, node_id const& id)
+{
+	observer_ptr o(new (ptr) find_data_observer(this, ep, id));
+#if defined TORRENT_DEBUG || TORRENT_RELEASE_ASSERTS
 	o->m_in_constructor = false;
 #endif
-	m_node.m_rpc.invoke(messages::get_peers, addr, o);
+	return o;
 }
 
-void find_data::got_data(msg const* m)
-{
-	m_data_callback(m->peers);
-}
+char const* find_data::name() const { return "find_data"; }
 
 void find_data::done()
 {
 	if (m_invoke_count != 0) return;
 
+	m_done = true;
+
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+	TORRENT_LOG(traversal) << "[" << this << "] " << name() << " DONE";
+#endif
+
 	std::vector<std::pair<node_entry, std::string> > results;
 	int num_results = m_node.m_table.bucket_size();
-	for (std::vector<result>::iterator i = m_results.begin()
+	for (std::vector<observer_ptr>::iterator i = m_results.begin()
 		, end(m_results.end()); i != end && num_results > 0; ++i)
 	{
-		if (i->flags & result::no_id) continue;
-		if ((i->flags & result::queried) == 0) continue;
-		std::map<node_id, std::string>::iterator j = m_write_tokens.find(i->id);
-		if (j == m_write_tokens.end()) continue;
-		results.push_back(std::make_pair(node_entry(i->id, i->addr), j->second));
+		observer_ptr const& o = *i;
+		if ((o->flags & observer::flag_alive) == 0)
+		{
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+			TORRENT_LOG(traversal) << "[" << this << "]     not alive: "
+				<< o->target_ep();
+#endif
+			continue;
+		}
+		std::map<node_id, std::string>::iterator j = m_write_tokens.find(o->id());
+		if (j == m_write_tokens.end())
+		{
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+			TORRENT_LOG(traversal) << "[" << this << "]     no write token: "
+				<< o->target_ep();
+#endif
+			continue;
+		}
+		results.push_back(std::make_pair(node_entry(o->id(), o->target_ep()), j->second));
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+			TORRENT_LOG(traversal) << "[" << this << "]     "
+				<< o->target_ep();
+#endif
 		--num_results;
 	}
-	m_nodes_callback(results);
+
+	if (m_nodes_callback) m_nodes_callback(results);
+
+	traversal_algorithm::done();
 }
 
 } } // namespace libtorrent::dht

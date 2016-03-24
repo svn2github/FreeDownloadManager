@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -34,39 +34,47 @@ POSSIBILITY OF SUCH DAMAGE.
 #define TORRENT_BROADCAST_SOCKET_HPP_INCLUDED
 
 #include "libtorrent/config.hpp"
+#include "libtorrent/io_service_fwd.hpp"
 #include "libtorrent/socket.hpp"
+#include "libtorrent/address.hpp"
+#include "libtorrent/error_code.hpp"
 #include <boost/shared_ptr.hpp>
-#include <boost/function.hpp>
+#include <boost/function/function3.hpp>
 #include <list>
 
 namespace libtorrent
 {
 
-	TORRENT_EXPORT bool is_local(address const& a);
-	TORRENT_EXPORT bool is_loopback(address const& addr);
-	TORRENT_EXPORT bool is_multicast(address const& addr);
-	TORRENT_EXPORT bool is_any(address const& addr);
-	TORRENT_EXPORT int cidr_distance(address const& a1, address const& a2);
+	TORRENT_EXTRA_EXPORT bool is_local(address const& a);
+	TORRENT_EXTRA_EXPORT bool is_loopback(address const& addr);
+	TORRENT_EXTRA_EXPORT bool is_multicast(address const& addr);
+	TORRENT_EXTRA_EXPORT bool is_any(address const& addr);
+	TORRENT_EXTRA_EXPORT bool is_teredo(address const& addr);
+	TORRENT_EXTRA_EXPORT int cidr_distance(address const& a1, address const& a2);
 
 	// determines if the operating system supports IPv6
-	TORRENT_EXPORT bool supports_ipv6();
+	TORRENT_EXTRA_EXPORT bool supports_ipv6();
 
-	TORRENT_EXPORT int common_bits(unsigned char const* b1
+	TORRENT_EXTRA_EXPORT int common_bits(unsigned char const* b1
 		, unsigned char const* b2, int n);
 
-	TORRENT_EXPORT address guess_local_address(io_service&);
+	TORRENT_EXTRA_EXPORT address guess_local_address(io_service&);
 
 	typedef boost::function<void(udp::endpoint const& from
 		, char* buffer, int size)> receive_handler_t;
 
-	class TORRENT_EXPORT broadcast_socket
+	class TORRENT_EXTRA_EXPORT broadcast_socket
 	{
 	public:
-		broadcast_socket(io_service& ios, udp::endpoint const& multicast_endpoint
-			, receive_handler_t const& handler, bool loopback = true);
+		broadcast_socket(udp::endpoint const& multicast_endpoint
+			, receive_handler_t const& handler);
 		~broadcast_socket() { close(); }
 
-		void send(char const* buffer, int size, error_code& ec);
+		void open(io_service& ios, error_code& ec, bool loopback = true);
+
+		enum flags_t { broadcast = 1 };
+		void send(char const* buffer, int size, error_code& ec, int flags = 0);
+
 		void close();
 		int num_send_sockets() const { return m_unicast_sockets.size(); }
 		void enable_ip_broadcast(bool e);
@@ -76,23 +84,35 @@ namespace libtorrent
 		struct socket_entry
 		{
 			socket_entry(boost::shared_ptr<datagram_socket> const& s)
-				: socket(s) {}
+				: socket(s), broadcast(false) {}
 			socket_entry(boost::shared_ptr<datagram_socket> const& s
-				, address_v4 const& mask): socket(s), netmask(mask) {}
+				, address_v4 const& mask): socket(s), netmask(mask), broadcast(false) {}
 			boost::shared_ptr<datagram_socket> socket;
-			char buffer[1024];
+			char buffer[1500];
 			udp::endpoint remote;
 			address_v4 netmask;
+			bool broadcast;
 			void close()
 			{
 				if (!socket) return;
 				error_code ec;
 				socket->close(ec);
 			}
+			bool can_broadcast() const
+			{
+				error_code ec;
+				return broadcast
+					&& netmask != address_v4()
+					&& socket->local_endpoint(ec).address().is_v4();
+			}
 			address_v4 broadcast_address() const
 			{
 				error_code ec;
+#if BOOST_VERSION < 104700
+				return address_v4(socket->local_endpoint(ec).address().to_v4().to_ulong() | ((~netmask.to_ulong()) & 0xffffffff));
+#else
 				return address_v4::broadcast(socket->local_endpoint(ec).address().to_v4(), netmask);
+#endif
 			}
 		};
 	
@@ -102,6 +122,9 @@ namespace libtorrent
 			, address_v4 const& mask);
 		void open_multicast_socket(io_service& ios, address const& addr
 			, bool loopback, error_code& ec);
+
+		// if we're aborting, destruct the handler and return true
+		bool maybe_abort();
 
 		// these sockets are used to
 		// join the multicast group (on each interface)
@@ -115,11 +138,17 @@ namespace libtorrent
 		udp::endpoint m_multicast_endpoint;
 		receive_handler_t m_on_receive;
 
-		// if set, use IP broadcast as well as IP multicast
-		// this is off by default because it's expensive in
-		// terms of bandwidth usage
-		bool m_ip_broadcast;
-		
+		// the number of outstanding async operations
+		// we have on these sockets. The m_on_receive
+		// handler may not be destructed until this reaches
+		// 0, since it may be holding references to
+		// the broadcast_socket itself.
+		int m_outstanding_operations;
+		// when set to true, we're trying to shut down
+		// don't initiate new operations and once the
+		// outstanding counter reaches 0, destruct
+		// the handler object
+		bool m_abort;
 	};
 }
 	

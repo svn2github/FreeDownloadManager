@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSXOR_H__5AD8FE3E_D6E2_4D2F_9725_0B8D6F12115C__INCLUDED_)
@@ -11,13 +11,14 @@
 
 #include <windows.h>
 #include <string>
+#include "Utils.h"
 
 class vmsXOR  
 {
 public:
 	void Decrypt(LPBYTE pbIn, LPBYTE pbOut, DWORD dwSize);
 	void Encrypt(LPBYTE pbIn, LPBYTE pbOut, DWORD dwSize);
-	void set_Key (LPCSTR pszKey);
+	void set_Key (LPCSTR tszKey);
 	vmsXOR();
 	virtual ~vmsXOR();
 

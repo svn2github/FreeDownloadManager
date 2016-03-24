@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -33,163 +33,15 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef TORRENT_PEER_ID_HPP_INCLUDED
 #define TORRENT_PEER_ID_HPP_INCLUDED
 
-#include <cctype>
-#include <algorithm>
-#include <string>
-#include <cstring>
-
 #include "libtorrent/config.hpp"
-#include "libtorrent/assert.hpp"
-#include "libtorrent/escape_string.hpp"
-
-#if TORRENT_USE_IOSTREAM
-#include <iostream>
-#include <iomanip>
-#endif
-
-#ifdef max
-#undef max
-#endif
-
-#ifdef min
-#undef min
-#endif
+#include "libtorrent/sha1_hash.hpp"
 
 namespace libtorrent
 {
-
-	class TORRENT_EXPORT big_number
-	{
-		// the number of bytes of the number
-		enum { number_size = 20 };
-	public:
-		enum { size = number_size };
-
-		big_number() { clear(); }
-
-		explicit big_number(char const* s)
-		{
-			if (s == 0) clear();
-			else std::memcpy(m_number, s, size);
-		}
-
-		explicit big_number(std::string const& s)
-		{
-			TORRENT_ASSERT(s.size() >= 20);
-			int sl = int(s.size()) < size ? int(s.size()) : size;
-			std::memcpy(m_number, &s[0], sl);
-		}
-
-		void assign(std::string const& s)
-		{
-			TORRENT_ASSERT(s.size() >= 20);
-			int sl = int(s.size()) < size ? int(s.size()) : size;
-			std::memcpy(m_number, &s[0], sl);
-		}
-
-		void assign(char const* str) { std::memcpy(m_number, str, size); }
-		void clear() { std::memset(m_number, 0, number_size); }
-
-		bool is_all_zeros() const
-		{
-			for (const unsigned char* i = m_number; i < m_number+number_size; ++i)
-				if (*i != 0) return false;
-			return true;
-		}
-
-		bool operator==(big_number const& n) const
-		{
-			return std::equal(n.m_number, n.m_number+number_size, m_number);
-		}
-
-		bool operator!=(big_number const& n) const
-		{
-			return !std::equal(n.m_number, n.m_number+number_size, m_number);
-		}
-
-		bool operator<(big_number const& n) const
-		{
-			for (int i = 0; i < number_size; ++i)
-			{
-				if (m_number[i] < n.m_number[i]) return true;
-				if (m_number[i] > n.m_number[i]) return false;
-			}
-			return false;
-		}
-		
-		big_number operator~()
-		{
-			big_number ret;
-			for (int i = 0; i< number_size; ++i)
-				ret.m_number[i] = ~m_number[i];
-			return ret;
-		}
-		
-		big_number& operator &= (big_number const& n)
-		{
-			for (int i = 0; i< number_size; ++i)
-				m_number[i] &= n.m_number[i];
-			return *this;
-		}
-
-		big_number& operator |= (big_number const& n)
-		{
-			for (int i = 0; i< number_size; ++i)
-				m_number[i] |= n.m_number[i];
-			return *this;
-		}
-
-		big_number& operator ^= (big_number const& n)
-		{
-			for (int i = 0; i< number_size; ++i)
-				m_number[i] ^= n.m_number[i];
-			return *this;
-		}
-		
-		unsigned char& operator[](int i)
-		{ TORRENT_ASSERT(i >= 0 && i < number_size); return m_number[i]; }
-
-		unsigned char const& operator[](int i) const
-		{ TORRENT_ASSERT(i >= 0 && i < number_size); return m_number[i]; }
-
-		typedef const unsigned char* const_iterator;
-		typedef unsigned char* iterator;
-
-		const_iterator begin() const { return m_number; }
-		const_iterator end() const { return m_number+number_size; }
-
-		iterator begin() { return m_number; }
-		iterator end() { return m_number+number_size; }
-
-		std::string to_string() const
-		{ return std::string((char const*)&m_number[0], number_size); }
-
-	private:
-
-		unsigned char m_number[number_size];
-
-	};
-
-	typedef big_number peer_id;
-	typedef big_number sha1_hash;
-
-#if TORRENT_USE_IOSTREAM
-	inline std::ostream& operator<<(std::ostream& os, big_number const& peer)
-	{
-		char out[41];
-		to_hex((char const*)&peer[0], big_number::size, out);
-		return os << out;
-	}
-
-	inline std::istream& operator>>(std::istream& is, big_number& peer)
-	{
-		char hex[40];
-		is.read(hex, 40);
-		if (!from_hex(hex, 40, (char*)&peer[0]))
-			is.setstate(std::ios_base::failbit);
-		return is;
-	}
-#endif // TORRENT_USE_IOSTREAM
+	typedef sha1_hash peer_id;
+#ifndef TORRENT_NO_DEPRECATE
+	typedef sha1_hash big_number;
+#endif
 }
 
 #endif // TORRENT_PEER_ID_HPP_INCLUDED

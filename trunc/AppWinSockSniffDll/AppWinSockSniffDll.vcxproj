@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -15,6 +15,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
+    <ProjectGuid>{7350138A-AF63-7728-A91D-9F2084339CFE}</ProjectGuid>
     <SccProjectName />
     <SccLocalPath />
   </PropertyGroup>
@@ -22,18 +23,20 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -62,6 +65,8 @@
     <IntDir>$(Configuration)</IntDir>
     <LinkIncremental>false</LinkIncremental>
     <TargetName>flvsniff</TargetName>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'">
     <OutDir>..\bin\$(Configuration)</OutDir>
@@ -80,16 +85,14 @@
       <MinimalRebuild>true</MinimalRebuild>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;APPWINSOCKSNIFFDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>.\Debug\</AssemblerListingLocation>
       <PrecompiledHeaderOutputFile>.\Debug\AppWinSockSniffDll.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <ObjectFileName>.\Debug\</ObjectFileName>
-      <ProgramDataBaseFileName>.\Debug\</ProgramDataBaseFileName>
       <AdditionalOptions>
       </AdditionalOptions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <ExceptionHandling>Async</ExceptionHandling>
+      <AdditionalIncludeDirectories>..\include.add;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -112,8 +115,9 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <ImportLibrary>.\Debug\flvsniff.lib</ImportLibrary>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;detours.lib;ws2_32.lib;wininet.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;ws2_32.lib;wininet.lib;shlwapi.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\AppWinSockSniffDll.def</ModuleDefinitionFile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -126,15 +130,13 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;APPWINSOCKSNIFFDLL_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AssemblerListingLocation>.\Release\</AssemblerListingLocation>
-      <PrecompiledHeaderOutputFile>.\Release\AppWinSockSniffDll.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
-      <ObjectFileName>.\Release\</ObjectFileName>
-      <ProgramDataBaseFileName>.\Release\</ProgramDataBaseFileName>
       <AdditionalOptions>
       </AdditionalOptions>
       <ExceptionHandling>Async</ExceptionHandling>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <AdditionalIncludeDirectories>..\include.add;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -157,9 +159,10 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <ImportLibrary>.\Release\flvsniff.lib</ImportLibrary>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;detours.lib;ws2_32.lib;wininet.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;ws2_32.lib;wininet.lib;shlwapi.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\AppWinSockSniffDll.def</ModuleDefinitionFile>
       <GenerateMapFile>true</GenerateMapFile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'">
@@ -181,6 +184,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <ExceptionHandling>Async</ExceptionHandling>
+      <AdditionalIncludeDirectories>..\include.add;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Midl>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -205,6 +209,7 @@
       <ImportLibrary>.\$(Configuration)\flvsniff.lib</ImportLibrary>
       <AdditionalDependencies>odbc32.lib;odbccp32.lib;detours.lib;ws2_32.lib;wininet.lib;shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>.\AppWinSockSniffDll.def</ModuleDefinitionFile>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -377,16 +382,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="vmsFile.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
-    </ClCompile>
-    <ClCompile Include="vmsFileUtil.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
-    </ClCompile>
     <ClCompile Include="vmsFindFlvDownloadsResultsCache.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
@@ -428,21 +423,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
     <ClCompile Include="vmsHttpHelper.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
-    </ClCompile>
-    <ClCompile Include="vmsHttpParser.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
-    </ClCompile>
-    <ClCompile Include="vmsHttpRequestParser.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
-    </ClCompile>
-    <ClCompile Include="vmsHttpResponseParser.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
@@ -532,11 +512,6 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
     </ClCompile>
-    <ClCompile Include="vmsXmlHelper.cpp">
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
-      <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'"> /EHa   /EHa </AdditionalOptions>
-    </ClCompile>
     <ClCompile Include="vmsZlibHelper.cpp">
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'"> /EHa   /EHa </AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'"> /EHa   /EHa </AdditionalOptions>
@@ -569,8 +544,6 @@
     <ClInclude Include="vmsCharsets.h" />
     <ClInclude Include="vmsDownloadForTrafficCollector.h" />
     <ClInclude Include="vmsExternalHttpTrafficCollector.h" />
-    <ClInclude Include="vmsFile.h" />
-    <ClInclude Include="vmsFileUtil.h" />
     <ClInclude Include="vmsFindFlvDownloadsResultsCache.h" />
     <ClInclude Include="vmsFindFlvDownloadsResultsCacheAsyncRequest.h" />
     <ClInclude Include="vmsHtmlParser.h" />
@@ -581,9 +554,6 @@
     <ClInclude Include="vmsHttpFlvTrafficAnalyzer4.h" />
     <ClInclude Include="vmsHttpFlvTrafficAnalyzer5.h" />
     <ClInclude Include="vmsHttpHelper.h" />
-    <ClInclude Include="vmsHttpParser.h" />
-    <ClInclude Include="vmsHttpRequestParser.h" />
-    <ClInclude Include="vmsHttpResponseParser.h" />
     <ClInclude Include="vmsHttpTrafficCollector.h" />
     <ClInclude Include="vmsIeFlvHistory.h" />
     <ClInclude Include="vmsLogHelper.h" />
@@ -602,7 +572,6 @@
     <ClInclude Include="vmsWinSockHttpDlgTree.h" />
     <ClInclude Include="vmsWinSockHttpTrafficAnalyzer.h" />
     <ClInclude Include="vmsWinSockHttpTrafficCollector.h" />
-    <ClInclude Include="vmsXmlHelper.h" />
     <ClInclude Include="vmsZlibHelper.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -52,9 +52,9 @@ vmsOverlappedWinsockCalls::Call* vmsOverlappedWinsockCalls::getCall(int nIndex)
 void vmsOverlappedWinsockCalls::LockList(bool bLock)
 {
 	if (bLock)
-		EnterCriticalSection (&m_csCalls);
+		EnterCriticalSection (m_csCalls);
 	else
-		LeaveCriticalSection (&m_csCalls);
+		LeaveCriticalSection (m_csCalls);
 }
 
 void vmsOverlappedWinsockCalls::RemoveCall(int nIndex)

@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,14 +30,18 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "libtorrent/pch.hpp"
-
 #include "libtorrent/lsd.hpp"
 #include "libtorrent/io.hpp"
 #include "libtorrent/http_tracker_connection.hpp"
 #include "libtorrent/buffer.hpp"
+#include "libtorrent/random.hpp"
 #include "libtorrent/http_parser.hpp"
 #include "libtorrent/escape_string.hpp"
+#include "libtorrent/socket_io.hpp" // for print_address
+
+#if defined TORRENT_ASIO_DEBUGGING
+#include "libtorrent/debug.hpp"
+#endif
 
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
@@ -48,7 +52,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <boost/asio/ip/host_name.hpp>
 #include <boost/asio/ip/multicast.hpp>
 #endif
-#include <boost/thread/mutex.hpp>
 #include <cstdlib>
 #include <boost/config.hpp>
 
@@ -65,69 +68,152 @@ static error_code ec;
 lsd::lsd(io_service& ios, address const& listen_interface
 	, peer_callback_t const& cb)
 	: m_callback(cb)
-	, m_retry_count(1)
-	, m_socket(ios, udp::endpoint(address_v4::from_string("239.192.152.143", ec), 6771)
+	, m_socket(udp::endpoint(address_v4::from_string("239.192.152.143", ec), 6771)
 		, boost::bind(&lsd::on_announce, self(), _1, _2, _3))
+#if TORRENT_USE_IPV6
+	, m_socket6(udp::endpoint(address_v6::from_string("ff15::efc0:988f", ec), 6771)
+		, boost::bind(&lsd::on_announce, self(), _1, _2, _3))
+#endif
 	, m_broadcast_timer(ios)
+	, m_cookie(random())
 	, m_disabled(false)
+#if TORRENT_USE_IPV6
+	, m_disabled6(false)
+#endif
 {
 #if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
-	m_log.open("lsd.log", std::ios::in | std::ios::out | std::ios::trunc);
+	m_log = fopen("lsd.log", "w+");
+	if (m_log == NULL)
+	{
+		fprintf(stderr, "failed to open 'lsd.log': (%d) %s"
+			, errno, strerror(errno));
+	}
+#endif
+
+	error_code ec;
+	m_socket.open(ios, ec);
+
+#if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
+	if (ec)
+	{
+		if (m_log) fprintf(m_log, "FAILED TO OPEN SOCKET: (%d) %s\n"
+			, ec.value(), ec.message().c_str());
+	}
+#endif
+
+#if TORRENT_USE_IPV6
+	m_socket6.open(ios, ec);
+#if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
+	if (ec)
+	{
+		if (m_log) fprintf(m_log, "FAILED TO OPEN SOCKET6: (%d) %s\n"
+			, ec.value(), ec.message().c_str());
+	}
+#endif
 #endif
 }
 
-lsd::~lsd() {}
-
-void lsd::announce(sha1_hash const& ih, int listen_port)
+lsd::~lsd()
 {
+#if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
+	if (m_log) fclose(m_log);
+#endif
+}
+
+int render_lsd_packet(char* dst, int len, int listen_port
+	, char const* info_hash_hex, int m_cookie, char const* host)
+{
+	return snprintf(dst, len,
+		"BT-SEARCH * HTTP/1.1\r\n"
+		"Host: %s:6771\r\n"
+		"Port: %d\r\n"
+		"Infohash: %s\r\n"
+		"cookie: %x\r\n"
+		"\r\n\r\n", host, listen_port, info_hash_hex, m_cookie);
+}
+
+void lsd::announce(sha1_hash const& ih, int listen_port, bool broadcast)
+{
+	announce_impl(ih, listen_port, broadcast, 0);
+}
+
+void lsd::announce_impl(sha1_hash const& ih, int listen_port, bool broadcast
+	, int retry_count)
+{
+#if TORRENT_USE_IPV6
+	if (m_disabled && m_disabled6) return;
+#else
 	if (m_disabled) return;
+#endif
 
 	char ih_hex[41];
 	to_hex((char const*)&ih[0], 20, ih_hex);
 	char msg[200];
-	int msg_len = snprintf(msg, sizeof(msg),
-		"BT-SEARCH * HTTP/1.1\r\n"
-		"Host: 239.192.152.143:6771\r\n"
-		"Port: %d\r\n"
-		"Infohash: %s\r\n"
-		"\r\n\r\n", listen_port, ih_hex);
-
-	m_retry_count = 1;
-	error_code ec;
-	m_socket.send(msg, msg_len, ec);
-	if (ec)
-	{
-		m_disabled = true;
-		return;
-	}
 
 #if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
+	if (m_log) fprintf(m_log, "%s ==> announce: ih: %s port: %u\n"
+		, time_now_string(), ih_hex, listen_port);
+#endif
+
+	error_code ec;
+	if (!m_disabled)
 	{
-		char msg[200];
-		snprintf(msg, sizeof(msg), "%s ==> announce: ih: %s port: %u"
-			, time_now_string(), ih_hex, listen_port);
-		m_log << msg << std::endl;
+		int msg_len = render_lsd_packet(msg, sizeof(msg), listen_port, ih_hex
+			, m_cookie, "239.192.152.143");
+		m_socket.send(msg, msg_len, ec, broadcast ? broadcast_socket::broadcast : 0);
+		if (ec)
+		{
+			m_disabled = true;
+#if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
+			if (m_log) fprintf(m_log, "%s failed to send message: (%d) %s"
+				, time_now_string(), ec.value(), ec.message().c_str());
+#endif
+		}
+	}
+
+#if TORRENT_USE_IPV6
+	if (!m_disabled6)
+	{
+		int msg_len = render_lsd_packet(msg, sizeof(msg), listen_port, ih_hex
+			, m_cookie, "[ff15::efc0:988f]");
+		m_socket6.send(msg, msg_len, ec, broadcast ? broadcast_socket::broadcast : 0);
+		if (ec)
+		{
+			m_disabled6 = true;
+#if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
+			if (m_log) fprintf(m_log, "%s failed to send message6: (%d) %s"
+				, time_now_string(), ec.value(), ec.message().c_str());
+#endif
+		}
 	}
 #endif
 
-	m_broadcast_timer.expires_from_now(milliseconds(250 * m_retry_count), ec);
+	++retry_count;
+	if (retry_count >= 3) return;
+
+#if TORRENT_USE_IPV6
+	if (m_disabled && m_disabled6) return;
+#else
+	if (m_disabled) return;
+#endif
+
+#if defined TORRENT_ASIO_DEBUGGING
+	add_outstanding_async("lsd::resend_announce");
+#endif
+	m_broadcast_timer.expires_from_now(seconds(2 * retry_count), ec);
 	m_broadcast_timer.async_wait(boost::bind(&lsd::resend_announce, self(), _1
-		, std::string(msg)));
+		, ih, listen_port, retry_count));
 }
 
-void lsd::resend_announce(error_code const& e, std::string msg)
+void lsd::resend_announce(error_code const& e, sha1_hash const& info_hash
+	, int listen_port, int retry_count)
 {
+#if defined TORRENT_ASIO_DEBUGGING
+	complete_async("lsd::resend_announce");
+#endif
 	if (e) return;
 
-	error_code ec;
-	m_socket.send(msg.c_str(), int(msg.size()), ec);
-
-	++m_retry_count;
-	if (m_retry_count >= 5)
-		return;
-
-	m_broadcast_timer.expires_from_now(milliseconds(250 * m_retry_count), ec);
-	m_broadcast_timer.async_wait(boost::bind(&lsd::resend_announce, self(), _1, msg));
+	announce_impl(info_hash, listen_port, false, retry_count);
 }
 
 void lsd::on_announce(udp::endpoint const& from, char* buffer
@@ -144,8 +230,7 @@ void lsd::on_announce(udp::endpoint const& from, char* buffer
 	if (!p.header_finished() || error)
 	{
 #if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
-	m_log << time_now_string()
-		<< " <== announce: incomplete HTTP message" << std::endl;
+		if (m_log) fprintf(m_log, "%s <== announce: incomplete HTTP message\n", time_now_string());
 #endif
 		return;
 	}
@@ -153,8 +238,8 @@ void lsd::on_announce(udp::endpoint const& from, char* buffer
 	if (p.method() != "bt-search")
 	{
 #if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
-	m_log << time_now_string()
-		<< " <== announce: invalid HTTP method: " << p.method() << std::endl;
+		if (m_log) fprintf(m_log, "%s <== announce: invalid HTTP method: %s\n"
+			, time_now_string(), p.method().c_str());
 #endif
 		return;
 	}
@@ -163,57 +248,78 @@ void lsd::on_announce(udp::endpoint const& from, char* buffer
 	if (port_str.empty())
 	{
 #if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
-	m_log << time_now_string()
-		<< " <== announce: invalid BT-SEARCH, missing port" << std::endl;
+		if (m_log) fprintf(m_log, "%s <== announce: invalid BT-SEARCH, missing port\n"
+			, time_now_string());
 #endif
 		return;
 	}
 
-	std::string const& ih_str = p.header("infohash");
-	if (ih_str.empty())
-	{
-#if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
-	m_log << time_now_string()
-		<< " <== announce: invalid BT-SEARCH, missing infohash" << std::endl;
-#endif
-		return;
-	}
-
-	sha1_hash ih(0);
-	from_hex(ih_str.c_str(), 40, (char*)&ih[0]);
 	int port = std::atoi(port_str.c_str());
 
-	if (!ih.is_all_zeros() && port != 0)
+	typedef std::multimap<std::string, std::string> headers_t;
+	headers_t const& headers = p.headers();
+
+	headers_t::const_iterator cookie_iter = headers.find("cookie");
+	if (cookie_iter != headers.end())
 	{
+		// we expect it to be hexadecimal
+		// if it isn't, it's not our cookie anyway
+		boost::int32_t cookie = strtol(cookie_iter->second.c_str(), NULL, 16);
+		if (cookie == m_cookie)
+		{
 #if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
-		char msg[200];
-		snprintf(msg, 200, "%s *** incoming local announce %s:%d ih: %s\n"
-			, time_now_string(), print_address(from.address()).c_str()
-			, port, ih_str.c_str());
+			if (m_log) fprintf(m_log, "%s <== announce: ignoring packet (cookie matched our own): %x == %x\n"
+				, time_now_string(), cookie, m_cookie);
 #endif
-		// we got an announce, pass it on through the callback
-#ifndef BOOST_NO_EXCEPTIONS
-		try {
-#endif
-			m_callback(tcp::endpoint(from.address(), port), ih);
-#ifndef BOOST_NO_EXCEPTIONS
+			return;
 		}
-		catch (std::exception&) {}
+	}
+
+	std::pair<headers_t::const_iterator, headers_t::const_iterator> ihs
+		= headers.equal_range("infohash");
+
+	for (headers_t::const_iterator i = ihs.first; i != ihs.second; ++i)
+	{
+		std::string const& ih_str = i->second;
+		if (ih_str.size() != 40)
+		{
+#if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
+			if (m_log) fprintf(m_log, "%s <== announce: invalid BT-SEARCH, invalid infohash: %s\n"
+				, time_now_string(), ih_str.c_str());
 #endif
+			continue;
+		}
+
+		sha1_hash ih(0);
+		from_hex(ih_str.c_str(), 40, (char*)&ih[0]);
+
+		if (!ih.is_all_zeros() && port != 0)
+		{
+#if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
+			if (m_log) fprintf(m_log, "%s *** incoming local announce %s:%d ih: %s\n"
+				, time_now_string(), print_address(from.address()).c_str()
+				, port, ih_str.c_str());
+#endif
+			// we got an announce, pass it on through the callback
+			TORRENT_TRY {
+				m_callback(tcp::endpoint(from.address(), port), ih);
+			} TORRENT_CATCH(std::exception&) {}
+		}
 	}
 }
 
 void lsd::close()
 {
 	m_socket.close();
+#if TORRENT_USE_IPV6
+	m_socket6.close();
+#endif
 	error_code ec;
 	m_broadcast_timer.cancel(ec);
 	m_disabled = true;
+#if TORRENT_USE_IPV6
+	m_disabled6 = true;
+#endif
 	m_callback.clear();
-}
-
-void lsd::use_broadcast(bool b)
-{
-	m_socket.enable_ip_broadcast(b);
 }
 

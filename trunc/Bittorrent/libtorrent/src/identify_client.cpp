@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,8 +30,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "libtorrent/pch.hpp"
-
 #include <cctype>
 #include <algorithm>
 #include <stdio.h>
@@ -48,7 +46,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "libtorrent/identify_client.hpp"
 #include "libtorrent/fingerprint.hpp"
-#include "libtorrent/escape_string.hpp"
+#include "libtorrent/string_util.hpp"
 
 namespace
 {
@@ -91,7 +89,7 @@ namespace
 	{
 		fingerprint ret("..", 0, 0, 0, 0);
 
-		if (!std::isalnum(id[0]))
+		if (!is_alpha(id[0]) && !is_digit(id[0]))
 			return boost::optional<fingerprint>();
 
 		if (std::equal(id.begin()+4, id.begin()+6, "--"))
@@ -147,22 +145,25 @@ namespace
 	// must be ordered alphabetically
 	map_entry name_map[] =
 	{
-		{"A",  "ABC"}
-		, {"AG",  "Ares"}
+		  {"A",  "ABC"}
+		, {"AG", "Ares"}
 		, {"AR", "Arctic Torrent"}
 		, {"AT", "Artemis"}
 		, {"AV", "Avicora"}
 		, {"AX", "BitPump"}
 		, {"AZ", "Azureus"}
-		, {"A~",  "Ares"}
+		, {"A~", "Ares"}
 		, {"BB", "BitBuddy"}
 		, {"BC", "BitComet"}
+		, {"BE", "baretorrent"}
 		, {"BF", "Bitflu"}
 		, {"BG", "BTG"}
 		, {"BL", "BitBlinder"}
 		, {"BP", "BitTorrent Pro"}
 		, {"BR", "BitRocket"}
 		, {"BS", "BTSlave"}
+		, {"BT", "BitTorrent"}
+		, {"BU", "BigUp"}
 		, {"BW", "BitWombat"}
 		, {"BX", "BittorrentX"}
 		, {"CD", "Enhanced CTorrent"}
@@ -173,10 +174,12 @@ namespace
 		, {"ES", "electric sheep"}
 		, {"FC", "FileCroc"}
 		, {"FT", "FoxTorrent"}
+		, {"FX", "Freebox BitTorrent"}
 		, {"GS", "GSTorrent"}
 		, {"HK", "Hekate"}
 		, {"HL", "Halite"}
 		, {"HN", "Hydranode"}
+		, {"IL", "iLivid"}
 		, {"KG", "KGet"}
 		, {"KT", "KTorrent"}
 		, {"LC", "LeechCraft"}
@@ -193,24 +196,27 @@ namespace
 		, {"MT", "Moonlight Torrent"}
 		, {"NX", "Net Transport"}
 		, {"O",  "Osprey Permaseed"}
-		, {"OS",  "OneSwarm"}
-		, {"OT",  "OmegaTorrent"}
-		, {"PD",  "Pando"}
-		, {"Q", "BTQueue"}
+		, {"OS", "OneSwarm"}
+		, {"OT", "OmegaTorrent"}
+		, {"PD", "Pando"}
+		, {"Q",  "BTQueue"}
 		, {"QD", "QQDownload"}
 		, {"QT", "Qt 4"}
 		, {"R",  "Tribler"}
-		, {"RT",  "Retriever"}
-		, {"RZ",  "RezTorrent"}
+		, {"RT", "Retriever"}
+		, {"RZ", "RezTorrent"}
 		, {"S",  "Shadow"}
 		, {"SB", "Swiftbit"}
 		, {"SD", "Xunlei"}
+		, {"SK", "spark"}
 		, {"SN", "ShareNet"}
 		, {"SS", "SwarmScope"}
 		, {"ST", "SymTorrent"}
 		, {"SZ", "Shareaza"}
-		, {"S~",  "Shareaza (beta)"}
+		, {"S~", "Shareaza (beta)"}
 		, {"T",  "BitTornado"}
+		, {"TB", "Torch"}
+		, {"TL", "Tribler"}
 		, {"TN", "Torrent.NET"}
 		, {"TR", "Transmission"}
 		, {"TS", "TorrentStorm"}
@@ -222,6 +228,7 @@ namespace
 		, {"VG", "Vagaa"}
 		, {"WT", "BitLet"}
 		, {"WY", "FireTorrent"}
+		, {"XF", "Xfplay"}
 		, {"XL", "Xunlei"}
 		, {"XS", "XSwifter"}
 		, {"XT", "XanTorrent"}
@@ -270,10 +277,14 @@ namespace
 		, {0, "-G3", "G3 Torrent"}
 		, {0, "-FG", "FlashGet"}
 		, {0, "-ML", "MLdonkey"}
+		, {0, "-MG", "Media Get"}
 		, {0, "XBT", "XBT"}
 		, {0, "OP", "Opera"}
 		, {2, "RS", "Rufus"}
 		, {0, "AZ2500BT", "BitTyrant"}
+		, {0, "btpd/", "BitTorrent Protocol Daemon"}
+		, {0, "TIX", "Tixati"}
+		, {0, "QVOD", "Qvod"}
 	};
 
 	bool compare_id(map_entry const& lhs, map_entry const& rhs)

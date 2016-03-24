@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2008, Arvid Norberg
+Copyright (c) 2008-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -34,19 +34,21 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "libtorrent/config.hpp"
 
-#ifdef TORRENT_WINDOWS
+#if defined TORRENT_WINDOWS || defined TORRENT_MINGW
 
 #include <malloc.h>
 #define TORRENT_ALLOCA(t, n) static_cast<t*>(_alloca(sizeof(t) * (n)))
 
+#elif defined TORRENT_BSD
+
+#include <stdlib.h>
+#define TORRENT_ALLOCA(t, n) static_cast<t*>(alloca(sizeof(t) * (n)))
+
 #else
 
 #include <alloca.h>
-
 #define TORRENT_ALLOCA(t, n) static_cast<t*>(alloca(sizeof(t) * (n)))
 
 #endif
 
 #endif
-
-

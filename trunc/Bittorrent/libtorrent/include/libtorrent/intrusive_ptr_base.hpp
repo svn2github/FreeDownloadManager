@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -47,20 +47,17 @@ namespace libtorrent
 		intrusive_ptr_base(intrusive_ptr_base<T> const&)
 			: m_refs(0) {}
 
-		intrusive_ptr_base& operator=(intrusive_ptr_base const& rhs)
-		{ return *this; }
-
 		friend void intrusive_ptr_add_ref(intrusive_ptr_base<T> const* s)
 		{
-			TORRENT_ASSERT(s->m_refs >= 0);
 			TORRENT_ASSERT(s != 0);
+			TORRENT_ASSERT(s->m_refs >= 0);
 			++s->m_refs;
 		}
 
 		friend void intrusive_ptr_release(intrusive_ptr_base<T> const* s)
 		{
-			TORRENT_ASSERT(s->m_refs > 0);
 			TORRENT_ASSERT(s != 0);
+			TORRENT_ASSERT(s->m_refs > 0);
 			if (--s->m_refs == 0)
 				boost::checked_delete(static_cast<T const*>(s));
 		}
@@ -74,7 +71,9 @@ namespace libtorrent
 		int refcount() const { return m_refs; }
 
 		intrusive_ptr_base(): m_refs(0) {}
+
 	private:
+
 		// reference counter for intrusive_ptr
 		mutable boost::detail::atomic_count m_refs;
 	};

@@ -287,11 +287,11 @@ void _setup_segments(GeoIP * gi) {
 
 			if (gi->databaseType == GEOIP_REGION_EDITION_REV0) {
 				/* Region Edition, pre June 2003 */
-				gi->databaseSegments = (unsigned int*)malloc(sizeof(int));
+				gi->databaseSegments = (unsigned int*)malloc(sizeof(unsigned int));
 				gi->databaseSegments[0] = STATE_BEGIN_REV0;
 			} else if (gi->databaseType == GEOIP_REGION_EDITION_REV1) {
 				/* Region Edition, post June 2003 */
-				gi->databaseSegments = (unsigned int*)malloc(sizeof(int));
+				gi->databaseSegments = (unsigned int*)malloc(sizeof(unsigned int));
 				gi->databaseSegments[0] = STATE_BEGIN_REV1;
 			} else if (gi->databaseType == GEOIP_CITY_EDITION_REV0 ||
 								 gi->databaseType == GEOIP_CITY_EDITION_REV1 ||
@@ -299,7 +299,7 @@ void _setup_segments(GeoIP * gi) {
 								 gi->databaseType == GEOIP_ISP_EDITION ||
 								 gi->databaseType == GEOIP_ASNUM_EDITION) {
 				/* City/Org Editions have two segments, read offset of second segment */
-				gi->databaseSegments = (unsigned int*)malloc(sizeof(int));
+				gi->databaseSegments = (unsigned int*)malloc(sizeof(unsigned int));
 				gi->databaseSegments[0] = 0;
 				fread(buf, SEGMENT_RECORD_LENGTH, 1, gi->GeoIPDatabase);
 				for (j = 0; j < SEGMENT_RECORD_LENGTH; j++) {
@@ -317,7 +317,7 @@ void _setup_segments(GeoIP * gi) {
 	if (gi->databaseType == GEOIP_COUNTRY_EDITION ||
 			gi->databaseType == GEOIP_PROXY_EDITION ||
 			gi->databaseType == GEOIP_NETSPEED_EDITION) {
-		gi->databaseSegments = (unsigned int*)malloc(sizeof(int));
+		gi->databaseSegments = (unsigned int*)malloc(sizeof(unsigned int));
 		gi->databaseSegments[0] = COUNTRY_BEGIN;
 	}
 }
@@ -334,7 +334,7 @@ int _check_mtime(GeoIP *gi) {
 				char const* src_start;
 				/* GeoIP Database file updated */
 				if (gi->flags & (GEOIP_MEMORY_CACHE | GEOIP_MMAP_CACHE)) {
-#ifndef WIN32
+#if !defined WIN32 && !defined __OS2__
 				    if ( gi->flags & GEOIP_MMAP_CACHE) {
 					munmap(gi->cache, gi->size);
 					gi->cache = NULL;
@@ -371,7 +371,7 @@ int _check_mtime(GeoIP *gi) {
 				gi->mtime = buf.st_mtime;
 				gi->size = buf.st_size;
 
-#ifndef WIN32
+#if !defined WIN32 && !defined __OS2__
 				if ( gi->flags & GEOIP_MMAP_CACHE) {
 				    gi->cache = (unsigned char*)mmap(NULL, buf.st_size, PROT_READ, MAP_PRIVATE, fileno(gi->GeoIPDatabase), 0);
 				    if ( gi->cache == MAP_FAILED ) {
@@ -594,7 +594,7 @@ GeoIP* GeoIP_open (const char * filename, int flags) {
 			}
 			gi->mtime = buf.st_mtime;
 			gi->size = buf.st_size;
-#ifndef WIN32
+#if !defined WIN32 && !defined __OS2__
 			/* MMAP added my Peter Shipley */
 			if ( flags & GEOIP_MMAP_CACHE) {
 			    gi->cache = (unsigned char*)mmap(NULL, buf.st_size, PROT_READ, MAP_PRIVATE, fileno(gi->GeoIPDatabase), 0);
@@ -660,7 +660,7 @@ void GeoIP_delete (GeoIP *gi) {
 	if (gi->GeoIPDatabase != NULL)
 		fclose(gi->GeoIPDatabase);
 	if (gi->cache != NULL) {
-#ifndef WIN32
+#if !defined WIN32 && !defined __OS2__
 	    if ( gi->flags & GEOIP_MMAP_CACHE) {
 		munmap(gi->cache, gi->size);
 	    } else

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -18,9 +18,9 @@ vmsWinInetHttpTrafficCollector::~vmsWinInetHttpTrafficCollector()
 
 void vmsWinInetHttpTrafficCollector::OnInternetReadFile(HINTERNET hFile, LPVOID lpBuffer, DWORD dwRead)
 {
-	EnterCriticalSection (&m_cs_vNonCacheHandles);
+	EnterCriticalSection (m_cs_vNonCacheHandles);
 	bool bIgnore = findNonCacheHandleIndex (hFile) != -1;
-	LeaveCriticalSection (&m_cs_vNonCacheHandles);
+	LeaveCriticalSection (m_cs_vNonCacheHandles);
 	if (bIgnore)
 		return;
 
@@ -44,9 +44,9 @@ void vmsWinInetHttpTrafficCollector::OnInternetReadFile(HINTERNET hFile, LPVOID 
 				(m_pHttpTraffic->FindDialogIndexBySocket (sockInfo.Socket, false) != -1 ||
 					m_pHttpTraffic->FindDialogIndexBySocket (sockInfo.Socket, true) != -1))
 		{
-			EnterCriticalSection (&m_cs_vNonCacheHandles);
+			EnterCriticalSection (m_cs_vNonCacheHandles);
 			m_vNonCacheHandles.push_back (hFile);
-			LeaveCriticalSection (&m_cs_vNonCacheHandles);
+			LeaveCriticalSection (m_cs_vNonCacheHandles);
 			m_pHttpTraffic->LockDialogsLists (false);
 			return;
 		}
@@ -62,19 +62,19 @@ void vmsWinInetHttpTrafficCollector::OnInternetReadFile(HINTERNET hFile, LPVOID 
 
 		if (m_pHttpTraffic->FindDialogByRequestUrl (spDlg->strRequestUrl.c_str (), vmsHttpTrafficCollector::HttpDialog::ALL, false))
 		{
-			EnterCriticalSection (&m_cs_vNonCacheHandles);
+			EnterCriticalSection (m_cs_vNonCacheHandles);
 			m_vNonCacheHandles.push_back (hFile);
-			LeaveCriticalSection (&m_cs_vNonCacheHandles);
+			LeaveCriticalSection (m_cs_vNonCacheHandles);
 			m_pHttpTraffic->LockDialogsLists (false);
 			return;
 		}
 
 		m_pHttpTraffic->ExtractHttpHeadersFromWInetFile (spDlg);
-		EnterCriticalSection (&m_cs_vPostData);
+		EnterCriticalSection (m_cs_vPostData);
 		int nPdIndex = findPostDataIndex (hFile);
 		if (nPdIndex != -1)
 			spDlg->vbRequestBody = m_vPostData [nPdIndex].vbData;
-		LeaveCriticalSection (&m_cs_vPostData);
+		LeaveCriticalSection (m_cs_vPostData);
 		spDlg->enState = vmsHttpTrafficCollector::HttpDialog::RESPONSE_HEADERS_RCVD;
 		m_pHttpTraffic->m_vDialogsInProgress.push_back (spDlg);
 
@@ -131,17 +131,17 @@ void vmsWinInetHttpTrafficCollector::OnInternetCloseHandle(HINTERNET hInternet)
 
 	m_pHttpTraffic->LockDialogsLists (false);
 
-	EnterCriticalSection (&m_cs_vPostData);
+	EnterCriticalSection (m_cs_vPostData);
 	int nIndex = findPostDataIndex (hInternet);
 	if (nIndex != -1)
 		m_vPostData.erase (m_vPostData.begin () + nIndex);
-	LeaveCriticalSection (&m_cs_vPostData);
+	LeaveCriticalSection (m_cs_vPostData);
 
-	EnterCriticalSection (&m_cs_vNonCacheHandles);
+	EnterCriticalSection (m_cs_vNonCacheHandles);
 	nIndex = findNonCacheHandleIndex (hInternet);
 	if (nIndex != -1)
 		m_vNonCacheHandles.erase (m_vNonCacheHandles.begin () + nIndex);
-	LeaveCriticalSection (&m_cs_vNonCacheHandles);
+	LeaveCriticalSection (m_cs_vNonCacheHandles);
 }
 
 void vmsWinInetHttpTrafficCollector::OnSendPostData(HINTERNET hInet, LPVOID pData, DWORD dwSize)

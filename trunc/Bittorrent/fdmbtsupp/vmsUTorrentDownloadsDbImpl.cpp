@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -23,11 +23,11 @@ vmsUTorrentDownloadsDbImpl::~vmsUTorrentDownloadsDbImpl(void)
 {
 }
 
-BOOL vmsUTorrentDownloadsDbImpl::ImportUtorrentDownloads (LPCSTR pszDownloadsDbFile)
+BOOL vmsUTorrentDownloadsDbImpl::ImportUtorrentDownloads (LPCTSTR pszDownloadsDbFile)
 {
 	m_vDownloads.clear ();
 
-	HANDLE hFile = CreateFileA (pszDownloadsDbFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE hFile = CreateFile (pszDownloadsDbFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
 		return FALSE;
 

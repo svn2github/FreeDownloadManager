@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2006, Arvid Norberg
+Copyright (c) 2006-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,15 +30,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "libtorrent/pch.hpp"
-
 #ifdef _MSC_VER
 #pragma warning(push, 1)
 #endif
 
 #include <boost/shared_ptr.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem/convenience.hpp>
 
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -50,13 +46,18 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/extensions.hpp"
 #include "libtorrent/entry.hpp"
 #include "libtorrent/peer_request.hpp"
-#include "libtorrent/peer_connection.hpp"
 
-#if TORRENT_USE_IOSTREAM
+#if TORRENT_USE_IOSTREAM && !defined TORRENT_DISABLE_EXTENSIONS
+
+#include <fstream>
+#include "libtorrent/file.hpp"
+#include "libtorrent/time.hpp"
+#include "libtorrent/lazy_entry.hpp"
+#include "libtorrent/peer_connection.hpp"
 
 namespace libtorrent {
 
-namespace fs = boost::filesystem;
+	class peer_connection;
 
 namespace
 {
@@ -65,9 +66,10 @@ namespace
 	{
 		logger_peer_plugin(std::string const& filename)
 		{
-			fs::path dir(fs::complete("libtorrent_ext_logs"));
-			if (!fs::exists(dir)) fs::create_directories(dir);
-			m_file.open((dir / filename).string().c_str(), std::ios_base::out | std::ios_base::out);
+			error_code ec;
+			std::string dir = complete("libtorrent_ext_logs");
+			if (!exists(dir)) create_directories(dir, ec);
+			m_file.open(combine_path(dir, filename).c_str(), std::ios_base::out);
 			m_file << "\n\n\n";
 			log_timestamp();
 			m_file << "*** starting log ***\n";
@@ -85,7 +87,7 @@ namespace
 		virtual bool on_extension_handshake(lazy_entry const& h)
 		{
 			log_timestamp();
-			m_file << "<== EXTENSION_HANDSHAKE\n" << h;
+			m_file << "<== EXTENSION_HANDSHAKE\n" << print_entry(h);
 			return true;
 		}
 
@@ -135,7 +137,7 @@ namespace
 			return false;
 		}
 
-		virtual bool on_bitfield(std::vector<bool> const& bitfield)
+		virtual bool on_bitfield(bitfield const& bitfield_)
 		{
 			log_timestamp();
 			m_file << "<== BITFIELD\n";
@@ -152,7 +154,7 @@ namespace
 			return false;
 		}
 
-		virtual bool on_piece(peer_request const& r, char const*)
+		virtual bool on_piece(peer_request const& r, disk_buffer_holder& data)
 		{
 			log_timestamp();
 			m_file << "<== PIECE [ piece: " << r.piece << " | s: " << r.start

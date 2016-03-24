@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -32,10 +32,10 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef LIBTORRENT_BUFFER_HPP
 #define LIBTORRENT_BUFFER_HPP
 
-#include <memory>
 #include <cstring>
 #include "libtorrent/invariant_check.hpp"
 #include "libtorrent/assert.hpp"
+#include <cstdlib> // malloc/free/realloc
 
 namespace libtorrent {
 
@@ -60,7 +60,12 @@ public:
 			return begin[index];
 		}
 		  
-		int left() const { TORRENT_ASSERT(end >= begin); return end - begin; }
+		int left() const
+		{
+			TORRENT_ASSERT(end >= begin);
+			TORRENT_ASSERT(end - begin < INT_MAX);
+			return int(end - begin);
+		}
 
 		char* begin;
 		char* end;
@@ -86,11 +91,16 @@ public:
 
 		bool operator==(const const_interval& p_interval)
 		{
-			return (begin == p_interval.begin
-				&& end == p_interval.end);
+			return begin == p_interval.begin
+				&& end == p_interval.end;
 		}
 
-		int left() const { TORRENT_ASSERT(end >= begin); return end - begin; }
+		int left() const
+		{
+			TORRENT_ASSERT(end >= begin);
+			TORRENT_ASSERT(end - begin < INT_MAX);
+			return int(end - begin);
+		}
 
 		char const* begin;
 		char const* end;
@@ -113,6 +123,11 @@ public:
 		resize(b.size());
 		std::memcpy(m_begin, b.begin(), b.size());
 	}
+
+#if __cplusplus > 199711L
+	buffer(buffer&& b): m_begin(b.m_begin), m_end(b.m_end), m_last(b.m_last)
+	{ b.m_begin = b.m_end = b.m_last = NULL; }
+#endif
 
 	buffer& operator=(buffer const& b)
 	{

@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,14 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#ifdef TORRENT_DEBUG
+#include "libtorrent/config.hpp"
+
+#if TORRENT_PRODUCTION_ASSERTS
+#include <boost/detail/atomic_count.hpp>
+#endif
+
+#if defined TORRENT_DEBUG || defined TORRENT_ASIO_DEBUGGING \
+	|| TORRENT_RELEASE_ASSERTS || defined TORRENT_DEBUG_BUFFERS
 
 #ifdef __APPLE__
 #include <AvailabilityMacros.h>
@@ -41,7 +48,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <stdlib.h>
 
 // uClibc++ doesn't have cxxabi.h
-#if defined __GNUC__ && !defined __UCLIBCXX_MAJOR__
+#if defined __GNUC__ && __GNUC__ >= 3 \
+	&& !defined __UCLIBCXX_MAJOR__
 
 #include <cxxabi.h>
 
@@ -82,6 +90,21 @@ std::string demangle(char const* name)
 	free(unmangled);
 	return ret;
 }
+#elif defined WIN32
+
+#undef _WIN32_WINNT
+#define _WIN32_WINNT 0x0501 // XP
+
+#include "windows.h"
+#include "dbghelp.h"
+
+std::string demangle(char const* name) 
+{ 
+	char demangled_name[256];
+	if (UnDecorateSymbolName(name, demangled_name, sizeof(demangled_name), UNDNAME_NO_THROW_SIGNATURES) == 0)
+		demangled_name[0] = 0;
+	return demangled_name;
+}
 
 #else
 std::string demangle(char const* name) { return name; }
@@ -92,54 +115,163 @@ std::string demangle(char const* name) { return name; }
 #include <signal.h>
 #include "libtorrent/version.hpp"
 
-// execinfo.h is available in the MacOS X 10.5 SDK.
-#if (defined __linux__ || (defined __APPLE__ && MAC_OS_X_VERSION_MIN_REQUIRED >= 1050))
+#if TORRENT_USE_EXECINFO
 #include <execinfo.h>
 
-void print_backtrace(char const* label)
+TORRENT_EXPORT void print_backtrace(char* out, int len, int max_depth)
 {
 	void* stack[50];
 	int size = backtrace(stack, 50);
 	char** symbols = backtrace_symbols(stack, size);
 
-	fprintf(stderr, "%s\n", label);
-	for (int i = 1; i < size; ++i)
+	for (int i = 1; i < size && len > 0; ++i)
 	{
-		fprintf(stderr, "%d: %s\n", i, demangle(symbols[i]).c_str());
+		int ret = snprintf(out, len, "%d: %s\n", i, demangle(symbols[i]).c_str());
+		out += ret;
+		len -= ret;
+		if (i - 1 == max_depth && max_depth > 0) break;
 	}
 
 	free(symbols);
 }
-#else
 
-void print_backtrace(char const* label) {}
+// visual studio 9 and up appears to support this
+#elif defined WIN32 && _MSC_VER >= 1500
 
-#endif
+#undef _WIN32_WINNT
+#define _WIN32_WINNT 0x0501 // XP
 
-void assert_fail(char const* expr, int line, char const* file, char const* function)
+#include "windows.h"
+#include "libtorrent/utf8.hpp"
+
+#include "winbase.h"
+#include "dbghelp.h"
+
+TORRENT_EXPORT void print_backtrace(char* out, int len, int max_depth)
 {
+	typedef USHORT (WINAPI *RtlCaptureStackBackTrace_t)(
+		__in ULONG FramesToSkip,
+		__in ULONG FramesToCapture,
+		__out PVOID *BackTrace,
+		__out_opt PULONG BackTraceHash);
 
-	fprintf(stderr, "assertion failed. Please file a bugreport at "
-		"http://code.rasterbar.com/libtorrent/newticket\n"
-		"Please include the following information:\n\n"
-		"version: " LIBTORRENT_VERSION "\n"
-		"%s\n"
-		"file: '%s'\n"
-		"line: %d\n"
-		"function: %s\n"
-		"expression: %s\n", LIBTORRENT_REVISION, file, line, function, expr);
+	static RtlCaptureStackBackTrace_t RtlCaptureStackBackTrace = 0;
 
-	print_backtrace("stack:");
+	if (RtlCaptureStackBackTrace == 0)
+	{
+		// we don't actually have to free this library, everyone has it loaded
+		HMODULE lib = LoadLibrary(TEXT("kernel32.dll"));
+		RtlCaptureStackBackTrace = (RtlCaptureStackBackTrace_t)GetProcAddress(lib, "RtlCaptureStackBackTrace");
+		if (RtlCaptureStackBackTrace == 0)
+		{
+			out[0] = 0;
+			return;
+		}
+	}
 
- 	// send SIGINT to the current process
- 	// to break into the debugger
- 	raise(SIGINT);
- 	abort();
+	int i;
+	void* stack[50];
+	int size = CaptureStackBackTrace(0, 50, stack, 0);
+
+	SYMBOL_INFO* symbol = (SYMBOL_INFO*)calloc(sizeof(SYMBOL_INFO) + MAX_SYM_NAME * sizeof(TCHAR), 1);
+	symbol->MaxNameLen = MAX_SYM_NAME;
+	symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+
+	HANDLE p = GetCurrentProcess();
+	static bool sym_initialized = false;
+	if (!sym_initialized)
+	{
+		sym_initialized = true;
+		SymInitialize(p, NULL, true);
+	}
+	for (i = 0; i < size && len > 0; ++i)
+	{
+		int ret;
+		if (SymFromAddr(p, uintptr_t(stack[i]), 0, symbol))
+			ret = snprintf(out, len, "%d: %s\n", i, symbol->Name);
+		else
+			ret = snprintf(out, len, "%d: <unknown>\n", i);
+
+		out += ret;
+		len -= ret;
+		if (i == max_depth && max_depth > 0) break;
+	}
+	free(symbol);
 }
 
 #else
 
-void assert_fail(char const* expr, int line, char const* file, char const* function) {}
+TORRENT_EXPORT void print_backtrace(char* out, int len, int max_depth) {}
+
+#endif
+
+#endif
+
+#if TORRENT_USE_ASSERTS || defined TORRENT_ASIO_DEBUGGING
+
+#if TORRENT_PRODUCTION_ASSERTS
+char const* libtorrent_assert_log = "asserts.log";
+// the number of asserts we've printed to the log
+boost::detail::atomic_count assert_counter(0);
+#endif
+
+TORRENT_EXPORT void assert_fail(char const* expr, int line, char const* file
+	, char const* function, char const* value, int kind)
+{
+#if TORRENT_PRODUCTION_ASSERTS
+	// no need to flood the assert log with infinite number of asserts
+	if (++assert_counter > 500) return;
+
+	FILE* out = fopen(libtorrent_assert_log, "a+");
+	if (out == 0) out = stderr;
+#else
+	FILE* out = stderr;
+#endif
+
+	char stack[8192];
+	stack[0] = '\0';
+	print_backtrace(stack, sizeof(stack), 0);
+
+	char const* message = "assertion failed. Please file a bugreport at "
+		"http://code.google.com/p/libtorrent/issues\n"
+		"Please include the following information:\n\n"
+		"version: " LIBTORRENT_VERSION "\n"
+		LIBTORRENT_REVISION "\n";
+
+	switch (kind)
+	{
+		case 1:
+			message = "A precondition of a libtorrent function has been violated.\n"
+				"This indicates a bug in the client application using libtorrent\n";
+	}
+	  
+	fprintf(out, "%s\n"
+		"file: '%s'\n"
+		"line: %d\n"
+		"function: %s\n"
+		"expression: %s\n"
+		"%s%s\n"
+		"stack:\n"
+		"%s\n"
+		, message, file, line, function, expr
+		, value ? value : "", value ? "\n" : ""
+		, stack);
+
+	// if production asserts are defined, don't abort, just print the error
+#if TORRENT_PRODUCTION_ASSERTS
+	if (out != stderr) fclose(out);
+#else
+ 	// send SIGINT to the current process
+ 	// to break into the debugger
+ 	raise(SIGINT);
+ 	abort();
+#endif
+}
+
+#else
+
+TORRENT_EXPORT void assert_fail(char const* expr, int line, char const* file
+	, char const* function, char const* value, int kind) {}
 
 #endif
 

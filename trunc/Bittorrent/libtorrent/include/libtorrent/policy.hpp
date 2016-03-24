@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -35,20 +35,22 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <algorithm>
 #include <deque>
+#include "libtorrent/string_util.hpp" // for allocate_string_copy
 
 #include "libtorrent/peer.hpp"
 #include "libtorrent/piece_picker.hpp"
 #include "libtorrent/socket.hpp"
+#include "libtorrent/address.hpp"
 #include "libtorrent/size_type.hpp"
 #include "libtorrent/invariant_check.hpp"
 #include "libtorrent/config.hpp"
-#include "libtorrent/time.hpp"
 
 namespace libtorrent
 {
 
 	class torrent;
 	class peer_connection;
+	struct external_ip;
 
 	// this is compressed as an unsigned floating point value
 	// the top 13 bits are the mantissa and the low
@@ -60,7 +62,7 @@ namespace libtorrent
 	// min value is 0, max value is 16775168
 	struct ufloat16
 	{
-		ufloat16() {}
+		ufloat16():m_val(0) {}
 		ufloat16(int v)
 		{ *this = v; }
 		operator int()
@@ -87,32 +89,35 @@ namespace libtorrent
 			return *this;
 		}
 	private:
-		unsigned int m_val;
+		boost::uint16_t m_val;
 	};
 
 	enum
 	{
 		// the limits of the download queue size
-		min_request_queue = 2,
-
-		// the amount of free upload allowed before
-		// the peer is choked
-		free_upload_amount = 4 * 16 * 1024
+		min_request_queue = 2
 	};
+
+	// calculate the priority of a peer based on its address. One of the
+	// endpoint should be our own. The priority is symmetric, so it doesn't
+	// matter which is which
+	TORRENT_EXTRA_EXPORT boost::uint32_t peer_priority(
+		tcp::endpoint e1, tcp::endpoint e2);
 
 	void request_a_block(torrent& t, peer_connection& c);
 
-	class TORRENT_EXPORT policy
+	class TORRENT_EXTRA_EXPORT policy
 	{
 	public:
 
 		policy(torrent* t);
 
-		// this is called every 10 seconds to allow
-		// for peer choking management
-		void pulse();
-
 		struct peer;
+
+#if TORRENT_USE_I2P
+		policy::peer* add_i2p_peer(char const* destination, int source, char flags);
+#endif
+
 		// this is called once for every peer we get from
 		// the tracker, pex, lsd or dht.
 		policy::peer* add_peer(const tcp::endpoint& remote, const peer_id& pid
@@ -139,38 +144,28 @@ namespace libtorrent
 
 		void set_seed(policy::peer* p, bool s);
 
-#ifdef TORRENT_DEBUG
-		bool has_connection(const peer_connection* p);
+		// this clears all cached peer priorities. It's called when
+		// our external IP changes
+		void clear_peer_prio();
 
+#if TORRENT_USE_ASSERTS
+		bool has_connection(const peer_connection* p);
+#endif
+#if TORRENT_USE_INVARIANT_CHECKS
 		void check_invariant() const;
 #endif
 
-// intended struct layout (on 32 bit architectures)
-// offset size  alignment field
-// 0      12    1         prev_amount_upload, prev_amount_download
-// 12     4     4         connection
-// 16     2     2         last_optimistically_unchoked
-// 18     2     2         last_connected
-// 20     16    1         addr
-// 36     2     2         port
-// 38     2     2         upload_rate_limit
-// 40     2     2         download_rate_limit
-// 42     1     1         hashfails
-// 43     1     1         failcount, connectable, optimistically_unchoked, seed
-// 44     1     1         fast_reconnects, trust_points
-// 45     1     1         source, pe_support, is_v6_addr
-// 46     1     1         on_parole, banned, added_to_dht
-// 47     1     1         <padding>
-// 48
-		struct TORRENT_EXPORT peer
+		struct TORRENT_EXTRA_EXPORT peer
 		{
-			peer();
 			peer(boost::uint16_t port, bool connectable, int src);
 
 			size_type total_download() const;
 			size_type total_upload() const;
+			
+			boost::uint32_t rank(external_ip const& external, int external_port) const;
 
 			libtorrent::address address() const;
+			char const* dest() const;
 
 			tcp::endpoint ip() const { return tcp::endpoint(address(), port); }
 
@@ -183,14 +178,12 @@ namespace libtorrent
 			// total amount of upload and download
 			// we'll have to add thes figures with the
 			// statistics from the peer_connection.
-			// 48 bits can fit 256 Terabytes
-#ifdef __SUNPRO_CC
-			unsigned prev_amount_upload:48;
-			unsigned prev_amount_download:48;
-#else
-			boost::uint64_t prev_amount_upload:48;
-			boost::uint64_t prev_amount_download:48;
-#endif
+			// since these values don't need to be stored
+			// with byte-precision, they specify the number
+			// of kiB. i.e. shift left 10 bits to compare to
+			// byte counters.
+			boost::uint32_t prev_amount_upload;
+			boost::uint32_t prev_amount_download;
 
 			// if the peer is connected now, this
 			// will refer to a valid peer_connection
@@ -206,6 +199,11 @@ namespace libtorrent
 			std::pair<const int, int>* inet_as;
 #endif
 
+			// as computed by hashing our IP with the remote
+			// IP of this peer
+			// calculated lazily
+			mutable boost::uint32_t peer_rank;
+
 			// the time when this peer was optimistically unchoked
 			// the last time. in seconds since session was created
 			// 16 bits is enough to last for 18.2 hours
@@ -218,7 +216,6 @@ namespace libtorrent
 			// or disconnected if it isn't connected right now
 			// in number of seconds since session was created
 			boost::uint16_t last_connected;
-
 
 			// the port this peer is or was connected on
 			boost::uint16_t port;
@@ -284,6 +281,10 @@ namespace libtorrent
 			// the one to use, false if it's the v4 one
 			bool is_v6_addr:1;
 #endif
+#if TORRENT_USE_I2P
+			// set if the i2p_destination is in use in the addr union
+			bool is_i2p_addr:1;
+#endif
 
 			// if this is true, the peer has previously
 			// participated in a piece that failed the piece
@@ -302,30 +303,49 @@ namespace libtorrent
 			// pinged by the DHT
 			bool added_to_dht:1;
 #endif
-#ifdef TORRENT_DEBUG
+			// we think this peer supports uTP
+			bool supports_utp:1;
+			// we have been connected via uTP at least once
+			bool confirmed_supports_utp:1;
+			bool supports_holepunch:1;
+			// this is set to one for web seeds. Web seeds
+			// are not stored in the policy m_peers list,
+			// and are excempt from connect candidate bookkeeping
+			// so, any peer with the web_seed bit set, is
+			// never considered a connect candidate
+			bool web_seed:1;
+#if TORRENT_USE_ASSERTS
 			bool in_use:1;
 #endif
 		};
 
-		struct TORRENT_EXPORT ipv4_peer : peer
+		struct TORRENT_EXTRA_EXPORT ipv4_peer : peer
 		{
 			ipv4_peer(tcp::endpoint const& ip, bool connectable, int src);
-			ipv4_peer(libtorrent::address const& a);
 
 			address_v4 addr;
 		};
 
-#if TORRENT_USE_IPV6
-		struct TORRENT_EXPORT ipv6_peer : peer
+#if TORRENT_USE_I2P
+		struct TORRENT_EXTRA_EXPORT i2p_peer : peer
 		{
-			ipv6_peer(tcp::endpoint const& ip, bool connectable, int src);
-			ipv6_peer(libtorrent::address const& a);
+			i2p_peer(char const* destination, bool connectable, int src);
+			~i2p_peer();
 
-			address_v6::bytes_type addr;
+			char* destination;
 		};
 #endif
 
-		int num_peers() const { return m_peers.size(); }
+#if TORRENT_USE_IPV6
+		struct TORRENT_EXTRA_EXPORT ipv6_peer : peer
+		{
+			ipv6_peer(tcp::endpoint const& ip, bool connectable, int src);
+
+			const address_v6::bytes_type addr;
+		};
+#endif
+
+		int num_peers() const { return int(m_peers.size()); }
 
 		struct peer_address_compare
 		{
@@ -341,9 +361,27 @@ namespace libtorrent
 				return lhs < rhs->address();
 			}
 
+#if TORRENT_USE_I2P
+			bool operator()(
+				peer const* lhs, char const* rhs) const
+			{
+				return strcmp(lhs->dest(), rhs) < 0;
+			}
+
+			bool operator()(
+				char const* lhs, peer const* rhs) const
+			{
+				return strcmp(lhs, rhs->dest()) < 0;
+			}
+#endif
+
 			bool operator()(
 				peer const* lhs, peer const* rhs) const
 			{
+#if TORRENT_USE_I2P
+				if (rhs->is_i2p_addr == lhs->is_i2p_addr)
+					return strcmp(lhs->dest(), rhs->dest()) < 0;
+#endif
 				return lhs->address() < rhs->address();
 			}
 		};
@@ -382,25 +420,39 @@ namespace libtorrent
 
 	private:
 
+		void update_peer(policy::peer* p, int src, int flags
+		, tcp::endpoint const& remote, char const* destination);
+		bool insert_peer(policy::peer* p, iterator iter, int flags);
+
 		bool compare_peer_erase(policy::peer const& lhs, policy::peer const& rhs) const;
 		bool compare_peer(policy::peer const& lhs, policy::peer const& rhs
-			, address const& external_ip) const;
+			, external_ip const& external, int source_port) const;
 
 		iterator find_connect_candidate(int session_time);
 
 		bool is_connect_candidate(peer const& p, bool finished) const;
 		bool is_erase_candidate(peer const& p, bool finished) const;
+		bool is_force_erase_candidate(peer const& pe) const;
 		bool should_erase_immediately(peer const& p) const;
 
-		void erase_peers();
+		enum flags_t { force_erase = 1 };
+		void erase_peers(int flags = 0);
 
 		peers_t m_peers;
+
+		torrent* m_torrent;
+
+		// this shouldbe NULL for the most part. It's set
+		// to point to a valid torrent_peer object if that
+		// object needs to be kept alive. If we ever feel
+		// like removing a torrent_peer from m_peers, we
+		// first check if the peer matches this one, and
+		// if so, don't delete it.
+		peer* m_locked_peer;
 
 		// since the peer list can grow too large
 		// to scan all of it, start at this iterator
 		int m_round_robin;
-
-		torrent* m_torrent;
 
 		// The number of peers in our peer list
 		// that are connect candidates. i.e. they're
@@ -421,45 +473,72 @@ namespace libtorrent
 		// this state. Every time m_torrent->is_finished()
 		// is different from this state, we need to
 		// recalculate the connect candidates.
-		bool m_finished;
+		bool m_finished:1;
 	};
 
 	inline policy::ipv4_peer::ipv4_peer(
 		tcp::endpoint const& ep, bool c, int src
 	)
-	  : peer(ep.port(), c, src)
-	  , addr(ep.address().to_v4())
+		: peer(ep.port(), c, src)
+		, addr(ep.address().to_v4())
 	{
+#if TORRENT_USE_IPV6
 		is_v6_addr = false;
+#endif
+#if TORRENT_USE_I2P
+		is_i2p_addr = false;
+#endif
 	}
 
-	inline policy::ipv4_peer::ipv4_peer(libtorrent::address const& a)
-	  : addr(a.to_v4())
+#if TORRENT_USE_I2P
+	inline policy::i2p_peer::i2p_peer(char const* dest, bool connectable, int src)
+		: peer(0, connectable, src), destination(allocate_string_copy(dest))
 	{
+#if TORRENT_USE_IPV6
 		is_v6_addr = false;
+#endif
+		is_i2p_addr = true;
 	}
 
+	inline policy::i2p_peer::~i2p_peer()
+	{ free(destination); }
+#endif // TORRENT_USE_I2P
+
+#if TORRENT_USE_IPV6
 	inline policy::ipv6_peer::ipv6_peer(
 		tcp::endpoint const& ep, bool c, int src
 	)
-	  : peer(ep.port(), c, src)
-	  , addr(ep.address().to_v6().to_bytes())
+		: peer(ep.port(), c, src)
+		, addr(ep.address().to_v6().to_bytes())
 	{
 		is_v6_addr = true;
+#if TORRENT_USE_I2P
+		is_i2p_addr = false;
+#endif
 	}
 
-	inline policy::ipv6_peer::ipv6_peer(libtorrent::address const& a)
-	  : addr(a.to_v6().to_bytes())
+#endif // TORRENT_USE_IPV6
+
+#if TORRENT_USE_I2P
+	inline char const* policy::peer::dest() const
 	{
-		is_v6_addr = true;
+		if (is_i2p_addr)
+			return static_cast<policy::i2p_peer const*>(this)->destination;
+		return "";
 	}
-
+#endif
+	
 	inline libtorrent::address policy::peer::address() const
 	{
 #if TORRENT_USE_IPV6
 		if (is_v6_addr)
 			return libtorrent::address_v6(
 				static_cast<policy::ipv6_peer const*>(this)->addr);
+		else
+#endif
+#if TORRENT_USE_I2P
+		if (is_i2p_addr) return libtorrent::address();
+		else
 #endif
 		return static_cast<policy::ipv4_peer const*>(this)->addr;
 	}

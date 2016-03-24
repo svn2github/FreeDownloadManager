@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -30,7 +30,7 @@ void vmsBrowserCachedFlvTrafficCollector::Initialize()
 	vmsBrowserFlvHistory *phist;
 	vmsIeFlvHistory iehist;
 
-	if (GetModuleHandle ("iexplore.exe"))
+	if (GetModuleHandle (L"iexplore.exe"))
 		phist = &iehist;
 	else
 		return;

@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2008, Arvid Norberg
+Copyright (c) 2008-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -37,11 +37,23 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/config.hpp"
 #include <cstring> // for memset and memcpy
 #include <cstdlib> // for malloc, free and realloc
+#include <boost/cstdint.hpp> // uint32_t
+#include <algorithm> // for min()
 
 namespace libtorrent
 {
+	// The bitfiled type stores any number of bits as a bitfield 
+	// in a heap allocated or borrowed array.
 	struct TORRENT_EXPORT bitfield
 	{
+		// constructs a new bitfield. The default constructor creates an empty
+		// bitfield. ``bits`` is the size of the bitfield (specified in bits).
+		// ``val`` is the value to initialize the bits to. If not specified
+		// all bits are initialized to 0.
+		//
+		// The constructor taking a pointer ``b`` and ``bits`` copies a bitfield
+		// from the specified buffer, and ``bits`` number of bits (rounded up to
+		// the nearest byte boundry).
 		bitfield(): m_bytes(0), m_size(0), m_own(false) {}
 		bitfield(int bits): m_bytes(0), m_size(0), m_own(false)
 		{ resize(bits); }
@@ -51,7 +63,16 @@ namespace libtorrent
 		{ assign(b, bits); }
 		bitfield(bitfield const& rhs): m_bytes(0), m_size(0), m_own(false)
 		{ assign(rhs.bytes(), rhs.size()); }
+#if __cplusplus > 199711L
+		bitfield(bitfield&& rhs): m_bytes(rhs.m_bytes), m_size(rhs.m_size), m_own(rhs.m_own)
+		{ rhs.m_bytes = NULL; }
+#endif
 
+		// assigns a bitfield pointed to ``b`` of ``bits`` number of bits, without
+		// taking ownership of the buffer. This is a way to avoid copying data and
+		// yet provide a raw buffer to functions that may operate on the bitfield
+		// type. It is the user's responsibility to make sure the passed-in buffer's
+		// life time exceeds all uses of the bitfield.
 		void borrow_bytes(char* b, int bits)
 		{
 			dealloc();
@@ -59,14 +80,18 @@ namespace libtorrent
 			m_size = bits;
 			m_own = false;
 		}
+
+		// hidden
 		~bitfield() { dealloc(); }
 
+		// copy bitfield from buffer ``b`` of ``bits`` number of bits, rounded up to
+		// the nearest byte boundary.
 		void assign(char const* b, int bits)
 		{ resize(bits); std::memcpy(m_bytes, b, (bits + 7) / 8); clear_trailing_bits(); }
 
+		// query bit at ``index``. Returns true if bit is 1, otherwise false.
 		bool operator[](int index) const
 		{ return get_bit(index); }
-
 		bool get_bit(int index) const
 		{
 			TORRENT_ASSERT(index >= 0);
@@ -74,13 +99,13 @@ namespace libtorrent
 			return (m_bytes[index / 8] & (0x80 >> (index & 7))) != 0;
 		}
 		
+		// set bit at ``index`` to 0 (clear_bit) or 1 (set_bit).
 		void clear_bit(int index)
 		{
 			TORRENT_ASSERT(index >= 0);
 			TORRENT_ASSERT(index < m_size);
 			m_bytes[index / 8] &= ~(0x80 >> (index & 7));
 		}
-
 		void set_bit(int index)
 		{
 			TORRENT_ASSERT(index >= 0);
@@ -88,17 +113,78 @@ namespace libtorrent
 			m_bytes[index / 8] |= (0x80 >> (index & 7));
 		}
 
-		std::size_t size() const { return m_size; }
+		// returns true if all bits in the bitfield are set
+		bool all_set() const
+		{
+			boost::uint8_t* bytes = m_bytes;
+			int num_bytes = m_size / 8;
+			int num_words = 0;
+
+			// head
+			if (num_bytes >= 4)
+			{
+				switch (uintptr_t(bytes) & 0x3)
+				{
+					case 0: break;
+					case 1:
+						if (bytes[0] != 0xff) return false;
+						if (bytes[1] != 0xff) return false;
+						if (bytes[2] != 0xff) return false;
+						bytes += 3;
+						num_bytes -= 3;
+						break;
+					case 2:
+						if (bytes[0] != 0xff) return false;
+						if (bytes[1] != 0xff) return false;
+						bytes += 2;
+						num_bytes -= 2;
+						break;
+					case 3:
+						if (bytes[0] != 0xff) return false;
+						++bytes;
+						--num_bytes;
+						break;
+				}
+
+				num_words = num_bytes / 4;
+
+				TORRENT_ASSERT((uintptr_t(bytes) & 0x3) == 0);
+				boost::uint32_t* words = (boost::uint32_t*)bytes;
+				for (int i = 0; i < num_words; ++i)
+				{
+					if (words[i] != 0xffffffff) return false;
+				}
+			}
+
+			// tail
+			for (int i = num_words * 4; i < num_bytes; ++i)
+			{
+				if (bytes[i] != 0xff) return false;
+			}
+			int rest = m_size & 0x7;
+			boost::uint8_t mask = (0xff << (8-rest)) & 0xff;
+			if (rest > 0 && (bytes[num_bytes] & mask) != mask)
+				return false;
+			return true;
+		}
+
+		// returns the size of the bitfield in bits.
+		int size() const { return m_size; }
+
+		// returns true if the bitfield has zero size.
 		bool empty() const { return m_size == 0; }
 
+		// returns a pointer to the internal buffer of the bitfield.
 		char const* bytes() const { return (char*)m_bytes; }
 
+		// copy operator
 		bitfield& operator=(bitfield const& rhs)
 		{
 			assign(rhs.bytes(), rhs.size());
 			return *this;
 		}
 
+		// count the number of bits in the bitfield that are set to 1.
 		int count() const
 		{
 			// 0000, 0001, 0010, 0011, 0100, 0101, 0110, 0111,
@@ -187,6 +273,8 @@ namespace libtorrent
 		const_iterator begin() const { return const_iterator(m_bytes, 0); }
 		const_iterator end() const { return const_iterator(m_bytes + m_size / 8, m_size & 7); }
 
+		// set the size of the bitfield to ``bits`` length. If the bitfield is extended,
+		// the new bits are initialized to ``val``.
 		void resize(int bits, bool val)
 		{
 			int s = m_size;
@@ -208,20 +296,9 @@ namespace libtorrent
 					std::memset(m_bytes + old_size_bytes, 0x00, new_size_bytes - old_size_bytes);
 			}
 		}
-
-		void set_all()
-		{
-			std::memset(m_bytes, 0xff, (m_size + 7) / 8);
-			clear_trailing_bits();
-		}
-
-		void clear_all()
-		{
-			std::memset(m_bytes, 0x00, (m_size + 7) / 8);
-		}
-	
 		void resize(int bits)
 		{
+			TORRENT_ASSERT(bits >= 0);
 			const int b = (bits + 7) / 8;
 			if (m_bytes)
 			{
@@ -247,7 +324,19 @@ namespace libtorrent
 			clear_trailing_bits();
 		}
 
-		void free() { dealloc(); m_size = 0; }
+		// set all bits in the bitfield to 1 (set_all) or 0 (clear_all).
+		void set_all()
+		{
+			std::memset(m_bytes, 0xff, (m_size + 7) / 8);
+			clear_trailing_bits();
+		}
+		void clear_all()
+		{
+			std::memset(m_bytes, 0x00, (m_size + 7) / 8);
+		}
+	
+		// make the bitfield empty, of zero size.
+		void clear() { dealloc(); m_size = 0; }
 
 	private:
 

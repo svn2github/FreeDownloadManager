@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Русский (Россия) resources
+// Russian (Russia) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
 LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
@@ -25,12 +25,12 @@ LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
 //
 
 IDR_FDMCUSTBUTTON       REGISTRY                "FDMCustButton.rgs"
-#endif    // Русский (Россия) resources
+#endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Английский (США) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
@@ -68,8 +68,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,961,0
- PRODUCTVERSION 1,0,961,0
+ FILEVERSION 1,0,962,0
+ PRODUCTVERSION 1,0,962,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -85,12 +85,12 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "FileDescription", "FDMCustIEBtn Module"
-            VALUE "FileVersion", "1.0.961.0"
+            VALUE "FileVersion", "1.0.962.0"
             VALUE "InternalName", "FDMCustIEBtn"
             VALUE "LegalCopyright", "Copyright 2005"
             VALUE "OriginalFilename", "FDMCustIEBtn.DLL"
             VALUE "ProductName", "FDMCustIEBtn Module"
-            VALUE "ProductVersion", "1.0.961.0"
+            VALUE "ProductVersion", "1.0.962.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -110,7 +110,7 @@ BEGIN
     IDS_PROJNAME            "FDMCustIEBtn"
 END
 
-#endif    // Английский (США) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

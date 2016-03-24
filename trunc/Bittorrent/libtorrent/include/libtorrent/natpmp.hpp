@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -33,11 +33,16 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef TORRENT_NATPMP_HPP
 #define TORRENT_NATPMP_HPP
 
+#include "libtorrent/io_service_fwd.hpp"
 #include "libtorrent/socket.hpp"
+#include "libtorrent/address.hpp"
+#include "libtorrent/thread.hpp"
+#include "libtorrent/error_code.hpp"
 #include "libtorrent/intrusive_ptr_base.hpp"
+#include "libtorrent/deadline_timer.hpp"
 
-#include <boost/function.hpp>
-#include <boost/thread/mutex.hpp>
+#include <boost/function/function1.hpp>
+#include <boost/function/function4.hpp>
 
 namespace libtorrent
 {
@@ -45,10 +50,10 @@ namespace libtorrent
 // int: port mapping index
 // int: external port
 // std::string: error message
-typedef boost::function<void(int, int, error_code const&)> portmap_callback_t;
+typedef boost::function<void(int, address, int, error_code const&)> portmap_callback_t;
 typedef boost::function<void(char const*)> log_callback_t;
 
-class TORRENT_EXPORT natpmp : public intrusive_ptr_base<natpmp>
+class natpmp : public intrusive_ptr_base<natpmp>
 {
 public:
 	natpmp(io_service& ios, address const& listen_interface
@@ -68,20 +73,19 @@ public:
 
 private:
 	
-	typedef boost::mutex mutex_t;
-
-	void update_mapping(int i, mutex_t::scoped_lock& l);
-	void send_map_request(int i, mutex_t::scoped_lock& l);
+	void update_mapping(int i, mutex::scoped_lock& l);
+	void send_map_request(int i, mutex::scoped_lock& l);
+	void send_get_ip_address_request(mutex::scoped_lock& l);
 	void resend_request(int i, error_code const& e);
 	void on_reply(error_code const& e
 		, std::size_t bytes_transferred);
-	void try_next_mapping(int i, mutex_t::scoped_lock& l);
-	void update_expiration_timer(boost::mutex::scoped_lock& l);
+	void try_next_mapping(int i, mutex::scoped_lock& l);
+	void update_expiration_timer(mutex::scoped_lock& l);
 	void mapping_expired(error_code const& e, int i);
-	void close_impl(mutex_t::scoped_lock& l);
+	void close_impl(mutex::scoped_lock& l);
 
-	void log(char const* msg, mutex_t::scoped_lock& l);
-	void disable(error_code const& ec, mutex_t::scoped_lock& l);
+	void log(char const* msg, mutex::scoped_lock& l);
+	void disable(error_code const& ec, mutex::scoped_lock& l);
 
 	struct mapping_t
 	{
@@ -139,6 +143,9 @@ private:
 	// used to receive responses in	
 	char m_response_buffer[16];
 
+	// router external IP address
+	address m_external_ip;
+
 	// the endpoint we received the message from
 	udp::endpoint m_remote;
 	
@@ -160,7 +167,7 @@ private:
 
 	bool m_abort;
 
-	mutable mutex_t m_mutex;
+	mutable mutex m_mutex;
 };
 
 }

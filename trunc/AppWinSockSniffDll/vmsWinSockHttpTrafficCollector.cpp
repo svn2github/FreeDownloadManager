@@ -1,15 +1,12 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 #include "vmsWinSockHttpTrafficCollector.h"
-#include "vmsHttpParser.h"
 #include "vmsZlibHelper.h"
 #include "vmsHttpHelper.h"
 #include "vmsWinSockHttpDlgTree.h"
-
-extern LPCSTR strstrn (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc);
 
 vmsWinSockHttpTrafficCollector::vmsWinSockHttpTrafficCollector(vmsHttpTrafficCollector *pHttpTraffic)
 {

@@ -1,4 +1,3 @@
-
 // Array Remove - By John Resig (MIT Licensed)
 Array.prototype.remove = function(from, to) {
   var rest = this.slice((to || from) + 1 || this.length);
@@ -7,7 +6,8 @@ Array.prototype.remove = function(from, to) {
 };
 
 var port = chrome.runtime.connectNative('com.vms.fdm');
-var suggest_callbacks = [];
+var items = [];
+var cancelled = [];
 var _config = { "monitor": false };
 var dialog_shown = false;
 
@@ -15,17 +15,17 @@ function UrlToFdm(id, url, referrer, page, postdata)
 {
 	if(dialog_shown)
 		return;
+	var origUrl = url;
+	if(redirects.hasOwnProperty(url))
+	{
+		var newUrl = redirects[url];
+		delete redirects[url];
+		url = newUrl;
+	}
 	chrome.cookies.getAll({ 'url': url },
 		function(c) {
 			cookie_string = c.map(function(cookie){
 				return cookie.name+"="+cookie.value+";"; }).join(' ');
-			var origUrl = url;
-			if(redirects.hasOwnProperty(url))
-			{
-				var newUrl = redirects[url];
-				delete redirects[url];
-				url = newUrl;
-			}
 			port.postMessage({
 				'id': id,
 				'list': false,
@@ -73,10 +73,14 @@ function CreateContextMenu()
 			"contexts": [ "image", "link" ],
 			"onclick" :
 				function(e) {
-					if(e.linkUrl)
-						UrlToFdm(-1, e.linkUrl, e.pageUrl);
+					if(e.linkUrl) {
+						if (e.linkUrl.indexOf("magnet:") == 0)
+							UrlToFdm (-1, e.linkUrl, e.pageUrl);
+						else
+							chrome.downloads.download({ url: e.linkUrl, saveAs: false });
+					}
 					else if(e.mediaType === "image")
-						UrlToFdm(-1, encodeURI(e.srcUrl), e.pageUrl);
+						chrome.downloads.download({ url: encodeURI(e.srcUrl), saveAs: false });
 				}
 		});
 	if(_config.menu.all)
@@ -153,24 +157,31 @@ port.onMessage.addListener(
 				break;
 
 			default:  // ordinary download
-				if(message.result)
-					chrome.downloads.cancel(message.id);
-				else
-					if(_config.allow_download)
-						chrome.downloads.resume(message.id);
-					else
-						chrome.downloads.cancel(message.id);
-				suggest_callbacks[message.id]();
-				suggest_callbacks.remove(message.id);
+				if(!message.result && _config.allow_download)
+				{
+					item = items[message.id];
+					items.remove(message.id);
+					cancelled.push(item);
+					chrome.downloads.download({ url: item });
+				}
 				break;
 		}
+	}
+);
+
+chrome.runtime.onMessageExternal.addListener(
+	function(request, sender, sendResponse) {
+		if(sender.url.toLowerCase().indexOf("http://files2.freedownloadmanager.org") == -1)
+		  return;
+		if(request =="uninstall")
+			chrome.management.uninstallSelf();
 	}
 );
 
 function OpenFDMHomepage()
 {
 	chrome.windows.create({
-		'url': 'chrome-extension://ahmpjcflkgiildlgicmcieglgoilbfdp/install.html',
+		'url': 'chrome-extension://' + chrome.runtime.id + '/install.html',
 		'type': 'popup',
 		'width': 620,
 		'height': 500
@@ -178,34 +189,30 @@ function OpenFDMHomepage()
 }
 
 port.onDisconnect.addListener(
-	function() {
-		chrome.runtime.getPlatformInfo(function(info) {
-			if(info.os == "win")
-			{
-				if(chrome.runtime.lastError)
-				{
-					message = chrome.runtime.lastError.message;
-					console.log(message);
-					if(message.indexOf("Access") != -1)
-					{
-						// ext id changed??
-						OpenFDMHomepage();
-						console.log(chrome.i18n.getMessage("installCorrupted"));
-					}
-					else if(message.indexOf("not found") != -1)
-					{
-						// user have just extension, not FDM itself
-						OpenFDMHomepage();
-						console.log(chrome.i18n.getMessage("installMissing"));
-					}
-					// TODO : "Native host has exited." -> restart or something
-				} else
-				{
-					OpenFDMHomepage();
-					console.log(chrome.i18n.getMessage("installUnknownError"));
-				}
-			}
-		});
+	function () {
+	    var error = chrome.runtime.lastError;
+	    chrome.runtime.getPlatformInfo(function (info) {
+	        if (info.os == "win") {
+	            if (error) {
+	                message = error.message;
+	                console.log(message);
+	                if (message.indexOf("Access") != -1) {
+	                    // ext id changed??
+	                    //OpenFDMHomepage();
+	                    console.log(chrome.i18n.getMessage("installCorrupted"));
+	                }
+	                else if (message.indexOf("not found") != -1) {
+	                    // user have just extension, not FDM itself
+	                    OpenFDMHomepage();
+	                    console.log(chrome.i18n.getMessage("installMissing"));
+	                }
+	                // TODO : "Native host has exited." -> restart or something
+	            } else {
+	                //OpenFDMHomepage();
+	                console.log(chrome.i18n.getMessage("installUnknownError"));
+	            }
+	        }
+	    });
 	}
 );
 
@@ -236,12 +243,21 @@ chrome.downloads.onDeterminingFilename.addListener(
 			suggest();
 			return;
 		}
+		
+		// user hit "cancel" in fdm
+		if (cancelled.indexOf(downloadItem.url) != -1)
+		{
+			cancelled.remove(cancelled.indexOf(downloadItem.url));
+			suggest();
+			return;
+		}
 
-		// Chrome starts download anyways, but
-		// it is hidden until call of suggest() callback.
-		chrome.downloads.pause(downloadItem.id);
+		items[downloadItem.id] = downloadItem.url;
+		chrome.downloads.cancel(downloadItem.id, function () {
+			chrome.downloads.erase({ id: downloadItem.id })
+		});
+		
 		UrlToFdm(downloadItem.id, downloadItem.url, downloadItem.referrer);
-		suggest_callbacks[downloadItem.id] = suggest;
 		return true;
 	}
 );

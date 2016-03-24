@@ -1,9 +1,10 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
 #include "vmsbtdownloadpeerinfo.h"
+#include "libtorrent/peer_info.hpp"
 
 class vmsBtDownloadPeerInfoImpl :
 	public vmsBtDownloadPeerInfo

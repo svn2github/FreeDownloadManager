@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_STDAFX_H__64B3F58D_839E_423C_9CFB_B81785CB258C__INCLUDED_)
@@ -17,7 +17,7 @@
 #include "libtorrent/bencode.hpp"
 #include "libtorrent/session.hpp"
 
-#include "../../Include.Add/vmsCriticalSection.h"
+#include "../../common/vms_sifdm_cl/vmsCriticalSection.h"
 #include "../../Include.Add/vmsObject.h"
 
 //{{AFX_INSERT_LOCATION}}

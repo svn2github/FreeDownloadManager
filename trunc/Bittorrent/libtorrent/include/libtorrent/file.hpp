@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -35,14 +35,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <memory>
 #include <string>
-#include <vector>
 
 #ifdef _MSC_VER
 #pragma warning(push, 1)
 #endif
 
 #include <boost/noncopyable.hpp>
-#include <boost/filesystem/path.hpp>
 
 #ifdef _MSC_VER
 #pragma warning(pop)
@@ -51,6 +49,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/error_code.hpp"
 #include "libtorrent/size_type.hpp"
 #include "libtorrent/config.hpp"
+#include "libtorrent/intrusive_ptr_base.hpp"
 
 #ifdef TORRENT_WINDOWS
 // windows part
@@ -59,6 +58,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 #include <windows.h>
 #include <winioctl.h>
+#include <sys/types.h>
 #else
 // posix part
 #define _FILE_OFFSET_BITS 64
@@ -74,36 +74,167 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <unistd.h>
 #include <sys/uio.h>
 #include <fcntl.h>
-#include <sys/stat.h>
 #include <sys/types.h>
+#include <dirent.h> // for DIR
+
 #undef _FILE_OFFSET_BITS
+
 #endif
+
 namespace libtorrent
 {
-	namespace fs = boost::filesystem;
+	struct file_status
+	{
+		size_type file_size;
+		boost::uint64_t atime;
+		boost::uint64_t mtime;
+		boost::uint64_t ctime;
+		enum {
+#if defined TORRENT_WINDOWS
+			fifo = 0x1000, // named pipe (fifo)
+			character_special = 0x2000,  // character special
+			directory = 0x4000,  // directory
+			regular_file = 0x8000  // regular
+#else
+			fifo = 0010000, // named pipe (fifo)
+			character_special = 0020000,  // character special
+			directory = 0040000,  // directory
+			block_special = 0060000,  // block special
+			regular_file = 0100000,  // regular
+			link = 0120000,  // symbolic link
+			socket = 0140000  // socket
+#endif
+		} modes_t;
+		int mode;
+	};
 
-	class TORRENT_EXPORT file: public boost::noncopyable
+	// internal flags for stat_file
+	enum { dont_follow_links = 1 };
+	TORRENT_EXTRA_EXPORT void stat_file(std::string f, file_status* s
+		, error_code& ec, int flags = 0);
+	TORRENT_EXTRA_EXPORT void rename(std::string const& f
+		, std::string const& newf, error_code& ec);
+	TORRENT_EXTRA_EXPORT void create_directories(std::string const& f
+		, error_code& ec);
+	TORRENT_EXTRA_EXPORT void create_directory(std::string const& f
+		, error_code& ec);
+	TORRENT_EXTRA_EXPORT void remove_all(std::string const& f
+		, error_code& ec);
+	TORRENT_EXTRA_EXPORT void remove(std::string const& f, error_code& ec);
+	TORRENT_EXTRA_EXPORT bool exists(std::string const& f);
+	TORRENT_EXTRA_EXPORT size_type file_size(std::string const& f);
+	TORRENT_EXTRA_EXPORT bool is_directory(std::string const& f
+		, error_code& ec);
+	TORRENT_EXTRA_EXPORT void recursive_copy(std::string const& old_path
+		, std::string const& new_path, error_code& ec);
+	TORRENT_EXTRA_EXPORT void copy_file(std::string const& f
+		, std::string const& newf, error_code& ec);
+
+	TORRENT_EXTRA_EXPORT std::string split_path(std::string const& f);
+	TORRENT_EXTRA_EXPORT char const* next_path_element(char const* p);
+	TORRENT_EXTRA_EXPORT std::string extension(std::string const& f);
+	TORRENT_EXTRA_EXPORT std::string remove_extension(std::string const& f);
+	TORRENT_EXTRA_EXPORT void replace_extension(std::string& f, std::string const& ext);
+	TORRENT_EXTRA_EXPORT bool is_root_path(std::string const& f);
+
+
+	// internal used by create_torrent.hpp
+	TORRENT_EXPORT std::string parent_path(std::string const& f);
+	TORRENT_EXTRA_EXPORT bool has_parent_path(std::string const& f);
+	// internal used by create_torrent.hpp
+	TORRENT_EXPORT std::string filename(std::string const& f);
+	TORRENT_EXTRA_EXPORT std::string combine_path(std::string const& lhs
+		, std::string const& rhs);
+	// internal used by create_torrent.hpp
+	TORRENT_EXPORT std::string complete(std::string const& f);
+	TORRENT_EXTRA_EXPORT bool is_complete(std::string const& f);
+	TORRENT_EXTRA_EXPORT std::string current_working_directory();
+#if TORRENT_USE_UNC_PATHS
+	TORRENT_EXTRA_EXPORT std::string canonicalize_path(std::string const& f);
+#endif
+
+	class TORRENT_EXTRA_EXPORT directory : public boost::noncopyable
 	{
 	public:
+		directory(std::string const& path, error_code& ec);
+		~directory();
+		void next(error_code& ec);
+		std::string file() const;
+		boost::uint64_t inode() const;
+		bool done() const { return m_done; }
+	private:
+#ifdef TORRENT_WINDOWS
+		HANDLE m_handle;
+		int m_inode;
+#if TORRENT_USE_WSTRING
+		WIN32_FIND_DATAW m_fd;
+#else
+		WIN32_FIND_DATAA m_fd;
+#endif
+#else
+		DIR* m_handle;
+		// the dirent struct contains a zero-sized
+		// array at the end, it will end up referring
+		// to the m_name field
+		struct dirent m_dirent;
+		char m_name[TORRENT_MAX_PATH + 1]; // +1 to make room for null
+#endif
+		bool m_done;
+	};
 
-		enum
+	struct TORRENT_EXTRA_EXPORT file: boost::noncopyable, intrusive_ptr_base<file>
+	{
+		// the open mode for files. Used for the file constructor or
+		// file::open().
+		enum open_mode_t
 		{
-			// when a file is opened with no_buffer
+			// open the file for reading only
+			read_only = 0,
+
+			// open the file for writing only
+			write_only = 1,
+
+			// open the file for reading and writing
+			read_write = 2,
+			
+			// the mask for the bits determining read or write mode
+			rw_mask = read_only | write_only | read_write,
+
+			// indicate that the file should be opened in
+			// *direct io* mode, i.e. bypassing the operating
+			// system's disk cache, or as much as possible of it
+			// depending on the system.
+			// when a file is opened with no_buffer,
 			// file offsets have to be aligned to
 			// pos_alignment() and buffer addresses
 			// to buf_alignment() and read/write sizes
 			// to size_alignment()
-			read_only = 0,
-			write_only = 1,
-			read_write = 2,
-			rw_mask = read_only | write_only | read_write,
 			no_buffer = 4,
-			mode_mask = rw_mask | no_buffer,
+
+			// open the file in sparse mode (if supported by the
+			// filesystem).
 			sparse = 8,
+
+			// don't update the access timestamps on the file (if
+			// supported by the operating system and filesystem).
+			// this generally improves disk performance.
+			no_atime = 16,
+			
+			// open the file for random acces. This disables read-ahead
+			// logic
 			random_access = 32,
 
+			// prevent the file from being opened by another process
+			// while it's still being held open by this handle
+			lock_file = 64,
+
+			// when creating a file, set the hidden attribute (windows only)
 			attribute_hidden = 0x1000,
+
+			// when creating a file, set the executable attribute
 			attribute_executable = 0x2000,
+
+			// the mask of all attribute bits
 			attribute_mask = attribute_hidden | attribute_executable
 		};
 
@@ -126,10 +257,10 @@ namespace libtorrent
 #endif
 
 		file();
-		file(fs::path const& p, int m, error_code& ec);
+		file(std::string const& p, int m, error_code& ec);
 		~file();
 
-		bool open(fs::path const& p, int m, error_code& ec);
+		bool open(std::string const& p, int m, error_code& ec);
 		bool is_open() const;
 		void close();
 		bool set_size(size_type size, error_code& ec);
@@ -152,6 +283,7 @@ namespace libtorrent
 
 		size_type writev(size_type file_offset, iovec_t const* bufs, int num_bufs, error_code& ec);
 		size_type readv(size_type file_offset, iovec_t const* bufs, int num_bufs, error_code& ec);
+		void hint_read(size_type file_offset, int len);
 
 		size_type get_size(error_code& ec) const;
 
@@ -171,14 +303,15 @@ namespace libtorrent
 
 #ifdef TORRENT_WINDOWS
 		HANDLE m_file_handle;
-#if TORRENT_USE_WPATH
+#if TORRENT_USE_WSTRING
 		std::wstring m_path;
 #else
 		std::string m_path;
-#endif
-#else
+#endif // TORRENT_USE_WSTRING
+#else // TORRENT_WINDOWS
 		int m_fd;
-#endif
+#endif // TORRENT_WINDOWS
+
 #if defined TORRENT_WINDOWS || defined TORRENT_LINUX || defined TORRENT_DEBUG
 		static void init_file();
 		static int m_page_size;
@@ -189,6 +322,8 @@ namespace libtorrent
 #endif
 #if defined TORRENT_WINDOWS
 		mutable int m_cluster_size;
+
+		static bool has_manage_volume_privs;
 #endif
 	};
 

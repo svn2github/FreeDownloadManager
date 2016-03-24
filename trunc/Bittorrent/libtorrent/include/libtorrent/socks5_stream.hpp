@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -33,44 +33,43 @@ POSSIBILITY OF SUCH DAMAGE.
 #ifndef TORRENT_SOCKS5_STREAM_HPP_INCLUDED
 #define TORRENT_SOCKS5_STREAM_HPP_INCLUDED
 
+#include <boost/function/function1.hpp>
+#include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 #include "libtorrent/proxy_base.hpp"
-
-namespace libtorrent {
-
-	namespace socks_error {
-
-		enum socks_error_code
-		{
-			no_error = 0,
-			unsupported_version,
-			unsupported_authentication_method,
-			unsupported_authentication_version,
-			authentication_error,
-			username_required,
-			general_failure,
-			command_not_supported,
-			no_identd,
-			identd_error,
-
-			num_errors
-		};
-	}
-
-#if BOOST_VERSION < 103500
-typedef asio::error::error_category socks_error_category;
-#else
-
-struct TORRENT_EXPORT socks_error_category : boost::system::error_category
-{
-	virtual const char* name() const;
-	virtual std::string message(int ev) const;
-	virtual boost::system::error_condition default_error_condition(int ev) const
-	{ return boost::system::error_condition(ev, *this); }
-};
-
+#if defined TORRENT_ASIO_DEBUGGING
+#include "libtorrent/debug.hpp"
 #endif
 
-extern socks_error_category socks_category;
+namespace libtorrent {
+namespace socks_error {
+
+	// SOCKS5 error values. If an error_code has the
+	// socks error category (get_socks_category()), these
+	// are the error values.
+	enum socks_error_code
+	{
+		no_error = 0,
+		unsupported_version,
+		unsupported_authentication_method,
+		unsupported_authentication_version,
+		authentication_error,
+		username_required,
+		general_failure,
+		command_not_supported,
+		no_identd,
+		identd_error,
+
+		num_errors
+	};
+
+	// internal
+	TORRENT_EXPORT boost::system::error_code make_error_code(socks_error_code e);
+
+} // namespace socks_error
+
+// returns the error_category for SOCKS5 errors
+TORRENT_EXPORT boost::system::error_category& get_socks_category();
 
 class socks5_stream : public proxy_base
 {
@@ -94,6 +93,29 @@ public:
 		m_password = password;
 	}
 
+	void set_dst_name(std::string const& host)
+	{
+		m_dst_name = host;
+		if (m_dst_name.size() > 255)
+			m_dst_name.resize(255);
+	}
+
+	void close(error_code& ec)
+	{
+		m_hostname.clear();
+		m_dst_name.clear();
+		proxy_base::close(ec);
+	}
+
+#ifndef BOOST_NO_EXCEPTIONS
+	void close()
+	{
+		m_hostname.clear();
+		m_dst_name.clear();
+		proxy_base::close();
+	}
+#endif
+
 	typedef boost::function<void(error_code const&)> handler_type;
 
 //#error fix error messages to use custom error_code category
@@ -110,12 +132,15 @@ public:
 		//   3.1 send SOCKS5 authentication method message
 		//   3.2 read SOCKS5 authentication response
 		//   3.3 send username+password
-		// 4 send SOCKS command message
+		// 4. send SOCKS command message
 
 		// to avoid unnecessary copying of the handler,
 		// store it in a shaed_ptr
 		boost::shared_ptr<handler_type> h(new handler_type(handler));
 
+#if defined TORRENT_ASIO_DEBUGGING
+		add_outstanding_async("socks5_stream::name_lookup");
+#endif
 		tcp::resolver::query q(m_hostname, to_string(m_port).elems);
 		m_resolver.async_resolve(q, boost::bind(
 			&socks5_stream::name_lookup, this, _1, _2, h));
@@ -140,6 +165,7 @@ private:
 	// proxy authentication
 	std::string m_user;
 	std::string m_password;
+	std::string m_dst_name;
 	int m_version;
 	int m_command;
 	// set to one when we're waiting for the
@@ -148,6 +174,19 @@ private:
 };
 
 }
+
+#if BOOST_VERSION >= 103500
+
+namespace boost { namespace system {
+
+	template<> struct is_error_code_enum<libtorrent::socks_error::socks_error_code>
+	{ static const bool value = true; };
+
+	template<> struct is_error_condition_enum<libtorrent::socks_error::socks_error_code>
+	{ static const bool value = true; };
+} }
+
+#endif // BOOST_VERSION
 
 #endif
 

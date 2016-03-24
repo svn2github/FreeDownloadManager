@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2006, Arvid Norberg & Daniel Wallin
+Copyright (c) 2006-2014, Arvid Norberg & Daniel Wallin
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -39,6 +39,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <libtorrent/kademlia/node_id.hpp>
 #include <libtorrent/kademlia/routing_table.hpp>
 #include <libtorrent/kademlia/logging.hpp>
+#include <libtorrent/kademlia/observer.hpp>
+#include <libtorrent/address.hpp>
 
 #include <boost/noncopyable.hpp>
 #include <boost/intrusive_ptr.hpp>
@@ -59,41 +61,46 @@ class node_impl;
 struct traversal_algorithm : boost::noncopyable
 {
 	void traverse(node_id const& id, udp::endpoint addr);
-	void finished(node_id const& id);
-	void failed(node_id const& id, bool prevent_request = false);
-	virtual ~traversal_algorithm();
-	boost::pool<>& allocator() const;
-	void status(dht_lookup& l);
+	void finished(observer_ptr o);
 
-	virtual char const* name() const { return "traversal_algorithm"; }
+	enum flags_t { prevent_request = 1, short_timeout = 2 };
+	void failed(observer_ptr o, int flags = 0);
+	virtual ~traversal_algorithm();
+	void status(dht_lookup& l);
+	void abort();
+
+	void* allocate_observer();
+	void free_observer(void* ptr);
+
+	virtual char const* name() const;
+	virtual void start();
 
 	node_id const& target() const { return m_target; }
 
+	void resort_results();
+	void add_entry(node_id const& id, udp::endpoint addr, unsigned char flags);
+
+	traversal_algorithm(node_impl& node, node_id target);
+	int invoke_count() const { return m_invoke_count; }
+	int branch_factor() const { return m_branch_factor; }
+
+	node_impl& node() const { return m_node; }
+
 protected:
 
-	template<class InIt>
-	traversal_algorithm(node_impl& node, node_id target, InIt start, InIt end);
+	// returns true if we're done
+	bool add_requests();
 
-	void add_requests();
-	void add_entry(node_id const& id, udp::endpoint addr, unsigned char flags);
 	void add_router_entries();
 	void init();
 
-	virtual void done() = 0;
-	virtual void invoke(node_id const& id, udp::endpoint addr) = 0;
+	virtual void done();
+	// should construct an algorithm dependent
+	// observer in ptr.
+	virtual observer_ptr new_observer(void* ptr
+		, udp::endpoint const& ep, node_id const& id);
 
-	struct result
-	{
-		result(node_id const& id, udp::endpoint addr, unsigned char f = 0) 
-			: id(id), addr(addr), flags(f) {}
-
-		node_id id;
-		udp::endpoint addr;
-		enum { queried = 1, initial = 2, no_id = 4 };
-		unsigned char flags;
-	};
-
-	std::vector<result>::iterator last_iterator();
+	virtual bool invoke(observer_ptr o) { return false; }
 
 	friend void intrusive_ptr_add_ref(traversal_algorithm* p)
 	{
@@ -109,39 +116,26 @@ protected:
 	int m_ref_count;
 
 	node_impl& m_node;
-	node_id m_target;
-	std::vector<result> m_results;
-	std::set<udp::endpoint> m_failed;
+	node_id const m_target;
+	std::vector<observer_ptr> m_results;
 	int m_invoke_count;
 	int m_branch_factor;
 	int m_responses;
 	int m_timeouts;
+	int m_num_target_nodes;
 };
 
-template<class InIt>
-traversal_algorithm::traversal_algorithm(
-	node_impl& node
-	, node_id target
-	, InIt start	// <- nodes to initiate traversal with
-	, InIt end)
-	: m_ref_count(0)
-	, m_node(node)
-	, m_target(target)
-	, m_invoke_count(0)
-	, m_branch_factor(3)
-	, m_responses(0)
-	, m_timeouts(0)
+struct traversal_observer : observer
 {
-	for (InIt i = start; i != end; ++i)
-	{
-		add_entry(i->id, udp::endpoint(i->addr, i->port), result::initial);
-	}
-	
-	// in case the routing table is empty, use the
-	// router nodes in the table
-	if (start == end) add_router_entries();
-	init();
-}
+	traversal_observer(
+		boost::intrusive_ptr<traversal_algorithm> const& algorithm
+		, udp::endpoint const& ep, node_id const& id)
+		: observer(algorithm, ep, id)
+	{}
+
+	// parses out "nodes" and keeps traversing
+	virtual void reply(msg const&);
+};
 
 } } // namespace libtorrent::dht
 

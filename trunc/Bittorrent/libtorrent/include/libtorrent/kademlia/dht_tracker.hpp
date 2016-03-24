@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2006, Arvid Norberg
+Copyright (c) 2006-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -40,11 +40,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <numeric>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
-#include <boost/optional.hpp>
-#include <boost/filesystem/operations.hpp>
 #include <boost/intrusive_ptr.hpp>
 #include <boost/detail/atomic_count.hpp>
-#include <boost/thread/mutex.hpp>
 
 #include "libtorrent/kademlia/node.hpp"
 #include "libtorrent/kademlia/node_id.hpp"
@@ -53,6 +50,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/session_status.hpp"
 #include "libtorrent/udp_socket.hpp"
 #include "libtorrent/socket.hpp"
+#include "libtorrent/thread.hpp"
+#include "libtorrent/deadline_timer.hpp"
 
 namespace libtorrent
 {
@@ -69,17 +68,20 @@ namespace libtorrent { namespace dht
 
 	struct dht_tracker;
 
-	TORRENT_EXPORT void intrusive_ptr_add_ref(dht_tracker const*);
-	TORRENT_EXPORT void intrusive_ptr_release(dht_tracker const*);	
+	TORRENT_EXTRA_EXPORT void intrusive_ptr_add_ref(dht_tracker const*);
+	TORRENT_EXTRA_EXPORT void intrusive_ptr_release(dht_tracker const*);	
 
-	struct dht_tracker
+	struct dht_tracker : udp_socket_interface, udp_socket_observer
 	{
 		friend void intrusive_ptr_add_ref(dht_tracker const*);
 		friend void intrusive_ptr_release(dht_tracker const*);
+
 		dht_tracker(libtorrent::aux::session_impl& ses, rate_limited_udp_socket& sock
 			, dht_settings const& settings, entry const* state = 0);
+		virtual ~dht_tracker();
 
-		void start(entry const& bootstrap);
+		void start(entry const& bootstrap
+			, find_data::nodes_callback const& f);
 		void stop();
 
 		void add_node(udp::endpoint node);
@@ -88,16 +90,32 @@ namespace libtorrent { namespace dht
 
 		entry state() const;
 
-		void announce(sha1_hash const& ih, int listen_port
+		enum flags_t { flag_seed = 1, flag_implied_port = 2 };
+		void announce(sha1_hash const& ih, int listen_port, int flags
 			, boost::function<void(std::vector<tcp::endpoint> const&)> f);
+
+		void get_item(sha1_hash const& target
+			, boost::function<void(item const&)> cb);
+
+		// key is a 32-byte binary string, the public key to look up.
+		// the salt is optional
+		void get_item(char const* key
+			, boost::function<void(item const&)> cb
+			, std::string salt = std::string());
+
+		void put_item(entry data
+			, boost::function<void()> cb);
+
+		void put_item(char const* key
+			, boost::function<void(item&)> cb, std::string salt = std::string());
 
 		void dht_status(session_status& s);
 		void network_stats(int& sent, int& received);
 
 		// translate bittorrent kademlia message into the generic kademlia message
 		// used by the library
-		void on_receive(udp::endpoint const& ep, char const* pkt, int size);
-		void on_unreachable(udp::endpoint const& ep);
+		virtual bool incoming_packet(error_code const& ec
+			, udp::endpoint const&, char const* buf, int size);
 
 	private:
 	
@@ -112,13 +130,11 @@ namespace libtorrent { namespace dht
 		void refresh_timeout(error_code const& e);
 		void tick(error_code const& e);
 
-		void on_bootstrap();
-		void send_packet(msg const& m);
-
-		void incoming_error(char const* msg, lazy_entry const& e, udp::endpoint const& ep);
+		// implements udp_socket_interface
+		virtual bool send_packet(libtorrent::entry& e, udp::endpoint const& addr
+			, int send_flags);
 
 		node_impl m_dht;
-		libtorrent::aux::session_impl& m_ses;
 		rate_limited_udp_socket& m_sock;
 
 		std::vector<char> m_send_buf;
@@ -130,10 +146,6 @@ namespace libtorrent { namespace dht
 		dht_settings const& m_settings;
 		int m_refresh_bucket;
 
-		// The mutex is used to abort the dht node
-		// it's only used to set m_abort to true
-		typedef boost::mutex mutex_t;
-		mutable mutex_t m_mutex;
 		bool m_abort;
 
 		// used to resolve hostnames for nodes
@@ -165,17 +177,8 @@ namespace libtorrent { namespace dht
 		int m_replies_bytes_sent[5];
 		int m_queries_bytes_received[5];
 		int m_counter;
-		int m_announces;
-		int m_failed_announces;
 
 		int m_total_message_input;
-		int m_az_message_input;
-		int m_ut_message_input;
-		int m_lt_message_input;
-		int m_mp_message_input;
-		int m_gr_message_input;
-		int m_mo_message_input;
-		
 		int m_total_in_bytes;
 		int m_total_out_bytes;
 		

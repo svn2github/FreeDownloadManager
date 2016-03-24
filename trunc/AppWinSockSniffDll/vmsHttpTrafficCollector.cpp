@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -9,8 +9,7 @@
 #include "vmsUrlMonSpyDll.h"
 #include <atlbase.h>
 #include "vmsUrl.h"
-
-extern LPCSTR strstrn (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc);
+#include "vmsCharsets.h"
 
 vmsHttpTrafficCollector::vmsHttpTrafficCollector()
 {
@@ -33,7 +32,7 @@ bool vmsHttpTrafficCollector::isFlashVideoCT(LPCSTR pszContentType)
 	LPCSTR apszCT [] = {
 		"video/x-flv", "video/mp4", "video/x-m4v", "audio/mp4a-latm", 
 		"video/3gpp", "video/quicktime", "audio/mp4", "video/mpeg",
-		"flv-application/octet-stream", "video/webm",
+		"flv-application/octet-stream", "video/webm", "video/mp2t"
 	};
 
 	for (int i = 0; i < sizeof (apszCT) / sizeof (LPCSTR); i++)
@@ -267,8 +266,6 @@ bool vmsHttpTrafficCollector::isResponseBodyContainsText(const HttpDialog* pDlg,
 	if (pDlg->vbResponseBody.empty ())
 		return false;
 	LPCSTR psz = (LPCSTR)&pDlg->vbResponseBody [0];
-	extern LPCSTR strstrn (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc);
-	extern LPCSTR strstrni (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc);
 	return bMatchCase ? strstrn (psz, pszText, pDlg->vbResponseBody.size ()) != NULL :
 		strstrni (psz, pszText, pDlg->vbResponseBody.size ()) != NULL;
 }
@@ -516,6 +513,35 @@ void vmsHttpTrafficCollector::ExtractContentType(HttpDialog *pDlg)
 	}
 }
 
+void vmsHttpTrafficCollector::ExtractContentCodePage(HttpDialog *pDlg)
+{
+	assert (pDlg != NULL);
+	if (!pDlg)
+		return;
+
+	assert (!pDlg->codePage);
+
+	assert (pDlg->pHttpResponse);
+	const vmsHttpParser::HdrField *pFld = pDlg->pHttpResponse->FieldByName ("Content-Type");
+	LPCSTR pszCharset = pFld ? strstr (pFld->strValue.c_str (), "charset") : nullptr;
+	if (pszCharset)
+	{
+		pszCharset += 7;
+		while (*pszCharset == ' ')
+			pszCharset++;
+		if (*pszCharset == '=')
+		{
+			pszCharset++;
+			while (*pszCharset == ' ')
+				pszCharset++;
+			string strCharset;
+			while (*pszCharset != ' ' && *pszCharset != 0)
+				strCharset += *pszCharset++;
+			pDlg->codePage = vmsCharsets::GetCpIdFromName (strCharset.c_str ());
+		}
+	}
+}
+
 void vmsHttpTrafficCollector::onHttpResponseHdrsAvailable(HttpDialog *pDlg)
 {
 	LOGFN ("vmsHttpTrafficCollector::onHttpResponseHdrsAvailable");
@@ -537,6 +563,7 @@ void vmsHttpTrafficCollector::onHttpResponseHdrsAvailable(HttpDialog *pDlg)
 		pDlg->nContentLength = (UINT64)_atoi64 (pCL->strValue.c_str ());
 	
 	ExtractContentType (pDlg);
+	ExtractContentCodePage (pDlg);
 	
 	if (pDlg->enCT != HttpDialog::UNKNOWN && pDlg->enCT != HttpDialog::FLV)
 	{
@@ -755,21 +782,21 @@ void vmsHttpTrafficCollector::ExtractRequestUrlFromWInetFile(HttpDialog *pDlg)
 	if (!pDlg->hWInetFile)
 		return;
 
-	char szUrl [10000] = ""; DWORD dw = sizeof (szUrl);
-	InternetQueryOption (pDlg->hWInetFile, INTERNET_OPTION_URL, szUrl, &dw);
+	std::vector <TCHAR> url (10000, '\0'); DWORD dw = (DWORD)url.size ();
+	InternetQueryOption (pDlg->hWInetFile, INTERNET_OPTION_URL, &url.front (), &dw);
 
-	pDlg->strRequestUrl = szUrl;
+	pDlg->strRequestUrl = stringFromTstring (&url.front ());
 	LOG ("New URL: %s", pDlg->strRequestUrl.c_str ());
 
-	char szHost [1000] = "";
+	std::vector <TCHAR> host (1000, '\0');
 
 	URL_COMPONENTS urlc; ZeroMemory (&urlc, sizeof (urlc));
 	urlc.dwStructSize = sizeof (urlc);
-	urlc.lpszHostName = szHost;
-	urlc.dwHostNameLength = sizeof (szHost);
-	InternetCrackUrl (szUrl, 0, 0, &urlc);
+	urlc.lpszHostName = &host.front ();
+	urlc.dwHostNameLength = (DWORD)host.size ();
+	InternetCrackUrl (&url.front (), 0, 0, &urlc);
 
-	pDlg->strRequestHost = szHost;
+	pDlg->strRequestHost = stringFromTstring (&host.front ());
 }
 
 void vmsHttpTrafficCollector::ExtractHttpHeadersFromWInetFile(HttpDialog *pDlg)
@@ -783,24 +810,24 @@ void vmsHttpTrafficCollector::ExtractHttpHeadersFromWInetFile(HttpDialog *pDlg)
 	if (!pDlg->hWInetFile)
 		return;
 
-	char szHdrs [40000] = ""; DWORD dw = sizeof (szHdrs);
+	std::vector <char> hdrs (40000, '\0'); DWORD dw = (DWORD)hdrs.size ();
 
-	HttpQueryInfo (pDlg->hWInetFile, HTTP_QUERY_RAW_HEADERS_CRLF | HTTP_QUERY_FLAG_REQUEST_HEADERS,
-		szHdrs, &dw, NULL);
+	HttpQueryInfoA (pDlg->hWInetFile, HTTP_QUERY_RAW_HEADERS_CRLF | HTTP_QUERY_FLAG_REQUEST_HEADERS,
+		&hdrs.front (), &dw, NULL);
 
-	if (*szHdrs)
+	if (hdrs.front ())
 	{
-		pDlg->strRequestHeaders = szHdrs;
+		pDlg->strRequestHeaders = &hdrs.front ();
 		onHttpRequestHdrsAvailable (pDlg);
 	}
 
-	*szHdrs = 0; dw = sizeof (szHdrs);
-	HttpQueryInfo (pDlg->hWInetFile, HTTP_QUERY_RAW_HEADERS_CRLF,
-		szHdrs, &dw, NULL);
+	hdrs [0] = 0; dw = (DWORD)hdrs.size ();
+	HttpQueryInfoA (pDlg->hWInetFile, HTTP_QUERY_RAW_HEADERS_CRLF,
+		&hdrs.front (), &dw, NULL);
 
-	if (*szHdrs)
+	if (hdrs.front ())
 	{
-		pDlg->strResponseHeaders = szHdrs;
+		pDlg->strResponseHeaders = &hdrs.front ();
 		onHttpResponseHdrsAvailable (pDlg);
 	}
 }
@@ -1011,6 +1038,10 @@ void vmsHttpTrafficCollector::FindUrlMonRequest(HttpDialog *pDlg)
 	pDlg->spUrlMonRequest = vmsUrlMonSpyDll::FindRequest (A2CW (pDlg->strRequestUrl.c_str ()), 
 		pDlg->vbRequestBody.empty () ? NULL : &pDlg->vbRequestBody[0], pDlg->vbRequestBody.size (), true);
 	LOG ("URLMON request %s found", pDlg->spUrlMonRequest != NULL ? "was" : "was NOT");
+#ifdef SCL_ENABLE
+	if (pDlg->spUrlMonRequest)
+		LOG (" SRC TAB URL: %s", W2CA (pDlg->spUrlMonRequest->getSrcTabUrl ()));
+#endif
 }
 
 void vmsHttpTrafficCollector::onFlvDetected(HttpDialog* pDlg)

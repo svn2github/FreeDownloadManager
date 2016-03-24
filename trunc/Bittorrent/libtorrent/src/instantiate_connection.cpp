@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,45 +30,108 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "libtorrent/pch.hpp"
-
 #include "libtorrent/socket.hpp"
 #include "libtorrent/session_settings.hpp"
 #include "libtorrent/socket_type.hpp"
+#include "libtorrent/utp_socket_manager.hpp"
 #include <boost/shared_ptr.hpp>
 #include <stdexcept>
 
 namespace libtorrent
 {
-
-	bool instantiate_connection(io_service& ios
-		, proxy_settings const& ps, socket_type& s)
+	TORRENT_EXPORT bool instantiate_connection(io_service& ios
+		, proxy_settings const& ps, socket_type& s
+		, void* ssl_context
+		, utp_socket_manager* sm
+		, bool peer_connection)
 	{
-		if (ps.type == proxy_settings::none)
+		if (sm)
 		{
-			s.instantiate<stream_socket>(ios);
+			utp_stream* str;
+#ifdef TORRENT_USE_OPENSSL
+			if (ssl_context)
+			{
+				s.instantiate<ssl_stream<utp_stream> >(ios, ssl_context);
+				str = &s.get<ssl_stream<utp_stream> >()->next_layer();
+			}
+			else
+#endif
+			{
+				s.instantiate<utp_stream>(ios);
+				str = s.get<utp_stream>();
+			}
+			str->set_impl(sm->new_utp_socket(str));
+		}
+#if TORRENT_USE_I2P
+		else if (ps.type == proxy_settings::i2p_proxy)
+		{
+			// it doesn't make any sense to try ssl over i2p
+			TORRENT_ASSERT(ssl_context == 0);
+			s.instantiate<i2p_stream>(ios);
+			s.get<i2p_stream>()->set_proxy(ps.hostname, ps.port);
+		}
+#endif
+		else if (ps.type == proxy_settings::none
+			|| (peer_connection && !ps.proxy_peer_connections))
+		{
+#ifdef TORRENT_USE_OPENSSL
+			if (ssl_context)
+			{
+				s.instantiate<ssl_stream<stream_socket> >(ios, ssl_context);
+			}
+			else
+#endif
+			{
+				s.instantiate<stream_socket>(ios);
+			}
 		}
 		else if (ps.type == proxy_settings::http
 			|| ps.type == proxy_settings::http_pw)
 		{
-			s.instantiate<http_stream>(ios);
-			s.get<http_stream>()->set_proxy(ps.hostname, ps.port);
+			http_stream* str;
+#ifdef TORRENT_USE_OPENSSL
+			if (ssl_context)
+			{
+				s.instantiate<ssl_stream<http_stream> >(ios, ssl_context);
+				str = &s.get<ssl_stream<http_stream> >()->next_layer();
+			}
+			else
+#endif
+			{
+				s.instantiate<http_stream>(ios);
+				str = s.get<http_stream>();
+			}
+
+			str->set_proxy(ps.hostname, ps.port);
 			if (ps.type == proxy_settings::http_pw)
-				s.get<http_stream>()->set_username(ps.username, ps.password);
+				str->set_username(ps.username, ps.password);
 		}
 		else if (ps.type == proxy_settings::socks5
 			|| ps.type == proxy_settings::socks5_pw
 			|| ps.type == proxy_settings::socks4)
 		{
-			s.instantiate<socks5_stream>(ios);
-			s.get<socks5_stream>()->set_proxy(ps.hostname, ps.port);
+			socks5_stream* str;
+#ifdef TORRENT_USE_OPENSSL
+			if (ssl_context)
+			{
+				s.instantiate<ssl_stream<socks5_stream> >(ios, ssl_context);
+				str = &s.get<ssl_stream<socks5_stream> >()->next_layer();
+			}
+			else
+#endif
+			{
+				s.instantiate<socks5_stream>(ios);
+				str = s.get<socks5_stream>();
+			}
+			str->set_proxy(ps.hostname, ps.port);
 			if (ps.type == proxy_settings::socks5_pw)
-				s.get<socks5_stream>()->set_username(ps.username, ps.password);
+				str->set_username(ps.username, ps.password);
 			if (ps.type == proxy_settings::socks4)
-				s.get<socks5_stream>()->set_version(4);
+				str->set_version(4);
 		}
 		else
 		{
+			TORRENT_ASSERT_VAL(false, ps.type);
 			return false;
 		}
 		return true;

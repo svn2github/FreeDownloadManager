@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -35,25 +35,16 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <boost/intrusive_ptr.hpp>
 #include "libtorrent/bandwidth_limit.hpp"
+#include "libtorrent/bandwidth_socket.hpp"
 
 namespace libtorrent {
 
-template<class PeerConnection>
-struct bw_request
+struct TORRENT_EXTRA_EXPORT bw_request
 {
-	bw_request(boost::intrusive_ptr<PeerConnection> const& pe
-		, int blk, int prio)
-		: peer(pe)
-		, priority(prio)
-		, assigned(0)
-		, request_size(blk)
-		, ttl(20)
-	{
-		TORRENT_ASSERT(priority > 0);
-		std::memset(channel, 0, sizeof(channel));
-	}
+	bw_request(boost::intrusive_ptr<bandwidth_socket> const& pe
+		, int blk, int prio);
 
-	boost::intrusive_ptr<PeerConnection> peer;
+	boost::intrusive_ptr<bandwidth_socket> peer;
 	// 1 is normal prio
 	int priority;
 	// the number of bytes assigned to this request so far
@@ -69,27 +60,11 @@ struct bw_request
 
 	// loops over the bandwidth channels and assigns bandwidth
 	// from the most limiting one
-	int assign_bandwidth()
-	{
-		TORRENT_ASSERT(assigned < request_size);
-		int quota = request_size - assigned;
-		TORRENT_ASSERT(quota >= 0);
-		for (int j = 0; j < 5 && channel[j]; ++j)
-		{
-			if (channel[j]->throttle() == 0) continue;
-			quota = (std::min)(int(boost::uint64_t(channel[j]->distribute_quota)
-				* priority / channel[j]->tmp), quota);
-		}
-		assigned += quota;
-		for (int j = 0; j < 5 && channel[j]; ++j)
-			channel[j]->use_quota(quota);
-		TORRENT_ASSERT(assigned <= request_size);
-		--ttl;
-		TORRENT_ASSERT(assigned <= request_size);
-		return quota;
-	}
+	int assign_bandwidth();
 
-	bandwidth_channel* channel[5];
+	enum { max_bandwidth_channels = 5 };
+	// we don't actually support more than 5 channels per peer
+	bandwidth_channel* channel[max_bandwidth_channels];
 };
 
 }

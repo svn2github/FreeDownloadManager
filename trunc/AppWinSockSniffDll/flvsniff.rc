@@ -51,7 +51,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,1032,0
+ FILEVERSION 1,0,1064,0
  PRODUCTVERSION 0,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -69,9 +69,9 @@ BEGIN
         BEGIN
             VALUE "CompanyName", " "
             VALUE "FileDescription", "flvsniff"
-            VALUE "FileVersion", "1.0.1032.0"
+            VALUE "FileVersion", "1.0.1064.0"
             VALUE "InternalName", "flvsniff"
-            VALUE "LegalCopyright", "Copyright © 2010-2013, FreeDownloadManager.ORG"
+            VALUE "LegalCopyright", "Copyright © 2010-2015, FreeDownloadManager.ORG"
             VALUE "OriginalFilename", "flvsniff.dll"
             VALUE "ProductName", "Free Download Manager"
             VALUE "ProductVersion", "0, 0, 0, 0"

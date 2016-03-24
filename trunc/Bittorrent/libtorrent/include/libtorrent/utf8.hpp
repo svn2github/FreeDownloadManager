@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2006, Arvid Norberg
+Copyright (c) 2006-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -35,75 +35,43 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include "libtorrent/config.hpp"
 
-#if !defined BOOST_FILESYSTEM_NARROW_ONLY || defined TORRENT_WINDOWS
+// on windows we need these functions for
+// convert_to_native and convert_from_native
+#if TORRENT_USE_WSTRING || defined TORRENT_WINDOWS
 
 #include <string>
 #include <cwchar>
-#include "libtorrent/ConvertUTF.h"
 
 namespace libtorrent
 {
 
-	inline int utf8_wchar(const std::string &utf8, std::wstring &wide)
+	// results from UTF-8 conversion functions utf8_wchar and
+	// wchar_utf8
+	enum utf8_conv_result_t
 	{
-		// allocate space for worst-case
-		wide.resize(utf8.size());
-		wchar_t const* dst_start = wide.c_str();
-		char const* src_start = utf8.c_str();
-		ConversionResult ret;
-		if (sizeof(wchar_t) == sizeof(UTF32))
-		{
-			ret = ConvertUTF8toUTF32((const UTF8**)&src_start, (const UTF8*)src_start
-				+ utf8.size(), (UTF32**)&dst_start, (UTF32*)dst_start + wide.size()
-				, lenientConversion);
-			wide.resize(dst_start - wide.c_str());
-			return ret;
-		}
-		else if (sizeof(wchar_t) == sizeof(UTF16))
-		{
-			ret = ConvertUTF8toUTF16((const UTF8**)&src_start, (const UTF8*)src_start
-				+ utf8.size(), (UTF16**)&dst_start, (UTF16*)dst_start + wide.size()
-				, lenientConversion);
-			wide.resize(dst_start - wide.c_str());
-			return ret;
-		}
-		else
-		{
-			return sourceIllegal;
-		}
-	}
+		// conversion successful
+		conversion_ok,
 
-	inline int wchar_utf8(const std::wstring &wide, std::string &utf8)
-	{
-		// allocate space for worst-case
-		utf8.resize(wide.size() * 6);
-		if (wide.empty()) return 0;
-		char* dst_start = &utf8[0];
-		wchar_t const* src_start = wide.c_str();
-		ConversionResult ret;
-		if (sizeof(wchar_t) == sizeof(UTF32))
-		{
-			ret = ConvertUTF32toUTF8((const UTF32**)&src_start, (const UTF32*)src_start
-				+ wide.size(), (UTF8**)&dst_start, (UTF8*)dst_start + utf8.size()
-				, lenientConversion);
-			utf8.resize(dst_start - &utf8[0]);
-			return ret;
-		}
-		else if (sizeof(wchar_t) == sizeof(UTF16))
-		{
-			ret = ConvertUTF16toUTF8((const UTF16**)&src_start, (const UTF16*)src_start
-				+ wide.size(), (UTF8**)&dst_start, (UTF8*)dst_start + utf8.size()
-				, lenientConversion);
-			utf8.resize(dst_start - &utf8[0]);
-			return ret;
-		}
-		else
-		{
-			return sourceIllegal;
-		}
-	}
+		// partial character in source, but hit end
+		source_exhausted,
+
+		// insuff. room in target for conversion
+		target_exhausted,
+
+		// source sequence is illegal/malformed
+		source_illegal
+	};
+
+	// ``utf8_wchar`` converts a UTF-8 string (``utf8``) to a wide character
+	// string (``wide``). ``wchar_utf8`` converts a wide character string
+	// (``wide``) to a UTF-8 string (``utf8``). The return value is one of
+	// the enumeration values from utf8_conv_result_t.
+	TORRENT_EXPORT utf8_conv_result_t utf8_wchar(
+		const std::string &utf8, std::wstring &wide);
+	TORRENT_EXPORT utf8_conv_result_t wchar_utf8(
+		const std::wstring &wide, std::string &utf8);
 }
-#endif
+#endif // !BOOST_NO_STD_WSTRING
 
 #endif
 

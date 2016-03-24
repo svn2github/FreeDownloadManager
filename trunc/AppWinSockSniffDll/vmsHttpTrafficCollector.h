@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSHTTPTRAFFICCOLLECTOR_H__B5D82E6A_4E18_4FE3_A82C_CDC599153570__INCLUDED_)
@@ -9,8 +9,6 @@
 #pragma once
 #endif 
 
-#include "vmsHttpRequestParser.h"
-#include "vmsHttpResponseParser.h"
 #include "vmsObject.h"
 #include "../iefdm/UrlMonSpy/vmsUrlMonRequest.h"
 
@@ -73,13 +71,15 @@ public:
 				
 			
 			SCRAP_FILE				= 1 << 5,
+			
+			CODEPAGE_SRC_HTML		= 1 << 6,
 		};
 		State enState;
-		string strRequestUrl;
-		string strRequestHost;
+		std::string strRequestUrl;
+		std::string strRequestHost;
 		vmsHttpRequestParser *pHttpRequest;
-		string strRequestHeaders;
-		vector <BYTE> vbRequestBody;
+		std::string strRequestHeaders;
+		std::vector <BYTE> vbRequestBody;
 		DWORD dwFlags;
 		
 		
@@ -90,20 +90,20 @@ public:
 		myvector <HttpDialogPtr> vDlgsRefererLinksTo;
 		
 		
-		myvector <string> vCanHaveChildrenWithHosts;
+		myvector <std::string> vCanHaveChildrenWithHosts;
 		vmsHttpResponseParser *pHttpResponse;
-		string strResponseHeaders;
-		vector <BYTE> vbResponseBody;
+		std::string strResponseHeaders;
+		std::vector <BYTE> vbResponseBody;
 		bool isBodyText () const {
 			return enCT == HTML || enCT == X_WWW_FORM_URL_ENCODED || enCT == XML || enCT == JSCRIPT;
 		}
 		LPSTR getBodyText () const {
 			if (vbResponseBody.empty ())
 				return "";
-			assert (vbResponseBody [vbResponseBody.size ()-1] == 0);
-			if (vbResponseBody [vbResponseBody.size ()-1])
+			assert (vbResponseBody.back () == 0);
+			if (vbResponseBody.back ())
 				return "";
-			return (LPSTR)&vbResponseBody [0];
+			return (LPSTR)&vbResponseBody.front ();
 		}
 		HttpDialogPtr spDlgPrevInSession;	
 		HttpDialogPtr spDlgRedirectChainPrev; 
@@ -115,7 +115,8 @@ public:
 		LONG nID;
 		bool bSaveResponseBody;
 		vmsUrlMonRequestPtr spUrlMonRequest;
-		string strRequestUrlOfFullResource; 
+		std::string strRequestUrlOfFullResource; 
+		UINT codePage;
 #ifdef _DEBUG
 		enum Provider {
 			PROV_UNKNOWN,
@@ -149,6 +150,7 @@ public:
 			dwTicksWhenCompleted = 0;
 			nContentLength = _UI64_MAX;
 			dwFlags = 0;
+			codePage = 0;
 #ifdef _DEBUG
 			enProvider = Provider::PROV_UNKNOWN;
 #endif
@@ -163,14 +165,14 @@ public:
 		}
 	};
 public:
-	static void ExtractUrlValuesFromPostData(const HttpDialog *pDlg, string &strValues);
+	static void ExtractUrlValuesFromPostData(const HttpDialog *pDlg, std::string &strValues);
 	void LockRemoveOldDialogs (bool bLock);
 	void LockDialogsLists(bool bLock);
 	void RemoveAllDialogsOlderWhen (UINT nSeconds);
 	int getHttpDialogIndex (const HttpDialog *pDlg) const;
 	const HttpDialog* getHttpDialog (int nIndex) const;
 	int getHttpDialogCount () const;
-	void GetHttpDialogs (int nStartIndex, int nEndIndex, DWORD dwContentTypes, vector <const HttpDialog*> &vDialogs) const;
+	void GetHttpDialogs (int nStartIndex, int nEndIndex, DWORD dwContentTypes, std::vector <const HttpDialog*> &vDialogs) const;
 	
 	static bool isFlashSwfCT (LPCSTR pszContentType);
 	
@@ -198,6 +200,7 @@ protected:
 	void onDataReceived (HttpDialog *pDlg);
 	void onHttpResponseHdrsAvailable (HttpDialog *pDlg);
 	void ExtractContentType (HttpDialog *pDlg);
+	void ExtractContentCodePage (HttpDialog *pDlg);
 	int FindDialogIndexById (LONG nID, bool bSearchInCompleted = false) const;
 	void DeleteDialogFromListByID (LONG nID);
 	static bool IsBodyFlashVideo (const HttpDialog* pDlg);

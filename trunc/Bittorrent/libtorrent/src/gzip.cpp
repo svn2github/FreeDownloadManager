@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -31,8 +31,8 @@ POSSIBILITY OF SUCH DAMAGE.
 */
 
 #include "libtorrent/assert.hpp"
-
-#include "zlib.h"
+#include "libtorrent/puff.hpp"
+#include "libtorrent/gzip.hpp"
 
 #include <vector>
 #include <string>
@@ -56,6 +56,59 @@ namespace
 
 namespace libtorrent
 {
+	struct gzip_error_category : boost::system::error_category
+	{
+		virtual const char* name() const BOOST_SYSTEM_NOEXCEPT;
+		virtual std::string message(int ev) const BOOST_SYSTEM_NOEXCEPT;
+		virtual boost::system::error_condition default_error_condition(int ev) const BOOST_SYSTEM_NOEXCEPT
+		{ return boost::system::error_condition(ev, *this); }
+	};
+
+	const char* gzip_error_category::name() const BOOST_SYSTEM_NOEXCEPT
+	{
+		return "gzip error";
+	}
+
+	std::string gzip_error_category::message(int ev) const BOOST_SYSTEM_NOEXCEPT
+	{
+		static char const* msgs[] =
+		{
+			"no error",
+			"invalid gzip header",
+			"inflated data too large",
+			"available inflate data did not terminate",
+			"output space exhausted before completing inflate",
+			"invalid block type (type == 3)",
+			"stored block length did not match one's complement",
+			"dynamic block code description: too many length or distance codes",
+			"dynamic block code description: code lengths codes incomplete",
+			"dynamic block code description: repeat lengths with no first length",
+			"dynamic block code description: repeat more than specified lengths",
+			"dynamic block code description: invalid literal/length code lengths",
+			"dynamic block code description: invalid distance code lengths",
+			"invalid literal/length or distance code in fixed or dynamic block",
+			"distance is too far back in fixed or dynamic block",
+			"unknown gzip error",
+		};
+		if (ev < 0 || ev >= int(sizeof(msgs)/sizeof(msgs[0])))
+			return "Unknown error";
+		return msgs[ev];
+	}
+
+	boost::system::error_category& get_gzip_category()
+	{
+		static gzip_error_category gzip_category;
+		return gzip_category;
+	}
+
+	namespace gzip_errors
+	{
+		boost::system::error_code make_error_code(error_code_enum e)
+		{
+			return boost::system::error_code(e, get_gzip_category());
+		}
+	}
+
 	// returns -1 if gzip header is invalid or the header size in bytes
 	int gzip_header(const char* buf, int size)
 	{
@@ -74,7 +127,7 @@ namespace libtorrent
 		int flags = buffer[3];
 
 		// check for reserved flag and make sure it's compressed with the correct metod
-		if (method != Z_DEFLATED || (flags & FRESERVED) != 0) return -1;
+		if (method != 8 || (flags & FRESERVED) != 0) return -1;
 
 		// skip time, xflags, OS code
 		size -= 10;
@@ -124,88 +177,91 @@ namespace libtorrent
 			if (size < 2) return -1;
 
 			size -= 2;
-			buffer += 2;
+//			buffer += 2;
 		}
 
 		return total_size - size;
 	}
 
-	bool inflate_gzip(
+	TORRENT_EXTRA_EXPORT void inflate_gzip(
 		char const* in
 		, int size
 		, std::vector<char>& buffer
 		, int maximum_size
-		, std::string& error)
+		, error_code& ec)
 	{
+		ec.clear();
 		TORRENT_ASSERT(maximum_size > 0);
 
 		int header_len = gzip_header(in, size);
 		if (header_len < 0)
 		{
-			error = "invalid gzip header in tracker response";
-			return true;
+			ec = gzip_errors::invalid_gzip_header;
+			return;
 		}
 
-		// start off with one kilobyte and grow
+		// start off with 4 kilobytes and grow
 		// if needed
-		buffer.resize(1024);
+		boost::uint32_t destlen = 4096;
+		int ret = 0;
+		boost::uint32_t srclen = size - header_len;
+		in += header_len;
 
-		// initialize the zlib-stream
-		z_stream str;
-
-		// subtract 8 from the end of the buffer since that's CRC32 and input size
-		// and those belong to the gzip file
-		str.avail_in = (int)size - header_len - 8;
-		str.next_in = reinterpret_cast<Bytef*>(const_cast<char*>(in + header_len));
-		str.next_out = reinterpret_cast<Bytef*>(&buffer[0]);
-		str.avail_out = (int)buffer.size();
-		str.zalloc = Z_NULL;
-		str.zfree = Z_NULL;
-		str.opaque = 0;
-		// -15 is really important. It will make inflate() not look for a zlib header
-		// and just deflate the buffer
-		if (inflateInit2(&str, -15) != Z_OK)
+		do
 		{
-			error = "gzip out of memory";
-			return true;
-		}
-
-		// inflate and grow inflate_buffer as needed
-		int ret = inflate(&str, Z_SYNC_FLUSH);
-		while (ret == Z_OK)
-		{
-			if (str.avail_out == 0)
-			{
-				if (buffer.size() >= (unsigned)maximum_size)
-				{
-					inflateEnd(&str);
-					error = "response too large";
-					return true;
-				}
-				int new_size = (int)buffer.size() * 2;
-				if (new_size > maximum_size)
-					new_size = maximum_size;
-				int old_size = (int)buffer.size();
-
-				buffer.resize(new_size);
-				str.next_out = reinterpret_cast<Bytef*>(&buffer[old_size]);
-				str.avail_out = new_size - old_size;
+			TORRENT_TRY {
+				buffer.resize(destlen);
+			} TORRENT_CATCH(std::exception& e) {
+				ec = errors::no_memory;
+				return;
 			}
 
-			ret = inflate(&str, Z_SYNC_FLUSH);
-		}
+			ret = puff((unsigned char*)&buffer[0], &destlen, (unsigned char*)in, &srclen);
 
-		buffer.resize(buffer.size() - str.avail_out);
-		inflateEnd(&str);
+			// if the destination buffer wasn't large enough, double its
+			// size and try again. Unless it's already at its max, in which
+			// case we fail
+			if (ret == 1) // 1:  output space exhausted before completing inflate
+			{
+				if (destlen == boost::uint32_t(maximum_size))
+				{
+					ec = gzip_errors::inflated_data_too_large;
+					return;
+				}
 
-		if (ret != Z_STREAM_END)
+				destlen *= 2;
+				if (destlen > (unsigned int)maximum_size)
+					destlen = maximum_size;
+			}
+		} while (ret == 1);
+
+		if (ret != 0)
 		{
-			error = "gzip error";
-			return true;
+			switch (ret)
+			{
+				case   2: ec = gzip_errors::data_did_not_terminate; return;
+				case   1: ec = gzip_errors::space_exhausted; return;
+				case  -1: ec = gzip_errors::invalid_block_type; return;
+				case  -2: ec = gzip_errors::invalid_stored_block_length; return;
+				case  -3: ec = gzip_errors::too_many_length_or_distance_codes; return;
+				case  -4: ec = gzip_errors::code_lengths_codes_incomplete; return;
+				case  -5: ec = gzip_errors::repeat_lengths_with_no_first_length; return;
+				case  -6: ec = gzip_errors::repeat_more_than_specified_lengths; return;
+				case  -7: ec = gzip_errors::invalid_literal_length_code_lengths; return;
+				case  -8: ec = gzip_errors::invalid_distance_code_lengths; return;
+				case  -9: ec = gzip_errors::invalid_literal_code_in_block; return;
+				case -10: ec = gzip_errors::distance_too_far_back_in_block; return;
+				default: ec = gzip_errors::unknown_gzip_error; return;
+			}
 		}
 
-		// commit the resulting buffer
-		return false;
+		if (destlen > buffer.size())
+		{
+			ec = gzip_errors::unknown_gzip_error;
+			return;
+		}
+
+		buffer.resize(destlen);
 	}
 
 }

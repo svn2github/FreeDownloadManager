@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -11,34 +11,63 @@
 #include <magnet_uri.hpp>
 
 bool _bWasShutdown = false;
+vmsBtSession* _pSession = NULL;
 
 vmsBtSession* WINAPI vmsBt_getSession ()
 {
-	return _bWasShutdown ? NULL : vmsBtSessionImpl::Instance ();
+	return _pSession;
+}
+
+vmsBtSession* WINAPI vmsBt_createSession()
+{
+	try {
+		_pSession = new vmsBtSessionImpl;
+	}
+	catch (...) {
+		_pSession = NULL;
+	}
+
+	return _pSession;
+}
+
+void WINAPI vmsBt_RemoveSession()
+{
+	if (_pSession != NULL){
+		delete _pSession;
+		_pSession = NULL;
+	}
 }
 
 void WINAPI vmsBt_Shutdown ()
 {
 	_bWasShutdown = true;
-	delete vmsBtSessionImpl::Instance ();
+	vmsBt_RemoveSession();
 }
 
 vmsBtSessionImpl::vmsBtSessionImpl(void)
 {
-	m_session.set_severity_level (libtorrent::alert::info);
-	m_session.add_extension (libtorrent::create_ut_pex_plugin);
+	m_session.set_severity_level (libtorrent::alert::info);	
 	m_session.set_max_half_open_connections (7);
 	if ( m_session.is_dht_running() == TRUE ){
 		m_session.stop_dht();
-		m_session.add_dht_router(std::make_pair(std::string("router.bittorrent.com"), 6881));
-		m_session.add_dht_router(std::make_pair(std::string("router.utorrent.com"), 6881));
-		m_session.add_dht_router(std::make_pair(std::string("dht.transmissionbt.com"), 6881));
-		m_session.add_dht_router(std::make_pair(std::string("dht.aelitis.com"), 6881)); 
 	}
+	m_session.add_dht_router(std::make_pair(std::string("router.bittorrent.com"), 6881));
+	m_session.add_dht_router(std::make_pair(std::string("router.utorrent.com"), 6881));
+	m_session.add_dht_router(std::make_pair(std::string("dht.transmissionbt.com"), 6881));
+	m_session.add_dht_router(std::make_pair(std::string("dht.aelitis.com"), 6881)); 
 
 	libtorrent::session_settings ss = m_session.settings ();
 	ss.active_downloads = ss.active_seeds = ss.active_limit = 100000;
-	m_session.set_settings (ss);	
+	
+	
+	
+	
+	
+	ss.enable_incoming_utp = false;
+	ss.enable_outgoing_utp = false;
+	
+
+	m_session.set_settings (ss);
 
 	setMultiTracker(true, true);
 	m_bThreadRunning = true;
@@ -118,7 +147,10 @@ vmsBtDownload* vmsBtSessionImpl::CreateDownload (vmsBtFile *torrent, LPCSTR pszO
 				for (; tiFi != torrentimpl->m_torrent->end_files (); tiFi++, eFRi++)
 				{
 					wszFile [nPathLen] = 0; 
-					MultiByteToWideChar (CP_UTF8, 0, tiFi->path.string ().c_str (), -1, wszFile + nPathLen, MAX_PATH - nPathLen);
+
+					libtorrent::file_entry fileEntry = torrentimpl->m_torrent->files().at( tiFi );					
+					MultiByteToWideChar (CP_UTF8, 0, fileEntry.path.c_str(), -1, wszFile + nPathLen, MAX_PATH - nPathLen);
+					
 					WIN32_FILE_ATTRIBUTE_DATA wfad;
 					if (GetFileAttributesExW (wszFile, GetFileExInfoStandard, &wfad))
 						eFRi->list ().back ().integer () = FILETIMEToUnixTime (wfad.ftLastWriteTime);
@@ -136,18 +168,13 @@ vmsBtDownload* vmsBtSessionImpl::CreateDownload (vmsBtFile *torrent, LPCSTR pszO
 			sm = libtorrent::storage_mode_compact;
 
 		vmsAUTOLOCKSECTION (m_csDownloads);
-
-		USES_CONVERSION;
-		LPCWSTR pwszOutputPath = A2CW (pszOutputPath);
-		std::string utf8;
-		libtorrent::wchar_utf8 (pwszOutputPath, utf8);
 		
 		if (torrentimpl->IsMagnetLink())
 		{
 			boost::system::error_code err;
 
 			libtorrent::add_torrent_params p;
-			p.save_path = utf8;
+			p.save_path = pszOutputPath;
 			p.storage_mode = (libtorrent::storage_mode_t)libtorrent::storage_mode_allocate;
 			p.paused = true;
 			p.duplicate_is_error = false;
@@ -157,12 +184,12 @@ vmsBtDownload* vmsBtSessionImpl::CreateDownload (vmsBtFile *torrent, LPCSTR pszO
 		}
 		else
 		{
-			th = m_session.add_torrent (*torrentimpl->m_torrent, utf8, entryFastResume, sm);
+			th = m_session.add_torrent (*torrentimpl->m_torrent, pszOutputPath, entryFastResume, sm);
 		}
 
 		th.set_ratio (1);
 
-		vmsBtDownloadImpl *pDld = new vmsBtDownloadImpl(th, torrentimpl, utf8);
+		vmsBtDownloadImpl *pDld = new vmsBtDownloadImpl(th, torrentimpl, pszOutputPath);
 		pDld->AddRef ();
 		
 		m_vDownloads.push_back (pDld);
@@ -297,6 +324,13 @@ void vmsBtSessionImpl::NATPMP_stop ()
 {
 	try {
 		m_session.stop_natpmp();
+	}catch (...){}
+}
+
+void vmsBtSessionImpl::addExtensionUTPEX ()
+{
+	try {
+		m_session.add_extension (libtorrent::create_ut_pex_plugin);
 	}catch (...){}
 }
 
@@ -452,8 +486,8 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 			continue; 
 
 		vmsBtSessionEvent ev;
-		std::string pszMsg = alert->message ();
-		ev.pszMsg = pszMsg.c_str();
+		std::string message = alert->message ();
+		ev.pszMsg = message.c_str();
 		
 		
 		
@@ -475,6 +509,7 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 		{
 			ev.enType = BTSET_FILE_ERROR;
 			hDownload = fea->handle;
+			ev.error_code = fea->error.value ();
 			goto _lRaiseEvent;
 		}
 
@@ -538,14 +573,14 @@ DWORD vmsBtSessionImpl::_threadSession (LPVOID lp)
 		libtorrent::peer_ban_alert *pba = dynamic_cast <libtorrent::peer_ban_alert*> (alert.get ());
 		if (pba != NULL)
 		{
-			processBanErrorAlert(pba, hDownload, ev, pszMsg);
+			processBanErrorAlert(pba, hDownload, ev, message);
 			goto _lRaiseEvent;
 		}
 
 		libtorrent::peer_error_alert *pea = dynamic_cast <libtorrent::peer_error_alert*> (alert.get ());
 		if (pea != NULL)
 		{
-			processPeerErrorAlert(pea, hDownload, ev, pszMsg);
+			processPeerErrorAlert(pea, hDownload, ev, message);
 			goto _lRaiseEvent;
 		}
 
@@ -563,23 +598,21 @@ _lRaiseEvent:
 		vmsBtDownloadImpl *pDld = NULL;
 		if (hDownload.is_valid ())
 		{
-			EnterCriticalSection (&pthis->m_csDownloads);
+			EnterCriticalSection (pthis->m_csDownloads);
 			int i = pthis->FindDownloadIndex (hDownload);
 			if (i != -1)
 			{
 				pDld = pthis->m_vDownloads [i];
 				pDld->AddRef ();
 			}
-			LeaveCriticalSection (&pthis->m_csDownloads);
+			LeaveCriticalSection (pthis->m_csDownloads);
 		}
 		ev.pDownload = pDld;
 
-		EnterCriticalSection (&pthis->m_csObject);
+		EnterCriticalSection (pthis->m_csObject);
 		if (pthis->m_pfnEvHandler)
 			pthis->m_pfnEvHandler (pthis, &ev, pthis->m_pEvData);
-		LeaveCriticalSection (&pthis->m_csObject);
-
-		
+		LeaveCriticalSection (pthis->m_csObject);
 
 		if (pDld)
 			pDld->Release ();
@@ -792,4 +825,12 @@ void vmsBtSessionImpl::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwS
 bool vmsBtSessionImpl::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer)
 {
 	return false;
+}
+
+void vmsBtSessionImpl::setSequentialDownloads(bool bEnableSequential){
+	vmsAUTOLOCKSECTION(m_csDownloads);
+	for (auto it = m_vDownloads.begin(); it != m_vDownloads.end(); ++it){
+		if ( (*it) != NULL )
+			(*it)->SetSequential(bEnableSequential);
+	}
 }

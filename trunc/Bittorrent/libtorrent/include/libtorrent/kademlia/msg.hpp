@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -35,6 +35,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 #include <string>
 #include <libtorrent/kademlia/node_id.hpp>
+#include "libtorrent/lazy_entry.hpp"
 #if BOOST_VERSION < 103500
 #include <asio/ip/udp.hpp>
 #else
@@ -45,59 +46,19 @@ namespace libtorrent {
 namespace dht {
 
 typedef std::vector<char> packet_t;
-
-namespace messages
-{
-	enum { ping = 0, find_node = 1, get_peers = 2, announce_peer = 3, error = 4 };
-	char const* const ids[] = { "ping", "find_node", "get_peers", "announce_peer", "error" }; 
-} // namespace messages
+typedef std::vector<node_entry> nodes_t;
+typedef std::vector<tcp::endpoint> peers_t;
 
 struct msg
 {
-	msg()
-		: reply(false)
-		, message_id(-1)
-		, port(0)
-	{}
+	msg(lazy_entry const& m, udp::endpoint const& ep): message(m), addr(ep) {}
+	// the message
+	lazy_entry const& message;
 
-	// true if this message is a reply
-	bool reply;
-	// the kind if message
-	int message_id;
-	// if this is a reply, a copy of the transaction id
-	// from the request. If it's a request, a transaction
-	// id that should be sent back in the reply
-	std::string transaction_id;
-	// the node id of the process sending the message
-	node_id id;
 	// the address of the process sending or receiving
 	// the message.
 	udp::endpoint addr;
-	// if this is a nodes response, these are the nodes
-	typedef std::vector<node_entry> nodes_t;
-	nodes_t nodes;
-
-	typedef std::vector<tcp::endpoint> peers_t;
-	peers_t peers;
-	
-	// similar to transaction_id but for write operations.
-	std::string write_token;
-
-	// if non-empty, include the "ip" key in the response
-	std::string ip;
-
-	// the info has for peer_requests, announce_peer
-	// and responses
-	node_id info_hash;
-	
-	// port for announce_peer messages
-	int port;
-	
-	// ERROR MESSAGES
-	int error_code;
-	std::string error_msg;
 };
-
 
 } }
 

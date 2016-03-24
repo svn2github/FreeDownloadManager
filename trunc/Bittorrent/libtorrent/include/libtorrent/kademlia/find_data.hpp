@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2006, Arvid Norberg & Daniel Wallin
+Copyright (c) 2006-2014, Arvid Norberg & Daniel Wallin
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,8 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <libtorrent/kademlia/msg.hpp>
 
 #include <boost/optional.hpp>
-#include <boost/function.hpp>
+#include <boost/function/function1.hpp>
+#include <boost/function/function2.hpp>
 
 namespace libtorrent { namespace dht
 {
@@ -56,61 +57,41 @@ class node_impl;
 
 // -------- find data -----------
 
-class find_data : public traversal_algorithm
+struct find_data : traversal_algorithm
 {
-public:
-	typedef boost::function<void(std::vector<tcp::endpoint> const&)> data_callback;
 	typedef boost::function<void(std::vector<std::pair<node_entry, std::string> > const&)> nodes_callback;
 
-	void got_data(msg const* m);
-	void got_write_token(node_id const& n, std::string const& write_token)
-	{ m_write_tokens[n] = write_token; }
-
 	find_data(node_impl& node, node_id target
-		, data_callback const& dcallback
 		, nodes_callback const& ncallback);
 
-	virtual char const* name() const { return "get_peers"; }
+	void got_write_token(node_id const& n, std::string const& write_token);
+
+	virtual void start();
+
+	virtual char const* name() const;
+
 	node_id const target() const { return m_target; }
 
-private:
+protected:
 
-	void done();
-	void invoke(node_id const& id, udp::endpoint addr);
+	virtual void done();
+	virtual observer_ptr new_observer(void* ptr, udp::endpoint const& ep
+		, node_id const& id);
 
-	data_callback m_data_callback;
 	nodes_callback m_nodes_callback;
 	std::map<node_id, std::string> m_write_tokens;
-	node_id const m_target;
 	bool m_done;
 };
 
-class find_data_observer : public observer
+struct find_data_observer : traversal_observer
 {
-public:
 	find_data_observer(
-		boost::intrusive_ptr<find_data> const& algorithm
-		, node_id self)
-		: observer(algorithm->allocator())
-		, m_algorithm(algorithm)
-		, m_self(self)
+		boost::intrusive_ptr<traversal_algorithm> const& algorithm
+		, udp::endpoint const& ep, node_id const& id)
+		: traversal_observer(algorithm, ep, id)
 	{}
-	~find_data_observer();
 
-	void send(msg& m)
-	{
-		m.reply = false;
-		m.message_id = messages::get_peers;
-		m.info_hash = m_algorithm->target();
-	}
-
-	void timeout();
-	void reply(msg const&);
-	void abort() { m_algorithm = 0; }
-
-private:
-	boost::intrusive_ptr<find_data> m_algorithm;
-	node_id const m_self;
+	virtual void reply(msg const&);
 };
 
 } } // namespace libtorrent::dht

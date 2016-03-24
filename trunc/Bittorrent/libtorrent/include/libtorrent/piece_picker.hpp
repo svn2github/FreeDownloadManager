@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -42,16 +42,22 @@ POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #include <boost/static_assert.hpp>
+#include <boost/cstdint.hpp>
 
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
 #include "libtorrent/peer_id.hpp"
-#include "libtorrent/socket.hpp"
 #include "libtorrent/config.hpp"
 #include "libtorrent/assert.hpp"
 #include "libtorrent/time.hpp"
+
+// #define TORRENT_DEBUG_REFCOUNTS
+
+#ifdef TORRENT_DEBUG_REFCOUNTS
+#include <set>
+#endif
 
 namespace libtorrent
 {
@@ -60,17 +66,20 @@ namespace libtorrent
 	class peer_connection;
 	struct bitfield;
 
-	struct TORRENT_EXPORT piece_block
+	struct TORRENT_EXTRA_EXPORT piece_block
 	{
 		const static piece_block invalid;
 
 		piece_block() {}
-		piece_block(int p_index, int b_index)
+		piece_block(boost::uint32_t p_index, boost::uint16_t b_index)
 			: piece_index(p_index)
 			, block_index(b_index)
-		{}
-		int piece_index;
-		int block_index;
+		{
+			TORRENT_ASSERT(p_index < (1 << 19));
+			TORRENT_ASSERT(b_index < (1 << 13));
+		}
+		boost::uint32_t piece_index:19;
+		boost::uint32_t block_index:13;
 
 		bool operator<(piece_block const& b) const
 		{
@@ -84,12 +93,13 @@ namespace libtorrent
 
 		bool operator!=(piece_block const& b) const
 		{ return piece_index != b.piece_index || block_index != b.block_index; }
-
 	};
 
-	class TORRENT_EXPORT piece_picker
+	class TORRENT_EXTRA_EXPORT piece_picker
 	{
 	public:
+
+		struct piece_pos;
 
 		enum
 		{
@@ -112,6 +122,10 @@ namespace libtorrent
 			// the state of this block
 			enum { state_none, state_requested, state_writing, state_finished };
 			unsigned state:2;
+#if TORRENT_USE_ASSERTS
+			// to allow verifying the invariant of blocks belonging to the right piece
+			int piece_index;
+#endif
 		};
 
 		// the peers that are downloading this piece
@@ -136,51 +150,60 @@ namespace libtorrent
 			// have affinity to pieces with the same speed category
 			speed_affinity = 32,
 			// ignore the prefer_whole_pieces parameter
-			ignore_whole_pieces = 64
+			ignore_whole_pieces = 64,
+			// treat pieces with priority 6 and below as filtered
+			// to trigger end-game mode until all prio 7 pieces are
+			// completed
+			time_critical_mode = 128
 		};
 
 		struct downloading_piece
 		{
-			downloading_piece(): state(none), index(-1), info(0)
-				, finished(0), writing(0), requested(0) {}
+			downloading_piece(): info(NULL), index(-1)
+				, finished(0), writing(0), requested(0)
+				, state(none) {}
 
-			piece_state_t state;
+			bool operator<(downloading_piece const& rhs) const { return index < rhs.index; }
 
-			// the index of the piece
-			int index;
 			// info about each block
 			// this is a pointer into the m_block_info
 			// vector owned by the piece_picker
 			block_info* info;
+			// the index of the piece
+			int index;
 			// the number of blocks in the finished state
 			boost::int16_t finished;
 			// the number of blocks in the writing state
 			boost::int16_t writing;
 			// the number of blocks in the requested state
 			boost::int16_t requested;
-		};
 
+			// one of piece_state_t values
+			// really just needs 2 bits
+			boost::uint16_t state;
+		};
+		
 		piece_picker();
 
 		void get_availability(std::vector<int>& avail) const;
 
 		// increases the peer count for the given piece
 		// (is used when a HAVE message is received)
-		void inc_refcount(int index);
-		void dec_refcount(int index);
+		void inc_refcount(int index, const void* peer);
+		void dec_refcount(int index, const void* peer);
 
 		// increases the peer count for the given piece
 		// (is used when a BITFIELD message is received)
-		void inc_refcount(bitfield const& bitmask);
+		void inc_refcount(bitfield const& bitmask, const void* peer);
 		// decreases the peer count for the given piece
 		// (used when a peer disconnects)
-		void dec_refcount(bitfield const& bitmask);
+		void dec_refcount(bitfield const& bitmask, const void* peer);
 		
 		// these will increase and decrease the peer count
 		// of all pieces. They are used when seeds join
 		// or leave the swarm.
-		void inc_refcount_all();
-		void dec_refcount_all();
+		void inc_refcount_all(const void* peer);
+		void dec_refcount_all(const void* peer);
 
 		// This indicates that we just received this piece
 		// it means that the refcounter will indicate that
@@ -202,6 +225,15 @@ namespace libtorrent
 			TORRENT_ASSERT(index >= 0);
 			TORRENT_ASSERT(index < int(m_piece_map.size()));
 			return m_piece_map[index].index == piece_pos::we_have_index;
+		}
+
+		bool is_downloading(int index) const
+		{
+			TORRENT_ASSERT(index >= 0);
+			TORRENT_ASSERT(index < int(m_piece_map.size()));
+
+			piece_pos const& p = m_piece_map[index];
+			return p.downloading;
 		}
 
 		// sets the priority of a piece.
@@ -236,7 +268,8 @@ namespace libtorrent
 		void pick_pieces(bitfield const& pieces
 			, std::vector<piece_block>& interesting_blocks, int num_blocks
 			, int prefer_whole_pieces, void* peer, piece_state_t speed
-			, int options, std::vector<int> const& suggested_pieces) const;
+			, int options, std::vector<int> const& suggested_pieces
+			, int num_peers) const;
 
 		// picks blocks from each of the pieces in the piece_list
 		// vector that is also in the piece bitmask. The blocks
@@ -288,14 +321,20 @@ namespace libtorrent
 
 		// returns information about the given piece
 		void piece_info(int index, piece_picker::downloading_piece& st) const;
-		
+
+		piece_pos const& piece_stats(int index) const
+		{
+			TORRENT_ASSERT(index >= 0 && index < int(m_piece_map.size()));
+			return m_piece_map[index];
+		}
+
 		// if a piece had a hash-failure, it must be restored and
 		// made available for redownloading
 		void restore_piece(int index);
 
 		// clears the given piece's download flag
 		// this means that this piece-block can be picked again
-		void abort_download(piece_block block);
+		void abort_download(piece_block block, void* peer = 0);
 
 		bool is_piece_finished(int index) const;
 
@@ -311,6 +350,8 @@ namespace libtorrent
 		std::vector<downloading_piece> const& get_download_queue() const
 		{ return m_downloads; }
 
+		int num_downloading_pieces() const { return int(m_downloads.size()); }
+
 		void* get_downloader(piece_block block) const;
 
 		// the number of filtered pieces we don't have
@@ -321,12 +362,15 @@ namespace libtorrent
 
 		int num_have() const { return m_num_have; }
 
-#ifdef TORRENT_DEBUG
+		// the number of pieces we want and don't have
+		int num_want_left() const { return num_pieces() - m_num_have - m_num_filtered; }
+
+#if TORRENT_USE_INVARIANT_CHECKS
 		// used in debug mode
 		void verify_priority(int start, int end, int prio) const;
-		void check_invariant(const torrent* t = 0) const;
 		void verify_pick(std::vector<piece_block> const& picked
 			, bitfield const& bits) const;
+		void check_invariant(const torrent* t = 0) const;
 #endif
 #if defined TORRENT_PICKER_LOG
 		void print_pieces() const;
@@ -355,12 +399,15 @@ namespace libtorrent
 		std::pair<int, int> expand_piece(int piece, int whole_pieces
 			, bitfield const& have) const;
 
+	public:
+
 		struct piece_pos
 		{
 			piece_pos() {}
 			piece_pos(int peer_count_, int index_)
 				: peer_count(peer_count_)
 				, downloading(0)
+				, full(0)
 				, piece_priority(1)
 				, index(index_)
 			{
@@ -370,9 +417,15 @@ namespace libtorrent
 
 			// the number of peers that has this piece
 			// (availability)
-			unsigned peer_count : 10;
+#if TORRENT_COMPACT_PICKER
+			boost::uint32_t peer_count : 9;
+#else
+			boost::uint32_t peer_count : 16;
+#endif
 			// is 1 if the piece is marked as being downloaded
-			unsigned downloading : 1;
+			boost::uint32_t downloading : 1;
+			// set when downloading, but no free blocks to request left
+			boost::uint32_t full : 1;
 			// is 0 if the piece is filtered (not to be downloaded)
 			// 1 is normal priority (default)
 			// 2 is higher priority than pieces at the same availability level
@@ -380,20 +433,36 @@ namespace libtorrent
 			// 4 is higher priority than partial pieces
 			// 5 and 6 same priority as availability 1 (ignores availability)
 			// 7 is maximum priority (ignores availability)
-			unsigned piece_priority : 3;
+			boost::uint32_t piece_priority : 3;
 			// index in to the piece_info vector
-			unsigned index : 18;
+#if TORRENT_COMPACT_PICKER
+			boost::uint32_t index : 18;
+#else
+			boost::uint32_t index;
+#endif
 
+#ifdef TORRENT_DEBUG_REFCOUNTS
+			// all the peers that have this piece
+			std::set<const void*> have_peers;
+#endif
 			enum
 			{
 				// index is set to this to indicate that we have the
 				// piece. There is no entry for the piece in the
 				// buckets if this is the case.
+#if TORRENT_COMPACT_PICKER
 				we_have_index = 0x3ffff,
+#else
+				we_have_index = 0xffffffff,
+#endif
 				// the priority value that means the piece is filtered
 				filter_priority = 0,
 				// the max number the peer count can hold
-				max_peer_count = 0x3ff
+#if TORRENT_COMPACT_PICKER
+				max_peer_count = 0x1ff
+#else
+				max_peer_count = 0xffff
+#endif
 			};
 			
 			bool have() const { return index == we_have_index; }
@@ -401,8 +470,7 @@ namespace libtorrent
 			void set_not_have() { index = 0; TORRENT_ASSERT(!have()); }
 			
 			bool filtered() const { return piece_priority == filter_priority; }
-			void filtered(bool f) { piece_priority = f ? filter_priority : 0; }
-			
+
 			//  prio 7 is always top priority
 			//  prio 0 is always -1 (don't pick)
 			//  downloading pieces are always on an even prio_factor priority
@@ -445,10 +513,21 @@ namespace libtorrent
 
 			bool operator==(piece_pos p) const
 			{ return index == p.index && peer_count == p.peer_count; }
-
 		};
 
+		void set_num_pad_files(int n) { m_num_pad_files = n; }
+
+	private:
+
+#ifndef TORRENT_DEBUG_REFCOUNTS
+#if TORRENT_COMPACT_PICKER
 		BOOST_STATIC_ASSERT(sizeof(piece_pos) == sizeof(char) * 4);
+#else
+		BOOST_STATIC_ASSERT(sizeof(piece_pos) == sizeof(char) * 8);
+#endif
+#endif
+
+		void break_one_seed();
 
 		void update_pieces() const;
 
@@ -467,14 +546,23 @@ namespace libtorrent
 		// shuffles the given piece inside it's priority range
 		void shuffle(int priority, int elem_index);
 
-		void sort_piece(std::vector<downloading_piece>::iterator dp);
+//		void sort_piece(std::vector<downloading_piece>::iterator dp);
 
-		downloading_piece& add_download_piece();
+		downloading_piece& add_download_piece(int index);
 		void erase_download_piece(std::vector<downloading_piece>::iterator i);
 
+		std::vector<downloading_piece>::const_iterator find_dl_piece(int index) const;
+		std::vector<downloading_piece>::iterator find_dl_piece(int index);
+
+		void update_full(downloading_piece& dp);
+
+		// some compilers (e.g. gcc 2.95, does not inherit access
+		// privileges to nested classes)
+	public:
 		// the number of seeds. These are not added to
 		// the availability counters of the pieces
 		int m_seeds;
+	private:
 
 		// the following vectors are mutable because they sometimes may
 		// be updated lazily, triggered by const functions
@@ -500,7 +588,8 @@ namespace libtorrent
 		// each piece that's currently being downloaded
 		// has an entry in this list with block allocations.
 		// i.e. it says wich parts of the piece that
-		// is being downloaded
+		// is being downloaded. This list is ordered
+		// by piece index to make lookups efficient
 		std::vector<downloading_piece> m_downloads;
 
 		// this holds the information of the
@@ -512,8 +601,8 @@ namespace libtorrent
 		// second entry in m_downloads and so on.
 		std::vector<block_info> m_block_info;
 
-		int m_blocks_per_piece;
-		int m_blocks_in_last_piece;
+		boost::uint16_t m_blocks_per_piece;
+		boost::uint16_t m_blocks_in_last_piece;
 
 		// the number of filtered pieces that we don't already
 		// have. total_number_of_pieces - number_of_pieces_we_have
@@ -539,12 +628,24 @@ namespace libtorrent
 		// the number of regions of pieces we don't have.
 		int m_sparse_regions;
 
+		// this is the number of partial download pieces
+		// that may be caused by pad files. We raise the limit
+		// of number of partial pieces by this amount, to not
+		// prioritize pieces that intersect pad files for no
+		// apparent reason
+		int m_num_pad_files;
+
 		// if this is set to true, it means update_pieces()
 		// has to be called before accessing m_pieces.
 		mutable bool m_dirty;
 	public:
 
+#if TORRENT_COMPACT_PICKER
 		enum { max_pieces = piece_pos::we_have_index - 1 };
+#else
+		// still limited by piece_block
+		enum { max_pieces = (1 << 19) - 2 };
+#endif
 
 	};
 }

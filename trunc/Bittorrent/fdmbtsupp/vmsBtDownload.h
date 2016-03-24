@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -106,4 +106,5 @@ public:
 	virtual UINT GetDownloadSpeedIncludingServiceTraffic () = NULL;
 	virtual UINT GetUploadSpeedIncludingServiceTraffic () = NULL;
 	virtual BOOL SetMagnetMetadata(vmsBtFile* torrentFile) = NULL;
+	virtual void SetSequential(bool bEnableSequential) = NULL;
 };

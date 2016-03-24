@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2006, Arvid Norberg
+Copyright (c) 2006-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -34,102 +34,88 @@ POSSIBILITY OF SUCH DAMAGE.
 #define RPC_MANAGER_HPP
 
 #include <vector>
+#include <deque>
 #include <map>
-#include <boost/function.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/noncopyable.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/array.hpp>
 #include <boost/pool/pool.hpp>
+#include <boost/function/function3.hpp>
 
 #include <libtorrent/socket.hpp>
 #include <libtorrent/entry.hpp>
 #include <libtorrent/kademlia/node_id.hpp>
 #include <libtorrent/kademlia/logging.hpp>
-#include <libtorrent/kademlia/node_entry.hpp>
 #include <libtorrent/kademlia/observer.hpp>
 
-#include "libtorrent/time.hpp"
+#include "libtorrent/ptime.hpp"
+
+namespace libtorrent { namespace aux { struct session_impl; } }
+
+namespace libtorrent { struct dht_settings; }
 
 namespace libtorrent { namespace dht
 {
-
-struct observer;
 
 #ifdef TORRENT_DHT_VERBOSE_LOGGING
 TORRENT_DECLARE_LOG(rpc);
 #endif
 
+struct udp_socket_interface;
+
 struct null_observer : public observer
 {
-	null_observer(boost::pool<>& allocator): observer(allocator) {}
-	virtual void reply(msg const&) {}
-	virtual void timeout() {}
-	virtual void send(msg&) {}
-	void abort() {}
+	null_observer(boost::intrusive_ptr<traversal_algorithm> const& a
+		, udp::endpoint const& ep, node_id const& id): observer(a, ep, id) {}
+	virtual void reply(msg const&) { flags |= flag_done; }
 };
 
 class routing_table;
 
-class rpc_manager
+class TORRENT_EXTRA_EXPORT rpc_manager
 {
 public:
-	typedef boost::function1<void, msg const&> fun;
-	typedef boost::function1<void, msg const&> send_fun;
 
-	rpc_manager(fun const& incoming_fun, node_id const& our_id
-		, routing_table& table, send_fun const& sf);
+	rpc_manager(node_id const& our_id
+		, routing_table& table, udp_socket_interface* sock);
 	~rpc_manager();
 
 	void unreachable(udp::endpoint const& ep);
 
 	// returns true if the node needs a refresh
-	bool incoming(msg const&);
+	// if so, id is assigned the node id to refresh
+	bool incoming(msg const&, node_id* id, libtorrent::dht_settings const& settings);
 	time_duration tick();
 
-	void invoke(int message_id, udp::endpoint target
+	bool invoke(entry& e, udp::endpoint target
 		, observer_ptr o);
 
-	void reply(msg& m);
+	void add_our_id(entry& e);
 
-#ifdef TORRENT_DEBUG
+#if TORRENT_USE_ASSERTS
 	size_t allocation_size() const;
+#endif
+#if TORRENT_USE_INVARIANT_CHECKS
 	void check_invariant() const;
 #endif
 
-	boost::pool<>& allocator() const
-	{ return m_pool_allocator; }
+	void* allocate_observer();
+	void free_observer(void* ptr);
+
+	int num_allocated_observers() const { return m_allocated_observers; }
 
 private:
 
-	enum { max_transactions = 2048 };
-
-	unsigned int new_transaction_id(observer_ptr o);
-	void update_oldest_transaction_id();
-	
 	boost::uint32_t calc_connection_id(udp::endpoint addr);
 
 	mutable boost::pool<> m_pool_allocator;
 
-	typedef boost::array<observer_ptr, max_transactions>
-		transactions_t;
+	typedef std::deque<observer_ptr> transactions_t;
 	transactions_t m_transactions;
-	std::vector<observer_ptr> m_aborted_transactions;
 	
-	// this is the next transaction id to be used
-	int m_next_transaction_id;
-	// this is the oldest transaction id still
-	// (possibly) in use. This is the transaction
-	// that will time out first, the one we are
-	// waiting for to time out
-	int m_oldest_transaction_id;
-	
-	fun m_incoming;
-	send_fun m_send;
-	node_id m_our_id;
+	udp_socket_interface* m_sock;
 	routing_table& m_table;
 	ptime m_timer;
-	node_id m_random_number;
+	node_id m_our_id;
+	int m_allocated_observers;
 	bool m_destructing;
 };
 

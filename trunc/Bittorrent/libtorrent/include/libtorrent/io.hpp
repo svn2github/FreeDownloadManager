@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -54,10 +54,22 @@ namespace libtorrent
 			for (int i = 0; i < (int)sizeof(T); ++i)
 			{
 				ret <<= 8;
-				ret |= static_cast<unsigned char>(*start);
+				ret |= static_cast<boost::uint8_t>(*start);
 				++start;
 			}
 			return ret;
+		}
+
+		template <class InIt>
+		boost::uint8_t read_impl(InIt& start, type<boost::uint8_t>)
+		{
+			return static_cast<boost::uint8_t>(*start++);
+		}
+
+		template <class InIt>
+		boost::int8_t read_impl(InIt& start, type<boost::int8_t>)
+		{
+			return static_cast<boost::int8_t>(*start++);
 		}
 
 		template <class T, class OutIt>
@@ -137,18 +149,21 @@ namespace libtorrent
 		void write_int8(boost::int8_t val, OutIt& start)
 		{ write_impl(val, start); }
 
-		inline void write_string(std::string const& str, char*& start)
+		inline int write_string(std::string const& str, char*& start)
 		{
-			std::memcpy((void*)start, &str[0], str.size());
+			std::memcpy((void*)start, str.c_str(), str.size());
 			start += str.size();
+			return str.size();
 		}
 
 		template <class OutIt>
-		void write_string(std::string const& str, OutIt& start)
+		int write_string(std::string const& val, OutIt& out)
 		{
-			std::copy(str.begin(), str.end(), start);
+			for (std::string::const_iterator i = val.begin()
+				, end(val.end()); i != end; ++i)
+				*out++ = *i;
+			return int(val.length());
 		}
-
 	}
 }
 

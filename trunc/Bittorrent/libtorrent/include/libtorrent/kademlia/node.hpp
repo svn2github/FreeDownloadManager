@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2006, Arvid Norberg
+Copyright (c) 2006-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -37,29 +37,28 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <map>
 #include <set>
 
+#include <libtorrent/config.hpp>
 #include <libtorrent/kademlia/routing_table.hpp>
 #include <libtorrent/kademlia/rpc_manager.hpp>
 #include <libtorrent/kademlia/node_id.hpp>
 #include <libtorrent/kademlia/msg.hpp>
+#include <libtorrent/kademlia/find_data.hpp>
+#include <libtorrent/kademlia/item.hpp>
 
 #include <libtorrent/io.hpp>
 #include <libtorrent/session_settings.hpp>
 #include <libtorrent/assert.hpp>
+#include <libtorrent/thread.hpp>
+#include <libtorrent/bloom_filter.hpp>
 
 #include <boost/cstdint.hpp>
-#include <boost/optional.hpp>
-#include <boost/iterator/transform_iterator.hpp>
 #include <boost/ref.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/optional.hpp>
 
 #include "libtorrent/socket.hpp"
 
 namespace libtorrent {
-	
-	namespace aux { struct session_impl; }
-	struct session_status;
-
+	class alert_manager;
+	struct alert_dispatcher;
 }
 
 namespace libtorrent { namespace dht
@@ -70,22 +69,88 @@ TORRENT_DECLARE_LOG(node);
 #endif
 
 struct traversal_algorithm;
+struct dht_observer;
+
+struct key_desc_t
+{
+	char const* name;
+	int type;
+	int size;
+	int flags;
+
+	enum {
+		// this argument is optional, parsing will not
+		// fail if it's not present
+		optional = 1,
+		// for dictionaries, the following entries refer
+		// to child nodes to this node, up until and including
+		// the next item that has the last_child flag set.
+		// these flags are nestable
+		parse_children = 2,
+		// this is the last item in a child dictionary
+		last_child = 4,
+		// the size argument refers to that the size
+		// has to be divisible by the number, instead
+		// of having that exact size
+		size_divisible = 8
+	}; 
+};
+
+bool TORRENT_EXTRA_EXPORT verify_message(lazy_entry const* msg, key_desc_t const desc[]
+	, lazy_entry const* ret[], int size , char* error, int error_size);
 
 // this is the entry for every peer
 // the timestamp is there to make it possible
 // to remove stale peers
 struct peer_entry
 {
-	tcp::endpoint addr;
 	ptime added;
+	tcp::endpoint addr;
+	bool seed;
 };
 
 // this is a group. It contains a set of group members
 struct torrent_entry
 {
+	std::string name;
 	std::set<peer_entry> peers;
 };
 
+struct dht_immutable_item
+{
+	dht_immutable_item() : value(0), num_announcers(0), size(0) {}
+	// malloced space for the actual value
+	char* value;
+	// this counts the number of IPs we have seen
+	// announcing this item, this is used to determine
+	// popularity if we reach the limit of items to store
+	bloom_filter<128> ips;
+	// the last time we heard about this
+	ptime last_seen;
+	// number of IPs in the bloom filter
+	int num_announcers;
+	// size of malloced space pointed to by value
+	int size;
+};
+
+struct ed25519_public_key { char bytes[item_pk_len]; };
+
+struct dht_mutable_item : dht_immutable_item
+{
+	char sig[item_sig_len];
+	boost::uint64_t seq;
+	ed25519_public_key key;
+	char* salt;
+	int salt_size;
+};
+
+// internal
+inline bool operator<(ed25519_public_key const& lhs, ed25519_public_key const& rhs)
+{
+	return memcmp(lhs.bytes, rhs.bytes, sizeof(lhs.bytes)) < 0;
+}
+
+// internal
 inline bool operator<(peer_entry const& lhs, peer_entry const& rhs)
 {
 	return lhs.addr.address() == rhs.addr.address()
@@ -98,71 +163,67 @@ struct null_type {};
 class announce_observer : public observer
 {
 public:
-	announce_observer(boost::pool<>& allocator
-		, sha1_hash const& info_hash
-		, int listen_port
-		, std::string const& write_token)
-		: observer(allocator)
-		, m_info_hash(info_hash)
-		, m_listen_port(listen_port)
-		, m_token(write_token)
+	announce_observer(boost::intrusive_ptr<traversal_algorithm> const& algo
+		, udp::endpoint const& ep, node_id const& id)
+		: observer(algo, ep, id)
 	{}
 
-	void send(msg& m)
-	{
-		m.port = m_listen_port;
-		m.info_hash = m_info_hash;
-		m.write_token = m_token;
-	}
-
-	void timeout() {}
-	void reply(msg const&) {}
-	void abort() {}
-
-private:
-	sha1_hash m_info_hash;
-	int m_listen_port;
-	std::string m_token;
+	void reply(msg const&) { flags |= flag_done; }
 };
 
-class node_impl : boost::noncopyable
+struct count_peers
+{
+	int& count;
+	count_peers(int& c): count(c) {}
+	void operator()(std::pair<libtorrent::dht::node_id
+		, libtorrent::dht::torrent_entry> const& t)
+	{
+		count += t.second.peers.size();
+	}
+};
+
+struct udp_socket_interface
+{
+	virtual bool send_packet(entry& e, udp::endpoint const& addr, int flags) = 0;
+};
+
+class TORRENT_EXTRA_EXPORT node_impl : boost::noncopyable
 {
 typedef std::map<node_id, torrent_entry> table_t;
+typedef std::map<node_id, dht_immutable_item> dht_immutable_table_t;
+typedef std::map<node_id, dht_mutable_item> dht_mutable_table_t;
+
 public:
-	node_impl(libtorrent::aux::session_impl& ses, boost::function<void(msg const&)> const& f
-		, dht_settings const& settings, boost::optional<node_id> nid);
+	node_impl(alert_dispatcher* alert_disp, udp_socket_interface* sock
+		, libtorrent::dht_settings const& settings, node_id nid, address const& external_address
+		, dht_observer* observer);
 
 	virtual ~node_impl() {}
 
-	void refresh(node_id const& id, boost::function0<void> f);
+	void tick();
 	void bootstrap(std::vector<udp::endpoint> const& nodes
-		, boost::function0<void> f);
-	void find_node(node_id const& id, boost::function<
-	void(std::vector<node_entry> const&)> f);
+		, find_data::nodes_callback const& f);
 	void add_router_node(udp::endpoint router);
 		
 	void unreachable(udp::endpoint const& ep);
 	void incoming(msg const& m);
 
-	void refresh();
-	void refresh_bucket(int bucket);
+	int num_torrents() const { return m_map.size(); }
+	int num_peers() const
+	{
+		int ret = 0;
+		std::for_each(m_map.begin(), m_map.end(), count_peers(ret));
+		return ret;
+	}
+
 	int bucket_size(int bucket);
-
-	typedef routing_table::iterator iterator;
-	
-	iterator begin() const { return m_table.begin(); }
-	iterator end() const { return m_table.end(); }
-
-	typedef table_t::iterator data_iterator;
 
 	node_id const& nid() const { return m_id; }
 
-	boost::tuple<int, int> size() const{ return m_table.size(); }
+	boost::tuple<int, int, int> size() const { return m_table.size(); }
 	size_type num_global_nodes() const
 	{ return m_table.num_global_nodes(); }
 
-	data_iterator begin_data() { return m_map.begin(); }
-	data_iterator end_data() { return m_map.end(); }
 	int data_size() const { return int(m_map.size()); }
 
 #ifdef TORRENT_DHT_VERBOSE_LOGGING
@@ -170,16 +231,21 @@ public:
 	{ m_table.print_state(os); }
 #endif
 
-	void announce(sha1_hash const& info_hash, int listen_port
+	enum flags_t { flag_seed = 1, flag_implied_port = 2 };
+	void announce(sha1_hash const& info_hash, int listen_port, int flags
 		, boost::function<void(std::vector<tcp::endpoint> const&)> f);
 
-	bool verify_token(msg const& m);
-	std::string generate_token(msg const& m);
+	void get_item(sha1_hash const& target, boost::function<bool(item&)> f);
+	void get_item(char const* pk, std::string const& salt, boost::function<bool(item&)> f);
+
+	bool verify_token(std::string const& token, char const* info_hash
+		, udp::endpoint const& addr);
+
+	std::string generate_token(udp::endpoint const& addr, char const* info_hash);
 	
 	// the returned time is the delay until connection_timeout()
 	// should be called again the next time
 	time_duration connection_timeout();
-	time_duration refresh_timeout();
 
 	// generates a new secret number used to generate write tokens
 	void new_write_key();
@@ -208,27 +274,28 @@ public:
 
 	void status(libtorrent::session_status& s);
 
+	libtorrent::dht_settings const& settings() const { return m_settings; }
+
 protected:
-	// is called when a find data request is received. Should
-	// return false if the data is not stored on this node. If
-	// the data is stored, it should be serialized into 'data'.
-	bool on_find(msg const& m, std::vector<tcp::endpoint>& peers) const;
 
-	// this is called when a store request is received. The data
-	// is store-parameters and the data to be stored.
-	void on_announce(msg const& m, msg& reply);
+	void send_single_refresh(udp::endpoint const& ep, int bucket
+		, node_id const& id = node_id());
+	void lookup_peers(sha1_hash const& info_hash, entry& reply
+		, bool noseed, bool scrape) const;
+	bool lookup_torrents(sha1_hash const& target, entry& reply
+		, char* tags) const;
 
-	dht_settings const& m_settings;
+	libtorrent::dht_settings const& m_settings;
 	
 private:
-	typedef boost::mutex mutex_t;
+	typedef libtorrent::mutex mutex_t;
 	mutex_t m_mutex;
 
 	// this list must be destructed after the rpc manager
 	// since it might have references to it
 	std::set<traversal_algorithm*> m_running_requests;
 
-	void incoming_request(msg const& h);
+	void incoming_request(msg const& h, entry& e);
 
 	node_id m_id;
 
@@ -237,14 +304,23 @@ public:
 	rpc_manager m_rpc;
 
 private:
+	dht_observer* m_observer;
+
 	table_t m_map;
+	dht_immutable_table_t m_immutable_table;
+	dht_mutable_table_t m_mutable_table;
 	
 	ptime m_last_tracker_tick;
+
+	// the last time we issued a bootstrap or a refresh on our own ID, to expand
+	// the routing table buckets close to us.
+	ptime m_last_self_refresh;
 
 	// secret random numbers used to create write tokens
 	int m_secret[2];
 
-	libtorrent::aux::session_impl& m_ses;
+	alert_dispatcher* m_post_alert;
+	udp_socket_interface* m_sock;
 };
 
 

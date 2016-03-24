@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -13,12 +13,10 @@
 #include "vmsUrl.h"
 #include "vmsBrowserSpecialInfo.h"
 #include "vmsUrlFromBrowser.h"
-#include <atlbase.h>
+#include "vmsUrlMonSpyDll.h"
 
-extern LPCSTR strstrni (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc);
-
-#define LOCKTREE vmsCriticalSectionAutoLock csalLOCKTREE ((LPCRITICAL_SECTION)&m_csModifyTree)
-#define LOCKREMOVEOLDDLGS vmsCriticalSectionAutoLock csalLOCKREMOVEOLDDLGS ((LPCRITICAL_SECTION)&m_csRemoveOldDialogs)
+#define LOCKTREE vmsCriticalSectionAutoLock csalLOCKTREE (&m_csModifyTree)
+#define LOCKREMOVEOLDDLGS vmsCriticalSectionAutoLock csalLOCKREMOVEOLDDLGS (&m_csRemoveOldDialogs)
 
 vmsWinSockHttpDlgTree::vmsWinSockHttpDlgTree()
 {
@@ -43,8 +41,6 @@ vmsWinSockHttpDlgTree& vmsWinSockHttpDlgTree::o()
 	return o;
 }
 
-#include "vmsUrlMonSpyDll.h"
-
 void vmsWinSockHttpDlgTree::InsertDialog(SPHTTPDLG spDlg)
 {
 	LOGFN ("vmsWinSockHttpDlgTree::InsertDialog");
@@ -61,7 +57,10 @@ void vmsWinSockHttpDlgTree::InsertDialog(SPHTTPDLG spDlg)
 		{
 			for (int i = 0; i < 300 && !spDlg->spUrlMonRequest->isSrcTabCalculated (); i++)
 				Sleep (10);
-			assert (spDlg->spUrlMonRequest->isSrcTabCalculated ());
+#ifdef DEBUG
+			if (!spDlg->spUrlMonRequest->isSrcTabCalculated ())
+				ATLTRACE ("Warning: SRC TAB is NOT calculated\n");
+#endif
 			if (!spDlg->spUrlMonRequest->isSrcTabCalculated ())
 				_bDontWait = true; 
 		}
@@ -142,7 +141,6 @@ bool vmsWinSockHttpDlgTree::IsHtmlWebPage(LPCSTR pszHtml)
 	assert (pszHtml != NULL);
 	if (pszHtml == NULL || *pszHtml == 0)
 		return false;
-	extern LPCSTR strstrni (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc);
 	int len = strlen (pszHtml);
 	return len >= 40000 ||
 		(strstrni (pszHtml, "<embed", len) || strstrni (pszHtml, "<object", len) || strstrni (pszHtml, "<script", len));
@@ -493,14 +491,14 @@ void vmsWinSockHttpDlgTree::RemoveAllDialogsOlderWhen(UINT nSeconds, UINT nSecon
 void vmsWinSockHttpDlgTree::LockRemoveOldDialogs(bool bLock)
 {
 	if (bLock)
-		EnterCriticalSection (&m_csRemoveOldDialogs);
+		EnterCriticalSection (m_csRemoveOldDialogs);
 	else
-		LeaveCriticalSection (&m_csRemoveOldDialogs);
+		LeaveCriticalSection (m_csRemoveOldDialogs);
 }
 
 void vmsWinSockHttpDlgTree::InsertDialog_Async(SPHTTPDLG spDlg)
 {
-	EnterCriticalSection (&m_csModifyAddDialogsList);
+	EnterCriticalSection (m_csModifyAddDialogsList);
 	
 	m_vAddDialogsList.push_back (spDlg);
 
@@ -510,7 +508,7 @@ void vmsWinSockHttpDlgTree::InsertDialog_Async(SPHTTPDLG spDlg)
 		m_htAddDialogs = CreateThread (NULL, 0, _threadAddDialogs, this, 0, &dw);
 	}
 
-	LeaveCriticalSection (&m_csModifyAddDialogsList);
+	LeaveCriticalSection (m_csModifyAddDialogsList);
 }
 
 DWORD WINAPI vmsWinSockHttpDlgTree::_threadAddDialogs(LPVOID lp)
@@ -521,14 +519,14 @@ DWORD WINAPI vmsWinSockHttpDlgTree::_threadAddDialogs(LPVOID lp)
 	{
 		while (!pthis->m_vAddDialogsList.empty ())
 		{
-			EnterCriticalSection (&pthis->m_csModifyAddDialogsList);
+			EnterCriticalSection (pthis->m_csModifyAddDialogsList);
 			SPHTTPDLG spDlg = pthis->m_vAddDialogsList [0];
-			LeaveCriticalSection (&pthis->m_csModifyAddDialogsList);
+			LeaveCriticalSection (pthis->m_csModifyAddDialogsList);
 			LOG ("ADDING TO TREE ID=%x", spDlg->nID);
 			pthis->InsertDialog (spDlg);
-			EnterCriticalSection (&pthis->m_csModifyAddDialogsList);
+			EnterCriticalSection (pthis->m_csModifyAddDialogsList);
 			pthis->m_vAddDialogsList.erase (pthis->m_vAddDialogsList.begin ());
-			LeaveCriticalSection (&pthis->m_csModifyAddDialogsList);
+			LeaveCriticalSection (pthis->m_csModifyAddDialogsList);
 		}
 
 		Sleep (10);
@@ -540,7 +538,7 @@ DWORD WINAPI vmsWinSockHttpDlgTree::_threadAddDialogs(LPVOID lp)
 bool vmsWinSockHttpDlgTree::UrlExistsInProcessHttpDialogsQueue (LPCSTR pszUrl)
 {
 	bool bExists = false;
-	EnterCriticalSection (&m_csModifyAddDialogsList);
+	EnterCriticalSection (m_csModifyAddDialogsList);
 	for (size_t i = 0; i < m_vAddDialogsList.size (); i++)
 	{
 		SPHTTPDLG spDlg = m_vAddDialogsList [i];
@@ -550,7 +548,7 @@ bool vmsWinSockHttpDlgTree::UrlExistsInProcessHttpDialogsQueue (LPCSTR pszUrl)
 			break;
 		}
 	}
-	LeaveCriticalSection (&m_csModifyAddDialogsList);
+	LeaveCriticalSection (m_csModifyAddDialogsList);
 	return bExists;
 }
 
@@ -1181,7 +1179,7 @@ void vmsWinSockHttpDlgTree::LogTreeItem(const TreeItem *item, int nDepth, bool b
 	LogTreeItem_getHtml (item, NULL, nDepth, bReversed, strHtml);
 	strHtml += "</body></html>";
 
-	tstring tstr = tszPath; tstr += "\\";
+	tstring tstr = tszPath; tstr += _T("\\");
 	TCHAR tsz [100]; tstr += _itot (item->spDlg->nID, tsz, 16);
 	tstr += bReversed ? _T ("-tree-r.html") : _T ("-tree.html");
 	HANDLE hFile = CreateFile (tstr.c_str (), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);

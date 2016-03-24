@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -41,68 +41,40 @@ POSSIBILITY OF SUCH DAMAGE.
 namespace libtorrent {
 
 // member of peer_connection
-struct TORRENT_EXPORT bandwidth_channel
+struct TORRENT_EXTRA_EXPORT bandwidth_channel
 {
 	static const int inf = boost::integer_traits<int>::const_max;
 
-	bandwidth_channel()
-		: tmp(0)
-		, distribute_quota(0)
-		, m_quota_left(0)
-		, m_limit(0)
-	{}
+	bandwidth_channel();
 
 	// 0 means infinite
-	void throttle(int limit)
-	{
-		TORRENT_ASSERT(limit >= 0);
-		// if the throttle is more than this, we might overflow
-		TORRENT_ASSERT(limit < INT_MAX / 31);
-		m_limit = limit;
-	}
-	
+	void throttle(int limit);
 	int throttle() const
 	{
-		return m_limit;
+		TORRENT_ASSERT_VAL(m_limit < INT_MAX, m_limit);
+		return int(m_limit);
 	}
 
-	int quota_left() const
-	{
-		if (m_limit == 0) return inf;
-		return (std::max)(m_quota_left, boost::int64_t(0));
-	}
-
-	void update_quota(int dt_milliseconds)
-	{
-		if (m_limit == 0) return;
-		m_quota_left += (m_limit * dt_milliseconds + 500) / 1000;
-		if (m_quota_left > m_limit * 3) m_quota_left = m_limit * 3;
-		distribute_quota = (std::max)(m_quota_left, boost::int64_t(0));
-//		fprintf(stderr, "%p: [%d]: + %"PRId64" limit: %"PRId64" quota_left: %"PRId64"\n", this
-//			, dt_milliseconds, (m_limit * dt_milliseconds + 500) / 1000, m_limit
-//			, m_quota_left);
-	}
+	int quota_left() const;
+	void update_quota(int dt_milliseconds);
 
 	// this is used when connections disconnect with
 	// some quota left. It's returned to its bandwidth
 	// channels.
-	void return_quota(int amount)
-	{
-		TORRENT_ASSERT(amount >= 0);
-		if (m_limit == 0) return;
-		TORRENT_ASSERT(m_quota_left <= m_quota_left + amount);
-		m_quota_left += amount;
-	}
+	void return_quota(int amount);
+	void use_quota(int amount);
 
-	void use_quota(int amount)
+	// this is an optimization. If there is more than one second
+	// of quota built up in this channel, just apply it right away
+	// instead of introducing a delay to split it up evenly. This
+	// should especially help in situations where a single peer
+	// has a capacity under the rate limit, but would otherwise be
+	// held back by the latency of getting bandwidth from the limiter
+	bool need_queueing(int amount)
 	{
-		TORRENT_ASSERT(amount >= 0);
-		TORRENT_ASSERT(m_limit >= 0);
-		if (m_limit == 0) return;
-
-//		fprintf(stderr, "%p: - %"PRId64" limit: %"PRId64" quota_left: %"PRId64"\n", this
-//			, amount, m_limit, m_quota_left);
+		if (m_quota_left - amount < m_limit) return true;
 		m_quota_left -= amount;
+		return false;
 	}
 
 	// used as temporary storage while distributing

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -36,24 +36,24 @@ void vmsIeFlvHistory::Gather()
 		if ((cei->CacheEntryType & COOKIE_CACHE_ENTRY) == 0 &&
 				cei->lpHeaderInfo != NULL && cei->dwHeaderInfoSize != 0)
 		{
-			LPCSTR pszUrl2 = cei->lpszSourceUrlName;
-			if (strncmp (pszUrl2, "Visited: ", 9) == 0)
+			LPCTSTR pszUrl2 = cei->lpszSourceUrlName;
+			if (_tcsncmp (pszUrl2, _T("Visited: "), 9) == 0)
 				pszUrl2 += 9;
 			pszUrl2 = pszUrl2 + 0;
 
-			LPCSTR pszCT = strstr (cei->lpHeaderInfo, "Content-Type:");
+			LPCTSTR pszCT = _tcsstr (cei->lpHeaderInfo, _T("Content-Type:"));
 			if (pszCT)
 			{
 				pszCT += 13+1;
-				string strCT;
-				while (!isspace ((BYTE)*pszCT) && cei->dwHeaderInfoSize > (pszCT - cei->lpHeaderInfo))
+				tstring strCT;
+				while (!_istspace ((unsigned)*pszCT) && cei->dwHeaderInfoSize > (pszCT - cei->lpHeaderInfo))
 					strCT += *pszCT++;
-				if (vmsHttpTrafficCollector::isFlashVideoCT (strCT.c_str ()))
+				if (vmsHttpTrafficCollector::isFlashVideoCT (stringFromTstring (strCT).c_str ()))
 				{
 					vmsBrowserFlvHistory::Item item;
-					item.strUrl = pszUrl2;
-					item.strHttpResponse = (LPCSTR)cei->lpHeaderInfo;
-					item.strContentType = strCT;
+					item.strUrl = stringFromTstring (pszUrl2);
+					item.strHttpResponse = stringFromTstring ((LPCTSTR)cei->lpHeaderInfo);
+					item.strContentType = stringFromTstring (strCT);
 					m_vItems.push_back (item);
 				}
 			}

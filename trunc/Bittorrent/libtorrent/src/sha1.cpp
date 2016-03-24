@@ -10,8 +10,6 @@ By Steve Reid <sreid@sea-to-sky.net>
 changelog at the end of the file.
 */
 
-#include "libtorrent/pch.hpp"
-
 #include <cstdio>
 #include <cstring>
 
@@ -27,16 +25,20 @@ typedef boost::uint8_t u8;
 
 #include "libtorrent/config.hpp"
 
-struct TORRENT_EXPORT SHA_CTX
+namespace libtorrent
+{
+
+struct TORRENT_EXPORT sha_ctx
 {
 	u32 state[5];
 	u32 count[2];
 	u8 buffer[64];
 };
 
-TORRENT_EXPORT void SHA1_Init(SHA_CTX* context);
-TORRENT_EXPORT void SHA1_Update(SHA_CTX* context, u8 const* data, u32 len);
-TORRENT_EXPORT void SHA1_Final(u8* digest, SHA_CTX* context);
+// we don't want these to clash with openssl's libcrypto
+TORRENT_EXPORT void SHA1_init(sha_ctx* context);
+TORRENT_EXPORT void SHA1_update(sha_ctx* context, u8 const* data, u32 len);
+TORRENT_EXPORT void SHA1_final(u8* digest, sha_ctx* context);
 
 namespace
 {
@@ -80,7 +82,7 @@ namespace
 
 	// Hash a single 512-bit block. This is the core of the algorithm.
 	template <class BlkFun>
-	void SHA1Transform(u32 state[5], u8 const buffer[64])
+	void SHA1transform(u32 state[5], u8 const buffer[64])
 	{
 		using namespace std;
 		u32 a, b, c, d, e;
@@ -123,22 +125,25 @@ namespace
 		state[2] += c;
 		state[3] += d;
 		state[4] += e;
-		// Wipe variables
-		a = b = c = d = e = 0;
 	}
 
-	void SHAPrintContext(SHA_CTX *context, char *msg)
+#ifdef VERBOSE
+	void SHAPrintContext(sha_ctx *context, char *msg)
 	{
 		using namespace std;
 		printf("%s (%d,%d) %x %x %x %x %x\n"
-			, msg, context->count[0], context->count[1]
-			, context->state[0], context->state[1]
-			, context->state[2], context->state[3]
-			, context->state[4]);
+			, msg, (unsigned int)context->count[0]
+			, (unsigned int)context->count[1]
+			, (unsigned int)context->state[0]
+			, (unsigned int)context->state[1]
+			, (unsigned int)context->state[2]
+			, (unsigned int)context->state[3]
+			, (unsigned int)context->state[4]);
 	}
+#endif
 
 	template <class BlkFun>
-	void internal_update(SHA_CTX* context, u8 const* data, u32 len)
+	void internal_update(sha_ctx* context, u8 const* data, u32 len)
 	{
 		using namespace std;
 		u32 i, j;	// JHB
@@ -152,10 +157,10 @@ namespace
 		if ((j + len) > 63)
 		{
 			memcpy(&context->buffer[j], data, (i = 64-j));
-			SHA1Transform<BlkFun>(context->state, context->buffer);
+			SHA1transform<BlkFun>(context->state, context->buffer);
 			for ( ; i + 63 < len; i += 64)
 			{
-				SHA1Transform<BlkFun>(context->state, &data[i]);
+				SHA1transform<BlkFun>(context->state, &data[i]);
 			}
 			j = 0;
 		}
@@ -169,16 +174,18 @@ namespace
 #endif
 	}
 
+#if !defined BOOST_BIG_ENDIAN && !defined BOOST_LITTLE_ENDIAN
 	bool is_big_endian()
 	{
 		u32 test = 1;
 		return *reinterpret_cast<u8*>(&test) == 0;
 	}
+#endif
 }
 
 // SHA1Init - Initialize new context
 
-void SHA1_Init(SHA_CTX* context)
+void SHA1_init(sha_ctx* context)
 {
     // SHA1 initialization constants
     context->state[0] = 0x67452301;
@@ -192,13 +199,13 @@ void SHA1_Init(SHA_CTX* context)
 
 // Run your data through this.
 
-void SHA1_Update(SHA_CTX* context, u8 const* data, u32 len)
+void SHA1_update(sha_ctx* context, u8 const* data, u32 len)
 {
 	// GCC standard defines for endianness
 	// test with: cpp -dM /dev/null
-#if defined __BIG_ENDIAN__
+#if defined BOOST_BIG_ENDIAN
 	internal_update<big_endian_blk0>(context, data, len);
-#elif defined __LITTLE_ENDIAN__
+#elif defined BOOST_LITTLE_ENDIAN
 	internal_update<little_endian_blk0>(context, data, len);
 #else
 	// select different functions depending on endianess
@@ -213,7 +220,7 @@ void SHA1_Update(SHA_CTX* context, u8 const* data, u32 len)
 
 // Add padding and return the message digest.
 
-void SHA1_Final(u8* digest, SHA_CTX* context)
+void SHA1_final(u8* digest, sha_ctx* context)
 {
 	u8 finalcount[8];
 
@@ -225,10 +232,10 @@ void SHA1_Final(u8* digest, SHA_CTX* context)
 			>> ((3-(i & 3)) * 8) ) & 255);
 	}
 
-	SHA1_Update(context, (u8 const*)"\200", 1);
+	SHA1_update(context, (u8 const*)"\200", 1);
 	while ((context->count[0] & 504) != 448)
-		SHA1_Update(context, (u8 const*)"\0", 1);
-	SHA1_Update(context, finalcount, 8);  // Should cause a SHA1Transform()
+		SHA1_update(context, (u8 const*)"\0", 1);
+	SHA1_update(context, finalcount, 8);  // Should cause a SHA1transform()
 
 	for (u32 i = 0; i < 20; ++i)
 	{
@@ -236,6 +243,8 @@ void SHA1_Final(u8* digest, SHA_CTX* context)
 			(context->state[i>>2] >> ((3-(i & 3)) * 8) ) & 255);
 	}
 }
+
+} // libtorrent namespace
   
 /************************************************************
 
@@ -298,7 +307,7 @@ By Arvid Norberg <arvidn@sourceforge.net>
    previous SHA1HANDSOFF implicit
 2- uses C99 types with size guarantees
    from boost
-3- if none of __BIG_ENDIAN__ or LITTLE_ENDIAN
+3- if none of BOOST_BIG_ENDIAN or BOOST_LITTLE_ENDIAN
    are defined, endianess is determined
    at runtime. templates are used to duplicate
    the transform function for each endianess

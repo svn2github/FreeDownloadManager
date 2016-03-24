@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2007, Arvid Norberg
+Copyright (c) 2007-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -37,15 +37,14 @@ POSSIBILITY OF SUCH DAMAGE.
 #include "libtorrent/peer_id.hpp"
 #include "libtorrent/broadcast_socket.hpp"
 #include "libtorrent/intrusive_ptr_base.hpp"
+#include "libtorrent/deadline_timer.hpp"
 
-#include <boost/function.hpp>
+#include <boost/function/function2.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/condition.hpp>
 
 #if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
-#include <fstream>
+#include <stdio.h>
 #endif
 
 namespace libtorrent
@@ -62,34 +61,44 @@ public:
 
 //	void rebind(address const& listen_interface);
 
-	void announce(sha1_hash const& ih, int listen_port);
+	void announce(sha1_hash const& ih, int listen_port, bool broadcast = false);
 	void close();
-
-	void use_broadcast(bool b);
 
 private:
 
-	void resend_announce(error_code const& e, std::string msg);
+	void announce_impl(sha1_hash const& ih, int listen_port
+		, bool broadcast, int retry_count);
+	void resend_announce(error_code const& e, sha1_hash const& ih
+		, int listen_port, int retry_count);
 	void on_announce(udp::endpoint const& from, char* buffer
 		, std::size_t bytes_transferred);
-//	void setup_receive();
 
 	peer_callback_t m_callback;
-
-	// current retry count
-	int m_retry_count;
 
 	// the udp socket used to send and receive
 	// multicast messages on
 	broadcast_socket m_socket;
+#if TORRENT_USE_IPV6
+	broadcast_socket m_socket6;
+#endif
 
 	// used to resend udp packets in case
 	// they time out
 	deadline_timer m_broadcast_timer;
 
+	// this is a random (presumably unique)
+	// ID for this LSD node. It is used to
+	// ignore our own broadcast messages.
+	// There's no point in adding ourselves
+	// as a peer
+	int m_cookie;
+
 	bool m_disabled;
+#if TORRENT_USE_IPV6
+	bool m_disabled6;
+#endif
 #if defined(TORRENT_LOGGING) || defined(TORRENT_VERBOSE_LOGGING)
-	std::ofstream m_log;
+	FILE* m_log;
 #endif
 };
 

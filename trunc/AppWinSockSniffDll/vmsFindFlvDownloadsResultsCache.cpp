@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -128,9 +128,9 @@ _lSkipCacheSearch:
 	if (pTA)	
 		result->pTa->AddFlvDownloads (*pTA);
 
-	EnterCriticalSection (&m_csResults);
+	EnterCriticalSection (m_csResults);
 	m_vResults.push_back (result);
-	LeaveCriticalSection (&m_csResults);
+	LeaveCriticalSection (m_csResults);
 
 	return result->pTa->get_FlvDownloadCount () ? S_OK : S_FALSE;
 }

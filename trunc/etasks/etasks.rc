@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Русский (Россия) resources
+// Russian (Russia) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
 LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
@@ -58,7 +58,7 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,0,963,0
+ FILEVERSION 1,0,966,0
  PRODUCTVERSION 0,0,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
@@ -76,8 +76,8 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FreeDownloadManager.ORG"
             VALUE "FileDescription", "Free Download Manager Task"
-            VALUE "FileVersion", "1.0.963.0"
-            VALUE "LegalCopyright", "Copyright © FreeDownloadManager.ORG, 2010-2011"
+            VALUE "FileVersion", "1.0.966.0"
+            VALUE "LegalCopyright", "Copyright © FreeDownloadManager.ORG, 2010-2015"
             VALUE "ProductName", "Free Download Manager"
             VALUE "ProductVersion", "0.0.0.0"
         END
@@ -88,7 +88,7 @@ BEGIN
     END
 END
 
-#endif    // Русский (Россия) resources
+#endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

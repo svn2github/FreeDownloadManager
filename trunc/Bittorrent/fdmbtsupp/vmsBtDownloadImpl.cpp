@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -98,7 +98,7 @@ void vmsBtDownloadImpl::get_SavePath (LPSTR pszRes)
 		*pszRes = 0;
 		return;
 	}
-	strcpy (pszRes, m_handle.save_path ().string ().c_str ());
+	strcpy (pszRes, m_handle.save_path ().c_str ());
 }
 
 float vmsBtDownloadImpl::get_PercentDone ()
@@ -482,4 +482,11 @@ BOOL vmsBtDownloadImpl::SetMagnetMetadata(vmsBtFile* torrentFile)
 	vmsBtFileImpl* torrentImpl = static_cast<vmsBtFileImpl*>(torrentFile);
 	torrentImpl->m_torrent = new libtorrent::torrent_info(m_handle.get_torrent_info());
 	return TRUE;
+}
+
+void vmsBtDownloadImpl::SetSequential(bool bEnableSequential){
+	if (m_handle.is_valid() == false) {
+		return;
+	}
+	m_handle.set_sequential_download( bEnableSequential );
 }

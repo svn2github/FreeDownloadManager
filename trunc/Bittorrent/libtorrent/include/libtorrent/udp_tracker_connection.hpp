@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -61,7 +61,7 @@ namespace libtorrent
 {
 	namespace aux { struct session_impl; }
 
-	class TORRENT_EXPORT udp_tracker_connection: public tracker_connection
+	class TORRENT_EXTRA_EXPORT udp_tracker_connection: public tracker_connection
 	{
 	friend class tracker_manager;
 	public:
@@ -72,16 +72,13 @@ namespace libtorrent
 			, tracker_manager& man
 			, tracker_request const& req
 			, boost::weak_ptr<request_callback> c
-			, aux::session_impl const& ses
+			, aux::session_impl& ses
 			, proxy_settings const& ps);
 
 		void start();
 		void close();
 
-#if !defined TORRENT_VERBOSE_LOGGING && !defined TORRENT_LOGGING && !defined TORRENT_ERROR_LOGGING
-	// necessary for logging member offsets
 	private:
-#endif
 
 		enum action_t
 		{
@@ -94,14 +91,21 @@ namespace libtorrent
 		boost::intrusive_ptr<udp_tracker_connection> self()
 		{ return boost::intrusive_ptr<udp_tracker_connection>(this); }
 
-		void name_lookup(error_code const& error, udp::resolver::iterator i);
+		void name_lookup(error_code const& error, tcp::resolver::iterator i);
 		void timeout(error_code const& error);
+		void start_announce();
 
-		void on_receive(error_code const& e, udp::endpoint const& ep
+		bool on_receive(error_code const& e, udp::endpoint const& ep
 			, char const* buf, int size);
-		void on_connect_response(char const* buf, int size);
-		void on_announce_response(char const* buf, int size);
-		void on_scrape_response(char const* buf, int size);
+		bool on_receive_hostname(error_code const& e, char const* hostname
+			, char const* buf, int size);
+		bool on_connect_response(char const* buf, int size);
+		bool on_announce_response(char const* buf, int size);
+		bool on_scrape_response(char const* buf, int size);
+
+		// wraps tracker_connection::fail
+		void fail(error_code const& ec, int code = -1
+			, char const* msg = "", int interval = 0, int min_interval = 0);
 
 		void send_udp_connect();
 		void send_udp_announce();
@@ -109,15 +113,15 @@ namespace libtorrent
 
 		virtual void on_timeout(error_code const& ec);
 
-		tracker_manager& m_man;
+		udp::endpoint pick_target_endpoint() const;
 
-		udp::resolver m_name_lookup;
-		boost::intrusive_ptr<udp_socket> m_socket;
+		bool m_abort;
+		std::string m_hostname;
 		udp::endpoint m_target;
-		std::list<udp::endpoint> m_endpoints;
+		std::list<tcp::endpoint> m_endpoints;
 
 		int m_transaction_id;
-		aux::session_impl const& m_ses;
+		aux::session_impl& m_ses;
 		int m_attempts;
 
 		struct connection_cache_entry
@@ -127,9 +131,11 @@ namespace libtorrent
 		};
 
 		static std::map<address, connection_cache_entry> m_connection_cache;
-		static boost::mutex m_cache_mutex;
+		static mutex m_cache_mutex;
 
 		action_t m_state;
+
+		proxy_settings m_proxy;
 	};
 
 }

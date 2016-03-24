@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -64,6 +64,7 @@ public:
 	UINT GetDownloadSpeedIncludingServiceTraffic ();
 	UINT GetUploadSpeedIncludingServiceTraffic ();
 	BOOL SetMagnetMetadata(vmsBtFile* torrentFile);
+	void SetSequential(bool bEnableSequential);
 
 	void AddRef () {InterlockedIncrement (&m_cRefs);}
 	void Release () {if (0 == InterlockedDecrement (&m_cRefs)) delete this;}

@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2008, Arvid Norberg
+Copyright (c) 2008-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -34,6 +34,7 @@ POSSIBILITY OF SUCH DAMAGE.
 #define TORRENT_SSL_STREAM_HPP_INCLUDED
 
 #include "libtorrent/socket.hpp"
+#include <boost/bind.hpp>
 #if BOOST_VERSION < 103500
 #include <asio/ssl.hpp>
 #else
@@ -50,19 +51,31 @@ class ssl_stream
 {
 public:
 
-	explicit ssl_stream(io_service& io_service)
-		: m_context(io_service, asio::ssl::context::sslv23_client)
-		, m_sock(io_service, m_context)
+	explicit ssl_stream(io_service& io_service, asio::ssl::context& ctx)
+		: m_sock(io_service, ctx)
 	{
-		error_code ec;
-		m_context.set_verify_mode(asio::ssl::context::verify_none, ec);
 	}
 
-	typedef Stream next_layer_type;
+	typedef typename asio::ssl::stream<Stream> sock_type;
+	typedef typename sock_type::next_layer_type next_layer_type;
 	typedef typename Stream::lowest_layer_type lowest_layer_type;
 	typedef typename Stream::endpoint_type endpoint_type;
 	typedef typename Stream::protocol_type protocol_type;
-	typedef typename asio::ssl::stream<Stream> sock_type;
+
+	void set_host_name(std::string name)
+	{
+#if OPENSSL_VERSION_NUMBER >= 0x90812f
+		SSL_set_tlsext_host_name(m_sock.native_handle(), name.c_str());
+#endif
+	}
+
+	template <class T>
+	void set_verify_callback(T const& fun, error_code& ec)
+	{ m_sock.set_verify_callback(fun, ec); }
+
+#if BOOST_VERSION >= 104700
+	SSL* native_handle() { return m_sock.native_handle(); }
+#endif
 
 	typedef boost::function<void(error_code const&)> handler_type;
 
@@ -81,6 +94,32 @@ public:
 			, boost::bind(&ssl_stream::connected, this, _1, h));
 	}
 
+	template <class Handler>
+	void async_accept_handshake(Handler const& handler)
+	{
+		// this is used for accepting SSL connections
+		boost::shared_ptr<handler_type> h(new handler_type(handler));
+		m_sock.async_handshake(asio::ssl::stream_base::server
+			, boost::bind(&ssl_stream::handshake, this, _1, h));
+	}
+
+	void accept_handshake(error_code& ec)
+	{
+		// this is used for accepting SSL connections
+		m_sock.handshake(asio::ssl::stream_base::server, ec);
+	}
+
+	template <class Handler>
+	void async_shutdown(Handler const& handler)
+	{
+		m_sock.async_shutdown(handler);
+	}
+
+	void shutdown(error_code& ec)
+	{
+		m_sock.shutdown(ec);
+	}
+
 	template <class Mutable_Buffers, class Handler>
 	void async_read_some(Mutable_Buffers const& buffers, Handler const& handler)
 	{
@@ -91,6 +130,34 @@ public:
 	std::size_t read_some(Mutable_Buffers const& buffers, error_code& ec)
 	{
 		return m_sock.read_some(buffers, ec);
+	}
+
+#ifndef BOOST_NO_EXCEPTIONS
+	template <class SettableSocketOption>
+	void set_option(SettableSocketOption const& opt)
+	{
+		m_sock.next_layer().set_option(opt);
+	}
+#endif
+
+	template <class SettableSocketOption>
+	error_code set_option(SettableSocketOption const& opt, error_code& ec)
+	{
+		return m_sock.next_layer().set_option(opt, ec);
+	}
+
+#ifndef BOOST_NO_EXCEPTIONS
+	template <class GettableSocketOption>
+	void get_option(GettableSocketOption& opt)
+	{
+		m_sock.next_layer().get_option(opt);
+	}
+#endif
+
+	template <class GettableSocketOption>
+	error_code get_option(GettableSocketOption& opt, error_code& ec)
+	{
+		return m_sock.next_layer().get_option(opt, ec);
 	}
 
 #ifndef BOOST_NO_EXCEPTIONS
@@ -118,6 +185,20 @@ public:
 	{
 		m_sock.async_write_some(buffers, handler);
 	}
+
+	template <class Const_Buffers>
+	std::size_t write_some(Const_Buffers const& buffers, error_code& ec)
+	{
+		return m_sock.write_some(buffers, ec);
+	}
+
+#ifndef BOOST_NO_EXCEPTIONS
+	std::size_t available() const
+	{ return const_cast<sock_type&>(m_sock).next_layer().available(); }
+#endif
+
+	std::size_t available(error_code& ec) const
+	{ return const_cast<sock_type&>(m_sock).next_layer().available(ec); }
 
 #ifndef BOOST_NO_EXCEPTIONS
 	void bind(endpoint_type const& endpoint)
@@ -218,7 +299,6 @@ private:
 		(*h)(e);
 	}
 
-	asio::ssl::context m_context;
 	asio::ssl::stream<Stream> m_sock;
 };
 

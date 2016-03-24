@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2005, Arvid Norberg
+Copyright (c) 2005-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -29,8 +29,6 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
 */
-
-#include "libtorrent/pch.hpp"
 
 #include "libtorrent/ip_filter.hpp"
 #include <boost/utility.hpp>
@@ -74,8 +72,7 @@ namespace libtorrent
 		return boost::make_tuple(m_filter4.export_filter<address_v4>()
 			, m_filter6.export_filter<address_v6>());
 #else
-		return boost::make_tuple(m_filter4.export_filter<address_v4>()
-			, std::vector<ip_range<address_v6> >());
+		return m_filter4.export_filter<address_v4>();
 #endif
 	}
 	

@@ -1,18 +1,18 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 
 void InitializeFdmBtSuppDll ()
 {
-	boost::filesystem::path::default_name_check (boost::filesystem::no_check);
+	
 }
 
 int WINAPI vmsBt_getMinimumFdmBuildRequired ()
 {
 	
-	return 1354;
+	return 1601;
 }
 
 BOOL APIENTRY DllMain( HANDLE hModule, 

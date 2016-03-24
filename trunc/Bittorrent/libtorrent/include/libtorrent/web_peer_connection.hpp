@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -39,8 +39,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <deque>
 #include <string>
 
-#include "libtorrent/debug.hpp"
-
 #ifdef _MSC_VER
 #pragma warning(push, 1)
 #endif
@@ -56,20 +54,11 @@ POSSIBILITY OF SUCH DAMAGE.
 #pragma warning(pop)
 #endif
 
-#include "libtorrent/buffer.hpp"
-#include "libtorrent/peer_connection.hpp"
-#include "libtorrent/socket.hpp"
-#include "libtorrent/peer_id.hpp"
-#include "libtorrent/storage.hpp"
-#include "libtorrent/stat.hpp"
-#include "libtorrent/alert.hpp"
-#include "libtorrent/torrent_handle.hpp"
-#include "libtorrent/torrent.hpp"
-#include "libtorrent/peer_request.hpp"
-#include "libtorrent/piece_block_progress.hpp"
 #include "libtorrent/config.hpp"
-// parse_url
-#include "libtorrent/tracker_manager.hpp"
+#include "libtorrent/web_connection_base.hpp"
+#include "libtorrent/disk_buffer_holder.hpp"
+#include "libtorrent/torrent.hpp"
+#include "libtorrent/piece_block_progress.hpp"
 #include "libtorrent/http_parser.hpp"
 
 namespace libtorrent
@@ -81,8 +70,8 @@ namespace libtorrent
 		struct session_impl;
 	}
 
-	class TORRENT_EXPORT web_peer_connection
-		: public peer_connection
+	class TORRENT_EXTRA_EXPORT web_peer_connection
+		: public web_connection_base
 	{
 	friend class invariant_access;
 	public:
@@ -95,45 +84,29 @@ namespace libtorrent
 			, boost::weak_ptr<torrent> t
 			, boost::shared_ptr<socket_type> s
 			, tcp::endpoint const& remote
-			, std::string const& url
-			, policy::peer* peerinfo);
-		void start();
+			, web_seed_entry& web);
 
-		~web_peer_connection();
+		virtual void on_connected();
+
+		virtual int type() const { return peer_connection::url_seed_connection; }
 
 		// called from the main loop when this connection has any
 		// work to do.
-		void on_sent(error_code const& error
-			, std::size_t bytes_transferred);
 		void on_receive(error_code const& error
 			, std::size_t bytes_transferred);
-
-		std::string const& url() const { return m_original_url; }
+			
+		std::string const& url() const { return m_url; }
 		
 		virtual void get_specific_peer_info(peer_info& p) const;
-		virtual bool in_handshake() const;
+		virtual void disconnect(error_code const& ec, int error = 0);
 
-		// the following functions appends messages
-		// to the send buffer
-		void write_choke() {}
-		void write_unchoke() {}
-		void write_interested() {}
-		void write_not_interested() {}
-		void write_request(peer_request const& r);
-		void write_cancel(peer_request const& r)
-		{ incoming_reject_request(r); }
-		void write_have(int index) {}
-		void write_piece(peer_request const& r, disk_buffer_holder& buffer) { TORRENT_ASSERT(false); }
-		void write_keepalive() {}
-		void on_connected();
-		void write_reject_request(peer_request const&) {}
-		void write_allow_fast(int) {}
+		virtual void write_request(peer_request const& r);
 
-#ifdef TORRENT_DEBUG
-		void check_invariant() const;
-#endif
+		virtual bool received_invalid_data(int index, bool single_peer);
 
 	private:
+
+		bool maybe_harvest_block();
 
 		// returns the block currently being
 		// downloaded. And the progress of that
@@ -142,43 +115,49 @@ namespace libtorrent
 		// will be invalid.
 		boost::optional<piece_block_progress> downloading_piece_progress() const;
 
-		// this has one entry per bittorrent request
-		std::deque<peer_request> m_requests;
+		void handle_padfile(buffer::const_interval& recv_buffer);
+
 		// this has one entry per http-request
 		// (might be more than the bt requests)
 		std::deque<int> m_file_requests;
 
-		std::string m_server_string;
-		http_parser m_parser;
-		std::string m_auth;
-		std::string m_host;
-		int m_port;
-		std::string m_path;
 		std::string m_url;
-		const std::string m_original_url;
+	
+		web_seed_entry* m_web;
 			
-		// the first request will contain a little bit more data
-		// than subsequent ones, things that aren't critical are left
-		// out to save bandwidth.
-		bool m_first_request;
-		
 		// this is used for intermediate storage of pieces
 		// that are received in more than one HTTP response
+		// TODO: 1 if we make this be a disk_buffer_holder instead
+		// we would save a copy sometimes
+		// use allocate_disk_receive_buffer and release_disk_receive_buffer
 		std::vector<char> m_piece;
 		
-		// the number of bytes into the receive buffer where
-		// current read cursor is.
-		int m_body_start;
 		// the number of bytes received in the current HTTP
 		// response. used to know where in the buffer the
 		// next response starts
-		int m_received_body;
+		size_type m_received_body;
 
 		// position in the current range response
-		int m_range_pos;
+		size_type m_range_pos;
 
 		// the position in the current block
 		int m_block_pos;
+
+		// this is the offset inside the current receive
+		// buffer where the next chunk header will be.
+		// this is updated for each chunk header that's
+		// parsed. It does not necessarily point to a valid
+		// offset in the receive buffer, if we haven't received
+		// it yet. This offset never includes the HTTP header
+		size_type m_chunk_pos;
+
+		// this is the number of bytes we've already received
+		// from the next chunk header we're waiting for
+		int m_partial_chunk_header;
+
+		// the number of responses we've received so far on
+		// this connection
+		int m_num_responses;
 	};
 }
 

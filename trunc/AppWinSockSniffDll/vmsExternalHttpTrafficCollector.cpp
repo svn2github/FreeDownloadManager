@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -27,13 +27,13 @@ UINT vmsExternalHttpTrafficCollector::OnNewHttpDialog(LPCSTR pszUrl, LPCSTR pszR
 
 	spDlg->strRequestUrl = pszUrl;
 	LOG ("New URL: %s", spDlg->strRequestUrl.c_str ());
-	char szHost [1000] = "";
+	TCHAR szHost [1000] = _T("");
 	URL_COMPONENTS urlc; ZeroMemory (&urlc, sizeof (urlc));
 	urlc.dwStructSize = sizeof (urlc);
 	urlc.lpszHostName = szHost;
 	urlc.dwHostNameLength = sizeof (szHost);
-	InternetCrackUrl (pszUrl, 0, 0, &urlc);
-	spDlg->strRequestHost = szHost;
+	InternetCrackUrl (tstringFromString (pszUrl).c_str (), 0, 0, &urlc);
+	spDlg->strRequestHost = stringFromTstring (szHost);
 
 	spDlg->strRequestHeaders = pszRequestHdrs;
 	m_pHttpTraffic->onHttpRequestHdrsAvailable (spDlg);

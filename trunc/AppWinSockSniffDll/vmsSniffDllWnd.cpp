@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -32,12 +32,12 @@ void vmsSniffDllWnd::Create()
 		wc.cbSize = sizeof (wc);
 		wc.lpfnWndProc = _WndProc;
 		wc.hInstance = _hModule;
-		wc.lpszClassName = "FdmFlvSniffDllWnd";
+		wc.lpszClassName = _T("FdmFlvSniffDllWnd");
 		RegisterClassEx (&wc);
 		_bClassRegistered = true;
 	}
 
-	m_hWnd = CreateWindow ("FdmFlvSniffDllWnd", NULL, WS_POPUP, 0, 0, 0, 0, NULL, NULL,
+	m_hWnd = CreateWindow (_T("FdmFlvSniffDllWnd"), NULL, WS_POPUP, 0, 0, 0, 0, NULL, NULL,
 		_hModule, NULL);
 }
 
@@ -58,13 +58,13 @@ LRESULT vmsSniffDllWnd::OnProcessWebPageUrl(LPARAM lp)
 {
 	LOGFN ("vmsSniffDllWnd::OnProcessWebPageUrl");
 
-	static HANDLE _hmxAccMem = CreateMutex (NULL, FALSE, "FdmFlvSniffDll::mutex::AccMem");
+	static HANDLE _hmxAccMem = CreateMutex (NULL, FALSE, L"FdmFlvSniffDll::mutex::AccMem");
 
 	WaitForSingleObject (_hmxAccMem, INFINITE);
 
 	LOGsnl ("Got mem mutex");
 
-	vmsSharedData sdata ("Fdm::mem::passUrlToFlvSniffDll", TRUE, 0, FILE_MAP_READ);
+	vmsSharedData sdata (L"Fdm::mem::passUrlToFlvSniffDll", TRUE, 0, FILE_MAP_READ);
 
 	if (sdata.getData () == NULL)
 	{
@@ -73,8 +73,8 @@ LRESULT vmsSniffDllWnd::OnProcessWebPageUrl(LPARAM lp)
 		return E_FAIL;
 	}
 
-	char *pszUrl = new char [strlen ((LPSTR)sdata.getData ())+1];
-	strcpy (pszUrl, (LPSTR)sdata.getData ());
+	LPTSTR pszUrl = new TCHAR [_tcslen ((LPTSTR)sdata.getData ())+1];
+	_tcscpy (pszUrl, (LPTSTR)sdata.getData ());
 
 	sdata.Release ();
 
@@ -90,7 +90,8 @@ LRESULT vmsSniffDllWnd::OnProcessWebPageUrl(LPARAM lp)
 	extern LONG _cInOnGetItBtnClicked;
 	InterlockedIncrement (&_cInOnGetItBtnClicked);
 #endif
-	HRESULT hr = _FlvResCache.FindFlvDownloads (pszUrl, NULL, NULL, NULL, NULL, NULL, result);
+	HRESULT hr = _FlvResCache.FindFlvDownloads (stringFromTstring (pszUrl).c_str (), 
+		NULL, NULL, NULL, NULL, NULL, result);
 #ifdef LOG_WEBFILES_TREE
 	InterlockedDecrement (&_cInOnGetItBtnClicked);
 #endif

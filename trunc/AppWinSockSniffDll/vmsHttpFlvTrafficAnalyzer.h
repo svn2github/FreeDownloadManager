@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSHTTPFLVTRAFFICANALYZER_H__208C8F65_B847_4DFF_9921_F56BF5510E99__INCLUDED_)
@@ -52,6 +52,7 @@ protected:
 	static void ExtractTitleFromXml (const vmsHttpTrafficCollector::HttpDialog *pDlg, wstring &wstrTitle, const vmsHttpTrafficCollector::HttpDialog* pFlvDlg);
 	static void ExtractTitleFromXWwwFormUrlEncoded (const vmsHttpTrafficCollector::HttpDialog *pDlg, wstring &wstrTitle);
 	static void ExtractTitleFromHtml (const vmsHttpTrafficCollector::HttpDialog *pHtmlDlg, wstring &wstrTitle);
+	static void ExtractCodePageFromHtml (const vmsHttpTrafficCollector::HttpDialog *pHtmlDlg, UINT &codePage);
 	void AddFlvDownload (const vmsHttpTrafficCollector::HttpDialog *pSrcHtmlDlg, const vmsHttpTrafficCollector::HttpDialog *pDlg, LPCWSTR pwszTitle);
 	vector <FlvDownload> m_vDownloads;
 

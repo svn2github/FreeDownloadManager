@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSSNIFFDLLWND_H__DC3299D1_9992_41EA_9389_7D3076E6AF41__INCLUDED_)

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -7,9 +7,10 @@
 #include "vmsCharsets.h"
 #include <atlbase.h>
 #include "vmsHttpHelper.h"
-#include "vmsXmlHelper.h"
 #include "vmsWinSockHttpTrafficAnalyzer.h"
 #include "vmsUrlWords.h"
+#include "vmsHtmlParser.h"
+#include "vmsHtmlTagParser.h"
 
 vmsHttpFlvTrafficAnalyzer::vmsHttpFlvTrafficAnalyzer()
 {
@@ -70,9 +71,69 @@ void vmsHttpFlvTrafficAnalyzer::AddFlvDownload(const vmsHttpTrafficCollector::Ht
 	m_vDownloads.push_back (flv);
 }
 
+void vmsHttpFlvTrafficAnalyzer::ExtractCodePageFromHtml (const vmsHttpTrafficCollector::HttpDialog *pHtmlDlg, UINT &codePage)
+{
+	codePage = 0;
+
+	assert (pHtmlDlg != NULL);
+	if (!pHtmlDlg)
+		return;
+
+	if (pHtmlDlg->vbResponseBody.empty ())
+		return;
+
+	std::vector <std::string> all_meta;
+	LPCSTR pszHtml = pHtmlDlg->getBodyText ();
+	vmsHtmlParser::findAllTagsHeads (pszHtml, "meta", all_meta);
+
+	for (const auto &item : all_meta)
+	{
+		vmsHtmlTagParser tp (item.c_str ());
+		auto attr = tp.findAttribute ("charset");
+		if (attr)
+		{
+			codePage = vmsCharsets::GetCpIdFromName (attr->strValue.c_str ());
+			if (codePage)
+				return;
+			continue;
+		}
+
+		attr = tp.findAttribute ("http-equiv");
+		if (attr && !stricmp (attr->strValue.c_str (), "Content-Type"))
+		{
+			attr = tp.findAttribute ("content");
+			assert (attr);
+			if (!attr)
+				continue;
+			auto pos = attr->strValue.find ("charset");
+			assert (pos != std::string::npos);
+			if (pos == std::string::npos)
+				continue;
+			pos = attr->strValue.find ('=', pos);
+			assert (pos != std::string::npos);
+			if (pos == std::string::npos)
+				continue;
+			++pos;
+			while (pos < attr->strValue.length () && isspace (attr->strValue [pos]))
+				++pos;
+			std::string charset;
+			while (pos < attr->strValue.length () && !isspace (attr->strValue [pos]))
+				charset += attr->strValue [pos++];
+			codePage = vmsCharsets::GetCpIdFromName (charset.c_str ());
+			if (codePage)
+				return;
+			continue;
+		}
+	}
+}
+
 void vmsHttpFlvTrafficAnalyzer::ExtractTitleFromHtml(const vmsHttpTrafficCollector::HttpDialog *pHtmlDlg, wstring &wstrTitle)
 {
 	wstrTitle = L"";
+	UINT codePage = 0;
+	ExtractCodePageFromHtml (pHtmlDlg, codePage);
+	if (!codePage)
+		codePage = pHtmlDlg->codePage;
 
 	assert (pHtmlDlg != NULL);
 	if (!pHtmlDlg)
@@ -81,7 +142,6 @@ void vmsHttpFlvTrafficAnalyzer::ExtractTitleFromHtml(const vmsHttpTrafficCollect
 	if (pHtmlDlg->vbResponseBody.empty ())
 		return;
 	
-	extern LPCSTR strstrni (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc);
 	LPCSTR psz = strstrni ((LPCSTR)&pHtmlDlg->vbResponseBody [0], "<title>", pHtmlDlg->vbResponseBody.size ());
 	if (psz)
 	{
@@ -95,41 +155,10 @@ void vmsHttpFlvTrafficAnalyzer::ExtractTitleFromHtml(const vmsHttpTrafficCollect
 			else 
 				break;
 		}
-		if (*psz == '<')
+		if (*psz == '<' && !strTitle.empty ())
 		{
-			const vmsHttpParser::HdrField *pFld = pHtmlDlg->pHttpResponse->FieldByName ("Content-Type");
-			LPCSTR pszCharset = pFld ? strstr (pFld->strValue.c_str (), "charset") : NULL;
-			if (pszCharset)
-			{
-				pszCharset += 7;
-				while (*pszCharset == ' ')
-					pszCharset++;
-				if (*pszCharset == '=')
-				{
-					pszCharset++;
-					while (*pszCharset == ' ')
-						pszCharset++;
-					string strCharset;
-					while (*pszCharset != ' ' && *pszCharset != 0)
-						strCharset += *pszCharset++;
-					UINT nCP = vmsCharsets::GetCpIdFromName (strCharset.c_str ());
-					if (nCP)
-					{
-						int n = MultiByteToWideChar (nCP, 0, strTitle.c_str (), -1, NULL, 0);
-						assert (n != 0);
-						LPWSTR pwsz = new WCHAR [n+1];
-						MultiByteToWideChar (nCP, 0, strTitle.c_str (), -1, pwsz, n);
-						wstrTitle = pwsz;
-						delete [] pwsz;
-					}
-				}
-			}
-			
-			if (wstrTitle.empty ())
-			{
-				USES_CONVERSION;
-				wstrTitle = A2W (strTitle.c_str ());
-			}
+			vmsCharsets::DecodeString (strTitle.c_str (), 
+				codePage ? codePage : CP_UTF8, wstrTitle);
 				
 			while (wstrTitle.empty () == false && wstrTitle [0] <= ' ')
 				wstrTitle.erase (wstrTitle.begin ());
@@ -158,7 +187,6 @@ void vmsHttpFlvTrafficAnalyzer::ExtractTitleFromXWwwFormUrlEncoded(const vmsHttp
 	if (pDlg->vbResponseBody.empty ())
 		return;
 	
-	extern LPCSTR strstrni (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc);
 	LPCSTR psz = strstrni ((LPCSTR)&pDlg->vbResponseBody [0], "&title=", pDlg->vbResponseBody.size ());
 	if (!psz)
 		return;
@@ -195,9 +223,6 @@ void vmsHttpFlvTrafficAnalyzer::ExtractTitleFromXWwwFormUrlEncoded(const vmsHttp
 
 void vmsHttpFlvTrafficAnalyzer::ExtractTitleFromXml(const vmsHttpTrafficCollector::HttpDialog *pDlg, wstring &wstrTitle, const vmsHttpTrafficCollector::HttpDialog* pFlvDlg)
 {
-	extern LPCSTR strstrni (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc);
-	extern LPCSTR strstrn (LPCSTR pszSrc, LPCSTR pszSrch, int lenSrc);
-
 	wstrTitle = L"";
 	
 	assert (pDlg != NULL);
@@ -232,13 +257,13 @@ void vmsHttpFlvTrafficAnalyzer::ExtractTitleFromXml(const vmsHttpTrafficCollecto
 	tstring tstrRequestUrl = A2CT (pFlvDlg->strRequestUrl.c_str ());
 	
 	
-	string strUrl = vmsXmlHelper::toUtf8noEncode (tstrRequestUrl);
+	string strUrl = vmsXmlUtil::toUtf8noEncode (tstrRequestUrl);
 	pszXml2 = strstrn (pszXml, strUrl.c_str (), iXmlLen);
 
 	if (!pszXml2)
 	{
 		
-		strUrl = vmsXmlHelper::toUtf8 (tstrRequestUrl);
+		strUrl = vmsXmlUtil::toUtf8 (tstrRequestUrl);
 		pszXml2 = strstrn (pszXml, strUrl.c_str (), iXmlLen);
 		if (!pszXml2)
 		{
@@ -376,28 +401,8 @@ void vmsHttpFlvTrafficAnalyzer::ExtractTitleFromXml(const vmsHttpTrafficCollecto
 
 void vmsHttpFlvTrafficAnalyzer::DecodeWebPageString(const vmsHttpTrafficCollector::HttpDialog* pHtmlDlg, LPCSTR pszString, wstring &wstrResult)
 {
-	const vmsHttpParser::HdrField *pFld = pHtmlDlg->pHttpResponse->FieldByName ("Content-Type");
-	LPCSTR pszCharset = pFld ? strstr (pFld->strValue.c_str (), "charset") : NULL;
-	if (pszCharset)
-	{
-		pszCharset += 7;
-		while (*pszCharset == ' ')
-			pszCharset++;
-		if (*pszCharset == '=')
-		{
-			pszCharset++;
-			while (*pszCharset == ' ')
-				pszCharset++;
-			string strCharset;
-			while (*pszCharset != ' ' && *pszCharset != 0)
-				strCharset += *pszCharset++;
-			UINT nCP = vmsCharsets::GetCpIdFromName (strCharset.c_str ());
-			if (nCP)
-				vmsCharsets::DecodeString (pszString, nCP, wstrResult);
-		}
-	}
-	if (wstrResult.empty ())
-		vmsCharsets::DecodeString (pszString, CP_UTF8, wstrResult);
+	vmsCharsets::DecodeString (pszString, 
+		pHtmlDlg->codePage ? pHtmlDlg->codePage : CP_UTF8, wstrResult);
 }
 
 void vmsHttpFlvTrafficAnalyzer::FindDialogsByUrlExactMatch(LPCSTR pszSrcText, const HTTPDLGLIST &vDlgs, HTTPDLGLIST &vResult)

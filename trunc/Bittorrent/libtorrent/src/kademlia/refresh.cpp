@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2006, Arvid Norberg & Daniel Wallin
+Copyright (c) 2006-2014, Arvid Norberg & Daniel Wallin
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -30,162 +30,80 @@ POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-#include "libtorrent/pch.hpp"
-
 #include <libtorrent/kademlia/refresh.hpp>
-#include <libtorrent/kademlia/routing_table.hpp>
 #include <libtorrent/kademlia/rpc_manager.hpp>
-#include <libtorrent/kademlia/logging.hpp>
 #include <libtorrent/kademlia/node.hpp>
-#include <libtorrent/kademlia/msg.hpp>
 
 #include <libtorrent/io.hpp>
-
-#include <boost/bind.hpp>
 
 namespace libtorrent { namespace dht
 {
 
 #ifdef TORRENT_DHT_VERBOSE_LOGGING
-TORRENT_DEFINE_LOG(refresh)
+	TORRENT_DECLARE_LOG(traversal);
 #endif
 
-refresh_observer::~refresh_observer()
+observer_ptr bootstrap::new_observer(void* ptr
+	, udp::endpoint const& ep, node_id const& id)
 {
-	if (m_algorithm) m_algorithm->failed(m_self, true);
-}
-
-void refresh_observer::reply(msg const& in)
-{
-	if (!m_algorithm) return;
-
-	if (!in.nodes.empty())
-	{
-		for (msg::nodes_t::const_iterator i = in.nodes.begin()
-			, end(in.nodes.end()); i != end; ++i)
-		{
-			m_algorithm->traverse(i->id, udp::endpoint(i->addr, i->port));
-		}
-	}
-	m_algorithm->finished(m_self);
-	m_algorithm = 0;
-}
-
-void refresh_observer::timeout()
-{
-	if (!m_algorithm) return;
-	m_algorithm->failed(m_self);
-	m_algorithm = 0;
-}
-
-ping_observer::~ping_observer()
-{
-	if (m_algorithm) m_algorithm->ping_timeout(m_self, true);
-}
-
-void ping_observer::reply(msg const& m)
-{
-	if (!m_algorithm) return;
-	
-	m_algorithm->ping_reply(m_self);
-	m_algorithm = 0;
-}
-
-void ping_observer::timeout()
-{
-	if (!m_algorithm) return;
-	m_algorithm->ping_timeout(m_self);
-	m_algorithm = 0;
-}
-
-void refresh::invoke(node_id const& nid, udp::endpoint addr)
-{
-	TORRENT_ASSERT(m_node.m_rpc.allocation_size() >= sizeof(refresh_observer));
-	void* ptr = m_node.m_rpc.allocator().malloc();
-	if (ptr == 0)
-	{
-		done();
-		return;
-	}
-	m_node.m_rpc.allocator().set_next_size(10);
-	observer_ptr o(new (ptr) refresh_observer( this, nid));
-#ifdef TORRENT_DEBUG
+	observer_ptr o(new (ptr) get_peers_observer(this, ep, id));
+#if defined TORRENT_DEBUG || TORRENT_RELEASE_ASSERTS
 	o->m_in_constructor = false;
 #endif
-
-	m_node.m_rpc.invoke(messages::find_node, addr, o);
+	return o;
 }
 
-void refresh::done()
+bool bootstrap::invoke(observer_ptr o)
 {
-	int max_results = m_node.m_table.bucket_size();
-	m_leftover_nodes_iterator = (int)m_results.size() > max_results ?
-		m_results.begin() + max_results : m_results.end();
+	entry e;
+	e["y"] = "q";
+	entry& a = e["a"];
 
-	invoke_pings_or_finish();
+	e["q"] = "get_peers";
+	a["info_hash"] = target().to_string();
+
+//	e["q"] = "find_node";
+//	a["target"] = target().to_string();
+	return m_node.m_rpc.invoke(e, o->target_ep(), o);
 }
 
-void refresh::ping_reply(node_id nid)
+bootstrap::bootstrap(
+	node_impl& node
+	, node_id target
+	, done_callback const& callback)
+	: get_peers(node, target, get_peers::data_callback(), callback, false)
 {
-	m_active_pings--;
-	invoke_pings_or_finish();
+	// make it more resilient to nodes not responding.
+	// we don't want to terminate early when we're bootstrapping
+	m_num_target_nodes *= 2;
 }
 
-void refresh::ping_timeout(node_id nid, bool prevent_request)
+char const* bootstrap::name() const { return "bootstrap"; }
+
+void bootstrap::trim_seed_nodes()
 {
-	m_active_pings--;
-	invoke_pings_or_finish(prevent_request);
+	// when we're bootstrapping, we want to start as far away from our ID as
+	// possible, to cover as much as possible of the ID space. So, remove all
+	// nodes except for the 32 that are farthest away from us
+	if (m_results.size() > 32)
+		m_results.erase(m_results.begin(), m_results.end() - 32);
 }
 
-void refresh::invoke_pings_or_finish(bool prevent_request)
+void bootstrap::done()
 {
-	if (prevent_request)
-	{
-		--m_max_active_pings;
-		if (m_max_active_pings <= 0)
-			m_max_active_pings = 1;
-	}
-	else
-	{
-		while (m_active_pings < m_max_active_pings)
-		{
-			if (m_leftover_nodes_iterator == m_results.end()) break;
-
-			result const& node = *m_leftover_nodes_iterator;
-
-			// Skip initial nodes
-			if (node.flags & result::initial)
-			{
-				++m_leftover_nodes_iterator;
-				continue;
-			}
-
-#ifndef BOOST_NO_EXCEPTIONS
-			try
-			{
+#ifdef TORRENT_DHT_VERBOSE_LOGGING
+	TORRENT_LOG(traversal) << "[" << this << "]"
+		<< " bootstrap done, pinging remaining nodes";
 #endif
-				TORRENT_ASSERT(m_node.m_rpc.allocation_size() >= sizeof(ping_observer));
-				void* ptr = m_node.m_rpc.allocator().malloc();
-				if (ptr == 0) return;
-				m_node.m_rpc.allocator().set_next_size(10);
-				observer_ptr o(new (ptr) ping_observer(this, node.id));
-#ifdef TORRENT_DEBUG
-				o->m_in_constructor = false;
-#endif
-				m_node.m_rpc.invoke(messages::ping, node.addr, o);
-				++m_active_pings;
-				++m_leftover_nodes_iterator;
-#ifndef BOOST_NO_EXCEPTIONS
-			}
-			catch (std::exception& e) {}
-#endif
-		}
-	}
 
-	if (m_active_pings == 0)
+	for (std::vector<observer_ptr>::iterator i = m_results.begin()
+		, end(m_results.end()); i != end; ++i)
 	{
-		m_done_callback();
+		if ((*i)->flags & observer::flag_queried) continue;
+		// this will send a ping
+		m_node.add_node((*i)->target_ep());
 	}
+	get_peers::done();
 }
 
 } } // namespace libtorrent::dht

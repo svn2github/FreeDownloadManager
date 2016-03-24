@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -7,7 +7,7 @@
 class vmsBtFile
 {
 public:
-	virtual BOOL LoadFromFile (LPCSTR pszTorrentFile) = NULL;
+	virtual BOOL LoadFromFile (LPCTSTR pszTorrentFile) = NULL;
 	virtual BOOL LoadFromBuffer (LPBYTE pbTorrent, DWORD dwTorrentSize) = NULL;
 	virtual BOOL LoadFromMagnetLink (LPCSTR pszTorrentFile) = NULL;
 	virtual BOOL LoadFromMagnetMetadata (vmsBtFile* torrentFile) = NULL;

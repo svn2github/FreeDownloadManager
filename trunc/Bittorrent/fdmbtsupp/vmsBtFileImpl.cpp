@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -42,11 +42,11 @@ BOOL vmsBtFileImpl::IsMagnetLink()
 	return m_isMagnet;
 }
 
-BOOL vmsBtFileImpl::LoadFromFile (LPCSTR pszTorrentFile)
+BOOL vmsBtFileImpl::LoadFromFile (LPCTSTR pszTorrentFile)
 {
 	SAFE_DELETE (m_torrent);
 
-	HANDLE hFile = CreateFileA (pszTorrentFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	HANDLE hFile = CreateFile (pszTorrentFile, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
 		return FALSE;
 
@@ -185,7 +185,7 @@ int vmsBtFileImpl::get_FileCount ()
 
 void vmsBtFileImpl::get_FileName (int nIndex, LPSTR pszRes)
 {
-	strcpy (pszRes, m_torrent->file_at (nIndex).path.string ().c_str ());
+	strcpy (pszRes, m_torrent->file_at (nIndex).path.c_str ());
 }
 
 UINT64 vmsBtFileImpl::get_FileSize (int nIndex)
@@ -298,30 +298,30 @@ int vmsBtFileImpl::get_PieceSize ()
 
 void add_files (libtorrent::file_storage& fs, wpath const& p, wpath const& l, LPBOOL pbNeedCancel)
 {
-	if (l.leaf ()[0] == '.') 
+	if (l.leaf ().string()[0] == '.') 
 		return;
 
 	wpath f(p / l);
 
 	if (is_directory (f))
 	{
-		typedef basic_directory_iterator<wpath> directory_iterator;
+		
 		for (directory_iterator i (f), end; i != end; ++i)
 		{
-			add_files (fs, p, l / i->leaf (), pbNeedCancel);
+			add_files (fs, p, l / i->path(), pbNeedCancel);
 			if (pbNeedCancel && *pbNeedCancel)
 				return;
 		}
 	}
 	else
 	{
-		fs.add_file(l, file_size (f));
+		fs.add_file(l.string(), file_size (f));
 	}
 }
 
 UINT64 get_files_size (wpath const& p, wpath const& l, LPBOOL pbNeedCancel)
 {
-	if (l.leaf ()[0] == '.') 
+	if (l.leaf ().string()[0] == '.') 
 		return 0;
 
 	wpath f(p / l);
@@ -330,10 +330,10 @@ UINT64 get_files_size (wpath const& p, wpath const& l, LPBOOL pbNeedCancel)
 
 	if (is_directory (f))
 	{
-		typedef basic_directory_iterator<wpath> directory_iterator;
+		
 		for (directory_iterator i (f), end; i != end; ++i)
 		{
-			s += get_files_size (p, l / i->leaf (), pbNeedCancel);
+			s += get_files_size (p, l / i->path (), pbNeedCancel);
 			if (pbNeedCancel && *pbNeedCancel)
 				return 0;
 		}
@@ -378,9 +378,9 @@ BOOL vmsBtFileImpl::GenerateFastResumeDataForSeed (LPCSTR pszSrcFolderOrFile, LP
 		piece_index.push_back (i);
 	libtorrent::entry::list_type& slots = ret ["slots"].list ();
 	std::copy (piece_index.begin (), piece_index.end (), std::back_inserter (slots));
-
+	
 	std::vector<std::pair<libtorrent::size_type, std::time_t> > file_sizes = 
-		libtorrent::get_filesizes (const_cast<libtorrent::file_storage&>(m_torrent->files()), libtorrent::fs::complete (pszSrcFolderOrFile));
+		libtorrent::get_filesizes (const_cast<libtorrent::file_storage&>(m_torrent->files()), complete(path(pszSrcFolderOrFile)).string());
 
 	ret ["file sizes"] = libtorrent::entry::list_type ();
 	libtorrent::entry::list_type& fl = ret ["file sizes"].list ();
@@ -418,7 +418,7 @@ void vmsBtFileImpl::get_FileName2 (int nIndex, LPSTR pszRes, DWORD dwBuffSize)
 	{
 		return;
 	}
-	strncpy (pszRes, m_torrent->file_at (nIndex).path.string ().c_str (), dwBuffSize - 1);
+	strncpy (pszRes, m_torrent->file_at (nIndex).path.c_str (), dwBuffSize - 1);
 	pszRes [dwBuffSize - 1] = 0;
 }
 
@@ -487,11 +487,11 @@ BOOL vmsBtFileImpl::CreateNewTorrent2 (LPCWSTR pszSrcPath, LPCSTR pszTrackers, L
 		
 		
 
-		std::string strPath;
-		libtorrent::wchar_utf8(full_path.branch_path().string(), strPath);
+		std::string strPath = full_path.branch_path().string();
+		
 		libtorrent::file_pool fp;
 		boost::scoped_ptr<libtorrent::storage_interface> st(
-			default_storage_constructor (fs, 0, strPath, fp));
+			default_storage_constructor (fs, 0, strPath, fp, std::vector<boost::uint8_t>()));
 
 		int num = m_pCreate_torrent->num_pieces ();
 		std::vector <char> buf (iPieceSize);

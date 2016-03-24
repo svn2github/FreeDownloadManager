@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -57,7 +57,7 @@ void ReadConfig()
 				KEY_READ,
 				&hMenu) == ERROR_SUCCESS)
 		{
-			DWORD bContextMenu = 0;
+			DWORD bContextMenu = 1;
 			cbData = sizeof(DWORD);
 			RegQueryValueEx(hMenu, "Enable", NULL, NULL, (LPBYTE)&bContextMenu, &cbData);
 
@@ -77,6 +77,11 @@ void ReadConfig()
 
 				cbData = sizeof(DWORD);
 				RegQueryValueEx(hMenu, "DLThis", NULL, NULL, (LPBYTE)&_bContextMenuDLThis, &cbData);
+			}
+			else
+			{
+				_bContextMenuDLAll = _bContextMenuDLFlashVideo = _bContextMenuDLPage = 
+					_bContextMenuDLSelected = _bContextMenuDLThis = 0;
 			}
 		}
 	}

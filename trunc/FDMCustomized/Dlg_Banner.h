@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DLG_BANNER_H__C9A6F3E1_BD30_44CA_9762_1BE45940E770__INCLUDED_)

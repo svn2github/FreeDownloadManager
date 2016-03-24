@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -15,7 +15,7 @@ public:
 		std::string strOutputPath;
 	};
 public:	
-	virtual BOOL ImportUtorrentDownloads (LPCSTR pszDownloadsDbFile) = NULL;
+	virtual BOOL ImportUtorrentDownloads (LPCTSTR pszDownloadsDbFile) = NULL;
 	virtual int getDownloadCount () = NULL;
 	virtual const Download* getDownload (int nIndex) = NULL;
 };

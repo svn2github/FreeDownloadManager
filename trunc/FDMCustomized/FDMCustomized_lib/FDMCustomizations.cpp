@@ -1,7 +1,8 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
+#include "StdAfx.h"
 #include "FDMCustomizations.h"
 #include "vmsMemFile.h"
 
@@ -12,7 +13,7 @@ vmsFDMCustomizations::vmsFDMCustomizations()
 	m_bUseBtn = FALSE;
 	m_bShowFDMCustBtn = TRUE;
 	m_dwAffiliateID = 0;
-	m_xor.set_Key ("vmsFDMCustomizations-2nd");
+	m_xor.set_Key (_T("vmsFDMCustomizations-2nd"));
 }
 
 vmsFDMCustomizations::~vmsFDMCustomizations()
@@ -106,7 +107,7 @@ void vmsFDMCustomizations::Save(HANDLE hFile)
 	dw = m_vBanners.size ();
 	file.WriteFile (&dw, sizeof (dw));
 
-	for (int i = 0; i < m_vBanners.size (); i++)
+	for (int i = 0; i < (int)m_vBanners.size (); i++)
 	{
 		
 
@@ -152,7 +153,7 @@ void vmsFDMCustomizations::Free()
 
 void vmsFDMCustomizations::WriteString(vmsMemFile &file, LPCSTR psz)
 {
-	DWORD dw = lstrlen (psz);
+	DWORD dw = lstrlen (psz) * sizeof(TCHAR);
 
 	file.WriteFile (&dw, sizeof (dw));
 	file.WriteFile (psz, dw);
@@ -166,9 +167,9 @@ void vmsFDMCustomizations::ReadString(vmsMemFile &file, LPSTR *ppsz)
 
 	file.ReadFile (&dw, sizeof (dw));
 
-	*ppsz = new char [dw+1];
+	*ppsz = new TCHAR [dw+1];
 
-	file.ReadFile (*ppsz, dw);
+	file.ReadFile (*ppsz, dw * sizeof(TCHAR));
 	(*ppsz)[dw] = 0;
 }
 
@@ -199,7 +200,7 @@ vmsFDMButton* vmsFDMCustomizations::get_ButtonInfo()
 
 void vmsFDMCustomizations::RemoveAllBanners()
 {
-	for (int i = 0; i < m_vBanners.size (); i++)
+	for (int i = 0; i < (int)m_vBanners.size (); i++)
 	{
 		delete [] m_vBanners [i].pbImage;
 		delete [] m_vBanners [i].pszLinksTo;

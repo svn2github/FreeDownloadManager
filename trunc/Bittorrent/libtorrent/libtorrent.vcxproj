@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -32,26 +32,30 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release-MT|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v120_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v90</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -89,8 +93,8 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>.\include\libtorrent;.\zlib;..\boost_1_44;.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_FILE_OFFSET_BITS=64;BOOST_THREAD_USE_LIB;_CRT_SECURE_NO_DEPRECATE;UNICODE;TORRENT_USE_OPENSSL;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\include\libtorrent;.\zlib;$(BOOST_ROOT);.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_FILE_OFFSET_BITS=64;BOOST_THREAD_USE_LIB;_CRT_SECURE_NO_DEPRECATE;UNICODE;TORRENT_USE_OPENSSL;_WIN32_WINNT=0x0500;BOOST_ASIO_SEPARATE_COMPILATION;BOOST_ASIO_ENABLE_CANCELIO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -107,9 +111,9 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>.\include\libtorrent;.\zlib;..\boost_1_44;.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_FILE_OFFSET_BITS=64;BOOST_THREAD_USE_LIB;_CRT_SECURE_NO_DEPRECATE;UNICODE;TORRENT_USE_OPENSSL;_WIN32_WINNT=0x0500;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalIncludeDirectories>.\include\libtorrent;.\zlib;$(BOOST_ROOT);.\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WIN32_LEAN_AND_MEAN;_FILE_OFFSET_BITS=64;BOOST_THREAD_USE_LIB;_CRT_SECURE_NO_DEPRECATE;UNICODE;TORRENT_USE_OPENSSL;_WIN32_WINNT=0x0500;BOOST_ASIO_SEPARATE_COMPILATION;BOOST_ASIO_ENABLE_CANCELIO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -119,6 +123,7 @@
       </UndefinePreprocessorDefinitions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Lib>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -178,93 +183,117 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\magnet_uri.cpp" />
-    <ClCompile Include="zlib\adler32.c" />
+    <None Include="ReadMe.txt" />
+    <None Include="src\Makefile.am" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="src\alert.cpp" />
+    <ClCompile Include="src\alert_manager.cpp" />
     <ClCompile Include="src\allocator.cpp" />
+    <ClCompile Include="src\asio.cpp" />
+    <ClCompile Include="src\asio_ssl.cpp" />
     <ClCompile Include="src\assert.cpp" />
+    <ClCompile Include="src\bandwidth_limit.cpp" />
+    <ClCompile Include="src\bandwidth_manager.cpp" />
+    <ClCompile Include="src\bandwidth_queue_entry.cpp" />
+    <ClCompile Include="src\bloom_filter.cpp" />
     <ClCompile Include="src\broadcast_socket.cpp" />
     <ClCompile Include="src\bt_peer_connection.cpp" />
-    <ClCompile Include="src\kademlia\closest_nodes.cpp" />
-    <ClCompile Include="zlib\compress.c" />
+    <ClCompile Include="src\chained_buffer.cpp" />
     <ClCompile Include="src\connection_queue.cpp" />
     <ClCompile Include="src\ConvertUTF.cpp" />
-    <ClCompile Include="zlib\crc32.c" />
     <ClCompile Include="src\create_torrent.cpp" />
-    <ClCompile Include="zlib\deflate.c" />
-    <ClCompile Include="src\kademlia\dht_tracker.cpp" />
     <ClCompile Include="src\disk_buffer_holder.cpp" />
+    <ClCompile Include="src\disk_buffer_pool.cpp" />
     <ClCompile Include="src\disk_io_thread.cpp" />
+    <ClCompile Include="src\ed25519\add_scalar.cpp" />
+    <ClCompile Include="src\ed25519\fe.cpp" />
+    <ClCompile Include="src\ed25519\ge.cpp" />
+    <ClCompile Include="src\ed25519\keypair.cpp" />
+    <ClCompile Include="src\ed25519\key_exchange.cpp" />
+    <ClCompile Include="src\ed25519\sc.cpp" />
+    <ClCompile Include="src\ed25519\seed.cpp" />
+    <ClCompile Include="src\ed25519\sha512.cpp" />
+    <ClCompile Include="src\ed25519\sign.cpp" />
+    <ClCompile Include="src\ed25519\verify.cpp" />
     <ClCompile Include="src\entry.cpp" />
     <ClCompile Include="src\enum_net.cpp" />
     <ClCompile Include="src\error_code.cpp" />
-    <ClCompile Include="src\escape_string.cpp">
-      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release-MT-dbg|Win32'">
-      </ExceptionHandling>
-      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release-MT|Win32'">
-      </ExceptionHandling>
-      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Sync</ExceptionHandling>
-      <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release_v90|Win32'">Sync</ExceptionHandling>
-    </ClCompile>
+    <ClCompile Include="src\escape_string.cpp" />
     <ClCompile Include="src\file.cpp" />
     <ClCompile Include="src\file_pool.cpp" />
     <ClCompile Include="src\file_storage.cpp" />
-    <ClCompile Include="src\kademlia\find_data.cpp" />
     <ClCompile Include="src\GeoIP.c" />
-    <ClCompile Include="zlib\gzio.c" />
     <ClCompile Include="src\gzip.cpp" />
+    <ClCompile Include="src\hasher.cpp" />
     <ClCompile Include="src\http_connection.cpp" />
     <ClCompile Include="src\http_parser.cpp" />
     <ClCompile Include="src\http_seed_connection.cpp" />
     <ClCompile Include="src\http_stream.cpp" />
     <ClCompile Include="src\http_tracker_connection.cpp" />
+    <ClCompile Include="src\i2p_stream.cpp" />
     <ClCompile Include="src\identify_client.cpp" />
-    <ClCompile Include="zlib\infback.c" />
-    <ClCompile Include="zlib\inffast.c" />
-    <ClCompile Include="zlib\inflate.c" />
-    <ClCompile Include="zlib\inftrees.c" />
     <ClCompile Include="src\instantiate_connection.cpp" />
     <ClCompile Include="src\ip_filter.cpp" />
+    <ClCompile Include="src\ip_voter.cpp" />
+    <ClCompile Include="src\kademlia\dht_tracker.cpp" />
+    <ClCompile Include="src\kademlia\find_data.cpp" />
+    <ClCompile Include="src\kademlia\get_item.cpp" />
+    <ClCompile Include="src\kademlia\get_peers.cpp" />
+    <ClCompile Include="src\kademlia\item.cpp" />
+    <ClCompile Include="src\kademlia\logging.cpp" />
+    <ClCompile Include="src\kademlia\node.cpp" />
+    <ClCompile Include="src\kademlia\node_id.cpp" />
+    <ClCompile Include="src\kademlia\refresh.cpp" />
+    <ClCompile Include="src\kademlia\routing_table.cpp" />
+    <ClCompile Include="src\kademlia\rpc_manager.cpp" />
+    <ClCompile Include="src\kademlia\traversal_algorithm.cpp" />
     <ClCompile Include="src\lazy_bdecode.cpp" />
     <ClCompile Include="src\logger.cpp" />
     <ClCompile Include="src\lsd.cpp" />
     <ClCompile Include="src\lt_trackers.cpp" />
+    <ClCompile Include="src\magnet_uri.cpp" />
     <ClCompile Include="src\metadata_transfer.cpp" />
+    <ClCompile Include="src\mpi.c" />
     <ClCompile Include="src\natpmp.cpp" />
-    <ClCompile Include="src\kademlia\node.cpp" />
-    <ClCompile Include="src\kademlia\node_id.cpp" />
+    <ClCompile Include="src\packet_buffer.cpp" />
     <ClCompile Include="src\parse_url.cpp" />
-    <ClCompile Include="src\pe_crypto.cpp" />
     <ClCompile Include="src\peer_connection.cpp" />
+    <ClCompile Include="src\pe_crypto.cpp" />
     <ClCompile Include="src\piece_picker.cpp" />
     <ClCompile Include="src\policy.cpp" />
-    <ClCompile Include="src\kademlia\refresh.cpp" />
-    <ClCompile Include="src\kademlia\routing_table.cpp" />
-    <ClCompile Include="src\kademlia\rpc_manager.cpp" />
+    <ClCompile Include="src\puff.cpp" />
+    <ClCompile Include="src\random.cpp" />
+    <ClCompile Include="src\rss.cpp" />
     <ClCompile Include="src\session.cpp" />
     <ClCompile Include="src\session_impl.cpp" />
+    <ClCompile Include="src\settings.cpp" />
     <ClCompile Include="src\sha1.cpp" />
     <ClCompile Include="src\smart_ban.cpp" />
+    <ClCompile Include="src\socket_io.cpp" />
+    <ClCompile Include="src\socket_type.cpp" />
     <ClCompile Include="src\socks5_stream.cpp" />
     <ClCompile Include="src\stat.cpp" />
     <ClCompile Include="src\storage.cpp" />
+    <ClCompile Include="src\string_util.cpp" />
+    <ClCompile Include="src\thread.cpp" />
+    <ClCompile Include="src\time.cpp" />
+    <ClCompile Include="src\timestamp_history.cpp" />
     <ClCompile Include="src\torrent.cpp" />
     <ClCompile Include="src\torrent_handle.cpp" />
     <ClCompile Include="src\torrent_info.cpp" />
     <ClCompile Include="src\tracker_manager.cpp" />
-    <ClCompile Include="src\kademlia\traversal_algorithm.cpp" />
-    <ClCompile Include="zlib\trees.c" />
     <ClCompile Include="src\udp_socket.cpp" />
     <ClCompile Include="src\udp_tracker_connection.cpp" />
-    <ClCompile Include="zlib\uncompr.c" />
     <ClCompile Include="src\upnp.cpp" />
+    <ClCompile Include="src\utf8.cpp" />
+    <ClCompile Include="src\utp_socket_manager.cpp" />
+    <ClCompile Include="src\utp_stream.cpp" />
     <ClCompile Include="src\ut_metadata.cpp" />
     <ClCompile Include="src\ut_pex.cpp" />
+    <ClCompile Include="src\web_connection_base.cpp" />
     <ClCompile Include="src\web_peer_connection.cpp" />
-    <ClCompile Include="zlib\zutil.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ReadMe.txt" />
+    <ClCompile Include="src\xml_parse.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

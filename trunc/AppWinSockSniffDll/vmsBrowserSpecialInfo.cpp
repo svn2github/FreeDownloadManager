@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -29,12 +29,12 @@ void vmsBrowserSpecialInfo::AddUrl(const UrlInfo &url)
 
 void vmsBrowserSpecialInfo::Lock()
 {
-	EnterCriticalSection (&m_csUrls);
+	EnterCriticalSection (m_csUrls);
 }
 
 void vmsBrowserSpecialInfo::Unlock()
 {
-	LeaveCriticalSection (&m_csUrls);
+	LeaveCriticalSection (m_csUrls);
 }
 
 int vmsBrowserSpecialInfo::findUrlIndex(LPCSTR pszUrl) const

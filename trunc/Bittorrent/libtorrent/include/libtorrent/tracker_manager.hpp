@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2003, Arvid Norberg
+Copyright (c) 2003-2014, Arvid Norberg
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -46,23 +46,27 @@ POSSIBILITY OF SUCH DAMAGE.
 #include <boost/cstdint.hpp>
 #include <boost/weak_ptr.hpp>
 #include <boost/intrusive_ptr.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/recursive_mutex.hpp>
 #include <boost/tuple/tuple.hpp>
 
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
-#include "libtorrent/socket.hpp"
-#include "libtorrent/entry.hpp"
-#include "libtorrent/session_settings.hpp"
-#include "libtorrent/peer_id.hpp"
-#include "libtorrent/peer.hpp"
 #include "libtorrent/config.hpp"
-#include "libtorrent/time.hpp"
+#include "libtorrent/socket.hpp"
+#include "libtorrent/address.hpp"
+#include "libtorrent/peer_id.hpp"
+#include "libtorrent/peer.hpp" // peer_entry
+#include "libtorrent/session_settings.hpp" // proxy_settings
+#include "libtorrent/deadline_timer.hpp"
 #include "libtorrent/connection_queue.hpp"
 #include "libtorrent/intrusive_ptr_base.hpp"
+#include "libtorrent/size_type.hpp"
+#include "libtorrent/union_endpoint.hpp"
+#include "libtorrent/udp_socket.hpp" // for udp_socket_observer
+#ifdef TORRENT_USE_OPENSSL
+#include <boost/asio/ssl/context.hpp>
+#endif
 
 namespace libtorrent
 {
@@ -73,9 +77,9 @@ namespace libtorrent
 	namespace aux { struct session_impl; }
 
 	// returns -1 if gzip header is invalid or the header size in bytes
-	TORRENT_EXPORT int gzip_header(const char* buf, int size);
+	TORRENT_EXTRA_EXPORT int gzip_header(const char* buf, int size);
 
-	struct TORRENT_EXPORT tracker_request
+	struct TORRENT_EXTRA_EXPORT tracker_request
 	{
 		tracker_request()
 			: kind(announce_request)
@@ -89,6 +93,10 @@ namespace libtorrent
 			, key(0)
 			, num_want(0)
 			, send_stats(true)
+			, apply_ip_filter(true)
+#ifdef TORRENT_USE_OPENSSL
+			, ssl_ctx(0)
+#endif
 		{}
 
 		enum
@@ -102,7 +110,8 @@ namespace libtorrent
 			none,
 			completed,
 			started,
-			stopped
+			stopped,
+			paused
 		};
 
 		sha1_hash info_hash;
@@ -115,15 +124,18 @@ namespace libtorrent
 		unsigned short listen_port;
 		event_t event;
 		std::string url;
-		int key;
+		std::string trackerid;
+		boost::uint32_t key;
 		int num_want;
-		std::string ipv6;
-		std::string ipv4;
 		address bind_ip;
 		bool send_stats;
+		bool apply_ip_filter;
+#ifdef TORRENT_USE_OPENSSL
+		boost::asio::ssl::context* ssl_ctx;
+#endif
 	};
 
-	struct TORRENT_EXPORT request_callback
+	struct TORRENT_EXTRA_EXPORT request_callback
 	{
 		friend class tracker_manager;
 		request_callback(): m_manager(0) {}
@@ -131,7 +143,8 @@ namespace libtorrent
 		virtual void tracker_warning(tracker_request const& req
 			, std::string const& msg) = 0;
 		virtual void tracker_scrape_response(tracker_request const& /*req*/
-			, int /*complete*/, int /*incomplete*/, int /*downloads*/) {}
+			, int /*complete*/, int /*incomplete*/, int /*downloads*/
+			, int /*downloaders*/) {}
 		virtual void tracker_response(
 			tracker_request const& req
 			, address const& tracker_ip
@@ -141,25 +154,27 @@ namespace libtorrent
 			, int min_interval
 			, int complete
 			, int incomplete
-			, address const& external_ip) = 0;
-		virtual void tracker_request_timed_out(
-			tracker_request const& req) = 0;
+			, int downloaded
+			, address const& external_ip
+			, std::string const& trackerid) = 0;
 		virtual void tracker_request_error(
 			tracker_request const& req
 			, int response_code
-			, const std::string& description
+			, error_code const& ec
+			, const std::string& msg
 			, int retry_interval) = 0;
 
-		tcp::endpoint m_tracker_address;
+		union_endpoint m_tracker_address;
 
 #if defined TORRENT_VERBOSE_LOGGING || defined TORRENT_LOGGING || defined TORRENT_ERROR_LOGGING
-		virtual void debug_log(const std::string& line) = 0;
-#endif
+		virtual void debug_log(const char* fmt, ...) const = 0;
+#else
 	private:
+#endif
 		tracker_manager* m_manager;
 	};
 
-	struct TORRENT_EXPORT timeout_handler
+	struct TORRENT_EXTRA_EXPORT timeout_handler
 		: intrusive_ptr_base<timeout_handler>
 		, boost::noncopyable
 	{
@@ -172,6 +187,8 @@ namespace libtorrent
 
 		virtual void on_timeout(error_code const& ec) = 0;
 		virtual ~timeout_handler() {}
+
+		io_service& get_io_service() { return m_timeout.get_io_service(); }
 
 	private:
 	
@@ -191,12 +208,12 @@ namespace libtorrent
 		int m_completion_timeout;
 		int m_read_timeout;
 
-		typedef boost::mutex mutex_t;
+		typedef mutex mutex_t;
 		mutable mutex_t m_mutex;
 		bool m_abort;
 	};
 
-	struct TORRENT_EXPORT tracker_connection
+	struct TORRENT_EXTRA_EXPORT tracker_connection
 		: timeout_handler
 	{
 		tracker_connection(tracker_manager& man
@@ -204,28 +221,41 @@ namespace libtorrent
 			, io_service& ios
 			, boost::weak_ptr<request_callback> r);
 
-		boost::shared_ptr<request_callback> requester();
+		boost::shared_ptr<request_callback> requester() const;
 		virtual ~tracker_connection() {}
 
 		tracker_request const& tracker_req() const { return m_req; }
 
-		void fail_disp(int code, std::string const& msg) { fail(code, msg.c_str()); }
-		void fail(int code, char const* msg, int interval = 0, int min_interval = 0);
-		void fail_timeout();
+		void fail(error_code const& ec, int code = -1, char const* msg = ""
+			, int interval = 0, int min_interval = 0);
 		virtual void start() = 0;
 		virtual void close();
 		address const& bind_interface() const { return m_req.bind_ip; }
 		void sent_bytes(int bytes);
 		void received_bytes(int bytes);
+		virtual bool on_receive(error_code const& ec, udp::endpoint const& ep
+			, char const* buf, int size) { return false; }
+		virtual bool on_receive_hostname(error_code const& ec, char const* hostname
+			, char const* buf, int size) { return false; }
+
+		boost::intrusive_ptr<tracker_connection> self()
+		{ return boost::intrusive_ptr<tracker_connection>(this); }
 
 	protected:
+
+		void fail_impl(error_code const& ec, int code = -1, std::string msg = std::string()
+			, int interval = 0, int min_interval = 0);
+
 		boost::weak_ptr<request_callback> m_requester;
-	private:
+
 		tracker_manager& m_man;
+
+	private:
+
 		const tracker_request m_req;
 	};
 
-	class TORRENT_EXPORT tracker_manager: boost::noncopyable
+	class TORRENT_EXTRA_EXPORT tracker_manager: public udp_socket_observer, boost::noncopyable
 	{
 	public:
 
@@ -250,10 +280,18 @@ namespace libtorrent
 
 		void sent_bytes(int bytes);
 		void received_bytes(int bytes);
+
+		virtual bool incoming_packet(error_code const& e, udp::endpoint const& ep
+			, char const* buf, int size);
+
+		// this is only used for SOCKS packets, since
+		// they may be addressed to hostname
+		virtual bool incoming_packet(error_code const& e, char const* hostname
+			, char const* buf, int size);
 		
 	private:
 
-		typedef boost::recursive_mutex mutex_t;
+		typedef mutex mutex_t;
 		mutable mutex_t m_mutex;
 
 		typedef std::list<boost::intrusive_ptr<tracker_connection> >
