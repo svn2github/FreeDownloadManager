@@ -23,41 +23,88 @@
  * mmx/mmx2/3dnow postprocess code.
  */
 
-#include "libavutil/x86_cpu.h"
+#include "libavutil/x86/asm.h"
 
-#define ALIGN_MASK "$-8"
+/* A single TEMPLATE_PP_* should be defined (to 1) when this template is
+ * included. The following macros will define its dependencies to 1 as well
+ * (like MMX2 depending on MMX), and will define to 0 all the others. Every
+ * TEMPLATE_PP_* need to be undef at the end. */
+
+#ifdef TEMPLATE_PP_C
+#   define RENAME(a) a ## _C
+#else
+#   define TEMPLATE_PP_C 0
+#endif
+
+#ifdef TEMPLATE_PP_ALTIVEC
+#   define RENAME(a) a ## _altivec
+#else
+#   define TEMPLATE_PP_ALTIVEC 0
+#endif
+
+#ifdef TEMPLATE_PP_MMX
+#   define RENAME(a) a ## _MMX
+#else
+#   define TEMPLATE_PP_MMX 0
+#endif
+
+#ifdef TEMPLATE_PP_MMXEXT
+#   undef  TEMPLATE_PP_MMX
+#   define TEMPLATE_PP_MMX 1
+#   define RENAME(a) a ## _MMX2
+#else
+#   define TEMPLATE_PP_MMXEXT 0
+#endif
+
+#ifdef TEMPLATE_PP_3DNOW
+#   undef  TEMPLATE_PP_MMX
+#   define TEMPLATE_PP_MMX 1
+#   define RENAME(a) a ## _3DNow
+#else
+#   define TEMPLATE_PP_3DNOW 0
+#endif
+
+#ifdef TEMPLATE_PP_SSE2
+#   undef  TEMPLATE_PP_MMX
+#   define TEMPLATE_PP_MMX 1
+#   undef  TEMPLATE_PP_MMXEXT
+#   define TEMPLATE_PP_MMXEXT 1
+#   define RENAME(a) a ## _SSE2
+#else
+#   define TEMPLATE_PP_SSE2 0
+#endif
 
 #undef REAL_PAVGB
 #undef PAVGB
 #undef PMINUB
 #undef PMAXUB
 
-#if   HAVE_MMX2
+#if   TEMPLATE_PP_MMXEXT
 #define REAL_PAVGB(a,b) "pavgb " #a ", " #b " \n\t"
-#elif HAVE_AMD3DNOW
+#elif TEMPLATE_PP_3DNOW
 #define REAL_PAVGB(a,b) "pavgusb " #a ", " #b " \n\t"
 #endif
 #define PAVGB(a,b)  REAL_PAVGB(a,b)
 
-#if   HAVE_MMX2
+#if   TEMPLATE_PP_MMXEXT
 #define PMINUB(a,b,t) "pminub " #a ", " #b " \n\t"
-#elif HAVE_MMX
+#elif TEMPLATE_PP_MMX
 #define PMINUB(b,a,t) \
     "movq " #a ", " #t " \n\t"\
     "psubusb " #b ", " #t " \n\t"\
     "psubb " #t ", " #a " \n\t"
 #endif
 
-#if   HAVE_MMX2
+#if   TEMPLATE_PP_MMXEXT
 #define PMAXUB(a,b) "pmaxub " #a ", " #b " \n\t"
-#elif HAVE_MMX
+#elif TEMPLATE_PP_MMX
 #define PMAXUB(a,b) \
     "psubusb " #a ", " #b " \n\t"\
     "paddb " #a ", " #b " \n\t"
 #endif
 
 //FIXME? |255-0| = 1 (should not be a problem ...)
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
 /**
  * Check if the middle 8x8 Block in the given 8x16 block is flat
  */
@@ -81,7 +128,7 @@ static inline int RENAME(vertClassify)(uint8_t src[], int stride, PPContext *c){
         "movq %%mm0, %%mm4                      \n\t"
         PMAXUB(%%mm1, %%mm4)
         PMINUB(%%mm1, %%mm3, %%mm5)
-        "psubb %%mm1, %%mm0                     \n\t" // mm0 = differnece
+        "psubb %%mm1, %%mm0                     \n\t" // mm0 = difference
         "paddb %%mm7, %%mm0                     \n\t"
         "pcmpgtb %%mm6, %%mm0                   \n\t"
 
@@ -137,7 +184,7 @@ static inline int RENAME(vertClassify)(uint8_t src[], int stride, PPContext *c){
         "psubusb %%mm3, %%mm4                   \n\t"
 
         "                                       \n\t"
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
         "pxor %%mm7, %%mm7                      \n\t"
         "psadbw %%mm7, %%mm0                    \n\t"
 #else
@@ -171,16 +218,16 @@ static inline int RENAME(vertClassify)(uint8_t src[], int stride, PPContext *c){
         return 2;
     }
 }
-#endif //HAVE_MMX
+#endif //TEMPLATE_PP_MMX
 
 /**
  * Do a vertical low pass filter on the 8x16 block (only write to the 8x8 block in the middle)
  * using the 9-Tap Filter (1,1,2,2,4,2,2,1,1)/16
  */
-#if !HAVE_ALTIVEC
+#if !TEMPLATE_PP_ALTIVEC
 static inline void RENAME(doVertLowPass)(uint8_t *src, int stride, PPContext *c)
 {
-#if HAVE_MMX2 || HAVE_AMD3DNOW
+#if TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     src+= stride*3;
     __asm__ volatile(        //"movv %0 %1 %2\n\t"
         "movq %2, %%mm0                         \n\t"  // QP,..., QP
@@ -307,7 +354,7 @@ static inline void RENAME(doVertLowPass)(uint8_t *src, int stride, PPContext *c)
         : "r" (src), "r" ((x86_reg)stride), "m" (c->pQPb)
         : "%"REG_a, "%"REG_c
     );
-#else //HAVE_MMX2 || HAVE_AMD3DNOW
+#else //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     const int l1= stride;
     const int l2= stride + l1;
     const int l3= stride + l2;
@@ -346,9 +393,9 @@ static inline void RENAME(doVertLowPass)(uint8_t *src, int stride, PPContext *c)
 
         src++;
     }
-#endif //HAVE_MMX2 || HAVE_AMD3DNOW
+#endif //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 }
-#endif //HAVE_ALTIVEC
+#endif //TEMPLATE_PP_ALTIVEC
 
 /**
  * Experimental Filter 1
@@ -359,7 +406,7 @@ static inline void RENAME(doVertLowPass)(uint8_t *src, int stride, PPContext *c)
  */
 static inline void RENAME(vertX1Filter)(uint8_t *src, int stride, PPContext *co)
 {
-#if HAVE_MMX2 || HAVE_AMD3DNOW
+#if TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     src+= stride*3;
 
     __asm__ volatile(
@@ -445,7 +492,7 @@ static inline void RENAME(vertX1Filter)(uint8_t *src, int stride, PPContext *co)
         : "r" (src), "r" ((x86_reg)stride), "m" (co->pQPb)
         : "%"REG_a, "%"REG_c
     );
-#else //HAVE_MMX2 || HAVE_AMD3DNOW
+#else //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 
     const int l1= stride;
     const int l2= stride + l1;
@@ -479,13 +526,13 @@ static inline void RENAME(vertX1Filter)(uint8_t *src, int stride, PPContext *co)
         }
         src++;
     }
-#endif //HAVE_MMX2 || HAVE_AMD3DNOW
+#endif //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 }
 
-#if !HAVE_ALTIVEC
+#if !TEMPLATE_PP_ALTIVEC
 static inline void RENAME(doVertDefFilter)(uint8_t src[], int stride, PPContext *c)
 {
-#if HAVE_MMX2 || HAVE_AMD3DNOW
+#if TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 /*
     uint8_t tmp[16];
     const int l1= stride;
@@ -766,12 +813,11 @@ static inline void RENAME(doVertDefFilter)(uint8_t src[], int stride, PPContext 
     }
 }
 */
-#elif HAVE_MMX
+#elif TEMPLATE_PP_MMX
+    DECLARE_ALIGNED(8, uint64_t, tmp)[4]; // make space for 4 8-byte vars
     src+= stride*4;
     __asm__ volatile(
         "pxor %%mm7, %%mm7                      \n\t"
-        "lea -40(%%"REG_SP"), %%"REG_c"         \n\t" // make space for 4 8-byte vars
-        "and "ALIGN_MASK", %%"REG_c"            \n\t" // align
 //      0       1       2       3       4       5       6       7
 //      %0      %0+%1   %0+2%1  eax+2%1 %0+4%1  eax+4%1 edx+%1  edx+2%1
 //      %0      eax     eax+%1  eax+2%1 %0+4%1  edx     edx+%1  edx+2%1
@@ -813,8 +859,8 @@ static inline void RENAME(doVertDefFilter)(uint8_t src[], int stride, PPContext 
         "psubw %%mm3, %%mm1                     \n\t" // 2H0 - 5H1 + 5H2 - H3
         "psubw %%mm2, %%mm0                     \n\t" // 2L0 - 5L1 + 5L2 - 2L3
         "psubw %%mm3, %%mm1                     \n\t" // 2H0 - 5H1 + 5H2 - 2H3
-        "movq %%mm0, (%%"REG_c")                \n\t" // 2L0 - 5L1 + 5L2 - 2L3
-        "movq %%mm1, 8(%%"REG_c")               \n\t" // 2H0 - 5H1 + 5H2 - 2H3
+        "movq %%mm0, (%3)                       \n\t" // 2L0 - 5L1 + 5L2 - 2L3
+        "movq %%mm1, 8(%3)                      \n\t" // 2H0 - 5H1 + 5H2 - 2H3
 
         "movq (%%"REG_a", %1, 2), %%mm0         \n\t"
         "movq %%mm0, %%mm1                      \n\t"
@@ -823,8 +869,8 @@ static inline void RENAME(doVertDefFilter)(uint8_t src[], int stride, PPContext 
 
         "psubw %%mm0, %%mm2                     \n\t" // L3 - L4
         "psubw %%mm1, %%mm3                     \n\t" // H3 - H4
-        "movq %%mm2, 16(%%"REG_c")              \n\t" // L3 - L4
-        "movq %%mm3, 24(%%"REG_c")              \n\t" // H3 - H4
+        "movq %%mm2, 16(%3)                     \n\t" // L3 - L4
+        "movq %%mm3, 24(%3)                     \n\t" // H3 - H4
         "paddw %%mm4, %%mm4                     \n\t" // 2L2
         "paddw %%mm5, %%mm5                     \n\t" // 2H2
         "psubw %%mm2, %%mm4                     \n\t" // 2L2 - L3 + L4
@@ -872,10 +918,10 @@ static inline void RENAME(doVertDefFilter)(uint8_t src[], int stride, PPContext 
         "psubw %%mm2, %%mm0                     \n\t" // 2L4 - 5L5 + 5L6 - 2L7
         "psubw %%mm3, %%mm1                     \n\t" // 2H4 - 5H5 + 5H6 - 2H7
 
-        "movq (%%"REG_c"), %%mm2                \n\t" // 2L0 - 5L1 + 5L2 - 2L3
-        "movq 8(%%"REG_c"), %%mm3               \n\t" // 2H0 - 5H1 + 5H2 - 2H3
+        "movq (%3), %%mm2                       \n\t" // 2L0 - 5L1 + 5L2 - 2L3
+        "movq 8(%3), %%mm3                      \n\t" // 2H0 - 5H1 + 5H2 - 2H3
 
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
         "movq %%mm7, %%mm6                      \n\t" // 0
         "psubw %%mm0, %%mm6                     \n\t"
         "pmaxsw %%mm6, %%mm0                    \n\t" // |2L4 - 5L5 + 5L6 - 2L7|
@@ -907,7 +953,7 @@ static inline void RENAME(doVertDefFilter)(uint8_t src[], int stride, PPContext 
         "psubw %%mm6, %%mm3                     \n\t" // |2H0 - 5H1 + 5H2 - 2H3|
 #endif
 
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
         "pminsw %%mm2, %%mm0                    \n\t"
         "pminsw %%mm3, %%mm1                    \n\t"
 #else
@@ -951,8 +997,8 @@ static inline void RENAME(doVertDefFilter)(uint8_t src[], int stride, PPContext 
         "psrlw $6, %%mm4                        \n\t"
         "psrlw $6, %%mm5                        \n\t"
 
-        "movq 16(%%"REG_c"), %%mm0              \n\t" // L3 - L4
-        "movq 24(%%"REG_c"), %%mm1              \n\t" // H3 - H4
+        "movq 16(%3), %%mm0                     \n\t" // L3 - L4
+        "movq 24(%3), %%mm1                     \n\t" // H3 - H4
 
         "pxor %%mm2, %%mm2                      \n\t"
         "pxor %%mm3, %%mm3                      \n\t"
@@ -971,7 +1017,7 @@ static inline void RENAME(doVertDefFilter)(uint8_t src[], int stride, PPContext 
         "pand %%mm2, %%mm4                      \n\t"
         "pand %%mm3, %%mm5                      \n\t"
 
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
         "pminsw %%mm0, %%mm4                    \n\t"
         "pminsw %%mm1, %%mm5                    \n\t"
 #else
@@ -995,10 +1041,10 @@ static inline void RENAME(doVertDefFilter)(uint8_t src[], int stride, PPContext 
         "movq %%mm0, (%0, %1)                   \n\t"
 
         : "+r" (src)
-        : "r" ((x86_reg)stride), "m" (c->pQPb)
-        : "%"REG_a, "%"REG_c
+        : "r" ((x86_reg)stride), "m" (c->pQPb), "r"(tmp)
+        : "%"REG_a
     );
-#else //HAVE_MMX2 || HAVE_AMD3DNOW
+#else //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     const int l1= stride;
     const int l2= stride + l1;
     const int l3= stride + l2;
@@ -1036,14 +1082,15 @@ static inline void RENAME(doVertDefFilter)(uint8_t src[], int stride, PPContext 
         }
         src++;
     }
-#endif //HAVE_MMX2 || HAVE_AMD3DNOW
+#endif //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 }
-#endif //HAVE_ALTIVEC
+#endif //TEMPLATE_PP_ALTIVEC
 
-#if !HAVE_ALTIVEC
+#if !TEMPLATE_PP_ALTIVEC
 static inline void RENAME(dering)(uint8_t src[], int stride, PPContext *c)
 {
-#if HAVE_MMX2 || HAVE_AMD3DNOW
+#if HAVE_7REGS && (TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW)
+    DECLARE_ALIGNED(8, uint64_t, tmp)[3];
     __asm__ volatile(
         "pxor %%mm6, %%mm6                      \n\t"
         "pcmpeqb %%mm7, %%mm7                   \n\t"
@@ -1062,7 +1109,7 @@ static inline void RENAME(dering)(uint8_t src[], int stride, PPContext *c)
 
 #undef REAL_FIND_MIN_MAX
 #undef FIND_MIN_MAX
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
 #define REAL_FIND_MIN_MAX(addr)\
         "movq " #addr ", %%mm0                  \n\t"\
         "pminub %%mm0, %%mm7                    \n\t"\
@@ -1089,7 +1136,7 @@ FIND_MIN_MAX((%0, %1, 8))
 
         "movq %%mm7, %%mm4                      \n\t"
         "psrlq $8, %%mm7                        \n\t"
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
         "pminub %%mm4, %%mm7                    \n\t" // min of pixels
         "pshufw $0xF9, %%mm7, %%mm4             \n\t"
         "pminub %%mm4, %%mm7                    \n\t" // min of pixels
@@ -1114,7 +1161,7 @@ FIND_MIN_MAX((%0, %1, 8))
 
         "movq %%mm6, %%mm4                      \n\t"
         "psrlq $8, %%mm6                        \n\t"
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
         "pmaxub %%mm4, %%mm6                    \n\t" // max of pixels
         "pshufw $0xF9, %%mm6, %%mm4             \n\t"
         "pmaxub %%mm4, %%mm6                    \n\t"
@@ -1134,16 +1181,16 @@ FIND_MIN_MAX((%0, %1, 8))
 #endif
         "movq %%mm6, %%mm0                      \n\t" // max
         "psubb %%mm7, %%mm6                     \n\t" // max - min
-        "movd %%mm6, %%ecx                      \n\t"
-        "cmpb "MANGLE(deringThreshold)", %%cl   \n\t"
+        "push %4                              \n\t"
+        "movd %%mm6, %k4                        \n\t"
+        "cmpb "MANGLE(deringThreshold)", %b4    \n\t"
+        "pop %4                               \n\t"
         " jb 1f                                 \n\t"
-        "lea -24(%%"REG_SP"), %%"REG_c"         \n\t"
-        "and "ALIGN_MASK", %%"REG_c"            \n\t"
         PAVGB(%%mm0, %%mm7)                           // a=(max + min)/2
         "punpcklbw %%mm7, %%mm7                 \n\t"
         "punpcklbw %%mm7, %%mm7                 \n\t"
         "punpcklbw %%mm7, %%mm7                 \n\t"
-        "movq %%mm7, (%%"REG_c")                \n\t"
+        "movq %%mm7, (%4)                       \n\t"
 
         "movq (%0), %%mm0                       \n\t" // L10
         "movq %%mm0, %%mm1                      \n\t" // L10
@@ -1207,8 +1254,8 @@ FIND_MIN_MAX((%0, %1, 8))
         PAVGB(t0, lx)                                 /* (src[-1] + src[+1])/2 */\
         PAVGB(sx, lx)                                 /* (src[-1] + 2src[0] + src[+1])/4 */\
         PAVGB(lx, pplx)                                     \
-        "movq " #lx ", 8(%%"REG_c")             \n\t"\
-        "movq (%%"REG_c"), " #lx "              \n\t"\
+        "movq " #lx ", 8(%4)                    \n\t"\
+        "movq (%4), " #lx "                     \n\t"\
         "psubusb " #lx ", " #t1 "               \n\t"\
         "psubusb " #lx ", " #t0 "               \n\t"\
         "psubusb " #lx ", " #sx "               \n\t"\
@@ -1235,7 +1282,7 @@ FIND_MIN_MAX((%0, %1, 8))
         "pandn " #dst ", " #ppsx "              \n\t"\
         "por " #pplx ", " #ppsx "               \n\t"\
         "movq " #ppsx ", " #dst "               \n\t"\
-        "movq 8(%%"REG_c"), " #lx "             \n\t"
+        "movq 8(%4), " #lx "                    \n\t"
 
 #define DERING_CORE(dst,src,ppsx,psx,sx,pplx,plx,lx,t0,t1) \
    REAL_DERING_CORE(dst,src,ppsx,psx,sx,pplx,plx,lx,t0,t1)
@@ -1265,10 +1312,10 @@ DERING_CORE((%%REGd, %1, 2),(%0, %1, 8)    ,%%mm0,%%mm2,%%mm4,%%mm1,%%mm3,%%mm5,
 DERING_CORE((%0, %1, 8)    ,(%%REGd, %1, 4),%%mm2,%%mm4,%%mm0,%%mm3,%%mm5,%%mm1,%%mm6,%%mm7)
 
         "1:                        \n\t"
-        : : "r" (src), "r" ((x86_reg)stride), "m" (c->pQPb), "m"(c->pQPb2)
-        : "%"REG_a, "%"REG_d, "%"REG_c
+        : : "r" (src), "r" ((x86_reg)stride), "m" (c->pQPb), "m"(c->pQPb2), "q"(tmp)
+        : "%"REG_a, "%"REG_d, "%"REG_SP
     );
-#else //HAVE_MMX2 || HAVE_AMD3DNOW
+#else // HAVE_7REGS && (TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW)
     int y;
     int min=255;
     int max=0;
@@ -1277,6 +1324,7 @@ DERING_CORE((%0, %1, 8)    ,(%%REGd, %1, 4),%%mm2,%%mm4,%%mm0,%%mm3,%%mm5,%%mm1,
     int s[10];
     const int QP2= c->QP/2 + 1;
 
+    src --;
     for(y=1; y<9; y++){
         int x;
         p= src + stride*y;
@@ -1385,19 +1433,19 @@ DERING_CORE((%0, %1, 8)    ,(%%REGd, %1, 4),%%mm2,%%mm4,%%mm0,%%mm3,%%mm5,%%mm1,
 //        src[0] = src[7]=src[stride*7]=src[stride*7 + 7]=255;
     }
 #endif
-#endif //HAVE_MMX2 || HAVE_AMD3DNOW
+#endif //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 }
-#endif //HAVE_ALTIVEC
+#endif //TEMPLATE_PP_ALTIVEC
 
 /**
- * Deinterlaces the given block by linearly interpolating every second line.
+ * Deinterlace the given block by linearly interpolating every second line.
  * will be called for every 8x8 block and can read & write from line 4-15
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
  */
 static inline void RENAME(deInterlaceInterpolateLinear)(uint8_t src[], int stride)
 {
-#if HAVE_MMX2 || HAVE_AMD3DNOW
+#if TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     src+= 4*stride;
     __asm__ volatile(
         "lea (%0, %1), %%"REG_a"                \n\t"
@@ -1442,7 +1490,7 @@ static inline void RENAME(deInterlaceInterpolateLinear)(uint8_t src[], int strid
 }
 
 /**
- * Deinterlaces the given block by cubic interpolating every second line.
+ * Deinterlace the given block by cubic interpolating every second line.
  * will be called for every 8x8 block and can read & write from line 4-15
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
@@ -1450,13 +1498,30 @@ static inline void RENAME(deInterlaceInterpolateLinear)(uint8_t src[], int strid
  */
 static inline void RENAME(deInterlaceInterpolateCubic)(uint8_t src[], int stride)
 {
-#if HAVE_MMX2 || HAVE_AMD3DNOW
+#if TEMPLATE_PP_SSE2 || TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     src+= stride*3;
     __asm__ volatile(
         "lea (%0, %1), %%"REG_a"                \n\t"
         "lea (%%"REG_a", %1, 4), %%"REG_d"      \n\t"
         "lea (%%"REG_d", %1, 4), %%"REG_c"      \n\t"
         "add %1, %%"REG_c"                      \n\t"
+#if TEMPLATE_PP_SSE2
+        "pxor %%xmm7, %%xmm7                    \n\t"
+#define REAL_DEINT_CUBIC(a,b,c,d,e)\
+        "movq " #a ", %%xmm0                    \n\t"\
+        "movq " #b ", %%xmm1                    \n\t"\
+        "movq " #d ", %%xmm2                    \n\t"\
+        "movq " #e ", %%xmm3                    \n\t"\
+        "pavgb %%xmm2, %%xmm1                   \n\t"\
+        "pavgb %%xmm3, %%xmm0                   \n\t"\
+        "punpcklbw %%xmm7, %%xmm0               \n\t"\
+        "punpcklbw %%xmm7, %%xmm1               \n\t"\
+        "psubw %%xmm1, %%xmm0                   \n\t"\
+        "psraw $3, %%xmm0                       \n\t"\
+        "psubw %%xmm0, %%xmm1                   \n\t"\
+        "packuswb %%xmm1, %%xmm1                \n\t"\
+        "movlps %%xmm1, " #c "                  \n\t"
+#else //TEMPLATE_PP_SSE2
         "pxor %%mm7, %%mm7                      \n\t"
 //      0       1       2       3       4       5       6       7       8       9       10
 //      %0      eax     eax+%1  eax+2%1 %0+4%1  edx     edx+%1  edx+2%1 %0+8%1  edx+4%1 ecx
@@ -1467,7 +1532,7 @@ static inline void RENAME(deInterlaceInterpolateCubic)(uint8_t src[], int stride
         "movq " #d ", %%mm2                     \n\t"\
         "movq " #e ", %%mm3                     \n\t"\
         PAVGB(%%mm2, %%mm1)                             /* (b+d) /2 */\
-        PAVGB(%%mm3, %%mm0)                             /* a(a+e) /2 */\
+        PAVGB(%%mm3, %%mm0)                             /* (a+e) /2 */\
         "movq %%mm0, %%mm2                      \n\t"\
         "punpcklbw %%mm7, %%mm0                 \n\t"\
         "punpckhbw %%mm7, %%mm2                 \n\t"\
@@ -1482,6 +1547,7 @@ static inline void RENAME(deInterlaceInterpolateCubic)(uint8_t src[], int stride
         "psubw %%mm2, %%mm3                     \n\t"   /* H(9b + 9d - a - e)/16 */\
         "packuswb %%mm3, %%mm1                  \n\t"\
         "movq %%mm1, " #c "                     \n\t"
+#endif //TEMPLATE_PP_SSE2
 #define DEINT_CUBIC(a,b,c,d,e)  REAL_DEINT_CUBIC(a,b,c,d,e)
 
 DEINT_CUBIC((%0)        , (%%REGa, %1), (%%REGa, %1, 2), (%0, %1, 4) , (%%REGd, %1))
@@ -1490,9 +1556,14 @@ DEINT_CUBIC((%0, %1, 4) , (%%REGd, %1), (%%REGd, %1, 2), (%0, %1, 8) , (%%REGc))
 DEINT_CUBIC((%%REGd, %1), (%0, %1, 8) , (%%REGd, %1, 4), (%%REGc)    , (%%REGc, %1, 2))
 
         : : "r" (src), "r" ((x86_reg)stride)
-        : "%"REG_a, "%"REG_d, "%"REG_c
+        :
+#if TEMPLATE_PP_SSE2
+        XMM_CLOBBERS("%xmm0", "%xmm1", "%xmm2", "%xmm3", "%xmm7",)
+#endif
+        "%"REG_a, "%"REG_d, "%"REG_c
     );
-#else //HAVE_MMX2 || HAVE_AMD3DNOW
+#undef REAL_DEINT_CUBIC
+#else //TEMPLATE_PP_SSE2 || TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     int x;
     src+= stride*3;
     for(x=0; x<8; x++){
@@ -1502,11 +1573,11 @@ DEINT_CUBIC((%%REGd, %1), (%0, %1, 8) , (%%REGd, %1, 4), (%%REGc)    , (%%REGc, 
         src[stride*9] = CLIP((-src[stride*6] + 9*src[stride*8] + 9*src[stride*10] - src[stride*12])>>4);
         src++;
     }
-#endif //HAVE_MMX2 || HAVE_AMD3DNOW
+#endif //TEMPLATE_PP_SSE2 || TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 }
 
 /**
- * Deinterlaces the given block by filtering every second line with a (-1 4 2 4 -1) filter.
+ * Deinterlace the given block by filtering every second line with a (-1 4 2 4 -1) filter.
  * will be called for every 8x8 block and can read & write from line 4-15
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
@@ -1514,7 +1585,7 @@ DEINT_CUBIC((%%REGd, %1), (%0, %1, 8) , (%%REGd, %1, 4), (%%REGc)    , (%%REGc, 
  */
 static inline void RENAME(deInterlaceFF)(uint8_t src[], int stride, uint8_t *tmp)
 {
-#if HAVE_MMX2 || HAVE_AMD3DNOW
+#if TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     src+= stride*4;
     __asm__ volatile(
         "lea (%0, %1), %%"REG_a"                \n\t"
@@ -1563,7 +1634,7 @@ DEINT_FF((%%REGd, %1), (%%REGd, %1, 2), (%0, %1, 8) , (%%REGd, %1, 4))
         : : "r" (src), "r" ((x86_reg)stride), "r"(tmp)
         : "%"REG_a, "%"REG_d
     );
-#else //HAVE_MMX2 || HAVE_AMD3DNOW
+#else //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     int x;
     src+= stride*4;
     for(x=0; x<8; x++){
@@ -1581,11 +1652,11 @@ DEINT_FF((%%REGd, %1), (%%REGd, %1, 2), (%0, %1, 8) , (%%REGd, %1, 4))
 
         src++;
     }
-#endif //HAVE_MMX2 || HAVE_AMD3DNOW
+#endif //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 }
 
 /**
- * Deinterlaces the given block by filtering every line with a (-1 2 6 2 -1) filter.
+ * Deinterlace the given block by filtering every line with a (-1 2 6 2 -1) filter.
  * will be called for every 8x8 block and can read & write from line 4-15
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
@@ -1593,7 +1664,7 @@ DEINT_FF((%%REGd, %1), (%%REGd, %1, 2), (%0, %1, 8) , (%%REGd, %1, 4))
  */
 static inline void RENAME(deInterlaceL5)(uint8_t src[], int stride, uint8_t *tmp, uint8_t *tmp2)
 {
-#if HAVE_MMX2 || HAVE_AMD3DNOW
+#if TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     src+= stride*4;
     __asm__ volatile(
         "lea (%0, %1), %%"REG_a"                \n\t"
@@ -1653,7 +1724,7 @@ DEINT_L5(%%mm1, %%mm0, (%%REGd, %1, 2), (%0, %1, 8)    , (%%REGd, %1, 4))
         : : "r" (src), "r" ((x86_reg)stride), "r"(tmp), "r"(tmp2)
         : "%"REG_a, "%"REG_d
     );
-#else //HAVE_MMX2 || HAVE_AMD3DNOW
+#else //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     int x;
     src+= stride*4;
     for(x=0; x<8; x++){
@@ -1682,11 +1753,11 @@ DEINT_L5(%%mm1, %%mm0, (%%REGd, %1, 2), (%0, %1, 8)    , (%%REGd, %1, 4))
 
         src++;
     }
-#endif //HAVE_MMX2 || HAVE_AMD3DNOW
+#endif //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 }
 
 /**
- * Deinterlaces the given block by filtering all lines with a (1 2 1) filter.
+ * Deinterlace the given block by filtering all lines with a (1 2 1) filter.
  * will be called for every 8x8 block and can read & write from line 4-15
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
@@ -1694,7 +1765,7 @@ DEINT_L5(%%mm1, %%mm0, (%%REGd, %1, 2), (%0, %1, 8)    , (%%REGd, %1, 4))
  */
 static inline void RENAME(deInterlaceBlendLinear)(uint8_t src[], int stride, uint8_t *tmp)
 {
-#if HAVE_MMX2 || HAVE_AMD3DNOW
+#if TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     src+= 4*stride;
     __asm__ volatile(
         "lea (%0, %1), %%"REG_a"                \n\t"
@@ -1741,7 +1812,7 @@ static inline void RENAME(deInterlaceBlendLinear)(uint8_t src[], int stride, uin
         : : "r" (src), "r" ((x86_reg)stride), "r" (tmp)
         : "%"REG_a, "%"REG_d
     );
-#else //HAVE_MMX2 || HAVE_AMD3DNOW
+#else //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     int a, b, c, x;
     src+= 4*stride;
 
@@ -1784,60 +1855,60 @@ static inline void RENAME(deInterlaceBlendLinear)(uint8_t src[], int stride, uin
         src += 4;
         tmp += 4;
     }
-#endif //HAVE_MMX2 || HAVE_AMD3DNOW
+#endif //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 }
 
 /**
- * Deinterlaces the given block by applying a median filter to every second line.
+ * Deinterlace the given block by applying a median filter to every second line.
  * will be called for every 8x8 block and can read & write from line 4-15,
  * lines 0-3 have been passed through the deblock / dering filters already, but can be read, too.
  * lines 4-12 will be read into the deblocking filter and should be deinterlaced
  */
 static inline void RENAME(deInterlaceMedian)(uint8_t src[], int stride)
 {
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
     src+= 4*stride;
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
     __asm__ volatile(
         "lea (%0, %1), %%"REG_a"                \n\t"
         "lea (%%"REG_a", %1, 4), %%"REG_d"      \n\t"
 //      0       1       2       3       4       5       6       7       8       9
 //      %0      eax     eax+%1  eax+2%1 %0+4%1  edx     edx+%1  edx+2%1 %0+8%1  edx+4%1
 
-        "movq (%0), %%mm0                       \n\t" //
-        "movq (%%"REG_a", %1), %%mm2            \n\t" //
-        "movq (%%"REG_a"), %%mm1                \n\t" //
+        "movq (%0), %%mm0                       \n\t"
+        "movq (%%"REG_a", %1), %%mm2            \n\t"
+        "movq (%%"REG_a"), %%mm1                \n\t"
         "movq %%mm0, %%mm3                      \n\t"
-        "pmaxub %%mm1, %%mm0                    \n\t" //
-        "pminub %%mm3, %%mm1                    \n\t" //
-        "pmaxub %%mm2, %%mm1                    \n\t" //
+        "pmaxub %%mm1, %%mm0                    \n\t"
+        "pminub %%mm3, %%mm1                    \n\t"
+        "pmaxub %%mm2, %%mm1                    \n\t"
         "pminub %%mm1, %%mm0                    \n\t"
         "movq %%mm0, (%%"REG_a")                \n\t"
 
-        "movq (%0, %1, 4), %%mm0                \n\t" //
-        "movq (%%"REG_a", %1, 2), %%mm1         \n\t" //
+        "movq (%0, %1, 4), %%mm0                \n\t"
+        "movq (%%"REG_a", %1, 2), %%mm1         \n\t"
         "movq %%mm2, %%mm3                      \n\t"
-        "pmaxub %%mm1, %%mm2                    \n\t" //
-        "pminub %%mm3, %%mm1                    \n\t" //
-        "pmaxub %%mm0, %%mm1                    \n\t" //
+        "pmaxub %%mm1, %%mm2                    \n\t"
+        "pminub %%mm3, %%mm1                    \n\t"
+        "pmaxub %%mm0, %%mm1                    \n\t"
         "pminub %%mm1, %%mm2                    \n\t"
         "movq %%mm2, (%%"REG_a", %1, 2)         \n\t"
 
-        "movq (%%"REG_d"), %%mm2                \n\t" //
-        "movq (%%"REG_d", %1), %%mm1            \n\t" //
+        "movq (%%"REG_d"), %%mm2                \n\t"
+        "movq (%%"REG_d", %1), %%mm1            \n\t"
         "movq %%mm2, %%mm3                      \n\t"
-        "pmaxub %%mm0, %%mm2                    \n\t" //
-        "pminub %%mm3, %%mm0                    \n\t" //
-        "pmaxub %%mm1, %%mm0                    \n\t" //
+        "pmaxub %%mm0, %%mm2                    \n\t"
+        "pminub %%mm3, %%mm0                    \n\t"
+        "pmaxub %%mm1, %%mm0                    \n\t"
         "pminub %%mm0, %%mm2                    \n\t"
         "movq %%mm2, (%%"REG_d")                \n\t"
 
-        "movq (%%"REG_d", %1, 2), %%mm2         \n\t" //
-        "movq (%0, %1, 8), %%mm0                \n\t" //
+        "movq (%%"REG_d", %1, 2), %%mm2         \n\t"
+        "movq (%0, %1, 8), %%mm0                \n\t"
         "movq %%mm2, %%mm3                      \n\t"
-        "pmaxub %%mm0, %%mm2                    \n\t" //
-        "pminub %%mm3, %%mm0                    \n\t" //
-        "pmaxub %%mm1, %%mm0                    \n\t" //
+        "pmaxub %%mm0, %%mm2                    \n\t"
+        "pminub %%mm3, %%mm0                    \n\t"
+        "pmaxub %%mm1, %%mm0                    \n\t"
         "pminub %%mm0, %%mm2                    \n\t"
         "movq %%mm2, (%%"REG_d", %1, 2)         \n\t"
 
@@ -1887,8 +1958,8 @@ MEDIAN((%%REGd, %1), (%%REGd, %1, 2), (%0, %1, 8))
         : : "r" (src), "r" ((x86_reg)stride)
         : "%"REG_a, "%"REG_d
     );
-#endif //HAVE_MMX2
-#else //HAVE_MMX
+#endif //TEMPLATE_PP_MMXEXT
+#else //TEMPLATE_PP_MMX
     int x, y;
     src+= 4*stride;
     // FIXME - there should be a way to do a few columns in parallel like w/mmx
@@ -1907,12 +1978,12 @@ MEDIAN((%%REGd, %1), (%%REGd, %1, 2), (%0, %1, 8))
         }
         src++;
     }
-#endif //HAVE_MMX
+#endif //TEMPLATE_PP_MMX
 }
 
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
 /**
- * transposes and shift the given 8x8 Block into dst1 and dst2
+ * Transpose and shift the given 8x8 Block into dst1 and dst2.
  */
 static inline void RENAME(transpose1)(uint8_t *dst1, uint8_t *dst2, uint8_t *src, int srcStride)
 {
@@ -1997,7 +2068,7 @@ static inline void RENAME(transpose1)(uint8_t *dst1, uint8_t *dst2, uint8_t *src
 }
 
 /**
- * transposes the given 8x8 block
+ * Transpose the given 8x8 block.
  */
 static inline void RENAME(transpose2)(uint8_t *dst, int dstStride, uint8_t *src)
 {
@@ -2075,10 +2146,10 @@ static inline void RENAME(transpose2)(uint8_t *dst, int dstStride, uint8_t *src)
         : "%"REG_a, "%"REG_d
     );
 }
-#endif //HAVE_MMX
+#endif //TEMPLATE_PP_MMX
 //static long test=0;
 
-#if !HAVE_ALTIVEC
+#if !TEMPLATE_PP_ALTIVEC
 static inline void RENAME(tempNoiseReducer)(uint8_t *src, int stride,
                                     uint8_t *tempBlurred, uint32_t *tempBlurredPast, int *maxNoise)
 {
@@ -2089,7 +2160,7 @@ static inline void RENAME(tempNoiseReducer)(uint8_t *src, int stride,
 
 #define FAST_L2_DIFF
 //#define L1_DIFF //u should change the thresholds too if u try that one
-#if HAVE_MMX2 || HAVE_AMD3DNOW
+#if TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
     __asm__ volatile(
         "lea (%2, %2, 2), %%"REG_a"             \n\t" // 3*stride
         "lea (%2, %2, 4), %%"REG_d"             \n\t" // 5*stride
@@ -2377,7 +2448,7 @@ L2_DIFF_CORE((%0, %%REGc)  , (%1, %%REGc))
         :: "r" (src), "r" (tempBlurred), "r"((x86_reg)stride), "m" (tempBlurredPast)
         : "%"REG_a, "%"REG_d, "%"REG_c, "memory"
     );
-#else //HAVE_MMX2 || HAVE_AMD3DNOW
+#else //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 {
     int y;
     int d=0;
@@ -2460,11 +2531,11 @@ Switch between
         }
     }
 }
-#endif //HAVE_MMX2 || HAVE_AMD3DNOW
+#endif //TEMPLATE_PP_MMXEXT || TEMPLATE_PP_3DNOW
 }
-#endif //HAVE_ALTIVEC
+#endif //TEMPLATE_PP_ALTIVEC
 
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
 /**
  * accurate deblock filter
  */
@@ -2472,7 +2543,7 @@ static av_always_inline void RENAME(do_a_deblock)(uint8_t *src, int step, int st
     int64_t dc_mask, eq_mask, both_masks;
     int64_t sums[10*8*2];
     src+= step*3; // src points to begin of the 8x8 Block
-//START_TIMER
+    //{ START_TIMER
     __asm__ volatile(
         "movq %0, %%mm7                         \n\t"
         "movq %1, %%mm6                         \n\t"
@@ -2488,7 +2559,7 @@ static av_always_inline void RENAME(do_a_deblock)(uint8_t *src, int step, int st
         "movq (%%"REG_a"), %%mm1                \n\t"
         "movq %%mm1, %%mm3                      \n\t"
         "movq %%mm1, %%mm4                      \n\t"
-        "psubb %%mm1, %%mm0                     \n\t" // mm0 = differnece
+        "psubb %%mm1, %%mm0                     \n\t" // mm0 = difference
         "paddb %%mm7, %%mm0                     \n\t"
         "pcmpgtb %%mm6, %%mm0                   \n\t"
 
@@ -2762,10 +2833,9 @@ static av_always_inline void RENAME(do_a_deblock)(uint8_t *src, int step, int st
 
     if(eq_mask != -1LL){
         uint8_t *temp_src= src;
+        DECLARE_ALIGNED(8, uint64_t, tmp)[4]; // make space for 4 8-byte vars
         __asm__ volatile(
             "pxor %%mm7, %%mm7                      \n\t"
-            "lea -40(%%"REG_SP"), %%"REG_c"         \n\t" // make space for 4 8-byte vars
-            "and "ALIGN_MASK", %%"REG_c"            \n\t" // align
 //      0       1       2       3       4       5       6       7       8       9
 //      %0      eax     eax+%1  eax+2%1 %0+4%1  ecx     ecx+%1  ecx+2%1 %1+8%1  ecx+4%1
 
@@ -2806,8 +2876,8 @@ static av_always_inline void RENAME(do_a_deblock)(uint8_t *src, int step, int st
             "psubw %%mm3, %%mm1                     \n\t" // 2H0 - 5H1 + 5H2 - H3
             "psubw %%mm2, %%mm0                     \n\t" // 2L0 - 5L1 + 5L2 - 2L3
             "psubw %%mm3, %%mm1                     \n\t" // 2H0 - 5H1 + 5H2 - 2H3
-            "movq %%mm0, (%%"REG_c")                \n\t" // 2L0 - 5L1 + 5L2 - 2L3
-            "movq %%mm1, 8(%%"REG_c")               \n\t" // 2H0 - 5H1 + 5H2 - 2H3
+            "movq %%mm0, (%4)                       \n\t" // 2L0 - 5L1 + 5L2 - 2L3
+            "movq %%mm1, 8(%4)                      \n\t" // 2H0 - 5H1 + 5H2 - 2H3
 
             "movq (%%"REG_a", %1, 2), %%mm0         \n\t"
             "movq %%mm0, %%mm1                      \n\t"
@@ -2816,8 +2886,8 @@ static av_always_inline void RENAME(do_a_deblock)(uint8_t *src, int step, int st
 
             "psubw %%mm0, %%mm2                     \n\t" // L3 - L4
             "psubw %%mm1, %%mm3                     \n\t" // H3 - H4
-            "movq %%mm2, 16(%%"REG_c")              \n\t" // L3 - L4
-            "movq %%mm3, 24(%%"REG_c")              \n\t" // H3 - H4
+            "movq %%mm2, 16(%4)                     \n\t" // L3 - L4
+            "movq %%mm3, 24(%4)                     \n\t" // H3 - H4
             "paddw %%mm4, %%mm4                     \n\t" // 2L2
             "paddw %%mm5, %%mm5                     \n\t" // 2H2
             "psubw %%mm2, %%mm4                     \n\t" // 2L2 - L3 + L4
@@ -2865,10 +2935,10 @@ static av_always_inline void RENAME(do_a_deblock)(uint8_t *src, int step, int st
             "psubw %%mm2, %%mm0                     \n\t" // 2L4 - 5L5 + 5L6 - 2L7
             "psubw %%mm3, %%mm1                     \n\t" // 2H4 - 5H5 + 5H6 - 2H7
 
-            "movq (%%"REG_c"), %%mm2                \n\t" // 2L0 - 5L1 + 5L2 - 2L3
-            "movq 8(%%"REG_c"), %%mm3               \n\t" // 2H0 - 5H1 + 5H2 - 2H3
+            "movq (%4), %%mm2                       \n\t" // 2L0 - 5L1 + 5L2 - 2L3
+            "movq 8(%4), %%mm3                      \n\t" // 2H0 - 5H1 + 5H2 - 2H3
 
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
             "movq %%mm7, %%mm6                      \n\t" // 0
             "psubw %%mm0, %%mm6                     \n\t"
             "pmaxsw %%mm6, %%mm0                    \n\t" // |2L4 - 5L5 + 5L6 - 2L7|
@@ -2900,7 +2970,7 @@ static av_always_inline void RENAME(do_a_deblock)(uint8_t *src, int step, int st
             "psubw %%mm6, %%mm3                     \n\t" // |2H0 - 5H1 + 5H2 - 2H3|
 #endif
 
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
             "pminsw %%mm2, %%mm0                    \n\t"
             "pminsw %%mm3, %%mm1                    \n\t"
 #else
@@ -2944,8 +3014,8 @@ static av_always_inline void RENAME(do_a_deblock)(uint8_t *src, int step, int st
             "psrlw $6, %%mm4                        \n\t"
             "psrlw $6, %%mm5                        \n\t"
 
-            "movq 16(%%"REG_c"), %%mm0              \n\t" // L3 - L4
-            "movq 24(%%"REG_c"), %%mm1              \n\t" // H3 - H4
+            "movq 16(%4), %%mm0                     \n\t" // L3 - L4
+            "movq 24(%4), %%mm1                     \n\t" // H3 - H4
 
             "pxor %%mm2, %%mm2                      \n\t"
             "pxor %%mm3, %%mm3                      \n\t"
@@ -2964,7 +3034,7 @@ static av_always_inline void RENAME(do_a_deblock)(uint8_t *src, int step, int st
             "pand %%mm2, %%mm4                      \n\t"
             "pand %%mm3, %%mm5                      \n\t"
 
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
             "pminsw %%mm0, %%mm4                    \n\t"
             "pminsw %%mm1, %%mm5                    \n\t"
 #else
@@ -2990,24 +3060,25 @@ static av_always_inline void RENAME(do_a_deblock)(uint8_t *src, int step, int st
             "movq %%mm0, (%0, %1)                   \n\t"
 
             : "+r" (temp_src)
-            : "r" ((x86_reg)step), "m" (c->pQPb), "m"(eq_mask)
-            : "%"REG_a, "%"REG_c
+            : "r" ((x86_reg)step), "m" (c->pQPb), "m"(eq_mask), "r"(tmp)
+            : "%"REG_a
         );
     }
 /*if(step==16){
     STOP_TIMER("step16")
 }else{
     STOP_TIMER("stepX")
-}*/
 }
-#endif //HAVE_MMX
+    } */
+}
+#endif //TEMPLATE_PP_MMX
 
 static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[], int dstStride, int width, int height,
                                 const QP_STORE_T QPs[], int QPStride, int isColor, PPContext *c);
 
 /**
- * Copies a block from src to dst and fixes the blacklevel.
- * levelFix == 0 -> do not touch the brighness & contrast
+ * Copy a block from src to dst and fixes the blacklevel.
+ * levelFix == 0 -> do not touch the brightness & contrast
  */
 #undef REAL_SCALED_CPY
 #undef SCALED_CPY
@@ -3015,18 +3086,18 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
 static inline void RENAME(blockCopy)(uint8_t dst[], int dstStride, const uint8_t src[], int srcStride,
                                      int levelFix, int64_t *packedOffsetAndScale)
 {
-#if !HAVE_MMX
+#if !TEMPLATE_PP_MMX
     int i;
 #endif
     if(levelFix){
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
     __asm__ volatile(
         "movq (%%"REG_a"), %%mm2        \n\t" // packedYOffset
         "movq 8(%%"REG_a"), %%mm3       \n\t" // packedYScale
         "lea (%2,%4), %%"REG_a"         \n\t"
         "lea (%3,%5), %%"REG_d"         \n\t"
         "pxor %%mm4, %%mm4              \n\t"
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
 #define REAL_SCALED_CPY(src1, src2, dst1, dst2)                                                \
         "movq " #src1 ", %%mm0          \n\t"\
         "movq " #src1 ", %%mm5          \n\t"\
@@ -3049,7 +3120,7 @@ static inline void RENAME(blockCopy)(uint8_t dst[], int dstStride, const uint8_t
         "movq %%mm0, " #dst1 "          \n\t"\
         "movq %%mm1, " #dst2 "          \n\t"\
 
-#else //HAVE_MMX2
+#else //TEMPLATE_PP_MMXEXT
 #define REAL_SCALED_CPY(src1, src2, dst1, dst2)                                        \
         "movq " #src1 ", %%mm0          \n\t"\
         "movq " #src1 ", %%mm5          \n\t"\
@@ -3076,7 +3147,7 @@ static inline void RENAME(blockCopy)(uint8_t dst[], int dstStride, const uint8_t
         "movq %%mm0, " #dst1 "          \n\t"\
         "movq %%mm1, " #dst2 "          \n\t"\
 
-#endif //HAVE_MMX2
+#endif //TEMPLATE_PP_MMXEXT
 #define SCALED_CPY(src1, src2, dst1, dst2)\
    REAL_SCALED_CPY(src1, src2, dst1, dst2)
 
@@ -3096,13 +3167,13 @@ SCALED_CPY((%%REGa, %4), (%%REGa, %4, 2), (%%REGd, %5), (%%REGd, %5, 2))
         "r" ((x86_reg)dstStride)
         : "%"REG_d
     );
-#else //HAVE_MMX
+#else //TEMPLATE_PP_MMX
     for(i=0; i<8; i++)
         memcpy( &(dst[dstStride*i]),
                 &(src[srcStride*i]), BLOCK_SIZE);
-#endif //HAVE_MMX
+#endif //TEMPLATE_PP_MMX
     }else{
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
     __asm__ volatile(
         "lea (%0,%2), %%"REG_a"                 \n\t"
         "lea (%1,%3), %%"REG_d"                 \n\t"
@@ -3129,33 +3200,35 @@ SIMPLE_CPY((%%REGa, %2), (%%REGa, %2, 2), (%%REGd, %3), (%%REGd, %3, 2))
         "r" ((x86_reg)dstStride)
         : "%"REG_a, "%"REG_d
     );
-#else //HAVE_MMX
+#else //TEMPLATE_PP_MMX
     for(i=0; i<8; i++)
         memcpy( &(dst[dstStride*i]),
                 &(src[srcStride*i]), BLOCK_SIZE);
-#endif //HAVE_MMX
+#endif //TEMPLATE_PP_MMX
     }
 }
 
 /**
- * Duplicates the given 8 src pixels ? times upward
+ * Duplicate the given 8 src pixels ? times upward
  */
 static inline void RENAME(duplicate)(uint8_t src[], int stride)
 {
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
     __asm__ volatile(
         "movq (%0), %%mm0               \n\t"
+        "movq %%mm0, (%0, %1, 4)        \n\t"
         "add %1, %0                     \n\t"
         "movq %%mm0, (%0)               \n\t"
         "movq %%mm0, (%0, %1)           \n\t"
         "movq %%mm0, (%0, %1, 2)        \n\t"
+        "movq %%mm0, (%0, %1, 4)        \n\t"
         : "+r" (src)
         : "r" ((x86_reg)-stride)
     );
 #else
     int i;
     uint8_t *p=src;
-    for(i=0; i<3; i++){
+    for(i=0; i<5; i++){
         p-= stride;
         memcpy(p, src, 8);
     }
@@ -3163,15 +3236,15 @@ static inline void RENAME(duplicate)(uint8_t src[], int stride)
 }
 
 /**
- * Filters array of bytes (Y or U or V values)
+ * Filter array of bytes (Y or U or V values)
  */
 static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[], int dstStride, int width, int height,
                                 const QP_STORE_T QPs[], int QPStride, int isColor, PPContext *c2)
 {
     DECLARE_ALIGNED(8, PPContext, c)= *c2; //copy to stack for faster access
     int x,y;
-#ifdef COMPILE_TIME_MODE
-    const int mode= COMPILE_TIME_MODE;
+#ifdef TEMPLATE_PP_TIME_MODE
+    const int mode= TEMPLATE_PP_TIME_MODE;
 #else
     const int mode= isColor ? c.ppMode.chromMode : c.ppMode.lumMode;
 #endif
@@ -3179,7 +3252,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
     int QPCorrecture= 256*256;
 
     int copyAhead;
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
     int i;
 #endif
 
@@ -3189,10 +3262,10 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
     //FIXME remove
     uint64_t * const yHistogram= c.yHistogram;
     uint8_t * const tempSrc= srcStride > 0 ? c.tempSrc : c.tempSrc - 23*srcStride;
-    uint8_t * const tempDst= dstStride > 0 ? c.tempDst : c.tempDst - 23*dstStride;
+    uint8_t * const tempDst= (dstStride > 0 ? c.tempDst : c.tempDst - 23*dstStride) + 32;
     //const int mbWidth= isColor ? (width+7)>>3 : (width+15)>>4;
 
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
     for(i=0; i<57; i++){
         int offset= ((i*c.ppMode.baseDcDiff)>>8) + 1;
         int threshold= offset*2 + 1;
@@ -3227,7 +3300,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
 
         c.frameNum++;
         // first frame is fscked so we ignore it
-        if(c.frameNum == 1) yHistogram[0]= width*height/64*15/256;
+        if(c.frameNum == 1) yHistogram[0]= width*(uint64_t)height/64*15/256;
 
         for(i=0; i<256; i++){
             sum+= yHistogram[i];
@@ -3250,7 +3323,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
 
         scale= (double)(c.ppMode.maxAllowedY - c.ppMode.minAllowedY) / (double)(white-black);
 
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
         c.packedYScale= (uint16_t)(scale*256.0 + 0.5);
         c.packedYOffset= (((black*c.packedYScale)>>8) - c.ppMode.minAllowedY) & 0xFFFF;
 #else
@@ -3280,10 +3353,10 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
 
         // From this point on it is guaranteed that we can read and write 16 lines downward
         // finish 1 block before the next otherwise we might have a problem
-        // with the L1 Cache of the P4 ... or only a few blocks at a time or soemthing
+        // with the L1 Cache of the P4 ... or only a few blocks at a time or something
         for(x=0; x<width; x+=BLOCK_SIZE){
 
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
 /*
             prefetchnta(srcBlock + (((x>>2)&6) + 5)*srcStride + 32);
             prefetchnta(srcBlock + (((x>>2)&6) + 6)*srcStride + 32);
@@ -3310,7 +3383,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
                 : "%"REG_a, "%"REG_d
             );
 
-#elif HAVE_AMD3DNOW
+#elif TEMPLATE_PP_3DNOW
 //FIXME check if this is faster on an 3dnow chip or if it is faster without the prefetch or ...
 /*          prefetch(srcBlock + (((x>>3)&3) + 5)*srcStride + 32);
             prefetch(srcBlock + (((x>>3)&3) + 9)*srcStride + 32);
@@ -3356,7 +3429,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
         //1% speedup if these are here instead of the inner loop
         const uint8_t *srcBlock= &(src[y*srcStride]);
         uint8_t *dstBlock= &(dst[y*dstStride]);
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
         uint8_t *tempBlock1= c.tempBlocks;
         uint8_t *tempBlock2= c.tempBlocks + 8;
 #endif
@@ -3372,14 +3445,14 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
             linecpy(tempSrc + srcStride*copyAhead, srcBlock + srcStride*copyAhead,
                     FFMAX(height-y-copyAhead, 0), srcStride);
 
-            /* duplicate last line of src to fill the void upto line (copyAhead+7) */
+            /* duplicate last line of src to fill the void up to line (copyAhead+7) */
             for(i=FFMAX(height-y, 8); i<copyAhead+8; i++)
                     memcpy(tempSrc + srcStride*i, src + srcStride*(height-1), FFABS(srcStride));
 
             /* copy up to (copyAhead+1) lines of dst (line -1 to (copyAhead-1))*/
             linecpy(tempDst, dstBlock - dstStride, FFMIN(height-y+1, copyAhead+1), dstStride);
 
-            /* duplicate last line of dst to fill the void upto line (copyAhead) */
+            /* duplicate last line of dst to fill the void up to line (copyAhead) */
             for(i=height-y+1; i<=copyAhead; i++)
                     memcpy(tempDst + dstStride*i, dst + dstStride*(height-1), FFABS(dstStride));
 
@@ -3389,10 +3462,10 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
 
         // From this point on it is guaranteed that we can read and write 16 lines downward
         // finish 1 block before the next otherwise we might have a problem
-        // with the L1 Cache of the P4 ... or only a few blocks at a time or soemthing
+        // with the L1 Cache of the P4 ... or only a few blocks at a time or something
         for(x=0; x<width; x+=BLOCK_SIZE){
             const int stride= dstStride;
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
             uint8_t *tmpXchg;
 #endif
             if(isColor){
@@ -3406,7 +3479,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
                 yHistogram[ srcBlock[srcStride*12 + 4] ]++;
             }
             c.QP= QP;
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
             __asm__ volatile(
                 "movd %1, %%mm7         \n\t"
                 "packuswb %%mm7, %%mm7  \n\t" // 0, 0, 0, QP, 0, 0, 0, QP
@@ -3419,7 +3492,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
 #endif
 
 
-#if HAVE_MMX2
+#if TEMPLATE_PP_MMXEXT
 /*
             prefetchnta(srcBlock + (((x>>2)&6) + 5)*srcStride + 32);
             prefetchnta(srcBlock + (((x>>2)&6) + 6)*srcStride + 32);
@@ -3446,7 +3519,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
                 : "%"REG_a, "%"REG_d
             );
 
-#elif HAVE_AMD3DNOW
+#elif TEMPLATE_PP_3DNOW
 //FIXME check if this is faster on an 3dnow chip or if it is faster without the prefetch or ...
 /*          prefetch(srcBlock + (((x>>3)&3) + 5)*srcStride + 32);
             prefetch(srcBlock + (((x>>3)&3) + 9)*srcStride + 32);
@@ -3490,12 +3563,12 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
                 }
             }
 
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
             RENAME(transpose1)(tempBlock1, tempBlock2, dstBlock, dstStride);
 #endif
             /* check if we have a previous block to deblock it with dstBlock */
             if(x - 8 >= 0){
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
                 if(mode & H_X1_FILTER)
                         RENAME(vertX1Filter)(tempBlock1, 16, &c);
                 else if(mode & H_DEBLOCK){
@@ -3516,11 +3589,12 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
                 if(mode & H_X1_FILTER)
                     horizX1Filter(dstBlock-4, stride, QP);
                 else if(mode & H_DEBLOCK){
-#if HAVE_ALTIVEC
+#if TEMPLATE_PP_ALTIVEC
                     DECLARE_ALIGNED(16, unsigned char, tempBlock)[272];
+                    int t;
                     transpose_16x8_char_toPackedAlign_altivec(tempBlock, dstBlock - (4 + 1), stride);
 
-                    const int t=vertClassify_altivec(tempBlock-48, 16, &c);
+                    t = vertClassify_altivec(tempBlock-48, 16, &c);
                     if(t==1) {
                         doVertLowPass_altivec(tempBlock-48, 16, &c);
                         transpose_8x16_char_fromPackedAlign_altivec(dstBlock - (4 + 1), tempBlock, stride);
@@ -3540,7 +3614,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
                 }else if(mode & H_A_DEBLOCK){
                     RENAME(do_a_deblock)(dstBlock-8, 1, stride, &c);
                 }
-#endif //HAVE_MMX
+#endif //TEMPLATE_PP_MMX
                 if(mode & DERING){
                 //FIXME filter first line
                     if(y>0) RENAME(dering)(dstBlock - stride - 8, stride, &c);
@@ -3550,7 +3624,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
                 {
                     RENAME(tempNoiseReducer)(dstBlock-8, stride,
                             c.tempBlurred[isColor] + y*dstStride + x,
-                            c.tempBlurredPast[isColor] + (y>>3)*256 + (x>>3),
+                            c.tempBlurredPast[isColor] + (y>>3)*256 + (x>>3) + 256,
                             c.ppMode.maxTmpNoise);
                 }
             }
@@ -3558,7 +3632,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
             dstBlock+=8;
             srcBlock+=8;
 
-#if HAVE_MMX
+#if TEMPLATE_PP_MMX
             tmpXchg= tempBlock1;
             tempBlock1= tempBlock2;
             tempBlock2 = tmpXchg;
@@ -3572,7 +3646,7 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
         if((mode & TEMP_NOISE_FILTER)){
             RENAME(tempNoiseReducer)(dstBlock-8, dstStride,
                     c.tempBlurred[isColor] + y*dstStride + x,
-                    c.tempBlurredPast[isColor] + (y>>3)*256 + (x>>3),
+                    c.tempBlurredPast[isColor] + (y>>3)*256 + (x>>3) + 256,
                     c.ppMode.maxTmpNoise);
         }
 
@@ -3591,16 +3665,16 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
 /*
         for(x=0; x<width; x+=32){
             volatile int i;
-            i+= + dstBlock[x + 7*dstStride] + dstBlock[x + 8*dstStride]
+            i+=   dstBlock[x + 7*dstStride] + dstBlock[x + 8*dstStride]
                 + dstBlock[x + 9*dstStride] + dstBlock[x +10*dstStride]
                 + dstBlock[x +11*dstStride] + dstBlock[x +12*dstStride];
                 + dstBlock[x +13*dstStride]
                 + dstBlock[x +14*dstStride] + dstBlock[x +15*dstStride];
         }*/
     }
-#if   HAVE_AMD3DNOW
+#if   TEMPLATE_PP_3DNOW
     __asm__ volatile("femms");
-#elif HAVE_MMX
+#elif TEMPLATE_PP_MMX
     __asm__ volatile("emms");
 #endif
 
@@ -3630,3 +3704,11 @@ static void RENAME(postProcess)(const uint8_t src[], int srcStride, uint8_t dst[
     *c2= c; //copy local context back
 
 }
+
+#undef RENAME
+#undef TEMPLATE_PP_C
+#undef TEMPLATE_PP_ALTIVEC
+#undef TEMPLATE_PP_MMX
+#undef TEMPLATE_PP_MMXEXT
+#undef TEMPLATE_PP_3DNOW
+#undef TEMPLATE_PP_SSE2

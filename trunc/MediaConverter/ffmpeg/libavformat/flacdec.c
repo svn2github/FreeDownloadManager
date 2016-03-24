@@ -21,62 +21,54 @@
 
 #include "libavcodec/flac.h"
 #include "avformat.h"
-#include "raw.h"
-#include "id3v2.h"
+#include "flac_picture.h"
+#include "internal.h"
+#include "rawdec.h"
 #include "oggdec.h"
 #include "vorbiscomment.h"
+#include "libavcodec/bytestream.h"
 
-static int flac_read_header(AVFormatContext *s,
-                             AVFormatParameters *ap)
+static int flac_read_header(AVFormatContext *s)
 {
-    uint8_t buf[ID3v2_HEADER_SIZE];
     int ret, metadata_last=0, metadata_type, metadata_size, found_streaminfo=0;
     uint8_t header[4];
     uint8_t *buffer=NULL;
-    AVStream *st = av_new_stream(s, 0);
+    AVStream *st = avformat_new_stream(s, NULL);
     if (!st)
         return AVERROR(ENOMEM);
     st->codec->codec_type = AVMEDIA_TYPE_AUDIO;
-    st->codec->codec_id = CODEC_ID_FLAC;
-    st->need_parsing = AVSTREAM_PARSE_FULL;
+    st->codec->codec_id = AV_CODEC_ID_FLAC;
+    st->need_parsing = AVSTREAM_PARSE_FULL_RAW;
     /* the parameters will be extracted from the compressed bitstream */
 
-    /* skip ID3v2 header if found */
-    ret = get_buffer(s->pb, buf, ID3v2_HEADER_SIZE);
-    if (ret == ID3v2_HEADER_SIZE && ff_id3v2_match(buf)) {
-        int len = ff_id3v2_tag_len(buf);
-        url_fseek(s->pb, len - ID3v2_HEADER_SIZE, SEEK_CUR);
-    } else {
-        url_fseek(s->pb, 0, SEEK_SET);
-    }
-
     /* if fLaC marker is not found, assume there is no header */
-    if (get_le32(s->pb) != MKTAG('f','L','a','C')) {
-        url_fseek(s->pb, -4, SEEK_CUR);
+    if (avio_rl32(s->pb) != MKTAG('f','L','a','C')) {
+        avio_seek(s->pb, -4, SEEK_CUR);
         return 0;
     }
 
     /* process metadata blocks */
     while (!url_feof(s->pb) && !metadata_last) {
-        get_buffer(s->pb, header, 4);
-        ff_flac_parse_block_header(header, &metadata_last, &metadata_type,
+        avio_read(s->pb, header, 4);
+        avpriv_flac_parse_block_header(header, &metadata_last, &metadata_type,
                                    &metadata_size);
         switch (metadata_type) {
         /* allocate and read metadata block for supported types */
         case FLAC_METADATA_TYPE_STREAMINFO:
+        case FLAC_METADATA_TYPE_CUESHEET:
+        case FLAC_METADATA_TYPE_PICTURE:
         case FLAC_METADATA_TYPE_VORBIS_COMMENT:
             buffer = av_mallocz(metadata_size + FF_INPUT_BUFFER_PADDING_SIZE);
             if (!buffer) {
                 return AVERROR(ENOMEM);
             }
-            if (get_buffer(s->pb, buffer, metadata_size) != metadata_size) {
-                av_freep(&buffer);
-                return AVERROR(EIO);
+            if (avio_read(s->pb, buffer, metadata_size) != metadata_size) {
+                RETURN_ERROR(AVERROR(EIO));
             }
             break;
         /* skip metadata block for unsupported types */
         default:
-            ret = url_fseek(s->pb, metadata_size, SEEK_CUR);
+            ret = avio_skip(s->pb, metadata_size);
             if (ret < 0)
                 return ret;
         }
@@ -85,12 +77,10 @@ static int flac_read_header(AVFormatContext *s,
             FLACStreaminfo si;
             /* STREAMINFO can only occur once */
             if (found_streaminfo) {
-                av_freep(&buffer);
-                return AVERROR_INVALIDDATA;
+                RETURN_ERROR(AVERROR_INVALIDDATA);
             }
             if (metadata_size != FLAC_STREAMINFO_SIZE) {
-                av_freep(&buffer);
-                return AVERROR_INVALIDDATA;
+                RETURN_ERROR(AVERROR_INVALIDDATA);
             }
             found_streaminfo = 1;
             st->codec->extradata      = buffer;
@@ -98,19 +88,50 @@ static int flac_read_header(AVFormatContext *s,
             buffer = NULL;
 
             /* get codec params from STREAMINFO header */
-            ff_flac_parse_streaminfo(st->codec, &si, st->codec->extradata);
+            avpriv_flac_parse_streaminfo(st->codec, &si, st->codec->extradata);
 
             /* set time base and duration */
             if (si.samplerate > 0) {
-                av_set_pts_info(st, 64, 1, si.samplerate);
+                avpriv_set_pts_info(st, 64, 1, si.samplerate);
                 if (si.samples > 0)
                     st->duration = si.samples;
+            }
+        } else if (metadata_type == FLAC_METADATA_TYPE_CUESHEET) {
+            uint8_t isrc[13];
+            uint64_t start;
+            const uint8_t *offset;
+            int i, chapters, track, ti;
+            if (metadata_size < 431)
+                RETURN_ERROR(AVERROR_INVALIDDATA);
+            offset = buffer + 395;
+            chapters = bytestream_get_byte(&offset) - 1;
+            if (chapters <= 0)
+                RETURN_ERROR(AVERROR_INVALIDDATA);
+            for (i = 0; i < chapters; i++) {
+                if (offset + 36 - buffer > metadata_size)
+                    RETURN_ERROR(AVERROR_INVALIDDATA);
+                start = bytestream_get_be64(&offset);
+                track = bytestream_get_byte(&offset);
+                bytestream_get_buffer(&offset, isrc, 12);
+                isrc[12] = 0;
+                offset += 14;
+                ti = bytestream_get_byte(&offset);
+                if (ti <= 0) RETURN_ERROR(AVERROR_INVALIDDATA);
+                offset += ti * 12;
+                avpriv_new_chapter(s, track, st->time_base, start, AV_NOPTS_VALUE, isrc);
+            }
+            av_freep(&buffer);
+        } else if (metadata_type == FLAC_METADATA_TYPE_PICTURE) {
+            ret = ff_flac_parse_picture(s, buffer, metadata_size);
+            av_freep(&buffer);
+            if (ret < 0) {
+                av_log(s, AV_LOG_ERROR, "Error parsing attached picture.\n");
+                return ret;
             }
         } else {
             /* STREAMINFO must be the first block */
             if (!found_streaminfo) {
-                av_freep(&buffer);
-                return AVERROR_INVALIDDATA;
+                RETURN_ERROR(AVERROR_INVALIDDATA);
             }
             /* process supported blocks other than STREAMINFO */
             if (metadata_type == FLAC_METADATA_TYPE_VORBIS_COMMENT) {
@@ -123,29 +144,26 @@ static int flac_read_header(AVFormatContext *s,
     }
 
     return 0;
+
+fail:
+    av_free(buffer);
+    return ret;
 }
 
 static int flac_probe(AVProbeData *p)
 {
-    uint8_t *bufptr = p->buf;
-    uint8_t *end    = p->buf + p->buf_size;
-
-    if(ff_id3v2_match(bufptr))
-        bufptr += ff_id3v2_tag_len(bufptr);
-
-    if(bufptr > end-4 || memcmp(bufptr, "fLaC", 4)) return 0;
-    else                                            return AVPROBE_SCORE_MAX/2;
+    if (p->buf_size < 4 || memcmp(p->buf, "fLaC", 4))
+        return 0;
+    return AVPROBE_SCORE_EXTENSION;
 }
 
-AVInputFormat flac_demuxer = {
-    "flac",
-    NULL_IF_CONFIG_SMALL("raw FLAC"),
-    0,
-    flac_probe,
-    flac_read_header,
-    ff_raw_read_partial_packet,
-    .flags= AVFMT_GENERIC_INDEX,
-    .extensions = "flac",
-    .value = CODEC_ID_FLAC,
-    .metadata_conv = ff_vorbiscomment_metadata_conv,
+AVInputFormat ff_flac_demuxer = {
+    .name           = "flac",
+    .long_name      = NULL_IF_CONFIG_SMALL("raw FLAC"),
+    .read_probe     = flac_probe,
+    .read_header    = flac_read_header,
+    .read_packet    = ff_raw_read_partial_packet,
+    .flags          = AVFMT_GENERIC_INDEX,
+    .extensions     = "flac",
+    .raw_codec_id   = AV_CODEC_ID_FLAC,
 };

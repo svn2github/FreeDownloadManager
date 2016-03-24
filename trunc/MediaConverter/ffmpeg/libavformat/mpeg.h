@@ -41,7 +41,7 @@
 #define AUDIO_ID 0xc0
 #define VIDEO_ID 0xe0
 #define AC3_ID   0x80
-#define DTS_ID   0x8a
+#define DTS_ID   0x88
 #define LPCM_ID  0xa0
 #define SUB_ID   0x20
 
@@ -54,6 +54,7 @@
 #define STREAM_TYPE_AUDIO_AAC       0x0f
 #define STREAM_TYPE_VIDEO_MPEG4     0x10
 #define STREAM_TYPE_VIDEO_H264      0x1b
+#define STREAM_TYPE_VIDEO_CAVS      0x42
 
 #define STREAM_TYPE_AUDIO_AC3       0x81
 #define STREAM_TYPE_AUDIO_DTS       0x8a
@@ -63,7 +64,7 @@ static const int lpcm_freq_tab[4] = { 48000, 96000, 44100, 32000 };
 /**
  * Parse MPEG-PES five-byte timestamp
  */
-static inline int64_t ff_parse_pes_pts(uint8_t *buf) {
+static inline int64_t ff_parse_pes_pts(const uint8_t *buf) {
     return (int64_t)(*buf & 0x0e) << 29 |
             (AV_RB16(buf+1) >> 1) << 15 |
              AV_RB16(buf+3) >> 1;

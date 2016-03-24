@@ -23,12 +23,26 @@
 
 #include <stdint.h>
 
+#include "attributes.h"
+#include "version.h"
+
+/**
+ * @defgroup lavu_sha SHA
+ * @ingroup lavu_crypto
+ * @{
+ */
+
 extern const int av_sha_size;
 
 struct AVSHA;
 
 /**
- * Initializes SHA-1 or SHA-2 hashing.
+ * Allocate an AVSHA context.
+ */
+struct AVSHA *av_sha_alloc(void);
+
+/**
+ * Initialize SHA-1 or SHA-2 hashing.
  *
  * @param context pointer to the function context (of size av_sha_size)
  * @param bits    number of bits in digest (SHA-1 - 160 bits, SHA-2 224 or 256 bits)
@@ -37,7 +51,7 @@ struct AVSHA;
 int av_sha_init(struct AVSHA* context, int bits);
 
 /**
- * Updates hash value.
+ * Update hash value.
  *
  * @param context hash function context
  * @param data    input data to update hash with
@@ -46,11 +60,15 @@ int av_sha_init(struct AVSHA* context, int bits);
 void av_sha_update(struct AVSHA* context, const uint8_t* data, unsigned int len);
 
 /**
- * Finishes hashing and output digest value.
+ * Finish hashing and output digest value.
  *
  * @param context hash function context
  * @param digest  buffer where output digest value is stored
  */
 void av_sha_final(struct AVSHA* context, uint8_t *digest);
+
+/**
+ * @}
+ */
 
 #endif /* AVUTIL_SHA_H */

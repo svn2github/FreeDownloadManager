@@ -25,10 +25,21 @@
 #include "mpegvideo.h"
 
 #define DC_VLC_BITS 9
+#define MV_VLC_BITS 9
 #define TEX_VLC_BITS 9
 
-static VLC dc_lum_vlc;
-static VLC dc_chroma_vlc;
+#define MBINCR_VLC_BITS 9
+#define MB_PAT_VLC_BITS 9
+#define MB_PTYPE_VLC_BITS 6
+#define MB_BTYPE_VLC_BITS 6
+
+extern VLC ff_dc_lum_vlc;
+extern VLC ff_dc_chroma_vlc;
+extern VLC ff_mbincr_vlc;
+extern VLC ff_mb_ptype_vlc;
+extern VLC ff_mb_btype_vlc;
+extern VLC ff_mb_pat_vlc;
+extern VLC ff_mv_vlc;
 
 extern uint8_t ff_mpeg12_static_rl_table_store[2][2][2*MAX_RUN + MAX_LEVEL + 3];
 
@@ -40,9 +51,9 @@ static inline int decode_dc(GetBitContext *gb, int component)
     int code, diff;
 
     if (component == 0) {
-        code = get_vlc2(gb, dc_lum_vlc.table, DC_VLC_BITS, 2);
+        code = get_vlc2(gb, ff_dc_lum_vlc.table, DC_VLC_BITS, 2);
     } else {
-        code = get_vlc2(gb, dc_chroma_vlc.table, DC_VLC_BITS, 2);
+        code = get_vlc2(gb, ff_dc_chroma_vlc.table, DC_VLC_BITS, 2);
     }
     if (code < 0){
         av_log(NULL, AV_LOG_ERROR, "invalid dc code at\n");
@@ -56,6 +67,8 @@ static inline int decode_dc(GetBitContext *gb, int component)
     return diff;
 }
 
-extern int ff_mpeg1_decode_block_intra(MpegEncContext *s, DCTELEM *block, int n);
+int ff_mpeg1_decode_block_intra(MpegEncContext *s, int16_t *block, int n);
+void ff_mpeg1_clean_buffers(MpegEncContext *s);
+int ff_mpeg1_find_frame_end(ParseContext *pc, const uint8_t *buf, int buf_size, AVCodecParserContext *s);
 
 #endif /* AVCODEC_MPEG12_H */

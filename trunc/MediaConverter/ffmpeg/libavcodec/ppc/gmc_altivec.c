@@ -20,20 +20,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "libavcodec/dsputil.h"
-#include "dsputil_ppc.h"
-#include "util_altivec.h"
-#include "types_altivec.h"
+#include "libavutil/mem.h"
+#include "libavutil/ppc/types_altivec.h"
+#include "libavutil/ppc/util_altivec.h"
 #include "dsputil_altivec.h"
 
 /*
   altivec-enhanced gmc1. ATM this code assume stride is a multiple of 8,
   to preserve proper dst alignment.
 */
-#define GMC1_PERF_COND (h==8)
-void gmc1_altivec(uint8_t *dst /* align 8 */, uint8_t *src /* align1 */, int stride, int h, int x16, int y16, int rounder)
+void ff_gmc1_altivec(uint8_t *dst /* align 8 */, uint8_t *src /* align1 */, int stride, int h, int x16, int y16, int rounder)
 {
-POWERPC_PERF_DECLARE(altivec_gmc1_num, GMC1_PERF_COND);
     const DECLARE_ALIGNED(16, unsigned short, rounder_a) = rounder;
     const DECLARE_ALIGNED(16, unsigned short, ABCD)[8] =
         {
@@ -51,10 +48,7 @@ POWERPC_PERF_DECLARE(altivec_gmc1_num, GMC1_PERF_COND);
     unsigned long dst_odd = (unsigned long)dst & 0x0000000F;
     unsigned long src_really_odd = (unsigned long)src & 0x0000000F;
 
-
-POWERPC_PERF_START_COUNT(altivec_gmc1_num, GMC1_PERF_COND);
-
-    tempA = vec_ld(0, (unsigned short*)ABCD);
+    tempA = vec_ld(0, (const unsigned short*)ABCD);
     Av = vec_splat(tempA, 0);
     Bv = vec_splat(tempA, 1);
     Cv = vec_splat(tempA, 2);
@@ -72,7 +66,7 @@ POWERPC_PERF_START_COUNT(altivec_gmc1_num, GMC1_PERF_COND);
     srcvA = vec_perm(src_0, src_1, vec_lvsl(0, src));
 
     if (src_really_odd != 0x0000000F) {
-        // if src & 0xF == 0xF, then (src+1) is properly aligned
+        // if (src & 0xF) == 0xF, then (src+1) is properly aligned
         // on the second vector.
         srcvB = vec_perm(src_0, src_1, vec_lvsl(1, src));
     } else {
@@ -96,7 +90,7 @@ POWERPC_PERF_START_COUNT(altivec_gmc1_num, GMC1_PERF_COND);
         srcvC = vec_perm(src_0, src_1, vec_lvsl(stride + 0, src));
 
         if (src_really_odd != 0x0000000F) {
-            // if src & 0xF == 0xF, then (src+1) is properly aligned
+            // if (src & 0xF) == 0xF, then (src+1) is properly aligned
             // on the second vector.
             srcvD = vec_perm(src_0, src_1, vec_lvsl(stride + 1, src));
         } else {
@@ -133,6 +127,4 @@ POWERPC_PERF_START_COUNT(altivec_gmc1_num, GMC1_PERF_COND);
         dst += stride;
         src += stride;
     }
-
-POWERPC_PERF_STOP_COUNT(altivec_gmc1_num, GMC1_PERF_COND);
 }

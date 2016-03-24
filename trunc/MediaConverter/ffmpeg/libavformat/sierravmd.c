@@ -27,8 +27,11 @@
  *   http://www.pcisys.net/~melanson/codecs/
  */
 
+#include "libavutil/channel_layout.h"
 #include "libavutil/intreadwrite.h"
 #include "avformat.h"
+#include "internal.h"
+#include "avio_internal.h"
 
 #define VMD_HEADER_SIZE 0x0330
 #define BYTES_PER_FRAME_RECORD 16
@@ -61,8 +64,8 @@ typedef struct VmdDemuxContext {
 
 static int vmd_probe(AVProbeData *p)
 {
-    int w, h;
-    if (p->buf_size < 16)
+    int w, h, sample_rate;
+    if (p->buf_size < 806)
         return 0;
     /* check if the first 2 bytes of the file contain the appropriate size
      * of a VMD header chunk */
@@ -70,24 +73,26 @@ static int vmd_probe(AVProbeData *p)
         return 0;
     w = AV_RL16(&p->buf[12]);
     h = AV_RL16(&p->buf[14]);
-    if (!w || w > 2048 || !h || h > 2048)
+    sample_rate = AV_RL16(&p->buf[804]);
+    if ((!w || w > 2048 || !h || h > 2048) &&
+        sample_rate != 22050)
         return 0;
 
     /* only return half certainty since this check is a bit sketchy */
-    return AVPROBE_SCORE_MAX / 2;
+    return AVPROBE_SCORE_EXTENSION;
 }
 
-static int vmd_read_header(AVFormatContext *s,
-                           AVFormatParameters *ap)
+static int vmd_read_header(AVFormatContext *s)
 {
     VmdDemuxContext *vmd = s->priv_data;
-    ByteIOContext *pb = s->pb;
-    AVStream *st = NULL, *vst;
+    AVIOContext *pb = s->pb;
+    AVStream *st = NULL, *vst = NULL;
     unsigned int toc_offset;
     unsigned char *raw_frame_table;
     int raw_frame_table_size;
     int64_t current_offset;
-    int i, j;
+    int i, j, ret;
+    int width, height;
     unsigned int total_frames;
     int64_t current_audio_pts = 0;
     unsigned char chunk[BYTES_PER_FRAME_RECORD];
@@ -95,44 +100,55 @@ static int vmd_read_header(AVFormatContext *s,
     int sound_buffers;
 
     /* fetch the main header, including the 2 header length bytes */
-    url_fseek(pb, 0, SEEK_SET);
-    if (get_buffer(pb, vmd->vmd_header, VMD_HEADER_SIZE) != VMD_HEADER_SIZE)
+    avio_seek(pb, 0, SEEK_SET);
+    if (avio_read(pb, vmd->vmd_header, VMD_HEADER_SIZE) != VMD_HEADER_SIZE)
         return AVERROR(EIO);
 
-    if(vmd->vmd_header[16] == 'i' && vmd->vmd_header[17] == 'v' && vmd->vmd_header[18] == '3')
-        vmd->is_indeo3 = 1;
-    else
-        vmd->is_indeo3 = 0;
-    /* start up the decoders */
-    vst = av_new_stream(s, 0);
-    if (!vst)
-        return AVERROR(ENOMEM);
-    av_set_pts_info(vst, 33, 1, 10);
-    vmd->video_stream_index = vst->index;
-    vst->codec->codec_type = AVMEDIA_TYPE_VIDEO;
-    vst->codec->codec_id = vmd->is_indeo3 ? CODEC_ID_INDEO3 : CODEC_ID_VMDVIDEO;
-    vst->codec->codec_tag = 0;  /* no fourcc */
-    vst->codec->width = AV_RL16(&vmd->vmd_header[12]);
-    vst->codec->height = AV_RL16(&vmd->vmd_header[14]);
-    if(vmd->is_indeo3 && vst->codec->width > 320){
-        vst->codec->width >>= 1;
-        vst->codec->height >>= 1;
+    width = AV_RL16(&vmd->vmd_header[12]);
+    height = AV_RL16(&vmd->vmd_header[14]);
+    if (width && height) {
+        if(vmd->vmd_header[24] == 'i' && vmd->vmd_header[25] == 'v' && vmd->vmd_header[26] == '3') {
+            vmd->is_indeo3 = 1;
+        } else {
+            vmd->is_indeo3 = 0;
+        }
+        /* start up the decoders */
+        vst = avformat_new_stream(s, NULL);
+        if (!vst)
+            return AVERROR(ENOMEM);
+        avpriv_set_pts_info(vst, 33, 1, 10);
+        vmd->video_stream_index = vst->index;
+        vst->codec->codec_type = AVMEDIA_TYPE_VIDEO;
+        vst->codec->codec_id = vmd->is_indeo3 ? AV_CODEC_ID_INDEO3 : AV_CODEC_ID_VMDVIDEO;
+        vst->codec->codec_tag = 0;  /* no fourcc */
+        vst->codec->width = width;
+        vst->codec->height = height;
+        if(vmd->is_indeo3 && vst->codec->width > 320){
+            vst->codec->width >>= 1;
+            vst->codec->height >>= 1;
+        }
+        if (ff_alloc_extradata(vst->codec, VMD_HEADER_SIZE))
+            return AVERROR(ENOMEM);
+        memcpy(vst->codec->extradata, vmd->vmd_header, VMD_HEADER_SIZE);
     }
-    vst->codec->extradata_size = VMD_HEADER_SIZE;
-    vst->codec->extradata = av_mallocz(VMD_HEADER_SIZE + FF_INPUT_BUFFER_PADDING_SIZE);
-    memcpy(vst->codec->extradata, vmd->vmd_header, VMD_HEADER_SIZE);
 
     /* if sample rate is 0, assume no audio */
     vmd->sample_rate = AV_RL16(&vmd->vmd_header[804]);
     if (vmd->sample_rate) {
-        st = av_new_stream(s, 0);
+        st = avformat_new_stream(s, NULL);
         if (!st)
             return AVERROR(ENOMEM);
         vmd->audio_stream_index = st->index;
         st->codec->codec_type = AVMEDIA_TYPE_AUDIO;
-        st->codec->codec_id = CODEC_ID_VMDAUDIO;
+        st->codec->codec_id = AV_CODEC_ID_VMDAUDIO;
         st->codec->codec_tag = 0;  /* no fourcc */
-        st->codec->channels = (vmd->vmd_header[811] & 0x80) ? 2 : 1;
+        if (vmd->vmd_header[811] & 0x80) {
+            st->codec->channels       = 2;
+            st->codec->channel_layout = AV_CH_LAYOUT_STEREO;
+        } else {
+            st->codec->channels       = 1;
+            st->codec->channel_layout = AV_CH_LAYOUT_MONO;
+        }
         st->codec->sample_rate = vmd->sample_rate;
         st->codec->block_align = AV_RL16(&vmd->vmd_header[806]);
         if (st->codec->block_align & 0x8000) {
@@ -147,15 +163,16 @@ static int vmd_read_header(AVFormatContext *s,
         /* calculate pts */
         num = st->codec->block_align;
         den = st->codec->sample_rate * st->codec->channels;
-        av_reduce(&den, &num, den, num, (1UL<<31)-1);
-        av_set_pts_info(vst, 33, num, den);
-        av_set_pts_info(st, 33, num, den);
+        av_reduce(&num, &den, num, den, (1UL<<31)-1);
+        if (vst)
+            avpriv_set_pts_info(vst, 33, num, den);
+        avpriv_set_pts_info(st, 33, num, den);
     }
 
     toc_offset = AV_RL32(&vmd->vmd_header[812]);
     vmd->frame_count = AV_RL16(&vmd->vmd_header[6]);
     vmd->frames_per_block = AV_RL16(&vmd->vmd_header[18]);
-    url_fseek(pb, toc_offset, SEEK_SET);
+    avio_seek(pb, toc_offset, SEEK_SET);
 
     raw_frame_table = NULL;
     vmd->frame_table = NULL;
@@ -168,15 +185,13 @@ static int vmd_read_header(AVFormatContext *s,
     raw_frame_table = av_malloc(raw_frame_table_size);
     vmd->frame_table = av_malloc((vmd->frame_count * vmd->frames_per_block + sound_buffers) * sizeof(vmd_frame));
     if (!raw_frame_table || !vmd->frame_table) {
-        av_free(raw_frame_table);
-        av_free(vmd->frame_table);
-        return AVERROR(ENOMEM);
+        ret = AVERROR(ENOMEM);
+        goto error;
     }
-    if (get_buffer(pb, raw_frame_table, raw_frame_table_size) !=
+    if (avio_read(pb, raw_frame_table, raw_frame_table_size) !=
         raw_frame_table_size) {
-        av_free(raw_frame_table);
-        av_free(vmd->frame_table);
-        return AVERROR(EIO);
+        ret = AVERROR(EIO);
+        goto error;
     }
 
     total_frames = 0;
@@ -189,9 +204,19 @@ static int vmd_read_header(AVFormatContext *s,
             int type;
             uint32_t size;
 
-            get_buffer(pb, chunk, BYTES_PER_FRAME_RECORD);
+            if ((ret = avio_read(pb, chunk, BYTES_PER_FRAME_RECORD)) != BYTES_PER_FRAME_RECORD) {
+                av_log(s, AV_LOG_ERROR, "Failed to read frame record\n");
+                if (ret >= 0)
+                    ret = AVERROR_INVALIDDATA;
+                goto error;
+            }
             type = chunk[0];
             size = AV_RL32(&chunk[2]);
+            if (size > INT_MAX / 2) {
+                av_log(s, AV_LOG_ERROR, "Invalid frame size\n");
+                ret = AVERROR_INVALIDDATA;
+                goto error;
+            }
             if(!size && type != 1)
                 continue;
             switch(type) {
@@ -205,7 +230,7 @@ static int vmd_read_header(AVFormatContext *s,
                 vmd->frame_table[total_frames].pts = current_audio_pts;
                 total_frames++;
                 if(!current_audio_pts)
-                    current_audio_pts += sound_buffers;
+                    current_audio_pts += sound_buffers - 1;
                 else
                     current_audio_pts++;
                 break;
@@ -228,31 +253,38 @@ static int vmd_read_header(AVFormatContext *s,
     vmd->frame_count = total_frames;
 
     return 0;
+
+error:
+    av_freep(&raw_frame_table);
+    av_freep(&vmd->frame_table);
+    return ret;
 }
 
 static int vmd_read_packet(AVFormatContext *s,
                            AVPacket *pkt)
 {
     VmdDemuxContext *vmd = s->priv_data;
-    ByteIOContext *pb = s->pb;
+    AVIOContext *pb = s->pb;
     int ret = 0;
     vmd_frame *frame;
 
     if (vmd->current_frame >= vmd->frame_count)
-        return AVERROR(EIO);
+        return AVERROR_EOF;
 
     frame = &vmd->frame_table[vmd->current_frame];
     /* position the stream (will probably be there already) */
-    url_fseek(pb, frame->frame_offset, SEEK_SET);
+    avio_seek(pb, frame->frame_offset, SEEK_SET);
 
+    if(ffio_limit(pb, frame->frame_size) != frame->frame_size)
+        return AVERROR(EIO);
     if (av_new_packet(pkt, frame->frame_size + BYTES_PER_FRAME_RECORD))
         return AVERROR(ENOMEM);
-    pkt->pos= url_ftell(pb);
+    pkt->pos= avio_tell(pb);
     memcpy(pkt->data, frame->frame_record, BYTES_PER_FRAME_RECORD);
-    if(vmd->is_indeo3)
-        ret = get_buffer(pb, pkt->data, frame->frame_size);
+    if(vmd->is_indeo3 && frame->frame_record[0] == 0x02)
+        ret = avio_read(pb, pkt->data, frame->frame_size);
     else
-        ret = get_buffer(pb, pkt->data + BYTES_PER_FRAME_RECORD,
+        ret = avio_read(pb, pkt->data + BYTES_PER_FRAME_RECORD,
             frame->frame_size);
 
     if (ret != frame->frame_size) {
@@ -275,17 +307,17 @@ static int vmd_read_close(AVFormatContext *s)
 {
     VmdDemuxContext *vmd = s->priv_data;
 
-    av_free(vmd->frame_table);
+    av_freep(&vmd->frame_table);
 
     return 0;
 }
 
-AVInputFormat vmd_demuxer = {
-    "vmd",
-    NULL_IF_CONFIG_SMALL("Sierra VMD format"),
-    sizeof(VmdDemuxContext),
-    vmd_probe,
-    vmd_read_header,
-    vmd_read_packet,
-    vmd_read_close,
+AVInputFormat ff_vmd_demuxer = {
+    .name           = "vmd",
+    .long_name      = NULL_IF_CONFIG_SMALL("Sierra VMD"),
+    .priv_data_size = sizeof(VmdDemuxContext),
+    .read_probe     = vmd_probe,
+    .read_header    = vmd_read_header,
+    .read_packet    = vmd_read_packet,
+    .read_close     = vmd_read_close,
 };

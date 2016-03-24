@@ -20,8 +20,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef CBRT_TABLEGEN_H
-#define CBRT_TABLEGEN_H
+#ifndef AVCODEC_CBRT_TABLEGEN_H
+#define AVCODEC_CBRT_TABLEGEN_H
 
 #include <stdint.h>
 #include <math.h>
@@ -36,16 +36,17 @@ static void cbrt_tableinit(void)
 {
     if (!cbrt_tab[(1<<13) - 1]) {
         int i;
+        /* cbrtf() isn't available on all systems, so we use powf(). */
         for (i = 0; i < 1<<13; i++) {
             union {
                 float f;
                 uint32_t i;
             } f;
-            f.f = cbrtf(i) * i;
+            f.f = pow(i, 1.0 / 3.0) * i;
             cbrt_tab[i] = f.i;
         }
     }
 }
 #endif /* CONFIG_HARDCODED_TABLES */
 
-#endif /* CBRT_TABLEGEN_H */
+#endif /* AVCODEC_CBRT_TABLEGEN_H */

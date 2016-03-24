@@ -22,7 +22,14 @@
 #ifndef AVCODEC_MATHOPS_H
 #define AVCODEC_MATHOPS_H
 
+#include <stdint.h>
+
 #include "libavutil/common.h"
+#include "config.h"
+
+extern const uint32_t ff_inverse[257];
+extern const uint8_t  ff_reverse[256];
+extern const uint8_t ff_sqrt_tab[256];
 
 #if   ARCH_ARM
 #   include "arm/mathops.h"
@@ -40,16 +47,17 @@
 
 /* generic implementation */
 
+#ifndef MUL64
+#   define MUL64(a,b) ((int64_t)(a) * (int64_t)(b))
+#endif
+
 #ifndef MULL
-#   define MULL(a,b,s) (((int64_t)(a) * (int64_t)(b)) >> (s))
+#   define MULL(a,b,s) (MUL64(a, b) >> (s))
 #endif
 
 #ifndef MULH
-//gcc 3.4 creates an incredibly bloated mess out of this
-//#    define MULH(a,b) (((int64_t)(a) * (int64_t)(b))>>32)
-
 static av_always_inline int MULH(int a, int b){
-    return ((int64_t)(a) * (int64_t)(b))>>32;
+    return MUL64(a, b) >> 32;
 }
 #endif
 
@@ -57,10 +65,6 @@ static av_always_inline int MULH(int a, int b){
 static av_always_inline unsigned UMULH(unsigned a, unsigned b){
     return ((uint64_t)(a) * (uint64_t)(b))>>32;
 }
-#endif
-
-#ifndef MUL64
-#   define MUL64(a,b) ((int64_t)(a) * (int64_t)(b))
 #endif
 
 #ifndef MAC64
@@ -118,14 +122,16 @@ static inline av_const int mid_pred(int a, int b, int c)
 #ifndef sign_extend
 static inline av_const int sign_extend(int val, unsigned bits)
 {
-    return (val << (INT_BIT - bits)) >> (INT_BIT - bits);
+    unsigned shift = 8 * sizeof(int) - bits;
+    union { unsigned u; int s; } v = { (unsigned) val << shift };
+    return v.s >> shift;
 }
 #endif
 
 #ifndef zero_extend
 static inline av_const unsigned zero_extend(unsigned val, unsigned bits)
 {
-    return (val << (INT_BIT - bits)) >> (INT_BIT - bits);
+    return (val << ((8 * sizeof(int)) - bits)) >> ((8 * sizeof(int)) - bits);
 }
 #endif
 
@@ -138,6 +144,13 @@ if ((y) < (x)) {\
 }
 #endif
 
+#ifndef MASK_ABS
+#define MASK_ABS(mask, level) do {              \
+        mask  = level >> 31;                    \
+        level = (level ^ mask) - mask;          \
+    } while (0)
+#endif
+
 #ifndef NEG_SSR32
 #   define NEG_SSR32(a,s) ((( int32_t)(a))>>(32-(s)))
 #endif
@@ -146,5 +159,79 @@ if ((y) < (x)) {\
 #   define NEG_USR32(a,s) (((uint32_t)(a))>>(32-(s)))
 #endif
 
-#endif /* AVCODEC_MATHOPS_H */
+#if HAVE_BIGENDIAN
+# ifndef PACK_2U8
+#   define PACK_2U8(a,b)     (((a) <<  8) | (b))
+# endif
+# ifndef PACK_4U8
+#   define PACK_4U8(a,b,c,d) (((a) << 24) | ((b) << 16) | ((c) << 8) | (d))
+# endif
+# ifndef PACK_2U16
+#   define PACK_2U16(a,b)    (((a) << 16) | (b))
+# endif
+#else
+# ifndef PACK_2U8
+#   define PACK_2U8(a,b)     (((b) <<  8) | (a))
+# endif
+# ifndef PACK_4U2
+#   define PACK_4U8(a,b,c,d) (((d) << 24) | ((c) << 16) | ((b) << 8) | (a))
+# endif
+# ifndef PACK_2U16
+#   define PACK_2U16(a,b)    (((b) << 16) | (a))
+# endif
+#endif
 
+#ifndef PACK_2S8
+#   define PACK_2S8(a,b)     PACK_2U8((a)&255, (b)&255)
+#endif
+#ifndef PACK_4S8
+#   define PACK_4S8(a,b,c,d) PACK_4U8((a)&255, (b)&255, (c)&255, (d)&255)
+#endif
+#ifndef PACK_2S16
+#   define PACK_2S16(a,b)    PACK_2U16((a)&0xffff, (b)&0xffff)
+#endif
+
+#ifndef FASTDIV
+#   define FASTDIV(a,b) ((uint32_t)((((uint64_t)a) * ff_inverse[b]) >> 32))
+#endif /* FASTDIV */
+
+#ifndef MOD_UNLIKELY
+#   define MOD_UNLIKELY(modulus, dividend, divisor, prev_dividend) \
+    do { \
+        if ((prev_dividend) == 0 || (dividend) - (prev_dividend) != (divisor)) \
+            (modulus) = (dividend) % (divisor); \
+        (prev_dividend) = (dividend); \
+    } while (0)
+#endif
+
+static inline av_const unsigned int ff_sqrt(unsigned int a)
+{
+    unsigned int b;
+
+    if (a < 255) return (ff_sqrt_tab[a + 1] - 1) >> 4;
+    else if (a < (1 << 12)) b = ff_sqrt_tab[a >> 4] >> 2;
+#if !CONFIG_SMALL
+    else if (a < (1 << 14)) b = ff_sqrt_tab[a >> 6] >> 1;
+    else if (a < (1 << 16)) b = ff_sqrt_tab[a >> 8]   ;
+#endif
+    else {
+        int s = av_log2_16bit(a >> 16) >> 1;
+        unsigned int c = a >> (s + 2);
+        b = ff_sqrt_tab[c >> (s + 8)];
+        b = FASTDIV(c,b) + (b << s);
+    }
+
+    return b - (a < b * b);
+}
+
+static inline int8_t ff_u8_to_s8(uint8_t a)
+{
+    union {
+        uint8_t u8;
+        int8_t  s8;
+    } b;
+    b.u8 = a;
+    return b.s8;
+}
+
+#endif /* AVCODEC_MATHOPS_H */

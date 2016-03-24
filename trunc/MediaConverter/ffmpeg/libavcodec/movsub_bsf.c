@@ -18,6 +18,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include "libavutil/common.h"
 #include "libavutil/intreadwrite.h"
 #include "avcodec.h"
 
@@ -33,10 +34,9 @@ static int text2movsub(AVBitStreamFilterContext *bsfc, AVCodecContext *avctx, co
     return 1;
 }
 
-AVBitStreamFilter text2movsub_bsf={
-    "text2movsub",
-    0,
-    text2movsub,
+AVBitStreamFilter ff_text2movsub_bsf={
+    .name   = "text2movsub",
+    .filter = text2movsub,
 };
 
 static int mov2textsub(AVBitStreamFilterContext *bsfc, AVCodecContext *avctx, const char *args,
@@ -49,8 +49,7 @@ static int mov2textsub(AVBitStreamFilterContext *bsfc, AVCodecContext *avctx, co
     return 1;
 }
 
-AVBitStreamFilter mov2textsub_bsf={
-    "mov2textsub",
-    0,
-    mov2textsub,
+AVBitStreamFilter ff_mov2textsub_bsf={
+    .name   = "mov2textsub",
+    .filter = mov2textsub,
 };

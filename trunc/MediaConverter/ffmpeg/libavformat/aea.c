@@ -20,9 +20,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#include "avformat.h"
-#include "raw.h"
+#include "libavutil/channel_layout.h"
 #include "libavutil/intreadwrite.h"
+#include "avformat.h"
+#include "pcm.h"
 
 #define AT1_SU_SIZE     212
 
@@ -46,29 +47,27 @@ static int aea_read_probe(AVProbeData *p)
         /* Check so that the redundant bsm bytes and info bytes are valid
          * the block size mode bytes have to be the same
          * the info bytes have to be the same
-         * the block size mode and info byte can't be the same
          */
-        if (bsm_s == bsm_e && inb_s == inb_e && bsm_s != inb_s)
-            return AVPROBE_SCORE_MAX / 2;
+        if (bsm_s == bsm_e && inb_s == inb_e)
+            return AVPROBE_SCORE_MAX / 4 + 1;
     }
     return 0;
 }
 
-static int aea_read_header(AVFormatContext *s,
-                           AVFormatParameters *ap)
+static int aea_read_header(AVFormatContext *s)
 {
-    AVStream *st = av_new_stream(s, 0);
+    AVStream *st = avformat_new_stream(s, NULL);
     if (!st)
         return AVERROR(ENOMEM);
 
     /* Parse the amount of channels and skip to pos 2048(0x800) */
-    url_fskip(s->pb, 264);
-    st->codec->channels = get_byte(s->pb);
-    url_fskip(s->pb, 1783);
+    avio_skip(s->pb, 264);
+    st->codec->channels = avio_r8(s->pb);
+    avio_skip(s->pb, 1783);
 
 
     st->codec->codec_type     = AVMEDIA_TYPE_AUDIO;
-    st->codec->codec_id       = CODEC_ID_ATRAC1;
+    st->codec->codec_id       = AV_CODEC_ID_ATRAC1;
     st->codec->sample_rate    = 44100;
     st->codec->bit_rate       = 292000;
 
@@ -77,7 +76,7 @@ static int aea_read_header(AVFormatContext *s,
         return -1;
     }
 
-    st->codec->channel_layout = (st->codec->channels == 1) ? CH_LAYOUT_MONO : CH_LAYOUT_STEREO;
+    st->codec->channel_layout = (st->codec->channels == 1) ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO;
 
     st->codec->block_align = AT1_SU_SIZE * st->codec->channels;
     return 0;
@@ -94,16 +93,13 @@ static int aea_read_packet(AVFormatContext *s, AVPacket *pkt)
     return ret;
 }
 
-AVInputFormat aea_demuxer = {
-    "aea",
-    NULL_IF_CONFIG_SMALL("MD STUDIO audio"),
-    0,
-    aea_read_probe,
-    aea_read_header,
-    aea_read_packet,
-    0,
-    pcm_read_seek,
-    .flags= AVFMT_GENERIC_INDEX,
-    .extensions = "aea",
+AVInputFormat ff_aea_demuxer = {
+    .name           = "aea",
+    .long_name      = NULL_IF_CONFIG_SMALL("MD STUDIO audio"),
+    .read_probe     = aea_read_probe,
+    .read_header    = aea_read_header,
+    .read_packet    = aea_read_packet,
+    .read_seek      = ff_pcm_read_seek,
+    .flags          = AVFMT_GENERIC_INDEX,
+    .extensions     = "aea",
 };
-

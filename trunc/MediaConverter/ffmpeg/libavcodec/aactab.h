@@ -32,6 +32,7 @@
 
 #include "libavutil/mem.h"
 #include "aac.h"
+#include "aac_tablegen_decl.h"
 
 #include <stdint.h>
 
@@ -43,14 +44,16 @@
 /* @name window coefficients
  * @{
  */
-DECLARE_ALIGNED(16, extern float,  ff_aac_kbd_long_1024)[1024];
-DECLARE_ALIGNED(16, extern float,  ff_aac_kbd_short_128)[128];
+DECLARE_ALIGNED(32, extern float,  ff_aac_kbd_long_1024)[1024];
+DECLARE_ALIGNED(32, extern float,  ff_aac_kbd_short_128)[128];
+const DECLARE_ALIGNED(32, extern float, ff_aac_eld_window)[1920];
 // @}
 
 /* @name number of scalefactor window bands for long and short transform windows respectively
  * @{
  */
 extern const uint8_t ff_aac_num_swb_1024[];
+extern const uint8_t ff_aac_num_swb_512 [];
 extern const uint8_t ff_aac_num_swb_128 [];
 // @}
 
@@ -68,15 +71,11 @@ extern const float *ff_aac_codebook_vector_vals[];
 extern const uint16_t *ff_aac_codebook_vector_idx[];
 
 extern const uint16_t * const ff_swb_offset_1024[13];
+extern const uint16_t * const ff_swb_offset_512 [13];
 extern const uint16_t * const ff_swb_offset_128 [13];
 
 extern const uint8_t ff_tns_max_bands_1024[13];
+extern const uint8_t ff_tns_max_bands_512 [13];
 extern const uint8_t ff_tns_max_bands_128 [13];
-
-#if CONFIG_HARDCODED_TABLES
-extern const float ff_aac_pow2sf_tab[428];
-#else
-extern       float ff_aac_pow2sf_tab[428];
-#endif /* CONFIG_HARDCODED_TABLES */
 
 #endif /* AVCODEC_AACTAB_H */

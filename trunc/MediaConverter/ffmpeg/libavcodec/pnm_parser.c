@@ -83,10 +83,10 @@ retry:
     return next;
 }
 
-AVCodecParser pnm_parser = {
-    { CODEC_ID_PGM, CODEC_ID_PGMYUV, CODEC_ID_PPM, CODEC_ID_PBM, CODEC_ID_PAM},
-    sizeof(ParseContext),
-    NULL,
-    pnm_parse,
-    ff_parse_close,
+AVCodecParser ff_pnm_parser = {
+    .codec_ids      = { AV_CODEC_ID_PGM, AV_CODEC_ID_PGMYUV, AV_CODEC_ID_PPM,
+                        AV_CODEC_ID_PBM, AV_CODEC_ID_PAM },
+    .priv_data_size = sizeof(ParseContext),
+    .parser_parse   = pnm_parse,
+    .parser_close   = ff_parse_close,
 };

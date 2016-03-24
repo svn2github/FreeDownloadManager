@@ -21,8 +21,8 @@
 
 #include "libavcodec/avcodec.h"
 #include "libavcodec/dsputil.h"
+#include "libavcodec/hpeldsp.h"
 
-void idct_sh4(DCTELEM *block);
-void dsputil_init_align(DSPContext* c, AVCodecContext *avctx);
+void ff_idct_sh4(int16_t *block);
 
-#endif
+#endif /* AVCODEC_SH4_DSPUTIL_SH4_H */

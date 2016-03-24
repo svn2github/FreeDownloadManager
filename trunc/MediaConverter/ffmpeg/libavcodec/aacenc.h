@@ -22,13 +22,27 @@
 #ifndef AVCODEC_AACENC_H
 #define AVCODEC_AACENC_H
 
+#include "libavutil/float_dsp.h"
 #include "avcodec.h"
 #include "put_bits.h"
-#include "dsputil.h"
 
 #include "aac.h"
-
+#include "audio_frame_queue.h"
 #include "psymodel.h"
+
+typedef enum AACCoder {
+    AAC_CODER_FAAC = 0,
+    AAC_CODER_ANMR,
+    AAC_CODER_TWOLOOP,
+    AAC_CODER_FAST,
+
+    AAC_CODER_NB,
+}AACCoder;
+
+typedef struct AACEncOptions {
+    int stereo_mode;
+    int aac_coder;
+} AACEncOptions;
 
 struct AACEncContext;
 
@@ -48,14 +62,17 @@ extern AACCoefficientsEncoder ff_aac_coders[];
  * AAC encoder context
  */
 typedef struct AACEncContext {
+    AVClass *av_class;
+    AACEncOptions options;                       ///< encoding options
     PutBitContext pb;
     FFTContext mdct1024;                         ///< long (1024 samples) frame transform context
     FFTContext mdct128;                          ///< short (128 samples) frame transform context
-    DSPContext  dsp;
-    DECLARE_ALIGNED(16, FFTSample, output)[2048]; ///< temporary buffer for MDCT input coefficients
-    int16_t* samples;                            ///< saved preprocessed input
+    AVFloatDSPContext fdsp;
+    float *planar_samples[6];                    ///< saved preprocessed input
 
     int samplerate_index;                        ///< MPEG-4 samplerate index
+    int channels;                                ///< channel count
+    const uint8_t *chan_map;                     ///< channel configuration map
 
     ChannelElement *cpe;                         ///< channel elements
     FFPsyContext psy;
@@ -64,8 +81,17 @@ typedef struct AACEncContext {
     int cur_channel;
     int last_frame;
     float lambda;
-    DECLARE_ALIGNED(16, int,   qcoefs)[96][2];   ///< quantized coefficients
-    DECLARE_ALIGNED(16, float, scoefs)[1024];    ///< scaled coefficients
+    AudioFrameQueue afq;
+    DECLARE_ALIGNED(16, int,   qcoefs)[96];      ///< quantized coefficients
+    DECLARE_ALIGNED(32, float, scoefs)[1024];    ///< scaled coefficients
+
+    struct {
+        float *samples;
+    } buffer;
 } AACEncContext;
+
+extern float ff_aac_pow34sf_tab[428];
+
+void ff_aac_coder_init_mips(AACEncContext *c);
 
 #endif /* AVCODEC_AACENC_H */

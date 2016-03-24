@@ -18,7 +18,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include <string.h>
+
 #include "avcodec.h"
+#include "libavutil/mem.h"
 
 
 static int dump_extradata(AVBitStreamFilterContext *bsfc, AVCodecContext *avctx, const char *args,
@@ -43,8 +46,7 @@ static int dump_extradata(AVBitStreamFilterContext *bsfc, AVCodecContext *avctx,
     return 0;
 }
 
-AVBitStreamFilter dump_extradata_bsf={
-    "dump_extra",
-    0,
-    dump_extradata,
+AVBitStreamFilter ff_dump_extradata_bsf={
+    .name   = "dump_extra",
+    .filter = dump_extradata,
 };

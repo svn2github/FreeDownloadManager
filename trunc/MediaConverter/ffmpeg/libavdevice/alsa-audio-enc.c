@@ -38,19 +38,26 @@
  */
 
 #include <alsa/asoundlib.h>
-#include "libavformat/avformat.h"
 
+#include "libavutil/time.h"
+#include "libavformat/internal.h"
+#include "avdevice.h"
 #include "alsa-audio.h"
 
 static av_cold int audio_write_header(AVFormatContext *s1)
 {
     AlsaData *s = s1->priv_data;
-    AVStream *st;
+    AVStream *st = NULL;
     unsigned int sample_rate;
-    enum CodecID codec_id;
+    enum AVCodecID codec_id;
     int res;
 
+    if (s1->nb_streams != 1 || s1->streams[0]->codec->codec_type != AVMEDIA_TYPE_AUDIO) {
+        av_log(s1, AV_LOG_ERROR, "Only a single audio stream is supported.\n");
+        return AVERROR(EINVAL);
+    }
     st = s1->streams[0];
+
     sample_rate = st->codec->sample_rate;
     codec_id    = st->codec->codec_id;
     res = ff_alsa_open(s1, SND_PCM_STREAM_PLAYBACK, &sample_rate,
@@ -61,6 +68,7 @@ static av_cold int audio_write_header(AVFormatContext *s1)
                st->codec->sample_rate, sample_rate);
         goto fail;
     }
+    avpriv_set_pts_info(st, 64, 1, sample_rate);
 
     return res;
 
@@ -76,7 +84,19 @@ static int audio_write_packet(AVFormatContext *s1, AVPacket *pkt)
     int size     = pkt->size;
     uint8_t *buf = pkt->data;
 
-    while((res = snd_pcm_writei(s->h, buf, size / s->frame_size)) < 0) {
+    size /= s->frame_size;
+    if (pkt->dts != AV_NOPTS_VALUE)
+        s->timestamp = pkt->dts;
+    s->timestamp += pkt->duration ? pkt->duration : size;
+
+    if (s->reorder_func) {
+        if (size > s->reorder_buf_size)
+            if (ff_alsa_extend_reorder_buf(s, size))
+                return AVERROR(ENOMEM);
+        s->reorder_func(buf, s->reorder_buf, size);
+        buf = s->reorder_buf;
+    }
+    while ((res = snd_pcm_writei(s->h, buf, size)) < 0) {
         if (res == -EAGAIN) {
 
             return AVERROR(EAGAIN);
@@ -93,16 +113,45 @@ static int audio_write_packet(AVFormatContext *s1, AVPacket *pkt)
     return 0;
 }
 
-AVOutputFormat alsa_muxer = {
-    "alsa",
-    NULL_IF_CONFIG_SMALL("ALSA audio output"),
-    "",
-    "",
-    sizeof(AlsaData),
-    DEFAULT_CODEC_ID,
-    CODEC_ID_NONE,
-    audio_write_header,
-    audio_write_packet,
-    ff_alsa_close,
-    .flags = AVFMT_NOFILE,
+static int audio_write_frame(AVFormatContext *s1, int stream_index,
+                             AVFrame **frame, unsigned flags)
+{
+    AlsaData *s = s1->priv_data;
+    AVPacket pkt;
+
+    /* ff_alsa_open() should have accepted only supported formats */
+    if ((flags & AV_WRITE_UNCODED_FRAME_QUERY))
+        return av_sample_fmt_is_planar(s1->streams[stream_index]->codec->sample_fmt) ?
+               AVERROR(EINVAL) : 0;
+    /* set only used fields */
+    pkt.data     = (*frame)->data[0];
+    pkt.size     = (*frame)->nb_samples * s->frame_size;
+    pkt.dts      = (*frame)->pkt_dts;
+    pkt.duration = av_frame_get_pkt_duration(*frame);
+    return audio_write_packet(s1, &pkt);
+}
+
+static void
+audio_get_output_timestamp(AVFormatContext *s1, int stream,
+    int64_t *dts, int64_t *wall)
+{
+    AlsaData *s  = s1->priv_data;
+    snd_pcm_sframes_t delay = 0;
+    *wall = av_gettime();
+    snd_pcm_delay(s->h, &delay);
+    *dts = s->timestamp - delay;
+}
+
+AVOutputFormat ff_alsa_muxer = {
+    .name           = "alsa",
+    .long_name      = NULL_IF_CONFIG_SMALL("ALSA audio output"),
+    .priv_data_size = sizeof(AlsaData),
+    .audio_codec    = DEFAULT_CODEC_ID,
+    .video_codec    = AV_CODEC_ID_NONE,
+    .write_header   = audio_write_header,
+    .write_packet   = audio_write_packet,
+    .write_trailer  = ff_alsa_close,
+    .write_uncoded_frame = audio_write_frame,
+    .get_output_timestamp = audio_get_output_timestamp,
+    .flags          = AVFMT_NOFILE,
 };
