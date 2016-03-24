@@ -1,12 +1,8 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
-
-#include "lib.add/vmsPostRequest.cpp"
-#include "lib.Add/vmsZip.cpp"
-#include "lib.Add/vmsUnZip.cpp"
 
 SCL_INITOBJECT (_T ("fdm"), 0);
 
@@ -24,7 +20,7 @@ fsCmdHistoryMgr _LastFolders;
 fsCmdHistoryMgr _LastFlashVideoUrls;
 fsCmdHistoryMgr _LastFlashVideoDstFolders;
 fsContextHelpMgr _CHMgr;
-fsMFCLangMgr _LngMgr;
+fsMFCLangMgr _LngMgr (MAKEINTRESOURCE (IDR_ENG_LNGSTRINGS), _T("RT_LNGSTRINGS"));
 fsSitesMgr _SitesMgr;
 fsIEContextMenuMgr _IECMM;
 vmsFdmOpNetIntegrationMgr _NOMgr;
@@ -42,6 +38,9 @@ vmsBtSupport _BT;
 vmsMediaConvertMgr _MediaConvertMgr;
 fsPluginMgr _PluginMgr;
 vmsFdmAppMgr _AppMgr;
+vmsYouTubeDownloadsMgr _YouTubeDldsMgr;
+std::shared_ptr <vmsDownloaderSecCheckFailureIgnoreList> _DldrSecCheckFailureIgnoreList = 
+	std::make_shared <vmsDownloaderSecCheckFailureIgnoreList> ();
 
 DWORD _dwAppState = 0;
 

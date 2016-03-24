@@ -30,9 +30,11 @@ function freeDldMgr_fmb_Initialize ()
   ext.MakeSureFlvSniffDllLoaded ();
 
   freeDldMgr_fmb_rkStgs = Components.classes["@mozilla.org/windows-registry-key;1"].createInstance (Components.interfaces.nsIWindowsRegKey);
-  freeDldMgr_fmb_rkStgs.open (freeDldMgr_fmb_rkStgs.ROOT_KEY_CURRENT_USER, 
-    "Software\\FreeDownloadManager.ORG\\Free Download Manager\\Settings\\FlvMonitoring",
-    freeDldMgr_fmb_rkStgs.ACCESS_ALL);
+  try {  // Firefox can go crazy w/o this
+    freeDldMgr_fmb_rkStgs.open (freeDldMgr_fmb_rkStgs.ROOT_KEY_CURRENT_USER,
+        "Software\\FreeDownloadManager.ORG\\Free Download Manager\\Settings\\FlvMonitoring",
+        freeDldMgr_fmb_rkStgs.ACCESS_ALL);
+  } catch(e) {}
 
   freeDldMgr_fmb_LoadTabCss ();
 
@@ -175,8 +177,8 @@ function freeDldMgr_fmb_isVideoFlash (elem)
 {
   var swfSrc = freeDldMgr_fmb_getFlashElementSwfUrl (elem);
   var flashVars = freeDldMgr_fmb_getElementParam (elem, "flashvars");
-  var frameUrl = elem.ownerDocument.URL;
-  var webPageUrl = window.content.document.URL;
+  var frameUrl = elem.ownerDocument.location.href;
+  var webPageUrl = window.content.document.location.href;
   if (frameUrl == webPageUrl)
     frameUrl = "";
   freeDldMgr_fmb_getOtherSwfUrls (elem);
@@ -184,6 +186,15 @@ function freeDldMgr_fmb_isVideoFlash (elem)
   var otherFlashVars = freeDldMgr_fmb_OtherFlashVars;
   return freeDldMgr_FDM.IsVideoFlash (webPageUrl, frameUrl, swfSrc, 
       flashVars, otherSwfUrls, otherFlashVars);
+}
+
+function freeDldMgr_fmb_isYouTubeHTML5Video(elem)
+{
+  return elem && (
+    elem.id == 'movie_player'
+  ||
+    elem.parentNode && elem.parentNode.parentNode && elem.parentNode.parentNode.id == 'movie_player'
+  );
 }
 
 function freeDldMgr_fmb_onTabClick (ev)
@@ -196,15 +207,15 @@ function freeDldMgr_fmb_onTabClick (ev)
     ev.stopPropagation ();
     var swfSrc = freeDldMgr_fmb_getFlashElementSwfUrl (freeDldMgr_fmb_CurrentElement);
     var flashVars = freeDldMgr_fmb_getElementParam (freeDldMgr_fmb_CurrentElement, "flashvars");
-    var frameUrl = freeDldMgr_fmb_CurrentElement.ownerDocument.URL;
-    var webPageUrl = window.content.document.URL;
+    var frameUrl = freeDldMgr_fmb_CurrentElement.ownerDocument.location.href;
+    var webPageUrl = window.content.document.location.href;
     if (frameUrl == webPageUrl)
       frameUrl = "";
     freeDldMgr_fmb_getOtherSwfUrls (freeDldMgr_fmb_CurrentElement);
     var otherSwfUrls = freeDldMgr_fmb_OtherSwfUrls;
     var otherFlashVars = freeDldMgr_fmb_OtherFlashVars;
-    //alert (freeDldMgr_fmb_CurrentElement.ownerDocument.URL);
-    //alert (freeDldMgr_fmb_CurrentElement.ownerDocument.defaultView.parent.document.URL);
+    //alert (freeDldMgr_fmb_CurrentElement.ownerDocument.location.href);
+    //alert (freeDldMgr_fmb_CurrentElement.ownerDocument.defaultView.parent.document.location.href);
     freeDldMgr_fmb_HideButton ();
     //freeDldMgr_dlURL (swfSrc);
     freeDldMgr_FDM.CreateVideoDownloadFromUrl3 (webPageUrl, frameUrl, swfSrc, 
@@ -215,7 +226,11 @@ function freeDldMgr_fmb_onTabClick (ev)
 function freeDldMgr_fmb_ShowTab (elem)
 {
   freeDldMgr_fmb_HideTab ();
-  freeDldMgr_fmb_CurrentElement = elem;
+  if (freeDldMgr_fmb_isYouTubeHTML5Video(elem))
+    freeDldMgr_fmb_CurrentElement = elem.parentNode.parentNode;
+  else
+    freeDldMgr_fmb_CurrentElement = elem;
+
   var doc = elem.ownerDocument.defaultView.top.document;
 
   freeDldMgr_fmb_objTabElement = doc.createElementNS ("http://www.w3.org/1999/xhtml", "a");
@@ -370,14 +385,19 @@ function freeDldMgr_fmb_getElementPosition (elem)
 
 function freeDldMgr_fmb_isEnabledInStgs ()
 {
-  if (!freeDldMgr_fmb_rkStgs.hasValue ("ShowDownloadItBtn"))
-    return true;
-  return freeDldMgr_fmb_rkStgs.readIntValue ("ShowDownloadItBtn");
-} 
+  try{
+    if (!freeDldMgr_fmb_rkStgs.hasValue ("ShowDownloadItBtn"))
+      return true;
+    return freeDldMgr_fmb_rkStgs.readIntValue ("ShowDownloadItBtn");
+  }
+  catch (e) {return true;}
+}
 
 function freeDldMgr_fmb_setEnabledInStgs (bEn)
 {
-  freeDldMgr_fmb_rkStgs.writeIntValue ("ShowDownloadItBtn", bEn); 
+  try{
+    freeDldMgr_fmb_rkStgs.writeIntValue ("ShowDownloadItBtn", bEn);
+  }catch(e) {}
 }
 
 function freeDldMgr_fmb_isElemBtnPart (elem)
@@ -406,7 +426,16 @@ function freeDldMgr_fmb_onMouseEvent_InElement (ev)
   if (freeDldMgr_fmb_isElemBtnPart (elem))
     return; 
 
-  if (elem.tagName.toLowerCase () != "embed" && 
+  // workaround: yt html video
+  if (freeDldMgr_fmb_objTabElement)
+    for (p = elem; p; p = p.parentNode)
+    {
+      if (p.id == "movie_player")
+        return;
+    }
+
+  if (elem.tagName &&
+  	elem.tagName.toLowerCase() != "embed" && 
   	elem.tagName.toLowerCase() != "object" && 
   	elem.tagName.toLowerCase() != "video")
   {
@@ -422,7 +451,7 @@ function freeDldMgr_fmb_onMouseEvent_InElement (ev)
 
   if (freeDldMgr_fmb_isEnabledInStgs () && 
   	freeDldMgr_fmb_isFlashObject (elem) && 
-  	freeDldMgr_fmb_isVideoFlash (elem))
+  	(freeDldMgr_fmb_isVideoFlash (elem) || freeDldMgr_fmb_isYouTubeHTML5Video(elem)))
     freeDldMgr_fmb_ShowButton (elem);
 }
 

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -66,7 +66,7 @@ BOOL CDDRDlg::OnInitDialog()
 	
 	
 	CString str;
-	str.Format ("%s\r\n \"%s\"\r\n%s", LS (L_DOWNLOAD2), m_strUrl, LS (L_WBDELETED));
+	str.Format (_T("%s\r\n \"%s\"\r\n%s"), LS (L_DOWNLOAD2), m_strUrl, LS (L_WBDELETED));
 	SetDlgItemText (IDC_MESSAGE, str);
 
 	if (m_bNoCancel)

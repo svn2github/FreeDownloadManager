@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -46,7 +46,7 @@ BOOL CPrg_SkinsPage::OnInitDialog()
 	for (int i = 0; i < _SkinMgr.get_Count (); i++)
 	{
 		CString str = _SkinMgr.get_Skin (i)->strName;
-		if (str.CompareNoCase ("Old Style") == 0)
+		if (str.CompareNoCase (_T("Old Style")) == 0)
 			str = LS (L_OLDSTYLE);
 		m_wndSkins.AddString (str);
 	}

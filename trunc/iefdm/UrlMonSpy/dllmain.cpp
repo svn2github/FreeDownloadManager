@@ -1,15 +1,17 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 
 #include "vmsUrlMonDefaultApphSpy.h"
 #include "vmsUrlMonRequestImpl.h"
+#include "../../common/component_crash_rep.h"
 
 DWORD WINAPI _threadInit (LPVOID)
 {
 	CoInitialize (NULL);
+	initializeCrashReporter ();
 	vmsUrlMonDefaultApphSpy::Initialize ();
 	CoUninitialize ();
 	return 0;

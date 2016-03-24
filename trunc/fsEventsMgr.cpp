@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -13,6 +13,16 @@
 static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
+
+fsDescEvent& fsDescEvent::operator = (const fsDescEvent_v1& src)
+{
+	timeEvent = src.timeEvent;
+	clrBg = src.clrBg;
+	clrText = src.clrText;
+	iImage = src.iImage;
+	CopyString(&pszEvent, src.pszEvent);
+	return *this;
+}
 
 vmsPersistableDescEventWrapper& vmsPersistableDescEventWrapper::operator = (const  vmsPersistableDescEventWrapper& src)
 {
@@ -106,7 +116,50 @@ BOOL fsEventsMgr::Save(HANDLE hFile)
 	return TRUE;
 }
 
-BOOL fsEventsMgr::Load(HANDLE hFile)
+bool fsEventsMgr::LoadDescEvent(HANDLE hFile, fsDescEvent& ev)
+{
+	DWORD dw;
+	if (!ReadFile (hFile, &ev, sizeof (fsDescEvent), &dw, NULL) || dw != sizeof (fsDescEvent))
+	{
+		m_vEvents.clear ();
+		return FALSE;
+	}
+
+	if (!fsReadStrFromFile (&ev.pszEvent, hFile))
+	{
+		m_vEvents.clear ();
+		return FALSE;
+	}
+
+	return TRUE;
+
+}
+
+bool fsEventsMgr::LoadDescEvent_old(HANDLE hFile, fsDescEvent& ev)
+{
+	DWORD dw;
+	fsDescEvent_v1 ev_old;
+
+	if (!ReadFile (hFile, &ev_old, sizeof (fsDescEvent_v1), &dw, NULL) || dw != sizeof (fsDescEvent))
+	{
+		m_vEvents.clear ();
+		return FALSE;
+	}
+
+	if (!fsReadStrFromFileA (&ev_old.pszEvent, hFile))
+	{
+		m_vEvents.clear ();
+		return FALSE;
+	}
+
+	ev = ev_old;
+	delete ev_old.pszEvent;
+
+	return TRUE;
+
+}
+
+BOOL fsEventsMgr::Load(HANDLE hFile, WORD wVer)
 {
 	int cRecs;
 	DWORD dw;
@@ -123,16 +176,15 @@ BOOL fsEventsMgr::Load(HANDLE hFile)
 		pEventPtr.CreateInstance();
 		fsDescEvent& ev = pEventPtr->deEvent;
 
-		if (!ReadFile (hFile, &ev, sizeof (fsDescEvent), &dw, NULL) || dw != sizeof (fsDescEvent))
-		{
-			m_vEvents.clear ();
-			return FALSE;
+		if (wVer > 0) {
+			
+			
+			ASSERT(false);
 		}
 
-		if (!fsReadStrFromFile (&ev.pszEvent, hFile))
-		{
-			m_vEvents.clear ();
-			return FALSE;
+		if (wVer == 0) {
+			
+			LoadDescEvent_old(hFile, ev);
 		}
 
 		

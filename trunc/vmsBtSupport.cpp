@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -19,6 +19,7 @@ vmsBtSupport::vmsBtSupport()
 	m_pbDHTstate = NULL;
 	m_hBtDll = NULL;
 	m_bWasShutdown = false;
+	m_pSession = NULL;
 }
 
 vmsBtSupport::~vmsBtSupport()
@@ -34,44 +35,57 @@ BOOL vmsBtSupport::Initialize()
 
 vmsBtSession* vmsBtSupport::get_Session()
 {
+	return m_pSession;
+}
+
+vmsBtSession* vmsBtSupport::create_Session()
+{
 	if (m_bWasShutdown)
 		return NULL;
 
-	static vmsBtSession* _pSession = NULL;
-	if (_pSession)
-		return _pSession;
+	vmsAUTOLOCKRW_WRITE(m_rwlSession);
 
-	vmsAUTOLOCKSECTION (m_cs1);
+	if (m_pSession)
+		return m_pSession;
 
-	if (_pSession)
-		return _pSession;
+	vmsAUTOLOCKSECTION(m_cs1);
 
 	if (!m_hBtDll)
-		Initialize ();
+		Initialize();
 
 	typedef vmsBtSession* (WINAPI *FNS)();
-	FNS pfnSession = (FNS) GetProcAddress (m_hBtDll, "vmsBt_getSession");;
-	
+	FNS pfnSession = (FNS)GetProcAddress(m_hBtDll, "vmsBt_createSession");
+
 	if (pfnSession)
 	{
-		_pSession = pfnSession ();
+		m_pSession = pfnSession();
 
-		if (_pSession)
+		if (m_pSession)
 		{
-			_pSession->SetUserAgent (vmsFdmAppMgr::getAppBtAgentName ());
-			_pSession->DisableOsCash();
-			ApplyListenPortSettings ();
-			ApplyDHTSettings ();
+
+			CHAR szAgentName[10000] = { 0, };
+#ifdef UNICODE
+			
+			DWORD dwBuffSize = 10000;
+			vmsUnicodeToUtf8(vmsFdmAppMgr::getAppBtAgentName(), szAgentName, &dwBuffSize);
+#else
+			
+#endif
+			m_pSession->SetUserAgent(szAgentName);
+			m_pSession->DisableOsCash();
+			ApplyExtensions();
+			ApplyListenPortSettings();
+			ApplyDHTSettings();
 			ApplyAdditionalTorrentSettings();
-			_pSession->SetDownloadLimit (-1);
-			_pSession->SetUploadLimit (-1);
-			ApplyProxySettings ();
-			_DldsMgr.AttachToBtSession ();
-			_DldsMgr.setNeedApplyTrafficLimit ();
+			m_pSession->SetDownloadLimit(-1);
+			m_pSession->SetUploadLimit(-1);
+			ApplyProxySettings();
+			_DldsMgr.AttachToBtSession();
+			_DldsMgr.setNeedApplyTrafficLimit();
 		}
 	}
-	
-	return _pSession;
+
+	return m_pSession;
 }
 
 BOOL vmsBtSupport::is_Initialized()
@@ -79,19 +93,34 @@ BOOL vmsBtSupport::is_Initialized()
 	return m_hBtDll != NULL;
 }
 
+void vmsBtSupport::ApplyExtensions(){
+	if (is_Initialized () == FALSE)
+		return;
+
+	LockSession(true);
+	vmsBtSession *pBtSession = get_Session ();
+
+	if (_App.Bittorrent_EnableUTPEX() && (pBtSession != NULL))
+	{
+		pBtSession->addExtensionUTPEX();
+	}
+	UnlockSession(true);
+}
+
 void vmsBtSupport::ApplyListenPortSettings()
 {
 	if (is_Initialized ())
 	{
+		LockSession(true);
 		vmsBtSession *pBtSession = get_Session ();
-
+		
 		int portFrom = _App.Bittorrent_ListenPort_From (),
 			portTo = _App.Bittorrent_ListenPort_To ();
-
-		if (pBtSession->IsListening () == FALSE ||
+		if ((pBtSession != NULL) && (pBtSession->IsListening() == FALSE ||
 				pBtSession->get_ListenPort () > portTo ||
-				pBtSession->get_ListenPort () < portFrom)
+				pBtSession->get_ListenPort () < portFrom))
 			pBtSession->ListenOn (portFrom, portTo);
+		UnlockSession(true);
 	}
 }
 
@@ -100,53 +129,65 @@ void vmsBtSupport::ApplyDHTSettings()
 	if (is_Initialized () == FALSE)
 		return;
 
+	LockSession(true);
 	vmsBtSession *pBtSession = get_Session ();
 
-	if (_App.Bittorrent_EnableDHT ())
-	{
-		if (pBtSession->DHT_isStarted () == FALSE){
-			pBtSession->DHT_start (m_pbDHTstate, m_dwDHTstateSize);
+	if (pBtSession){
+		if (_App.Bittorrent_EnableDHT())
+		{
+			if (pBtSession->DHT_isStarted() == FALSE){
+				pBtSession->DHT_start(m_pbDHTstate, m_dwDHTstateSize);
+			}
+		}
+		else
+		{
+			if (pBtSession->DHT_isStarted())
+				pBtSession->DHT_stop();
 		}
 	}
-	else
-	{
-		if (pBtSession->DHT_isStarted ())
-			pBtSession->DHT_stop ();
-	}
+	UnlockSession(true);
 }
 
 void vmsBtSupport::ApplyAdditionalTorrentSettings(){
 	if (is_Initialized () == FALSE)
 		return;
 
+	LockSession(true);
 	vmsBtSession *pBtSession = get_Session ();
 
-	if (_App.Bittorrent_EnableLocalPeerDiscovery())
-	{
-		pBtSession->LocalPeers_start ();
-	}
-	else
-	{
-		pBtSession->LocalPeers_stop ();
+	if (pBtSession){
+
+		if (_App.Bittorrent_EnableLocalPeerDiscovery())
+		{
+			pBtSession->LocalPeers_start();
+		}
+		else
+		{
+			pBtSession->LocalPeers_stop();
+		}
+
+		if (_App.Bittorrent_EnableUPnP())
+		{
+			pBtSession->UPNP_start();
+		}
+		else
+		{
+			pBtSession->UPNP_stop();
+		}
+
+		if (_App.Bittorrent_EnableNATPMP())
+		{
+			pBtSession->NATPMP_start();
+		}
+		else
+		{
+			pBtSession->NATPMP_stop();
+		}
+
+		pBtSession->setSequentialDownloads(_App.Bittorrent_EnableSequentialDownloading());
 	}
 
-	if (_App.Bittorrent_EnableUPnP())
-	{
-		pBtSession->UPNP_start ();
-	}
-	else
-	{
-		pBtSession->UPNP_stop ();
-	}
-
-	if (_App.Bittorrent_EnableNATPMP())
-	{
-		pBtSession->NATPMP_start ();
-	}
-	else
-	{
-		pBtSession->NATPMP_stop ();
-	}
+	UnlockSession(true);
 }
 
 BOOL vmsBtSupport::SaveState()
@@ -154,7 +195,10 @@ BOOL vmsBtSupport::SaveState()
 	if (is_Initialized () == FALSE)
 		return TRUE;
 
+	vmsAUTOLOCKRW_READ(m_rwlSession);
 	vmsBtSession *pBtSession = get_Session ();
+	if (pBtSession == NULL)
+		return TRUE;
 	vmsBtPersistObject *pBtPO = NULL;
 	pBtSession->getPersistObject (&pBtPO);
 	assert (pBtPO != NULL);
@@ -178,7 +222,7 @@ BOOL vmsBtSupport::SaveState()
 	if (m_pbDHTstate == NULL)
 		return TRUE;
 
-	HANDLE hFile = CreateFile (fsGetDataFilePath ("btdht.sav"), GENERIC_WRITE,
+	HANDLE hFile = CreateFile (fsGetDataFilePath (_T("btdht.sav")), GENERIC_WRITE,
 		0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
 		return FALSE;
@@ -193,10 +237,10 @@ BOOL vmsBtSupport::SaveState()
 
 BOOL vmsBtSupport::LoadState()
 {
-	if (GetFileAttributes (fsGetDataFilePath ("btdht.sav")) == DWORD (-1))
+	if (GetFileAttributes (fsGetDataFilePath (_T("btdht.sav"))) == DWORD (-1))
 		return TRUE;
 
-	HANDLE hFile = CreateFile (fsGetDataFilePath ("btdht.sav"), GENERIC_READ,
+	HANDLE hFile = CreateFile (fsGetDataFilePath (_T("btdht.sav")), GENERIC_READ,
 		0, NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
 		return FALSE;
@@ -215,22 +259,32 @@ BOOL vmsBtSupport::LoadState()
 
 void vmsBtSupport::Shutdown()
 {
-	if (is_Initialized () == FALSE)
-		return;
-
 	m_bWasShutdown = true;
 
+	RemoveSession();
+}
+
+void vmsBtSupport::RemoveSession(){
+	vmsAUTOLOCKRW_WRITE(m_rwlSession);
+
+	if (is_Initialized() == FALSE)
+		return;
+
 	typedef void (WINAPI *FNS)();
-	FNS pfn = (FNS) GetProcAddress (m_hBtDll, "vmsBt_Shutdown");
+	FNS pfn = (FNS)GetProcAddress(m_hBtDll, "vmsBt_RemoveSession");
 	if (pfn)
-		pfn ();
+		pfn();	
+	m_pSession = NULL;
 }
 
 void vmsBtSupport::ApplyProxySettings()
 {
 	if (is_Initialized () == FALSE)
 		return;
-
+	vmsAUTOLOCKRW_READ(m_rwlSession);
+	vmsBtSession *pBtSession = get_Session();
+	if (pBtSession == NULL)
+		return;
 	fsString strIp, strUser, strPwd;
 	int nPort = 0;
 
@@ -249,14 +303,14 @@ void vmsBtSupport::ApplyProxySettings()
 		strPwd = _App.HttpProxy_UserName ();
 		if (strIp.IsEmpty () == FALSE)
 		{
-			char sz [1000];
-			strcpy (sz, strIp);
-			LPSTR pszPort = strrchr (sz, ':');
+			TCHAR tsz [1000];
+			_tcscpy (tsz, strIp);
+			LPTSTR pszPort = _tcsrchr (tsz, _T(':'));
 			if (pszPort)
 			{
 				*pszPort++ = 0;
-				nPort = atoi (pszPort);
-				strIp = sz;
+				nPort = _tstoi (pszPort);
+				strIp = tsz;
 			}
 		}
 		break;
@@ -266,37 +320,39 @@ void vmsBtSupport::ApplyProxySettings()
 		break;
 	}
 
-	get_Session ()->SetProxySettings (strIp, nPort, strUser, strPwd);
+	get_Session ()->SetProxySettings (strIp ? stringFromTstring ((LPCTSTR)strIp).c_str() : nullptr, 
+		nPort, strUser ? stringFromTstring ((LPCTSTR)strUser).c_str() : nullptr, 
+		strPwd ? stringFromTstring ((LPCTSTR)strPwd).c_str() : nullptr);
 }
 
 void vmsBtSupport::GetIeProxySettings(fsString &strIp, fsString &strUser, fsString &strPwd, int &nPort)
 {
-	strIp = strUser = strPwd = ""; 
+	strIp = strUser = strPwd = _T(""); 
 	nPort = 0;
 
 	CRegKey key;
 	if (ERROR_SUCCESS != key.Open (HKEY_CURRENT_USER, 
-			"Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings", 
+			_T("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"), 
 			KEY_READ))
 		return;
 
 	DWORD dw;
-	if (ERROR_SUCCESS != key.QueryValue (dw, "ProxyEnable"))
+	if (ERROR_SUCCESS != key.QueryValue (dw, _T("ProxyEnable")))
 		return;
 	if (dw == FALSE)
 		return;
 
-	char szProxy [1000];
+	TCHAR szProxy [1000];
 	dw = sizeof (szProxy);
-	if (ERROR_SUCCESS != key.QueryValue (szProxy, "ProxyServer", &dw))
+	if (ERROR_SUCCESS != key.QueryValue (szProxy, _T("ProxyServer"), &dw))
 		return;
 
-	LPSTR pszPort = strrchr (szProxy, ':');
+	LPTSTR pszPort = _tcsrchr (szProxy, _T(':'));
 	if (pszPort)
 	{
 		*pszPort = 0;
 		pszPort++;
-		nPort = atoi (pszPort);
+		nPort = _tstoi (pszPort);
 	}
 
 	strIp = szProxy;
@@ -304,14 +360,14 @@ void vmsBtSupport::GetIeProxySettings(fsString &strIp, fsString &strUser, fsStri
 
 void vmsBtSupport::GetFirefoxProxySettings(fsString &strIp, fsString &strUser, fsString &strPwd, int &nPort)
 {
-	strIp = strUser = strPwd = ""; 
+	strIp = strUser = strPwd = _T(""); 
 	nPort = 0;
 
 	if (1 != _App.FirefoxSettings_Proxy_Type ())
 		return;
 
-	strIp = _App.FirefoxSettings_Proxy_Addr ("http");
-	nPort = _App.FirefoxSettings_Proxy_Port ("http");
+	strIp = _App.FirefoxSettings_Proxy_Addr (_T("http"));
+	nPort = _App.FirefoxSettings_Proxy_Port (_T("http"));
 }
 
 vmsBtFile* vmsBtSupport::CreateTorrentFileObject()
@@ -356,6 +412,7 @@ bool vmsBtSupport::LoadBtDll()
 		return true;
 	if (!isBtDllValid ())
 		return false;
+	USES_CONVERSION;
 	return NULL != (m_hBtDll = LoadLibrary (getBtDllFileName ().c_str ()));
 }
 
@@ -410,7 +467,7 @@ int vmsBtSupport::getBtDllMinimumFdmBuildRequired()
 	return _val = pfn ();
 }
 
-std::string vmsBtSupport::getBtDllFileName(void)
+tstring vmsBtSupport::getBtDllFileName(void)
 {
 	tstring tstrDll;
 
@@ -428,8 +485,8 @@ std::string vmsBtSupport::getBtDllFileName(void)
 
 	
 	tstrDll = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
-	if (tstrDll [tstrDll.length () - 1] != '\\')
-		tstrDll += '\\';
+	if (tstrDll [tstrDll.length () - 1] != _T('\\'))
+		tstrDll += _T('\\');
 	tstrDll += _T ("fdmbtsupp.dll");
 	return tstrDll;
 }
@@ -451,4 +508,19 @@ bool vmsBtSupport::isBtDllValid(void)
 		getBtDllMinimumFdmBuildRequired () <= vmsFdmAppMgr::getBuildNumber ();
 
 	return _iResult != 0;
+}
+
+void vmsBtSupport::LockSession(bool bForRead){
+	if (bForRead)
+		m_rwlSession.AcquireReaderLock();
+	else
+		m_rwlSession.AcquireWriterLock();
+
+}
+
+void vmsBtSupport::UnlockSession(bool bForRead){
+	if (bForRead)
+		m_rwlSession.ReleaseReaderLock();
+	else
+		m_rwlSession.ReleaseWriterLock();
 }

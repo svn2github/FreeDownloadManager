@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -93,8 +93,6 @@ void vmsMediaConvertMgr::vmsConvertMediaFileContext::getObjectItselfStateBuffer(
 }
 
 vmsMediaConvertMgr::vmsMediaConvertMgr()
-	
-	
 {
 }
 
@@ -108,65 +106,54 @@ void vmsMediaConvertMgr::AddTask(vmsDownloadSmartPtr dld, const vmsMediaFileConv
 	vmsConvertMediaFileContextSmartPtr pCtxPtr;
 	pCtxPtr.CreateInstance();
 
-	
 	pCtxPtr->dld = dld;
 	pCtxPtr->stgs = stgs;
-	m_vTasks.push_back (pCtxPtr);
+
+	{
+		vmsThreadSafe4Scope;
+		m_vTasks.push_back (pCtxPtr);
+		getPersistObjectChildren ()->addPersistObject (
+			(vmsConvertMediaFileContext*)m_vTasks.back());
+	}
+
 	setDirty();
-	m_vTasks.back()->setDirty();
-	getPersistObjectChildren ()->addPersistObject ((vmsConvertMediaFileContext*)m_vTasks.back());
-	
-	
+	pCtxPtr->setDirty();
 }
 
 BOOL vmsMediaConvertMgr::SaveState()
 {
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	if (!isDirty())
 		return TRUE;
 
-	CString strFile = fsGetDataFilePath ("mctasks.sav");
+	CString strFile = fsGetDataFilePath (_T("mctasks.sav"));
 	HANDLE hFile = CreateFile (strFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
 		FILE_ATTRIBUTE_HIDDEN, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
 		return FALSE;
 
-	DWORD dw;
-	std::auto_ptr<BYTE> apbtBufferGuard;
+	DWORD dwRequiredSize = 0;
+	std::vector <BYTE> buffer;
 
+	DWORD dw;
 	fsMcMgrFileHdr hdr;
 	if (FALSE == WriteFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
 		goto _lErr;
 
-	DWORD dwRequiredSize = 0;
+	{
+		vmsThreadSafe4Scope;
 
-	getStateBuffer(0, &dwRequiredSize, false);
+		getStateBuffer (0, &dwRequiredSize, false);
 
-	if (dwRequiredSize == 0)
-		goto _lErr;
+		if (dwRequiredSize == 0)
+			goto _lErr;
 
-	apbtBufferGuard.reset( new BYTE[dwRequiredSize] );
-	LPBYTE pbtBuffer = apbtBufferGuard.get();
-	if (pbtBuffer == 0)
-		goto _lErr;
-	memset(pbtBuffer, 0, dwRequiredSize);
-
-	getStateBuffer(pbtBuffer, &dwRequiredSize, true);
-
-	if (FALSE == WriteFile (hFile, pbtBuffer, dwRequiredSize, &dw, NULL) || dw != dwRequiredSize) {
-		goto _lErr;
+		buffer.resize (dwRequiredSize, 0);
+		getStateBuffer (&buffer.front (), &dwRequiredSize, true);
 	}
+
+	if (FALSE == WriteFile (hFile, &buffer.front (), dwRequiredSize, &dw, NULL) || dw != dwRequiredSize)
+		goto _lErr;
+
 	CloseHandle (hFile);
 	onStateSavedSuccessfully();
 
@@ -178,9 +165,96 @@ _lErr:
 	return FALSE;
 }
 
+bool vmsMediaConvertMgr::LoadContext(HANDLE hFile, vmsConvertMediaFileContextSmartPtr& ctx, WORD wVer)
+{
+	UINT nId;
+	DWORD dw;
+	if (FALSE == ReadFile (hFile, &nId, sizeof (UINT), &dw, NULL))
+		return false;
+
+	if (FALSE == fsReadStrFromFile (&ctx->stgs.strFormat.pszString, hFile))
+		return false;
+
+	if (FALSE == fsReadStrFromFile (&ctx->stgs.strExtension.pszString, hFile))
+		return false;
+
+	if (FALSE == fsReadStrFromFile (&ctx->stgs.strAudioCodec.pszString, hFile))
+		return false;
+
+	if (FALSE == fsReadStrFromFile (&ctx->stgs.strVideoCodec.pszString, hFile))
+		return false;
+
+	if (FALSE == ReadFile (hFile, &ctx->stgs.nAudioBitrate, sizeof (int), &dw, NULL))
+		return false;
+
+	if (FALSE == ReadFile (hFile, &ctx->stgs.nVideoBitrate, sizeof (int), &dw, NULL))
+		return false;
+
+	if (FALSE == ReadFile (hFile, &ctx->stgs.sizeVideo, sizeof (CSize), &dw, NULL))
+		return false;
+
+	ctx->dld = _DldsMgr.GetDownloadByID (nId);
+	if (ctx->dld != NULL)
+		m_vTasks.push_back (ctx);
+
+	return true;
+}
+
+bool vmsMediaConvertMgr::LoadContext_old(HANDLE hFile, vmsConvertMediaFileContextSmartPtr& ctx, WORD wVer)
+{
+	UINT nId;
+	DWORD dw;
+	LPSTR pszValue = 0;
+	if (FALSE == ReadFile (hFile, &nId, sizeof (UINT), &dw, NULL))
+		return false;
+
+	if (FALSE == fsReadStrFromFileA (&pszValue, hFile))
+		return false;
+
+	CopyString(&ctx->stgs.strFormat.pszString, pszValue);
+	delete pszValue;
+	pszValue = 0;
+
+	if (FALSE == fsReadStrFromFileA (&pszValue, hFile))
+		return false;
+
+	CopyString(&ctx->stgs.strExtension.pszString, pszValue);
+	delete pszValue;
+	pszValue = 0;
+
+	if (FALSE == fsReadStrFromFileA (&pszValue, hFile))
+		return false;
+
+	CopyString(&ctx->stgs.strAudioCodec.pszString, pszValue);
+	delete pszValue;
+	pszValue = 0;
+
+	if (FALSE == fsReadStrFromFileA (&pszValue, hFile))
+		return false;
+
+	CopyString(&ctx->stgs.strVideoCodec.pszString, pszValue);
+	delete pszValue;
+	pszValue = 0;
+
+	if (FALSE == ReadFile (hFile, &ctx->stgs.nAudioBitrate, sizeof (int), &dw, NULL))
+		return false;
+
+	if (FALSE == ReadFile (hFile, &ctx->stgs.nVideoBitrate, sizeof (int), &dw, NULL))
+		return false;
+
+	if (FALSE == ReadFile (hFile, &ctx->stgs.sizeVideo, sizeof (CSize), &dw, NULL))
+		return false;
+
+	ctx->dld = _DldsMgr.GetDownloadByID (nId);
+	if (ctx->dld != NULL)
+		m_vTasks.push_back (ctx);
+
+	return true;
+}
+
 BOOL vmsMediaConvertMgr::LoadState()
 {
-	CString strFile = fsGetDataFilePath ("mctasks.sav");
+	CString strFile = fsGetDataFilePath (_T("mctasks.sav"));
 	HANDLE hFile = CreateFile (strFile, GENERIC_READ, 0, NULL, OPEN_EXISTING,
 		FILE_ATTRIBUTE_HIDDEN, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -195,8 +269,28 @@ BOOL vmsMediaConvertMgr::LoadState()
 	if (FALSE == ReadFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
 		goto _lErr;
 
-	if (lstrcmp (hdr.szSig, MCMGRFILE_SIG) || hdr.wVer > MCMGRFILE_CURRENT_VERSION)
+	if (strcmp (hdr.szSig, MCMGRFILE_SIG) || hdr.wVer > MCMGRFILE_CURRENT_VERSION)
 		goto _lErr;
+
+	if (hdr.wVer <= 1) {
+
+		
+		size_t i;
+		if (FALSE == ReadFile (hFile, &i, sizeof (i), &dw, NULL))
+			goto _lErr;
+		while (i--) {
+
+			vmsMediaConvertMgr::vmsConvertMediaFileContextSmartPtr pCtxPtr;
+			pCtxPtr.CreateInstance();
+			if (!LoadContext_old(hFile, pCtxPtr, hdr.wVer))
+				goto _lErr;
+
+		}
+
+		CloseHandle (hFile);
+		return  TRUE;
+
+	}
 
 	dwRequiredSize -= sizeof (hdr);
 	if (dwRequiredSize <= 0) {
@@ -240,9 +334,9 @@ DWORD WINAPI vmsMediaConvertMgr::_threadConvertMediaFile(LPVOID lp)
 	{
 		CString str;
 		if (i)
-			str.Format ("%s (%d).%s", strDst, i, pcmfc->stgs.strExtension);
+			str.Format (_T("%s (%d).%s"), strDst, i, pcmfc->stgs.strExtension);
 		else
-			str.Format ("%s.%s", strDst, pcmfc->stgs.strExtension);
+			str.Format (_T("%s.%s"), strDst, pcmfc->stgs.strExtension);
 
 		if (GetFileAttributes (str) == DWORD (-1))
 		{
@@ -253,10 +347,13 @@ DWORD WINAPI vmsMediaConvertMgr::_threadConvertMediaFile(LPVOID lp)
 	
 	_DldsMgr.AddEvent (pcmfc->dld, LS (L_CONVERTING), EDT_INQUIRY);
 
+	int ffmpegErrCode;
+	std::string ffmpegErrMessage;
+
 	if (vmsMediaConverter::ConvertMedia (pcmfc->dld->pMgr->get_OutputFilePathName (), 
 			strDst, pcmfc->stgs.strFormat, pcmfc->stgs.strAudioCodec, -1, pcmfc->stgs.nAudioBitrate, -1, 
 			pcmfc->stgs.strVideoCodec, pcmfc->stgs.nVideoBitrate, -1, pcmfc->stgs.sizeVideo.cx, pcmfc->stgs.sizeVideo.cy,
-			&info->iProgress, &info->bNeedStop))
+			&info->iProgress, &info->bNeedStop, &ffmpegErrCode, &ffmpegErrMessage))
 	{
 		if (bDontDeleteSourceFile == FALSE)
 		{
@@ -264,20 +361,20 @@ DWORD WINAPI vmsMediaConvertMgr::_threadConvertMediaFile(LPVOID lp)
 
 			fsDownload_Properties *dp = pcmfc->dld->pMgr->GetDownloadMgr ()->GetDP ();
 			delete [] dp->pszFileName;
-			dp->pszFileName = new char [strDst.GetLength () + 1];
+			dp->pszFileName = new TCHAR [strDst.GetLength () + 1];
 			lstrcpy (dp->pszFileName, strDst);
 			pcmfc->dld->pMgr->GetDownloadMgr ()->setDirty();
 		}
 		else
 		{
 			CString strDst2 = strDst;
-			strDst2.SetAt (strDst2.GetLength () - 3, 't');
-			strDst2.SetAt (strDst2.GetLength () - 2, 'm');
-			strDst2.SetAt (strDst2.GetLength () - 1, 'p');
+			strDst2.SetAt (strDst2.GetLength () - 3, _T('t'));
+			strDst2.SetAt (strDst2.GetLength () - 2, _T('m'));
+			strDst2.SetAt (strDst2.GetLength () - 1, _T('p'));
 			if (FALSE == MoveFile (strDst, strDst2))
 				strDst2 = strDst;
 			CString strFilter; 
-			strFilter.Format ("%s files (*.%s)|*.%s||", pcmfc->stgs.strExtension,
+			strFilter.Format (_T("%s files (*.%s)|*.%s||"), pcmfc->stgs.strExtension,
 				pcmfc->stgs.strExtension, pcmfc->stgs.strExtension);
 			CFileDialog dlg (FALSE, pcmfc->stgs.strExtension, strDst, 
 				OFN_OVERWRITEPROMPT|OFN_NOCHANGEDIR, strFilter, AfxGetApp ()->m_pMainWnd);
@@ -295,18 +392,18 @@ DWORD WINAPI vmsMediaConvertMgr::_threadConvertMediaFile(LPVOID lp)
 
 				CString strMsg;
 				strMsg.Format (LS (L_CONVERTED_OK), strDst);
-				UINT nRet = MyMessageBox (NULL, strMsg, LS (L_DONE), NULL, IDI_QUESTION, 
-					LS (L_LAUNCH), LS (L_OPENFOLDER), "OK");
+				UINT nRet = MyMessageBox (AfxGetMainWnd (), strMsg, LS (L_DONE), NULL, IDI_QUESTION, 
+					LS (L_LAUNCH), LS (L_OPENFOLDER), _T("OK"));
 
 				if (nRet == IDC_BTN1)
 				{
-					ShellExecute (0, "open", strDst, NULL, NULL, SW_SHOW);
+					ShellExecute (0, _T("open"), strDst, NULL, NULL, SW_SHOW);
 				}
 				else if (nRet == IDC_BTN2)
 				{
 					CString strCmd;
-					strCmd.Format ("/select,\"%s\"", strDst);
-					ShellExecute (NULL, "open", "explorer.exe", strCmd, NULL, SW_SHOW);
+					strCmd.Format (_T("/select,\"%s\""), strDst);
+					ShellExecute (NULL, _T("open"), _T("explorer.exe"), strCmd, NULL, SW_SHOW);
 				}
 			}
 		}
@@ -326,7 +423,8 @@ DWORD WINAPI vmsMediaConvertMgr::_threadConvertMediaFile(LPVOID lp)
 		{
 			CString strMsg;
 			strMsg.Format (LS (L_CONVERTED_FAILED), pcmfc->dld->pMgr->get_OutputFilePathName ());
-			MessageBox (NULL, strMsg, LS (L_FAILED), MB_ICONERROR); 
+			
+			AfxGetMainWnd ()->MessageBox (strMsg, LS (L_FAILED), MB_ICONERROR | MB_SETFOREGROUND); 
 		}
 	}
 
@@ -342,22 +440,24 @@ void vmsMediaConvertMgr::ConvertMediaFile(vmsDownloadSmartPtr dld, vmsMediaConve
 
 	if (enOs == MCM_OS_SEARCH_IN_MGR)
 	{
-		int nIndex = FindDownload (dld);
-		if (nIndex == -1)
-			return;
+		{
+			vmsThreadSafe4Scope;
 
-		vmsConvertMediaFileContext* ctx = (vmsConvertMediaFileContext*)m_vTasks [nIndex];
-		if (ctx == 0)
-			return;
-		pcmfc->dld = ctx->dld;	
-		pcmfc->stgs = ctx->stgs;
+			int nIndex = FindDownload (dld);
+			if (nIndex == -1)
+				return;
+
+			vmsConvertMediaFileContext* ctx = (vmsConvertMediaFileContext*)m_vTasks [nIndex];
+			if (ctx == 0)
+				return;
+			pcmfc->dld = ctx->dld;	
+			pcmfc->stgs = ctx->stgs;
 		
-		
-		m_vTasks.erase (m_vTasks.begin () + nIndex);
+			m_vTasks.erase (m_vTasks.begin () + nIndex);
+			getPersistObjectChildren ()->removePersistObject (nIndex);
+		}
+
 		setDirty();
-		getPersistObjectChildren ()->removePersistObject (nIndex);
-		
-		
 	}
 	else
 	{
@@ -385,9 +485,6 @@ int vmsMediaConvertMgr::FindDownload(vmsDownloadSmartPtr dld)
 {
 	for (size_t i = 0; i < m_vTasks.size (); i++)
 	{
-		
-		
-		
 		if (m_vTasks [i]->dld->nID == dld->nID)
 			return i;
 	}

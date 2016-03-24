@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_MYMESSAGEBOX_H__611389DA_FD32_41A3_A149_12BDFFA82B97__INCLUDED_)
@@ -54,9 +54,9 @@ protected:
 	DECLARE_MESSAGE_MAP()
 };
 
-inline UINT MyMessageBox (CWnd* pwndParent, LPCSTR pszText, LPCSTR pszTitle,
-	LPCSTR pszCheckbox, LPCSTR pszSysIcon = NULL, LPCSTR pszBtn1Text = "OK", LPCSTR pszBtn2Text = NULL, 
-	LPCSTR pszBtn3Text = NULL, bool bTopMost = false)
+inline UINT MyMessageBox (CWnd* pwndParent, LPCTSTR pszText, LPCTSTR pszTitle,
+	LPCTSTR pszCheckbox, LPCTSTR pszSysIcon = NULL, LPCTSTR pszBtn1Text = _T("OK"), LPCTSTR pszBtn2Text = NULL, 
+	LPCTSTR pszBtn3Text = NULL, bool bTopMost = false)
 {
 	CMyMessageBox mb (pwndParent);
 
@@ -86,6 +86,16 @@ inline UINT MyMessageBox (CWnd* pwndParent, LPCSTR pszText, LPCSTR pszTitle,
 		nRet |= 0x00010000;
 
 	return nRet;
+}
+
+inline std::pair <UINT, bool> MyMessageBox2 (CWnd* pwndParent, LPCTSTR pszText, LPCTSTR pszTitle,
+	LPCTSTR pszCheckbox, LPCTSTR pszSysIcon = NULL, LPCTSTR pszBtn1Text = _T("OK"), LPCTSTR pszBtn2Text = NULL, 
+	LPCTSTR pszBtn3Text = NULL, bool bTopMost = false)
+{
+	auto result = MyMessageBox (pwndParent, pszText, pszTitle, pszCheckbox, pszSysIcon, pszBtn1Text, pszBtn2Text, pszBtn3Text, bTopMost);
+	bool checked = (result & 0x00010000) != 0;
+	result &= ~0x00010000;
+	return std::make_pair (result, checked);
 }
 
 //{{AFX_INSERT_LOCATION}}

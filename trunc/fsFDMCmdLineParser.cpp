@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -18,12 +18,14 @@ static char THIS_FILE[]=__FILE__;
 
 fsFDMCmdLineParser::fsFDMCmdLineParser() : 
 	m_bRunAsElevatedTasksProcessor (false),
-	m_bInstallIeIntegration (false)
+	m_bInstallIeIntegration (false),
+	m_bInstallChromeIntegration(false)
 {
 	m_bAnotherFDMStarted = FALSE;
 	m_bForceSilent = FALSE;
 	m_bNeedExit = false;
 	m_bNeedRegisterServer = m_bNeedUnregisterServer = false;
+	m_bNeedRegisterServerUserOnly = false;
 }
 
 fsFDMCmdLineParser::~fsFDMCmdLineParser()
@@ -46,27 +48,27 @@ void fsFDMCmdLineParser::Parse(PerformTasksOfType enPTT)
 
 	for (int i = 0; i < m_parser.Get_ParameterCount (); i++)
 	{
-		LPCSTR pszParam = m_parser.Get_Parameter (i);
-		LPCSTR pszValue = m_parser.Get_ParameterValue (i);
+		LPCTSTR pszParam = m_parser.Get_Parameter (i);
+		LPCTSTR pszValue = m_parser.Get_ParameterValue (i);
 
-		if (strcmp (pszParam, "?") == 0 && enPTT == Normal)
+		if (_tcscmp (pszParam, _T("?")) == 0 && enPTT == Normal)
 		{
-			MessageBox (0, "fdm.exe [-fs] [-url=]url1 [-url=]url2 ...\n\n-fs - force silent mode.\nIf url contains spaces it should be in quotes.\n\nExample:\nfdm.exe -fs \"http://site.com/read me.txt\"", "Command line usage", 0);
+			MessageBox (0, _T("fdm.exe [-fs] [-url=]url1 [-url=]url2 ...\n\n-fs - force silent mode.\nIf url contains spaces it should be in quotes.\n\nExample:\nfdm.exe -fs \"http://site.com/read me.txt\""), _T("Command line usage"), 0);
 		}
-		else if (stricmp (pszParam, "fs") == 0)
+		else if (_tcsicmp (pszParam, _T("fs")) == 0)
 		{
 			m_bForceSilent = TRUE;
 		}
-		else if ((stricmp (pszParam, "URL") == 0 || *pszParam == 0) && enPTT == Normal)
+		else if ((_tcsicmp (pszParam, _T("URL")) == 0 || *pszParam == 0) && enPTT == Normal)
 		{
 			fsURL url;
-			BOOL bUrl = IR_SUCCESS == url.Crack (pszValue) && pszValue [1] != ':';
+			BOOL bUrl = IR_SUCCESS == url.Crack (pszValue) && pszValue [1] != _T(':');
 			BOOL bTorrent = FALSE;
 
 			if (bUrl == FALSE)
 			{
-				bTorrent = strlen (pszValue) > 8 && 
-					0 == stricmp (pszValue + strlen (pszValue) - 8, ".torrent");
+				bTorrent = _tcslen (pszValue) > 8 && 
+					0 == _tcsicmp (pszValue + _tcslen (pszValue) - 8, _T(".torrent"));
 
 				if (_tcsstr(pszValue, _T("magnet:")) != 0)
 				{
@@ -109,13 +111,13 @@ void fsFDMCmdLineParser::Parse(PerformTasksOfType enPTT)
 				app->m_vUrlsToAdd.add (url);
 			}
 		}
-		else if (stricmp (pszParam, "nostart") == 0)
+		else if (_tcsicmp (pszParam, _T("nostart")) == 0)
 		{
 			m_bNeedExit = true;
 		}
-		else if (stricmp (pszParam, "assocwithtorrent") == 0 && enPTT == Elevated)
+		else if (_tcsicmp (pszParam, _T("assocwithtorrent")) == 0 && enPTT == Elevated)
 		{
-			bool bAssoc = strcmp (pszValue, "0") != 0;
+			bool bAssoc = _tcscmp (pszValue, _T("0")) != 0;
 			if (bAssoc)
 			{
 				_App.Bittorrent_OldTorrentAssociation (vmsTorrentExtension::GetCurrentAssociation ());
@@ -126,32 +128,40 @@ void fsFDMCmdLineParser::Parse(PerformTasksOfType enPTT)
 				vmsTorrentExtension::AssociateWith (_App.Bittorrent_OldTorrentAssociation ());
 			}
 		}
-		else if (stricmp (pszParam, "assocwithmagnet") == 0 && enPTT == Elevated)
+		else if (_tcsicmp (pszParam, _T("assocwithmagnet")) == 0 && enPTT == Elevated)
 		{
-			bool bAssoc = strcmp (pszValue, "0") != 0;
+			bool bAssoc = _tcscmp (pszValue, _T("0")) != 0;
 			vmsFdmUtils::AssociateFdmWithMagnetLinks (bAssoc);
 		}
-		else if (!stricmp (pszParam, "RegServer"))
+		else if (!_tcsicmp (pszParam, _T("RegServer")))
 		{
 			m_bNeedRegisterServer = true;
 		}
-		else if (!stricmp (pszParam, "UnregServer"))
+		else if (!_tcsicmp (pszParam, _T("RegServerUserOnly")))
+		{
+			m_bNeedRegisterServerUserOnly = true;
+		}
+		else if (!_tcsicmp (pszParam, _T("UnregServer")))
 		{
 			m_bNeedUnregisterServer = true;
 		}
-		else if (!stricmp (pszParam, "runelevated"))
+		else if (!_tcsicmp (pszParam, _T("runelevated")))
 		{
 			m_bRunAsElevatedTasksProcessor = true;
 		}
-		else if (!stricmp (pszParam, "ie"))
+		else if (!_tcsicmp (pszParam, _T("ie")))
 		{
 			m_bInstallIeIntegration = true;
 		}
-		else if (!stricmp (pszParam, "installIntegration") || !stricmp (pszParam, "deinstallIntegration") && enPTT == Elevated)
+		else if (!_tcsicmp(pszParam, _T("chrome")))
+		{
+			m_bInstallChromeIntegration = true;
+		}
+		else if (!_tcsicmp (pszParam, _T("installIntegration")) || !_tcsicmp (pszParam, _T("deinstallIntegration")))
 		{
 			std::vector <int> v;
 			ReadIntVector (pszValue, v);
-			bool bInstall = !stricmp (pszParam, "installIntegration");
+			bool bInstall = !_tcsicmp (pszParam, _T("installIntegration"));
 			for (size_t i = 0; i < v.size (); i++)
 			{
 				if (bInstall)
@@ -168,7 +178,7 @@ BOOL fsFDMCmdLineParser::is_ForceSilentSpecified()
 	return m_bForceSilent;
 }
 
-void fsFDMCmdLineParser::AddTorrent(LPCSTR pszTorrent)
+void fsFDMCmdLineParser::AddTorrent(LPCTSTR pszTorrent)
 {
 	if (m_bAnotherFDMStarted)
 	{
@@ -196,6 +206,11 @@ void fsFDMCmdLineParser::AddTorrent(LPCSTR pszTorrent)
 bool fsFDMCmdLineParser::isNeedRegisterServer(void)
 {
 	return m_bNeedRegisterServer;
+}
+
+bool fsFDMCmdLineParser::isNeedRegisterServerUserOnly(void)
+{
+	return m_bNeedRegisterServerUserOnly;
 }
 
 bool fsFDMCmdLineParser::isNeedUnregisterServer(void)

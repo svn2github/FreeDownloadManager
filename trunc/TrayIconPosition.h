@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_TRAYICONPOSITION_H__9FD8A5A1_419F_11D7_B751_00304F20BD3B__INCLUDED_)

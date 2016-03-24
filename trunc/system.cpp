@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -40,7 +40,7 @@ BOOL fsSetLayeredWindowAttributes (HWND hWnd, COLORREF clrKey, BYTE bAlpha, DWOR
 		HMODULE hDll = LoadLibrary (_T ("User32.Dll"));
 
 		if (hDll)
-			_pfnSetLWA = (fntSetLayeredWndAttr) GetProcAddress (hDll, _T ("SetLayeredWindowAttributes"));
+			_pfnSetLWA = (fntSetLayeredWndAttr) GetProcAddress (hDll, "SetLayeredWindowAttributes");
 																											
 		if (_pfnSetLWA == NULL)
 			return FALSE;
@@ -63,12 +63,12 @@ void fsInitRAS ()
 	if (hDll)
 	{
 		
-		_pfnRasGetStat = (fntRasGetStat) GetProcAddress (hDll, _T ("RasGetConnectionStatistics"));
+		_pfnRasGetStat = (fntRasGetStat) GetProcAddress (hDll, "RasGetConnectionStatistics");
 
 		
-		_pfnRasHangUp  = (fntRasHangUp) GetProcAddress (hDll, _T ("RasHangUpA"));
+		_pfnRasHangUp  = (fntRasHangUp) GetProcAddress (hDll, "RasHangUpA");
 		if (_pfnRasHangUp == NULL)
-			_pfnRasHangUp  = (fntRasHangUp) GetProcAddress (hDll, _T ("RasHangUp"));
+			_pfnRasHangUp  = (fntRasHangUp) GetProcAddress (hDll, "RasHangUp");
 
 		
 		_pfnRasGetErrorString = (fntRasGetErrorString) GetProcAddress (hDll, "RasGetErrorStringA");
@@ -218,22 +218,22 @@ void fsSetForegroundWindow (HWND hWnd)
 	AttachThreadInput (iMyTID, iCurrTID, FALSE);
 }
 
-void fsOpenUrlInBrowser (LPCSTR pszUrl)
+void fsOpenUrlInBrowser (LPCTSTR pszUrl)
 {
-	char szReg [100];
-	char szBrowser [MY_MAX_PATH];
+	TCHAR szReg [100];
+	TCHAR szBrowser [MY_MAX_PATH];
 	DWORD dwBrowserLen = MY_MAX_PATH;
 
 	
 
-	if (strnicmp (pszUrl, "http", 4) == 0)
-		strcpy (szReg, "http");
-	else if (strnicmp (pszUrl, "https", 5) == 0)
-		strcpy (szReg, "https");
+	if (_tcsncicmp (pszUrl, _T("http"), 4) == 0)
+		_tcscpy (szReg, _T("http"));
+	else if (_tcsncicmp (pszUrl, _T("https"), 5) == 0)
+		_tcscpy (szReg, _T("https"));
 	else
-		strcpy (szReg, "ftp");
+		_tcscpy (szReg, _T("ftp"));
 
-	strcat (szReg, "\\shell\\open\\command");
+	_tcscat (szReg, _T("\\shell\\open\\command"));
 
 	HKEY hReg;
 
@@ -248,26 +248,26 @@ void fsOpenUrlInBrowser (LPCSTR pszUrl)
 
 	RegCloseKey (hReg);
 
-	strlwr (szBrowser);
-	LPSTR pszExe;
-	pszExe = strstr (szBrowser, ".exe");
+	_tcslwr (szBrowser);
+	LPTSTR pszExe;
+	pszExe = _tcsstr (szBrowser, _T(".exe"));
 
 	if (pszExe == NULL)
 		goto _lErr;
 
 	pszExe [4] = 0;
 
-	if (32 >= (int)ShellExecute (HWND_DESKTOP, "open", szBrowser [0] == '"' ? szBrowser+1 : szBrowser, pszUrl, NULL, SW_SHOW))
+	if (32 >= (int)ShellExecute (HWND_DESKTOP, _T("open"), szBrowser [0] == _T('"') ? szBrowser+1 : szBrowser, pszUrl, NULL, SW_SHOW))
 		goto _lErr;
 
 	return;
 
 _lErr:
-	if (32 >= (int) ShellExecute (HWND_DESKTOP, "open", pszUrl, NULL, NULL, SW_SHOW))
+	if (32 >= (int) ShellExecute (HWND_DESKTOP, _T("open"), pszUrl, NULL, NULL, SW_SHOW))
 		MessageBox (NULL, pszUrl, LS (L_ERROPENURL), MB_ICONERROR);
 }
 
-int fsStrCmpNC (LPCSTR psz1, LPCSTR psz2)
+int fsStrCmpNC (LPCTSTR psz1, LPCTSTR psz2)
 {
 	int ret = CompareString (LOCALE_USER_DEFAULT, NORM_IGNORECASE, psz1, -1, psz2, -1);
 	switch (ret)
@@ -283,7 +283,7 @@ int fsStrCmpNC (LPCSTR psz1, LPCSTR psz2)
 	}
 }
 
-int fsStrNCmpNC (LPCSTR psz1, LPCSTR psz2, int nCount)
+int fsStrNCmpNC (LPCTSTR psz1, LPCTSTR psz2, int nCount)
 {
 	int ret = CompareString (LOCALE_USER_DEFAULT, NORM_IGNORECASE, psz1, nCount, psz2, nCount);
 	switch (ret)
@@ -302,7 +302,7 @@ int fsStrNCmpNC (LPCSTR psz1, LPCSTR psz2, int nCount)
 void fsOnMemoryError ()
 {
 #ifndef FDM_DLDR__RAWCODEONLY
-	if (IDCANCEL == MessageBox (NULL, "Out of memory! Please close some applications and press Retry or Cancel to exit without saving any data", "Out of memory", MB_ICONEXCLAMATION|MB_RETRYCANCEL))
+	if (IDCANCEL == MessageBox (NULL, _T("Out of memory! Please close some applications and press Retry or Cancel to exit without saving any data"), _T("Out of memory"), MB_ICONEXCLAMATION|MB_RETRYCANCEL))
 	{
 		_TrayMgr.Remove ();
 		ExitProcess (0);
@@ -322,7 +322,7 @@ BOOL GetIEVersion(DWORD *pMajor, DWORD *pMinor, DWORD *pBuild, DWORD *pSubBuild)
         lRet = rk.QueryValue(szBuff, _T("Version"), &dwCount);
         if(lRet == 0)
         {
-            sscanf(szBuff, "%u.%u.%u.%u", pMajor, pMinor, pBuild, pSubBuild);
+            _stscanf(szBuff, _T("%u.%u.%u.%u"), pMajor, pMinor, pBuild, pSubBuild);
             return TRUE;
         }
     }
@@ -340,7 +340,7 @@ DWORD GetShell32Version ()
 
 	if (dwVer == 0)
 	{
-		HMODULE hLib = LoadLibrary ("shell32.dll");
+		HMODULE hLib = LoadLibrary (_T("shell32.dll"));
 		if (hLib == NULL)
 			return 0;
 
@@ -407,10 +407,10 @@ BOOL fsIsSystemInFullScreenMode ()
 		{
 			CString str;
 			pwnd->GetWindowText (str);
-			char sz [1000];
+			TCHAR sz [1000];
 			GetClassName (pwnd->m_hWnd, sz, 1000);
 			str = sz;
-			if (str.CompareNoCase ("progman"))
+			if (str.CompareNoCase (_T("progman")))
 				return TRUE;
 		}	
 	}
@@ -427,7 +427,7 @@ BOOL vmsSetSuspendState (BOOL bHibernate, BOOL bForce, BOOL bDisableWakeEvent)
 
 	if (_pfnSSS == NULL)
 	{
-		HMODULE hDll = LoadLibrary ("powrprof.dll");
+		HMODULE hDll = LoadLibrary (_T("powrprof.dll"));
 		if (hDll)
 			_pfnSSS = (fntSetSuspendState) GetProcAddress (hDll, "SetSuspendState");
 	}
@@ -526,16 +526,21 @@ LONG fsCopyKey(HKEY hSrcParent, HKEY hTargParent, LPCTSTR szSrcKey, LPCTSTR szTa
     }
 }
 
-DWORD vmsSHCopyKey (HKEY hkeySrc, LPCSTR pszSubKey, HKEY hkeyDst)
+DWORD vmsSHCopyKey (HKEY hkeySrc, LPCTSTR pszSubKey, HKEY hkeyDst)
 {
-	typedef DWORD (WINAPI *fntSHCopyKey)(HKEY, LPCSTR, HKEY, DWORD);
+	typedef DWORD (WINAPI *fntSHCopyKey)(HKEY, LPCTSTR, HKEY, DWORD);
 	static fntSHCopyKey _pfnCK = NULL;
 
 	if (_pfnCK == NULL)
 	{
-		HMODULE hDll = LoadLibrary ("shlwapi.dll");
+		HMODULE hDll = LoadLibrary (_T("shlwapi.dll"));
+#ifdef UNICODE
+		if (hDll)
+			_pfnCK = (fntSHCopyKey) GetProcAddress (hDll, "SHCopyKeyW");
+#else
 		if (hDll)
 			_pfnCK = (fntSHCopyKey) GetProcAddress (hDll, "SHCopyKeyA");
+#endif
 	}
 
 	if (_pfnCK == NULL)
@@ -544,28 +549,28 @@ DWORD vmsSHCopyKey (HKEY hkeySrc, LPCSTR pszSubKey, HKEY hkeyDst)
 	return _pfnCK (hkeySrc, pszSubKey, hkeyDst, NULL);
 }
 
-BOOL vmsMoveFileAtWinBoot (LPCSTR pszSrc, LPCSTR pszDst)
+BOOL vmsMoveFileAtWinBoot (LPCTSTR pszSrc, LPCTSTR pszDst)
 {
 	if ((GetVersion () & 0x80000000) == 0) 
 		return MoveFileEx (pszSrc, pszDst, MOVEFILE_DELAY_UNTIL_REBOOT);
 
-	char szWinInit [MAX_PATH] = "";
+	TCHAR szWinInit [MAX_PATH] = _T("");
 	GetWindowsDirectory (szWinInit, MAX_PATH);
 	if (szWinInit [3] != 0)
-		lstrcat (szWinInit, "\\");
-	lstrcat (szWinInit, "wininit.ini");
+		lstrcat (szWinInit, _T("\\"));
+	lstrcat (szWinInit, _T("wininit.ini"));
 
-	char sz [32000] = "";
-	DWORD dwLen = GetPrivateProfileSection ("rename", sz, sizeof (sz), szWinInit);
-	LPSTR psz = sz + dwLen;
-	lstrcpy (psz, pszDst ? pszDst : "NUL");
-	lstrcat (psz, "=");
+	TCHAR sz [32000] = _T("");
+	DWORD dwLen = GetPrivateProfileSection (_T("rename"), sz, sizeof (sz), szWinInit);
+	LPTSTR psz = sz + dwLen;
+	lstrcpy (psz, pszDst ? pszDst : _T("NUL"));
+	lstrcat (psz, _T("="));
 	lstrcat (psz, pszSrc);
 	psz [lstrlen (psz) + 1] = 0;
-	return WritePrivateProfileSection ("rename", sz, szWinInit);
+	return WritePrivateProfileSection (_T("rename"), sz, szWinInit);
 }
 
-BOOL vmsDeleteFileAtWinBoot (LPCSTR pszFile)
+BOOL vmsDeleteFileAtWinBoot (LPCTSTR pszFile)
 {
 	return vmsMoveFileAtWinBoot (pszFile, NULL);
 }
@@ -575,24 +580,24 @@ char vmsGetExeDriveLetter ()
 	static char _chResult = 0;
 	if (_chResult)
 		return _chResult;
-	char sz [MAX_PATH] = "";
+	TCHAR sz [MAX_PATH] = _T("");
 	GetModuleFileName (NULL, sz, MAX_PATH);
 	return _chResult = sz [0];
 }
 
-void vmsCopyFiles (LPCSTR pszSrcFolder, LPCSTR pszDstFolder, LPCSTR pszFileMask)
+void vmsCopyFiles (LPCTSTR pszSrcFolder, LPCTSTR pszDstFolder, LPCTSTR pszFileMask)
 {
 
 #ifndef FDM_DLDR__RAWCODEONLY
 
 	CString str = pszSrcFolder;
-	if (str.Right (1) != '\\')
-		str += '\\';
+	if (str.Right (1) != _T('\\'))
+		str += _T('\\');
 	str += pszFileMask;
 	
 	CString strDst = pszDstFolder;
-	if (strDst.Right (1) != '\\')
-		strDst += '\\';
+	if (strDst.Right (1) != _T('\\'))
+		strDst += _T('\\');
 	
 	CFileFind ff;
 	

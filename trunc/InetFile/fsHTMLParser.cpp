@@ -1,8 +1,9 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsHTMLParser.h"
+#include "Utils.h"
 #include "strparsing.h"
 #include "system.h"
 
@@ -31,7 +32,7 @@ void fsHTMLParser::ParseHTML(LPSTR pszHTML)
 
 LPCSTR fsHTMLParser::GetUrl(int iIndex)
 {
-	return m_vUrls [iIndex];
+	return m_vUrls [iIndex].c_str();
 }
 
 void fsHTMLParser::ParseHTML()
@@ -193,7 +194,7 @@ LPCSTR fsHTMLParser::ParseTag_A_Href(LPCSTR pszTag, LPCSTR pszAddUrlEnds)
 			
 			for (int i = 0; i < m_vUrls.size (); i++) 
 			{
-				if (stricmp (m_vUrls [i], pszUrl) == 0)
+				if (stricmp (m_vUrls [i].c_str(), pszUrl) == 0)
 				{
 					iUrlFound = i;
 					break;
@@ -233,7 +234,7 @@ LPCSTR fsHTMLParser::Parse_HTMLGiving(LPCSTR pszGiving, LPSTR *ppszValue, LPCSTR
 {
 
 	
-	pszGiving = fsStrSkipDividers (pszGiving);
+	pszGiving = fsStrSkipDividersA (pszGiving);
 
 	*ppszValue = NULL;
 
@@ -243,7 +244,7 @@ LPCSTR fsHTMLParser::Parse_HTMLGiving(LPCSTR pszGiving, LPSTR *ppszValue, LPCSTR
 
 	pszGiving ++;	
 
-	pszGiving = fsStrSkipDividers (pszGiving);
+	pszGiving = fsStrSkipDividersA (pszGiving);
 
 	
 	LPCSTR pszEnd = " >";
@@ -264,7 +265,7 @@ LPCSTR fsHTMLParser::Parse_HTMLGiving(LPCSTR pszGiving, LPSTR *ppszValue, LPCSTR
 		strcat (szEnd, pszAddEnds);
 
 	
-	pszGiving = fsStrGetStrUpToChar (pszGiving, szEnd, ppszValue);
+	pszGiving = fsStrGetStrUpToCharA (pszGiving, szEnd, ppszValue);
 
 	if (pszGiving == NULL)
 		return NULL;
@@ -314,7 +315,7 @@ int fsHTMLParser::GetImageCount()
 
 LPCSTR fsHTMLParser::GetImage(int iIndex)
 {
-	return m_vImgs [iIndex];
+	return m_vImgs [iIndex].c_str();
 }
 
 int fsHTMLParser::GetImageLinkTo(int iImage)
@@ -327,9 +328,21 @@ void fsHTMLParser::SetKillDupes(BOOL bKill)
 	m_bKillDupes = bKill;
 }
 
+void fsHTMLParser::ReplaceUrl(int iIndex, LPCWSTR pszNewUrl)
+{
+	CHAR szNewUrl[10000] = {0,};
+	DWORD dwSize = sizeof(szNewUrl);
+	vmsUnicodeUrlToAnsi(pszNewUrl, szNewUrl, &dwSize);
+
+	LPCSTR pszUrl = &szNewUrl[0];
+
+	ReplaceUrl(iIndex, pszUrl);
+
+}
+
 void fsHTMLParser::ReplaceUrl(int iIndex, LPCSTR pszNewUrl)
 {
-	if (strcmp (m_vUrls [iIndex], pszNewUrl) == 0)
+	if (strcmp (m_vUrls [iIndex].c_str(), pszNewUrl) == 0)
 		return;
 
 	fsTextRegion &rgn = m_vUrlsRgns [iIndex];
@@ -380,7 +393,7 @@ int fsHTMLParser::ReplaceString(LPCSTR pszNewVal, fsTextRegion &rgn)
 
 void fsHTMLParser::ReplaceImage(int iIndex, LPCSTR pszNewImg)
 {
-	if (strcmp (m_vImgs [iIndex], pszNewImg) == 0)
+	if (strcmp (m_vImgs [iIndex].c_str(), pszNewImg) == 0)
 		return;
 
 	fsTextRegion &rgn = m_vImgsRgns [iIndex];
@@ -389,6 +402,16 @@ void fsHTMLParser::ReplaceImage(int iIndex, LPCSTR pszNewImg)
 	rgn.nEnd -= nHole;
 
 	CorrectRegions (rgn.nStart, nHole);
+}
+
+void fsHTMLParser::ReplaceImage(int iIndex, LPCWSTR pwszNewImg)
+{
+	CHAR szNewImg[10000] = {0,};
+	DWORD dwSize = sizeof(szNewImg);
+	vmsUnicodeUrlToAnsi(pwszNewImg, szNewImg, &dwSize);
+
+	LPCSTR pszImgs = &szNewImg[0];
+	ReplaceImage(iIndex, pszImgs);
 }
 
 UINT fsHTMLParser::GetHTMLLength()
@@ -523,7 +546,7 @@ LPCSTR fsHTMLParser::ParseTag_Link_Href(LPCSTR pszTag)
 		if (m_bKillDupes)
 		{
 			for (int i = 0; i < m_vLinkUrls.size (); i++)
-				if (stricmp (m_vLinkUrls [i], pszUrl) == 0)
+				if (stricmp (m_vLinkUrls [i].c_str(), pszUrl) == 0)
 				{
 					iUrlFound = i;
 					break;
@@ -558,7 +581,7 @@ int fsHTMLParser::GetLinkUrlCount()
 
 LPCSTR fsHTMLParser::GetLinkUrl(int iIndex)
 {
-	return m_vLinkUrls [iIndex];
+	return m_vLinkUrls [iIndex].c_str();
 }
 
 fsLinkRelType fsHTMLParser::GetLinkUrlRelType(int iIndex)
@@ -568,7 +591,7 @@ fsLinkRelType fsHTMLParser::GetLinkUrlRelType(int iIndex)
 
 void fsHTMLParser::ReplaceLinkUrl(int iIndex, LPCSTR pszNewUrl)
 {
-	if (strcmp (m_vLinkUrls [iIndex], pszNewUrl) == 0)
+	if (strcmp (m_vLinkUrls [iIndex].c_str(), pszNewUrl) == 0)
 		return;
 
 	fsTextRegion &rgn = m_vLinkUrlsRgns [iIndex];
@@ -577,6 +600,16 @@ void fsHTMLParser::ReplaceLinkUrl(int iIndex, LPCSTR pszNewUrl)
 	rgn.nEnd -= nHole;
 
 	CorrectRegions (rgn.nStart, nHole);
+}
+
+void fsHTMLParser::ReplaceLinkUrl(int iIndex, LPCWSTR pwszNewUrl)
+{
+	CHAR szNewUrl[10000] = {0,};
+	DWORD dwSize = sizeof(szNewUrl);
+	vmsUnicodeUrlToAnsi(pwszNewUrl, szNewUrl, &dwSize);
+
+	LPCSTR pszNewUrl = &szNewUrl[0];
+	ReplaceLinkUrl(iIndex, pszNewUrl);
 }
 
 LPCSTR fsHTMLParser::ParseTag_Meta(LPCSTR pszTag, fsHTMLParser *pThis)
@@ -650,7 +683,7 @@ LPCSTR fsHTMLParser::ParseTag_Meta_Content(LPCSTR pszTag, fsMetaHttpEquivType mh
 		
 	case MHET_REFRESH:
 
-		pszTag = fsStrSkipDividers (pszTag);
+		pszTag = fsStrSkipDividersA (pszTag);
 		if (*pszTag != '=')
 		{
 
@@ -662,13 +695,13 @@ LPCSTR fsHTMLParser::ParseTag_Meta_Content(LPCSTR pszTag, fsMetaHttpEquivType mh
 		bA = *pszTag == '\'' || *pszTag == '"';
 		if (bA) pszTag++;
 
-		pszTag = fsStrSkipDividers (pszTag);
+		pszTag = fsStrSkipDividersA (pszTag);
 
 		while (fsStrIsDivider (*pszTag) == FALSE && *pszTag != ';') pszTag++;
 
 		if (*pszTag == ';') pszTag++;
 
-		pszTag = fsStrSkipDividers (pszTag);
+		pszTag = fsStrSkipDividersA (pszTag);
 
 		if (strnicmp (pszTag, "url", 3) || (fsStrIsDivider (pszTag [3]) == FALSE && pszTag [3] != '='))
 		{
@@ -750,7 +783,7 @@ LPCSTR fsHTMLParser::ParseTag_Base_Href(LPCSTR pszTag, LPCSTR pszAddUrlEnds)
 
 LPCSTR fsHTMLParser::Get_BaseURL()
 {
-	return m_strBaseURL;
+	return m_strBaseURL.c_str();
 }
 
 void fsHTMLParser::RemoveBaseTag()
@@ -802,7 +835,7 @@ LPCSTR fsHTMLParser::ParseTag_Frame_Src(LPCSTR pszTag, LPCSTR )
 	if (pszUrl)
 	{
 		fsTextRegion rgn;
-		rgn.nStart = pszTag - lstrlen (pszUrl) - m_pszHTML;
+		rgn.nStart = pszTag - strlen (pszUrl) - m_pszHTML;
 		rgn.nEnd = pszTag - m_pszHTML;
 		if (pszTag [-1] == '"' || pszTag [-1] == '\'') 
 		{
@@ -824,12 +857,12 @@ int fsHTMLParser::GetFrameUrlCount()
 
 LPCSTR fsHTMLParser::GetFrameUrl(int iIndex)
 {
-	return m_vFrameUrls [iIndex];
+	return m_vFrameUrls [iIndex].c_str();
 }
 
 void fsHTMLParser::ReplaceFrameUrl(int iIndex, LPCSTR pszNewUrl)
 {
-	if (strcmp (m_vFrameUrls [iIndex], pszNewUrl) == 0)
+	if (strcmp (m_vFrameUrls [iIndex].c_str(), pszNewUrl) == 0)
 		return;
 	fsTextRegion &rgn = m_vFrameRgns [iIndex];
 	int nHole = ReplaceString (pszNewUrl, rgn);
@@ -837,4 +870,17 @@ void fsHTMLParser::ReplaceFrameUrl(int iIndex, LPCSTR pszNewUrl)
 	rgn.nEnd -= nHole;
 
 	CorrectRegions (rgn.nStart, nHole);
+}
+
+void fsHTMLParser::ReplaceFrameUrl(int iIndex, LPCWSTR pwszNewUrl)
+{
+
+	CHAR szNewUrl[10000] = {0,};
+	DWORD dwSize = sizeof(szNewUrl);
+	vmsUnicodeUrlToAnsi(pwszNewUrl, szNewUrl, &dwSize);
+
+	LPCSTR pszNewUrl = &szNewUrl[0];
+
+	ReplaceFrameUrl(iIndex, pwszNewUrl);
+
 }

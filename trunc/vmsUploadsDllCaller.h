@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSUPLOADSDLLCALLER_H__0DB1F7B9_7EE8_4D15_8ABE_68D1D244F6D7__INCLUDED_)
@@ -18,18 +18,18 @@ class vmsUploadsDllCaller : public vmsUploadsDll::vmsDllCaller
 public:
 	vmsUploadsDll::vmsDllCallerEx* GetExtendedFeatures();
 	BOOL OnBeforeUpload (LPSTR, bool*);
-	void GetCommonFilesFolder (LPSTR psz);
-	void GetDataFilePath (LPCSTR pszName, LPSTR pszResult);
+	void GetCommonFilesFolder (LPTSTR psz);
+	void GetDataFilePath (LPCTSTR pszName, LPTSTR pszResult);
 	
 	vmsUploadsDll::vmsDllPersist* GetPersist();
 	
 	HBITMAP GetBitmap (vmsUploadsDll::vmsWhichBitmap enBmp);
 	
-	void IRToStr (int ir, char *sz, UINT cch);
+	void IRToStr (int ir, TCHAR *tsz, UINT cch);
 	
 	virtual vmsUploadsDll::vmsDllCallerSettings* GetSettings();
 	
-	virtual LPCSTR GetTranslatedString (int nId);
+	virtual LPCTSTR GetTranslatedString (int nId);
 
 	vmsUploadsDllCaller();
 	virtual ~vmsUploadsDllCaller();

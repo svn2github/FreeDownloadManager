@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __MISC_H_
@@ -7,19 +7,20 @@
 
 #include "list.h"
 #include "fsDownload.h" 
+#include "common/misc.h"
 
 extern void DrawVerticalFrame (HDC hdc, int xStart, int xEnd, int yStart, int height);
 extern void DrawHorizontalFrame (HDC hdc, int yStart, int yEnd, int xStart, int width);
 
-extern void BytesToXBytes (UINT64 uBytes, float* pfXBytes, LPSTR pszXVal);
+extern void BytesToXBytes (UINT64 uBytes, float* pfXBytes, LPTSTR pszXVal);
 extern CString BytesToString (UINT64 uSize, bool bForceXbytes = false);
 
-extern void SystemTimeToStr (SYSTEMTIME *time, LPSTR pszDate, LPSTR pszTime, BOOL bSeconds = TRUE);
-extern void FileTimeToStr (FILETIME *time, LPSTR pszDate, LPSTR pszTime, BOOL bSeconds = TRUE);
+extern void SystemTimeToStr (SYSTEMTIME *time, LPTSTR pszDate, LPTSTR pszTime, BOOL bSeconds = TRUE);
+extern void FileTimeToStr (FILETIME *time, LPTSTR pszDate, LPTSTR pszTime, BOOL bSeconds = TRUE);
 
-extern BOOL fsErrorToStr (LPSTR pszErr, DWORD dwMaxSize, DWORD* pdwLastError = NULL);
+extern BOOL fsErrorToStr (LPTSTR pszErr, DWORD dwMaxSize, DWORD* pdwLastError = NULL);
 
-extern BOOL fsBuildPathToFile (LPCSTR pszFileName);
+extern BOOL fsBuildPathToFile (LPCTSTR pszFileName);
 extern BOOL fsBuildPathToFileW (LPCWSTR pszFileName);
 
 extern BOOL DPEntry_IsAllEqual  (DLDS_LIST *pv, int offset, int size, BOOL bString);
@@ -39,18 +40,16 @@ extern void DNPEntry_SetValue_BitMask (DLDS_LIST *pv, int offset, DWORD dwMask);
 
 extern void DNPEntry_UnsetValue_BitMask (DLDS_LIST *pv, int offset, DWORD dwMask);
 
-extern BOOL IsExtInExtsStr (LPCSTR pszExts, LPCSTR pszExt);
+extern BOOL IsExtInExtsStr (LPCTSTR pszExts, LPCTSTR pszExt);
 
-extern void fsGetPath (LPCSTR pszFile, LPSTR pszPath);
+extern void fsGetPath (LPCTSTR pszFile, LPTSTR pszPath);
 
-extern void fsGetFileName (LPCSTR pszFilePath, LPSTR pszFileName);
+extern void fsGetFileName (LPCTSTR pszFilePath, LPTSTR pszFileName);
 
-extern void fsPathToGoodPath (LPSTR pszPath);
+extern void fsPathToGoodPath (LPTSTR pszPath);
 
-extern void fsPathToGoodUrlPath (LPSTR pszPath);
+extern void fsPathToGoodUrlPath (LPTSTR pszPath);
 
-extern BOOL fsSaveStrToFile(LPCSTR pszStr, HANDLE hFile);
-extern BOOL fsReadStrFromFile(LPSTR *ppszStr, HANDLE hFile);
 extern BOOL fsReadStringFromFile (HANDLE hFile, fsString &str);
 
 extern DWORD fsGetTimeDelta (FILETIME *t1, FILETIME *t2);
@@ -74,5 +73,7 @@ extern void fsOpenBuyPage ();
 
 extern void vmsUtf8ToAscii (LPSTR psz);
 extern std::wstring vmsUtf8Unicode (LPCSTR psz);
+extern bool vmsUnicodeToUtf8 (LPCTSTR tszSrc, LPSTR szTar, DWORD* pdwTarBuffLen);
+extern bool vmsAnsiToUtf8 (LPCTSTR tszSrc, LPSTR szTar, DWORD* pdwTarBuffLen);
 
 #endif

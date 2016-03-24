@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsFtpConnection.h"
@@ -18,7 +18,7 @@ fsFtpConnection::~fsFtpConnection()
 
 }
 
-fsInternetResult fsFtpConnection::Connect(LPCSTR pszServer, LPCSTR pszUser, LPCSTR pszPassword, INTERNET_PORT nPort)
+fsInternetResult fsFtpConnection::Connect(LPCTSTR pszServer, LPCTSTR pszUser, LPCTSTR pszPassword, INTERNET_PORT nPort)
 {
 	fsInternetResult ir;
 
@@ -71,18 +71,18 @@ void fsFtpConnection::ReceiveExtError()
 	if (::GetLastError () == ERROR_INSUFFICIENT_BUFFER)	
 	{
 		dwLen ++;	
-		fsnew (m_pszLastError, char, dwLen);	
+		fsnew (m_pszLastError, TCHAR, dwLen);	
 		InternetGetLastResponseInfo (&dwErr, m_pszLastError, &dwLen);	
 	}
 }
 
-fsInternetResult fsFtpConnection::SetCurrentDirectory(LPCSTR pszDir)
+fsInternetResult fsFtpConnection::SetCurrentDirectory(LPCTSTR pszDir)
 {
 	if (pszDir == NULL || *pszDir == 0)
 		return IR_ERROR;
 
 	fsString strCmd;
-	strCmd = "CWD ";
+	strCmd = _T("CWD ");
 	strCmd += pszDir;
 	Dialog (IFDD_TOSERVER, strCmd);	
 									

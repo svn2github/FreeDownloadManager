@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSHTTPFILE_H__28FE56A5_B9BC_43B2_A475_16CC7616FC32__INCLUDED_)
@@ -15,31 +15,31 @@
 class fsHttpFile : public fsInternetFile  
 {
 public:
-	void set_Charset (LPCSTR psz);
+	void set_Charset (LPCTSTR psz);
 	void set_EnableAutoRedirect (BOOL b);
 	fsString GetCookiesFromResponse();
 	void set_UseMultipart (BOOL b);
 	fsInternetResult Write (LPBYTE pBuffer, DWORD dwSize, DWORD *pdwWritten);
-	fsInternetResult OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 uUploadPartSize = _UI64_MAX, UINT64 uUploadTotalSize = _UI64_MAX);
+	fsInternetResult OpenEx(LPCTSTR pszFilePath, UINT64 uStartPos, UINT64 uUploadPartSize = _UI64_MAX, UINT64 uUploadTotalSize = _UI64_MAX);
 	
 	
-	void SetAdditionalHeaders(LPCSTR pszAdditionalHeaders);
+	void SetAdditionalHeaders(LPCTSTR pszAdditionalHeaders);
 	
 	LPCSTR GetPostData();
 	
-	LPCSTR GetCookies();
+	LPCTSTR GetCookies();
 	void SetPostData (LPCSTR pszPostData);
-	void SetCookies (LPCSTR pszCookies);
+	void SetCookies (LPCTSTR pszCookies);
 	
 	BOOL get_UseCookie();
 	
-	LPCSTR get_Referer ();
+	LPCTSTR get_Referer ();
 	
 	BOOL get_UseHttp11();
 	
 	BOOL Is_Secure();
 	
-	fsInternetResult QuerySize (LPCSTR pszFilePath);
+	fsInternetResult QuerySize (LPCTSTR pszFilePath);
 	
 	
 	void RetreiveHeadersOnly(BOOL b = TRUE);
@@ -48,11 +48,11 @@ public:
 	
 	void UseSecure (BOOL bUse);
 	
-	void SetReferer (LPCSTR pszReferer);
+	void SetReferer (LPCTSTR pszReferer);
 	
 	void UseHttp11 (BOOL bUse = TRUE);
 	
-	fsInternetResult Open (LPCSTR pszFilePath, UINT64 uStartPos);
+	fsInternetResult Open (LPCTSTR pszFilePath, UINT64 uStartPos);
 	
 	fsInternetResult Read(LPBYTE pBuffer, DWORD dwToRead, DWORD *pdwRead);
 	fsHttpFile();
@@ -66,7 +66,7 @@ protected:
 	UINT64 m_uLeftToUpload;
 	
 	void IgnoreSecurityProblems ();
-	fsInternetResult Open_imp (LPCSTR pszFilePath, UINT64 uStartPos, int cTryings);
+	fsInternetResult Open_imp (LPCTSTR pszFilePath, UINT64 uStartPos, int cTryings);
 	
 	
 	
@@ -77,13 +77,13 @@ protected:
 	fsInternetResult SetupProxy();
 
 	
-	LPSTR m_pszReferer;			
+	LPTSTR m_pszReferer;			
 	BOOL m_bHeadersOnly;		
 	DWORD m_dwFlags;			
-	LPSTR m_pszHttpVersion;		
-	LPSTR m_pszCookies;			
+	LPTSTR m_pszHttpVersion;		
+	LPTSTR m_pszCookies;			
 	LPSTR m_pszPostData;		
-	LPSTR m_pszAdditionalHeaders; 
+	LPTSTR m_pszAdditionalHeaders; 
 };
 
 #endif 

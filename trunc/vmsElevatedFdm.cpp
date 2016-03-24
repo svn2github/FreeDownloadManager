@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -15,7 +15,7 @@ vmsElevatedFdm::~vmsElevatedFdm(void)
 {
 }
 
-bool vmsElevatedFdm::Run(LPCTSTR ptszAdditionalArgs, bool bWaitForComplete)
+bool vmsElevatedFdm::Run(LPCTSTR ptszAdditionalArgs, bool bWaitForComplete, bool bShowPreUacDlg)
 {
 	TCHAR tsz [MAX_PATH];
 	GetModuleFileName (NULL, tsz, _countof (tsz));
@@ -24,7 +24,7 @@ bool vmsElevatedFdm::Run(LPCTSTR ptszAdditionalArgs, bool bWaitForComplete)
 	ZeroMemory (&sei, sizeof (sei));
 	sei.cbSize = sizeof (sei);
 	sei.fMask = SEE_MASK_FLAG_NO_UI | SEE_MASK_NOCLOSEPROCESS;
-	sei.lpVerb = _T ("runas");
+	sei.lpVerb = bShowPreUacDlg ? _T("runas") : _T("open");
 	sei.lpFile = tsz;
 	tstring tstr = _T ("-runelevated");
 	if (ptszAdditionalArgs && *ptszAdditionalArgs)
@@ -71,54 +71,19 @@ bool vmsElevatedFdm::InstallIeIntegration(bool bShowPreUacDlg)
 	return m_bInstallIeIntegrationPerformed;
 }
 
-bool vmsElevatedFdm::CopyFiles(const std::vector <std::pair <tstring, tstring> >& vFiles)
+bool vmsElevatedFdm::InstallChromeIntegration(bool bShowPreUacDlg)
 {
-	assert (!vFiles.empty ());
-	if (vFiles.empty ())
-		return true;
-
-	tstring tstrArgs;
-
-	for (size_t i = 0; i < vFiles.size (); i++)
+	if (bShowPreUacDlg)
 	{
-		const std::pair <tstring, tstring>& fileinfo = vFiles [i];
-
-		if (!fileinfo.second.empty ())
-		{
-			tstrArgs += _T ("-copy \"");
-			tstrArgs += fileinfo.first;
-			tstrArgs += _T ("\" \"");
-			tstrArgs += fileinfo.second;
-			tstrArgs += _T ("\" ");
-		}
-		else
-		{
-			tstrArgs += _T ("-del \"");
-			tstrArgs += fileinfo.first;
-			tstrArgs += _T ("\" ");
-		}
+		wchar_t wsz [10000];
+		wsprintf (wsz, LS (L_ADM_RIGHTS_REQ_TO_INTEGRATE_INTO), L"Google Chrome");
+		CDlgElevateRequired dlg;
+		dlg.m_strMsg = wsz;
+		if (IDOK != dlg.DoModal())
+			return false;
 	}
 
-	bool bError = true;
-
-	SHELLEXECUTEINFO sei = {0};
-	sei.cbSize = sizeof (sei);
-	sei.fMask = SEE_MASK_FLAG_NO_UI | SEE_MASK_NOCLOSEPROCESS;
-	sei.lpVerb = _T ("runas");
-	sei.lpFile = _T ("etasks.exe");
-	sei.lpParameters = tstrArgs.c_str ();
-	sei.nShow = SW_HIDE;
-
-	if (ShellExecuteEx (&sei))
-	{
-		WaitForSingleObject (sei.hProcess, INFINITE);
-		DWORD dw = 1;
-		GetExitCodeProcess (sei.hProcess, &dw);
-		bError = dw != 0;
-		CloseHandle (sei.hProcess);
-	}
-
-	return !bError;
+	return Run(_T("-chrome"), true, bShowPreUacDlg);
 }
 
 bool vmsElevatedFdm::InstallIntegration (const std::vector <vmsKnownBrowsers::Browser> &vBrowsers, bool bInstall, bool bShowPreUacDlg)

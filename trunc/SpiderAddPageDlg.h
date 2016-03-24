@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_SPIDERADDPAGEDLG_H__79BC625E_210D_4F12_B127_5C0A95C10E5B__INCLUDED_)
@@ -19,7 +19,7 @@ public:
 	
 	
 	
-	static BOOL IsOkUrl (LPCSTR pszUrl, LPCSTR pszHTMLExts, BOOL *pbMustAddSlash = NULL);
+	static BOOL IsOkUrl (LPCTSTR pszUrl, LPCTSTR pszHTMLExts, BOOL *pbMustAddSlash = NULL);
 	
 	void ReadAutostart();
 	fsWebPageDownloader* m_wpd;	

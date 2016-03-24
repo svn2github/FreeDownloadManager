@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -86,7 +86,7 @@ HRESULT fsShellBrowsersEvents::Attach(SHDocVw::IShellWindowsPtr& spSHWnds)
 		catch (const std::exception& ex)
 		{
 			ASSERT (FALSE);
-			vmsLogger::WriteLog("fsShellBrowsersEvents::Attach " + tstring(ex.what()));
+			vmsLogger::WriteLog("fsShellBrowsersEvents::Attach " + std::string(ex.what()));
 		}
 		catch (...)
 		{
@@ -156,7 +156,7 @@ void fsShellBrowsersEvents::Detach()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsShellBrowsersEvents::Detach " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsShellBrowsersEvents::Detach " + std::string(ex.what()));
 	}
 	catch (...)
 	{

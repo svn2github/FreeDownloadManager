@@ -1,10 +1,11 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 #include "FdmApp.h"
 #include "vmsStringList.h"
+#include "Utils.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -22,7 +23,7 @@ vmsStringList::~vmsStringList()
 
 }
 
-void vmsStringList::Add(LPCSTR psz)
+void vmsStringList::Add(LPCTSTR psz)
 {
 	m_vList.add (psz);
 }
@@ -37,7 +38,7 @@ void vmsStringList::Del(int nIndex)
 	m_vList.del (nIndex);
 }
 
-LPCSTR vmsStringList::get_String(int nIndex) const
+LPCTSTR vmsStringList::get_String(int nIndex) const
 {
 	const fs::list <fsString>* pv = &m_vList;
 	return ((fs::list <fsString>*)pv)->at (nIndex);
@@ -46,7 +47,7 @@ LPCSTR vmsStringList::get_String(int nIndex) const
 BOOL vmsStringList::Save(HANDLE hFile)
 {
 	int c = m_vList.size ();
-	
+
 	DWORD dw;
 
 	if (FALSE == WriteFile (hFile, &c, sizeof (c), &dw, NULL))
@@ -61,7 +62,48 @@ BOOL vmsStringList::Save(HANDLE hFile)
 	return TRUE;
 }
 
-BOOL vmsStringList::Load(HANDLE hFile)
+bool vmsStringList::LoadItems(HANDLE hFile, int nItemCount, WORD wVer)
+{
+	for (int i = 0; i < nItemCount; i++)
+	{
+		LPTSTR psz;
+
+		if (FALSE == fsReadStrFromFile (&psz, hFile))
+			return false;
+
+		Add (psz);
+
+		delete [] psz;
+	}
+
+	return true;
+
+}
+
+bool vmsStringList::LoadItems_old(HANDLE hFile, int nItemCount, WORD wVer)
+{
+	for (int i = 0; i < nItemCount; i++)
+	{
+		LPTSTR ptsz;
+		LPSTR psz = 0;
+
+		if (FALSE == fsReadStrFromFileA (&psz, hFile))
+			return false;
+
+		CopyString(&ptsz, psz);
+		delete [] psz;
+		psz = 0;
+
+		Add (ptsz);
+
+		delete [] ptsz;
+	}
+
+	return true;
+
+}
+
+BOOL vmsStringList::Load(HANDLE hFile, WORD wVer)
 {
 	Clear ();
 
@@ -71,16 +113,13 @@ BOOL vmsStringList::Load(HANDLE hFile)
 	if (FALSE == ReadFile (hFile, &c, sizeof (c), &dw, NULL))
 		return FALSE;
 
-	for (int i = 0; i < c; i++)
-	{
-		LPSTR psz;
+	if (wVer > 1) {
+		LoadItems(hFile, c, wVer);
+	}
 
-		if (FALSE == fsReadStrFromFile (&psz, hFile))
-			return FALSE;
-
-		Add (psz);
-
-		delete [] psz;
+	if (wVer == 1) {
+		
+		LoadItems_old(hFile, c, wVer);
 	}
 
 	return TRUE;

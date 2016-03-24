@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -76,41 +76,41 @@ void CIwResultPropertyPage::InitManagerResult(int nManagerIndex, bool bChecked, 
 		CString sTmp;
 
 		pwndSuccessful->GetWindowText(sStatistics);
-		sStatistics += " ";
+		sStatistics += _T(" ");
 		if (tImportResult.nSuccess == -1) {
 			sStatistics += LS (L_UNDEFINED_IMPORT_RESULT);
 		} else {
-			sTmp.Format("%d", tImportResult.nSuccess);
+			sTmp.Format(_T("%d"), tImportResult.nSuccess);
 			sStatistics += sTmp;
 		}
 		pwndSuccessful->SetWindowText(sStatistics);
 
 		pwndFailed->GetWindowText(sStatistics);
-		sStatistics += " ";
+		sStatistics += _T(" ");
 		if (tImportResult.nFailure == -1) {
 			sStatistics += LS (L_UNDEFINED_IMPORT_RESULT);
 		} else {
-			sTmp.Format("%d", tImportResult.nFailure);
+			sTmp.Format(_T("%d"), tImportResult.nFailure);
 			sStatistics += sTmp;
 		}
 		pwndFailed->SetWindowText(sStatistics);
 
 		pwndUnprocessed->GetWindowText(sStatistics);
-		sStatistics += " ";
+		sStatistics += _T(" ");
 		if (tImportResult.nUnprocessed == -1) {
 			sStatistics += LS (L_UNDEFINED_IMPORT_RESULT);
 		} else {
-			sTmp.Format("%d", tImportResult.nUnprocessed);
+			sTmp.Format(_T("%d"), tImportResult.nUnprocessed);
 			sStatistics += sTmp;
 		}
 		pwndUnprocessed->SetWindowText(sStatistics);
 
 		pwndTotal->GetWindowText(sStatistics);
-		sStatistics += " ";
+		sStatistics += _T(" ");
 		if (tImportResult.nTotal == -1) {
 			sStatistics += LS (L_UNDEFINED_IMPORT_RESULT);
 		} else {
-			sTmp.Format("%d", tImportResult.nTotal);
+			sTmp.Format(_T("%d"), tImportResult.nTotal);
 			sStatistics += sTmp;
 		}
 		pwndTotal->SetWindowText(sStatistics);

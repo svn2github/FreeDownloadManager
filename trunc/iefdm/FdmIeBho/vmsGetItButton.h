@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSGETITBUTTON_H__A26B4169_6D5A_421F_AD64_34AA3AD12F8D__INCLUDED_)
@@ -23,12 +23,13 @@ public:
 	bool isShowingMenu () const;
 	const vmsFlvSniffDll* getSniffDll () const;
 	HWND getHWND () const;
-	std::string m_strHtmlPageUrl;
+	std::wstring m_wstrHtmlPageUrl;
 	std::string m_strFrameUrl;
 	std::string m_strSwfUrl;
 	std::string m_strFlashVars;
 	std::string m_strOtherSwfUrls;
 	std::string m_strOtherFlashVars;
+	bool m_youtubeVideo;
 	void Create (HWND hwndParent, const RECT* prcFlash);
 	vmsGetItButton();
 	virtual ~vmsGetItButton();

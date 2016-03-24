@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSDSHOWFILTERDETECTOR_H__7B357AEC_A90F_4E5D_B217_875875A49469__INCLUDED_)
@@ -28,8 +28,8 @@ protected:
 	UINT64 m_uFileOkLen;
 	
 	 
-	BOOL IsFilterMeets (HANDLE hFile, LPCSTR pszOffset, LPCSTR pszCb, LPCSTR pszMask, LPCSTR pszVal);
-	BOOL IsFilterMeets (HANDLE hFile, LPCSTR pszCheckBytes);
+	BOOL IsFilterMeets (HANDLE hFile, LPCTSTR pszOffset, LPCTSTR pszCb, LPCTSTR pszMask, LPCTSTR pszVal);
+	BOOL IsFilterMeets (HANDLE hFile, LPCTSTR pszCheckBytes);
 	BOOL IsFilterMeets (HANDLE hFile, HKEY hkFilter);
 	const AM_MEDIA_TYPE* DetectMediaType (HANDLE hFile, HKEY hkFiltrs);
 	AM_MEDIA_TYPE m_mt;

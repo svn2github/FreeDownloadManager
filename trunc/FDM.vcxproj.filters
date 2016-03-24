@@ -13,6 +13,12 @@
       <UniqueIdentifier>{c9dae535-0deb-4896-aa6f-6dbd9dffea90}</UniqueIdentifier>
       <Extensions>ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe</Extensions>
     </Filter>
+    <Filter Include="Header Files\YouTube">
+      <UniqueIdentifier>{d2d5c480-a912-41e2-b46b-5b51adb4f4b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\YouTube">
+      <UniqueIdentifier>{bf3c78c0-6764-4e81-91e7-8104a5526166}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AERDlg.cpp">
@@ -270,33 +276,6 @@
     <ClCompile Include="DownloadAlrExistsDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DownloaderProperties_BtPage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DownloaderProperties_CommunityPage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DownloaderProperties_ListPage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DownloaderProperties_MirrorsPage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DownloaderProperties_MonitorPage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DownloaderProperties_MonitorPage_SkipList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DownloaderProperties_NewDownloadPage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DownloaderProperties_NotificationsPage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DownloaderPropertiesSheet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DownloadProperties.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -523,9 +502,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="fsInternetFileListMgr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="fsLangMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="fsMFCLangMgr.cpp">
@@ -774,9 +750,6 @@
     <ClCompile Include="TreeCtrlEx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="UEDlg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="UIThread.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -840,9 +813,6 @@
     <ClCompile Include="vmsComDLL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vmsCommandLine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vmsDataFile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -879,9 +849,6 @@
     <ClCompile Include="vmsFdmAppMgr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vmsFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vmsFileExtensionInOs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -891,16 +858,7 @@
     <ClCompile Include="vmsFilesToDelete.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vmsFileUtil.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsFirefoxExtensionInstaller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vmsFirefoxMonitoring.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsFirefoxUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vmsFlvSniffInjector.cpp">
@@ -940,9 +898,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vmsProcessesInjector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsProcessList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vmsRegisteredApp.cpp">
@@ -1176,25 +1131,7 @@
     <ClCompile Include="vmsElevatedFdm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DlgUnhExc2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsFdmCrashReporter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsCrashReporter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Lib.Add\ioapi.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Lib.Add\zip.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vmsFirefoxExtensionUpdateMgr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Lib.Add\unzip.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vmsAppGlobalObjects.cpp">
@@ -1222,6 +1159,63 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vmsChromeExtensionInstaller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsFdmBrowserPluginMonitoring.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DownloaderProperties_MonitorPage_SkipList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsFdmSimpleDownloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsFdmURLDownloader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsYouTubeDownloadsMgr.cpp">
+      <Filter>Source Files\YouTube</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsYouTubeParserErrorSenderPOST.cpp">
+      <Filter>Source Files\YouTube</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsYouTubePreviewIconLoader.cpp">
+      <Filter>Source Files\YouTube</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsYouTubeURLReloadingTask.cpp">
+      <Filter>Source Files\YouTube</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsAVMergerFFMPEG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsAVMergingMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsThreadPoolAsio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsFFMPEG.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsInetUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsYouTubeParserDllMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsDownloadTools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WaitDlg2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="to_link.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsVideoMonitoringModulesUiManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vmsDownloaderSecCheckFailureHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1492,33 +1486,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DownloadAlrExistsDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DownloaderProperties_BtPage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DownloaderProperties_CommunityPage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DownloaderProperties_ListPage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DownloaderProperties_MirrorsPage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DownloaderProperties_MonitorPage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DownloaderProperties_MonitorPage_SkipList.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DownloaderProperties_NewDownloadPage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DownloaderProperties_NotificationsPage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DownloaderPropertiesSheet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DownloadProperties.h">
@@ -1995,9 +1962,6 @@
     <ClInclude Include="TreeCtrlEx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="UEDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UIThread.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -2097,9 +2061,6 @@
     <ClInclude Include="vmsFdmAppMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vmsFile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vmsFileExtensionInOs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -2109,16 +2070,7 @@
     <ClInclude Include="vmsFilesToDelete.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vmsFileUtil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsFirefoxExtensionInstaller.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vmsFirefoxMonitoring.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsFirefoxUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsFlvSniffInjector.h">
@@ -2158,9 +2110,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsProcessesInjector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsProcessList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsRegisteredApp.h">
@@ -2397,18 +2346,6 @@
     <ClInclude Include="vmsElevatedFdm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DlgUnhExc2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsFdmCrashReporter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsCrashCatcher.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsCrashReporter.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="vmsAppFileUpdateInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -2452,6 +2389,126 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsChromeExtensionInstaller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFdmBrowserPluginMonitoring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DownloaderProperties_MonitorPage_SkipList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFdmSimpleDownloader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFdmURLDownloader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFdmURLDownloadMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsURLDownloadMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsYouTubeAfterMergeAction.h">
+      <Filter>Header Files\YouTube</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsYouTubeDownloadsMgr.h">
+      <Filter>Header Files\YouTube</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsYouTubeParserErrorSender.h">
+      <Filter>Header Files\YouTube</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsYouTubeParserErrorSenderPOST.h">
+      <Filter>Header Files\YouTube</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsYouTubeParserObjectsHolder.h">
+      <Filter>Header Files\YouTube</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsYouTubePreviewIconLoader.h">
+      <Filter>Header Files\YouTube</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsYouTubeURLReloadingTask.h">
+      <Filter>Header Files\YouTube</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsAVMerger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsAVMergerFFMPEG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsAVMergingMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsAVMergingTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsThreadPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsThreadPoolAsio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsThreadPoolTask.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFFMPEG.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsInetUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsYouTubeParserDllMgr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsDownloadTools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsAVMergingMgrCallback.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsVideoMonitoringModulesManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsOptionalModulesManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsResourceDownloader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsWwwResourceDownloader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsOptionalModulesDownloader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsOptionalModulesInstaller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsOptionalModulesBasicDownloader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsOptionalModulesList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsOptionalModulesBasicInstaller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsFdmOptionalModulesBasicManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WaitDlg2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsVideoMonitoringModulesUiManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsVideoMonitoringModulesUpdateManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsDownloaderSecCheckFailureIgnoreList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vmsDownloaderSecCheckFailureHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

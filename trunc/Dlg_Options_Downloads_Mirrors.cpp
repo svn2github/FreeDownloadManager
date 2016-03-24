@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -82,8 +82,8 @@ BOOL CDlg_Options_Downloads_Mirrors::OnInitDialog()
 
 	CheckDlgButton (IDC_CHECKIFDLDISMIRR, _App.CheckIfDownloadIsMirror () ? BST_CHECKED : BST_UNCHECKED);
 	
-	m_wndMirrServers.AddString ("FileSearching.com");
-	m_wndMirrServers.AddString ("FindFiles.com");
+	m_wndMirrServers.AddString (_T("FileSearching.com"));
+	m_wndMirrServers.AddString (_T("FindFiles.com"));
 	m_wndMirrServers.SetCurSel (_App.Mirr_Server ());
 	
 	ApplyLanguage ();

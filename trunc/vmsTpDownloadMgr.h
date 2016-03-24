@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __TP_DOWNLOAD_MGR_H_
@@ -12,7 +12,6 @@
 #include "vmsDll.h"
 #include "msdl\TransferProtocolDownloader.h"
 #include "vmsDownloadMgrEx.h"
-#include "vmsCriticalSection.h"	
 #include "fsInternetDownloader.h"
 #include "vmsPersistObject.h"
 
@@ -30,7 +29,7 @@ typedef DWORD fsDownloadState;
 
 typedef DWORD (*fntTpDownloadManagerEventHandler)(class vmsTpDownloadMgr*, fsDownloaderEvent, UINT, LPVOID);
 
-typedef void (*fntTpDownloadManagerEventDescFunc)(class vmsTpDownloadMgr*, fsDownloadMgr_EventDescType enType, LPCSTR pszDesc, LPVOID lp);
+typedef void (*fntTpDownloadManagerEventDescFunc)(class vmsTpDownloadMgr*, fsDownloadMgr_EventDescType enType, LPCTSTR pszDesc, LPVOID lp);
 
 class vmsTpDownloadMgr : public vmsPersistObject
 {
@@ -49,7 +48,7 @@ public:
 
 	fsString get_URL();
 
-	BOOL CreateTPDownload (LPCSTR pszUrl, LPCSTR pszOutputPath, LPCSTR pszFileName, int nStreamingSpeed = 1);
+	BOOL CreateTPDownload (LPCTSTR pszUrl, LPCTSTR pszOutputPath, LPCTSTR pszFileName, int nStreamingSpeed = 1);
 
 	UINT GetSpeed();
 	BOOL IsDone();
@@ -77,8 +76,8 @@ public:
 	
 	BOOL LoadState(LPBYTE lpBuffer, LPDWORD pdwSize, WORD wVer);
 	
-	BOOL MoveToFolder (LPCSTR pszFolder);
-	BOOL MoveFile (LPCSTR pszNewFileName);
+	BOOL MoveToFolder (LPCTSTR pszFolder);
+	BOOL MoveFile (LPCTSTR pszNewFileName);
 	BOOL IsFileInit();
 
 	DWORD get_Flags();
@@ -104,7 +103,7 @@ protected:
 	
 	DWORD RaiseEvent (fsDownloaderEvent ev, DWORD dw = 0);	
 	
-	void RaiseEvent (LPCSTR pszEvent, fsDownloadMgr_EventDescType enType = EDT_INQUIRY);
+	void RaiseEvent (LPCTSTR pszEvent, fsDownloadMgr_EventDescType enType = EDT_INQUIRY);
 	
 	fntTpDownloadManagerEventHandler m_pfnEvHandler;
 	LPVOID m_lpEvParam;
@@ -113,7 +112,7 @@ protected:
 
 	vmsCriticalSection m_csDownload;
 	bool m_bDlThreadNeedStop;
-	static std::string getTPDllFileName(void);
+	static tstring getTPDllFileName(void);
 	bool LoadTPDll (vmsDLL& dll);
 
 	TransferProtocolDownloader* m_dldr;	

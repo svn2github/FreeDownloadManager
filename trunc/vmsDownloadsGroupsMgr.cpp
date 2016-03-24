@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -48,9 +48,39 @@ bool vmsDownloadsGroup::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWOR
 	LPBYTE pbtCurrentPos = pbtBuffer;
 
 	getVarFromBuffer(nId, pbtCurrentPos, pbtBuffer, *pdwSize);
-	getStrFromBuffer(&strName.pszString, pbtCurrentPos, pbtBuffer, *pdwSize);
-	getStrFromBuffer(&strOutFolder.pszString, pbtCurrentPos, pbtBuffer, *pdwSize);
-	getStrFromBuffer(&strExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize);
+
+	if (dwVer == 1) {
+
+		LPSTR pszValue = 0;
+
+		getStrFromBuffer(&pszValue, pbtCurrentPos, pbtBuffer, *pdwSize);
+
+		CopyString(&strName.pszString, pszValue);
+		delete pszValue;
+		pszValue = 0;
+
+		getStrFromBuffer(&pszValue, pbtCurrentPos, pbtBuffer, *pdwSize);
+
+		CopyString(&strOutFolder.pszString, pszValue);
+		delete pszValue;
+		pszValue = 0;
+
+		getStrFromBuffer(&pszValue, pbtCurrentPos, pbtBuffer, *pdwSize);
+
+		CopyString(&strExts.pszString, pszValue);
+		delete pszValue;
+		pszValue = 0;
+
+	} else if (dwVer > 1) {
+
+		getStrFromBuffer(&strName.pszString, pbtCurrentPos, pbtBuffer, *pdwSize);
+		getStrFromBuffer(&strOutFolder.pszString, pbtCurrentPos, pbtBuffer, *pdwSize);
+		getStrFromBuffer(&strExts.pszString, pbtCurrentPos, pbtBuffer, *pdwSize);
+		
+	} else {
+		ASSERT(false);
+	}
+
 	getVarFromBuffer(nChildren, pbtCurrentPos, pbtBuffer, *pdwSize);
 
 	
@@ -93,7 +123,7 @@ void vmsDownloadsGroupsMgr::CreateDefaultGroups()
 	grp->strName = LS (L_OTHER);
 	if (IS_PORTABLE_MODE)
 	{
-		grp->strOutFolder = "%sdrive%\\Downloads\\";
+		grp->strOutFolder = _T("%sdrive%\\Downloads\\");
 	}
 	else
 	{
@@ -104,40 +134,40 @@ void vmsDownloadsGroupsMgr::CreateDefaultGroups()
 			;
 		if (i == 26)
 			i = 0;
-		grp->strOutFolder = "A";
+		grp->strOutFolder = _T("A");
 		grp->strOutFolder [0] = (char) ('C' + i);
-		grp->strOutFolder += ":\\Downloads\\";
+		grp->strOutFolder += _T(":\\Downloads\\");
 	}
 	CString strRoot = grp->strOutFolder;
-	grp->strExts = "";
+	grp->strExts = _T("");
 	grp->nId = GRP_OTHER_ID;
 	Add (grp, NULL, TRUE);
 	
 	grp.CreateInstance ();
-	grp->strName = "Video";
-	grp->strOutFolder = strRoot + "Video\\";
+	grp->strName = _T("Video");
+	grp->strOutFolder = strRoot + _T("Video\\");
 	grp->strExts = GetVideoExts ();
 	grp->nId = m_nGrpNextId++;
 	Add (grp, NULL, TRUE);
 	
 	grp.CreateInstance ();
-	grp->strName = "Music";
-	grp->strOutFolder = strRoot + "Music\\";
+	grp->strName = _T("Music");
+	grp->strOutFolder = strRoot + _T("Music\\");
 	grp->strExts = GetAudioExts ();
 	grp->nId = m_nGrpNextId++;
 	Add (grp, NULL, TRUE);
 	
 	grp.CreateInstance ();
-	grp->strName = "Software";
-	grp->strOutFolder = strRoot + "Software\\";
-	grp->strExts = "exe com msi";
+	grp->strName = _T("Software");
+	grp->strOutFolder = strRoot + _T("Software\\");
+	grp->strExts = _T("exe com msi");
 	grp->nId = m_nGrpNextId++;
 	Add (grp, NULL, TRUE);
 }
 
 BOOL vmsDownloadsGroupsMgr::LoadFromDisk()
 {
-	fsString strFile = fsGetDataFilePath ("groups.sav");
+	fsString strFile = fsGetDataFilePath (_T("groups.sav"));
 
 	if (GetFileAttributes (strFile) == DWORD (-1))
 	{	
@@ -180,8 +210,18 @@ BOOL vmsDownloadsGroupsMgr::LoadFromDisk()
 		DWORD dw;
 		if (ReadFile (hFile, &hdr, sizeof (hdr), &dw, NULL))
 		{
-			if (hdr.wVer == DLDSGRPSFILE_CURRENT_VERSION && 
-					lstrcmp (hdr.szSig,	DLDSGRPSFILE_SIG) == 0)
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+
+			if (strcmp (hdr.szSig,	DLDSGRPSFILE_SIG) == 0)
 			{
 				
 				
@@ -225,7 +265,7 @@ BOOL vmsDownloadsGroupsMgr::LoadFromDisk()
 
 BOOL vmsDownloadsGroupsMgr::SaveToDisk()
 {
-	fsString strFile = fsGetDataFilePath ("groups.sav");
+	fsString strFile = fsGetDataFilePath (_T("groups.sav"));
 
 	
 	
@@ -376,7 +416,7 @@ fsString vmsDownloadsGroupsMgr::GetGroupFullName(UINT nId)
 {
 	vmsDownloadsGroupSmartPtr pGroup = FindGroup (nId);
 	if (pGroup == NULL)
-		return "";
+		return _T("");
 	PDLDS_GROUPS_TREE p = FindGroupInTree (pGroup);
 	fsString strName;
 
@@ -389,7 +429,7 @@ fsString vmsDownloadsGroupsMgr::GetGroupFullName(UINT nId)
 		}
 		else
 		{
-			str += '\\';
+			str += _T('\\');
 			str += strName;
 			strName = str;
 		}
@@ -400,7 +440,7 @@ fsString vmsDownloadsGroupsMgr::GetGroupFullName(UINT nId)
 	return strName;
 }
 
-vmsDownloadsGroupSmartPtr vmsDownloadsGroupsMgr::FindGroupByExt(LPCSTR pszExt)
+vmsDownloadsGroupSmartPtr vmsDownloadsGroupsMgr::FindGroupByExt(LPCTSTR pszExt)
 {
 	for (size_t i = 0; i < m_vGroups.size (); i++)
 	{
@@ -462,26 +502,26 @@ fsString vmsDownloadsGroupsMgr::GetGroupsRootOutFolder()
 	return FindGroup (GRP_OTHER_ID)->strOutFolder;
 }
 
-void vmsDownloadsGroupsMgr::SetGroupsRootOutFolder(LPCSTR psz)
+void vmsDownloadsGroupsMgr::SetGroupsRootOutFolder(LPCTSTR psz)
 {
 	SetGroupsRootOutFolder (GetGroupsTree (), psz);
 }
 
-void vmsDownloadsGroupsMgr::SetGroupsRootOutFolder(PDLDS_GROUPS_TREE pRoot, LPCSTR pszFolder)
+void vmsDownloadsGroupsMgr::SetGroupsRootOutFolder(PDLDS_GROUPS_TREE pRoot, LPCTSTR pszFolder)
 {
 	for (int i = 0; i < pRoot->GetLeafCount (); i++)
 	{
 		PDLDS_GROUPS_TREE pGroup = pRoot->GetLeaf (i);
 		
 		fsString str = pszFolder;
-		if (str [str.GetLength () - 1] != '\\' && str [str.GetLength () - 1] != '/')
-			str += '\\';
+		if (str [str.GetLength () - 1] != _T('\\') && str [str.GetLength () - 1] != _T('/'))
+			str += _T('\\');
 		pGroup->GetData ()->strOutFolder = str;
 
 		if (pGroup->GetData ()->nId != GRP_OTHER_ID)
 		{
 			pGroup->GetData ()->strOutFolder += pGroup->GetData ()->strName;
-			pGroup->GetData ()->strOutFolder += '\\';
+			pGroup->GetData ()->strOutFolder += _T('\\');
 		}
 
 		pGroup->GetData ()->setDirty();
@@ -524,12 +564,19 @@ void vmsDownloadsGroupsMgr::DeleteGroup(vmsDownloadsGroupSmartPtr pGroup)
 	}
 }
 
-vmsDownloadsGroupSmartPtr vmsDownloadsGroupsMgr::FindGroupByName(LPCSTR pszName)
+vmsDownloadsGroupSmartPtr vmsDownloadsGroupsMgr::FindGroupByName(LPCTSTR pszName)
 {
 	return FindGroupByName (pszName, GetGroupsTree ());
 }
 
-BOOL vmsDownloadsGroupsMgr::LoadGroupsTreeFromFile(HANDLE hFile, PDLDS_GROUPS_TREE pRoot)
+vmsDownloadsGroupSmartPtr vmsDownloadsGroupsMgr::FindGroupByNameA(LPCSTR pszName)
+{
+	USES_CONVERSION;
+	tstring sName = CA2T(pszName);
+	return FindGroupByName (sName.c_str(), GetGroupsTree ());
+}
+
+BOOL vmsDownloadsGroupsMgr::LoadGroupsTreeFromFile(HANDLE hFile, PDLDS_GROUPS_TREE pRoot, WORD wVer)
 {
 	int cGroups = 0;
 	DWORD dw;
@@ -540,10 +587,10 @@ BOOL vmsDownloadsGroupsMgr::LoadGroupsTreeFromFile(HANDLE hFile, PDLDS_GROUPS_TR
 	{
 		vmsDownloadsGroupSmartPtr pGroup;
 		pGroup.CreateInstance ();
-		if (FALSE == LoadGroupFromFile (hFile, pGroup))
+		if (FALSE == LoadGroupFromFile (hFile, pGroup, wVer))
 			return FALSE;
 		PDLDS_GROUPS_TREE pGroupRoot = Add (pGroup, pRoot, TRUE, true);
-		if (FALSE == LoadGroupsTreeFromFile (hFile, pGroupRoot))
+		if (FALSE == LoadGroupsTreeFromFile (hFile, pGroupRoot, wVer))
 			return FALSE;
 	}
 
@@ -570,21 +617,50 @@ bool vmsDownloadsGroupsMgr::LoadGroupsTreeFromBuffer(LPBYTE& pbtCurrentPos, LPBY
 	return true;
 }
 
-BOOL vmsDownloadsGroupsMgr::LoadGroupFromFile(HANDLE hFile, vmsDownloadsGroupSmartPtr pGroup)
+BOOL vmsDownloadsGroupsMgr::LoadGroupFromFile(HANDLE hFile, vmsDownloadsGroupSmartPtr pGroup, WORD wVer)
 {
 	DWORD dw;
 
 	if (FALSE == ReadFile (hFile, &pGroup->nId, sizeof (pGroup->nId), &dw, NULL))
 		return FALSE;
 
-	if (FALSE == fsReadStringFromFile (hFile, pGroup->strName))
-		return FALSE;
+	if (wVer > 1) {
 
-	if (FALSE == fsReadStringFromFile (hFile, pGroup->strOutFolder))
-		return FALSE;
+		if (FALSE == fsReadStringFromFile (hFile, pGroup->strName))
+			return FALSE;
 
-	if (FALSE == fsReadStringFromFile (hFile, pGroup->strExts))
-		return FALSE;
+		if (FALSE == fsReadStringFromFile (hFile, pGroup->strOutFolder))
+			return FALSE;
+
+		if (FALSE == fsReadStringFromFile (hFile, pGroup->strExts))
+			return FALSE;
+
+	} else {
+
+		
+		LPSTR pszValue = 0;
+
+		if (FALSE == fsReadStrFromFileA (&pszValue, hFile))
+			return FALSE;
+
+		CopyString(&pGroup->strName.pszString, pszValue);
+		delete pszValue;
+		pszValue = 0;
+
+		if (FALSE == fsReadStrFromFileA (&pszValue, hFile))
+			return FALSE;
+
+		CopyString(&pGroup->strOutFolder.pszString, pszValue);
+		delete pszValue;
+		pszValue = 0;
+
+		if (FALSE == fsReadStrFromFileA (&pszValue, hFile))
+			return FALSE;
+
+		CopyString(&pGroup->strExts.pszString, pszValue);
+		delete pszValue;
+		pszValue = 0;
+	}
 
 	return TRUE;
 }
@@ -644,10 +720,10 @@ PDLDS_GROUPS_TREE vmsDownloadsGroupsMgr::Add(vmsDownloadsGroupSmartPtr grp, PDLD
 	return pGrp;
 }
 
-vmsDownloadsGroupSmartPtr vmsDownloadsGroupsMgr::FindGroupByName(LPCSTR pszName, PDLDS_GROUPS_TREE pRoot)
+vmsDownloadsGroupSmartPtr vmsDownloadsGroupsMgr::FindGroupByName(LPCTSTR pszName, PDLDS_GROUPS_TREE pRoot)
 {
 	fsString strName;
-	while (*pszName && *pszName != '\\' && *pszName != '/')
+	while (*pszName && *pszName != _T('\\') && *pszName != _T('/'))
 		strName += *pszName++;
 	if (*pszName)
 		pszName++;
@@ -743,14 +819,14 @@ void vmsDownloadsGroupsMgr::SaveGroupToBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtB
 	putStrToBuffer(pGroup->strExts.pszString, pbtCurrentPos, pbtBuffer, dwBufferSize, 0);
 }
 
-LPCSTR vmsDownloadsGroupsMgr::GetVideoExts()
+LPCTSTR vmsDownloadsGroupsMgr::GetVideoExts()
 {
-	return "avi mpg mov wmv mpeg vob mpe flv mp4 mkv";
+	return _T("avi mpg mov wmv mpeg vob mpe flv mp4 mkv");
 }
 
-LPCSTR vmsDownloadsGroupsMgr::GetAudioExts()
+LPCTSTR vmsDownloadsGroupsMgr::GetAudioExts()
 {
-	return "mp3 wav au ogg aif aiff snd voc aac mid wma";
+	return _T("mp3 wav au ogg aif aiff snd voc aac mid wma");
 }
 
 void vmsDownloadsGroupsMgr::RebuildGroupsList()

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -42,7 +42,7 @@ bool vmsFlvSniffDllLoader::isDllEnabled() const
 		return false;
 
 	dw = m_dwBrowser;
-	hkcu.getKey ().QueryValue (dw, "ProcessList");
+	hkcu.getKey ().QueryValue (dw, _T("ProcessList"));
 
 	return (dw & m_dwBrowser) != 0;
 }
@@ -51,7 +51,7 @@ void vmsFlvSniffDllLoader::MakeSureDllLoaded()
 {
 	if (m_hDll)
 		return;
-	if (GetModuleHandle ("flvsniff.dll"))
+	if (GetModuleHandle (_T("flvsniff.dll")))
 		return;
 	if (!isDllEnabled ())
 		return;

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __WGURLRECEIVER_H_
@@ -88,6 +88,7 @@ public:
 	STDMETHOD(ShowAddDownloadDialog)();
 protected:
 	void CheckRapidshare();
+	void CheckYouTubePicture();
 	void StartJobThread (LPTHREAD_START_ROUTINE pfn);
 	static DWORD WINAPI _threadAddPage (LPVOID lp);
 	HANDLE m_hJobt;

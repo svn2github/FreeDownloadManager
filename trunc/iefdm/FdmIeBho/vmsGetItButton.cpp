@@ -1,20 +1,25 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 #include "vmsGetItButton.h"
 #include <commctrl.h>
 #include "resource.h"
-#include "vmsFdmTranslations.h"
+#include "../../common/vmsFdmTranslations.h"
 #include "vmsIeHKCU.h"
 #include "WaitDlg.h"
+#include "../fdm.h"
+
+_COM_SMARTPTR_TYPEDEF(IFDMFlashVideoDownloads, __uuidof(IFDMFlashVideoDownloads));
+_COM_SMARTPTR_TYPEDEF(IFdmUiWindow, __uuidof(IFdmUiWindow));
 
 #define ID_DOWNLOAD_IT			100
 
 HIMAGELIST vmsGetItButton::m_hImgs = NULL;
 
-vmsGetItButton::vmsGetItButton()
+vmsGetItButton::vmsGetItButton() :
+	m_youtubeVideo (false)
 {
 	m_hWnd = m_hwndTB = NULL;
 	m_bShowingMenu = false;
@@ -127,11 +132,11 @@ void vmsGetItButton::Create(HWND hwndParent, const RECT* prcFlash)
 
 	SendMessage (m_hwndTB, TB_BUTTONSTRUCTSIZE, sizeof (TBBUTTON), 0);
 
-	std::string str = vmsFdmTranslations::o ().GetString (L_DLBYFDM);
+	tstring str = vmsFdmTranslations::o ().GetString (L_DLBYFDM);
 	if (str.empty ())
-		str = "Download with FDM";
+		str = _T("Download with FDM");
 	USES_CONVERSION;
-	SendMessage (m_hwndTB, TB_ADDSTRING, 0, (LPARAM)A2CT (str.c_str ()));
+	SendMessage (m_hwndTB, TB_ADDSTRING, 0, (LPARAM)str.c_str ());
 
 	SendMessage (m_hwndTB, TB_SETBITMAPSIZE, 0, MAKELONG (16, 16));
 	SendMessage (m_hwndTB, TB_SETIMAGELIST, 0, (LPARAM)m_hImgs);
@@ -193,6 +198,19 @@ void vmsGetItButton::Create(HWND hwndParent, const RECT* prcFlash)
 void vmsGetItButton::onClick()
 {
 	m_bWasClick = true;
+
+	if (m_youtubeVideo)
+	{
+		IFDMFlashVideoDownloadsPtr spFVDownloads;
+		verify (SUCCEEDED (spFVDownloads.CreateInstance (__uuidof (FDMFlashVideoDownloads))));
+		assert (spFVDownloads != NULL);
+		if (spFVDownloads == NULL)
+		{
+			return;
+		}
+		verify (SUCCEEDED (spFVDownloads->CreateFromUrl (SysAllocString (m_wstrHtmlPageUrl.c_str ()))));
+		return;
+	}
 
 	DWORD dw;
 	CloseHandle (
@@ -266,7 +284,7 @@ DWORD WINAPI vmsGetItButton::_threadOnDownloadItBtnClicked(LPVOID lp)
 {
 	HRESULT hr = CoInitialize (NULL);
 	vmsGetItButton *pthis = (vmsGetItButton*)lp;
-	pthis->m_sniffDll.OnDownloadItBtnClicked (pthis->m_strHtmlPageUrl.c_str (),
+	pthis->m_sniffDll.OnDownloadItBtnClicked (utf8FromWide (pthis->m_wstrHtmlPageUrl).c_str (),
 		pthis->m_strFrameUrl.c_str (), pthis->m_strSwfUrl.c_str (), pthis->m_strFlashVars.c_str (),
 		pthis->m_strOtherSwfUrls.c_str (), pthis->m_strOtherFlashVars.c_str ());
 	SetEvent (pthis->m_hEvCloseDlg);

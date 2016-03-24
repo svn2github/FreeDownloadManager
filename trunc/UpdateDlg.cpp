@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -117,8 +117,6 @@ void CUpdateDlg::_UpdateMgrEvents(fsUpdateMgrEvent ev, LPVOID lp)
 
 		case UME_RETREIVINGUPDLST:
 			
-			_UpdateMgr.m_dldr->GetDP ()->uMaxAttempts = UINT_MAX;
-			_UpdateMgr.m_dldr->ApplyProperties ();
 			
 			pThis->SetTimer (1, 1000, NULL);
 			pThis->m_wndMsg.SetWindowText (LS (L_CHECKINGUPD));
@@ -141,12 +139,12 @@ void CUpdateDlg::_UpdateMgrEvents(fsUpdateMgrEvent ev, LPVOID lp)
 		case UME_NEWVERSIONNOTAVAIL:
 			
 			pThis->m_wndMsg.SetWindowText (LS (L_ALRNEWESTVER));
-			pThis->SetDlgItemText (IDCANCEL, "OK");
+			pThis->SetDlgItemText (IDCANCEL, _T("OK"));
 		break;
 
 		case UME_FATALERROR:
 			
-			char szErr [1000];
+			TCHAR szErr [1000];
 			fsIRToStr (_UpdateMgr.m_dldr->GetLastError (), szErr, sizeof (szErr));
 			pThis->m_wndMsg.SetWindowText (szErr);
 			pThis->KillTimer (1);
@@ -160,8 +158,6 @@ void CUpdateDlg::_UpdateMgrEvents(fsUpdateMgrEvent ev, LPVOID lp)
 		case UME_RETREIVINGUPDATE:
 		{
 			
-			_UpdateMgr.m_dldr->GetDP ()->uMaxAttempts = UINT_MAX;
-			_UpdateMgr.m_dldr->ApplyProperties ();
 			CString str;
 			str.Format (LS (L_VERAVAIL), _UpdateMgr.GetVersion (), _UpdateMgr.GetBuildNumber ());
 			str += ". "; str += LS (L_DOWNLOADING); str += "...";
@@ -209,7 +205,7 @@ void CUpdateDlg::ShowUpdateInfo()
 	str.Format (LS (L_FULLDISTR),  _UpdateMgr.GetVersion (), _UpdateMgr.GetFullSize ());
 	SetDlgItemText (IDC_FULLDISTRIB, str);
 
-	LPCSTR pszUpgSize = _UpdateMgr.GetUpgSize ();
+	LPCTSTR pszUpgSize = _UpdateMgr.GetUpgSize ();
 	
 	
 	if (*pszUpgSize == 0)
@@ -245,21 +241,21 @@ void CUpdateDlg::OnTimer(UINT )
 		if (uSpeed)
 			m_wndTimeLeft.SetWindowText (fsTimeInSecondsToStr (DWORD ((INT64)uBytesLeft / (INT64)uSpeed)));
 		else
-			m_wndTimeLeft.SetWindowText ("");
+			m_wndTimeLeft.SetWindowText (_T(""));
 	}
 	else
 	{
-		m_wndTimeLeft.SetWindowText ("");
+		m_wndTimeLeft.SetWindowText (_T(""));
 	}
 
 	float val;
-	char szDim [100];
+	TCHAR szDim [100];
 	CString str;
 
 	if (uSize != _UI64_MAX)
 	{
 		BytesToXBytes (uSize, &val, szDim);
-		str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+		str.Format (_T("%.*g %s"), val > 999 ? 4 : 3, val, szDim);
 	}
 	else
 	{
@@ -268,11 +264,11 @@ void CUpdateDlg::OnTimer(UINT )
 	m_wndSize.SetWindowText (str);
 
 	BytesToXBytes (uSpeed, &val, szDim);
-	str.Format ("%.*g %s/s", val > 999 ? 4 : 3, val, szDim);
+	str.Format (_T("%.*g %s/s"), val > 999 ? 4 : 3, val, szDim);
 	m_wndSpeed.SetWindowText (str);
 }
 
-void CUpdateDlg::_UpdateMgrDescEvents(LPCSTR , LPVOID )
+void CUpdateDlg::_UpdateMgrDescEvents(LPCTSTR , LPVOID )
 {
 	
 }
@@ -342,7 +338,7 @@ void CUpdateDlg::OnWhatisthis()
 void CUpdateDlg::OnHelp() 
 {
 	
-	::HtmlHelp (AfxGetApp ()->m_pMainWnd->m_hWnd, "Help\\Free Download Manager.chm::/Update.htm", HH_DISPLAY_TOPIC, NULL);	
+	::HtmlHelp (AfxGetApp ()->m_pMainWnd->m_hWnd, _T("Help\\Free Download Manager.chm::/Update.htm"), HH_DISPLAY_TOPIC, NULL);	
 }
 
 void CUpdateDlg::ApplyLanguage()

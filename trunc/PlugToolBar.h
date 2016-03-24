@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_PLUGTOOLBAR_H__7F4831DD_9204_4457_A718_5BBC46CA373E__INCLUDED_)

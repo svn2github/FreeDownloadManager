@@ -1,9 +1,14 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef NOCURL
 
+#include "common.h"
+#include <memory>
+#include <string>
+#include <exception>
+#include "Utils.h"
 #include "fsInternetFile2.h"
 #include <curl/curl.h>
 
@@ -63,8 +68,11 @@ fsInternetResult fsInternetFile2::Initialize()
 
 			curl_easy_setopt (m_curl, CURLOPT_FOLLOWLOCATION, TRUE);
 
-			curl_easy_setopt (m_curl, CURLOPT_SSL_VERIFYPEER, FALSE);
-			curl_easy_setopt (m_curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+			
+			{
+				curl_easy_setopt (m_curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+				curl_easy_setopt (m_curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+			}
 		}
 	}
 
@@ -77,11 +85,18 @@ size_t fsInternetFile2::_WriteData(void *ptr, size_t size, size_t nmemb, void *s
 	return pthis->OnWriteData ((LPBYTE)ptr, size * nmemb);
 }
 
-void fsInternetFile2::set_URL(LPCSTR pszURL)
+void fsInternetFile2::set_URL(LPCTSTR pszURL)
 {
-	curl_easy_setopt (m_curl, CURLOPT_URL, pszURL);
+	std::string sUrl;
+#ifdef UNICODE
+	UniToAnsi(std::wstring(pszURL), sUrl);
+#else
+	sUrl = pszURL;
+#endif
 
-	if (strstr (pszURL, ".megashares.com/") != NULL)
+	curl_easy_setopt (m_curl, CURLOPT_URL, sUrl.c_str());
+
+	if (_tcsstr (pszURL, _T(".megashares.com/")) != NULL)
 		m_bDoPause = TRUE;
 }
 
@@ -93,7 +108,7 @@ fsInternetResult fsInternetFile2::StartDownloading()
 		m_bNeedStop = false;
 		m_bAnswrFromServRcvd = false;
 		m_irLastError = IR_SUCCESS;
-		m_strHttpHeader = "";
+		m_strHttpHeader = _T("");
 		m_enRST = RST_UNKNOWN;
 
 		
@@ -145,6 +160,8 @@ DWORD WINAPI fsInternetFile2::_threadDownload(LPVOID lp)
 
 	
 	pthis->m_irLastError = CURLcodeToIR (res);
+	if (pthis->m_irLastError == IR_SEC_CHECK_FAILURE)
+		pthis->m_lastSctFailure = CURLcodeToSCT (res);
 
 	if (pthis->m_irLastError == IR_SUCCESS)
 	{
@@ -193,9 +210,24 @@ fsInternetResult fsInternetFile2::CURLcodeToIR(int code)
 	case CURLE_HTTP_RANGE_ERROR:
 		return IR_RANGESNOTAVAIL;
 
+	case CURLE_SSL_CACERT:
+		return IR_SEC_CHECK_FAILURE;
+
 	
 	default:
 		return IR_ERROR;
+	}
+}
+
+fsSecurityCheckType fsInternetFile2::CURLcodeToSCT(int code)
+{
+	switch (code)
+	{
+	case CURLE_SSL_CACERT:
+		return SCT_CERT_INVALID_CA;
+
+	default:
+		return SCT_UNSPECIFIED;
 	}
 }
 
@@ -303,8 +335,15 @@ void fsInternetFile2::set_ResumeFrom (UINT64 uStart)
 	m_uStartPos = uStart;
 }
 
-void fsInternetFile2::set_UserAgent(LPCSTR psz)
+void fsInternetFile2::set_UserAgent(LPCTSTR psz)
 {
+	std::string sUserAgent;
+#ifdef UNICODE
+	UniToAnsi(std::wstring(psz), sUserAgent);
+#else
+	sUserAgent = pszURL;
+#endif
+
 	curl_easy_setopt (m_curl, CURLOPT_USERAGENT, psz);
 }
 
@@ -314,31 +353,68 @@ void fsInternetFile2::set_UseHttp11(BOOL bUse)
 		bUse ? CURL_HTTP_VERSION_1_1 : CURL_HTTP_VERSION_1_0);
 }
 
-void fsInternetFile2::set_Referer(LPCSTR psz)
+void fsInternetFile2::set_Referer(LPCTSTR psz)
 {
-	curl_easy_setopt (m_curl, CURLOPT_REFERER, psz);
+	std::string sReferer;
+#ifdef UNICODE
+	UniToAnsi(std::wstring(psz), sReferer);
+#else
+	sReferer = pszURL;
+#endif
+
+	curl_easy_setopt (m_curl, CURLOPT_REFERER, sReferer.c_str());
 }
 
-void fsInternetFile2::set_Cookie(LPCSTR psz)
+void fsInternetFile2::set_Cookie(LPCTSTR psz)
 {
-	curl_easy_setopt (m_curl, CURLOPT_COOKIE, psz);
+	std::string sCookie;
+#ifdef UNICODE
+	UniToAnsi(std::wstring(psz), sCookie);
+#else
+	sCookie = pszURL;
+#endif
+
+	curl_easy_setopt (m_curl, CURLOPT_COOKIE, sCookie.c_str());
 }
 
-void fsInternetFile2::set_Auth(LPCSTR pszUser, LPCSTR pszPwd)
+void fsInternetFile2::set_Auth(LPCTSTR pszUser, LPCTSTR pszPwd)
 {
 	char sz [1000];
+#ifdef UNICODE
+	sprintf (sz, "%S:%S", pszUser, pszPwd);
+#else
 	sprintf (sz, "%s:%s", pszUser, pszPwd);
+#endif
+
 	curl_easy_setopt (m_curl, CURLOPT_USERPWD, sz);
 }
 
-void fsInternetFile2::set_Proxy(LPCSTR pszProxy, LPCSTR pszUser, LPCSTR pszPwd)
+void fsInternetFile2::set_Proxy(LPCTSTR pszProxy, LPCTSTR pszUser, LPCTSTR pszPwd)
 {
+	std::string sProxy;
+#ifdef UNICODE
+	UniToAnsi(std::wstring(pszProxy), sProxy);
+#else
+	sProxy = pszProxy;
+#endif
+
 	curl_easy_setopt (m_curl, CURLOPT_PROXY, pszProxy);
 
 	if (pszUser && *pszUser)
 	{
-		curl_easy_setopt (m_curl, CURLOPT_PROXYUSERNAME, pszUser);
-		curl_easy_setopt (m_curl, CURLOPT_PROXYPASSWORD, pszPwd);
+
+		std::string sUser;
+		std::string sPassword;
+#ifdef UNICODE
+	UniToAnsi(std::wstring(pszUser), sUser);
+	UniToAnsi(pszPwd ? std::wstring(pszPwd) : std::wstring(L""), sPassword);
+#else
+	sUser = pszUser;
+	sPassword = pszPwd ? pszPwd : "";
+#endif
+
+		curl_easy_setopt (m_curl, CURLOPT_PROXYUSERNAME, sUser.c_str());
+		curl_easy_setopt (m_curl, CURLOPT_PROXYPASSWORD, sPassword.c_str());
 				
 	}
 }
@@ -350,7 +426,7 @@ void fsInternetFile2::set_PostData(LPCSTR psz)
 	if (bPost)
 	{
 		curl_easy_setopt (m_curl, CURLOPT_POSTFIELDS, psz);
-		curl_easy_setopt (m_curl, CURLOPT_POSTFIELDSIZE, lstrlen (psz));
+		curl_easy_setopt (m_curl, CURLOPT_POSTFIELDSIZE, strlen (psz));
 	}
 }
 
@@ -360,7 +436,15 @@ void fsInternetFile2::ExtractFileInfoFromResponse()
 	{
 		LPSTR psz = NULL;
 		curl_easy_getinfo (m_curl, CURLINFO_CONTENT_TYPE, &psz);
+
+#ifdef UNICODE
+		std::wstring sContentType;
+		LPCSTR szContentType = psz ? psz : "";
+		AnsiToUni(std::string(szContentType), sContentType);
+		m_strContentType = sContentType.c_str();
+#else
 		m_strContentType = psz ? psz : "";
+#endif
 
 		curl_easy_getinfo (m_curl, CURLINFO_FILETIME, &m_fileTime);
 
@@ -370,6 +454,8 @@ void fsInternetFile2::ExtractFileInfoFromResponse()
 	
 		if (m_uStartPos != 0)
 			m_enRST = RST_PRESENT;
+
+		ExtractSuggestedFileName ();
 	}
 	else
 	{
@@ -377,7 +463,7 @@ void fsInternetFile2::ExtractFileInfoFromResponse()
 	}
 }
 
-LPCSTR fsInternetFile2::get_ContentType()
+LPCTSTR fsInternetFile2::get_ContentType()
 {
 	return m_strContentType;
 }
@@ -413,11 +499,20 @@ size_t fsInternetFile2::_WriteHeader(void *ptr, size_t size, size_t nmemb, void 
 	char sz [10000];
 	strncpy (sz, (LPCSTR)ptr, size * nmemb);
 	sz [size * nmemb] = 0;
-	pthis->m_strHttpHeader += sz;
+
+#ifdef UNICODE
+		WCHAR wsz[10000] = {0,};
+		int nLen = ::MultiByteToWideChar(CP_ACP, 0, sz, -1, 0, 0);
+		::MultiByteToWideChar(CP_ACP, 0, sz, -1, wsz, nLen);
+		pthis->m_strHttpHeader += wsz;
+#else
+		pthis->m_strHttpHeader += sz;
+#endif
+
 	return size * nmemb;
 }
 
-LPCSTR fsInternetFile2::get_SuggestedFileName()
+LPCTSTR fsInternetFile2::get_SuggestedFileName()
 {
 	return m_strSuggestedFileName;
 }
@@ -432,9 +527,93 @@ void fsInternetFile2::setUseFtpAsciiMode(bool bUse)
 	curl_easy_setopt (m_curl, CURLOPT_TRANSFERTEXT, bUse);
 }
 
-void fsInternetFile2::setInterface(LPCSTR psz)
+void fsInternetFile2::setInterface(LPCTSTR psz)
 {
-	curl_easy_setopt (m_curl, CURLOPT_INTERFACE, psz);
+	std::string sInterface;
+#ifdef UNICODE
+	UniToAnsi(std::wstring(psz), sInterface);
+#else
+	sInterface = psz;
+#endif
+
+	curl_easy_setopt (m_curl, CURLOPT_INTERFACE, sInterface.c_str());
+}
+
+void fsInternetFile2::ExtractSuggestedFileName ()
+{
+	assert (!m_strHttpHeader.IsEmpty ());
+
+	if (m_strHttpHeader.IsEmpty ())
+		return;
+
+	std::string responseHeader = utf8FromWide ((LPCWSTR)m_strHttpHeader);
+
+	size_t nPos = stringFindI (responseHeader, std::string ("content-disposition:"));
+	if (nPos == std::string::npos)
+		return;
+
+	size_t nPos2 = nPos + 20;
+
+	nPos = stringFindI (responseHeader, std::string ("\r\n"), nPos2);
+	if (nPos == std::string::npos)
+		return;
+
+	std::string strCT (responseHeader.begin () + nPos2, responseHeader.begin () + nPos);
+	if (strCT.empty ())
+		return;
+
+	nPos = stringFindI (strCT, std::string ("filename"));
+	if (nPos == std::string::npos)
+		return;
+
+	const char* psz = strCT.c_str () + nPos + 8;
+
+	while (*psz == ' ')
+		psz++;
+	bool bCharset = false;
+	if (*psz == '*') 
+	{
+		bCharset = true;
+		psz++;
+	}
+
+	if (*psz++ != '=')
+		return;
+	while (*psz == ' ') psz++;
+
+	bool bInvComms = false; 
+	if (*psz == '"' || *psz == '\'')
+	{
+		bInvComms = true;
+		psz++;
+	}
+
+	std::string strFile;
+
+	while (*psz != ';' && *psz != 0)
+		strFile += *psz++;	
+
+	if (bInvComms)	
+		strFile.erase (strFile.end () - 1); 
+
+	if (bCharset)
+	{
+		nPos = strFile.find ("''");
+		if (nPos != std::string::npos)
+			strFile.erase (strFile.begin (), strFile.begin () + nPos + 2);
+	}
+
+	m_strSuggestedFileName = wideFromUtf8 (strFile).c_str ();
+}
+
+void fsInternetFile2::SetSecurityCheckIgnoreFlags (DWORD flags)
+{
+	m_sctIgnoreFlags = flags;
+}
+
+fsSecurityCheckType fsInternetFile2::get_lastSctFailure () const
+{
+	return m_lastSctFailure;
 }
 
 #endif 

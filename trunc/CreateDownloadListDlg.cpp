@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -113,7 +113,7 @@ BOOL CCreateDownloadListDlg::OnInitDialog()
 	CheckRadioButton (IDC_STARTNOW, IDC_STARTSCHEDULE, IDC_STARTNOW);
 	m_dld->bAutoStart = TRUE;  
 
-	m_dld->pMgr->GetDownloadMgr ()->CreateByUrl ("http://");
+	m_dld->pMgr->GetDownloadMgr ()->CreateByUrl (_T("http://"));
 
 	m_bGroupChanged = m_bAuthChanged = FALSE;
 
@@ -131,7 +131,7 @@ BOOL CCreateDownloadListDlg::OnInitDialog()
 	int cDownloads = m_wndUrlList.GetItemCount();
 	int i = 0;
 	for (i = 0; i <= cDownloads - 1; i++) {
-		LPCSTR pszUrl = m_pvUrls->at (m_wndUrlList.GetItemData (i));
+		LPCTSTR pszUrl = m_pvUrls->at (m_wndUrlList.GetItemData (i));
 		fsURL urlDownloadUrl;
 		if (IR_SUCCESS != urlDownloadUrl.Crack (pszUrl)) {
 			continue;
@@ -332,7 +332,7 @@ void CCreateDownloadListDlg::OnOK()
 
 	GetDlgItemText (IDC_OUTFOLDER, strOutFolder);
 
-	fsPathToGoodPath ((LPSTR)(LPCSTR)strOutFolder);
+	fsPathToGoodPath ((LPTSTR)(LPCTSTR)strOutFolder);
 
 	if (strOutFolder.GetLength () == 0)
 	{
@@ -362,8 +362,8 @@ void CCreateDownloadListDlg::OnOK()
 		}
 	}
 
-	fsnew (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, CHAR, strOutFolder.GetLength () + 1);
-	strcpy (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, strOutFolder);
+	fsnew (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, TCHAR, (strOutFolder.GetLength () + 1) * sizeof(TCHAR));
+	_tcscpy (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, strOutFolder);
 
 	m_dld->pGroup = m_wndGroups.GetSelectedGroup ();
 
@@ -404,8 +404,8 @@ BOOL CCreateDownloadListDlg::ReadAuth()
 		
 				SAFE_DELETE_ARRAY (dnp->pszUserName);
 				
-				fsnew (dnp->pszUserName, CHAR, strUser.GetLength ()+1);
-				strcpy (dnp->pszUserName, strUser);
+				fsnew (dnp->pszUserName, TCHAR, (strUser.GetLength ()+1) * sizeof(TCHAR));
+				_tcscpy (dnp->pszUserName, strUser);
 			}
 
 			if (m_bPasswordChanged || !strPassword.IsEmpty()) {
@@ -413,8 +413,8 @@ BOOL CCreateDownloadListDlg::ReadAuth()
 		
 				SAFE_DELETE_ARRAY (dnp->pszPassword);
 				
-				fsnew (dnp->pszPassword, CHAR, strPassword.GetLength ()+1);
-				strcpy (dnp->pszPassword, strPassword);
+				fsnew (dnp->pszPassword, TCHAR, (strPassword.GetLength ()+1) * sizeof(TCHAR));
+				_tcscpy (dnp->pszPassword, strPassword);
 			}
 			break;
 
@@ -429,10 +429,10 @@ BOOL CCreateDownloadListDlg::ReadAuth()
 				SAFE_DELETE_ARRAY (dnp->pszUserName);
 				SAFE_DELETE_ARRAY (dnp->pszPassword);
 
-				fsnew (dnp->pszUserName, CHAR, sEmptyString.GetLength ()+1);
-				fsnew (dnp->pszPassword, CHAR, sEmptyString.GetLength ()+1);
-				strcpy (dnp->pszUserName, sEmptyString);
-				strcpy (dnp->pszPassword, sEmptyString);
+				fsnew (dnp->pszUserName, TCHAR, (sEmptyString.GetLength ()+1) * sizeof(TCHAR));
+				fsnew (dnp->pszPassword, TCHAR, (sEmptyString.GetLength ()+1) * sizeof(TCHAR));
+				_tcscpy (dnp->pszUserName, sEmptyString);
+				_tcscpy (dnp->pszPassword, sEmptyString);
 			}
 
 			break;
@@ -458,7 +458,7 @@ BOOL CCreateDownloadListDlg::AddDownloads()
 
 void CCreateDownloadListDlg::WriteUrlsToDialog()
 {
-	m_wndUrlList.InsertColumn (0, "", LVCFMT_LEFT, 200);
+	m_wndUrlList.InsertColumn (0, _T(""), LVCFMT_LEFT, 200);
 	
 
 	int wmax = 0;
@@ -469,7 +469,7 @@ void CCreateDownloadListDlg::WriteUrlsToDialog()
 
 	for (int i = 0, cItems = 0; i < m_pvUrls->size (); i++)
 	{
-		LPCSTR pszURL = m_pvUrls->at (i);
+		LPCTSTR pszURL = m_pvUrls->at (i);
 
 		fsURL url;
 		if (IR_SUCCESS != url.Crack (pszURL))
@@ -700,7 +700,7 @@ DWORD WINAPI CCreateDownloadListDlg::_threadCalculateSize(LPVOID lp)
 		uSummSize += uSize;
 
 		CString str;
-		str.Format ("%s (%d - %s, %d - %s)", LS (L_QUERINGSIZE), i+1, LS (L_DONE), iFailed, LS (L_ERR));
+		str.Format (_T("%s (%d - %s, %d - %s)"), LS (L_QUERINGSIZE), i+1, LS (L_DONE), iFailed, LS (L_ERR));
 		dlg->SetDlgItemText (IDC_MESSAGE, str);	
 
 		info->iProgress = (int) ((double) i / pvpDlds->size () * 100);
@@ -716,10 +716,10 @@ DWORD WINAPI CCreateDownloadListDlg::_threadCalculateSize(LPVOID lp)
 		{
 			if (_pwndDownloads->IsSizesInBytes () == FALSE)
 			{
-				char szDim [50];
+				TCHAR szDim [50];
 				float fSize;
 				BytesToXBytes (uSummSize, &fSize, szDim);
-				strSize.Format ("%.*g %s", fSize > 999 ? 4 : 3, fSize, szDim);
+				strSize.Format (_T("%.*g %s"), fSize > 999 ? 4 : 3, fSize, szDim);
 			}
 			else
 				strSize = fsBytesToStr (uSummSize);
@@ -748,8 +748,8 @@ DLDS_LIST* CCreateDownloadListDlg::GenerateDownloads(BOOL bCheckDldExistance)
 		vmsDownloadSmartPtr dld;
 		Download_CreateInstance (dld);
 
-		LPCSTR pszUrl = m_pvUrls->at (m_wndUrlList.GetItemData (i));
-		LPCSTR pszCookies = m_pvCookies->at (m_wndUrlList.GetItemData (i));
+		LPCTSTR pszUrl = m_pvUrls->at (m_wndUrlList.GetItemData (i));
+		LPCTSTR pszCookies = m_pvCookies->at (m_wndUrlList.GetItemData (i));
 
 		if (IR_SUCCESS != dld->pMgr->GetDownloadMgr ()->CreateByUrl (pszUrl, TRUE))
 			continue;
@@ -784,10 +784,10 @@ DLDS_LIST* CCreateDownloadListDlg::GenerateDownloads(BOOL bCheckDldExistance)
 				SAFE_DELETE_ARRAY (dnp->pszUserName);
 				SAFE_DELETE_ARRAY (dnp->pszPassword);
 
-				fsnew (dnp->pszUserName, CHAR, siDldSiteInfo->strUser.GetLength ()+1);
-				fsnew (dnp->pszPassword, CHAR, siDldSiteInfo->strPassword.GetLength ()+1);
-				strcpy (dnp->pszUserName, siDldSiteInfo->strUser);
-				strcpy (dnp->pszPassword, siDldSiteInfo->strPassword);
+				fsnew (dnp->pszUserName, TCHAR, (siDldSiteInfo->strUser.GetLength ()+1) * sizeof(TCHAR));
+				fsnew (dnp->pszPassword, TCHAR, (siDldSiteInfo->strPassword.GetLength ()+1) * sizeof (TCHAR));
+				_tcscpy (dnp->pszUserName, siDldSiteInfo->strUser);
+				_tcscpy (dnp->pszPassword, siDldSiteInfo->strPassword);
 
 			} else if (*urlDownloadUrl.GetUserName () == 0 && *urlDownloadUrl.GetPassword ()) {
 				fsDownload_NetworkProperties *dnp = dld->pMgr->GetDownloadMgr ()->GetDNP ();
@@ -798,10 +798,10 @@ DLDS_LIST* CCreateDownloadListDlg::GenerateDownloads(BOOL bCheckDldExistance)
 				tstring sUserName = urlDownloadUrl.GetUserName ();
 				tstring sPasword = urlDownloadUrl.GetUserName ();
 
-				fsnew (dnp->pszUserName, CHAR, sUserName.length() + 1);
-				fsnew (dnp->pszPassword, CHAR, sPasword.length() + 1);
-				strcpy (dnp->pszUserName, sUserName.c_str());
-				strcpy (dnp->pszPassword, sPasword.c_str());
+				fsnew (dnp->pszUserName, TCHAR, (sUserName.length() + 1) * sizeof(TCHAR));
+				fsnew (dnp->pszPassword, TCHAR, (sPasword.length() + 1) * sizeof(TCHAR));
+				_tcscpy (dnp->pszUserName, sUserName.c_str());
+				_tcscpy (dnp->pszPassword, sPasword.c_str());
 			}
 
 		}
@@ -819,13 +819,13 @@ DLDS_LIST* CCreateDownloadListDlg::GenerateDownloads(BOOL bCheckDldExistance)
 		
 				if (!m_bUsernameChanged) {
 					SAFE_DELETE_ARRAY (dnp->pszUserName);
-					fsnew (dnp->pszUserName, CHAR, siDldSiteInfo->strUser.GetLength ()+1);
-					strcpy (dnp->pszUserName, siDldSiteInfo->strUser);
+					fsnew (dnp->pszUserName, TCHAR, (siDldSiteInfo->strUser.GetLength ()+1) * sizeof(TCHAR));
+					_tcscpy (dnp->pszUserName, siDldSiteInfo->strUser);
 				}
 				if (!m_bPasswordChanged) {
 					SAFE_DELETE_ARRAY (dnp->pszPassword);
-					fsnew (dnp->pszPassword, CHAR, siDldSiteInfo->strPassword.GetLength ()+1);
-					strcpy (dnp->pszPassword, siDldSiteInfo->strPassword);
+					fsnew (dnp->pszPassword, TCHAR, (siDldSiteInfo->strPassword.GetLength ()+1) * sizeof(TCHAR));
+					_tcscpy (dnp->pszPassword, siDldSiteInfo->strPassword);
 				}
 
 			} else if (*urlDownloadUrl.GetUserName () == 0 && *urlDownloadUrl.GetPassword ()) {
@@ -833,13 +833,13 @@ DLDS_LIST* CCreateDownloadListDlg::GenerateDownloads(BOOL bCheckDldExistance)
 		
 				if (!m_bUsernameChanged) {
 					SAFE_DELETE_ARRAY (dnp->pszUserName);
-					fsnew (dnp->pszUserName, CHAR, siDldSiteInfo->strUser.GetLength ()+1);
-					strcpy (dnp->pszUserName, siDldSiteInfo->strUser);
+					fsnew (dnp->pszUserName, TCHAR, (siDldSiteInfo->strUser.GetLength ()+1) * sizeof(TCHAR));
+					_tcscpy (dnp->pszUserName, siDldSiteInfo->strUser);
 				}
 				if (!m_bPasswordChanged) {
 					SAFE_DELETE_ARRAY (dnp->pszPassword);
-					fsnew (dnp->pszPassword, CHAR, siDldSiteInfo->strPassword.GetLength ()+1);
-					strcpy (dnp->pszPassword, siDldSiteInfo->strPassword);
+					fsnew (dnp->pszPassword, TCHAR, (siDldSiteInfo->strPassword.GetLength ()+1) * sizeof(TCHAR));
+					_tcscpy (dnp->pszPassword, siDldSiteInfo->strPassword);
 				}
 			}
 
@@ -847,12 +847,12 @@ DLDS_LIST* CCreateDownloadListDlg::GenerateDownloads(BOOL bCheckDldExistance)
 
 		if (bNeedReferer)
 		{
-			LPCSTR pszReferer = m_pvReferers->at (m_wndUrlList.GetItemData (i));
+			LPCTSTR pszReferer = m_pvReferers->at (m_wndUrlList.GetItemData (i));
 			int len = pszReferer ? lstrlen (pszReferer) : 0;
 			if (len) 
 			{
 				SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszReferer);
-				dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszReferer = new char [len+1];
+				dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszReferer = new TCHAR [(len+1) * sizeof (TCHAR)];
 				lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszReferer, pszReferer);
 			}
 		}
@@ -860,7 +860,7 @@ DLDS_LIST* CCreateDownloadListDlg::GenerateDownloads(BOOL bCheckDldExistance)
 		if (pszCookies && *pszCookies)
 		{
 			SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies);
-			dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies = new char [lstrlen (pszCookies) + 1];
+			dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies = new TCHAR [(lstrlen (pszCookies) + 1) * sizeof (TCHAR)];
 			lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies, pszCookies);
 		}
 
@@ -912,14 +912,14 @@ void CCreateDownloadListDlg::OnFilter()
 	_App.DldListDlg_Filter_LastExts (dlg.m_strExts);
 	_App.DldListDlg_Filter_LastExtsRemove (dlg.m_bRemove);
 
-	char szFile [10000];
+	TCHAR szFile [10000];
 
 	std::vector <int> v;
 
 	int i = 0;
 	for (i = 0; i < m_wndUrlList.GetItemCount (); i++)
 	{
-		LPCSTR pszUrl = m_pvUrls->at (m_wndUrlList.GetItemData (i));
+		LPCTSTR pszUrl = m_pvUrls->at (m_wndUrlList.GetItemData (i));
 		fsURL url;
 		if (IR_SUCCESS == url.Crack (pszUrl))
 		{
@@ -928,7 +928,7 @@ void CCreateDownloadListDlg::OnFilter()
 
 			BOOL bExtPresent = FALSE;
 
-			LPCSTR pszExt = strrchr (szFile, '.');
+			LPCTSTR pszExt = _tcsrchr (szFile, _T('.'));
 			if (pszExt && IsExtInExtsStr (dlg.m_strExts, pszExt+1))
 				bExtPresent = TRUE;
 

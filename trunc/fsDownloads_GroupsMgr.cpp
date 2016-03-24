@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -14,9 +14,9 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-#define	GRPREG_OUTFOLDER	"OutFolder"
-#define	GRPREG_EXTENSIONS	"Extensions"
-#define GRPREG_OTHER		"Other"
+#define	GRPREG_OUTFOLDER	_T("OutFolder")
+#define	GRPREG_EXTENSIONS	_T("Extensions")
+#define GRPREG_OTHER		_T("Other")
 
 fsDownloads_GroupsMgr::fsDownloads_GroupsMgr()
 {
@@ -49,7 +49,7 @@ BOOL fsDownloads_GroupsMgr::LoadGroupsFromReg()
 {
 	LONG lResult;
 	DWORD dwIndex = 0;
-	CHAR szGroup [MAX_GROUP_LEN];
+	TCHAR szGroup [MAX_GROUP_LEN];
 	DWORD dwSize;
 	FILETIME lastTime;
 	HKEY hGroup;
@@ -85,14 +85,14 @@ BOOL fsDownloads_GroupsMgr::LoadGroupsFromReg()
 			continue;
 		}
 
-		strcpy (grp.szName, szGroup);
+		_tcscpy (grp.szName, szGroup);
 
 		dwSize  = MY_MAX_PATH;
 		lResult = RegQueryValueEx (hGroup, GRPREG_OUTFOLDER, NULL, NULL, (LPBYTE) grp.szOutFolder, &dwSize);
 		if (lResult != ERROR_SUCCESS)
 		{
 			lRes = lResult;
-			strcpy (grp.szOutFolder, "C:\\Downloads\\");
+			_tcscpy (grp.szOutFolder, _T("C:\\Downloads\\"));
 		}
 
 		dwSize  = MAX_EXTS_LEN;
@@ -172,11 +172,11 @@ BOOL fsDownloads_GroupsMgr::SaveGroups()
 			continue;
 		}
 
-		lResult = RegSetValueEx (hGroup, GRPREG_OUTFOLDER, 0, REG_SZ, (LPBYTE) grp.szOutFolder, strlen (grp.szOutFolder));
+		lResult = RegSetValueEx (hGroup, GRPREG_OUTFOLDER, 0, REG_SZ, (LPBYTE) grp.szOutFolder, _tcslen (grp.szOutFolder));
 		if (lResult != ERROR_SUCCESS)
 			lRes = lResult;
 
-		lResult = RegSetValueEx (hGroup, GRPREG_EXTENSIONS, 0, REG_SZ, (LPBYTE) grp.szExts, strlen (grp.szExts));
+		lResult = RegSetValueEx (hGroup, GRPREG_EXTENSIONS, 0, REG_SZ, (LPBYTE) grp.szExts, _tcslen (grp.szExts));
 		if (lResult != ERROR_SUCCESS)
 			lRes = lResult;
 
@@ -206,7 +206,7 @@ BOOL fsDownloads_GroupsMgr::GetGroup(fsDownloadGroup *pGroup, int iGroup)
 	return TRUE;
 }
 
-int fsDownloads_GroupsMgr::FindGroupByExt(LPCSTR pszExt)
+int fsDownloads_GroupsMgr::FindGroupByExt(LPCTSTR pszExt)
 {
 	for (int grp = 0; grp < m_vGroups.size (); grp++)
 	{
@@ -218,7 +218,7 @@ int fsDownloads_GroupsMgr::FindGroupByExt(LPCSTR pszExt)
 	return -1;
 }
 
-int fsDownloads_GroupsMgr::FindGroupByName(LPCSTR pszName)
+int fsDownloads_GroupsMgr::FindGroupByName(LPCTSTR pszName)
 {
 	for (int i = 0; i < m_vGroups.size (); i++)
 		if (!fsStrCmpNC (m_vGroups [i].szName, pszName))
@@ -227,7 +227,7 @@ int fsDownloads_GroupsMgr::FindGroupByName(LPCSTR pszName)
 	return -1;
 }
 
-void fsDownloads_GroupsMgr::DeleteGroup(LPCSTR pszGroup)
+void fsDownloads_GroupsMgr::DeleteGroup(LPCTSTR pszGroup)
 {
 	int grp = FindGroupByName (pszGroup);
 	if (grp == -1)
@@ -248,23 +248,23 @@ void fsDownloads_GroupsMgr::CreateGroup(fsDownloadGroup *grp)
 
 void fsDownloads_GroupsMgr::UpdateGroup(int iGrp, fsDownloadGroup *grp)
 {
-	if (strcmp (m_vGroups [iGrp].szName, grp->szName))
+	if (_tcscmp (m_vGroups [iGrp].szName, grp->szName))
 		RegDeleteKey (m_hGroups, m_vGroups [iGrp].szName);
 	
 	m_vGroups [iGrp] = *grp;
 }
 
-LPCSTR fsDownloads_GroupsMgr::GetGroupName(int iGrp)
+LPCTSTR fsDownloads_GroupsMgr::GetGroupName(int iGrp)
 {
 	return m_vGroups [iGrp].szName;
 }
 
-LPCSTR fsDownloads_GroupsMgr::GetGroupFolder(int iGrp)
+LPCTSTR fsDownloads_GroupsMgr::GetGroupFolder(int iGrp)
 {
 	return m_vGroups [iGrp].szOutFolder;
 }
 
-void fsDownloads_GroupsMgr::SetGroupFolder(int iGrp, LPCSTR pszFldr)
+void fsDownloads_GroupsMgr::SetGroupFolder(int iGrp, LPCTSTR pszFldr)
 {
 	lstrcpy (m_vGroups [iGrp].szOutFolder, pszFldr);
 }

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FdmApp_H__0DFAE8B5_1F34_4956_8DFA_5AE79C242CB7__INCLUDED_)
@@ -58,7 +58,7 @@ protected:
 	
 	void Install_UnregisterServer();
 	
-	void Install_RegisterServer();
+	void Install_RegisterServer(bool bUserOnly = false);
 	
 	BOOL m_bForceSilentSpecified;
 	
@@ -67,7 +67,7 @@ protected:
 	
 	
 	
-	BOOL RegisterServer(BOOL bGlobal);
+	BOOL RegisterServer(BOOL bGlobal, bool bRegisterForUserOnly = false );
 	
 	BOOL m_bCOMInited;
 	
@@ -77,8 +77,6 @@ protected:
 	void CheckLocked();
 	
 	BOOL m_bStarting;
-	
-	static LONG WINAPI _UEF (_EXCEPTION_POINTERS*);
 	
 	BOOL CheckFdmStartedAlready(BOOL bSetForIfEx = TRUE);
 	BOOL m_bEmbedding;		
@@ -93,14 +91,9 @@ private:
 	
 	BOOL InitATL();
 protected:
-	bool onNeedRegisterServer(void);
+	bool onNeedRegisterServer(bool bUserOnly);
 	bool onNeedUnregisterServer(void);
 	void RunAsElevatedTasksProcessor(fsFDMCmdLineParser& cmdline);
-public:
-	
-	
-	
-	void CheckFirefoxExtension(LPDWORD pdwResult = NULL);
 };
 
 //{{AFX_INSERT_LOCATION}}

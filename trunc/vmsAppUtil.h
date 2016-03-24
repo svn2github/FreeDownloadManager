@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSAPPUTIL_H__E0C0FA99_0E90_4A12_9D11_213C6C368ADB__INCLUDED_)
@@ -12,7 +12,7 @@
 class vmsAppUtil  
 {
 public:
-	static fsInternetResult UrlDownloadToFile (LPCSTR pszUrl, LPCSTR pszFileName);
+	static fsInternetResult UrlDownloadToFile (LPCTSTR pszUrl, LPCTSTR pszFileName);
 	vmsAppUtil();
 	virtual ~vmsAppUtil();
 

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -22,7 +22,7 @@ vmsStringRecentList::~vmsStringRecentList()
 
 }
 
-void vmsStringRecentList::Add(LPCSTR psz)
+void vmsStringRecentList::Add(LPCTSTR psz)
 {
 	m_vList.Add (psz);
 
@@ -50,7 +50,7 @@ int vmsStringRecentList::get_Count() const
 	return m_vList.get_Count ();
 }
 
-LPCSTR vmsStringRecentList::get_String(int nIndex) const
+LPCTSTR vmsStringRecentList::get_String(int nIndex) const
 {
 	return m_vList.get_String (nIndex);
 }
@@ -65,7 +65,7 @@ BOOL vmsStringRecentList::Save(HANDLE hFile)
 	return m_vList.Save (hFile);
 }
 
-BOOL vmsStringRecentList::Load(HANDLE hFile)
+BOOL vmsStringRecentList::Load(HANDLE hFile, WORD wVer)
 {
-	return m_vList.Load (hFile);
+	return m_vList.Load (hFile, wVer);
 }

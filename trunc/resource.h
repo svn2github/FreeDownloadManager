@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 //{{NO_DEPENDENCIES}}
@@ -143,7 +143,6 @@
 #define IDB_BACK                        239
 #define IDB_BACK_D                      240
 #define IDB_SORTIMAGES                  241
-#define IDD_UNHEXC                      242
 #define IDD_DLDALREXISTS                243
 #define IDD_ADDURLLIST                  244
 #define IDD_CREATEURLLIST               244
@@ -277,7 +276,7 @@
 #define IDD_TPDLD_GENERAL               390
 #define IDD_TORRENTMOVE                 492
 #define IDD_DIALOG2                     495
-#define IDD_UNHEXC2                     495
+#define IDD_WAITER2                     496
 #define IDC_URL                         1001
 #define IDC_BUTTON2                     1003
 #define IDC_SETTIME                     1003
@@ -882,20 +881,12 @@
 #define IDC__TO2                        1178
 #define IDC_VIRNAME                     1179
 #define IDC_CHOOSEVIR                   1180
-#define IDC__UEICON                     1181
 #define IDC__MSG                        1182
 #define IDC_DONTASK                     1183
-#define IDC__MSG1                       1183
 #define IDC__SUPPORT1                   1184
-#define IDC__MSG2                       1184
 #define IDC__SUPPORT2                   1185
-#define IDC__MSG4                       1186
-#define IDC__MSG5                       1187
 #define IDC_URLLIST                     1188
-#define IDC__MSG6                       1188
-#define IDC__MSG7                       1189
 #define IDC__SEC                        1190
-#define IDC__MSG8                       1190
 #define IDC_MAXMIRRORSVAL               1191
 #define IDC__SEC2                       1191
 #define IDC_MAXMIRRORSSPIN              1192
@@ -995,8 +986,6 @@
 #define IDC__CHECKSUM                   1273
 #define IDC__ICON                       1273
 #define IDC__RESULTMSG                  1274
-#define IDC__MSG3                       1275
-#define IDC__MSG9                       1276
 #define IDC_EXPLORER1                   1277
 #define IDC__WC_MB                      1278
 #define IDC_PERFORMCHECKWHENDONE        1279
@@ -1020,7 +1009,6 @@
 #define IDC_PORT_TO_SPIN                1297
 #define IDC_USE_DHT                     1298
 #define IDC__USEPORTS                   1299
-#define IDC_DESCRIPTION                 1300
 #define IDC__FILE                       1300
 #define IDC_MAXHALFSVAL                 1300
 #define IDC_DROPBOX                     1301
@@ -1068,6 +1056,8 @@
 #define IDC_ENABLE_MONITORING           1344
 #define IDC__WARNING                    1345
 #define IDC__FLVONTHISPAGE              1346
+#define IDC__WARNING2                   1346
+#define IDC__GETIT_DESC                 1346
 #define IDC__NOTE                       1347
 #define IDC_M_IE                        1348
 #define IDC_M_SEAMONKEY                 1349
@@ -1114,6 +1104,9 @@
 #define IDC_INBITS                      1380
 #define IDC_ABORTALL                    1558
 #define IDC_LOCAL_PEER                  1559
+#define IDC_LOCAL_PEER2                 1560
+#define IDC_UTPEX                       1560
+#define IDC_SEQUENTIAL                  1561
 #define IDC__COPYRIGHT                  1900
 #define IDC__REGTO                      1901
 #define IDC_USEMAXCONNS                 2034
@@ -1263,7 +1256,7 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        496
+#define _APS_NEXT_RESOURCE_VALUE        497
 #define _APS_NEXT_COMMAND_VALUE         33236
 #define _APS_NEXT_CONTROL_VALUE         1560
 #define _APS_NEXT_SYMED_VALUE           137

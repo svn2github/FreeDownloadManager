@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -79,9 +79,9 @@ void CUploadsWnd::Plugin_GetToolBarInfo(wgTButtonInfo **ppButtons, int *pcButton
 {
 	static wgTButtonInfo btns [] = 
 	{
-		wgTButtonInfo (ID_UPL_CREATENEW, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_UPL_START, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_UPL_STOP, TBSTYLE_BUTTON, ""),
+		wgTButtonInfo (ID_UPL_CREATENEW, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_UPL_START, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_UPL_STOP, TBSTYLE_BUTTON, _T("")),
 		
 	};
 
@@ -116,10 +116,10 @@ void CUploadsWnd::Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int *)
 	*ppItems = NULL;
 }
 
-void CUploadsWnd::Plugin_GetPluginNames(LPCSTR *ppszLong, LPCSTR *ppszShort)
+void CUploadsWnd::Plugin_GetPluginNames(LPCTSTR *ppszLong, LPCTSTR *ppszShort)
 {
 	static CString strName;
-	strName = LSNP (L_UPLOADS);
+	strName = LSNP (L_UPLOADS).c_str ();
 	*ppszLong = *ppszShort = strName;
 }
 
@@ -269,7 +269,7 @@ void CUploadsWnd::ApplyLanguageToMenuView(CMenu *menu)
 
 	UINT aCmds [] = {ID_ULLIST_1, ID_ULLIST_2, ID_ULLIST_3, ID_ULLIST_4, ID_ULLIST_5, 
 		ID_ULLIST_6, ID_ULLIST_7, ID_ULOG_1, ID_ULOG_2, ID_ULOG_3 };
-	LPCSTR apszCmds [] = {"URL", LS (L_NAME), LS (L_SIZE), LS (L_UPLOADED),
+	LPCTSTR apszCmds [] = {_T("URL"), LS (L_NAME), LS (L_SIZE), LS (L_UPLOADED),
 		LS (L_TIMELEFT), LS (L_SPEED), LS (L_ADDED),
 		LS (L_TIME), LS (L_DATE), LS (L_INFORMATION)};
 	

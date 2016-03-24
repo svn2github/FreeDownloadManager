@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -33,7 +33,7 @@ BOOL CComboBox_Ex::Create(CWnd *pParent)
 	CComboBox::Create (WS_CHILD|WS_VISIBLE|CBS_AUTOHSCROLL|CBS_DROPDOWN|WS_VSCROLL,
 		rc, pParent, 0x67909);
 
-	m_font.CreateFont (15, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "MS Sans Serif");
+	m_font.CreateFont (15, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("MS Sans Serif"));
 	SetFont (&m_font);
 
 	return TRUE;

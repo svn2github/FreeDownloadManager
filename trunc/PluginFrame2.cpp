@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -76,7 +76,7 @@ void CPluginFrame2::SetActivePlugin(int iPlugin)
 		int i = 0;
 		for (i = 0; i < 3; i++)
 			m_wndTabs.InsertItem (i, _PluginMgr.Plugin (i).strName);
-		m_wndTabs.InsertItem (i, ">>");
+		m_wndTabs.InsertItem (i, _T(">>"));
 		m_wndTabs.SetCurSel (cur);
 		SetActivePlugin (cur);
 		return;
@@ -89,7 +89,7 @@ void CPluginFrame2::SetActivePlugin(int iPlugin)
 		int i;
 		for (i = 3; i < _PluginMgr.GetPluginCount (); i++)
 			m_wndTabs.InsertItem (i, _PluginMgr.Plugin (i).strName);
-		m_wndTabs.InsertItem (i, "<<");
+		m_wndTabs.InsertItem (i, _T("<<"));
 		m_wndTabs.SetCurSel (m_iActivePlugin);
 		return;
 	}
@@ -135,7 +135,7 @@ void CPluginFrame2::OnNewLng()
 		if (i < 3 || m_bMoreTabs)
 			m_wndTabs.InsertItem (i, plug->strName);
 		else if (i == 3)
-			m_wndTabs.InsertItem (i,  ">>");
+			m_wndTabs.InsertItem (i,  _T(">>"));
 
 		if (i == m_iActivePlugin)
 		{
@@ -145,7 +145,7 @@ void CPluginFrame2::OnNewLng()
 	}
 
 	if (m_bMoreTabs)
-		m_wndTabs.InsertItem (i, "<<");
+		m_wndTabs.InsertItem (i, _T("<<"));
 
 	m_wndTabs.SetCurSel (m_iActivePlugin);
 }
@@ -167,7 +167,7 @@ BOOL CPluginFrame2::Initialize()
 		if (i < 3 || m_bMoreTabs)
 			m_wndTabs.InsertItem (i, plug.strName);
 		else if (i == 3)
-			m_wndTabs.InsertItem (i, ">>");
+			m_wndTabs.InsertItem (i, _T(">>"));
 
 		::ShowWindow (plug.hWnd, SW_HIDE);
 		

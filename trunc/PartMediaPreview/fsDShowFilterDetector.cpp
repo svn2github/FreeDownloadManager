@@ -1,11 +1,12 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #define WINVER 0x501
 #define _WIN32_IE 0x501
 #define _WIN32_WINNT 0x501
 
+#include "Utils.h"
 #include "fsDShowFilterDetector.h"
 #include "../system.h"
 #include <stdio.h>
@@ -28,7 +29,7 @@ const AM_MEDIA_TYPE* fsDShowFilterDetector::DetectMediaType(HANDLE hFile, UINT64
 {
 	HKEY key;
 	if (ERROR_SUCCESS != RegOpenKeyEx (HKEY_CLASSES_ROOT, 
-			"Media Type\\{e436eb83-524f-11ce-9f53-0020af0ba770}", 0, KEY_READ, &key))
+			_T ("Media Type\\{e436eb83-524f-11ce-9f53-0020af0ba770}"), 0, KEY_READ, &key))
 		return NULL;
 
 	m_uFileOkLen = uFileOkLen;
@@ -54,15 +55,15 @@ const AM_MEDIA_TYPE* fsDShowFilterDetector::Get_MediaType()
 const AM_MEDIA_TYPE* fsDShowFilterDetector::DetectMediaType(HANDLE hFile, HKEY hkFilters)
 {
 	DWORD dwRes = ERROR_SUCCESS;
-	char szKey [1000];
+	TCHAR szKey [1000];
 
  	for (DWORD i = 0; dwRes == ERROR_SUCCESS; i++)
 	{
 		dwRes = RegEnumKey (hkFilters, i, szKey, sizeof (szKey));
 		
 		
-		if (szKey [strlen (szKey)-1] != '}')
-			strcat (szKey, "}");
+		if (szKey [_tcslen (szKey)-1] != _T('}'))
+			_tcscat_s (szKey, 1000, _T("}"));
 
 		if (dwRes == ERROR_SUCCESS)
 		{
@@ -86,7 +87,13 @@ const AM_MEDIA_TYPE* fsDShowFilterDetector::DetectMediaType(HANDLE hFile, HKEY h
 	GUID  guid;
 	wchar_t szFilterGUID [1000];
 	ZeroMemory (szFilterGUID, sizeof (szFilterGUID));
+
+#ifdef UNICODE
+	wcscpy_s(szFilterGUID, 1000, szKey);
+#else
 	MultiByteToWideChar (CP_ACP, 0, szKey, -1, szFilterGUID, 1000);
+#endif
+
 	if (FAILED (CLSIDFromString (szFilterGUID, &guid)))
 		return NULL;
 
@@ -100,7 +107,7 @@ BOOL fsDShowFilterDetector::IsFilterMeets(HANDLE hFile, HKEY hkFilter)
 	DWORD dwRes = ERROR_SUCCESS;
 	for (DWORD i = 0; dwRes == ERROR_SUCCESS; i++)
 	{
-		char szValue [1000], szData [1000];
+		TCHAR szValue [1000], szData [1000];
 		DWORD dwValLen = sizeof (szValue), 
 			dwDataLen = sizeof (szData);
 		DWORD dwType;
@@ -110,7 +117,7 @@ BOOL fsDShowFilterDetector::IsFilterMeets(HANDLE hFile, HKEY hkFilter)
 
 		if (dwRes == ERROR_SUCCESS && dwType == REG_SZ)
 		{
-			if (stricmp (szValue, "Source Filter") == 0)
+			if (_tcsicmp (szValue, _T("Source Filter")) == 0)
 				continue;
 
 			if (IsFilterMeets (hFile, szData))
@@ -121,51 +128,51 @@ BOOL fsDShowFilterDetector::IsFilterMeets(HANDLE hFile, HKEY hkFilter)
 	return FALSE;
 }
 
-BOOL fsDShowFilterDetector::IsFilterMeets(HANDLE hFile, LPCSTR pszCheckBytes)
+BOOL fsDShowFilterDetector::IsFilterMeets(HANDLE hFile, LPCTSTR pszCheckBytes)
 {
 	while (*pszCheckBytes)
 	{
-		char szOffset [100], szCb [100], szMask [10000], szVal [10000];
+		TCHAR szOffset [100], szCb [100], szMask [10000], szVal [10000];
 		int pos = 0;
 
 		
-		while (*pszCheckBytes && *pszCheckBytes == ' ')
+		while (*pszCheckBytes && *pszCheckBytes == _T(' '))
 			pszCheckBytes++;
 
 		
-		while (*pszCheckBytes && *pszCheckBytes != ',')
+		while (*pszCheckBytes && *pszCheckBytes != _T(','))
 			szOffset [pos++] = *pszCheckBytes++;
 		szOffset [pos] = 0;
 		pos = 0;
 		if (*pszCheckBytes)	pszCheckBytes++;
-		while (*pszCheckBytes && *pszCheckBytes == ' ')
+		while (*pszCheckBytes && *pszCheckBytes == _T(' '))
 			pszCheckBytes++;
 
 		
-		while (*pszCheckBytes && *pszCheckBytes != ',')
+		while (*pszCheckBytes && *pszCheckBytes != _T(','))
 			szCb [pos++] = *pszCheckBytes++;
 		szCb [pos] = 0;
 		pos = 0;
 		if (*pszCheckBytes)	pszCheckBytes++;
-		while (*pszCheckBytes && *pszCheckBytes == ' ')
+		while (*pszCheckBytes && *pszCheckBytes == _T(' '))
 			pszCheckBytes++;
 
 		
-		while (*pszCheckBytes && *pszCheckBytes != ',')
+		while (*pszCheckBytes && *pszCheckBytes != _T(','))
 			szMask [pos++] = *pszCheckBytes++;
 		szMask [pos] = 0;
 		pos = 0;
 		if (*pszCheckBytes)	pszCheckBytes++;
-		while (*pszCheckBytes && *pszCheckBytes == ' ')
+		while (*pszCheckBytes && *pszCheckBytes == _T(' '))
 			pszCheckBytes++;
 
 		
-		while (*pszCheckBytes && *pszCheckBytes != ',')
+		while (*pszCheckBytes && *pszCheckBytes != _T(','))
 			szVal [pos++] = *pszCheckBytes++;
 		szVal [pos] = 0;
 		pos = 0;
 		if (*pszCheckBytes)	pszCheckBytes++;
-		while (*pszCheckBytes && *pszCheckBytes == ' ')
+		while (*pszCheckBytes && *pszCheckBytes == _T(' '))
 			pszCheckBytes++;
 
 		if (*szOffset == 0 || *szCb == 0 || *szVal == 0)
@@ -174,7 +181,7 @@ BOOL fsDShowFilterDetector::IsFilterMeets(HANDLE hFile, LPCSTR pszCheckBytes)
 		if (*szMask == 0)
 		{
 			UINT i = 0;
-			for (i = 0; i < strlen (szVal); i++)
+			for (i = 0; i < _tcslen (szVal); i++)
 				szMask [i] = 'F';
 			szMask [i] = 0;
 		}
@@ -186,10 +193,10 @@ BOOL fsDShowFilterDetector::IsFilterMeets(HANDLE hFile, LPCSTR pszCheckBytes)
 	return TRUE;
 }
 
-BOOL fsDShowFilterDetector::IsFilterMeets(HANDLE hFile, LPCSTR pszOffset, LPCSTR pszCb, LPCSTR pszMask, LPCSTR pszVal)
+BOOL fsDShowFilterDetector::IsFilterMeets(HANDLE hFile, LPCTSTR pszOffset, LPCTSTR pszCb, LPCTSTR pszMask, LPCTSTR pszVal)
 {
-	INT64 offset =  _atoi64 (pszOffset);
-	int cb = atoi (pszCb);
+	INT64 offset =  _tstoi64 (pszOffset);
+	int cb = _tstoi (pszCb);
 	DWORD dw;
 
 	if (offset < 0)
@@ -212,22 +219,22 @@ BOOL fsDShowFilterDetector::IsFilterMeets(HANDLE hFile, LPCSTR pszOffset, LPCSTR
 
 	for (int i = 0; i < cb; i++)
 	{
-		char szHexMaskByte [3];
+		TCHAR szHexMaskByte [3];
 		szHexMaskByte [0] = pszMask [i*2];
 		szHexMaskByte [1] = pszMask [i*2+1];
 		szHexMaskByte [2] = 0;
 
-		char szHexValByte [3];
+		TCHAR szHexValByte [3];
 		szHexValByte [0] = pszVal [i*2];
 		szHexValByte [1] = pszVal [i*2+1];
 		szHexValByte [2] = 0;
 
 		int x;
 
-		sscanf (szHexMaskByte, "%x", &x);
+		_stscanf_s (szHexMaskByte, _T("%x"), &x);
 		BYTE bMask = (BYTE) x;
 
-		sscanf (szHexValByte, "%x", &x);
+		_stscanf_s (szHexValByte, _T("%x"), &x);
 		BYTE bVal = (BYTE) x;
 
 		if ((buf [i] & bMask) != bVal)

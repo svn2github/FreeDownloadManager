@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -73,7 +73,7 @@ fsInternetDownloader::fsInternetDownloader()
 	m_dwState = 0;
 	m_cMirrsFound = 0;
 
-	m_strContentType = "";
+	m_strContentType = _T("");
 
 	m_pZipPreviewStream = NULL;
 	m_uTimeout = 120;
@@ -108,10 +108,10 @@ fsDownload_NetworkProperties* fsInternetDownloader::DNP(int nSection)
 		&m_vMirrs [m_vSections [nSection].nMirrorURL].dnp;
 }
 
-fsInternetResult fsInternetDownloader::AddSection(BOOL bQueryCreation)
+fsInternetDownloaderResult fsInternetDownloader::AddSection(BOOL bQueryCreation)
 {
 	if (m_bErrDownloading)
-		return IR_ERROR;
+		return std::make_pair (IR_ERROR, SCT_NONE);
 
 	if (m_vSections.size ())
 		return CreateAdditionalSection (bQueryCreation);
@@ -119,18 +119,16 @@ fsInternetResult fsInternetDownloader::AddSection(BOOL bQueryCreation)
 		return CreateMainSection (bQueryCreation);
 }
 
-fsInternetResult fsInternetDownloader::CreateMainSection(UINT uStartFrom, BOOL bQueryCreation)
+fsInternetDownloaderResult fsInternetDownloader::CreateMainSection(uint64_t uStartFrom, BOOL bQueryCreation)
 {
 	fsSection sect;
-	
-	fsInternetResult ir;
 	
 	m_bNoNewSections = FALSE;
 	m_bNeedStop = FALSE;
 
 	
 	if (bQueryCreation && Event (DE_QUERYNEWSECTION, UINT_MAX) == FALSE)
-		return IR_S_FALSE;	
+		return std::make_pair (IR_S_FALSE, SCT_NONE);	
 
 	m_cBaseSectCreatingNow++;
 	vmsAUTOLOCKSECTION (m_csAddSection);
@@ -144,13 +142,13 @@ fsInternetResult fsInternetDownloader::CreateMainSection(UINT uStartFrom, BOOL b
 	
 	
 	UINT u = UINT_MAX;
-	ir = OpenUrl (uStartFrom, &sect.file, -1, u);
+	auto result = OpenUrl (uStartFrom, &sect.file, -1, u);
 
-	if (ir != IR_SUCCESS)
+	if (result.first != IR_SUCCESS)
 	{
 		m_cBaseSectCreatingNow--;
 		Event (DE_STARTINGDOWNLOAD_FAILEDTOCONNECT);
-		return ir;
+		return result;
 	}
 
 	m_uSSFileSize = m_uLDFileSize = sect.file->GetFileSize ();
@@ -174,28 +172,29 @@ fsInternetResult fsInternetDownloader::CreateMainSection(UINT uStartFrom, BOOL b
 		}
 		delete sect.file;
 
-		return IR_S_FALSE;
+		return std::make_pair (IR_S_FALSE, SCT_NONE);
 	}
 
-	return m_bNeedStop ? IR_S_FALSE : IR_SUCCESS;
+	return std::make_pair (
+		m_bNeedStop ? IR_S_FALSE : IR_SUCCESS,
+		SCT_NONE);
 }
 
-fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreation)
+fsInternetDownloaderResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreation)
 {
 	if (m_bNoNewSections || m_bAddingSection)
-		return IR_S_FALSE; 
+		return std::make_pair (IR_S_FALSE, SCT_NONE); 
 
 	if (m_vSections.size () - GetDoneSectionCount () >= MAX_NOT_COMPLETED_SECTION_COUNT)
-		return IR_S_FALSE; 
+		return std::make_pair (IR_S_FALSE, SCT_NONE); 
 
 	if (GetSSFileSize () == _UI64_MAX)
-		return IR_S_FALSE; 
+		return std::make_pair (IR_S_FALSE, SCT_NONE); 
 
 	m_bAddingSection = TRUE;
 
 	UINT64 uMaxSection = 0;
 	int iSection = -1;
-	fsInternetResult ir;
 
 	if (IsMayZIP (TRUE) && m_vSections.size () == 1 && 
 			m_vSections [0].uCurrent < ZIP_SFXMAXSIZE)
@@ -203,13 +202,13 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 		
 	{
 		m_bAddingSection = FALSE;
-		return IR_S_FALSE;
+		return std::make_pair (IR_S_FALSE, SCT_NONE);
 	}
 
 	if (IsResumeSupported () == RST_NONE)
 	{
 		m_bAddingSection = FALSE;
-		return IR_RANGESNOTAVAIL;
+		return std::make_pair (IR_RANGESNOTAVAIL, SCT_NONE);
 	}
 
 	vmsAUTOLOCKSECTION (m_csAddSection);
@@ -220,7 +219,7 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 	if (bQueryCreation && Event (DE_QUERYNEWSECTION, sect.nMirrorURL) == FALSE)
 	{
 		m_bAddingSection = FALSE;
-		return IR_S_FALSE;
+		return std::make_pair (IR_S_FALSE, SCT_NONE);
 	}
 
 	UINT nMirrorInc = sect.nMirrorURL;
@@ -273,7 +272,7 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 			m_cBaseSectCreatingNow--;
 		else
 			m_vMirrs [nMirrorInc].cSectsCreatingNow --;
-		return IR_S_FALSE;
+		return std::make_pair (IR_S_FALSE, SCT_NONE);
 	}
 
 	vmsAUTOLOCKSECTION (m_csSections);
@@ -298,14 +297,14 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 
 		setDirty(); 
 
-		return IR_S_FALSE;
+		return std::make_pair (IR_S_FALSE, SCT_NONE);
 	}
 
 	ASSERT (sect.uStart != 0);
 
 	TSECT(&sect);
 
-	ir = OpenUrl (sect.uStart, &sect.file, -1, sect.nMirrorURL, m_uSSFileSize != _UI64_MAX);
+	auto result = OpenUrl (sect.uStart, &sect.file, -1, sect.nMirrorURL, m_uSSFileSize != _UI64_MAX);
 
 	
 	
@@ -321,10 +320,10 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 		setDirty(); 
 
 		m_bAddingSection = FALSE;
-		return IR_S_FALSE;
+		return std::make_pair (IR_S_FALSE, SCT_NONE);
 	}
 
-	if (ir != IR_SUCCESS)
+	if (result.first != IR_SUCCESS)
 	{
 		if (nMirrorInc == UINT_MAX)
 			m_cBaseSectCreatingNow--;
@@ -334,15 +333,15 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 		setDirty(); 
 		
 		m_bAddingSection = FALSE;
-		return ir;
+		return result;
 	}
 
 	
-	EnterCriticalSection (&m_csSections);
+	EnterCriticalSection (m_csSections);
 	m_vSections [iSection].uEnd = sect.uStart;
 	m_vSections [iSection].uDEnd = sect.uDStart;
 	setDirty();
-	LeaveCriticalSection (&m_csSections);
+	LeaveCriticalSection (m_csSections);
 
 	if (sect.nMirrorURL != nMirrorInc)	
 	{
@@ -359,18 +358,18 @@ fsInternetResult fsInternetDownloader::CreateAdditionalSection(BOOL bQueryCreati
 
 	CreateSection (sect);
 
-	EnterCriticalSection (&m_csSections);
+	EnterCriticalSection (m_csSections);
 	if (m_vSections [iSection].uEnd < m_vSections [iSection].uCurrent)
 	{
 		m_vSections [iSection].uEnd = m_vSections [iSection].uCurrent;
 		m_vSections [iSection].uDEnd = m_vSections [iSection].uDCurrent;
 		setDirty();
 	}
-	LeaveCriticalSection (&m_csSections);
+	LeaveCriticalSection (m_csSections);
 
 	m_bAddingSection = FALSE;
 
-	return IR_SUCCESS;
+	return std::make_pair (IR_SUCCESS, SCT_NONE);
 }
 
 void fsInternetDownloader::CreateCompleteSection(UINT64 uFileSize)
@@ -539,7 +538,7 @@ BOOL fsInternetDownloader::__threadDownload_flushdata (fsSectionEx* sect,
 			catch (const std::exception& ex)
 			{
 				ASSERT (FALSE);
-				vmsLogger::WriteLog(" " + tstring(ex.what()));
+				vmsLogger::WriteLog(" " + std::string(ex.what()));
 			}
 			catch (...)
 			{
@@ -559,7 +558,7 @@ BOOL fsInternetDownloader::__threadDownload_flushdata (fsSectionEx* sect,
 		iLenCorrection = dwRead;
 	}
 
-	EnterCriticalSection (&sect->pThis->m_csSections);
+	EnterCriticalSection (sect->pThis->m_csSections);
 
 	
 	__int64 i = sect->pThis->m_dwDataLenInCache;
@@ -576,7 +575,7 @@ BOOL fsInternetDownloader::__threadDownload_flushdata (fsSectionEx* sect,
 		sect->pThis->setDirty();
 	}
 
-	LeaveCriticalSection (&sect->pThis->m_csSections);
+	LeaveCriticalSection (sect->pThis->m_csSections);
 
 	return TRUE;
 }
@@ -665,12 +664,12 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 			
 			
 			
-			EnterCriticalSection (&sect->pThis->m_csSections);
+			EnterCriticalSection (sect->pThis->m_csSections);
 			if (dnp->enProtocol == NP_FTP && sect->file->FtpGetTransferType () == FTT_ASCII && sect->uEnd == sect->file->GetFileSize ()) {
 				sect->uEnd += 100;
 				sect->pThis->setDirty();
 			}
-			LeaveCriticalSection (&sect->pThis->m_csSections);
+			LeaveCriticalSection (sect->pThis->m_csSections);
 		}
 
 		
@@ -692,7 +691,9 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 		if (sect->file)
 		{
 			
-			sect->lastErr = sect->file->Read (pBuffer, dwRead, &dwRead);
+			sect->setLastError (
+				sect->file->Read (pBuffer, dwRead, &dwRead),
+				sect->file);
 			sect->pThis->setDirty();
 		}
 		else
@@ -746,11 +747,11 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 				if (sect->uEnd == _UI64_MAX || 
 					(sect->uEnd >= sect->file->GetFileSize () && sect->file->FtpGetTransferType () == FTT_ASCII && dnp->enProtocol == NP_FTP))
 				{
-					EnterCriticalSection (&sect->pThis->m_csSections);
+					EnterCriticalSection (sect->pThis->m_csSections);
 					sect->uEnd = CURRENT_DL_POS;
 					sect->uDEnd = sect->pThis->m_uLDFileSize = CURRENT_DW_POS;
 					sect->pThis->setDirty();
-					LeaveCriticalSection (&sect->pThis->m_csSections);
+					LeaveCriticalSection (sect->pThis->m_csSections);
 					TSECT (sect);
 					break;
 				}
@@ -775,13 +776,13 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 		{
 			if (sect->pThis->GetNumberOfSections () == 1)
 			{
-				LPCSTR pszHost = sect->pThis->DNP (0)->pszServerName;
+				LPCTSTR pszHost = sect->pThis->DNP (0)->pszServerName;
 				bool bDone = false;
 
-				if (strlen (pszHost) > sizeof ("mail.yahoo.com") &&
-						stricmp (pszHost+strlen (pszHost)-sizeof ("mail.yahoo.com"), ".mail.yahoo.com") == 0)
+				if (_tcslen (pszHost) > sizeof ("mail.yahoo.com") &&
+						_tcsicmp (pszHost+_tcslen (pszHost)-sizeof ("mail.yahoo.com"), _T(".mail.yahoo.com")) == 0)
 					bDone = true;
-				else if (strstr (sect->pThis->DNP (0)->pszPathName, ".mail.yahoo.com/"))
+				else if (_tcsstr (sect->pThis->DNP (0)->pszPathName, _T(".mail.yahoo.com/")))
 					bDone = true;
 
 				if (bDone)
@@ -811,7 +812,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 				DWORD dw3 = (WORD)(CURRENT_DW_POS - sect->uDStart);
 
 				dw = min (dw, dw2); dw = min (dw, dw3);
-				EnterCriticalSection (&sect->pThis->m_csSections);
+				EnterCriticalSection (sect->pThis->m_csSections);
 
 				if (sect->dwCacheLen)
 				{
@@ -834,7 +835,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 				sect->uDCurrent -= dw;
 				sect->pThis->setDirty();
 
-				LeaveCriticalSection (&sect->pThis->m_csSections);
+				LeaveCriticalSection (sect->pThis->m_csSections);
 				TSECT (sect);
 			}
 
@@ -880,7 +881,9 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 				}
 
 				sect->pThis->Event (DE_CONNECTING, sect->iSection);
-				sect->lastErr = sect->pThis->OpenUrl (CURRENT_DL_POS, &sect->file, sect->iSection, sect->nMirrorURL, TRUE);
+				auto oures = sect->pThis->OpenUrl (CURRENT_DL_POS, &sect->file, sect->iSection, sect->nMirrorURL, TRUE);
+				sect->lastErr = oures.first;
+				sect->lastSecCheckFailure = oures.second;
 				sect->pThis->setDirty();
 				
 				if (sect->lastErr != IR_SUCCESS)
@@ -1027,7 +1030,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 						
 
 						sect->pThis->m_bNeedStop = TRUE;
-						EnterCriticalSection (&sect->pThis->m_csSections);
+						EnterCriticalSection (sect->pThis->m_csSections);
 						
 						
 						
@@ -1035,7 +1038,7 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 						sect->uCurrent = uZIPStart;
 						sect->dwCacheLen -= min (sect->dwCacheLen, (DWORD)(CURRENT_DL_POS - uZIPStart));
 						sect->pThis->setDirty();
-						LeaveCriticalSection (&sect->pThis->m_csSections);
+						LeaveCriticalSection (sect->pThis->m_csSections);
 						TSECT (sect);
 						CHECK_NEED_STOP; 
 					}
@@ -1051,12 +1054,12 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 						
 
 						sect->state = SS_ERRSTOPPED;
-						EnterCriticalSection (&sect->pThis->m_csSections);
+						EnterCriticalSection (sect->pThis->m_csSections);
 						sect->uDCurrent -= CURRENT_DL_POS - uZIPStart;
 						sect->uCurrent = uZIPStart;
 						sect->dwCacheLen -= min (sect->dwCacheLen, (DWORD)(CURRENT_DL_POS - uZIPStart));
 						sect->pThis->setDirty();
-						LeaveCriticalSection (&sect->pThis->m_csSections);
+						LeaveCriticalSection (sect->pThis->m_csSections);
 						TSECT (sect);
 						goto _exit;
 					}
@@ -1148,11 +1151,11 @@ DWORD WINAPI fsInternetDownloader::_threadDownload(LPVOID lp)
 	}
 
 	
-	EnterCriticalSection (&sect->pThis->m_csSections);
+	EnterCriticalSection (sect->pThis->m_csSections);
 	sect->uCurrent = sect->uEnd;
 	if (sect->uDCurrent > sect->uDEnd)
 		sect->uDCurrent = sect->uDEnd;
-	LeaveCriticalSection (&sect->pThis->m_csSections);
+	LeaveCriticalSection (sect->pThis->m_csSections);
 	TSECT (sect);
 	sect->state = SS_DONE;
 	sect->pThis->setDirty();
@@ -1168,13 +1171,13 @@ _exit:
 		__threadDownload_flushdata (sect, NULL, 0, pbCache, dwCacheSize, sect->dwCacheLen);
 	if (sect->dwCacheLen)
 	{
-		EnterCriticalSection (&sect->pThis->m_csSections);
+		EnterCriticalSection (sect->pThis->m_csSections);
 		sect->pThis->m_dwDataLenInCache -= sect->dwCacheLen;
-		LeaveCriticalSection (&sect->pThis->m_csSections);
+		LeaveCriticalSection (sect->pThis->m_csSections);
 	}
 	SAFE_DELETE_ARRAY (pbCache);
 
-	EnterCriticalSection (&sect->pThis->m_csDone);
+	EnterCriticalSection (sect->pThis->m_csDone);
 
 	sect->pThis->m_cRunningThreads--;
 
@@ -1183,14 +1186,14 @@ _exit:
 		case SS_DONE:
 			if (sect->nMirrorURL != UINT_MAX)
 				sect->pThis->m_vMirrs [sect->nMirrorURL].bIsGood = TRUE;
-			EnterCriticalSection (&sect->pThis->m_csSections);
+			EnterCriticalSection (sect->pThis->m_csSections);
 			if (sect->uDEnd == _UI64_MAX || sect->uEnd == _UI64_MAX)
 			{
 				sect->uEnd = sect->uCurrent;
 				sect->uDEnd = sect->uDCurrent;
 			}
 			sect->pThis->setDirty();
-			LeaveCriticalSection (&sect->pThis->m_csSections);
+			LeaveCriticalSection (sect->pThis->m_csSections);
 			sect->pThis->Event (DE_SECTIONDONE, sect->iSection);
 			break;
 
@@ -1215,116 +1218,260 @@ _exit:
 
 	sect->pThis->m_cThreads--;
 
-	LeaveCriticalSection (&sect->pThis->m_csDone);
+	LeaveCriticalSection (sect->pThis->m_csDone);
 
 	return 0;
 }
 
-fsInternetResult fsInternetDownloader::OpenUrl(UINT64 uStartPos, fsInternetURLFile **ppFile,  int iSectIndex, UINT &nMirror, BOOL bCheckFileSize, LPCSTR pszContentTypeReq)
+fsInternetDownloaderResult fsInternetDownloader::OpenUrl (UINT64 uStartPos, fsInternetURLFile **ppFile,  int iSectIndex, UINT &nMirror, BOOL bCheckFileSize, LPCTSTR pszContentTypeReq)
 {
 	return OpenUrl_imp (uStartPos, ppFile, iSectIndex, nMirror, bCheckFileSize, 0, pszContentTypeReq, NULL);
 }
 
-fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetURLFile **ppFile,  int iSectIndex, UINT &nMirror,  BOOL bCheckFileSize, int iAttempt, LPCSTR , fsDownload_NetworkProperties *pDNPRedirectedUrl, bool bIsRedirected)
+tstring fsInternetDownloader::ExtractRedirectURL (fsInternetURLFile* file, fsDownload_NetworkProperties *dnp)
+{
+	LPCTSTR pszUrlTo = file->GetLastError ();
+
+	fsURL url;
+
+	if (url.Crack (pszUrlTo) != IR_SUCCESS) 
+	{
+		
+
+		LPTSTR pszUrlPath = new TCHAR [10000];
+
+		if (*pszUrlTo == 0)
+			_tcscpy (pszUrlPath, _T("/"));
+		else if (*pszUrlTo != _T('/') && *pszUrlTo != _T('\\')) 
+		{
+			
+
+			fsPathFromUrlPath (dnp->pszPathName, dnp->enProtocol == NP_FTP, FALSE, pszUrlPath, 10000);
+
+			if (pszUrlPath [lstrlen (pszUrlPath)-1] != _T('\\') &&
+				pszUrlPath [lstrlen (pszUrlPath)-1] != _T('/'))
+				lstrcat (pszUrlPath, _T("\\"));
+
+			_tcscat (pszUrlPath, pszUrlTo);
+		}
+		else
+		{
+			_tcscpy (pszUrlPath, pszUrlTo);	
+		}
+
+		LPTSTR pszUrl = new TCHAR [10000];
+		DWORD dwLen = 10000/sizeof(TCHAR);
+
+		
+		url.Create (fsNPToScheme (dnp->enProtocol), dnp->pszServerName, dnp->uServerPort, 
+			dnp->pszUserName, dnp->pszPassword, pszUrlPath, pszUrl, &dwLen);
+
+		delete [] pszUrlPath;
+
+		tstring tstrResult = pszUrl;
+		delete [] pszUrl;
+		return tstrResult;
+	}
+	else
+	{
+		return pszUrlTo;	
+	}
+}
+
+fsInternetResult fsInternetDownloader::ApplyRedirectURL (fsInternetURLFile *file, fsDownload_NetworkProperties *dnp, 
+	std::unique_ptr <fsDownload_NetworkProperties>& upRedirectedDnp)
 {
 	fsInternetResult ir;
+	tstring tstrUrlTo = ExtractRedirectURL (file, dnp);
+
+	
+	LPTSTR pszUser = new TCHAR [10000], pszPassword = new TCHAR [10000];
+	if (dnp->pszUserName)
+		_tcscpy (pszUser, dnp->pszUserName);
+	else
+		*pszUser = 0;
+
+	if (dnp->pszPassword)
+		_tcscpy (pszPassword, dnp->pszPassword);
+	else
+		*pszPassword = 0;
+
+	if (dnp->dwFlags & DNPF_DONT_UPDATE_ORIGINAL_URL_AFTER_REDIRECT)
+	{
+		upRedirectedDnp.reset (new fsDownload_NetworkProperties);
+		fsDNP_BuffersInfo buffs;
+
+		ZeroMemory (upRedirectedDnp.get (), sizeof (fsDownload_NetworkProperties));
+
+		ir = fsDNP_GetByUrl (upRedirectedDnp.get (), &buffs, TRUE, tstrUrlTo.c_str ());
+
+		if (ir == IR_SUCCESS)
+		{
+			fsDNP_CloneSettings (upRedirectedDnp.get (), dnp);
+			dnp = upRedirectedDnp.get ();
+		}
+	}
+	else
+	{
+		
+		ir = fsDNP_ApplyUrl (dnp, tstrUrlTo.c_str ());
+	}
+
+	if (ir != IR_SUCCESS)
+	{
+		
+		return ir;
+	}
+
+	if (dnp->pszUserName == NULL || *dnp->pszUserName == 0)
+	{
+		SAFE_DELETE_ARRAY (dnp->pszUserName);
+		dnp->pszUserName = new TCHAR [_tcslen (pszUser) + 1];
+		_tcscpy (dnp->pszUserName, pszUser);
+
+		SAFE_DELETE_ARRAY (dnp->pszPassword);
+		dnp->pszPassword = new TCHAR [_tcslen (pszPassword) + 1];
+		_tcscpy (dnp->pszPassword, pszPassword);
+	}
+
+	delete [] pszUser; delete [] pszPassword;
+
+	return IR_SUCCESS;
+}
+
+fsInternetDownloaderResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetURLFile **ppFile,  int iSectIndex, UINT &nMirror,  BOOL bCheckFileSize, int iAttempt, LPCTSTR , fsDownload_NetworkProperties *pDNPRedirectedUrl, bool bIsRedirected)
+{
+	fsInternetResult ir;
+	fsSecurityCheckType sct;
 	fsDownload_NetworkProperties* dnp;
 	
 	*ppFile = NULL;
 
 	if (iAttempt > 15)
-		return IR_ERROR;
+		return std::make_pair (IR_ERROR, SCT_NONE);
 
 	vmsAUTOLOCKSECTION (m_csOpenUrl);
 	if (m_bNeedStop)
-		return IR_S_FALSE;
+		return std::make_pair (IR_S_FALSE, SCT_NONE);
 
 	if (pDNPRedirectedUrl)
 		dnp = pDNPRedirectedUrl;
 	else
 		dnp = nMirror == UINT_MAX ? DNP (iSectIndex) : &m_vMirrs [nMirror].dnp;
 
-	ASSERT (m_pOpeningFile == NULL);
-	fsnew1 (m_pOpeningFile, fsInternetURLFile);
-	m_pOpeningFile->SetDialogFunc (_InetFileDialogFunc, this, LPVOID (iSectIndex));
-	
-	vmsInternetSession* pSession = new vmsInternetSession;
-	char szProxy [10000];
-	vmsMakeWinInetProxy (dnp->pszProxyName, dnp->enProtocol, dnp->enProtocol, szProxy);
-	ir  = pSession->Create (dnp->pszAgent, dnp->enAccType, szProxy, dnp->enProtocol);
-	if (ir != IR_SUCCESS)
+	int max_attempts = 2;
+	for (int attempt = 0; attempt < max_attempts; ++attempt)
 	{
-		delete pSession;
-		SAFE_DELETE (m_pOpeningFile);
-		return ir;
-	}
+		ASSERT (m_pOpeningFile == NULL);
+		fsnew1 (m_pOpeningFile, fsInternetURLFile);
+		m_pOpeningFile->SetDialogFunc (_InetFileDialogFunc, this, LPVOID (iSectIndex));
 	
-	ApplyProxySettings (pSession, dnp);
-	
-	m_pOpeningFile->Initialize (pSession, TRUE);
-
-	ApplyProperties (m_pOpeningFile, dnp);
-
-	
-	if (dnp->enProtocol == NP_FTP && dnp->enFtpTransferType == FTT_UNKNOWN)
-	{
-		int posPath = strlen (dnp->pszPathName) - 1;
-		int posExt = 0;
-		LPSTR pszExt = new char [MY_MAX_PATH];
-
-		while (posPath && dnp->pszPathName [posPath] != '.')
-			pszExt [posExt++] = dnp->pszPathName [posPath--];
-
-		if (posPath)
+		vmsInternetSession* pSession = new vmsInternetSession;
+		TCHAR szProxy [10000];
+		vmsMakeWinInetProxy (dnp->pszProxyName, dnp->enProtocol, dnp->enProtocol, szProxy);
+		ir  = pSession->Create (dnp->pszAgent, dnp->enAccType, szProxy, dnp->enProtocol);
+		if (ir != IR_SUCCESS)
 		{
-			LPSTR pszExtension = new char [MY_MAX_PATH];
+			delete pSession;
+			SAFE_DELETE (m_pOpeningFile);
+			return std::make_pair (ir, SCT_NONE);
+		}
+	
+		ApplyProxySettings (pSession, dnp, m_uTimeout);
+	
+		m_pOpeningFile->Initialize (pSession, TRUE);
 
-			pszExt [posExt] = 0;
+		ApplyProperties (m_pOpeningFile, dnp);
 
-			int i = 0;
-			for (i = 0; i < posExt; i++)
-				pszExtension [i] = pszExt [posExt - i - 1];
+		
+		if (dnp->enProtocol == NP_FTP && dnp->enFtpTransferType == FTT_UNKNOWN)
+		{
+			int posPath = _tcslen (dnp->pszPathName) - 1;
+			int posExt = 0;
+			LPTSTR pszExt = new TCHAR [MY_MAX_PATH];
 
-			pszExtension [i] = 0;
+			while (posPath && dnp->pszPathName [posPath] != _T('.'))
+				pszExt [posExt++] = dnp->pszPathName [posPath--];
+
+			if (posPath)
+			{
+				LPTSTR pszExtension = new TCHAR [MY_MAX_PATH];
 			
-			if (IsExtInExtsStr (dnp->pszASCIIExts, pszExtension))
-				m_pOpeningFile->FtpSetTransferType (FTT_ASCII);
-			else
+				pszExt [posExt] = 0;
+
+				int i = 0;
+				for (i = 0; i < posExt; i++)
+					pszExtension [i] = pszExt [posExt - i - 1];
+
+				pszExtension [i] = 0;
+			
+				if (IsExtInExtsStr (dnp->pszASCIIExts, pszExtension))
+					m_pOpeningFile->FtpSetTransferType (FTT_ASCII);
+				else
+					m_pOpeningFile->FtpSetTransferType (FTT_BINARY);
+				
+				delete [] pszExtension;
+			}
+			else 
+			{
 				m_pOpeningFile->FtpSetTransferType (FTT_BINARY);
+			}
 
-			delete [] pszExtension;
+			delete [] pszExt;
 		}
-		else 
+
+		_inc_tOU_param toup;
+		toup.pthis = this;
+		toup.uStartPos = uStartPos;
+		toup.pFile = m_pOpeningFile;
+		toup.dnp = dnp;
+		DWORD dw;
+		HANDLE hOpen = CreateThread (NULL, 0, _threadOpenUrl, &toup, 0, &dw);
+		while (WAIT_TIMEOUT == WaitForSingleObject (hOpen, 333))
 		{
-			m_pOpeningFile->FtpSetTransferType (FTT_BINARY);
+			if (m_bNeedStop || IsDone ())
+				TerminateThread (hOpen, IR_TIMEOUT);
+		}
+		GetExitCodeThread (hOpen, &dw);
+		CloseHandle (hOpen);
+
+		ir = (fsInternetResult)dw;
+
+		bool need_retry = false;
+		
+		if (ir == IR_SEC_CHECK_FAILURE)
+		{
+			sct = m_pOpeningFile->get_lastSctFailure ();
+
+			fsDownloaderEventSecCheckFailureInfo info;
+			info.dnp = dnp;
+			info.sctFlags = sct;
+
+			if (Event (DE_SEC_CHECK_FAILURE, 
+					reinterpret_cast <UINT_PTR> (&info)))
+			{
+				dnp->sctIgnoreFlags |= sct;
+				setDirty ();
+				SAFE_DELETE (m_pOpeningFile);
+				need_retry = true;
+				++max_attempts;				
+			}
+		}
+		else
+		{
+			sct = SCT_NONE;
 		}
 
-		delete [] pszExt;
+		if (!need_retry)
+			break;
 	}
-
-	_inc_tOU_param toup;
-	toup.pthis = this;
-	toup.uStartPos = uStartPos;
-	toup.pFile = m_pOpeningFile;
-	toup.dnp = dnp;
-	DWORD dw;
-	HANDLE hOpen = CreateThread (NULL, 0, _threadOpenUrl, &toup, 0, &dw);
-	while (WAIT_TIMEOUT == WaitForSingleObject (hOpen, 333))
-	{
-		if (m_bNeedStop || IsDone ())
-			TerminateThread (hOpen, IR_TIMEOUT);
-	}
-	GetExitCodeThread (hOpen, &dw);
-	CloseHandle (hOpen);
-
-	ir =  (fsInternetResult)dw; 
 
 	
 
 	if (m_bNeedStop)
 	{
 		SAFE_DELETE (m_pOpeningFile);
-		return IR_S_FALSE;
+		return std::make_pair (IR_S_FALSE, SCT_NONE);
 	}
 
 	if (ir == IR_SUCCESS && bCheckFileSize && m_uSSFileSize != _UI64_MAX)
@@ -1348,7 +1495,7 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 				bool bThereIsIdenticalServer = false;
 				for (i = 0; i < GetNumberOfSections(); i++) {
 
-					LPCSTR pszServerName = DNP(i)->pszServerName;
+					LPCTSTR pszServerName = DNP(i)->pszServerName;
 					if (fsIsServersEqual(pszServerName, dnp->pszServerName, FALSE)) {
 						bThereIsIdenticalServer = true;
 						break;
@@ -1358,127 +1505,38 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 				if (bThereIsIdenticalServer)
 				{
 					SAFE_DELETE (m_pOpeningFile);
-					return IR_SERVERUNKERROR;
+					return std::make_pair (IR_SERVERUNKERROR, SCT_NONE);
 				}
-			}
-
-			LPCSTR pszUrlTo = m_pOpeningFile->GetLastError ();
-
-			fsURL url;
-			LPSTR pszUrl = new char [10000];
-			DWORD dwLen = 10000;
-
-			if (url.Crack (pszUrlTo) != IR_SUCCESS) 
-			{
-				
-
-				LPSTR pszUrlPath = new char [10000];
-
-				if (*pszUrlTo == 0)
-					strcpy (pszUrlPath, "/");
-				else if (*pszUrlTo != '/' && *pszUrlTo != '\\') 
-				{
-					
-
-					fsPathFromUrlPath (dnp->pszPathName, dnp->enProtocol == NP_FTP, FALSE, pszUrlPath, 10000);
-
-					if (pszUrlPath [lstrlen (pszUrlPath)-1] != '\\' &&
-							pszUrlPath [lstrlen (pszUrlPath)-1] != '/')
-						lstrcat (pszUrlPath, "\\");
-					
-					strcat (pszUrlPath, pszUrlTo);
-				}
-				else
-				{
-					strcpy (pszUrlPath, pszUrlTo);	
-				}
-
-				
-				url.Create (fsNPToScheme (dnp->enProtocol), dnp->pszServerName, dnp->uServerPort, 
-					dnp->pszUserName, dnp->pszPassword, pszUrlPath, pszUrl, &dwLen);
-
-				delete [] pszUrlPath;
-			}
-			else
-			{
-				strcpy (pszUrl, pszUrlTo);	
-			}
+			}			
 
 			Event (DE_REDIRECTING);
 
-			
-			LPSTR pszUser = new char [10000], pszPassword = new char [10000];
-			if (dnp->pszUserName)
-				strcpy (pszUser, dnp->pszUserName);
-			else
-				*pszUser = 0;
+			std::unique_ptr <fsDownload_NetworkProperties> upRedirectedDnp;
 
-			if (dnp->pszPassword)
-				strcpy (pszPassword, dnp->pszPassword);
-			else
-				*pszPassword = 0;
-
-			fsDownload_NetworkProperties *dnpRedirectedUrl = NULL;
-
-			if (dnp->dwFlags & DNPF_DONT_UPDATE_ORIGINAL_URL_AFTER_REDIRECT)
-			{
-				dnpRedirectedUrl = new fsDownload_NetworkProperties;
-				fsDNP_BuffersInfo buffs;
-
-				ZeroMemory (dnpRedirectedUrl, sizeof (*dnpRedirectedUrl));
-
-				ir = fsDNP_GetByUrl (dnpRedirectedUrl, &buffs, TRUE, pszUrl);
-
-				if (ir == IR_SUCCESS)
-				{
-					fsDNP_CloneSettings (dnpRedirectedUrl, dnp);
-					dnp = dnpRedirectedUrl;
-					setDirty();
-				}
-			}
-			else
-			{
-				
-				ir = fsDNP_ApplyUrl (dnp, pszUrl);
-				setDirty();
-			}
-
-			delete [] pszUrl;
+			ir = ApplyRedirectURL (m_pOpeningFile, dnp, upRedirectedDnp);
 
 			if (ir != IR_SUCCESS)
 			{
+				if (ir == IR_SEC_CHECK_FAILURE)
+					sct = m_pOpeningFile->get_lastSctFailure ();
 				
 				SAFE_DELETE (m_pOpeningFile);
-				return ir;
+				return std::make_pair (ir, sct);
 			}
 
-			if (dnp->pszUserName == NULL || *dnp->pszUserName == 0)
-			{
-				SAFE_DELETE_ARRAY (dnp->pszUserName);
-				dnp->pszUserName = new char [strlen (pszUser) + 1];
-				strcpy (dnp->pszUserName, pszUser);
-
-				SAFE_DELETE_ARRAY (dnp->pszPassword);
-				dnp->pszPassword = new char [strlen (pszPassword) + 1];
-				strcpy (dnp->pszPassword, pszPassword);
-				setDirty();
-			}
-
-			delete [] pszUser; delete [] pszPassword;
+			setDirty ();
+			
+			if (upRedirectedDnp)
+				dnp = upRedirectedDnp.get ();
 
 			Event (DE_REDIRECTINGOKCONTINUEOPENING);
 
 			SAFE_DELETE (m_pOpeningFile);
-			
+
 			if (m_bNeedStop == FALSE)
-				ir = OpenUrl_imp (uStartPos, ppFile, iSectIndex, nMirror, bCheckFileSize, ++iAttempt, NULL, dnp, _bIsRedirected);
+				return OpenUrl_imp (uStartPos, ppFile, iSectIndex, nMirror, bCheckFileSize, ++iAttempt, NULL, dnp, _bIsRedirected);
 			else
-				ir = IR_S_FALSE;
-			
-			if (dnpRedirectedUrl)
-				delete dnpRedirectedUrl;
-			
-			return ir;
+				return std::make_pair (IR_S_FALSE, SCT_NONE);
 		}
 		else 
 		{
@@ -1532,7 +1590,7 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 		if (ir != IR_BADFILESIZE)
 		{
 			SAFE_DELETE (m_pOpeningFile);
-			return ir;
+			return std::make_pair (ir, sct);
 		}
 	}
 
@@ -1545,7 +1603,7 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 			
 			
 			SAFE_DELETE (m_pOpeningFile);
-			return IR_SERVERUNKERROR;
+			return std::make_pair (IR_SERVERUNKERROR, SCT_NONE);
 		}
 	}
 	
@@ -1558,7 +1616,7 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 
 	if (m_strContentType.Length () == 0)
 	{
-		char szContType [1000];
+		TCHAR szContType [1000];
 		if ((*ppFile)->GetContentType (szContType))
 			m_strContentType = szContType;
 	}
@@ -1569,7 +1627,7 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 			m_strFileName = m_strSuggFileName;
 		else
 		{
-			char szFile [10000];
+			TCHAR szFile [10000];
 			fsFileNameFromUrlPath (dnp->pszPathName, dnp->enProtocol == NP_FTP,
 				TRUE, szFile, sizeof (szFile));
 			m_strFileName = szFile;
@@ -1579,7 +1637,7 @@ fsInternetResult fsInternetDownloader::OpenUrl_imp(UINT64 uStartPos, fsInternetU
 
 	(*ppFile)->GetLastModifiedDate (&m_fileDate);
 
-	return IR_SUCCESS;
+	return std::make_pair (IR_SUCCESS, SCT_NONE);
 }
 
 void fsInternetDownloader::SetRetryTime(DWORD dwMilliseconds)
@@ -1643,7 +1701,7 @@ void fsInternetDownloader::StopDownloading()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1659,7 +1717,7 @@ void fsInternetDownloader::StopDownloading()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1676,7 +1734,7 @@ void fsInternetDownloader::StopDownloading()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1697,7 +1755,7 @@ void fsInternetDownloader::StopDownloading()
 			catch (const std::exception& ex)
 			{
 				ASSERT (FALSE);
-				vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + tstring(ex.what()));
+				vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + std::string(ex.what()));
 			}
 			catch (...)
 			{
@@ -1709,7 +1767,7 @@ void fsInternetDownloader::StopDownloading()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsInternetDownloader::StopDownloading " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1724,7 +1782,7 @@ BOOL fsInternetDownloader::SaveSectionsState(LPBYTE pBuffer, LPDWORD pdwSize)
 {
 	DWORD dwNeedSize = sizeof (int) + m_vSections.size () * sizeof (fsSection);
 
-	dwNeedSize += sizeof (int) + m_strFileName.Length ();
+	dwNeedSize += sizeof (int) + m_strFileName.Length () * sizeof (TCHAR);
 	dwNeedSize += sizeof (DWORD); 
 	dwNeedSize += 2*sizeof (UINT64); 
 
@@ -1753,8 +1811,8 @@ BOOL fsInternetDownloader::SaveSectionsState(LPBYTE pBuffer, LPDWORD pdwSize)
 	pBuffer = LPBYTE (pBuf);
 	*((LPINT)pBuffer) = m_strFileName.Length ();
 	pBuffer += sizeof (int);
-	strncpy (LPSTR (pBuffer), m_strFileName, m_strFileName.Length ());
-	pBuffer += m_strFileName.Length ();
+	_tcsncpy (LPTSTR (pBuffer), m_strFileName, m_strFileName.Length ());
+	pBuffer += m_strFileName.Length () * sizeof (TCHAR);
 
 	*((LPDWORD)pBuffer) = m_dwState;
 	pBuffer += sizeof (DWORD);
@@ -1808,12 +1866,24 @@ BOOL fsInternetDownloader::RestoreSectionsState(LPBYTE pBuffer, DWORD dwSize, DW
 
 	if (iStrLen > MY_MAX_PATH || iStrLen < 0)
 		return FALSE;
+
+	if (dwVer > LAST_ANSI_DL_FILE_VERSION) {
 	
-	char sz [10000];
-	strncpy (sz, LPCSTR (pBuffer), iStrLen);
-	sz [iStrLen] = 0;
-	m_strFileName = sz;
-	pBuffer += iStrLen;
+		TCHAR tsz [10000] = {0,};
+		_tcsncpy (tsz, LPCTSTR (pBuffer), iStrLen);
+		tsz [iStrLen] = 0;
+		m_strFileName = tsz;
+		pBuffer += iStrLen * sizeof (TCHAR);
+
+	} else {
+		
+		char sz [10000];
+		strncpy (sz, LPCSTR (pBuffer), iStrLen);
+		sz [iStrLen] = 0;
+		USES_CONVERSION;
+		m_strFileName = CA2CT(sz);
+		pBuffer += iStrLen;
+	}
 
 	m_dwState = *((LPDWORD) pBuffer);
 	pBuffer += sizeof (DWORD);
@@ -1868,7 +1938,8 @@ BOOL fsInternetDownloader::RestoreSectionsState_vlt5(LPBYTE pBuffer, DWORD dwSiz
 	char sz [10000];
 	strncpy (sz, LPCSTR (pBuffer), iStrLen);
 	sz [iStrLen] = 0;
-	m_strFileName = sz;
+	USES_CONVERSION;
+	m_strFileName = CA2CT(sz);
 	pBuffer += iStrLen;
 
 	m_dwState = *((LPDWORD) pBuffer);
@@ -1918,7 +1989,7 @@ BOOL fsInternetDownloader::RestoreSectionsState_vlt4(LPVOID pBuffer, DWORD dwSiz
 	return TRUE;
 }
 
-fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
+fsInternetDownloaderResult fsInternetDownloader::StartDownloading(uint64_t uStartFrom)
 {
 	int size = m_vSections.size ();
 
@@ -1929,7 +2000,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 		return CreateMainSection (uStartFrom);
 
 	if (IsRunning () || IsDone ())
-		return IR_S_FALSE;
+		return std::make_pair (IR_S_FALSE, SCT_NONE);
 
 	m_bNeedStop = FALSE;
 
@@ -1955,7 +2026,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 	
 	for (int i = 0; i < size && m_bNeedStop == FALSE; i++)
 	{
-		fsSection &sect = m_vSections [i];
+		fsSectionEx &sect = m_vSections [i];
 
 		if (sect.state == SS_DONE)
 			continue;
@@ -1976,14 +2047,16 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 		else
 			m_vMirrs [nMirrorInc].cSectsCreatingNow++;
 
-		sect.lastErr = OpenUrl (sect.uCurrent, &sect.file, -1, sect.nMirrorURL, TRUE);
+		auto oures = OpenUrl (sect.uCurrent, &sect.file, -1, sect.nMirrorURL, TRUE);
+		sect.lastErr = oures.first;
+		sect.lastSecCheckFailure = oures.second;
 		setDirty();
 		if (sect.lastErr == IR_SUCCESS)
 		{
 			bAtLeast1Started = TRUE;
 
 			if (Event (DE_NEEDFILE) == FALSE || FALSE == Event (DE_NEEDFILE_FINALINITIALIZATION))
-				return IR_S_FALSE;
+				return std::make_pair (IR_S_FALSE, SCT_NONE);
 		}
 		else if (bAtLeast1Started)
 		{
@@ -2011,7 +2084,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 						m_cBaseSectCreatingNow--;
 					else
 						m_vMirrs [nMirrorInc].cSectsCreatingNow--;
-					return sect.lastErr;
+					return std::make_pair (sect.lastErr, sect.lastSecCheckFailure);
 				}
 				else
 				{
@@ -2036,7 +2109,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 						m_cBaseSectCreatingNow--;
 					else
 						m_vMirrs [nMirrorInc].cSectsCreatingNow--;
-					return IR_FILENOTFOUND;
+					return std::make_pair (IR_FILENOTFOUND, SCT_NONE);
 				}
 			break;
 
@@ -2049,7 +2122,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 						m_cBaseSectCreatingNow--;
 					else
 						m_vMirrs [nMirrorInc].cSectsCreatingNow--;
-					return IR_LOGINFAILURE;
+					return std::make_pair (IR_LOGINFAILURE, SCT_NONE);
 				}
 			break;
 		}
@@ -2058,9 +2131,8 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 		{
 			
 			
-
-			fsInternetResult ir = OpenUrl (0, &sect.file, -1, sect.nMirrorURL, TRUE);
-			if (ir == IR_SUCCESS)
+			auto oures = OpenUrl (0, &sect.file, -1, sect.nMirrorURL, TRUE);
+			if (oures.first == IR_SUCCESS)
 			{
 				if (sect.file->GetFileSize () != m_uSSFileSize) {
 					sect.lastErr = IR_BADFILESIZE; 
@@ -2109,7 +2181,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 							m_cBaseSectCreatingNow--;
 						else
 							m_vMirrs [nMirrorInc].cSectsCreatingNow--;
-						return IR_S_FALSE;
+						return std::make_pair (IR_S_FALSE, SCT_NONE);
 
 					case SCR_ADJUSTFORNEWSIZE:
 						
@@ -2122,7 +2194,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 
 								if (sect.uEnd > uNewSize)
 								{
-									EnterCriticalSection (&m_csSections);
+									EnterCriticalSection (m_csSections);
 									sect.uEnd = sect.uDEnd = uNewSize;
 									if (sect.uCurrent > sect.uEnd)
 									{
@@ -2130,7 +2202,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 										sect.state = SS_DONE;
 									}
 									setDirty();
-									LeaveCriticalSection (&m_csSections);
+									LeaveCriticalSection (m_csSections);
 								}
 							}
 						}
@@ -2161,7 +2233,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 							m_cBaseSectCreatingNow--;
 						else
 							m_vMirrs [nMirrorInc].cSectsCreatingNow--;
-						return IR_S_FALSE;
+						return std::make_pair (IR_S_FALSE, SCT_NONE);
 				}
 			}
 		}
@@ -2172,7 +2244,7 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 			m_vMirrs [nMirrorInc].cSectsCreatingNow--;
 
 		if (sect.file == NULL && bAtLeast1Started == FALSE)
-			return sect.lastErr; 
+			return std::make_pair (sect.lastErr, sect.lastSecCheckFailure); 
 
 		m_cThreads++; m_cRunningThreads++;
 		Event (DE_SECTIONSTARTED, i);
@@ -2183,7 +2255,10 @@ fsInternetResult fsInternetDownloader::StartDownloading(UINT uStartFrom)
 
 	m_bNoNewSections = FALSE;
 	m_dwForceCacheSizePerSection = DWORD (-1);
-	return IsRunning () ? IR_SUCCESS : IR_S_FALSE;
+
+	return std::make_pair (
+		IsRunning () ? IR_SUCCESS : IR_S_FALSE,
+		SCT_NONE);
 }
 
 BOOL fsInternetDownloader::IsDownloading()
@@ -2215,7 +2290,7 @@ void fsInternetDownloader::SetEventFunc(fsDownloaderEventFunc pfn, LPVOID lpPara
 	m_lpEvent = lpParam;
 }
 
-DWORD fsInternetDownloader::Event(fsDownloaderEvent enEvent, UINT uDesc)
+DWORD fsInternetDownloader::Event(fsDownloaderEvent enEvent, UINT_PTR uDesc)
 {
 	if (m_pfnEvents)
 		return m_pfnEvents (enEvent, uDesc, m_lpEvent);
@@ -2357,19 +2432,19 @@ void fsInternetDownloader::ApplyProperties(fsInternetURLFile *pFile, fsDownload_
 		
 		
 		
-		char szUrl [10000];
-		char szRefUrl [10000];
+		TCHAR szUrl [10000];
+		TCHAR szRefUrl [10000];
 		fsURL url;
-		DWORD dw = sizeof (szUrl);
-		if (*dnp->pszPathName && strcmp (dnp->pszPathName, "/") && strcmp (dnp->pszPathName, "\\") && 
+		DWORD dw = _countof (szUrl);
+		if (*dnp->pszPathName && _tcscmp (dnp->pszPathName, _T("/")) && _tcscmp (dnp->pszPathName, _T("\\")) && 
 			 IR_SUCCESS == url.Create (fsNPToScheme (dnp->enProtocol), dnp->pszServerName, dnp->uServerPort, NULL, NULL, dnp->pszPathName,
 			szUrl, &dw))
 		{
 			if (fsFilePathFromUrlPath (szUrl, dnp->enProtocol == NP_FTP, 
 					FALSE, szRefUrl, sizeof (szRefUrl)))
 			{
-				LPSTR psz1 = strrchr (szRefUrl, '\\');
-				LPSTR psz2 = strrchr (szRefUrl, '/');
+				LPTSTR psz1 = _tcsrchr (szRefUrl, _T('\\'));
+				LPTSTR psz2 = _tcsrchr (szRefUrl, _T('/'));
 				if (psz2 > psz1) 
 					psz1 = psz2;
 
@@ -2393,6 +2468,8 @@ void fsInternetDownloader::ApplyProperties(fsInternetURLFile *pFile, fsDownload_
 
 	if (dnp->enFtpTransferType != FTT_UNKNOWN && dnp->enProtocol == NP_FTP)
 		pFile->FtpSetTransferType (dnp->enFtpTransferType);
+
+	pFile->SetSecurityCheckIgnoreFlags (dnp->sctIgnoreFlags);
 }
 
 int fsInternetDownloader::GetDoneSectionCount()
@@ -2430,7 +2507,7 @@ UINT64 fsInternetDownloader::GetBytesLeft()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsInternetDownloader::GetBytesLeft " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsInternetDownloader::GetBytesLeft " + std::string(ex.what()));
 		return _UI64_MAX;
 	}
 	catch (...)
@@ -2559,7 +2636,7 @@ void fsInternetDownloader::StopSection()
 	}
 }
 
-LPCSTR fsInternetDownloader::GetSuggestedFileName()
+LPCTSTR fsInternetDownloader::GetSuggestedFileName()
 {
 	return m_strSuggFileName.Length () ? (LPTSTR)m_strSuggFileName : NULL ;
 }
@@ -2609,12 +2686,12 @@ fsInternetResult fsInternetDownloader::QuerySize(fsInternetURLFile *file)
 	fsInternetResult ir;
 
 	vmsInternetSession* pSession = new vmsInternetSession;
-	char szProxy [10000];
+	TCHAR szProxy [10000];
 	vmsMakeWinInetProxy (DNP ()->pszProxyName, DNP ()->enProtocol, DNP ()->enProtocol, szProxy);
 	ir  = pSession->Create (DNP ()->pszAgent, DNP ()->enAccType, szProxy, DNP ()->enProtocol);
 	if (ir != IR_SUCCESS)
 		return ir;
-	ApplyProxySettings (pSession, DNP ());
+	ApplyProxySettings (pSession, DNP (), m_uTimeout);
 
 	ir = file->Initialize (pSession, TRUE);
 	if (ir != IR_SUCCESS)
@@ -2633,50 +2710,50 @@ fsInternetResult fsInternetDownloader::QuerySize(fsInternetURLFile *file)
 			if (m_vSections.size ()) 
 				return IR_SERVERUNKERROR;
 
-			LPCSTR pszUrl = file->GetLastError ();
+			LPCTSTR pszUrl = file->GetLastError ();
 
 			
 
 			fsURL url;
-			CHAR szUrl [10000];
-			DWORD dwLen = sizeof (szUrl);
+			TCHAR szUrl [10000];
+			DWORD dwLen = _countof (szUrl);
 
 			if (url.Crack (pszUrl) != IR_SUCCESS) 
 			{
-				char szUrlPath [10000];
+				TCHAR szUrlPath [10000];
 
 				if (*pszUrl == 0)
-					strcpy (szUrlPath, "/");
-				else if (*pszUrl != '/' && *pszUrl != '\\')
+					_tcscpy (szUrlPath, _T("/"));
+				else if (*pszUrl != _T('/') && *pszUrl != _T('\\'))
 				{
 					fsPathFromUrlPath (DNP()->pszPathName, DNP()->enProtocol == NP_FTP, FALSE, szUrlPath, 10000);
 
-					if (szUrlPath [lstrlen (szUrlPath)-1] != '\\' &&
-							szUrlPath [lstrlen (szUrlPath)-1] != '/')
-						lstrcat (szUrlPath, "\\");
+					if (szUrlPath [lstrlen (szUrlPath)-1] != _T('\\') &&
+							szUrlPath [lstrlen (szUrlPath)-1] != _T('/'))
+						lstrcat (szUrlPath, _T("\\"));
 					
-					strcat (szUrlPath, pszUrl);
+					_tcscat (szUrlPath, pszUrl);
 				}
 				else
-					strcpy (szUrlPath, pszUrl);
+					_tcscpy (szUrlPath, pszUrl);
 
 				url.Create (fsNPToScheme (DNP ()->enProtocol), DNP ()->pszServerName, DNP ()->uServerPort, 
 					DNP ()->pszUserName, DNP ()->pszPassword, szUrlPath, szUrl, &dwLen);
 			}
 			else
-				strcpy (szUrl, pszUrl);	
+				_tcscpy (szUrl, pszUrl);	
 
 			fsDownload_NetworkProperties *dnp = DNP ();
 
 			
-			LPSTR pszUser = new char [10000], pszPassword = new char [10000];
+			LPTSTR pszUser = new TCHAR [10000], pszPassword = new TCHAR [10000];
 			if (dnp->pszUserName)
-				strcpy (pszUser, dnp->pszUserName);
+				_tcscpy (pszUser, dnp->pszUserName);
 			else
 				*pszUser = 0;
 			
 			if (dnp->pszPassword)
-				strcpy (pszPassword, dnp->pszPassword);
+				_tcscpy (pszPassword, dnp->pszPassword);
 			else
 				*pszPassword = 0;
 			
@@ -2690,12 +2767,12 @@ fsInternetResult fsInternetDownloader::QuerySize(fsInternetURLFile *file)
 			if (dnp->pszUserName == NULL || *dnp->pszUserName == 0)
 			{
 				SAFE_DELETE_ARRAY (dnp->pszUserName);
-				dnp->pszUserName = new char [strlen (pszUser) + 1];
-				strcpy (dnp->pszUserName, pszUser);
+				dnp->pszUserName = new TCHAR [_tcslen (pszUser) + 1];
+				_tcscpy (dnp->pszUserName, pszUser);
 				
 				SAFE_DELETE_ARRAY (dnp->pszPassword);
-				dnp->pszPassword = new char [strlen (pszPassword) + 1];
-				strcpy (dnp->pszPassword, pszPassword);
+				dnp->pszPassword = new TCHAR [_tcslen (pszPassword) + 1];
+				_tcscpy (dnp->pszPassword, pszPassword);
 				setDirty();
 			}
 			
@@ -2727,7 +2804,7 @@ fsInternetResult fsInternetDownloader::QuerySize(fsInternetURLFile *file)
 			m_strFileName = m_strSuggFileName;
 		else
 		{
-			char szFile [10000];
+			TCHAR szFile [10000];
 			fsFileNameFromUrlPath (DNP ()->pszPathName, DNP ()->enProtocol == NP_FTP,
 				TRUE, szFile, sizeof (szFile));
 			m_strFileName = szFile;
@@ -2768,7 +2845,7 @@ fsInternetResult fsInternetDownloader::LaunchOneMoreSection()
 	return IR_S_FALSE;
 }
 
-void fsInternetDownloader::_InetFileDialogFunc(fsInetFileDialogDirection dir, LPCSTR pszMsg, LPVOID lp1, LPVOID lp2)
+void fsInternetDownloader::_InetFileDialogFunc(fsInetFileDialogDirection dir, LPCTSTR pszMsg, LPVOID lp1, LPVOID lp2)
 {
 	fsInternetDownloader* pThis = (fsInternetDownloader*) lp1;
 	int sect = (int) lp2;
@@ -2798,7 +2875,7 @@ int fsInternetDownloader::GetMirrorURLCount()
 	return m_vMirrs.size ();
 }
 
-fsInternetResult fsInternetDownloader::AddMirrorURL(LPCSTR pszUrl, LPCSTR pszUser, LPCSTR pszPassword, BOOL bDontMeasureSpeed)
+fsInternetResult fsInternetDownloader::AddMirrorURL(LPCTSTR pszUrl, LPCTSTR pszUser, LPCTSTR pszPassword, BOOL bDontMeasureSpeed)
 {
 	fsInternetResult ir;
 
@@ -2819,11 +2896,11 @@ fsInternetResult fsInternetDownloader::AddMirrorURL(LPCSTR pszUrl, LPCSTR pszUse
 		SAFE_DELETE_ARRAY (dnp.pszUserName);
 		SAFE_DELETE_ARRAY (dnp.pszPassword);
 
-		dnp.pszUserName = new char [strlen (pszUser) + 1];
-		strcpy (dnp.pszUserName, pszUser);
+		dnp.pszUserName = new TCHAR [_tcslen (pszUser) + 1];
+		_tcscpy (dnp.pszUserName, pszUser);
 
-		dnp.pszPassword = new char [pszPassword ? strlen (pszPassword) + 1 : 1];
-		strcpy (dnp.pszPassword, pszPassword ? pszPassword : "");
+		dnp.pszPassword = new TCHAR [pszPassword ? _tcslen (pszPassword) + 1 : 1];
+		_tcscpy (dnp.pszPassword, pszPassword ? pszPassword : _T(""));
 	}
 
 	AddMirror (&dnp, TRUE, bDontMeasureSpeed);
@@ -2838,7 +2915,7 @@ fsInternetResult fsInternetDownloader::FindMirrors()
 	if (m_dwState & IDS_MIRRSEARCHPERFORMED)
 		return IR_SUCCESS;
 
-	char szFileName [10000];
+	TCHAR szFileName [10000];
 
 	if (m_strFileName.Length () == 0)
 	{
@@ -2846,7 +2923,7 @@ fsInternetResult fsInternetDownloader::FindMirrors()
 			szFileName, sizeof (szFileName));
 	}
 	else
-		strcpy (szFileName, m_strFileName);
+		_tcscpy (szFileName, m_strFileName);
 
 	fsMirrorURLsMgr_FileMirrorsDotCom mirrors;
 #ifndef FDM_DLDR__RAWCODEONLY
@@ -2860,7 +2937,7 @@ fsInternetResult fsInternetDownloader::FindMirrors()
 	mirrors.Set_EventFunc (_MirrMgrEvents, this);
 
 	vmsInternetSession* pSession = new vmsInternetSession;
-	char szProxy [10000];
+	TCHAR szProxy [10000];
 	vmsMakeWinInetProxy (DNP ()->pszProxyName, DNP ()->enProtocol, DNP ()->enProtocol, szProxy);
 	fsInternetResult ir  = pSession->Create (DNP()->pszAgent, DNP()->enAccType, szProxy, DNP ()->enProtocol);
 	if (ir != IR_SUCCESS)
@@ -2870,7 +2947,7 @@ fsInternetResult fsInternetDownloader::FindMirrors()
 		return ir;
 	}
 	
-	ApplyProxySettings (pSession, DNP());
+	ApplyProxySettings (pSession, DNP(), m_uTimeout);
 
 	mirrors.Initialize (szFileName, GetSSFileSize (), DNP ()->pszServerName,
 		pSession);
@@ -3089,7 +3166,7 @@ void fsInternetDownloader::RemoveAllMirrors()
 
 	m_vMirrs.clear ();
 	m_dwState &= ~ IDS_MIRRSEARCHPERFORMED;
-	m_strFileName = "";
+	m_strFileName = _T("");
 	setDirty();
 }
 
@@ -3134,7 +3211,7 @@ void fsInternetDownloader::Set_MirrPingTime(int iMirr, DWORD dw)
 	m_vMirrs [iMirr].dwPingTime = dw;
 }
 
-LPCSTR fsInternetDownloader::GetContentType()
+LPCTSTR fsInternetDownloader::GetContentType()
 {
 	return m_strContentType;
 }
@@ -3153,7 +3230,7 @@ UINT64 fsInternetDownloader::GetDownloadedBytesCount()
 	return m_vSections.size () ? m_vSections [0].uDCurrent + m_dwDataLenInCache : 0;
 }
 
-LPCSTR fsInternetDownloader::Get_FileName()
+LPCTSTR fsInternetDownloader::Get_FileName()
 {
 	return m_strFileName;
 }
@@ -3196,7 +3273,8 @@ BOOL fsInternetDownloader::RestoreSectionsState_v5(LPBYTE pBuffer, DWORD )
 	char sz [10000];
 	strncpy (sz, LPCSTR (pBuffer), iStrLen);
 	sz [iStrLen] = 0;
-	m_strFileName = sz;
+	USES_CONVERSION;
+	m_strFileName = CA2CT(sz);
 	pBuffer += iStrLen;
 
 	m_dwState = *((LPDWORD) pBuffer);
@@ -3444,23 +3522,23 @@ BOOL fsInternetDownloader::IsMayZIP(BOOL bIsExeMay)
 	if (GetSSFileSize () == _UI64_MAX)
 		return FALSE;	
 
-	LPCSTR pszExt = strrchr (m_strFileName, '.');
+	LPCTSTR pszExt = _tcsrchr (m_strFileName, _T('.'));
 	if (pszExt++ == NULL)
 		return FALSE;	
 	
-	if (stricmp (pszExt, "zip") == 0)
+	if (_tcsicmp (pszExt, _T("zip")) == 0)
 		return TRUE;	
 	
-	if (bIsExeMay && stricmp (pszExt, "exe") == 0)
+	if (bIsExeMay && _tcsicmp (pszExt, _T("exe")) == 0)
 		return TRUE; 
 
 	return FALSE; 
 }
 
-void fsInternetDownloader::ApplyProxySettings(fsInternetSession *pSession, fsDownload_NetworkProperties* dnp)
+void fsInternetDownloader::ApplyProxySettings(fsInternetSession *pSession, fsDownload_NetworkProperties* dnp, UINT uTimeout)
 {
 	pSession->SetProxyAuth (dnp->pszProxyUserName, dnp->pszProxyPassword);
-	pSession->SetTimeout (m_uTimeout);
+	pSession->SetTimeout (uTimeout);
 }
 
 void fsInternetDownloader::Set_Timeout(UINT u)
@@ -3470,11 +3548,11 @@ void fsInternetDownloader::Set_Timeout(UINT u)
 
 BOOL fsInternetDownloader::RemoveMirror(int iIndex)
 {
-	if (m_bAddingSection || m_cBaseSectCreatingNow || m_csOpenUrl.OwningThread != NULL ||
+	if (m_bAddingSection || m_cBaseSectCreatingNow || ((LPCRITICAL_SECTION)m_csOpenUrl)->OwningThread != NULL ||
 			m_vMirrs [iIndex].cSectsCreatingNow)
 		return FALSE;
 
-	EnterCriticalSection (&m_csOpenUrl);
+	EnterCriticalSection (m_csOpenUrl);
 
 	
 	for (int i = 0; i < m_vSections.size (); i++)
@@ -3501,21 +3579,21 @@ BOOL fsInternetDownloader::RemoveMirror(int iIndex)
 
 	setDirty();
 
-	LeaveCriticalSection (&m_csOpenUrl);
+	LeaveCriticalSection (m_csOpenUrl);
 	return TRUE;
 }
 
 fsString fsInternetDownloader::get_URL(BOOL bIncludeAuthInfo)
 {
 	fsURL url;
-	char szUrl [10000];
-	DWORD dw = sizeof (szUrl);
+	TCHAR szUrl [10000];
+	DWORD dw = _countof (szUrl);
 
 	if (IR_SUCCESS != url.Create (fsNPToScheme (DNP ()->enProtocol), DNP ()->pszServerName, DNP ()->uServerPort,
-			bIncludeAuthInfo ? DNP ()->pszUserName : "", bIncludeAuthInfo ? DNP ()->pszPassword : "", 
+			bIncludeAuthInfo ? DNP ()->pszUserName : _T(""), bIncludeAuthInfo ? DNP ()->pszPassword : _T(""), 
 			DNP ()->pszPathName, szUrl, &dw))
 	{
-		return "";
+		return _T("");
 	}
 
 	return szUrl;
@@ -3575,7 +3653,7 @@ DWORD WINAPI fsInternetDownloader::_threadOpenUrl(LPVOID lp)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsInternetDownloader::_threadOpenUrl " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsInternetDownloader::_threadOpenUrl " + std::string(ex.what()));
 		dw = IR_ERROR;
 	}
 	catch (...)
@@ -3591,9 +3669,9 @@ DWORD WINAPI fsInternetDownloader::_threadOpenUrl(LPVOID lp)
 void fsInternetDownloader::LockWriteFile(BOOL bLock)
 {
 	if (bLock)
-		EnterCriticalSection (&m_csWriteToFile);
+		EnterCriticalSection (m_csWriteToFile);
 	else
-		LeaveCriticalSection (&m_csWriteToFile);
+		LeaveCriticalSection (m_csWriteToFile);
 }
 
 void fsInternetDownloader::CheckIfSuggFileNameEncoded()
@@ -3601,10 +3679,24 @@ void fsInternetDownloader::CheckIfSuggFileNameEncoded()
 	if (m_strSuggFileName.Length () < 13)
 		return;
 
-	if (strnicmp (m_strSuggFileName, "=?UTF-8?", 8))
+	if (_tcsncicmp (m_strSuggFileName, _T("=?UTF-8?"), 8))
 		return;
 
-	LPCSTR psz = &m_strSuggFileName [8];
+	LPCSTR psz = 0;
+#ifdef UNICODE
+	LPCTSTR tszSuggFileName = &m_strSuggFileName [8];
+	int nLen = ::WideCharToMultiByte(CP_ACP, 0, tszSuggFileName, -1, 0, 0, 0, 0);
+	std::auto_ptr<CHAR> apszSuggFileNameGuard( new CHAR[nLen] );
+	CHAR* szSuggFileName = apszSuggFileNameGuard.get();
+	if (szSuggFileName == 0)
+		throw std::exception("Out of memory");
+	memset(szSuggFileName, 0, nLen);
+	::WideCharToMultiByte(CP_ACP, 0, tszSuggFileName, -1, szSuggFileName, nLen, 0, 0);
+	psz = szSuggFileName;
+#else
+	psz = &m_strSuggFileName [8];
+#endif
+
 	if (*psz != 'B' && *psz != 'b') 
 		return;
 	if (psz [1] != '?')
@@ -3612,14 +3704,14 @@ void fsInternetDownloader::CheckIfSuggFileNameEncoded()
 
 	psz += 2;
 
-	fsString str;
+	CStringA str;
 	while (psz [1] && (*psz != '?' || psz [1] != '='))
 		str += *psz++;
 	
 	if (*psz != '?' || psz [1] != '=')
 		return; 
 
-	LPBYTE pb = new BYTE [str.Length ()];
+	LPBYTE pb = new BYTE [str.GetLength ()];
 
 	int len = base64_decode (str, pb);
 	if (len <= 0)
@@ -3634,9 +3726,12 @@ void fsInternetDownloader::CheckIfSuggFileNameEncoded()
 	if (len > 0)
 		pwsz [len] = 0;
 	
-	WideCharToMultiByte (CP_ACP, 0, pwsz, -1, (LPSTR)pb, str.Length (), NULL, NULL);
-
+#ifdef UNICODE
+	m_strSuggFileName = pwsz;
+#else
+	WideCharToMultiByte (CP_ACP, 0, pwsz, -1, (LPSTR)pb, str.GetLength (), NULL, NULL);
 	m_strSuggFileName = (LPSTR)pb;
+#endif
 
 	delete [] pb;
 	delete [] pwsz;
@@ -3652,7 +3747,7 @@ void fsInternetDownloader::AddSection(UINT64 uStart, UINT64 uEnd, UINT64 uCurren
 {
 	ASSERT((uStart < uEnd) && (uCurrent >= uStart) && (uCurrent <= uEnd));
 
-	EnterCriticalSection (&m_csAddSection);
+	EnterCriticalSection (m_csAddSection);
 
 	fsSection sect;
 
@@ -3675,7 +3770,7 @@ void fsInternetDownloader::AddSection(UINT64 uStart, UINT64 uEnd, UINT64 uCurren
 	m_vSections.add (sect);
 	setDirty();
 
-	LeaveCriticalSection (&m_csAddSection);
+	LeaveCriticalSection (m_csAddSection);
 }
 
 void fsInternetDownloader::SetManagerPersistObject(vmsPersistObject* pManagerPersistObject)

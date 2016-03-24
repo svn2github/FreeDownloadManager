@@ -1,11 +1,10 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 #include "vmsFdmOpNetIntegrationMgr.h"
 #include "vmsFdmFilesDeleter.h"
-#include "VistaFx/VistaFx.h"
 #include "vmsElevatedFdm.h"
 #include "DlgElevateRequired.h"
 
@@ -29,6 +28,7 @@ bool vmsFdmOpNetIntegrationMgr::DeinstallPluginsEx(const std::vector <vmsKnownBr
 bool vmsFdmOpNetIntegrationMgr::InstallPluginsEx(const std::vector <vmsKnownBrowsers::Browser>& vBrowsers)
 {
 	bool bOK = true;
+	vmsWinOsVersion osver;
 
 	std::vector <vmsKnownBrowsers::Browser> vToBeInstalledElevated;
 
@@ -37,7 +37,8 @@ bool vmsFdmOpNetIntegrationMgr::InstallPluginsEx(const std::vector <vmsKnownBrow
 		vmsNpPluginInstaller& pluginInstaller = getPluginInstaller (vBrowsers [i]);
 		if (pluginInstaller.InstallPlugin ())
 			continue;
-		if (GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher () && !IsUserAnAdmin ())
+		if (GetLastError () == ERROR_ACCESS_DENIED && 
+			osver.isVistaOrHigher () && !IsUserAnAdmin ())
 			vToBeInstalledElevated.push_back (vBrowsers [i]);
 		else
 			bOK = false;

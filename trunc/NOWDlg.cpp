@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -40,18 +40,18 @@ BOOL CNOWDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
-	m_wndCT.AddString ("14.4K Modem");
-	m_wndCT.AddString ("28.8K Modem");
-	m_wndCT.AddString ("33.6K Modem");
-	m_wndCT.AddString ("56K Modem/ISDN");
-	m_wndCT.AddString ("112K Dual ISDN");
-	m_wndCT.AddString ("256K DSL/Cable");
-	m_wndCT.AddString ("512K DSL/Cable");
-	m_wndCT.AddString ("768K DSL/Cable");
-	m_wndCT.AddString ("1M DSL/Cable");
-	m_wndCT.AddString ("1.5M DSL/Cable");
-	m_wndCT.AddString ("2M DSL/Cable");
-	m_wndCT.AddString ("10/100M LAN");
+	m_wndCT.AddString (_T("14.4K Modem"));
+	m_wndCT.AddString (_T("28.8K Modem"));
+	m_wndCT.AddString (_T("33.6K Modem"));
+	m_wndCT.AddString (_T("56K Modem/ISDN"));
+	m_wndCT.AddString (_T("112K Dual ISDN"));
+	m_wndCT.AddString (_T("256K DSL/Cable"));
+	m_wndCT.AddString (_T("512K DSL/Cable"));
+	m_wndCT.AddString (_T("768K DSL/Cable"));
+	m_wndCT.AddString (_T("1M DSL/Cable"));
+	m_wndCT.AddString (_T("1.5M DSL/Cable"));
+	m_wndCT.AddString (_T("2M DSL/Cable"));
+	m_wndCT.AddString (_T("10/100M LAN"));
 
 	m_wndCT.SetCurSel (_App.NOW ());
 

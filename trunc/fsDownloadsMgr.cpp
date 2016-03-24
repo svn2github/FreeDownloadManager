@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -49,7 +49,11 @@ using namespace fsArchive;
 
 const double DLD_HP_START_COEFF = 3.0;
 
-fsDownloadsMgr::fsDownloadsMgr()
+#include "vmsFdmSimpleDownloader.h"
+
+fsDownloadsMgr::fsDownloadsMgr() :
+	m_currentTotalDownloadingSpeed (0)
+	, m_atLeast1CompletedDuringSession (false)
 {
 	m_errorTimeouts[vmsBtDownloadErrorState::BTDES_BAD_REQUEST_400] = 0;
 	m_errorTimeouts[vmsBtDownloadErrorState::BTDES_SERVER_INTERNAL_ERROR_500] = 10 * 1000;
@@ -155,11 +159,14 @@ UINT fsDownloadsMgr::Add(vmsDownloadSmartPtr dld, BOOL bKeepIDAsIs, bool bPlaceT
 
 	dld->dwFlags &= ~DLD_WAS_DELETED;
 	dld->setDirty();
+	if (dld->isYouTube()){
+		Event(dld, LS(L_YOUTUBE_DOWNLOAD_ADDED), EDT_INQUIRY);
+	}
 
 	return dld->nID;
 }
 
-void fsDownloadsMgr::_DownloadMgrEventDesc(fsDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCSTR pszEvent, LPVOID lp)
+void fsDownloadsMgr::_DownloadMgrEventDesc(fsDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCTSTR pszEvent, LPVOID lp)
 {
 	try 
 	{
@@ -173,7 +180,7 @@ void fsDownloadsMgr::_DownloadMgrEventDesc(fsDownloadMgr *pMgr, fsDownloadMgr_Ev
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::_DownloadMgrEventDesc " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::_DownloadMgrEventDesc " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -199,7 +206,7 @@ vmsDownloadSmartPtr fsDownloadsMgr::GetDownloadByDownloadMgr(fsDownloadMgr *pMgr
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByDownloadMgr " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByDownloadMgr " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -210,7 +217,7 @@ vmsDownloadSmartPtr fsDownloadsMgr::GetDownloadByDownloadMgr(fsDownloadMgr *pMgr
 	return NULL;
 }
 
-DWORD fsDownloadsMgr::_DownloadMgrEvents(fsDownloadMgr *pMgr, fsDownloaderEvent enEvent, UINT uInfo, LPVOID lp)
+DWORD fsDownloadsMgr::_DownloadMgrEvents(fsDownloadMgr *pMgr, fsDownloaderEvent enEvent, UINT_PTR uInfo, LPVOID lp)
 {
 	fsDownloadsMgr* pThis = (fsDownloadsMgr*) lp;
 
@@ -247,13 +254,30 @@ DWORD fsDownloadsMgr::_DownloadMgrEvents(fsDownloadMgr *pMgr, fsDownloaderEvent 
 						break;
 
 					case DMEE_STOPPEDORDONE: 
+						if (dld->isYouTube() && (dld->getState() & DLDS_YOUTUBE_URL_RELOADING)){							
+							dld->removeStateFlags(DLDS_YOUTUBE_URL_RELOADING);
+						}
 						pThis->UnregisterDownloadInTum (dld);
 						if (FALSE == pThis->OnDownloadStoppedOrDone (dld))
 							return TRUE;
 						dld = NULL;	
 						break;
 
-					case DMEE_FATALERROR:
+					case DMEE_FATALERROR:						
+						if (dld->isYouTube()){
+							if (dld->dwFlags & DLD_YOUTUBE_RELOAD_URL_IF_START_FAILED){
+								dld->dwFlags &= ~DLD_YOUTUBE_RELOAD_URL_IF_START_FAILED;
+								dld->setStateFlags(DLDS_YOUTUBE_URL_RELOADING);
+								dld->setDirty();
+								pThis->Event(dld, LS(L_RESTARTINGDLD), EDT_RESPONSE_S);
+								_YouTubeDldsMgr.reloadURL(dld);
+							}
+							else{
+								dld->pMgr->GetDownloadMgr()->GetDP()->aEP[DFE_ACCDENIED] = DFEP_STOP;
+								pThis->Event(dld, LS(L_YOUTUBE_NEED_RESTART), EDT_RESPONSE_E);
+								dld->setDirty();
+							}
+						}
 					case DMEE_USERSTOP:
 						pThis->UnregisterDownloadInTum (dld);
 						dld->bAutoStart = FALSE;
@@ -327,12 +351,21 @@ DWORD fsDownloadsMgr::_DownloadMgrEvents(fsDownloadMgr *pMgr, fsDownloaderEvent 
 
 			case DE_ARCHIVEDETECTED:
 				return pThis->OnArchiveDetected (dld, (fsArchiveRebuilder*) uInfo);
+
+			case DE_SEC_CHECK_FAILURE:
+			{
+				fsDownloaderEventReceived2Info info;
+				info.ev = enEvent;
+				info.secCheckFailureInfo = reinterpret_cast <fsDownloaderEventSecCheckFailureInfo*> (uInfo);
+				return pThis->Event (dld, DME_DOWNLOADEREVENTRECEIVED2, 
+					reinterpret_cast <UINT_PTR> (&info));
+			}
 		}
 	}
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::_DownloadMgrEvents " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::_DownloadMgrEvents " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -399,7 +432,7 @@ void fsDownloadsMgr::ProcessDownloads()
 		BOOL bAccept = FALSE, bAcceptAdditionalConnections = FALSE, bNeedCloseSomeConnections = FALSE;	
 		
 		fsDownloadMgr *pMgr = dld->pMgr->GetDownloadMgr (); 
-		LPCSTR pszSiteName = pMgr ? pMgr->GetDNP ()->pszServerName : NULL;
+		LPCTSTR pszSiteName = pMgr ? pMgr->GetDNP ()->pszServerName : NULL;
 		fsNetworkProtocol enNP = pMgr ? pMgr->GetDNP ()->enProtocol : (fsNetworkProtocol)-1;
 
 		if (cDlds && cConns)	
@@ -569,7 +602,7 @@ void fsDownloadsMgr::ProcessDownloads()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::ProcessDownloads " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::ProcessDownloads " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -609,7 +642,7 @@ void fsDownloadsMgr::StartDownloads(DLDS_LIST &vpDlds, BOOL )
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::StartDownloads " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::StartDownloads " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -619,7 +652,7 @@ void fsDownloadsMgr::StartDownloads(DLDS_LIST &vpDlds, BOOL )
 
 	setNeedApplyTrafficLimit ();
 
-	Event (NULL, NULL, DME_DLDSAUTOSTARTMDFD);
+	Event (NULL, NULL, DME_DLDSAUTOSTARTMDFD, 0);
 }
 
 void fsDownloadsMgr::StopDownloads(DLDS_LIST &vDlds, BOOL bByUser)
@@ -641,7 +674,7 @@ void fsDownloadsMgr::StopDownloads(DLDS_LIST &vDlds, BOOL bByUser)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::StopDownloads " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::StopDownloads " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -652,7 +685,7 @@ void fsDownloadsMgr::StopDownloads(DLDS_LIST &vDlds, BOOL bByUser)
 	setNeedApplyTrafficLimit ();
 
 	if (bByUser)
-		Event (NULL, NULL, DME_DLDSAUTOSTARTMDFD);
+		Event (NULL, NULL, DME_DLDSAUTOSTARTMDFD, 0);
 }
 
 void fsDownloadsMgr::SetEventsFunc(fntDownloadsMgrEventFunc pfn, LPVOID lpParam)
@@ -661,15 +694,15 @@ void fsDownloadsMgr::SetEventsFunc(fntDownloadsMgrEventFunc pfn, LPVOID lpParam)
 	m_lpEventsParam = lpParam;
 }
 
-DWORD fsDownloadsMgr::Event(fsDownload* dld, fsDLHistoryRecord *phst, fsDownloadsMgrEvent ev)
+DWORD fsDownloadsMgr::Event(fsDownload* dld, fsDLHistoryRecord *phst, fsDownloadsMgrEvent ev, UINT_PTR ev_info)
 {
 	DWORD dwRet = TRUE; 
 
 	if (dld && dld->pfnDownloadEventsFunc)
-		dwRet = dld->pfnDownloadEventsFunc (dld, phst, ev, dld->lpEventsParam);
+		dwRet = dld->pfnDownloadEventsFunc (dld, phst, ev, ev_info, dld->lpEventsParam);
 
 	if (m_pfnEvents)
-		dwRet = m_pfnEvents (dld, phst, ev, m_lpEventsParam);
+		dwRet = m_pfnEvents (dld, phst, ev, ev_info, m_lpEventsParam);
 
 	return dwRet;
 }
@@ -688,7 +721,7 @@ vmsDownloadSmartPtr fsDownloadsMgr::GetDownload(size_t iIndex)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::GetDownload " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownload " + std::string(ex.what()));
 		return NULL;
 	}
 	catch (...)
@@ -704,7 +737,7 @@ BOOL fsDownloadsMgr::LoadDownloads()
 	vmsAUTOLOCKRW_WRITE (m_rwlDownloads);
 	vmsAUTOLOCKSECTION (m_csDeletedDownloads);
 
-	if (!m_saver.Load (m_vDownloads, "downloads", FALSE))
+	if (!m_saver.Load (m_vDownloads, _T("downloads"), FALSE))
 		return FALSE;
 
 	m_vDownloads.resetDirty();
@@ -712,7 +745,7 @@ BOOL fsDownloadsMgr::LoadDownloads()
 	BOOL bFailIfLarge = _App.CheckRecycleBinSize ();
 	for (int j = 0; j < 2; j++)
 	{
-		fsDLLoadResult res = m_saver.Load (m_vDeletedDownloads, "downloads.del", j == 0 && bFailIfLarge);
+		fsDLLoadResult res = m_saver.Load (m_vDeletedDownloads, _T("downloads.del"), j == 0 && bFailIfLarge);
 		m_vDeletedDownloads.resetDirty();
 		if (res == DLLR_TOOLARGESIZE)
 		{
@@ -814,13 +847,13 @@ BOOL fsDownloadsMgr::Save()
 	{
 		
 		vmsAUTOLOCKRW_READ (m_rwlDownloads);
-		if (FALSE == m_saver.Save (m_vDownloads, "downloads"))
+		if (FALSE == m_saver.Save (m_vDownloads, _T ("downloads")))
 			b = FALSE;
 		vmsAUTOLOCKRW_READ_UNLOCK (m_rwlDownloads);
 
 		
 		vmsAUTOLOCKSECTION (m_csDeletedDownloads);
-		if (FALSE == m_saver.Save (m_vDeletedDownloads, "downloads.del"))
+		if (FALSE == m_saver.Save (m_vDeletedDownloads, _T ("downloads.del")))
 			b = FALSE;
 		vmsAUTOLOCKSECTION_UNLOCK (m_csDeletedDownloads);
 
@@ -839,7 +872,7 @@ BOOL fsDownloadsMgr::Save()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::Save " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::Save " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -877,7 +910,7 @@ int fsDownloadsMgr::DeleteDownloads(DLDS_LIST &vDlds, BOOL bByUser, BOOL bDontCo
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDownloads " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDownloads " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -957,7 +990,7 @@ DWORD WINAPI fsDownloadsMgr::_threadDeleteDownloads(LPVOID lp)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::_threadDeleteDownloads " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::_threadDeleteDownloads " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -974,7 +1007,7 @@ DWORD WINAPI fsDownloadsMgr::_threadDeleteDownloads(LPVOID lp)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::_threadDeleteDownloads " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::_threadDeleteDownloads " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1065,7 +1098,7 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 			catch (const std::exception& ex)
 			{
 				ASSERT (FALSE);
-				vmsLogger::WriteLog("fsDownloadsMgr::_threadDownloadsMgr " + tstring(ex.what()));
+				vmsLogger::WriteLog("fsDownloadsMgr::_threadDownloadsMgr " + std::string(ex.what()));
 			}
 			catch (...)
 			{
@@ -1075,6 +1108,8 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 
 			pThis->m_rwlDownloads.ReleaseReaderLock ();
 
+			pThis->m_currentTotalDownloadingSpeed = summ;
+
 			
 			
 			if (summ == 0 && pThis->IsRunning () == FALSE)
@@ -1082,7 +1117,11 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 			else {
 				pThis->m_vSummSpeed.add (summ);
 				if (cBtDownloads &&_BT.is_Initialized ()) {
-					_BT.get_Session ()->setWriteCacheSize (cBtDownloads * _App.FileWriteCacheSize ());
+					_BT.LockSession(true);
+					vmsBtSession *pSession = _BT.get_Session();
+					if ( pSession != NULL )
+						pSession->setWriteCacheSize (cBtDownloads * _App.FileWriteCacheSize ());
+					_BT.UnlockSession(true);
 				}
 			}
 		}
@@ -1118,7 +1157,7 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 		catch (const std::exception& ex)
 		{
 			ASSERT (FALSE);
-			vmsLogger::WriteLog("fsDownloadsMgr::_threadDownloadsMgr " + tstring(ex.what()));
+			vmsLogger::WriteLog("fsDownloadsMgr::_threadDownloadsMgr " + std::string(ex.what()));
 		}
 		catch (...)
 		{
@@ -1134,7 +1173,7 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 		{
 			bool bNeedPD = false, bNeedAL = false, bNeedCNAD = false;
 
-			EnterCriticalSection (&pThis->m_csNeedStartXXXX);
+			EnterCriticalSection (pThis->m_csNeedStartXXXX);
 			if (pThis->m_ticksNeedStartProcessDownloads.m_dwTicks && pThis->m_ticksNeedStartProcessDownloads <= ticksNow)
 			{
 				bNeedPD = true;
@@ -1161,7 +1200,7 @@ DWORD WINAPI fsDownloadsMgr::_threadDownloadsMgr(LPVOID lp)
 					lastDldsProc.Now();
 				}
 			}
-			LeaveCriticalSection (&pThis->m_csNeedStartXXXX);
+			LeaveCriticalSection (pThis->m_csNeedStartXXXX);
 
 			if (bNeedPD)
 				pThis->ProcessDownloads ();
@@ -1229,7 +1268,7 @@ void fsDownloadsMgr::RebuildServerList(BOOL bUpdateSiteList)
 
 			fsDownload_NetworkProperties *dnp = pMgr->GetDownloader ()->DNP (uSect);
 
-			LPCSTR pszServer = dnp->pszServerName;
+			LPCTSTR pszServer = dnp->pszServerName;
 			fsNetworkProtocol np = dnp->enProtocol;
 			
 			fsSiteInfo *site = _SitesMgr.FindSite (pszServer, fsNPToSiteValidFor (np));
@@ -1282,7 +1321,7 @@ void fsDownloadsMgr::RebuildServerList(BOOL bUpdateSiteList)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::RebuildServerList " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::RebuildServerList " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1302,7 +1341,7 @@ void fsDownloadsMgr::RebuildServerList(BOOL bUpdateSiteList)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::RebuildServerList " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::RebuildServerList " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1318,7 +1357,7 @@ BOOL fsDownloadsMgr::OnQueryNewSection(vmsDownloadSmartPtr dld, UINT nUsingMirro
 	if (dld->pMgr->GetDownloadMgr ()->GetDP ()->bIgnoreRestrictions)
 		return TRUE;
 
-	EnterCriticalSection (&m_csQSection);
+	EnterCriticalSection (m_csQSection);
 	BOOL b = TRUE; 
 
 	fsDownload_NetworkProperties *dnp;
@@ -1347,11 +1386,11 @@ BOOL fsDownloadsMgr::OnQueryNewSection(vmsDownloadSmartPtr dld, UINT nUsingMirro
 		dld->setDirty();
 	}
 
-	LeaveCriticalSection (&m_csQSection);
+	LeaveCriticalSection (m_csQSection);
 	return b;
 }
 
-void fsDownloadsMgr::Event(vmsDownloadSmartPtr dld, LPCSTR pszEvent, fsDownloadMgr_EventDescType enType)
+void fsDownloadsMgr::Event(vmsDownloadSmartPtr dld, LPCTSTR pszEvent, fsDownloadMgr_EventDescType enType)
 {
 	OnDownloadDescEventRcvd (dld, enType, pszEvent);
 }
@@ -1371,7 +1410,7 @@ UINT fsDownloadsMgr::GetAmountConnections()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::GetAmountConnections " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::GetAmountConnections " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1420,14 +1459,19 @@ void fsDownloadsMgr::ApplyTrafficLimit()
 	{
 		
 		
-		_BT.get_Session ()->SetUploadLimit (_TumMgr.getRestrainAll () ? 1 :
-			_App.Bittorrent_UploadTrafficLimit (_TumMgr.GetTUM ()));
-		_BT.get_Session ()->SetMaxUploads (
-			_App.Bittorrent_UploadConnectionLimit (_TumMgr.GetTUM ()));
-		_BT.get_Session ()->SetMaxHalfOpenConnections (
-			_App.Bittorrent_MaxHalfConnections (_TumMgr.GetTUM ()));
-		_BT.get_Session ()->SetMaxConnections (
-			_App.Bittorrent_MaxConnections (_TumMgr.GetTUM ()));
+		_BT.LockSession(true);
+		vmsBtSession *pS = _BT.get_Session();
+		if ( pS != NULL ){
+			pS->SetUploadLimit (_TumMgr.getRestrainAll () ? 1 :
+				_App.Bittorrent_UploadTrafficLimit (_TumMgr.GetTUM ()));
+			pS->SetMaxUploads (
+				_App.Bittorrent_UploadConnectionLimit (_TumMgr.GetTUM ()));
+			pS->SetMaxHalfOpenConnections (
+				_App.Bittorrent_MaxHalfConnections (_TumMgr.GetTUM ()));
+			pS->SetMaxConnections (
+				_App.Bittorrent_MaxConnections(_TumMgr.GetTUM()));
+		}
+		_BT.UnlockSession(true);
 	}
 }
 
@@ -1448,7 +1492,7 @@ void fsDownloadsMgr::StartAllDownloads(BOOL bByUser)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::StartAllDownloads " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::StartAllDownloads " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1476,7 +1520,7 @@ void fsDownloadsMgr::StopAllDownloads(BOOL bByUser)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::StopAllDownloads " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::StopAllDownloads " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1523,7 +1567,7 @@ BOOL fsDownloadsMgr::IsRunning()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::IsRunning " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::IsRunning " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1556,7 +1600,7 @@ vmsDownloadSmartPtr fsDownloadsMgr::GetDownloadByID(UINT nID)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByID " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByID " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1601,7 +1645,7 @@ void fsDownloadsMgr::SaveSettings()
 	_App.DldsMgrPDTimeLimit (m_dwPDTimeLimit);
 }
 
-BOOL fsDownloadsMgr::IsServerFilled(LPCSTR pszServer, DWORD dwReqProtocols)
+BOOL fsDownloadsMgr::IsServerFilled(LPCTSTR pszServer, DWORD dwReqProtocols)
 {
 	fsSiteInfo *site = _SitesMgr.FindSite (pszServer, dwReqProtocols);
 
@@ -1663,7 +1707,7 @@ int fsDownloadsMgr::GetRunningDownloadCount(bool bIncludeBtSeeds)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::GetRunningDownloadCount " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::GetRunningDownloadCount " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1717,7 +1761,7 @@ int fsDownloadsMgr::DeleteDownloads2(DLDS_LIST *vDlds, BOOL bByUser, BOOL bDontC
 
 	vmsDownloadSmartPtr dldFake;
 	Download_CreateInstance (dldFake);
-	dldFake->pMgr->GetDownloadMgr ()->CreateByUrl ("http://localhost/", TRUE);
+	dldFake->pMgr->GetDownloadMgr ()->CreateByUrl (_T("http://localhost/"), TRUE);
 
 	_pwndDownloads->set_DontUpdateTIPO (TRUE);
 
@@ -1808,7 +1852,7 @@ int fsDownloadsMgr::DeleteDownloads2(DLDS_LIST *vDlds, BOOL bByUser, BOOL bDontC
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDownloads2 " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDownloads2 " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1926,10 +1970,10 @@ DWORD WINAPI fsDownloadsMgr::_threadWaitDelDlds(LPVOID lp)
 	int *pcDlds = (int*) info->lpParam5;
 	fsDownloadsMgr* pThis = (fsDownloadsMgr*) info->lpParam6;
 
-	pThis->Event (NULL, NULL, DME_BEGINDELETEMANYDOWNLOADS);
+	pThis->Event (NULL, NULL, DME_BEGINDELETEMANYDOWNLOADS, 0);
 	*pcDlds = pThis->DeleteDownloads2 (vDlds, bByUser, bDontConfirmFileDeleting, bDontDeleteFiles, 
 		&info->bNeedStop, &info->iProgress);
-	pThis->Event (NULL, NULL, DME_ENDDELETEMANYDOWNLOADS);
+	pThis->Event (NULL, NULL, DME_ENDDELETEMANYDOWNLOADS, 0);
 
 	info->bWaitDone = TRUE;
 
@@ -1953,7 +1997,7 @@ void fsDownloadsMgr::Download_CloneSettings(vmsDownloadSmartPtr dst, vmsDownload
 
 BOOL fsDownloadsMgr::PerformVirusCheck(vmsDownloadSmartPtr dld, BOOL bCheckExtReqs, BOOL bWaitDone)
 {
-	if (m_strVirName == "")
+	if (m_strVirName == _T(""))
 		return TRUE;
 
 	bool bMultiTorrent = dld->pMgr->GetBtDownloadMgr () != NULL && 
@@ -1968,7 +2012,7 @@ BOOL fsDownloadsMgr::PerformVirusCheck(vmsDownloadSmartPtr dld, BOOL bCheckExtRe
 	int i = 0;
 	for (i = 0; i < nFiles; i++)
 	{
-		char szFile [MY_MAX_PATH];
+		TCHAR szFile [MY_MAX_PATH];
 		
 		if (bMultiTorrentCheck)
 			strFile = dld->pMgr->GetBtDownloadMgr ()->get_OutputFilePathName (i);
@@ -1979,7 +2023,7 @@ BOOL fsDownloadsMgr::PerformVirusCheck(vmsDownloadSmartPtr dld, BOOL bCheckExtRe
 
 		if (bCheckExtReqs)
 		{
-			char *pszExt = strrchr (strFile, '.');
+			TCHAR *pszExt = _tcsrchr (strFile, _T('.'));
 
 			
 			if (pszExt && IsExtInExtsStr (m_strVirExts, pszExt+1))
@@ -1994,12 +2038,12 @@ BOOL fsDownloadsMgr::PerformVirusCheck(vmsDownloadSmartPtr dld, BOOL bCheckExtRe
 	Event (dld, LS (L_LAUNCHAVIR), EDT_INQUIRY);
 	
 	CString strArgs = m_strVirArgs;
-	CString str = '"'; str += strFile; str += '"';
-	strArgs.Replace ("%file%", str);
+	CString str = _T('"'); str += strFile; str += _T('"');
+	strArgs.Replace (_T("%file%"), str);
 
 	if (bWaitDone == FALSE)
 	{
-		DWORD dwErr = (DWORD) ShellExecute (HWND_DESKTOP, "open", m_strVirName, strArgs, NULL, SW_SHOW);
+		DWORD dwErr = (DWORD) ShellExecute (HWND_DESKTOP, _T("open"), m_strVirName, strArgs, NULL, SW_SHOW);
 		if (dwErr <= 32)
 		{
 			SetLastError (dwErr);
@@ -2016,13 +2060,13 @@ BOOL fsDownloadsMgr::PerformVirusCheck(vmsDownloadSmartPtr dld, BOOL bCheckExtRe
 		ZeroMemory (&pi, sizeof (pi));
 
 		fsString str = m_strVirName;
-		if (strchr (str, '\\') == NULL && strchr (str, '/') == NULL)
+		if (_tcschr (str, _T('\\')) == NULL && _tcschr (str, _T('/')) == NULL)
 			str = vmsRegisteredApp::GetFullPath (str);
 
 		CString strCmdLine; 
-		strCmdLine.Format ("\"%s\" %s", (LPCSTR)str, (LPCSTR)strArgs);
+		strCmdLine.Format (_T("\"%s\" %s"), (LPCTSTR)str, (LPCTSTR)strArgs);
 
-		if (FALSE == CreateProcess (NULL, (LPSTR)(LPCSTR)strCmdLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
+		if (FALSE == CreateProcess (NULL, (LPTSTR)(LPCTSTR)strCmdLine, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi))
 			goto _lErr;
 
 		WaitForSingleObject (pi.hProcess, INFINITE);
@@ -2032,7 +2076,7 @@ BOOL fsDownloadsMgr::PerformVirusCheck(vmsDownloadSmartPtr dld, BOOL bCheckExtRe
 	return TRUE;
 
 _lErr:
-	CHAR szErr [1000]; DWORD dwErr = GetLastError ();
+	TCHAR szErr [1000]; DWORD dwErr = GetLastError ();
 	fsErrorToStr (szErr, sizeof (szErr), &dwErr);
 	Event (dld, szErr, EDT_RESPONSE_E);
 	return FALSE;
@@ -2101,14 +2145,14 @@ DWORD fsDownloadsMgr::OnBeforeDownload(vmsDownloadSmartPtr dld)
 
 	if (bOK && (dld->dwFlags & DLD_CTREQ_HTML))
 	{
-		LPCSTR pszType = pMgr->GetDownloader ()->GetContentType ();
+		LPCTSTR pszType = pMgr->GetDownloader ()->GetContentType ();
 
-		if(strstr (pszType, "html") == NULL)
+		if(_tcsstr (pszType, _T("html")) == NULL)
 			bOK = FALSE;
 	}
 
 	if (bOK && dld->pfnDownloadEventsFunc && (dld->dwFlags & DLD_NOTIFYBEFOREDOWNLOAD))
-		bOK = dld->pfnDownloadEventsFunc (dld, NULL, DME_BEFOREDOWNLOADING, dld->lpEventsParam);
+		bOK = dld->pfnDownloadEventsFunc (dld, NULL, DME_BEFOREDOWNLOADING, 0, dld->lpEventsParam);
 
 	if (bOK == FALSE)
 	{
@@ -2350,7 +2394,7 @@ int fsDownloadsMgr::DeleteDeletedDownloads2(DLDS_LIST *vDlds, BOOL bNoCancel, BO
 	
 	vmsDownloadSmartPtr dldFake;
 	Download_CreateInstance (dldFake);
-	dldFake->pMgr->GetDownloadMgr ()->CreateByUrl ("http://localhost/", TRUE);
+	dldFake->pMgr->GetDownloadMgr ()->CreateByUrl (_T("http://localhost/"), TRUE);
 
 	vmsAUTOLOCKSECTION (m_csDeletedDownloads);
 
@@ -2396,7 +2440,7 @@ int fsDownloadsMgr::DeleteDeletedDownloads2(DLDS_LIST *vDlds, BOOL bNoCancel, BO
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDeletedDownloads2 " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::DeleteDeletedDownloads2 " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -2421,7 +2465,7 @@ int fsDownloadsMgr::DeleteDeletedDownloads2(DLDS_LIST *vDlds, BOOL bNoCancel, BO
 	
 	
 
-	Event (NULL, NULL, DME_RECYCLEBINCONTENTCHANGED);
+	Event (NULL, NULL, DME_RECYCLEBINCONTENTCHANGED, 0);
 
 	if (!pThreadParams->vDlds.empty ())
 	{
@@ -2512,7 +2556,7 @@ int fsDownloadsMgr::RestoreDownloads2(DLDS_LIST* vDlds, BOOL *pbNeedStop, int *p
 
 	vmsDownloadSmartPtr dldFake;
 	Download_CreateInstance (dldFake);
-	dldFake->pMgr->GetDownloadMgr ()->CreateByUrl ("http://localhost/", TRUE);
+	dldFake->pMgr->GetDownloadMgr ()->CreateByUrl (_T("http://localhost/"), TRUE);
 
 	vmsAUTOLOCKSECTION (m_csDeletedDownloads);
 
@@ -2559,7 +2603,7 @@ int fsDownloadsMgr::RestoreDownloads2(DLDS_LIST* vDlds, BOOL *pbNeedStop, int *p
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::RestoreDownloads2 " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::RestoreDownloads2 " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -2583,7 +2627,7 @@ int fsDownloadsMgr::RestoreDownloads2(DLDS_LIST* vDlds, BOOL *pbNeedStop, int *p
 	
 	
 
-	Event (NULL, NULL, DME_RECYCLEBINCONTENTCHANGED);
+	Event (NULL, NULL, DME_RECYCLEBINCONTENTCHANGED, 0);
 
 	if (cRestored)
 		setNeedProcessDownloads ();
@@ -2633,12 +2677,12 @@ void fsDownloadsMgr::_HistoryMgrEvents(fsDownloadsHistoryMgrEvent ev, fsDLHistor
 void fsDownloadsMgr::Event(fsDLHistoryRecord *rec, fsDownloadsMgrEvent ev)
 {
 	if (m_pfnEvents)
-		m_pfnEvents (NULL, rec, ev, m_lpEventsParam);
+		m_pfnEvents (NULL, rec, ev, 0, m_lpEventsParam);
 }
 
-DWORD fsDownloadsMgr::Event(fsDownload *dld, fsDownloadsMgrEvent ev)
+DWORD fsDownloadsMgr::Event(fsDownload *dld, fsDownloadsMgrEvent ev, UINT_PTR ev_info)
 {
-	return Event (dld, NULL, ev);
+	return Event (dld, NULL, ev, ev_info);
 }
 
 struct _threadArchiveDetectedInfo
@@ -2718,16 +2762,16 @@ void fsDownloadsMgr::LaunchDownload(vmsDownloadSmartPtr dld, UINT nWaitForConfir
 	if (nWaitForConfirmation != 0)
 	{
 		CWaitForConfirmationDlg dlg;
-		char szFile [MY_MAX_PATH];
+		TCHAR szFile [MY_MAX_PATH];
 		if (dld->pMgr->GetDownloadMgr ())
 			fsGetFileName (dld->pMgr->get_OutputFilePathName (), szFile);
 		else if (dld->pMgr->GetBtDownloadMgr ())
 			lstrcpy (szFile, dld->pMgr->GetBtDownloadMgr ()->get_TorrentName ());
-		CString strMsg = "\""; strMsg += szFile; strMsg += "\" ";
-		if (dld->strComment != "") {
-			strMsg += '('; strMsg += dld->strComment; strMsg += ") ";
+		CString strMsg = _T("\""); strMsg += szFile; strMsg += _T("\" ");
+		if (dld->strComment != _T("")) {
+			strMsg += _T('('); strMsg += dld->strComment; strMsg += _T(") ");
 		}
-		strMsg += LS (L_WASSCHEDULEDTOLAUNCH); strMsg += "\n";
+		strMsg += LS (L_WASSCHEDULEDTOLAUNCH); strMsg += _T("\n");
 		strMsg += LS (L_DOYOUWANTTOLAUNCHIT);
 		dlg.Init (strMsg, nWaitForConfirmation);
 		if (IDCANCEL == dlg.DoModal ())
@@ -2741,7 +2785,9 @@ void fsDownloadsMgr::LaunchDownload(vmsDownloadSmartPtr dld, UINT nWaitForConfir
 	if (dld->pMgr->IsBittorrent ())
 		strFileName += dld->pMgr->GetBtDownloadMgr ()->get_RootFolderName ();
 
-	ShellExecute (::GetDesktopWindow (), "open", strFileName, NULL, NULL, SW_SHOW);
+	
+	
+	ShellExecute (AfxGetApp()->GetMainWnd()->GetSafeHwnd(), _T ("open"), strFileName, NULL, NULL, SW_SHOW);
 }
 
 void fsDownloadsMgr::Shutdown()
@@ -2753,8 +2799,13 @@ void fsDownloadsMgr::Shutdown()
 	while (m_cThreadsRunning)
 		Sleep (10);
 
-	if (_BT.is_Initialized ())
-		_BT.get_Session ()->set_EventsHandler (NULL, NULL);
+	if (_BT.is_Initialized()){
+		_BT.LockSession(true);
+		vmsBtSession *pSession = _BT.get_Session();
+		if (pSession != NULL)
+			pSession->set_EventsHandler(NULL, NULL);
+		_BT.UnlockSession(true);
+	}
 
 	for (size_t i = 0; i < m_vDownloads.size (); i++)
 		UnregisterDownloadInTum (m_vDownloads [i]);
@@ -2791,9 +2842,9 @@ BOOL fsDownloadsMgr::GenerateDescriptionFile(vmsDownloadSmartPtr dld)
 		return FALSE;
 
 	CString str = dld->strComment;
-	str.Replace ("\r", "");
+	str.Replace (_T("\r"), _T(""));
 
-	str += "\n\n"; str += LS (L_THISFILEWASDLDEDFROM); str += ":\n";
+	str += _T("\n\n"); str += LS (L_THISFILEWASDLDEDFROM); str += _T(":\n");
 	if (dld->pMgr->GetDownloadMgr ())
 	{
 		str += dld->pMgr->get_URL ();
@@ -2801,31 +2852,31 @@ BOOL fsDownloadsMgr::GenerateDescriptionFile(vmsDownloadSmartPtr dld)
 	else if (dld->pMgr->GetBtDownloadMgr ())
 	{
 		str += dld->pMgr->GetBtDownloadMgr ()->get_TorrentName ();
-		str += " (";
+		str += _T(" (");
 		str += dld->pMgr->get_URL ();
-		str += ")";
+		str += _T(")");
 	}
 
-	str += "\n\n"; str += LS (L_DATE); str += ": ";
+	str += _T("\n\n"); str += LS (L_DATE); str += _T(": ");
 	
 	FILETIME time;
 	SYSTEMTIME systime;
 	GetLocalTime (&systime);
 	SystemTimeToFileTime (&systime, &time);
 
-	char szDate [1000], szTime [1000];
+	TCHAR szDate [1000], szTime [1000];
 	FileTimeToStr (&time, szDate, szTime, FALSE);
-	str += szDate; str += ", "; str += szTime;
+	str += szDate; str += _T(", "); str += szTime;
 
 	CStdioFile file;
 	CString strName = dld->pMgr->get_OutputFilePathName ();
 	if (dld->pMgr->GetBtDownloadMgr () != NULL && 
 			dld->pMgr->GetBtDownloadMgr ()->get_FileCount () != 1)
 	{
-		strName += "\\"; 
+		strName += _T("\\"); 
 		strName += dld->pMgr->GetBtDownloadMgr ()->get_TorrentName ();
 	}
-	strName += ".dsc.txt";
+	strName += _T(".dsc.txt");
 
 	file.Open (strName, CFile::typeText | CFile::modeCreate | CFile::modeWrite);
 	file.WriteString (str);
@@ -2836,7 +2887,7 @@ BOOL fsDownloadsMgr::GenerateDescriptionFile(vmsDownloadSmartPtr dld)
 
 BOOL fsDownloadsMgr::LoadStateInformation()
 {
-	CString strFileName = fsGetDataFilePath ("dlmgrsi.sav");
+	CString strFileName = fsGetDataFilePath (_T("dlmgrsi.sav"));
 
 	if (GetFileAttributes (strFileName) == DWORD (-1))
 		return TRUE;
@@ -2888,7 +2939,7 @@ BOOL fsDownloadsMgr::LoadStateInformation()
 
 	
 		vmsStringRecentList vFilePathes;
-		if (FALSE == vFilePathes.Load (hFile))
+		if (FALSE == vFilePathes.Load (hFile, hdr.wVer))
 		{
 			CloseHandle (hFile);
 			return false;
@@ -2896,14 +2947,30 @@ BOOL fsDownloadsMgr::LoadStateInformation()
 
 		for (int i = 0; i < vFilePathes.get_Count (); i++)
 		{
-			char sz [MY_MAX_PATH] = "";
+			TCHAR sz [MY_MAX_PATH] = _T("");
 			fsGetFileName (vFilePathes.get_String (i), sz);
 			
 			
 			m_siStateInfo.GetFileRecentList().Add (sz, vFilePathes.get_String (i), true);
 		}
 	} else {
-		if (dwRequiredSize > 0) {
+		if (hdr.wVer <= 1) {
+			UINT u;
+			if (FALSE == ReadFile (hFile, &u, sizeof (u), &dw, NULL))
+			{
+				CloseHandle (hFile);
+				return FALSE;
+			}
+
+			m_siStateInfo.SetId(u);
+
+			if (FALSE == m_siStateInfo.GetFileRecentList().Load (hFile, hdr.wVer)) {
+				CloseHandle (hFile);
+				return FALSE;
+			}
+		}
+
+		if (hdr.wVer > 1 && dwRequiredSize > 0) {
 			std::auto_ptr<BYTE> apbtBufferGuard( new BYTE[dwRequiredSize] );
 			LPBYTE pbtBuffer = apbtBufferGuard.get();
 			if (!pbtBuffer)
@@ -2928,7 +2995,7 @@ BOOL fsDownloadsMgr::SaveStateInformation()
 	if (!m_siStateInfo.isDirty())
 		return TRUE;
 
-	CString strFileName = fsGetDataFilePath ("dlmgrsi.sav");
+	CString strFileName = fsGetDataFilePath (_T("dlmgrsi.sav"));
 
 	HANDLE hFile = CreateFile (strFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
 		FILE_ATTRIBUTE_HIDDEN, NULL);
@@ -2965,20 +3032,6 @@ BOOL fsDownloadsMgr::SaveStateInformation()
 	m_siStateInfo.onStateSavedSuccessfully();
 
 	return TRUE;
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }
 
 UINT fsDownloadsMgr::GetNextDownloadID()
@@ -3044,25 +3097,27 @@ void fsDownloadsMgr::ReorderDownloads(DLDS_LIST_REF vDlds, DLDS_LIST_REF vReqOrd
 	
 	
 	size_t nPrevIndx = (size_t)-1; 
-	size_t i = 0;
-	for (i = 0; i < vDlds.size (); i++) 
+
+	for (size_t i = 0; i < vDlds.size (); i++) 
 	{
-		if (m_vDownloads [nPrevIndx + 1] == vDlds [i]) {
+		if (m_vDownloads [nPrevIndx + 1] == vDlds [i])
+		{
 			vIndxs.push_back (++nPrevIndx);	
 		}
-		else {
+		else
+		{
 			
 			
 			
 			vIndxs.push_back (nPrevIndx = GetDownloadIndex (vDlds [i], bDldsSorted ? nPrevIndx + 1 : 0));
-			if (nPrevIndx == m_vDownloads.size () - 1)
-				nPrevIndx = (size_t)-1;
 		}
+		if (nPrevIndx == m_vDownloads.size () - 1)
+			nPrevIndx = (size_t)-1;
 	}
 
 	
 
-	for (i = 0; i < vReqOrder.size (); i++)
+	for (size_t i = 0; i < vReqOrder.size (); i++)
 	{
 		size_t nNewIndx = vIndxs [i];	
 		if (nNewIndx == (size_t)-1)
@@ -3138,7 +3193,7 @@ DWORD WINAPI fsDownloadsMgr::_threadIntegrityCheckAndVirCheckAndLaunch(LPVOID lp
 			{
 				CDlg_CheckFileIntegrity_Result dlg;
 				dlg.m_bResultOK = FALSE;
-				char sz [MY_MAX_PATH];
+				TCHAR sz [MY_MAX_PATH];
 				fsGetFileName (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, sz);
 				dlg.m_strFileName = sz;
 				dlg.m_strUrl = dld->pMgr->get_URL ();
@@ -3202,6 +3257,8 @@ void fsDownloadsMgr::OnDldDoneCheckIfNeedDel(vmsDownloadSmartPtr dld)
 {
 	if (m_bAutoDelCompleted || (dld->dwFlags & DLD_DELETEWHENDONE) != 0)
 	{
+		if (dld->isYouTube() && _YouTubeDldsMgr.downloadNeedsProcessing(dld))
+			return;
 		DLDS_LIST vDlds;
 		vDlds.push_back (dld);
 		DeleteDownloads (vDlds, FALSE, (dld->dwFlags & DLD_DELETEFILEALWAYS) != FALSE);
@@ -3215,7 +3272,7 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsMetaLink(vmsDownloadSmartPtr dld)
 		return FALSE;
 
 	fsString strFile = dld->pMgr->get_OutputFilePathName ();
-	if (lstrlen (strFile) > 10 && lstrcmpi (strFile + lstrlen (strFile) - 9, ".metalink") != 0)
+	if (lstrlen (strFile) > 10 && lstrcmpi (strFile + lstrlen (strFile) - 9, _T(".metalink")) != 0)
 		return FALSE; 
 
 	vmsMetalinkFile mf;
@@ -3233,7 +3290,7 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsMetaLink(vmsDownloadSmartPtr dld)
 		vmsMetalinkFile_File *file = mf.get_File (iFile);
 
 		
-		if (file->strOS.GetLength () && strstr (file->strOS, "Windows") == NULL)
+		if (file->strOS.GetLength () && _tcsstr (file->strOS, _T("Windows")) == NULL)
 			continue;
 
 		viFiles.push_back (iFile);
@@ -3272,10 +3329,10 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsMetaLink(vmsDownloadSmartPtr dld)
 		{
 			vmsMetalinkFile_File_Url *url = &file->vMirrors [i];
 
-			if (strcmpi (url->strProtocol, "http") && strcmpi (url->strProtocol, "https") &&
-					strcmpi (url->strProtocol, "ftp"))
+			if (_tcsicmp (url->strProtocol, _T("http")) && _tcsicmp (url->strProtocol, _T("https")) &&
+					_tcsicmp (url->strProtocol, _T("ftp")))
 			{
-				if (strcmpi (url->strProtocol, "bittorrent") == 0)
+				if (_tcsicmp (url->strProtocol, _T("bittorrent")) == 0)
 					strBtUrl = url->strUrl;
 				continue;
 			}
@@ -3323,11 +3380,11 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsMetaLink(vmsDownloadSmartPtr dld)
 			if (hash->strChecksum.GetLength () == 0)
 				continue;
 		
-			if (lstrcmpi (hash->strAlgorithm, "md5") == 0)
+			if (lstrcmpi (hash->strAlgorithm, _T("md5")) == 0)
 				dwAlg = HA_MD5;
 
-			else if (lstrcmpi (hash->strAlgorithm, "sha1") == 0 || 
-					lstrcmpi (hash->strAlgorithm, "sha-1") == 0)
+			else if (lstrcmpi (hash->strAlgorithm, _T("sha1")) == 0 || 
+					lstrcmpi (hash->strAlgorithm, _T("sha-1")) == 0)
 				dwAlg = HA_SHA1;
 
 			else
@@ -3336,33 +3393,33 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsMetaLink(vmsDownloadSmartPtr dld)
 			
 			dld->pMgr->GetDownloadMgr ()->GetDP ()->dwIntegrityCheckAlgorithm = dwAlg;
 			SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum);
-			dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum = new char [hash->strChecksum.GetLength () + 1];
+			dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum = new TCHAR [hash->strChecksum.GetLength () + 1];
 			lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum, hash->strChecksum);
 			dld->pMgr->GetDownloadMgr ()->setDirty();
 		}
 		
 		if (iFile == 0)
 			DeleteFile (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
-		LPSTR psz = strrchr (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, '\\');
+		LPTSTR psz = _tcsrchr (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, _T('\\'));
 		if (psz == NULL)
-			psz = strrchr (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, '/');
+			psz = _tcsrchr (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, _T('/'));
 		if (psz)
 			*psz = 0;
 
 		fsString strNewFile;
 		strNewFile = dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
-		strNewFile += "\\";
-		if (file->strName.pszString != NULL && strstr (file->strName, "..\\") == NULL &&
-				strstr (file->strName, "../") == NULL)
+		strNewFile += _T("\\");
+		if (file->strName.pszString != NULL && _tcsstr (file->strName, _T("..\\")) == NULL &&
+				_tcsstr (file->strName, _T("../")) == NULL)
 			strNewFile += file->strName;
 		SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
-		dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new char [strNewFile.Length () + 1];
+		dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new TCHAR [strNewFile.Length () + 1];
 		lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, strNewFile);
 
 		dld->pMgr->GetDownloadMgr ()->setDirty();
 
 		if (dld->strComment.GetLength () != 0)
-			dld->strComment += "\r\n";
+			dld->strComment += _T("\r\n");
 		dld->strComment += mf.get_Description ();
 		dld->setDirty();
 
@@ -3528,7 +3585,7 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsBittorrent(vmsDownloadSmartPtr dld
 
 	if ((dld->dwFlags & DLD_TORRENT_DOWNLOAD) == 0)
 	{
-		if (lstrlen (strFile) > 10 && lstrcmpi (strFile + lstrlen (strFile) - 8, ".torrent") != 0)
+		if (lstrlen (strFile) > 10 && lstrcmpi (strFile + lstrlen (strFile) - 8, _T(".torrent")) != 0)
 			return FALSE; 
 	}
 
@@ -3572,14 +3629,16 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsBittorrent(vmsDownloadSmartPtr dld
 	if (dld->pGroup->nId == GRP_OTHER_ID)
 	{
 		vmsBtFile *pBtFile = _BT.CreateTorrentFileObject ();
-		if (pBtFile && pBtFile->LoadFromFile (strFile) && pBtFile->get_FileCount () == 1)
+		
+		if (pBtFile && pBtFile->LoadFromFile ((LPCTSTR)strFile) && pBtFile->get_FileCount () == 1)
 		{
 			char sz [MY_MAX_PATH] = "";
 			pBtFile->get_FileName2 (0, sz, sizeof (sz));
 			LPCSTR psz = strrchr (sz, '.');
 			if (psz)
 			{
-				vmsDownloadsGroupSmartPtr pGrp = _DldsGrps.FindGroupByExt (psz + 1);
+				tstring sExt = CA2T((LPCSTR)(psz + 1));
+				vmsDownloadsGroupSmartPtr pGrp = _DldsGrps.FindGroupByExt (sExt.c_str());
 				if (pGrp != NULL)
 				{
 					ChangeDownloadGroup (dld, pGrp);
@@ -3591,7 +3650,7 @@ BOOL fsDownloadsMgr::OnDldDone_CheckDownloadIsBittorrent(vmsDownloadSmartPtr dld
 			pBtFile->Release ();
 	}
 
-	char szPath [MY_MAX_PATH];
+	TCHAR szPath [MY_MAX_PATH];
 	fsGetPath (strFile, szPath);
 
 	vmsBtDownloadManagerPtr pBtMgr; 
@@ -3687,7 +3746,10 @@ void fsDownloadsMgr::_BtSessionEventsHandler(vmsBtSession *, vmsBtSessionEvent *
 	if (dld == NULL)
 		return;
 
-	std::string strTmp;
+	USES_CONVERSION;
+	tstring strTmp;
+	tstring sUrl;
+	tstring sEvent;
 
 	if (ev->enType != BTSET_TRACKER_ERROR)
 	{
@@ -3713,15 +3775,21 @@ void fsDownloadsMgr::_BtSessionEventsHandler(vmsBtSession *, vmsBtSessionEvent *
 		dld->pMgr->GetBtDownloadMgr ()->DeleteBtDownload ();
 		dld->setDirty();
 		if (ev->enType == BTSET_FILE_ERROR)
-			pthis->Event (dld, LS (L_BT_FILE_ERROR), EDT_RESPONSE_E);
+		{
+			tstringstream ss;
+			ss << LS (L_BT_FILE_ERROR) << _T(" (error code: ") << ev->error_code << _T(")");
+			pthis->Event (dld, ss.str ().c_str (), EDT_RESPONSE_E);
+		}
 		break;
 
 	case BTSET_TRACKER_ANNOUNCE:
 		if (dld->pMgr->IsRunning () == FALSE && dld->pMgr->GetBtDownloadMgr ()->isSeeding () == FALSE)
 			return;
-		strTmp = LS (L_BT_TRACKER_ANNOUNCE); strTmp += " ("; strTmp += ev->tracker.pszUrl; strTmp += ")";
+		
+		sUrl = vmsUtf8Unicode(ev->tracker.pszUrl);
+		strTmp = LS (L_BT_TRACKER_ANNOUNCE); strTmp += _T(" ("); strTmp += sUrl.c_str(); strTmp += _T(")");
 		pthis->Event (dld, strTmp.c_str (), EDT_INQUIRY);
-		dld->pMgr->GetBtDownloadMgr ()->setLastTracker (ev->tracker.pszUrl);
+		dld->pMgr->GetBtDownloadMgr ()->setLastTracker (sUrl.c_str());
 		dld->pMgr->GetBtDownloadMgr ()->setLastTrackerStatus (LS (L_CONNECTING));
 		break;
 
@@ -3729,7 +3797,7 @@ void fsDownloadsMgr::_BtSessionEventsHandler(vmsBtSession *, vmsBtSessionEvent *
 		{
 			if (dld->pMgr->IsRunning () == FALSE && dld->pMgr->GetBtDownloadMgr ()->isSeeding () == FALSE)
 				return;
-			strTmp = LS (L_BT_TRACKER_ERROR); strTmp += " ("; strTmp += ev->tracker.pszUrl; strTmp += ")";
+			strTmp = LS (L_BT_TRACKER_ERROR); strTmp += _T(" ("); strTmp += tstringFromString (ev->tracker.pszUrl); strTmp += _T(")");
 			pthis->Event (dld, strTmp.c_str (), EDT_RESPONSE_E);
 			if (ev->pszMsg)
 			{
@@ -3740,17 +3808,17 @@ void fsDownloadsMgr::_BtSessionEventsHandler(vmsBtSession *, vmsBtSessionEvent *
 					pszMsg += 2;
 				if (pszMsg == NULL)
 					pszMsg = ev->pszMsg;
-				pthis->EventEx (dld, pszMsg, EDT_RESPONSE_E, 70);
-				dld->pMgr->GetBtDownloadMgr ()->setLastTracker (ev->tracker.pszUrl);
+				pthis->EventEx (dld, tstringFromString (pszMsg).c_str (), EDT_RESPONSE_E, 70);
+				dld->pMgr->GetBtDownloadMgr ()->setLastTracker (tstringFromString (ev->tracker.pszUrl).c_str ());
 				strTmp = LS (L_FAILED);
-				strTmp += ": "; strTmp += pszMsg;
+				strTmp += _T(": "); strTmp += tstringFromString (pszMsg);
 				dld->pMgr->GetBtDownloadMgr ()->setLastTrackerStatus (strTmp.c_str ());
 			}
-			char sz [1000];
-			int nNext; nNext = dld->pMgr->GetBtDownloadMgr ()->get_NextAnnounceInterval (ev->tracker.pszUrl);
+			TCHAR sz [1000];
+			int nNext; nNext = dld->pMgr->GetBtDownloadMgr ()->get_NextAnnounceInterval (tstringFromString (ev->tracker.pszUrl).c_str ());
 			if (nNext)
 			{
-				sprintf (sz, LS (L_NEXT_CONNECT_WITH_TRACKER_IN), nNext);
+				_stprintf (sz, LS (L_NEXT_CONNECT_WITH_TRACKER_IN), nNext);
 				
 				
 			}
@@ -3786,9 +3854,10 @@ void fsDownloadsMgr::_BtSessionEventsHandler(vmsBtSession *, vmsBtSessionEvent *
 	case BTSET_TRACKER_REPLY:
 		if (dld->pMgr->IsRunning () == FALSE && dld->pMgr->GetBtDownloadMgr ()->isSeeding () == FALSE)
 			return;
-		dld->pMgr->GetBtDownloadMgr ()->setLastTracker (ev->tracker.pszUrl);
-		dld->pMgr->GetBtDownloadMgr ()->setLastTrackerStatus ("OK"); 
-		strTmp = LS (L_BT_TRACKER_OK_RESPONSE); strTmp += " ("; strTmp += ev->tracker.pszUrl; strTmp += ")";
+		sUrl = CA2T(ev->tracker.pszUrl);
+		dld->pMgr->GetBtDownloadMgr ()->setLastTracker (sUrl.c_str());
+		dld->pMgr->GetBtDownloadMgr ()->setLastTrackerStatus (_T("OK")); 
+		strTmp = LS (L_BT_TRACKER_OK_RESPONSE); strTmp += _T(" ("); strTmp += sUrl.c_str(); strTmp += _T(")");
 		pthis->Event (dld, strTmp.c_str (), EDT_RESPONSE_S);
 		TCHAR tsz [200];
 		_stprintf_s (tsz, _countof (tsz)-1, LS (L_N_PEERS_RECEIVED), ev->tracker.reply.cPeersRcvd);
@@ -3815,7 +3884,11 @@ void fsDownloadsMgr::_BtSessionEventsHandler(vmsBtSession *, vmsBtSessionEvent *
 
 void fsDownloadsMgr::AttachToBtSession()
 {
-	_BT.get_Session ()->set_EventsHandler (_BtSessionEventsHandler, this);
+	_BT.LockSession(true);
+	vmsBtSession *pSession = _BT.get_Session();
+	if ( pSession != NULL )
+		pSession->set_EventsHandler (_BtSessionEventsHandler, this);
+	_BT.UnlockSession(true);
 }
 
 vmsDownloadSmartPtr fsDownloadsMgr::GetDownloadByBtDownloadMgr(vmsBtDownloadManager *pMgr)
@@ -3835,7 +3908,7 @@ vmsDownloadSmartPtr fsDownloadsMgr::GetDownloadByBtDownloadMgr(vmsBtDownloadMana
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByBtDownloadMgr " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByBtDownloadMgr " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -3861,7 +3934,7 @@ vmsDownloadSmartPtr fsDownloadsMgr::GetDownloadByTpDownloadMgr(vmsTpDownloadMgr 
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByTpDownloadMgr " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::GetDownloadByTpDownloadMgr " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -3890,7 +3963,7 @@ vmsDownloadSmartPtr fsDownloadsMgr::FindDownloadByBtDownload(vmsBtDownload *pDld
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::FindDownloadByBtDownload " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::FindDownloadByBtDownload " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -3911,10 +3984,10 @@ DWORD fsDownloadsMgr::_BtDownloadManagerEventHandler(vmsBtDownloadManager *pMgr,
 	btev.ev = ev;
 	btev.dwInfo = dwInfo;
 
-	EnterCriticalSection (&pthis->m_csBtDownloadManagerEvents);
+	EnterCriticalSection (pthis->m_csBtDownloadManagerEvents);
 	pthis->m_vBtDownloadManagerEvents.push_back (btev);
 	SetEvent (pthis->m_hevNeedDispatchEvents);
-	LeaveCriticalSection (&pthis->m_csBtDownloadManagerEvents);
+	LeaveCriticalSection (pthis->m_csBtDownloadManagerEvents);
 
 	return 0;
 }
@@ -3934,7 +4007,7 @@ void fsDownloadsMgr::onBtDownloadManagerEvent (vmsBtDownloadManager *pMgr, vmsBt
 			break;
 
 		case BTDME_ALLOCATION_FAILED:
-			CHAR szErr [1000];
+			TCHAR szErr [1000];
 			fsErrorToStr (szErr, sizeof (szErr), &dwInfo);
 			dld->bAutoStart = FALSE;
 			dld->setDirty();
@@ -4031,7 +4104,7 @@ DWORD fsDownloadsMgr::_TpDownloadManagerEventHandler(vmsTpDownloadMgr *pMgr, fsD
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::_TpDownloadManagerEventHandler " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::_TpDownloadManagerEventHandler " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -4045,7 +4118,7 @@ DWORD fsDownloadsMgr::_TpDownloadManagerEventHandler(vmsTpDownloadMgr *pMgr, fsD
 	return TRUE;
 }
 
-void fsDownloadsMgr::_TpDownloadManagerEventDesc(vmsTpDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCSTR pszEvent, LPVOID lp)
+void fsDownloadsMgr::_TpDownloadManagerEventDesc(vmsTpDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCTSTR pszEvent, LPVOID lp)
 {
 	try 
 	{
@@ -4059,7 +4132,7 @@ void fsDownloadsMgr::_TpDownloadManagerEventDesc(vmsTpDownloadMgr *pMgr, fsDownl
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::_TpDownloadManagerEventDesc " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::_TpDownloadManagerEventDesc " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -4074,6 +4147,8 @@ BOOL fsDownloadsMgr::OnDownloadStoppedOrDone(vmsDownloadSmartPtr dld)
 
 	if (bDone)
 	{
+		m_atLeast1CompletedDuringSession = true;
+
 		SYSTEMTIME time;
 		GetLocalTime (&time);
 		SystemTimeToFileTime (&time, &dld->dateCompleted);
@@ -4131,7 +4206,7 @@ BOOL fsDownloadsMgr::OnDownloadStoppedOrDone(vmsDownloadSmartPtr dld)
 			else
 			{
 				fsString strPath = dld->pMgr->get_OutputFilePathName ();
-				char sz [MY_MAX_PATH] = "";
+				TCHAR sz [MY_MAX_PATH] = _T("");
 				fsGetFileName (strPath, sz);
 				
 				
@@ -4193,7 +4268,7 @@ BOOL fsDownloadsMgr::OnDownloadStoppedOrDone(vmsDownloadSmartPtr dld)
 	return TRUE;
 }
 
-void fsDownloadsMgr::OnDownloadDescEventRcvd(vmsDownloadSmartPtr dld, fsDownloadMgr_EventDescType enType, LPCSTR pszEvent)
+void fsDownloadsMgr::OnDownloadDescEventRcvd(vmsDownloadSmartPtr dld, fsDownloadMgr_EventDescType enType, LPCTSTR pszEvent)
 {
 	try 
 	{
@@ -4226,7 +4301,7 @@ void fsDownloadsMgr::OnDownloadDescEventRcvd(vmsDownloadSmartPtr dld, fsDownload
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadsMgr::OnDownloadDescEventRcvd " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadsMgr::OnDownloadDescEventRcvd " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -4297,32 +4372,32 @@ void fsDownloadsMgr::DownloadStateChanged(vmsDownloadSmartPtr dld)
 	Event (dld, DME_DOWNLOAD_STATE_CHANGED);
 }
 
-void fsDownloadsMgr::AddEvent(vmsDownloadSmartPtr dld, LPCSTR pszEvent, fsDownloadMgr_EventDescType enType)
+void fsDownloadsMgr::AddEvent(vmsDownloadSmartPtr dld, LPCTSTR pszEvent, fsDownloadMgr_EventDescType enType)
 {
 	Event (dld, pszEvent, enType);
 }
 
-void fsDownloadsMgr::EventEx(vmsDownloadSmartPtr dld, LPCSTR pszEvent, fsDownloadMgr_EventDescType enType, int nMaxCharsPerLine)
+void fsDownloadsMgr::EventEx(vmsDownloadSmartPtr dld, LPCTSTR pszEvent, fsDownloadMgr_EventDescType enType, int nMaxCharsPerLine)
 {
 	fsString strEvent;
 	int n = 0;
 
 	while (*pszEvent)
 	{
-		if (*pszEvent == ' ' && n >= nMaxCharsPerLine)
+		if (*pszEvent == _T(' ') && n >= nMaxCharsPerLine)
 		{
 			Event (dld, strEvent, enType);
-			strEvent = "";
+			strEvent = _T("");
 			n = 0;
 			pszEvent++;
 		}
 		else
 		{
 			strEvent += *pszEvent++;
-			if (*pszEvent == '\n' || *pszEvent == '\r')
+			if (*pszEvent == _T('\n') || *pszEvent == _T('\r'))
 			{
 				n = nMaxCharsPerLine;
-				while (*pszEvent == '\n' || *pszEvent == '\r')
+				while (*pszEvent == _T('\n') || *pszEvent == _T('\r'))
 					pszEvent++;
 				continue;
 			}
@@ -4466,7 +4541,7 @@ BOOL fsDownloadsMgr::CheckIfDownloadIsMirror(fsDownload *dld)
 		fsDownloadMgr *pMgr = m_vDownloads [i]->pMgr->GetDownloadMgr ();
 		if (pMgr == NULL)
 			continue;
-		if (stricmp (strFile, pMgr->getFileName ()) == 0)
+		if (_tcsicmp (strFile, pMgr->getFileName ()) == 0)
 		{
 			if (pMgr->GetDownloader ()->GetSSFileSize () == uFileSize)
 			{
@@ -4548,14 +4623,14 @@ DWORD WINAPI fsDownloadsMgr::_threadEventsDispatcher (LPVOID lp)
 
 		do 
 		{
-			EnterCriticalSection (&pthis->m_csBtDownloadManagerEvents);
+			EnterCriticalSection(pthis->m_csBtDownloadManagerEvents);
 			bHas = !pthis->m_vBtDownloadManagerEvents.empty ();
 			if (bHas)
 			{
 				btev = pthis->m_vBtDownloadManagerEvents [0];
 				pthis->m_vBtDownloadManagerEvents.erase (pthis->m_vBtDownloadManagerEvents.begin ());
 			}
-			LeaveCriticalSection (&pthis->m_csBtDownloadManagerEvents);
+			LeaveCriticalSection (pthis->m_csBtDownloadManagerEvents);
 
 			if (bHas)
 				pthis->onBtDownloadManagerEvent (btev.spMgr, btev.ev, btev.dwInfo);
@@ -4614,4 +4689,78 @@ bool fsDownloadsMgr::IsDownloadSuspended(vmsDownloadSmartPtr dld)
 		}
 	}
 	return false;
+}
+
+vmsDownloadSmartPtr fsDownloadsMgr::findYouTubeDownload (tstring youTubeID, tstring format, YouTubeDownloadDetails::MediaType mediaType ){
+	
+	vmsAUTOLOCKRW_READ (m_rwlDownloads);
+
+	for (size_t i = 0; i < m_vDownloads.size (); i++)
+	{
+		if ( ( m_vDownloads [i]->youTubeDetails.youTubeID == youTubeID )
+			&& ( m_vDownloads [i]->youTubeDetails.format == format )
+			&& ( m_vDownloads [i]->youTubeDetails.mediaType == mediaType ) )
+			return m_vDownloads [i];
+	}
+
+	return NULL;
+}
+
+void fsDownloadsMgr::findYouTubeDownloads (tstring youTubeID, tstring format, YouTubeDownloadDetails::MediaType mediaType, DLDS_LIST &v ){
+	vmsAUTOLOCKRW_READ (m_rwlDownloads);
+
+	for (size_t i = 0; i < m_vDownloads.size (); i++)
+	{
+		if ( ( m_vDownloads [i]->youTubeDetails.youTubeID == youTubeID )
+			&& ( m_vDownloads [i]->youTubeDetails.format == format )
+			&& ( m_vDownloads [i]->youTubeDetails.mediaType == mediaType ) )
+			v.push_back( m_vDownloads [i] );			
+	}
+}
+
+void fsDownloadsMgr::findDownloadsByIds (std::vector<unsigned int> ids, DLDS_LIST &v ){
+	if ( ids.empty() )
+		return;
+
+	vmsAUTOLOCKRW_READ (m_rwlDownloads);
+	for (size_t i = 0; i < m_vDownloads.size (); i++)
+	{
+		if ( std::find(ids.begin(), ids.end(), m_vDownloads [i]->nID)!=ids.end() )		
+			v.push_back( m_vDownloads [i] );			
+	}
+}
+
+void fsDownloadsMgr::onPostDownloadTaskCreated(vmsDownloadSmartPtr dld, LPCWSTR id)
+{
+	UNREFERENCED_PARAMETER (id);
+	Event (dld, DME_POST_DOWNLOAD_TASK_CREATED);
+
+	if (!wcscmp (id, avmergePostDownloadTaskName))
+	{
+		Event (dld, LS (L_WAITING_MEDIA_MERGE_TASK_BEGIN), EDT_INQUIRY);
+	}
+}
+
+void fsDownloadsMgr::onPostDownloadTaskFinished(vmsDownloadSmartPtr dld, LPCWSTR id, bool result)
+{
+	UNREFERENCED_PARAMETER (result);
+	Event (dld, DME_POST_DOWNLOAD_TASK_FINISHED);
+
+	if (!wcscmp (id, avmergePostDownloadTaskName))
+	{
+		Event (dld, 
+			result ? LS (L_MEDIA_MERGE_TASK_SUCCEEDED) : LS (L_MEDIA_MERGE_TASK_FAILED), 
+			result ? EDT_RESPONSE_S : EDT_RESPONSE_E);
+	}
+}
+
+void fsDownloadsMgr::onPostDownloadTaskStarted(vmsDownloadSmartPtr dld, LPCWSTR id)
+{
+	UNREFERENCED_PARAMETER (id);
+	Event (dld, DME_POST_DOWNLOAD_TASK_STARTED);
+
+	if (!wcscmp (id, avmergePostDownloadTaskName))
+	{
+		Event (dld, LS (L_MEDIA_MERGE_TASK_STARTED), EDT_INQUIRY);
+	}
 }

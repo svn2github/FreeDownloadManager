@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsFtpFile.h"
@@ -22,7 +22,7 @@ fsFtpFile::~fsFtpFile()
 	CloseHandle ();
 }
 
-fsInternetResult fsFtpFile::Open(LPCSTR pszFilePath, UINT64 uStartPos)
+fsInternetResult fsFtpFile::Open(LPCTSTR pszFilePath, UINT64 uStartPos)
 {
 	return OpenEx (pszFilePath, uStartPos, _UI64_MAX);
 }
@@ -72,7 +72,7 @@ void fsFtpFile::ReceiveExtError()
 	if (::GetLastError () == ERROR_INSUFFICIENT_BUFFER)
 	{
 		dwLen++;
-		fsnew (m_pszLastError, char, dwLen);
+		fsnew (m_pszLastError, TCHAR, dwLen);
 		InternetGetLastResponseInfo (&dwErr, m_pszLastError, &dwLen);
 	}
 }
@@ -137,8 +137,8 @@ SHORT fsFtpFile::OpenSocket()
 
 	listen (m_sRcv, 1); 
 
-	CHAR ipAddr [100];
-	sprintf (ipAddr, "%d,%d,%d,%d,%d,%d", (int) (BYTE) he->h_addr_list [0][0], (int) (BYTE) he->h_addr_list [0][1], (int) (BYTE) he->h_addr_list [0][2], (int) (BYTE) he->h_addr_list [0][3],
+	TCHAR ipAddr [100] = {0,};
+	_stprintf (ipAddr, _T("%d,%d,%d,%d,%d,%d"), (int) (BYTE) he->h_addr_list [0][0], (int) (BYTE) he->h_addr_list [0][1], (int) (BYTE) he->h_addr_list [0][2], (int) (BYTE) he->h_addr_list [0][3],
 					DWORD (port) >> 8, DWORD (port) & 0xff);
 	m_strPORT = ipAddr; 
 
@@ -157,18 +157,18 @@ BOOL fsFtpFile::ParseSIZE()
 {
 	ReceiveExtError ();
 	
-	int len = strlen (m_pszLastError);
+	int len = _tcslen (m_pszLastError);
 	int pos = len - 2;
 
 	
 	
-	while (pos > 0 && m_pszLastError [pos - 1] >= '0' && m_pszLastError [pos - 1] <= '9')
+	while (pos > 0 && m_pszLastError [pos - 1] >= _T('0') && m_pszLastError [pos - 1] <= _T('9'))
 		pos--;
 
 	if (pos <= 0 || pos == len - 2)
 		return FALSE; 
 
-	UINT64 uSize = (UINT64) _atoi64 (m_pszLastError + pos);
+	UINT64 uSize = (UINT64) _tstoi64 (m_pszLastError + pos);
 	if (uSize > 1000ui64*1024*1024*1024)
 		return FALSE;
 		
@@ -180,12 +180,12 @@ BOOL fsFtpFile::ParseSIZE()
 fsInternetResult fsFtpFile::PASV_ConnectSocket()
 {
 	
-	LPCSTR pszPORT = m_pszLastError;
+	LPCTSTR pszPORT = m_pszLastError;
 
 	
 	do
 	{
-		pszPORT = strchr (pszPORT+1, ',');
+		pszPORT = _tcschr (pszPORT+1, _T(','));
 		if (pszPORT == NULL)
 			return IR_ERROR;
 	}
@@ -204,12 +204,12 @@ fsInternetResult fsFtpFile::PASV_ConnectSocket()
 	
 	for (int i = 0; i < 6; i++)
 	{
-		aAddr [i] = (BYTE) atoi (pszPORT);
+		aAddr [i] = (BYTE) _tstoi (pszPORT);
 		
 		
-		while (*pszPORT >= '0' && *pszPORT <= '9')
+		while (*pszPORT >= _T('0') && *pszPORT <= _T('9'))
 			pszPORT++;
-		while (*pszPORT && (*pszPORT < '0' || *pszPORT > '9'))
+		while (*pszPORT && (*pszPORT < _T('0') || *pszPORT > _T('9')))
 			pszPORT++;
 
 		if (*pszPORT == 0 && i != 5)
@@ -234,12 +234,12 @@ fsInternetResult fsFtpFile::PASV_ConnectSocket()
 	return IR_SUCCESS;
 }
 
-BOOL fsFtpFile::IsDigit(char c)
+BOOL fsFtpFile::IsDigit(TCHAR c)
 {
-	return c <= '9' && c >= '0';
+	return c <= _T('9') && c >= _T('0');
 }
 
-fsInternetResult fsFtpFile::QuerySize(LPCSTR pszFilePath)
+fsInternetResult fsFtpFile::QuerySize(LPCTSTR pszFilePath)
 {
 	
 	
@@ -257,15 +257,15 @@ fsInternetResult fsFtpFile::QuerySize(LPCSTR pszFilePath)
 
 	CloseHandle (); 
 
-	CHAR szCmd [10000];	
+	TCHAR szCmd [10000];	
 
-	char szFile [10000];
-	strcpy (szFile, pszFilePath);
+	TCHAR szFile [10000];
+	_tcscpy_s (szFile, pszFilePath);
 
 	
 	
 	
-	char *pszFile = const_cast<char*>(max (strrchr (pszFilePath, '/'), strrchr (pszFilePath, '\\')));
+	TCHAR *pszFile = const_cast<TCHAR*>(max (_tcsrchr (pszFilePath, _T('/')), _tcsrchr (pszFilePath, _T('\\'))));
 
 	if (pszFile)
 	{
@@ -273,14 +273,14 @@ fsInternetResult fsFtpFile::QuerySize(LPCSTR pszFilePath)
 		{
 			szFile [pszFile - pszFilePath] = 0;
 
-			sprintf (szCmd, "CWD %s", szFile);	
+			_stprintf_s (szCmd, 10000, _T("CWD %s"), szFile);	
 												
 			Dialog (IFDD_TOSERVER, szCmd);
 
 			if (!FtpCommand (hServer, FALSE, m_dwTransferType, szCmd, NULL, NULL))
-				strcpy (szFile, pszFilePath);	
+				_tcscpy_s (szFile, 10000, pszFilePath);	
 			else
-				strcpy (szFile, pszFile + 1);	
+				_tcscpy_s (szFile, 10000, pszFile + 1);	
 			
 			DialogFtpResponse ();
 		}
@@ -296,7 +296,7 @@ fsInternetResult fsFtpFile::QuerySize(LPCSTR pszFilePath)
 	if (bListOK == FALSE)
 	{
 		
-		lstrcpy (szCmd, "TYPE I");
+		lstrcpy (szCmd, _T("TYPE I"));
 		Dialog (IFDD_TOSERVER, szCmd);	
 		fsInternetResult ir;
 		if (!FtpCommand (hServer, FALSE, FTP_TRANSFER_TYPE_BINARY, szCmd, NULL, NULL)) 
@@ -307,7 +307,7 @@ fsInternetResult fsFtpFile::QuerySize(LPCSTR pszFilePath)
 		}
 
 		
-		sprintf (szCmd, "SIZE %s", szFile);
+		_stprintf_s (szCmd, _T("SIZE %s"), szFile);
 		Dialog (IFDD_TOSERVER, szCmd);
 		if (FtpCommand (hServer, FALSE, FTP_TRANSFER_TYPE_BINARY, szCmd, NULL, NULL))
 			ParseSIZE ();
@@ -328,9 +328,9 @@ void fsFtpFile::SetDontUseLIST(BOOL b)
 	m_bDontUseLIST = b;
 }
 
-BOOL fsFtpFile::Send_LIST(LPSTR pszCmd, LPCSTR pszFile)
+BOOL fsFtpFile::Send_LIST(LPTSTR pszCmd, LPCTSTR pszFile)
 {
-	sprintf (pszCmd, "LIST %s", pszFile);
+	_stprintf (pszCmd, _T("LIST %s"), pszFile);
 	Dialog (IFDD_TOSERVER, pszCmd);
 
 	WIN32_FIND_DATA wfd;
@@ -379,7 +379,7 @@ fsFtpTransferType fsFtpFile::GetTransferType()
 		return FTT_UNKNOWN;
 }
 
-fsInternetResult fsFtpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 , UINT64 uUploadTotalSize)
+fsInternetResult fsFtpFile::OpenEx(LPCTSTR pszFilePath, UINT64 uStartPos, UINT64 , UINT64 uUploadTotalSize)
 {
 	if (!m_pServer) 
 		return IR_NOTINITIALIZED;
@@ -394,15 +394,15 @@ fsInternetResult fsFtpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 
 
 	CloseHandle (); 
 
-	CHAR szCmd [10000];	
+	TCHAR szCmd [10000];	
 
-	char szFile [10000];
-	strcpy (szFile, pszFilePath);
+	TCHAR szFile [10000];
+	_tcscpy_s (szFile, 10000, pszFilePath);
 
 	
 	
 	
-	char *pszFile = const_cast<char*>(max (strrchr (pszFilePath, '/'), strrchr (pszFilePath, '\\')));
+	TCHAR *pszFile = const_cast<TCHAR*>(max (_tcsrchr (pszFilePath, '/'), _tcsrchr (pszFilePath, '\\')));
 
 	if (pszFile)
 	{
@@ -410,14 +410,14 @@ fsInternetResult fsFtpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 
 		{
 			szFile [pszFile - pszFilePath] = 0;
 
-			sprintf (szCmd, "CWD %s", szFile);	
+			_stprintf_s (szCmd, _T("CWD %s"), szFile);	
 												
 			Dialog (IFDD_TOSERVER, szCmd);
 
 			if (!FtpCommand (hServer, FALSE, m_dwTransferType, szCmd, NULL, NULL))
-				strcpy (szFile, pszFilePath);	
+				_tcscpy_s (szFile, 10000, pszFilePath);	
 			else
-				strcpy (szFile, pszFile + 1);	
+				_tcscpy_s (szFile, 10000, pszFile + 1);	
 			
 			DialogFtpResponse ();
 		}
@@ -433,7 +433,7 @@ fsInternetResult fsFtpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 
 	if (bListOK == FALSE)
 	{
 		
-		lstrcpy (szCmd, "TYPE I");
+		lstrcpy (szCmd, _T("TYPE I"));
 		Dialog (IFDD_TOSERVER, szCmd);	
 		fsInternetResult ir;
 		if (!FtpCommand (hServer, FALSE, FTP_TRANSFER_TYPE_BINARY, szCmd, NULL, NULL)) 
@@ -444,7 +444,7 @@ fsInternetResult fsFtpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 
 		}
 
 		
-		sprintf (szCmd, "SIZE %s", szFile);
+		_stprintf_s (szCmd, 10000, _T("SIZE %s"), szFile);
 		Dialog (IFDD_TOSERVER, szCmd);
 		if (FtpCommand (hServer, FALSE, FTP_TRANSFER_TYPE_BINARY, szCmd, NULL, NULL))
 			ParseSIZE ();
@@ -459,7 +459,7 @@ fsInternetResult fsFtpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 
 	}
 
 	
-	sprintf (szCmd, "TYPE %c", m_dwTransferType & FTP_TRANSFER_TYPE_ASCII ? 'A' : 'I');
+	_stprintf_s (szCmd, 10000, _T("TYPE %c"), m_dwTransferType & FTP_TRANSFER_TYPE_ASCII ? _T('A') : _T('I'));
 	Dialog (IFDD_TOSERVER, szCmd);	
 
 	fsInternetResult ir;
@@ -478,9 +478,9 @@ fsInternetResult fsFtpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 
 
 	if (bPassive)
 	{
-		Dialog (IFDD_TOSERVER, "PASV");
+		Dialog (IFDD_TOSERVER, _T("PASV"));
 		
-		if (!FtpCommand (hServer, FALSE, m_dwTransferType, "PASV", NULL, NULL))
+		if (!FtpCommand (hServer, FALSE, m_dwTransferType, _T("PASV"), NULL, NULL))
 		{
 			return FtpError ();
 		}
@@ -500,7 +500,7 @@ fsInternetResult fsFtpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 
 			return IR_ERROR;
 
 		
-		sprintf (szCmd, "PORT %s", m_strPORT);
+		_stprintf_s (szCmd, 10000, _T("PORT %s"), m_strPORT);
 		Dialog (IFDD_TOSERVER, szCmd);
 		if (!FtpCommand (hServer, FALSE, m_dwTransferType, szCmd, NULL, NULL)) 
 		{
@@ -514,7 +514,7 @@ fsInternetResult fsFtpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 
 	{
 		if (uStartPos) 
 		{
-			sprintf (szCmd, "REST %I64u", uStartPos); 
+			_stprintf_s (szCmd, 10000, _T("REST %I64u"), uStartPos); 
 			Dialog (IFDD_TOSERVER, szCmd);
 
 			if (!FtpCommand (hServer, FALSE, m_dwTransferType, szCmd, NULL, NULL))
@@ -528,9 +528,9 @@ fsInternetResult fsFtpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 
 		}
 		else
 		{
-			Dialog (IFDD_TOSERVER, "REST 100");
+			Dialog (IFDD_TOSERVER, _T("REST 100"));
 			
-			if (!FtpCommand (hServer, FALSE, m_dwTransferType, "REST 100", NULL, NULL))
+			if (!FtpCommand (hServer, FALSE, m_dwTransferType, _T("REST 100"), NULL, NULL))
 			{
 				m_enRST = RST_NONE;
 				DialogFtpResponse ();
@@ -539,21 +539,21 @@ fsInternetResult fsFtpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 
 			{
 				m_enRST = RST_PRESENT;
 				DialogFtpResponse ();
-				Dialog (IFDD_TOSERVER, "REST 0"); 
-				FtpCommand (hServer, FALSE, m_dwTransferType, "REST 0", NULL, NULL);
+				Dialog (IFDD_TOSERVER, _T("REST 0")); 
+				FtpCommand (hServer, FALSE, m_dwTransferType, _T("REST 0"), NULL, NULL);
 				DialogFtpResponse ();
 			}
 		}
 
-		sprintf (szCmd, "RETR %s", szFile); 
+		_stprintf_s (szCmd, _T("RETR %s"), szFile); 
 	}
 	else
 	{
 		
 		if (uStartPos)
-			sprintf (szCmd, "APPE %s", szFile);
+			_stprintf_s (szCmd, _T("APPE %s"), szFile);
 		else
-			sprintf (szCmd, "STOR %s", szFile);			
+			_stprintf_s (szCmd, _T("STOR %s"), szFile);			
 	}
 
 	Dialog (IFDD_TOSERVER, szCmd);
@@ -590,19 +590,19 @@ fsInternetResult fsFtpFile::Write (LPBYTE pBuffer, DWORD dwToWrite, DWORD *pdwWr
 	return IR_SUCCESS;
 }
 
-BOOL fsFtpFile::FtpCommand(HINTERNET hConnect, BOOL fExpectResponse, DWORD dwFlags, LPCSTR pszCommand, DWORD_PTR dwContext, HINTERNET* phFtpCommand)
+BOOL fsFtpFile::FtpCommand(HINTERNET hConnect, BOOL fExpectResponse, DWORD dwFlags, LPCTSTR pszCommand, DWORD_PTR dwContext, HINTERNET* phFtpCommand)
 {
-	char szCmd [1000];
-	if (strchr (pszCommand, '%'))
+	TCHAR szCmd [1000];
+	if (_tcschr (pszCommand, _T('%')))
 	{
 		int pos = 0;
 
 		while (*pszCommand)
 		{
-			if (*pszCommand == '%')
+			if (*pszCommand == _T('%'))
 			{
-				szCmd [pos++] = '%';
-				szCmd [pos++] = '%';
+				szCmd [pos++] = _T('%');
+				szCmd [pos++] = _T('%');
 			}
 			else
 				szCmd [pos++] = *pszCommand;

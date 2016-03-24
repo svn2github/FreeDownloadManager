@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -44,7 +44,7 @@ BOOL CWnd_Banner::Create(CWnd *pWndParent, int cy)
 			AfxRegisterWndClass (0, LoadCursor (AfxGetInstanceHandle (), 
 					MAKEINTRESOURCE (IDC_HAND_)),
 				(HBRUSH)(COLOR_3DFACE+1), NULL), 
-			"", WS_CHILD|WS_VISIBLE,
+			_T(""), WS_CHILD|WS_VISIBLE,
 			CRect (0, 0, 300, cy), pWndParent, 0);
 
 	Initialize ();
@@ -61,7 +61,7 @@ void CWnd_Banner::OnPaint()
 		Sleep (10);
 }
 
-void CWnd_Banner::SetBanner(LPCSTR pszFile, LPCSTR pszURL)
+void CWnd_Banner::SetBanner(LPCTSTR pszFile, LPCTSTR pszURL)
 {
 	KillTimer (1);
 

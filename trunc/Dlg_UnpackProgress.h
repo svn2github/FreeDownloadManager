@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DLG_UNPACKPROGRESS_H__73FC2783_CE33_4E19_B98A_3D826DD2A65C__INCLUDED_)
@@ -42,9 +42,9 @@ protected:
 	
 	virtual bool SetProgress (int nProgress);
 	
-	virtual bool AfterExtract (LPCSTR pszFile, vmsAC_ExtractResult res);
+	virtual bool AfterExtract (LPCTSTR pszFile, vmsAC_ExtractResult res);
 	
-	virtual bool BeforeExtract (LPCSTR pszFile);
+	virtual bool BeforeExtract (LPCTSTR pszFile);
 
 	
 	//{{AFX_MSG(CDlg_UnpackProgress)

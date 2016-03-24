@@ -1,7 +1,9 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
+#include <string>
+#include "Utils.h"
 #include "fsInternetURLFile.h"
 #include "fsInternetSession.h"
 #include "fsInternetFile.h"
@@ -85,7 +87,7 @@ UINT64 fsInternetURLFile::GetFileSize()
 	return m_pFile->GetFileSize ();
 }
 
-void fsInternetURLFile::SetReferer(LPCSTR pszReferer)
+void fsInternetURLFile::SetReferer(LPCTSTR pszReferer)
 {
 	m_httpFile.SetReferer (pszReferer);
 }
@@ -123,12 +125,12 @@ void fsInternetURLFile::Close()
 		m_pFile->CloseHandle ();
 }
 
-LPCSTR fsInternetURLFile::GetLastError()
+LPCTSTR fsInternetURLFile::GetLastError()
 {
 	return m_pszLastError;
 }
 
-fsInternetResult fsInternetURLFile::Open(INTERNET_SCHEME scheme, LPCSTR pszHostName, LPCSTR pszUser, LPCSTR pszPassword, INTERNET_PORT port, LPCSTR pszPath, UINT64 uStartPosition, BOOL bSendHTTPBasicAuthImmediately)
+fsInternetResult fsInternetURLFile::Open(INTERNET_SCHEME scheme, LPCTSTR pszHostName, LPCTSTR pszUser, LPCTSTR pszPassword, INTERNET_PORT port, LPCTSTR pszPath, UINT64 uStartPosition, BOOL bSendHTTPBasicAuthImmediately)
 {
 	return OpenEx (scheme, pszHostName, pszUser, pszPassword, port, pszPath,
 		uStartPosition, bSendHTTPBasicAuthImmediately, _UI64_MAX);
@@ -155,13 +157,13 @@ void fsInternetURLFile::CloseHandle()
 	LeaveCriticalSection (&m_cs);
 }
 
-BOOL fsInternetURLFile::GetContentType(LPSTR pszType)
+BOOL fsInternetURLFile::GetContentType(LPTSTR pszType)
 {
 #ifndef NOCURL
 	if (m_bUseFile2)
 	{
-		LPCSTR psz = m_ifile2.get_ContentType ();
-		lstrcpy (pszType, psz ? psz : "");
+		LPCTSTR psz = m_ifile2.get_ContentType ();
+		lstrcpy (pszType, psz ? psz : _T(""));
 		return *pszType != 0;
 	}
 #endif 
@@ -193,7 +195,7 @@ fsResumeSupportType fsInternetURLFile::IsResumeSupported()
 	return m_pFile->IsResumeSupported ();
 }
 
-LPCSTR fsInternetURLFile::GetSuggestedFileName()
+LPCTSTR fsInternetURLFile::GetSuggestedFileName()
 {
 	try {
 #ifndef NOCURL
@@ -206,7 +208,7 @@ LPCSTR fsInternetURLFile::GetSuggestedFileName()
 	catch (...) {return NULL;}
 }
 
-fsInternetResult fsInternetURLFile::QuerySize(INTERNET_SCHEME scheme, LPCSTR pszHostName, LPCSTR pszUser, LPCSTR pszPassword, INTERNET_PORT port, LPCSTR pszPath, BOOL bSendHTTPBasicAuthImmediately)
+fsInternetResult fsInternetURLFile::QuerySize(INTERNET_SCHEME scheme, LPCTSTR pszHostName, LPCTSTR pszUser, LPCTSTR pszPassword, INTERNET_PORT port, LPCTSTR pszPath, BOOL bSendHTTPBasicAuthImmediately)
 {
 	
 
@@ -279,29 +281,29 @@ void fsInternetURLFile::FtpSetDontUseLIST(BOOL b)
 
 void fsInternetURLFile::SetupProxyForFile2()
 {
-	LPCSTR psz1, psz2, psz3;
+	LPCTSTR psz1, psz2, psz3;
 	m_pSession->get_Proxy (psz1, psz2, psz3);
 
 	if (psz1 == NULL || *psz1 == 0)
 		return;
 
-	char szProxy [1000];
-	if (lstrcmpi (psz1, "Internet Explorer") == 0)
+	TCHAR szProxy [1000];
+	if (lstrcmpi (psz1, _T("Internet Explorer")) == 0)
 	{
 		CRegKey key;
 		if (ERROR_SUCCESS != key.Open (HKEY_CURRENT_USER, 
-				"Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings", 
+				_T("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"), 
 				KEY_READ))
 			return;
 
 		DWORD dw;
-		if (ERROR_SUCCESS != key.QueryValue (dw, "ProxyEnable"))
+		if (ERROR_SUCCESS != key.QueryValue (dw, _T("ProxyEnable")))
 			return;
 		if (dw == FALSE)
 			return;
 
 		dw = sizeof (szProxy);
-		if (ERROR_SUCCESS != key.QueryValue (szProxy, "ProxyServer", &dw))
+		if (ERROR_SUCCESS != key.QueryValue (szProxy, _T("ProxyServer"), &dw))
 			return;
 
 		psz1 = szProxy;
@@ -314,7 +316,7 @@ void fsInternetURLFile::SetupProxyForFile2()
 
 #endif 
 
-void fsInternetURLFile::SetCookies(LPCSTR pszCookies)
+void fsInternetURLFile::SetCookies(LPCTSTR pszCookies)
 {
 	m_httpFile.SetCookies (pszCookies);
 }
@@ -329,7 +331,7 @@ fsFtpTransferType fsInternetURLFile::FtpGetTransferType()
 	return m_ftpFile.GetTransferType ();
 }
 
-fsInternetResult fsInternetURLFile::OpenEx(INTERNET_SCHEME scheme, LPCSTR pszHostName, LPCSTR pszUser, LPCSTR pszPassword, INTERNET_PORT port, LPCSTR pszPath, UINT64 uStartPosition, BOOL bSendHTTPBasicAuthImmediately, UINT64 uUploadPartSize, UINT64 uUploadTotalSize)
+fsInternetResult fsInternetURLFile::OpenEx(INTERNET_SCHEME scheme, LPCTSTR pszHostName, LPCTSTR pszUser, LPCTSTR pszPassword, INTERNET_PORT port, LPCTSTR pszPath, UINT64 uStartPosition, BOOL bSendHTTPBasicAuthImmediately, UINT64 uUploadPartSize, UINT64 uUploadTotalSize)
 {
 	fsInternetResult ir;
 
@@ -435,7 +437,7 @@ fsInternetResult fsInternetURLFile::OpenEx(INTERNET_SCHEME scheme, LPCSTR pszHos
 		if (m_strRespFromServer.IsEmpty () == FALSE)
 		{
 			Dialog (IFDD_FROMSERVER, m_strRespFromServer);
-			m_strRespFromServer = "";
+			m_strRespFromServer = _T("");
 		}
 		m_bCatchFromServerResponse = FALSE;
 		m_pszLastError = m_pFile->GetLastError ();
@@ -465,8 +467,8 @@ _lUseFile2:
 		CloseHandle ();
 		m_bUseFile2 = true;
 		fsURL url;
-		char szUrl [10000];
-		DWORD dw = sizeof (szUrl);
+		TCHAR szUrl [10000];
+		DWORD dw = _countof (szUrl);
 		url.Create (scheme, pszHostName, port, NULL, NULL, pszPath, szUrl, &dw);
 		m_ifile2.Initialize ();
 		if (m_strInterface.IsEmpty () == false)
@@ -488,7 +490,7 @@ _lUseFile2:
 			}
 			else
 			{
-				char szCookie [10000]; dw = sizeof (szCookie);
+				TCHAR szCookie [10000]; dw = sizeof (szCookie);
 				*szCookie = 0;
 				InternetGetCookie (szUrl, NULL, szCookie, &dw);
 				if (*szCookie)
@@ -511,7 +513,7 @@ _lUseFile2:
 	if (m_strRespFromServer.IsEmpty () == FALSE)
 	{
 		Dialog (IFDD_FROMSERVER, m_strRespFromServer);
-		m_strRespFromServer = "";
+		m_strRespFromServer = _T("");
 	}
 	m_bCatchFromServerResponse = FALSE;
 		
@@ -529,23 +531,34 @@ fsInternetResult fsInternetURLFile::Write(LPBYTE pBuffer, DWORD dwToWrite, DWORD
 	return m_pFile->Write (pBuffer, dwToWrite, pdwWritten);
 }
 
-void fsInternetURLFile::FormHttpBasicAuthHdr(LPCSTR pszUser, LPCSTR pszPassword)
+void fsInternetURLFile::FormHttpBasicAuthHdr(LPCTSTR pszUser, LPCTSTR pszPassword)
 {
 	if (pszUser == NULL || *pszUser == 0)
 		return;
 
-	char szHdr [1000];
+	TCHAR szHdr [1000];
 
-	char szLogin [1000];
+	TCHAR szLogin [1000];
 	lstrcpy (szLogin, pszUser);
-	lstrcat (szLogin, ":");
+	lstrcat (szLogin, _T(":"));
 	if (pszPassword)
 		lstrcat (szLogin, pszPassword);
 
+	std::string sLogin;
+#ifdef UNICODE
+	UniToAnsi(std::wstring(szLogin), sLogin);
+#else
+	sLogin = szLogin;
+#endif
+
 	LPSTR pszL;
-	base64_encode (szLogin, lstrlen (szLogin), &pszL);
+	base64_encode (sLogin.c_str(), lstrlen (szLogin), &pszL);
 	
+#ifdef UNICODE
+	swprintf_s (szHdr, 1000, _T("Authorization: Basic %S\r\n"), pszL);
+#else
 	sprintf (szHdr, "Authorization: Basic %s\r\n", pszL);
+#endif
 	delete [] pszL;
 
 	m_httpFile.SetAdditionalHeaders (szHdr);
@@ -556,7 +569,7 @@ void fsInternetURLFile::set_UseMultipart(BOOL b)
 	m_httpFile.set_UseMultipart (b);
 }
 
-fsInternetResult fsInternetURLFile::OpenAnotherRequestOnServer(LPCSTR pszPath, UINT64 uStartPosition, UINT64 uUploadPartSize, UINT64 uUploadTotalSize)
+fsInternetResult fsInternetURLFile::OpenAnotherRequestOnServer(LPCTSTR pszPath, UINT64 uStartPosition, UINT64 uUploadPartSize, UINT64 uUploadTotalSize)
 {
 	fsInternetResult ir;
 
@@ -612,12 +625,12 @@ void fsInternetURLFile::set_EnableAutoRedirect(BOOL b)
 	m_httpFile.set_EnableAutoRedirect (b);
 }
 
-void fsInternetURLFile::set_Charset(LPCSTR psz)
+void fsInternetURLFile::set_Charset(LPCTSTR psz)
 {
 	m_httpFile.set_Charset (psz);
 }
 
-void fsInternetURLFile::_InetFileDialogFunc(fsInetFileDialogDirection enDir, LPCSTR pszMsg, LPVOID lp1, LPVOID )
+void fsInternetURLFile::_InetFileDialogFunc(fsInetFileDialogDirection enDir, LPCTSTR pszMsg, LPVOID lp1, LPVOID )
 {
 	fsInternetURLFile *pthis = (fsInternetURLFile*) lp1;
 
@@ -633,25 +646,25 @@ void fsInternetURLFile::_InetFileDialogFunc(fsInetFileDialogDirection enDir, LPC
 
 bool fsInternetURLFile::isProxySpecified()
 {
-	LPCSTR psz1, psz2, psz3;
+	LPCTSTR psz1, psz2, psz3;
 	m_pSession->get_Proxy (psz1, psz2, psz3);
 
-	if (psz1 && lstrcmpi (psz1, "Internet Explorer") == 0)
+	if (psz1 && lstrcmpi (psz1, _T("Internet Explorer")) == 0)
 	{
 		CRegKey key;
 		if (ERROR_SUCCESS != key.Open (HKEY_CURRENT_USER, 
-				"Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings", KEY_READ))
+				_T("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings"), KEY_READ))
 			return false;
 		
 		DWORD dw;
-		if (ERROR_SUCCESS != key.QueryValue (dw, "ProxyEnable"))
+		if (ERROR_SUCCESS != key.QueryValue (dw, _T("ProxyEnable")))
 			return false;
 		if (dw == FALSE)
 			return false;
 
-		char szProxy [1000] = "";
+		TCHAR szProxy [1000] = _T("");
 		dw = sizeof (szProxy);
-		if (ERROR_SUCCESS != key.QueryValue (szProxy, "ProxyServer", &dw))
+		if (ERROR_SUCCESS != key.QueryValue (szProxy, _T("ProxyServer"), &dw))
 			return false;
 		
 		if (*szProxy == 0)
@@ -663,15 +676,35 @@ bool fsInternetURLFile::isProxySpecified()
 	return psz1 != NULL && *psz1 != 0;
 }
 
-void fsInternetURLFile::SetInterface(LPCSTR psz)
+void fsInternetURLFile::SetInterface(LPCTSTR psz)
 {
 	m_strInterface = psz;
 }
 
-LPCSTR fsInternetURLFile::GetServerName()
+LPCTSTR fsInternetURLFile::GetServerName()
 {
 	if (m_pServer == NULL)
 		return 0;
 
 	return m_pServer->GetServerName();
+}
+
+void fsInternetURLFile::SetSecurityCheckIgnoreFlags (DWORD flags)
+{
+	auto file = m_pFile;
+	if (!file)
+		file = &m_httpFile;
+	file->SetSecurityCheckIgnoreFlags (flags);
+#ifndef NOCURL
+	m_ifile2.SetSecurityCheckIgnoreFlags (flags);
+#endif
+}
+
+fsSecurityCheckType fsInternetURLFile::get_lastSctFailure () const
+{
+#ifndef NOCURL
+	if (m_bUseFile2)
+		return m_ifile2.get_lastSctFailure ();
+#endif
+	return m_pFile ? m_pFile->get_lastSctFailure () : SCT_NONE;
 }

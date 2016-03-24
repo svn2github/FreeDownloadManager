@@ -1,9 +1,11 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
+first
+
 #include "stdafx.h"
-#include "FdmApp.h"
+
 #include "vmsSimpleFileDownloader.h"
 
 #ifdef _DEBUG
@@ -22,7 +24,7 @@ vmsSimpleFileDownloader::~vmsSimpleFileDownloader()
 	SAFE_DELETE (m_dldr);
 }
 
-fsInternetResult vmsSimpleFileDownloader::Download(LPCSTR pszUrl, LPCSTR pszFileName)
+fsInternetResult vmsSimpleFileDownloader::Download(LPCTSTR pszUrl, LPCTSTR pszFileName)
 {
 	if (IsRunning ())
 		return IR_S_FALSE;
@@ -36,23 +38,23 @@ fsInternetResult vmsSimpleFileDownloader::Download(LPCSTR pszUrl, LPCSTR pszFile
 	fsDownload_Properties *dp = m_dldr->GetDP ();
 
 	SAFE_DELETE_ARRAY (dp->pszFileName);
-	fsnew (dp->pszFileName, char, lstrlen (pszFileName) + 1);
-	strcpy (dp->pszFileName, pszFileName);
+	fsnew (dp->pszFileName, TCHAR, lstrlen (pszFileName) + 1);
+	_tcscpy (dp->pszFileName, pszFileName);
 	dp->uMaxSections = 1;
 	dp->uMaxAttempts = 1;
 	dp->dwFlags |= DPF_DONTRESTARTIFNORESUME;
 	dp->enSCR = SCR_STOP;
 	dp->enAER = AER_REWRITE;
-	*dp->pszAdditionalExt = 0;
+	
 
-	ir = m_dldr->StartDownloading ();
+	ir = m_dldr->StartDownloading ().first;
 	if (ir != IR_SUCCESS)
 		return ir;
 
 	return IR_SUCCESS;
 }
 
-void vmsSimpleFileDownloader::_DownloadMgrDescEvents(fsDownloadMgr *, fsDownloadMgr_EventDescType, LPCSTR pszDesc, LPVOID lp)
+void vmsSimpleFileDownloader::_DownloadMgrDescEvents(fsDownloadMgr *, fsDownloadMgr_EventDescType, LPCTSTR pszDesc, LPVOID lp)
 {
 
 }
@@ -88,7 +90,7 @@ bool vmsSimpleFileDownloader::IsRunning()
 	return m_dldr ? m_dldr->HasActivity () != 0 : FALSE;
 }
 
-fsInternetResult vmsSimpleFileDownloader::GetLastError()
+fsInternetDownloaderResult vmsSimpleFileDownloader::GetLastError()
 {
 	return m_dldr->GetLastError ();
 }

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -8,7 +8,7 @@
 #include <basetsd.h>
 #include <ddraw.h>
 #include <dinput.h>
-#include <dmusici.h>
+#include <dmusicc.h>
 
 typedef HRESULT(WINAPI * DIRECTDRAWCREATE)( GUID*, LPDIRECTDRAW*, IUnknown* );
 typedef HRESULT(WINAPI * DIRECTDRAWCREATEEX)( GUID*, VOID**, REFIID, IUnknown* );
@@ -48,7 +48,7 @@ DWORD fsDirectXVersion::GetCurrentVersion()
     HRESULT              hr;
 
     
-    hDDrawDLL = LoadLibrary( "DDRAW.DLL" );
+    hDDrawDLL = LoadLibrary( _T("DDRAW.DLL") );
     if( hDDrawDLL == NULL )
     {
         dwDXVersion = 0;
@@ -94,7 +94,7 @@ DWORD fsDirectXVersion::GetCurrentVersion()
 	
 
     
-    hDInputDLL = LoadLibrary( "DINPUT.DLL" );
+    hDInputDLL = LoadLibrary( _T("DINPUT.DLL") );
     if( hDInputDLL == NULL )
     {
         
@@ -232,7 +232,7 @@ DWORD fsDirectXVersion::GetCurrentVersion()
 	
 
     
-    hD3D8DLL = LoadLibrary( "D3D8.DLL" );
+    hD3D8DLL = LoadLibrary( _T("D3D8.DLL") );
     if( hD3D8DLL == NULL )
     {
 	    FreeLibrary( hDDrawDLL );

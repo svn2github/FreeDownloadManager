@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -53,9 +53,9 @@ BOOL CWndLog::Create(CWnd *pParent)
 	m_images.Add (&bmp, RGB (255, 0, 255));
 	SetImageList (&m_images, LVSIL_SMALL);
 
-	InsertColumn (0, "Time", LVCFMT_LEFT, 80, 0);
-	InsertColumn (1, "Date", LVCFMT_LEFT, 100, 0);
-	InsertColumn (2, "Information", LVCFMT_LEFT, 400, 0);
+	InsertColumn (0, _T("Time"), LVCFMT_LEFT, 80, 0);
+	InsertColumn (1, _T("Date"), LVCFMT_LEFT, 100, 0);
+	InsertColumn (2, _T("Information"), LVCFMT_LEFT, 400, 0);
 
 	ShowWindow (SW_SHOW);
 
@@ -65,7 +65,7 @@ BOOL CWndLog::Create(CWnd *pParent)
 void CWndLog::AddRecord(fsDescEvent *event)
 {
 	SYSTEMTIME time;
-	CHAR strTime [1000], strDate [1000];
+	TCHAR strTime [1000], strDate [1000];
 
 	FileTimeToSystemTime (&event->timeEvent, &time);
 
@@ -197,7 +197,7 @@ void CWndLog::SetEvMgr(fsEventsMgr *mgr)
 void CWndLog::OnCopyToCb() 
 {
 	SYSTEMTIME time;
-	CHAR strTime [1000], strDate [1000];
+	TCHAR strTime [1000], strDate [1000];
 
 	CString strText;
 

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -84,8 +84,8 @@ BOOL CDownloadProperties_GeneralPage::OnInitDialog()
 		
 
 		fsURL url;
-		CHAR szUrl [10000];
-		DWORD dwLen = sizeof (szUrl);
+		TCHAR szUrl [10000];
+		DWORD dwLen = _countof (szUrl);
 
 		url.Create (fsNPToScheme (dnp0->enProtocol), dnp0->pszServerName, dnp0->uServerPort,
 			NULL, NULL, dnp0->pszPathName, szUrl, &dwLen);
@@ -204,11 +204,11 @@ BOOL CDownloadProperties_GeneralPage::OnApply()
 				else
 				{
 					CString strErr;
-					CHAR szErr [1000];
+					TCHAR szErr [1000];
 
 					fsErrorToStr (szErr, 1000);
 
-					strErr.Format ("%s\n\n%s: %s", LS (L_CANTRENAME), LS (L_ERR), szErr); 
+					strErr.Format (_T("%s\n\n%s: %s"), LS (L_CANTRENAME), LS (L_ERR), szErr); 
 					MessageBox (strErr, LS (L_ERR), MB_ICONERROR);
 				}
 			}
@@ -377,8 +377,8 @@ void CDownloadProperties_GeneralPage::WriteAuthorization()
 			break;
 
 		case BST_UNCHECKED:
-			DNP_SET (pszUserName, TRUE, "");
-			DNP_SET (pszPassword, TRUE, "");
+			DNP_SET (pszUserName, TRUE, _T(""));
+			DNP_SET (pszPassword, TRUE, _T(""));
 			break;
 	}
 }

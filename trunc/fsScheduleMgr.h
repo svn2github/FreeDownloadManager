@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSSCHEDULEMGR_H__D5B62542_F8EA_4F9C_BC88_C3E2BB4E1B9D__INCLUDED_)
@@ -44,6 +44,12 @@ enum fsWhenToStartType
 
 struct fsProgramInfo
 {
+	LPTSTR pszName;		
+	LPTSTR pszArgs;		
+};
+
+struct fsProgramInfoA
+{
 	LPSTR pszName;		
 	LPSTR pszArgs;		
 };
@@ -64,6 +70,15 @@ struct fsShutdown
 };
 
 struct fsDialInfo
+{
+	LPTSTR pszConnection;	
+	UINT  cAttempts;		
+	UINT  cPauseBetween;	
+	DWORD dwHangupLess;		
+	UINT  cAgains;			
+};
+
+struct fsDialInfoA
 {
 	LPSTR pszConnection;	
 	UINT  cAttempts;		
@@ -98,6 +113,24 @@ struct fsWhatToStart
 		fsTUM enTUM;			
 		fsShutdown shutdown;	
 		fsDialInfo dial;  
+		
+		
+		LPTSTR pszHangupConnection;
+		fsRestrainAllDlds enRAD; 
+	};
+};
+
+struct fsWhatToStartA
+{
+	fsWhatToStartType enType;
+
+	union		
+	{
+		fsProgramInfoA prog;		
+		fsDownloadsInfo dlds;
+		fsTUM enTUM;			
+		fsShutdown shutdown;	
+		fsDialInfoA dial;  
 		
 		
 		LPSTR pszHangupConnection;
@@ -156,6 +189,14 @@ struct fsSchedule
 private:
 	fsSchedule() {}
 	fsSchedule(const fsSchedule&) {}
+};
+
+struct fsScheduleA
+{
+	fsWhatToStartA wts;	
+	fsWhenToStart hts;	
+	DWORD dwFlags;		
+	UINT uWaitForConfirmation; 
 };
 
 struct fsScheduleEx
@@ -225,7 +266,7 @@ struct fsSchedulerFileHdr
 };
 
 typedef void (*fntScheduleMgrEvents)(fsSchedule *task, fsScheduleMgrEvent ev, LPVOID lp);
-typedef void (*fntScheduleMgrEventDesc)(LPCSTR pszEvent, fsScheduleMgrEventType type, LPVOID lp);
+typedef void (*fntScheduleMgrEventDesc)(LPCTSTR pszEvent, fsScheduleMgrEventType type, LPVOID lp);
 
 class fsScheduleMgr : public vmsPersistObject
 {
@@ -263,8 +304,10 @@ public:
 	
 	static void FreeTask (fsSchedule *task);
 	
-	BOOL LoadStateFromFile (HANDLE hFile);
+	BOOL LoadStateFromFile (HANDLE hFile, WORD wVer);
 	BOOL SaveStateToFile (HANDLE hFile);
+	bool LoadTask(HANDLE hFile, fsSchedule *task);
+	bool LoadTask_old(HANDLE hFile, fsSchedule *task);
 	
 	
 	
@@ -295,7 +338,7 @@ public:
 
 protected:
 	
-	void Event (LPCSTR pszEvent, fsScheduleMgrEventType enType = SMET_S);
+	void Event (LPCTSTR pszEvent, fsScheduleMgrEventType enType = SMET_S);
 	void Event (fsSchedule* task, fsScheduleMgrEvent ev);
 	
 

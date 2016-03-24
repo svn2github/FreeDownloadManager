@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -52,7 +52,7 @@ BOOL CDlgCreateFlvDownloadsByWebPageUrl::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 	
-	LPCSTR pszUrl = _ClipbrdMgr.Text ();
+	LPCTSTR pszUrl = _ClipbrdMgr.Text ();
 	if (pszUrl && *pszUrl)
 	{
 		fsURL url;
@@ -61,7 +61,7 @@ BOOL CDlgCreateFlvDownloadsByWebPageUrl::OnInitDialog()
 	}
 
 	if (m_strWebPageUrl.IsEmpty ())
-		m_strWebPageUrl = "http://";
+		m_strWebPageUrl = _T("http://");
 
 	CComboBox *pUrls = (CComboBox*) GetDlgItem (IDC_WPURL);
 	for (int i = 0; i < _LastFlashVideoUrls.GetRecordCount (); i++)

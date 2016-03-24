@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSSKINMGR_H__3007DDD4_437C_4D37_B1A8_88EA19D78531__INCLUDED_)
@@ -71,7 +71,7 @@ protected:
 	HINSTANCE m_hInst;	
 	int m_nCurrSkin;	
 	
-	void Scan_TryFolder (LPCSTR pszFolder);
+	void Scan_TryFolder (LPCTSTR pszFolder);
 	
 	fs::list <vmsSkinInfo> m_vList;
 

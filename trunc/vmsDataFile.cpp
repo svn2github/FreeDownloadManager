@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -16,7 +16,7 @@ static char THIS_FILE[]=__FILE__;
 vmsDataFile::vmsDataFile()
 {
 	m_tData.CreateInstance ();
-	m_tData->GetData ().strName = "vmsDataFile v1.0";
+	m_tData->GetData ().strName = _T("vmsDataFile v1.0");
 }
 
 vmsDataFile::~vmsDataFile()
@@ -24,7 +24,7 @@ vmsDataFile::~vmsDataFile()
 
 }
 
-LPDATAFILETREE vmsDataFile::FindItem(LPCSTR pszSection, LPCSTR pszValueName, LPDATAFILETREE ptRoot)
+LPDATAFILETREE vmsDataFile::FindItem(LPCTSTR pszSection, LPCTSTR pszValueName, LPDATAFILETREE ptRoot)
 {
 	if (ptRoot == NULL)
 		ptRoot = m_tData;
@@ -33,7 +33,7 @@ LPDATAFILETREE vmsDataFile::FindItem(LPCSTR pszSection, LPCSTR pszValueName, LPD
 
 	if (pszSection && *pszSection)
 	{
-		while (*pszSection && *pszSection != '\\' && *pszSection != '/')
+		while (*pszSection && *pszSection != _T('\\') && *pszSection != _T('/'))
 			strS += *pszSection++;
 
 		if (*pszSection)
@@ -71,6 +71,10 @@ void vmsDataFile::SaveToFile(HANDLE hFile)
 {
 	vmsFile file;
 	file.Attach (hFile, false);
+
+	vmsDataFileHeader hdr;
+	file.Write(&hdr, sizeof(hdr));
+
 	SaveToFile (file, m_tData);
 }
 
@@ -251,7 +255,30 @@ void vmsDataFile::LoadFromFile(HANDLE hFile)
 {
 	vmsFile file (hFile, false);
 	m_tData->Clear ();
+	DWORD dwSize = ::GetFileSize(hFile, 0);
+
+	vmsDataFileHeader hdr;
+
+	if (dwSize < sizeof(hdr)) {
+		LoadFromFile_old (file, m_tData);
+		return;
+	}
+
+	file.Read(&hdr, sizeof(hdr));
+	if (wcsncmp(hdr.wszSig, FDM_DATA_FILE_SIG, wcslen(FDM_DATA_FILE_SIG))) {
+		::SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+		LoadFromFile_old (file, m_tData);
+		return;
+	}
+
 	LoadFromFile (file, m_tData);
+}
+
+void vmsDataFile::LoadFromFile_old(HANDLE hFile)
+{
+	vmsFile file (hFile, false);
+	m_tData->Clear ();
+	LoadFromFile_old (file, m_tData);
 }
 
 void vmsDataFile::LoadFromFile(vmsFile &file, LPDATAFILETREE ptRoot)
@@ -268,6 +295,22 @@ void vmsDataFile::LoadFromFile(vmsFile &file, LPDATAFILETREE ptRoot)
 
 	for (int i = 0; i < cLeafs; i++)
 		LoadFromFile (file, ptRoot->AddLeaf (vmsDataFileItem ()));
+}
+
+void vmsDataFile::LoadFromFile_old(vmsFile &file, LPDATAFILETREE ptRoot)
+{
+	ASSERT (ptRoot != NULL);
+
+	LoadFromFile_old (file, ptRoot->GetData ());
+
+	if (ptRoot->GetData ().vt.empty () == false)
+		return;	
+
+	int cLeafs;
+	file.ReadInt (cLeafs);
+
+	for (int i = 0; i < cLeafs; i++)
+		LoadFromFile_old (file, ptRoot->AddLeaf (vmsDataFileItem ()));
 }
 
 void vmsDataFile::LoadFromFile(vmsFile &file, vmsDataFileItem &item)
@@ -388,7 +431,43 @@ bool vmsDataFile::LoadFromBuffer(LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD 
 	return true;
 }
 
-LPDATAFILETREE vmsDataFile::CreateSection(LPCSTR pszSection, LPDATAFILETREE ptRoot)
+void vmsDataFile::LoadFromFile_old(vmsFile &file, vmsDataFileItem &item)
+{
+	
+	std::string sName;
+	file.ReadString (sName);
+	USES_CONVERSION;
+	item.strName = CA2T(sName.c_str());
+
+	
+
+	
+	int enType;
+	file.ReadInt (enType);
+
+	int i; double f; __int64 i64; std::string str; 
+	LPBYTE pb; int nSize;
+
+	
+	switch (enType)
+	{
+	case VVT_EMPTY: break;
+	case VVT_INT: file.ReadInt (i); item.vt = i; break;
+	case VVT_DOUBLE: file.ReadDouble (f); item.vt = f; break;
+	case VVT_INT64: file.ReadInt64 (i64); item.vt = i64; break;
+	case VVT_ASTRING: file.ReadString (str); item.vt = CA2CT(str.c_str()); break;
+	case VVT_LPBYTE: 
+		file.ReadInt (nSize);
+		pb = new BYTE [nSize];
+		file.Read (pb, nSize);
+		item.vt.set (pb, nSize);
+		delete [] pb;
+		break;
+	default: ASSERT (false); 
+	}
+}
+
+LPDATAFILETREE vmsDataFile::CreateSection(LPCTSTR pszSection, LPDATAFILETREE ptRoot)
 {
 	if (ptRoot == NULL)
 		ptRoot = m_tData;
@@ -397,13 +476,13 @@ LPDATAFILETREE vmsDataFile::CreateSection(LPCSTR pszSection, LPDATAFILETREE ptRo
 		return ptRoot;
 
 	fsString strS;
-	while (*pszSection && *pszSection != '\\' && *pszSection != '/')
+	while (*pszSection && *pszSection != _T('\\') && *pszSection != _T('/'))
 		strS += *pszSection++;
 
 	if (*pszSection)
 		pszSection++;
 
-	if (strS != "")
+	if (strS != _T(""))
 	for (int i = 0; i < ptRoot->GetLeafCount (); i++)
 	{
 		LPDATAFILETREE ptLeaf = ptRoot->GetLeaf (i);
@@ -418,7 +497,7 @@ LPDATAFILETREE vmsDataFile::CreateSection(LPCSTR pszSection, LPDATAFILETREE ptRo
 	return CreateSection (pszSection, ptLeaf);
 }
 
-LPDATAFILEITEM vmsDataFile::CreateItem(LPDATAFILETREE pSection, LPCSTR pszItemName)
+LPDATAFILEITEM vmsDataFile::CreateItem(LPDATAFILETREE pSection, LPCTSTR pszItemName)
 {
 	LPDATAFILETREE ptLeaf = FindItem (NULL, pszItemName, pSection);
 	if (ptLeaf == NULL)
@@ -429,42 +508,42 @@ LPDATAFILEITEM vmsDataFile::CreateItem(LPDATAFILETREE pSection, LPCSTR pszItemNa
 	return &ptLeaf->GetData ().vt;
 }
 
-LPDATAFILEITEM vmsDataFile::CreateItem(LPCSTR pszSection, LPCSTR pszItemName)
+LPDATAFILEITEM vmsDataFile::CreateItem(LPCTSTR pszSection, LPCTSTR pszItemName)
 {
 	return CreateItem (CreateSection (pszSection), pszItemName);
 }
 
-void vmsDataFile::set_Value(LPCSTR pszSection, LPCSTR pszValueName, int iValue)
+void vmsDataFile::set_Value(LPCTSTR pszSection, LPCTSTR pszValueName, int iValue)
 {
 	LPDATAFILEITEM item = CreateItem (pszSection, pszValueName);
 	item->set (iValue);
 }
 
-void vmsDataFile::set_Value(LPCSTR pszSection, LPCSTR pszValueName, __int64 i64Value)
+void vmsDataFile::set_Value(LPCTSTR pszSection, LPCTSTR pszValueName, __int64 i64Value)
 {
 	LPDATAFILEITEM item = CreateItem (pszSection, pszValueName);
 	item->set (i64Value);
 }
 
-void vmsDataFile::set_Value(LPCSTR pszSection, LPCSTR pszValueName, double fValue)
+void vmsDataFile::set_Value(LPCTSTR pszSection, LPCTSTR pszValueName, double fValue)
 {
 	LPDATAFILEITEM item = CreateItem (pszSection, pszValueName);
 	item->set (fValue);
 }
 
-void vmsDataFile::set_Value(LPCSTR pszSection, LPCSTR pszValueName, LPCSTR pszValue)
+void vmsDataFile::set_Value(LPCTSTR pszSection, LPCTSTR pszValueName, LPCTSTR pszValue)
 {
 	LPDATAFILEITEM item = CreateItem (pszSection, pszValueName);
 	item->set (pszValue);
 }
 
-void vmsDataFile::set_Value(LPCSTR pszSection, LPCSTR pszValueName, LPBYTE pbValue, UINT nValueSize)
+void vmsDataFile::set_Value(LPCTSTR pszSection, LPCTSTR pszValueName, LPBYTE pbValue, UINT nValueSize)
 {
 	LPDATAFILEITEM item = CreateItem (pszSection, pszValueName);
 	item->set (pbValue, nValueSize);
 }
 
-bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, int &iValue)
+bool vmsDataFile::get_Value(LPCTSTR pszSection, LPCTSTR pszValueName, int &iValue)
 {
 	LPDATAFILETREE item = FindItem (pszSection, pszValueName);
 	if (item) {
@@ -474,7 +553,7 @@ bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, int &iValue)
 	return false;
 }
 
-bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, __int64 &i64Value)
+bool vmsDataFile::get_Value(LPCTSTR pszSection, LPCTSTR pszValueName, __int64 &i64Value)
 {
 	LPDATAFILETREE item = FindItem (pszSection, pszValueName);
 	if (item) {
@@ -484,7 +563,7 @@ bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, __int64 &i64
 	return false;
 }
 
-bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, double &fValue)
+bool vmsDataFile::get_Value(LPCTSTR pszSection, LPCTSTR pszValueName, double &fValue)
 {
 	LPDATAFILETREE item = FindItem (pszSection, pszValueName);
 	if (item) {
@@ -494,7 +573,7 @@ bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, double &fVal
 	return false;
 }
 
-bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, LPCSTR &pszValue)
+bool vmsDataFile::get_Value(LPCTSTR pszSection, LPCTSTR pszValueName, LPCTSTR &pszValue)
 {
 	LPDATAFILETREE item = FindItem (pszSection, pszValueName);
 	if (item) {
@@ -504,7 +583,7 @@ bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, LPCSTR &pszV
 	return false;
 }
 
-bool vmsDataFile::get_Value(LPCSTR pszSection, LPCSTR pszValueName, LPBYTE &pbValue, UINT &nValueSize)
+bool vmsDataFile::get_Value(LPCTSTR pszSection, LPCTSTR pszValueName, LPBYTE &pbValue, UINT &nValueSize)
 {
 	LPDATAFILETREE item = FindItem (pszSection, pszValueName);
 	if (item && item->GetData ().vt.type () != VVT_EMPTY)

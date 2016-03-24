@@ -1,11 +1,10 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __VMSREADERWRITERLOCK_H_
 #define __VMSREADERWRITERLOCK_H_
 
-#include "vmsCriticalSection.h"
 #include "vmsTls.h"
 
 class vmsReaderWriterLock
@@ -53,7 +52,7 @@ public:
 			return;
 		}
 
-		EnterCriticalSection (&m_csWrite);
+		EnterCriticalSection (m_csWrite);
 		assert (m_dwWritingThreadId == 0);
 		m_dwWritingThreadId = dwThreadId;
 		assert (m_cWritingThreadLocks == 0);
@@ -67,7 +66,7 @@ public:
 		if (--m_cWritingThreadLocks)		
 			return;
 		m_dwWritingThreadId = 0;
-		LeaveCriticalSection (&m_csWrite);
+		LeaveCriticalSection (m_csWrite);
 	}
 
 public:

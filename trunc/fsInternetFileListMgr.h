@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSINTERNETFILELISTMGR_H__B6B6A23E_9022_462E_A29B_7D4978517BCB__INCLUDED_)
@@ -35,18 +35,18 @@ class fsInternetFileListMgr
 {
 public:
 	
-	fsInternetResult GetList (LPCSTR pszUrl, LPCSTR pszUser, LPCSTR pszPassword);
+	fsInternetResult GetList (LPCTSTR pszUrl, LPCTSTR pszUser, LPCTSTR pszPassword);
 	
 	fsInternetResult Refresh();
 	
-	LPCSTR GetCurrentPath();
+	LPCTSTR GetCurrentPath();
 	
 	
 	void GetCurrentUrl (fsString &strUrl, BOOL bIncludeUser = TRUE, BOOL bIncludePassword = TRUE);
 	
 	void GetParentFolderUrl (fsString &strUrl);
 	
-	void FolderToUrl (LPCSTR pszFolder, fsString &strUrl);
+	void FolderToUrl (LPCTSTR pszFolder, fsString &strUrl);
 	
 	void ReadSettings();
 	
@@ -61,13 +61,13 @@ public:
 	
 	
 	
-	fsInternetResult GetFullUrl (LPCSTR pszRelOrNotUrl, fsString& strUrl);
+	fsInternetResult GetFullUrl (LPCTSTR pszRelOrNotUrl, fsString& strUrl);
 	
-	fsInternetResult GoFolder (LPCSTR pszFolder);
+	fsInternetResult GoFolder (LPCTSTR pszFolder);
 	
 	fsInternetResult GoParentFolder();
 	
-	LPCSTR GetLastErrorDesc();
+	LPCTSTR GetLastErrorDesc();
 	
 	BOOL IsCurrentPathRoot ();
 	
@@ -88,7 +88,7 @@ public:
 
 protected:
 	
-	BOOL AskForLogin(LPCSTR pszHostName);
+	BOOL AskForLogin(LPCTSTR pszHostName);
 	
 	static void _HttpEvents (class fsHttpFiles* pFiles, fsHttpFilesEvent enEvent, LPVOID lpParam);
 	
@@ -99,7 +99,7 @@ protected:
 	
 	void Free(BOOL bStopBeforeFree = TRUE);
 	
-	int FindFiles (LPCSTR pszFilesUrl);
+	int FindFiles (LPCTSTR pszFilesUrl);
 	BOOL m_bCurPathIsRoot;	
 	vmsInternetSession m_session;
 	fsInternetURLServer m_server;	

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSSOUNDSMGR_H__2B545D6C_1469_4EBA_AA3C_0EE4A01C8668__INCLUDED_)
@@ -22,7 +22,7 @@ enum fsSoundsMgrEvent
 class fsSoundsMgr  
 {
 public:
-	void PlaySnd (LPCSTR pszSoundFile);
+	void PlaySnd (LPCTSTR pszSoundFile);
 	
 	void Event (fsSoundsMgrEvent ev);
 	void ReadSettings();

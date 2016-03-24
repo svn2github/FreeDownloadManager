@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_vms7zipArchiveExtractCallback_H__DEC4C09F_A9EE_40B3_9CA3_99C17CF06198__INCLUDED_)
@@ -19,7 +19,7 @@ class vms7zipArchiveExtractCallback : public IArchiveExtractCallback
 {
 public:
 	
-	LPCSTR get_FurtherExtractFile ();
+	LPCTSTR get_FurtherExtractFile ();
 	
 	bool is_AbortedByUser();
 
@@ -38,7 +38,7 @@ public:
 	STDMETHOD(SetTotal )(UInt64 total);
 
 	
-	vms7zipArchiveExtractCallback(IInArchive* pArc, LPCSTR pszOutFolder, vmsArchiveCallback* pAC, LPCSTR pszSrcArcFileName);
+	vms7zipArchiveExtractCallback(IInArchive* pArc, LPCTSTR pszOutFolder, vmsArchiveCallback* pAC, LPCTSTR pszSrcArcFileName);
 	virtual ~vms7zipArchiveExtractCallback();
 
 protected:

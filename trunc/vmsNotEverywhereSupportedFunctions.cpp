@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -24,7 +24,7 @@ vmsNotEverywhereSupportedFunctions::~vmsNotEverywhereSupportedFunctions()
 
 LONG vmsNotEverywhereSupportedFunctions::RegOverridePredefKey(HKEY hkey1, HKEY hkey2)
 {
-	HMODULE h = LoadLibrary ("advapi32.dll");
+	HMODULE h = LoadLibrary (_T("advapi32.dll"));
 	if (!h)
 		return ERROR_BAD_ENVIRONMENT;
 	typedef LONG (WINAPI *FNROPK)(HKEY,HKEY);
@@ -37,4 +37,19 @@ LONG vmsNotEverywhereSupportedFunctions::RegOverridePredefKey(HKEY hkey1, HKEY h
 	LONG lRes = pfn (hkey1, hkey2);
 	FreeLibrary (h);
 	return lRes;
+}
+
+BOOL vmsNotEverywhereSupportedFunctions::OverrideHKCRForUser(){
+	HKEY hKey;
+	LONG lRes;
+	lRes = RegOpenKeyEx(HKEY_CURRENT_USER, _T("Software\\Classes"), 0, KEY_ALL_ACCESS, &hKey);
+	if (lRes == ERROR_SUCCESS){
+		lRes = RegOverridePredefKey(HKEY_CLASSES_ROOT, hKey);
+		RegCloseKey(hKey);
+	}
+	return ( lRes == ERROR_SUCCESS );
+}
+
+BOOL vmsNotEverywhereSupportedFunctions::ResetHKCR(){
+	return ( RegOverridePredefKey(HKEY_CLASSES_ROOT, NULL) == ERROR_SUCCESS );
 }

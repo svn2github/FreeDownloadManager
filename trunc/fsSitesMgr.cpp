@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -42,7 +42,7 @@ fsSiteInfo* fsSitesMgr::GetSite(int iIndex)
 	return m_vSites [iIndex];
 }
 
-fsSiteInfo* fsSitesMgr::FindSite(LPCSTR pszSite, DWORD dwValidFor, BOOL bAllReq)
+fsSiteInfo* fsSitesMgr::FindSite(LPCTSTR pszSite, DWORD dwValidFor, BOOL bAllReq)
 {
 	vmsAUTOLOCKSECTION (m_csSites);
 
@@ -306,14 +306,43 @@ BOOL fsSitesMgr::LoadFromFile(HANDLE hFile)
 			}
 		}
 
-		if (!fsReadStrFromFile (&site->strName.pszString, hFile))
-			return FALSE;
+		if (hdr.wVer < 4) {
 
-		if (!fsReadStrFromFile (&site->strPassword.pszString, hFile))
-			return FALSE;
+			if (!fsReadStrFromFile (&site->strName.pszString, hFile))
+				return FALSE;
 
-		if (!fsReadStrFromFile (&site->strUser.pszString, hFile))
-			return FALSE;
+			if (!fsReadStrFromFile (&site->strPassword.pszString, hFile))
+				return FALSE;
+
+			if (!fsReadStrFromFile (&site->strUser.pszString, hFile))
+				return FALSE;
+
+		} else {
+
+			LPSTR pszValue = 0;
+
+			if (!fsReadStrFromFileA (&pszValue, hFile))
+				return FALSE;
+
+			CopyString(&site->strName.pszString, pszValue);
+			delete pszValue;
+			pszValue = 0;
+
+			if (!fsReadStrFromFileA (&pszValue, hFile))
+				return FALSE;
+
+			CopyString(&site->strPassword.pszString, pszValue);
+			delete pszValue;
+			pszValue = 0;
+
+			if (!fsReadStrFromFileA (&pszValue, hFile))
+				return FALSE;
+
+			CopyString(&site->strUser.pszString, pszValue);
+			delete pszValue;
+			pszValue = 0;
+
+		}
 
 		if (hdr.wVer >= 3)
 		{
@@ -392,14 +421,30 @@ bool fsSitesMgr::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSi
 			}
 		}
 
-		if (!getStrFromBuffer(&site->strName.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
-			return false;
+		if (dwVer >= 4)
+		{
+			if (!getStrFromBuffer(&site->strName.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
 
-		if (!getStrFromBuffer(&site->strPassword.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
-			return false;
+			if (!getStrFromBuffer(&site->strPassword.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
 
-		if (!getStrFromBuffer(&site->strUser.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
-			return false;
+			if (!getStrFromBuffer(&site->strUser.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+		}
+		else
+		{
+			if (!getStrFromBuffer_ANSI_to_UNICODE(&site->strName.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+
+			if (!getStrFromBuffer_ANSI_to_UNICODE(&site->strPassword.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+
+			if (!getStrFromBuffer_ANSI_to_UNICODE(&site->strUser.pszString, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+		}
+
+		
 
 		if (dwVer >= 3) {
 
@@ -476,12 +521,12 @@ void fsSitesMgr::CheckGroups()
 void fsSitesMgr::LockList(bool bLock)
 {
 	if (bLock)
-		EnterCriticalSection (&m_csSites);
+		EnterCriticalSection (m_csSites);
 	else
-		LeaveCriticalSection (&m_csSites);
+		LeaveCriticalSection (m_csSites);
 }
 
 void fsSitesMgr::LockList(vmsCriticalSectionAutoLock& csal)
 {
-	csal.Attach (&m_csSites);
+	csal.Attach (m_csSites);
 }

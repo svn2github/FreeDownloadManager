@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsInternetSession.h"
@@ -7,8 +7,8 @@
 fsInternetSession::fsInternetSession()
 {
 	m_hSession = NULL;
-	m_strProxyUser = "";
-	m_strProxyPassword = "";
+	m_strProxyUser = _T("");
+	m_strProxyPassword = _T("");
 }
 
 fsInternetSession::~fsInternetSession()
@@ -16,7 +16,7 @@ fsInternetSession::~fsInternetSession()
 	CloseHandle ();
 }
 
-fsInternetResult fsInternetSession::Create(LPCSTR pszAgent, fsInternetAccessType accType, LPCSTR pszProxy)
+fsInternetResult fsInternetSession::Create(LPCTSTR pszAgent, fsInternetAccessType accType, LPCTSTR pszProxy)
 {
 	CloseHandle ();
 
@@ -25,12 +25,12 @@ fsInternetResult fsInternetSession::Create(LPCSTR pszAgent, fsInternetAccessType
 	switch (accType)
 	{
 		case IAT_NOPROXY:
-			m_strProxy = "";
+			m_strProxy = _T("");
 			dwAccessType = INTERNET_OPEN_TYPE_DIRECT;
 			break;
 
 		case IAT_PRECONFIGPROXY:
-			m_strProxy = "Internet Explorer";
+			m_strProxy = _T("Internet Explorer");
 			dwAccessType = INTERNET_OPEN_TYPE_PRECONFIG;
 			break;
 
@@ -48,7 +48,7 @@ fsInternetResult fsInternetSession::Create(LPCSTR pszAgent, fsInternetAccessType
 	m_strUserAgent = pszAgent;
 
 	m_hSession = InternetOpen (pszAgent, dwAccessType, pszProxy, 
-		dwAccessType == INTERNET_OPEN_TYPE_PROXY ? "<local>" : NULL, 0);
+		dwAccessType == INTERNET_OPEN_TYPE_PROXY ? _T("<local>") : NULL, 0);
 
 	if (m_hSession == NULL)
 		return fsWinInetErrorToIR ();
@@ -75,7 +75,7 @@ void fsInternetSession::SetTimeout(UINT uTimeout)
 	InternetSetOption (m_hSession, INTERNET_OPTION_CONNECT_TIMEOUT, &uTimeout, sizeof (uTimeout));
 }
 
-void fsInternetSession::SetProxyAuth(LPCSTR pszUser, LPCSTR pszPassword)
+void fsInternetSession::SetProxyAuth(LPCTSTR pszUser, LPCTSTR pszPassword)
 {
 	m_strProxyUser = pszUser;
 	m_strProxyPassword = pszPassword;
@@ -119,12 +119,12 @@ void fsInternetSession::AdjustWinInetConnectionLimit()
 	InternetSetOption (NULL, INTERNET_OPTION_MAX_CONNS_PER_1_0_SERVER, &ul, sizeof (ul));
 }
 
-LPCSTR fsInternetSession::get_UserAgent()
+LPCTSTR fsInternetSession::get_UserAgent()
 {
 	return m_strUserAgent;
 }
 
-void fsInternetSession::get_Proxy(LPCSTR &pszProxyName, LPCSTR &pszProxyUser, LPCSTR &pszProxyPwd)
+void fsInternetSession::get_Proxy(LPCTSTR &pszProxyName, LPCTSTR &pszProxyUser, LPCTSTR &pszProxyPwd)
 {
 	pszProxyName = m_strProxy;
 	pszProxyUser = m_strProxyUser;

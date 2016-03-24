@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -13,9 +13,8 @@ public:
 		tstring tstrVersion;
 	};
 public:
-	vmsAppFileUpdateInfo(LPCTSTR ptszFileUpdateInfoURL, LPCTSTR ptszFileName, UINT nAppBuildNumber) :
+	vmsAppFileUpdateInfo(LPCTSTR ptszFileUpdateInfoURL, UINT nAppBuildNumber) :
 		m_tstrUpdateInfoURL (ptszFileUpdateInfoURL),
-		m_tstrFileName (ptszFileName),
 		m_nAppBuildNumber (nAppBuildNumber)
 	{
 	}
@@ -29,7 +28,6 @@ public:
 	bool Retrieve ()
 	{
 		vmsTmpFileName tmpFile (_T ("tmp"), _T ("xml"));
-		DeleteUrlCacheEntry (m_tstrUpdateInfoURL.c_str ());
 		HRESULT hr = URLDownloadToFile (NULL, m_tstrUpdateInfoURL.c_str (), tmpFile, 0, NULL);
 		if (FAILED (hr))
 			return false;
@@ -39,7 +37,7 @@ public:
 			return false;
 		spXML->put_async (FALSE);
 		VARIANT_BOOL bRes = FALSE;
-		spXML->load (COleVariant (tmpFile), &bRes);
+		spXML->load (CComVariant (tmpFile), &bRes);
 		if (!bRes)
 			return false;
 		IXMLDOMNodePtr spNode;
@@ -81,7 +79,7 @@ protected:
 
 			UINT nMin = UINT_MAX, nMax = UINT_MAX;
 
-			COleVariant vtMin, vtMax;
+			CComVariant vtMin, vtMax;
 			if (spMin)
 				spMin->get_nodeValue (&vtMin);
 			if (spMax)
@@ -137,7 +135,6 @@ protected:
 
 protected:
 	tstring m_tstrUpdateInfoURL;
-	tstring m_tstrFileName;
 	UINT m_nAppBuildNumber;
 	Info m_result;
 };

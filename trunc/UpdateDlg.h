@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_UPDATEDLG_H__6107B08B_7B97_4773_956E_31EADCF6C993__INCLUDED_)
@@ -40,7 +40,7 @@ protected:
 	
 	void ShowGroup (BOOL bFirstGroup);
 	
-	static void _UpdateMgrDescEvents (LPCSTR pszEvent, LPVOID lp);
+	static void _UpdateMgrDescEvents (LPCTSTR pszEvent, LPVOID lp);
 	static void _UpdateMgrEvents (fsUpdateMgrEvent ev, LPVOID lp);
 	
 	void ShowUpdateInfo ();

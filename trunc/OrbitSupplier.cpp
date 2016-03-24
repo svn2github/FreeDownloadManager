@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "StdAfx.h"
@@ -65,7 +65,13 @@ void COrbitSupplier::Import(informer fnInformer, void* pData, TImportResult& tIm
 		}
 		pExc->Delete();
 
-		throw std::runtime_error((const char*)sMsg);
+#ifdef UNICODE
+			std::string _sMsg;
+			UniToAnsi((LPCWSTR)sMsg, _sMsg);
+			throw std::runtime_error(_sMsg.c_str());
+#else
+			throw std::runtime_error((const char*)sMsg);
+#endif
 	}
 }
 
@@ -106,7 +112,13 @@ void COrbitSupplier::retreivePathToOrbitAppData(CString& sPath) const
 	
 	if (hr == S_FALSE) {
 		sMsg = LS (L_CANT_FIND_PATH_TO_ORBIT_APPDATA);
-		throw std::runtime_error((const char*)sMsg);
+#ifdef UNICODE
+			std::string _sMsg;
+			UniToAnsi((LPCWSTR)sMsg, _sMsg);
+			throw std::runtime_error(_sMsg.c_str());
+#else
+			throw std::runtime_error((const char*)sMsg);
+#endif
 	}
 
 	if ( FAILED(hr) ) {
@@ -116,7 +128,13 @@ void COrbitSupplier::retreivePathToOrbitAppData(CString& sPath) const
 		if (!ComErrToSysErrCode(hr, dwErr)) {
 			sMsg = LS (L_CANT_DETECT_PATH_TO_ORBIT_APPDATA);
 			appendErrorCode(sMsg, hr);
+#ifdef UNICODE
+			std::string _sMsg;
+			UniToAnsi((LPCWSTR)sMsg, _sMsg);
+			throw std::runtime_error(_sMsg.c_str());
+#else
 			throw std::runtime_error((const char*)sMsg);
+#endif
 		}
 
 		bool bFailedToRetreive = false; 
@@ -128,7 +146,13 @@ void COrbitSupplier::retreivePathToOrbitAppData(CString& sPath) const
 		} else {
 			sMsg = LS (L_CANT_DETECT_PATH_TO_ORBIT_APPDATA);
 		}
-		throw std::runtime_error((const char*)sMsg);
+#ifdef UNICODE
+			std::string _sMsg;
+			UniToAnsi((LPCWSTR)sMsg, _sMsg);
+			throw std::runtime_error(_sMsg.c_str());
+#else
+			throw std::runtime_error((const char*)sMsg);
+#endif
 	}
 
 	sPath = szDownloadListPath;
@@ -153,7 +177,13 @@ void COrbitSupplier::OpenFile(HANDLE& hFile, const CString& sDldListFilePath, La
 			appendDiagnostics(sMsg, sDiagnostics);
 		}
 
-		throw std::runtime_error((const char*)sMsg);
+#ifdef UNICODE
+			std::string _sMsg;
+			UniToAnsi((LPCWSTR)sMsg, _sMsg);
+			throw std::runtime_error(_sMsg.c_str());
+#else
+			throw std::runtime_error((const char*)sMsg);
+#endif
 	}
 }
 
@@ -167,7 +197,13 @@ void COrbitSupplier::ReadFile(HANDLE& hFile, BYTE* bBuffer, DWORD& dwBytesRead, 
 		sMsg = LS (enMsg);
 
 		if (!CloseHandle(hFile)) {
+#ifdef UNICODE
+			std::string _sMsg;
+			UniToAnsi((LPCWSTR)sMsg, _sMsg);
+			throw std::runtime_error(_sMsg.c_str());
+#else
 			throw std::runtime_error((const char*)sMsg);
+#endif
 		}
 
 		bool bFailedToRetreive = false; 
@@ -179,11 +215,17 @@ void COrbitSupplier::ReadFile(HANDLE& hFile, BYTE* bBuffer, DWORD& dwBytesRead, 
 			appendDiagnostics(sMsg, sDiagnostics);
 		}
 
+#ifdef UNICODE
+		std::string _sMsg;
+		UniToAnsi((LPCWSTR)sMsg, _sMsg);
+		throw std::runtime_error(_sMsg.c_str());
+#else
 		throw std::runtime_error((const char*)sMsg);
+#endif
 	}
 }
 
-void COrbitSupplier::ReadOrbitDldList(const CString& sDldListFilePath, CString& sDldList) const
+void COrbitSupplier::ReadOrbitDldList(const CString& sDldListFilePath, CStringA& sDldList) const
 {
 	CString sMsg;
 
@@ -203,7 +245,7 @@ void COrbitSupplier::ReadOrbitDldList(const CString& sDldListFilePath, CString& 
 		if (pTmpBuffer == 0) {
 			sMsg = LS (L_OUTOFMEMORY);
 			CloseHandle(hDldList);
-			throw std::runtime_error((const char*)sMsg);
+			throw std::runtime_error("Out of memory");
 		}
 
 		memset(pTmpBuffer, 0, dwTotalBytesRead + dwBytesRead + 1);
@@ -221,19 +263,19 @@ bool COrbitSupplier::retrieveDownloadFilePath(const TOrbitDownload& tOrbitDownlo
 {
 	
 	sDownloadFilePath = tOrbitDownload.sPath;
-	sDownloadFilePath.Replace("/", "\\");
+	sDownloadFilePath.Replace(_T("/"), _T("\\"));
 	if (sDownloadFilePath.IsEmpty()) {
 		
 		return false;
 	}
 
-	if (sDownloadFilePath.Right(1) != "\\") {
-		sDownloadFilePath += "\\";
+	if (sDownloadFilePath.Right(1) != _T("\\")) {
+		sDownloadFilePath += _T("\\");
 	}
 
 	CString sDownloadFileName = tOrbitDownload.sFile;
 	if (!tOrbitDownload.bIsComplete) {
-		sDownloadFileName += ".ob!"; 
+		sDownloadFileName += _T(".ob!"); 
 	}
 
 	if (sDownloadFileName.IsEmpty()) {
@@ -255,14 +297,14 @@ void COrbitSupplier::configureDownloadFileName(const CString& sDownloadFilePath,
 	CString sMsg;
 
 	
-	std::auto_ptr<CHAR> pFileNameGuard ( new CHAR[sDownloadFilePath.GetLength() + 1] );
-	CHAR* pszFileName = pFileNameGuard.get();
+	std::auto_ptr<TCHAR> pFileNameGuard ( new TCHAR[sDownloadFilePath.GetLength() + 1] );
+	TCHAR* pszFileName = pFileNameGuard.get();
 	if (!pszFileName) {
 		sMsg = LS (L_OUTOFMEMORY);
-		throw std::runtime_error((const char*)sMsg);
+		throw std::runtime_error("Out of memory");
 	}
 	memset(pszFileName, 0, sDownloadFilePath.GetLength() + 1);
-	strncpy(pszFileName, (LPCTSTR)sDownloadFilePath, sDownloadFilePath.GetLength());
+	_tcsncpy(pszFileName, (LPCTSTR)sDownloadFilePath, sDownloadFilePath.GetLength());
 
 	delete [] dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
 	dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = pFileNameGuard.release();
@@ -273,14 +315,14 @@ void COrbitSupplier::configureIncompleteFileExt(vmsDownloadSmartPtr dld) const
 	CString sMsg;
 
 	
-	std::auto_ptr<CHAR> pExtGuard ( new CHAR[8] );
-	CHAR* pszExt = pExtGuard.get();
+	std::auto_ptr<TCHAR> pExtGuard ( new TCHAR[8] );
+	TCHAR* pszExt = pExtGuard.get();
 	if (!pszExt) {
 		sMsg = LS (L_OUTOFMEMORY);
-		throw std::runtime_error((const char*)sMsg);
+		throw std::runtime_error("Out of memory");
 	}
 	memset(pszExt, 0, 8);
-	strncpy(pszExt, _T("ob!"), 3);
+	_tcsncpy(pszExt, _T("ob!"), 3);
 
 	delete [] dld->pMgr->GetDownloadMgr ()->GetDP ()->pszAdditionalExt;
 	dld->pMgr->GetDownloadMgr ()->GetDP ()->pszAdditionalExt = pExtGuard.release();
@@ -380,7 +422,7 @@ void COrbitSupplier::processDldsImportedFromOrbit(OrbitDownloadsArray& arrDownlo
 
 }
 
-void COrbitSupplier::retrieveOrbitDownloadList(CString& sDldList) const
+void COrbitSupplier::retrieveOrbitDownloadList(CStringA& sDldList) const
 {
 	CString sMsg;
 
@@ -390,18 +432,20 @@ void COrbitSupplier::retrieveOrbitDownloadList(CString& sDldList) const
 
 	ASSERT(sPath.GetLength() > 0);
 
-	sPath.Replace("/", "\\"); 
-	if (sPath.Right(1) != "\\") {
-		sPath += "\\";
+	sPath.Replace(_T("/"), _T("\\")); 
+	if (sPath.Right(1) != _T("\\")) {
+		sPath += _T("\\");
 	}
 
 	CString sDldListFilePath = sPath;
-	sDldListFilePath += "Orbit\\DownloadList.dat";
+	sDldListFilePath += _T("Orbit\\DownloadList.dat");
 
 	
 	if (GetFileAttributes(sDldListFilePath) == (DWORD)(-1)) {
 		sMsg = LS (L_CANT_FIND_ORBIT_DOWNLOAD_LIST);
-		throw std::runtime_error((const char*)sMsg);
+		USES_CONVERSION;
+		std::string _sMsg = CT2A((LPCTSTR)sMsg);
+		throw std::runtime_error(_sMsg.c_str());
 	}
 
 	
@@ -410,7 +454,7 @@ void COrbitSupplier::retrieveOrbitDownloadList(CString& sDldList) const
 
 void COrbitSupplier::retrieveOrbitDownloads(OrbitDownloadsArray& arrDownloads) const
 {
-	CString sDldList;
+	CStringA sDldList;
 	
 	
 	retrieveOrbitDownloadList(sDldList);

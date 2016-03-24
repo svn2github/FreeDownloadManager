@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -102,11 +102,11 @@ CString CDlg_CheckFileIntegrity_Progress::get_ValidHashResult()
 	str.MakeLower ();
 
 	CString str2;
-	LPCSTR psz = str;
+	LPCTSTR psz = str;
 	while (*psz)
 	{
-		if ((*psz >= '0' && *psz <= '9') ||
-				(*psz >= 'a' && *psz <= 'f') )
+		if ((*psz >= _T('0') && *psz <= _T('9')) ||
+				(*psz >= _T('a') && *psz <= _T('f')) )
 			str2 += *psz;
 
 		psz++;

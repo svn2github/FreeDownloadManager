@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -14,7 +14,7 @@ static char THIS_FILE[]=__FILE__;
 
 fsSitePingMgr::fsSitePingMgr()
 {
-	m_hDllIcmp = LoadLibrary ("icmp.dll");
+	m_hDllIcmp = LoadLibrary (_T("icmp.dll"));
 	if (m_hDllIcmp)
 	{
 		m_pfnIcmpCreateFile = (HANDLE (WINAPI *)(void))
@@ -35,7 +35,7 @@ fsSitePingMgr::~fsSitePingMgr()
 		FreeLibrary (m_hDllIcmp);
 }
 
-DWORD fsSitePingMgr::Ping(LPCSTR pszSite)
+DWORD fsSitePingMgr::Ping(LPCTSTR pszSite)
 {
    
     IPINFO ipInfo;

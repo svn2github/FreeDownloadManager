@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -291,7 +291,7 @@ UINT vmsDownloadMgrEx::GetSpeed()
 		return m_pTpMgr->GetSpeed ();
 }
 
-BOOL vmsDownloadMgrEx::MoveToFolder(LPCSTR pszPath)
+BOOL vmsDownloadMgrEx::MoveToFolder(LPCTSTR pszPath)
 {
 	if (m_pMgr)
 		return m_pMgr->MoveToFolder (pszPath);
@@ -322,7 +322,7 @@ BOOL vmsDownloadMgrEx::IsCantStart()
 fsInternetResult vmsDownloadMgrEx::RestartDownloading()
 {
 	if (m_pMgr)
-		return m_pMgr->RestartDownloading ();
+		return m_pMgr->RestartDownloading ().first;
 	else if (m_spBtMgr)
 		return m_spBtMgr->RestartDownloading ();
 	else if (m_pTpMgr)
@@ -348,7 +348,7 @@ BOOL vmsDownloadMgrEx::IsHtmlSpiderDownload()
 fsInternetResult vmsDownloadMgrEx::StartDownloading()
 {
 	if (m_pMgr)
-		return m_pMgr->StartDownloading ();
+		return m_pMgr->StartDownloading ().first;
 	else if (m_spBtMgr)
 		return m_spBtMgr->StartDownloading ();
 	else if (m_pTpMgr)
@@ -524,13 +524,13 @@ void vmsDownloadMgrEx::GetSplittedSectionsList(std::vector <vmsSectionInfo> &v)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("vmsDownloadMgrEx::GetSplittedSectionsList " + tstring(ex.what()));
+		vmsLogger::WriteLog(_T("vmsDownloadMgrEx::GetSplittedSectionsList ") + tstringFromString(ex.what()));
 		v.clear ();
 	}
 	catch (...)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("vmsDownloadMgrEx::GetSplittedSectionsList unknown exception");
+		vmsLogger::WriteLog(_T("vmsDownloadMgrEx::GetSplittedSectionsList unknown exception"));
 		v.clear ();
 	}
 }
@@ -559,7 +559,7 @@ void vmsDownloadMgrEx::Do_OpenFolder()
 {
 	if (m_pMgr && m_pMgr->IsFileInit () == FALSE)
 	{
-		ShellExecute (NULL, "explore", get_OutputFilePathName (), NULL, NULL, SW_SHOW);
+		ShellExecute (NULL, _T("explore"), get_OutputFilePathName (), NULL, NULL, SW_SHOW);
 	}
 	else
 	{
@@ -570,16 +570,16 @@ void vmsDownloadMgrEx::Do_OpenFolder()
 
 		if (GetFileAttributes (strFileName) == DWORD (-1))
 		{
-			char szPath [MY_MAX_PATH];
+			TCHAR szPath [MY_MAX_PATH];
 			
 			fsGetPath (strFileName, szPath);
-			ShellExecute (NULL, "explore", szPath, NULL, NULL, SW_SHOW);
+			ShellExecute (NULL, _T("explore"), szPath, NULL, NULL, SW_SHOW);
 		}
 		else
 		{
 			CString strCmd;
-			strCmd.Format ("/select,\"%s\"", strFileName);
-				ShellExecute (NULL, "open", "explorer.exe", strCmd, NULL, SW_SHOW);
+			strCmd.Format (_T("/select,\"%s\""), strFileName);
+				ShellExecute (NULL, _T("open"), _T("explorer.exe"), strCmd, NULL, SW_SHOW);
 		}
 	}
 }
@@ -646,4 +646,14 @@ bool vmsDownloadMgrEx::isInternetTraffic (bool bForDownload)
 {
 	vmsDownloaderWithNetworkUsageAdjustment *pObj = getDownloaderWithNetworkUsageAdjustmentObject ();
 	return pObj ? pObj->isInternetTraffic (bForDownload) : true;
+}
+
+fsString vmsDownloadMgrEx::get_OutputPath()
+{
+	if (m_pMgr)
+		return m_pMgr->GetDP ()->pszFileName;
+	else if (m_spBtMgr)
+		return m_spBtMgr->get_OutputPath();
+	else if (m_pTpMgr)
+		return m_pTpMgr->get_OutputPath ();
 }

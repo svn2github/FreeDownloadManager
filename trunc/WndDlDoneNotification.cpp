@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -107,7 +107,7 @@ void CWndDlDoneNotification::GetWindowPosition(int iPos, CRect *prc)
 	
 	
 	
-	HWND shellWindow = ::FindWindow ("Shell_TrayWnd", NULL);
+	HWND shellWindow = ::FindWindow (_T("Shell_TrayWnd"), NULL);
 	
 	APPBARDATA appBarData;
 	appBarData.hWnd = shellWindow;
@@ -203,7 +203,7 @@ void CWndDlDoneNotification::OnPaint()
 
 	rc2.top += rc3.Height () + 2;	
 	rc2.top = max (rc2.top, 5+16+1);
-	char sz [MY_MAX_PATH] = "";
+	TCHAR sz [MY_MAX_PATH] = _T("");
 	if (m_dld->pMgr->IsBittorrent () && m_dld->pMgr->GetBtDownloadMgr ()->get_FileCount () > 1)
 		lstrcpy (sz, m_dld->pMgr->GetBtDownloadMgr ()->get_TorrentName ());
 	else
@@ -239,11 +239,11 @@ void CWndDlDoneNotification::OnPaint()
 void CWndDlDoneNotification::OnLButtonDown(UINT nFlags, CPoint point) 
 {
 	CFrameWnd::OnLButtonDown(nFlags, point);
+	PostMessage (WM_CLOSE);	
 	if (PtInRect (&m_rcLaunch, point))
 		_DldsMgr.LaunchDownload (m_dld);
 	else if (PtInRect (&m_rcOpenFolder, point))
 		m_dld->pMgr->Do_OpenFolder ();
-	PostMessage (WM_CLOSE);	
 }
 
 BOOL CWndDlDoneNotification::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message) 

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -23,11 +23,11 @@ vmsAppUtil::~vmsAppUtil()
 
 }
 
-fsInternetResult vmsAppUtil::UrlDownloadToFile(LPCSTR pszUrl, LPCSTR pszFileName)
+fsInternetResult vmsAppUtil::UrlDownloadToFile(LPCTSTR pszUrl, LPCTSTR pszFileName)
 {
 	vmsSimpleFileDownloader dldr;
 	dldr.Download (pszUrl, pszFileName);
 	while (dldr.IsRunning ())
 		Sleep (10);
-	return dldr.GetLastError ();
+	return dldr.GetLastError ().first;
 }

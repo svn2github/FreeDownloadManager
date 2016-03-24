@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -37,7 +37,7 @@ END_MESSAGE_MAP()
 
 void CDownloadsGroupsComboBox::Fill()
 {
-	m_wndTree.CreateEx (WS_EX_TOPMOST, WC_TREEVIEW, "", WS_POPUP | WS_BORDER |
+	m_wndTree.CreateEx (WS_EX_TOPMOST, WC_TREEVIEW, _T(""), WS_POPUP | WS_BORDER |
 		TVS_FULLROWSELECT | TVS_HASLINES |  TVS_TRACKSELECT, 
 		CRect (0,0,0,0), GetParent (), 0);
 	m_wndTree.SetWindowPos (&CWnd::wndTopMost, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
@@ -261,7 +261,7 @@ void CDownloadsGroupsComboBox::Tree_UpdateSelection(BOOL bPostNotificationMsg)
 		
 
 		m_pSelectedGroup = NULL;
-		AddString ("");
+		AddString (_T(""));
 	}
 	SetCurSel (0);	
 

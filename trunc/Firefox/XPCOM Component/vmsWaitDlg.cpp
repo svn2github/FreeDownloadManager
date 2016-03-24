@@ -1,10 +1,11 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
+#include "common.h"
 #include "vmsWaitDlg.h"
 #include "resource.h"
-#include "vmsFdmTranslations.h"
+#include "../../common/vmsFdmTranslations.h"
 
 vmsWaitDlg::vmsWaitDlg()
 {
@@ -26,9 +27,9 @@ INT_PTR CALLBACK vmsWaitDlg::_DlgProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 		vmsWaitDlg *pthis = (vmsWaitDlg*)lp;
 		setThisPtr (hwnd, pthis);
 		SetDlgItemText (hwnd, IDC__MSG, pthis->m_strMsg.c_str ());
-		std::string str = vmsFdmTranslations::o ().GetString (L_PLEASEWAIT);
+		tstring str = vmsFdmTranslations::o ().GetString (L_PLEASEWAIT);
 		if (str.empty ())
-			str = "Please wait...";
+			str = _T("Please wait...");
 		SetWindowText (hwnd, str.c_str ());
 
 		SetTimer (hwnd, 1, 100, NULL);

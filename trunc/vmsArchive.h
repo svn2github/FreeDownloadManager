@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSARCHIVE_H__445E6510_F791_4E22_809D_17DF225A6762__INCLUDED_)
@@ -26,7 +26,7 @@ public:
 	
 	
 	
-	virtual bool Extract (LPCSTR pszArchive, LPCSTR pszOutFolder) = NULL;
+	virtual bool Extract (LPCTSTR pszArchive, LPCTSTR pszOutFolder) = NULL;
 
 	vmsArchive();
 	virtual ~vmsArchive();

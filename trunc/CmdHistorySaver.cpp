@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "StdAfx.h"
@@ -26,7 +26,7 @@ void CCmdHistorySaver::Save()
 	std::auto_ptr<BYTE> apbtBufferGuard;
 	fsHistFileHdr hdr;
 
-	HANDLE hFile = CreateFile (fsGetDataFilePath ("history.sav"), GENERIC_WRITE, 0, NULL, 
+	HANDLE hFile = CreateFile (fsGetDataFilePath (_T("history.sav")), GENERIC_WRITE, 0, NULL, 
 		CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -63,7 +63,7 @@ _lErr:
 	if (hFile != INVALID_HANDLE_VALUE)
 		CloseHandle (hFile);
 
-	DeleteFile (fsGetDataFilePath ("history.sav"));
+	DeleteFile (fsGetDataFilePath (_T("history.sav")));
 }
 
 void CCmdHistorySaver::Load()
@@ -76,7 +76,7 @@ void CCmdHistorySaver::Load()
 	_HsMgr.ReadSettings ();
 
 	
-	HANDLE hFile = CreateFile (fsGetDataFilePath ("history.sav"), GENERIC_READ, FILE_SHARE_READ, NULL, 
+	HANDLE hFile = CreateFile (fsGetDataFilePath (_T("history.sav")), GENERIC_READ, FILE_SHARE_READ, NULL, 
 		OPEN_EXISTING, 0, NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE)

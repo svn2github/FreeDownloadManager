@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSCLIPBOARDMGR_H__7D232619_1541_409D_A94A_F6B2CCFF7456__INCLUDED_)
@@ -13,9 +13,9 @@ class fsClipboardMgr
 {
 public:
 	
-	BOOL Text (LPCSTR psz);
+	BOOL Text (LPCTSTR psz);
 	
-	LPCSTR Text();
+	LPCTSTR Text();
 	
 	void Initialize (HWND hWnd);
 

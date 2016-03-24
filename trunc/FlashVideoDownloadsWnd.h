@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FLASHVIDEODOWNLOADSWND_H__09228685_F3CC_4075_B8A1_430FAACBC81B__INCLUDED_)
@@ -7,6 +7,7 @@
 
 #include "FVDownloads_Tasks.h"	
 #include "WndSplitter.h"	
+#include "DlgCreateFlvDownloads.h"
 #if _MSC_VER > 1000
 #pragma once
 #endif 
@@ -21,7 +22,7 @@ public:
 	struct WmFvdwLparam
 	{
 		CString strSrcWebPageUrl;
-		std::vector <vmsNewDownloadInfo> *pvDlds;
+		std::unique_ptr <std::vector <vmsNewDownloadInfo>> pvDlds;
 		class CFdmUiWindow *pUiWindow;
 	};
 
@@ -33,7 +34,7 @@ public:
 public:
 	
 	static void Plugin_SetLanguage (wgLanguage, HMENU hMenuMain, HMENU);
-	static void Plugin_GetPluginNames(LPCSTR *ppszLong, LPCSTR *ppszShort);
+	static void Plugin_GetPluginNames(LPCTSTR *ppszLong, LPCTSTR *ppszShort);
 	static void Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int *cItems);
 	static void Plugin_GetMenuImages(fsSetImage **ppImages, int *pcImages);
 	static void Plugin_GetToolBarInfo (wgTButtonInfo **ppButtons, int *pcButtons);
@@ -47,7 +48,7 @@ public:
 	//}}AFX_VIRTUAL
 
 public:
-	BOOL CreateDownload (LPCSTR pszUrl = NULL, bool bTopMostErrMessages = false);
+	BOOL CreateDownload (LPCTSTR pszUrl = NULL, bool bTopMostErrMessages = false);
 	void SetActiveDownload (vmsDownloadSmartPtr dld);
 	void SaveAll(DWORD dwWhat);
 	void OnDownloadDone (vmsDownloadSmartPtr dld);
@@ -87,6 +88,16 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnDestroy();
+protected:
+	bool CreateFlvDownloads(CWnd *parentWindow, const CString &strSrcWebPageUrl, 
+		std::unique_ptr <std::vector <vmsNewDownloadInfo>> pvDlds, 
+		std::unique_ptr <std::vector <bool>> selectedDownloads,
+		CFdmUiWindow *pUiWindow, bool bReqTopMostDialog,
+		CDlgCreateFlvDownloads::ui_customizations *dlg_customizations = nullptr);
+	bool CreateDownloadFromYtParser(const CString &srcUrl, class YouTubeParser *parser, 
+		bool topmostDialog, bool& cancelled_by_user);
+	void FinalConstructNewDownloadInfo(vmsNewDownloadInfo *dlInfo, 
+		const vmsNewDownloadInfo *parentDlInfo, const class CDlgCreateFlvDownloads& dlg);
 };
 
 //{{AFX_INSERT_LOCATION}}

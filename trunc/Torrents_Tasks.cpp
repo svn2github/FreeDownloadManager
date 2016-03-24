@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -84,17 +84,17 @@ BOOL CTorrents_Tasks::Create(CWnd *pwndParent)
 	m_selimages.Add (&bmp2, RGB (255, 0, 255));
 	SetSelectedImages (&m_selimages);
 	
-	InsertColumn (0, "", LVCFMT_LEFT, 200, 0);
-	InsertColumn (1, "", LVCFMT_LEFT, 50, 0);
-	InsertColumn (2, "", LVCFMT_LEFT, 100, 0);
-	InsertColumn (3, "", LVCFMT_LEFT, 60, 0);
-	InsertColumn (4, "", LVCFMT_LEFT, 50, 0);
-	InsertColumn (5, "", LVCFMT_LEFT, 58, 0);
-	InsertColumn (6, "", LVCFMT_LEFT, 70, 0);
-	InsertColumn (7, "", LVCFMT_LEFT, 200, 0);
-	InsertColumn (8, "", LVCFMT_LEFT, 120, 0);
+	InsertColumn (0, _T(""), LVCFMT_LEFT, 200, 0);
+	InsertColumn (1, _T(""), LVCFMT_LEFT, 50, 0);
+	InsertColumn (2, _T(""), LVCFMT_LEFT, 100, 0);
+	InsertColumn (3, _T(""), LVCFMT_LEFT, 60, 0);
+	InsertColumn (4, _T(""), LVCFMT_LEFT, 50, 0);
+	InsertColumn (5, _T(""), LVCFMT_LEFT, 58, 0);
+	InsertColumn (6, _T(""), LVCFMT_LEFT, 70, 0);
+	InsertColumn (7, _T(""), LVCFMT_LEFT, 200, 0);
+	InsertColumn (8, _T(""), LVCFMT_LEFT, 120, 0);
 	
-	ReadState ("TorrentsTasks");
+	ReadState (_T("TorrentsTasks"));
 	
 	
 	ShowWindow (SW_SHOW);
@@ -164,7 +164,7 @@ void CTorrents_Tasks::OnGetdispinfo(NMHDR *pNMHDR, LRESULT *pResult)
 				else
 				{
 					
-					CString str; str.Format ("%.*g", 4, 
+					CString str; str.Format (_T("%.*g"), 4, 
 						(float)dld->pMgr->GetBtDownloadMgr ()->getRatio ());
 					lstrcpy (pItem->pszText, str);
 				}
@@ -174,7 +174,7 @@ void CTorrents_Tasks::OnGetdispinfo(NMHDR *pNMHDR, LRESULT *pResult)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CTorrents_Tasks::OnGetdispinfo " + tstring(ex.what()));
+		vmsLogger::WriteLog("CTorrents_Tasks::OnGetdispinfo " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -281,7 +281,7 @@ void CTorrents_Tasks::UpdateActiveDownload(int adjSelected)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CTorrents_Tasks::UpdateActiveDownload " + tstring(ex.what()));
+		vmsLogger::WriteLog("CTorrents_Tasks::UpdateActiveDownload " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -540,8 +540,8 @@ void CTorrents_Tasks::UpdateMenu(CMenu *pPopup)
 
 void CTorrents_Tasks::OnBtdldAddfromfile() 
 {
-	CString str; str.Format ("%s (*.torrent)|*.torrent||", LS (L_TORRENT_FILES));
-	CFileDialog dlg (TRUE, "torrent", NULL, OFN_HIDEREADONLY|OFN_NOCHANGEDIR, str, this);
+	CString str; str.Format (_T("%s (*.torrent)|*.torrent||"), LS (L_TORRENT_FILES));
+	CFileDialog dlg (TRUE, _T("torrent"), NULL, OFN_HIDEREADONLY|OFN_NOCHANGEDIR, str, this);
 	if (dlg.DoModal () != IDOK)
 		return;
 	CString strUrl = "file://"; strUrl += dlg.GetPathName ();
@@ -727,7 +727,7 @@ void CTorrents_Tasks::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 void CTorrents_Tasks::SaveState()
 {
-	CListCtrlEx::SaveState ("TorrentsTasks");
+	CListCtrlEx::SaveState (_T("TorrentsTasks"));
 }
 
 int CTorrents_Tasks::OnUpdateToolBar(UINT nID)

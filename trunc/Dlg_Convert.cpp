@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -54,16 +54,16 @@ UINT _anQualityNames [] = {
 	L_VERYHIGH_2,
 };
 
-LPCSTR _apszFormats [] = {
+LPCTSTR _apszFormats [] = {
 	
-	NULL,						"avi", "avi",			"msmpeg4v2", "mp3",
-	NULL,						"avi", "avi",			"mpeg4", "mp3",
-	"FLV (*.flv)",				"flv", "flv",			"", "",
-	"WMV (*.wmv)" ,				"wmv", "asf",			"wmv2", "wmav2",
-	"MPEG1 (*.mpg)",			"mpg", "mpeg",			"mpeg1video", "mp3",
-	"MPEG2 (*.mpg)",			"mpg", "mpegts",		"mpeg2video", "aac",
-	NULL,						"mp4", "mp4",			"mpeg4", "aac",
-	"MP3 (*.mp3)",				"mp3", "mp3",			"none", "mp3",
+	NULL,						_T("avi"), _T("avi"),			_T("msmpeg4v2"), _T("mp3"),
+	NULL,						_T("avi"), _T("avi"),			_T("mpeg4"), _T("mp3"),
+	_T("FLV (*.flv)"),			_T("flv"), _T("flv"),			_T(""), _T(""),
+	_T("WMV (*.wmv)") ,			_T("wmv"), _T("asf"),			_T("wmv2"), _T("wmav2"),
+	_T("MPEG1 (*.mpg)"),		_T("mpg"), _T("mpeg"),			_T("mpeg1video"), _T("mp3"),
+	_T("MPEG2 (*.mpg)"),		_T("mpg"), _T("mpegts"),		_T("mpeg2video"), _T("aac"),
+	NULL,						_T("mp4"), _T("mp4"),			_T("mpeg4"), _T("aac"),
+	_T("MP3 (*.mp3)"),			_T("mp3"), _T("mp3"),			_T("none"), _T("mp3"),
 };
 
 SIZE _aVideoSizes [] = {
@@ -105,7 +105,7 @@ BOOL CDlg_Convert::OnInitDialog()
 		else
 		{
 			CString str;
-			str.Format ("%d x %d", _aVideoSizes [i].cx, _aVideoSizes [i].cy);
+			str.Format (_T("%d x %d"), _aVideoSizes [i].cx, _aVideoSizes [i].cy);
 			m_wndVideoSize.AddString (str);
 		}
 		if (m_stgs->sizeVideo == _aVideoSizes [i])
@@ -123,8 +123,8 @@ BOOL CDlg_Convert::OnInitDialog()
 		int k = m - lstrlen (LS (_anQualityNames [i]));
 		k = (int)(k * 1.6);
 		while (k--)
-			str2 += ' '; 
-		str.Format ("%s %s (%s: %dkbps; %s: %dkbps)", LS (_anQualityNames [i]), str2,
+			str2 += _T(' '); 
+		str.Format (_T("%s %s (%s: %dkbps; %s: %dkbps)"), LS (_anQualityNames [i]), str2,
 			LS (L_VIDEO_BITRATE), _aQualityRates [i].cx, 
 			LS (L_AUDIO_BITRATE), _aQualityRates [i].cy);
 		m_wndQuality.AddString (str);

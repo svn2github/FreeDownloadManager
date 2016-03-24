@@ -1,11 +1,12 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 #include "fdm.h"
 #include "Dlg_Options_Downloads_Flv.h"
 #include "vmsFlvSniffInjector.h"
+#include "WaitDlg2.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -14,7 +15,8 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 CDlg_Options_Downloads_Flv::CDlg_Options_Downloads_Flv(CWnd* pParent )
-	: CDlg_Options_Page(CDlg_Options_Downloads_Flv::IDD, pParent)
+	: CDlg_Options_Page(CDlg_Options_Downloads_Flv::IDD, pParent),
+	m_vmm (std::make_shared <vmsVideoMonitoringModulesManager> ())
 {
 	//{{AFX_DATA_INIT(CDlg_Options_Downloads_Flv)
 		
@@ -57,7 +59,11 @@ BOOL CDlg_Options_Downloads_Flv::OnInitDialog()
 	if (dw & FSDI_PROCESS_SEAMONKEY)
 		CheckDlgButton (IDC_M_SEAMONKEY, BST_CHECKED);
 
-	if (_App.FlvMonitoring_Enable ())
+	bool monitoring_enabled = 
+		_App.FlvMonitoring_Enable () != FALSE &&
+		m_vmm.modules_installed ();
+
+	if (monitoring_enabled)
 		CheckDlgButton (IDC_ENABLE_MONITORING, BST_CHECKED);
 	else
 		m_dwOldFSDI = 0;
@@ -90,12 +96,12 @@ BOOL CDlg_Options_Downloads_Flv::OnInitDialog()
 
 CString CDlg_Options_Downloads_Flv::get_PageShortTitle()
 {
-	return LS (L_FLASH_VIDEO);
+	return LS (L_VIDEO_MONITORING);
 }
 
 CString CDlg_Options_Downloads_Flv::get_PageTitle()
 {
-	return LS (L_FVDOWNLOADS);
+	return LS (L_VIDEO_DOWNLOADS);
 }
 
 BOOL CDlg_Options_Downloads_Flv::Apply()
@@ -164,6 +170,7 @@ void CDlg_Options_Downloads_Flv::ApplyLanguage()
 	fsDlgLngInfo lnginfo [] =  {
 		fsDlgLngInfo (IDC_ENABLE_MONITORING, L_FLV_ENABLEMONITORING),
 		fsDlgLngInfo (IDC__WARNING, L_FLV_MONITOR_WARNING),
+		fsDlgLngInfo (IDC__GETIT_DESC, L_GETIT_VIDEO_BTN_DESC)
 	};
 	
 	_LngMgr.ApplyLanguage (this, lnginfo, sizeof (lnginfo) / sizeof (fsDlgLngInfo), 0);
@@ -176,6 +183,15 @@ void CDlg_Options_Downloads_Flv::ApplyLanguage()
 
 void CDlg_Options_Downloads_Flv::OnEnableMonitoring() 
 {
+	if (IsDlgButtonChecked (IDC_ENABLE_MONITORING) == BST_CHECKED)
+	{
+		if (!m_vmm.MakeSureModulesInstalled (this))
+		{
+			CheckDlgButton (IDC_ENABLE_MONITORING, BST_UNCHECKED);
+			return;
+		}
+	}
+
 	UpdateEnabled ();
 }	
 

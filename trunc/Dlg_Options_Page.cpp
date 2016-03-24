@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -24,6 +24,7 @@ CDlg_Options_Page::CDlg_Options_Page(UINT u, CWnd* wnd) :
 	m_nReflectLevel = 1;
 	m_bElevateRequired = false;
 	m_bRestartOfBrowserIsRequired = false;
+	m_bRestartOfApplicationIsRequired = false;
 }
 
 CDlg_Options_Page::~CDlg_Options_Page()
@@ -31,7 +32,7 @@ CDlg_Options_Page::~CDlg_Options_Page()
 
 }
 
-LPCSTR CDlg_Options_Page::get_Template()
+LPCTSTR CDlg_Options_Page::get_Template()
 {
 	return m_lpszTemplateName;
 }

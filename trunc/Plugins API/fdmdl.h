@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __FDMDL_H_
@@ -43,8 +43,8 @@ public:
 	virtual void DeleteFileOnDisk () = NULL;
 	
 	
-	virtual void getFileName (LPSTR pszFileName) = NULL;	
-	virtual void getUrl (LPSTR pszUrl) = NULL;
+	virtual void getFileName (LPTSTR pszFileName) = NULL;	
+	virtual void getUrl (LPTSTR pszUrl) = NULL;
 	virtual float getProgress () = NULL;
 	virtual UINT getId () = NULL;
 };

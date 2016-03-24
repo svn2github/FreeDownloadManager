@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -20,7 +20,7 @@ BEGIN_MESSAGE_MAP(CWebInterfaceApp, CWinApp)
 END_MESSAGE_MAP()
 
 CWebInterfaceApp::CWebInterfaceApp() : 
-	m_si ("FDM - remote control server")
+	m_si (_T("FDM - remote control server"))
 {
 }
 
@@ -31,9 +31,9 @@ BOOL CWebInterfaceApp::InitInstance()
 	if (m_si.is_1stInstance () == FALSE)
 		return FALSE;
 
-	char sz [MAX_PATH];
+	TCHAR sz [MAX_PATH];
 	GetModuleFileName (NULL, sz, MAX_PATH);
-	*strrchr (sz, '\\') = 0;
+	*_tcsrchr (sz, _T('\\')) = 0;
 	SetCurrentDirectory (sz);
 
 	AfxEnableControlContainer();
@@ -46,7 +46,7 @@ BOOL CWebInterfaceApp::InitInstance()
 	Enable3dControlsStatic();	
 #endif
 
-	SetRegistryKey ("FreeDownloadManager.ORG");
+	SetRegistryKey (_T("FreeDownloadManager.ORG"));
 
 	CoInitialize (NULL);
 

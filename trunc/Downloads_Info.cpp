@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -165,24 +165,24 @@ void CDownloads_Info::ApplyLanguage()
 	ZeroMemory (&item, sizeof (item));
 
 	item.mask = TCIF_TEXT;
-	item.pszText = (LPSTR) LS (L_LOG);
+	item.pszText = (LPTSTR) LS (L_LOG);
 	SetItem (0, &item);
 
 	int nBtCorr = 0;
 	if (m_bBtTabShowing)
 	{
-		item.pszText = (LPSTR) LS (L_BITTORRENT);
+		item.pszText = (LPTSTR) LS (L_BITTORRENT);
 		SetItem (1, &item);
 		nBtCorr = 1;
 	}
 
-	item.pszText = (LPSTR) LS (L_PROGRESS);
+	item.pszText = (LPTSTR) LS (L_PROGRESS);
 	SetItem (1+nBtCorr, &item);
 
-	item.pszText = (LPSTR) LS (L_MEDIA_PREVIEW_CONVERT);
+	item.pszText = (LPTSTR) LS (L_MEDIA_PREVIEW_CONVERT);
 	SetItem (2+nBtCorr, &item);
 
-	item.pszText = (LPSTR) LS (L_OPINIONS);
+	item.pszText = (LPTSTR) LS (L_OPINIONS);
 	SetItem (3+nBtCorr, &item);
 
 	m_log.ApplyLanguage ();
@@ -192,7 +192,7 @@ void CDownloads_Info::ApplyLanguage()
 
 void CDownloads_Info::SaveState()
 {
-	m_log.SaveState ("DownloadsLog");
+	m_log.SaveState (_T("DownloadsLog"));
 	_App.View_DldInfoCurTab (m_bBtTabWasActive ? DIT_BT : get_CurTab ());
 	m_video.SaveState ();
 }

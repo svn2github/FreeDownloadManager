@@ -41,24 +41,6 @@
     <ClCompile Include="FDMUrlReceiver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fsLangMgr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsFdmTranslations.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsFile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsFileUtil.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsFirefoxExtensionInstaller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsFirefoxUtil.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="vmsFlvSniffDll.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -69,12 +51,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vmsHttpRedirectList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsBinaryFileVersionInfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vmsAppVersion.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="vmsBrowserActivityMonitor.cpp">
@@ -98,21 +74,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="FDMUrlReceiver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fsLangMgr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsFdmTranslations.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsFileUtil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsFirefoxExtensionInstaller.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vmsFirefoxUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="vmsFlvSniffDll.h">

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -30,7 +30,7 @@ BOOL CWndSplitter::Create(HINSTANCE hInst, HWND hWndParent, WndSplitterType enTy
 {
 	m_type = enType;
 	m_wndParent = hWndParent;
-	LPCSTR pszClassName = m_type == WST_VERTICAL ? "WndSplitter_Vertical" : "WndSplitter_Horizontal";
+	LPCTSTR pszClassName = m_type == WST_VERTICAL ? _T("WndSplitter_Vertical") : _T("WndSplitter_Horizontal");
 
 	WNDCLASS wc = {
 		0, _wndProc, 0, 0, hInst, NULL, LoadCursor (NULL, m_type == WST_VERTICAL ? IDC_SIZEWE : IDC_SIZENS),

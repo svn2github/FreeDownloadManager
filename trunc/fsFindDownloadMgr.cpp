@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -9,7 +9,13 @@
 #include "DownloadsWnd.h"
 
 extern CDownloadsWnd* _pwndDownloads;
-extern LPCSTR fsStrStrNoCase(LPCSTR pszIn, LPCSTR pszWhat);
+#ifdef UNICODE
+extern LPCWSTR fsStrStrNoCaseW(LPCWSTR pszIn, LPCWSTR pszWhat);
+#define fsStrStrNoCase fsStrStrNoCaseW
+#else
+extern LPCSTR fsStrStrNoCaseA(LPCSTR pszIn, LPCSTR pszWhat);
+#define fsStrStrNoCase fsStrStrNoCaseA
+#endif
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -325,7 +331,7 @@ BOOL fsFindDownloadMgr::IsSatisfies(vmsDownloadSmartPtr dld)
 
 	if (m_dwFlags & SEARCHIN_FILENAME)
 	{
-		char sz [10000];
+		TCHAR sz [10000];
 		CDownloads_Tasks::GetFileName (dld, sz);
 		if (fsStrStrNoCase (sz, m_strWhat))
 			return TRUE;

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsinet.h"
@@ -93,8 +93,17 @@ fsInternetResult fsWinInetErrorToIR (DWORD dwErr)
 		case ERROR_HTTP_INVALID_HEADER:
 			return IR_E_WININET_UNSUPP_RESOURCE;
 
+		case ERROR_INTERNET_SEC_CERT_DATE_INVALID:
+		case ERROR_INTERNET_SEC_CERT_CN_INVALID:
+		case ERROR_INTERNET_HTTP_TO_HTTPS_ON_REDIR:
+		case ERROR_INTERNET_HTTPS_TO_HTTP_ON_REDIR:
+		case ERROR_INTERNET_INVALID_CA:
+		case ERROR_INTERNET_SEC_CERT_ERRORS:
+		case ERROR_INTERNET_SEC_CERT_NO_REV:
+		case ERROR_INTERNET_SEC_CERT_REV_FAILED:
+			return IR_SEC_CHECK_FAILURE;
+
 		default:
-			
 			return IR_WININETUNKERROR;
 	}
 }
@@ -144,7 +153,49 @@ fsInternetResult fsHttpStatusCodeToIR (DWORD dwStatusCode)
 	}
 }
 
-fsInternetResult fsHttpOpenUrl (LPCSTR pszUrl, LPCSTR pszUser, LPCSTR pszPassword, fsHttpConnection *pServer, fsHttpFile *pFile, LPSTR* ppRedirectedUrl, BOOL *pbRedirInner)
+fsSecurityCheckType fsWinInetErrorToSCT ()
+{
+	return fsWinInetErrorToSCT (GetLastError ());
+}
+
+fsSecurityCheckType fsWinInetErrorToSCT (DWORD err)
+{
+	switch (err)
+	{
+	case ERROR_INTERNET_SEC_CERT_DATE_INVALID:
+		return SCT_CERT_DATE_INVALID;
+
+	case ERROR_INTERNET_SEC_CERT_CN_INVALID:
+		return SCT_CERT_CN_INVALID;
+
+	case ERROR_INTERNET_INVALID_CA:
+		return SCT_CERT_INVALID_CA;
+
+	default:
+		return SCT_UNSPECIFIED;
+	}
+}
+
+DWORD fsSCTflagsToWinInetIgnoreFlags (DWORD flags)
+{
+	DWORD result = 0;
+	if (flags & SCT_CERT_CN_INVALID)
+		result |= SECURITY_FLAG_IGNORE_CERT_CN_INVALID;
+	if (flags & SCT_CERT_DATE_INVALID)
+		result |= SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+	if (flags & SCT_CERT_INVALID_CA)
+		result |= SECURITY_FLAG_IGNORE_UNKNOWN_CA;
+	if (flags & SCT_UNSPECIFIED)
+	{
+		result |= SECURITY_FLAG_IGNORE_WRONG_USAGE | 
+			SECURITY_FLAG_IGNORE_REVOCATION |
+			SECURITY_FLAG_IGNORE_REDIRECT_TO_HTTPS |
+			SECURITY_FLAG_IGNORE_REDIRECT_TO_HTTP;
+	}
+	return result;
+}
+
+fsInternetResult fsHttpOpenUrl (LPCTSTR pszUrl, LPCTSTR pszUser, LPCTSTR pszPassword, fsHttpConnection *pServer, fsHttpFile *pFile, LPTSTR* ppRedirectedUrl, BOOL *pbRedirInner)
 {
 	fsURL url;
 	fsInternetResult ir;
@@ -164,7 +215,7 @@ fsInternetResult fsHttpOpenUrl (LPCSTR pszUrl, LPCSTR pszUser, LPCSTR pszPasswor
 	return fsHttpOpenPath (url.GetPath (), pServer, pFile, ppRedirectedUrl, pbRedirInner);
 }
 
-fsInternetResult fsHttpOpenPath (LPCSTR pszPath, fsHttpConnection *pServer, fsHttpFile *pFile, LPSTR* ppRedirectedUrl, BOOL *pbRedirInner)
+fsInternetResult fsHttpOpenPath (LPCTSTR pszPath, fsHttpConnection *pServer, fsHttpFile *pFile, LPTSTR* ppRedirectedUrl, BOOL *pbRedirInner)
 {
 	fsInternetResult ir;
 
@@ -190,12 +241,12 @@ fsInternetResult fsHttpOpenPath (LPCSTR pszPath, fsHttpConnection *pServer, fsHt
 
 			if (bRelUrl)
 			{
-				if (*pFile->GetLastError () != '/' && *pFile->GetLastError () != '\\')
+				if (*pFile->GetLastError () != _T('/') && *pFile->GetLastError () != _T('\\'))
 				{
 					
 					strUrl = pszPath;
 					int len = strUrl.Length ();
-					while (strUrl [len-1] != '/' && strUrl [len-1] != '\\')
+					while (strUrl [len-1] != _T('/') && strUrl [len-1] != _T('\\'))
 						len--;
 					strUrl [len] = 0;
 					strUrl += pFile->GetLastError ();
@@ -220,8 +271,8 @@ fsInternetResult fsHttpOpenPath (LPCSTR pszPath, fsHttpConnection *pServer, fsHt
 			
 			if (*ppRedirectedUrl == NULL)
 			{
-				fsnew (*ppRedirectedUrl, CHAR, strUrl.Length () + 1);
-				strcpy (*ppRedirectedUrl, strUrl);
+				fsnew (*ppRedirectedUrl, TCHAR, strUrl.Length () + 1);
+				_tcscpy_s (*ppRedirectedUrl, strUrl.Length () + 1, (LPCTSTR)strUrl);
 			}
 
 			
@@ -234,7 +285,7 @@ fsInternetResult fsHttpOpenPath (LPCSTR pszPath, fsHttpConnection *pServer, fsHt
 	return IR_SUCCESS;
 }
 
-BOOL fsUrlToFullUrl (LPCSTR pszUrlParent, LPCSTR pszUrlCurrent, LPSTR *ppszFullUrl)
+BOOL fsUrlToFullUrl (LPCTSTR pszUrlParent, LPCTSTR pszUrlCurrent, LPTSTR *ppszFullUrl)
 {
 	fsURL url;
 	*ppszFullUrl = NULL;
@@ -243,12 +294,12 @@ BOOL fsUrlToFullUrl (LPCSTR pszUrlParent, LPCSTR pszUrlCurrent, LPSTR *ppszFullU
 
 	if (IR_SUCCESS != url.Crack (pszUrlCurrent, FALSE)) 
 	{
-		UINT nLenParent = strlen (pszUrlParent);
-		UINT nLenUrl = strlen (pszUrlCurrent);
+		UINT nLenParent = _tcslen (pszUrlParent);
+		UINT nLenUrl = _tcslen (pszUrlCurrent);
 
-		fsnew (*ppszFullUrl, char, nLenParent + nLenUrl + 10);
+		fsnew (*ppszFullUrl, TCHAR, (nLenParent + nLenUrl + 10) * sizeof(TCHAR));
 		
-		if (*pszUrlCurrent == '\\' || *pszUrlCurrent == '/')
+		if (*pszUrlCurrent == _T('\\') || *pszUrlCurrent == _T('/'))
 		{
 			
 			
@@ -273,15 +324,15 @@ BOOL fsUrlToFullUrl (LPCSTR pszUrlParent, LPCSTR pszUrlCurrent, LPSTR *ppszFullU
 
 			int posmin = 0;	
 			
-			LPCSTR pszPath;
-			pszPath = strstr (*ppszFullUrl, "://"); 
+			LPCTSTR pszPath;
+			pszPath = _tcsstr (*ppszFullUrl, _T("://")); 
 			if (pszPath == NULL)
-				pszPath = strstr (*ppszFullUrl, ":\\\\");
+				pszPath = _tcsstr (*ppszFullUrl, _T(":\\\\"));
 			if (pszPath)
 			{
 				pszPath += 3; 
 				
-				while (*pszPath != 0 && *pszPath != '\\' && *pszPath != '/')
+				while (*pszPath != 0 && *pszPath != _T('\\') && *pszPath != _T('/'))
 					pszPath++;
 				
 				posmin = pszPath - *ppszFullUrl;
@@ -290,7 +341,7 @@ BOOL fsUrlToFullUrl (LPCSTR pszUrlParent, LPCSTR pszUrlCurrent, LPSTR *ppszFullU
 				{
 					
 					
-					lstrcat (*ppszFullUrl, "/");
+					lstrcat (*ppszFullUrl, _T("/"));
 					posmin++;
 				}
 				else 
@@ -300,7 +351,7 @@ BOOL fsUrlToFullUrl (LPCSTR pszUrlParent, LPCSTR pszUrlCurrent, LPSTR *ppszFullU
 			
 			if (pos < posmin)
 				pos = posmin;
-			else while (pos > posmin && pszUrlParent [pos-1] != '\\' && pszUrlParent [pos-1] != '/')
+			else while (pos > posmin && pszUrlParent [pos-1] != _T('\\') && pszUrlParent [pos-1] != _T('/'))
 				pos--; 
 
 			
@@ -308,12 +359,12 @@ BOOL fsUrlToFullUrl (LPCSTR pszUrlParent, LPCSTR pszUrlCurrent, LPSTR *ppszFullU
 			for (UINT i = 0; i < nLenUrl; i++)
 			{
 				
-				if (pszUrlCurrent [i] == '.')
+				if (pszUrlCurrent [i] == _T('.'))
 				{
 					
-					if (pszUrlCurrent [i+1] == '.')
+					if (pszUrlCurrent [i+1] == _T('.'))
 					{
-						if (pszUrlCurrent [i+2] == '\\' || pszUrlCurrent [i+2] == '/') 
+						if (pszUrlCurrent [i+2] == _T('\\') || pszUrlCurrent [i+2] == _T('/')) 
 						{
 							
 
@@ -322,7 +373,7 @@ BOOL fsUrlToFullUrl (LPCSTR pszUrlParent, LPCSTR pszUrlCurrent, LPSTR *ppszFullU
 
 							
 							
-							while (pos > posmin && ((*ppszFullUrl) [pos-1] != '\\' && (*ppszFullUrl) [pos-1] != '/'))
+							while (pos > posmin && ((*ppszFullUrl) [pos-1] != _T('\\') && (*ppszFullUrl) [pos-1] != _T('/')))
 								pos --;
 
 							i += 2; 
@@ -334,7 +385,7 @@ BOOL fsUrlToFullUrl (LPCSTR pszUrlParent, LPCSTR pszUrlCurrent, LPSTR *ppszFullU
 						}
 					}
 					
-					else if (pszUrlCurrent [i+1] == '\\' || pszUrlCurrent [i+1] == '/') 
+					else if (pszUrlCurrent [i+1] == _T('\\') || pszUrlCurrent [i+1] == _T('/')) 
 					{
 						i += 1; 
 					}
@@ -360,8 +411,8 @@ BOOL fsUrlToFullUrl (LPCSTR pszUrlParent, LPCSTR pszUrlCurrent, LPSTR *ppszFullU
 
 	
 	
-	fsnew (*ppszFullUrl, char, strlen (pszUrlCurrent) + 1);
-	strcpy (*ppszFullUrl, pszUrlCurrent);
+	fsnew (*ppszFullUrl, TCHAR, (_tcslen (pszUrlCurrent) + 1) * sizeof(TCHAR));
+	_tcscpy (*ppszFullUrl, pszUrlCurrent);
 	return FALSE;
 
 	}
@@ -384,23 +435,23 @@ fsInternetResult fsWSAErrorToIR ()
 	return IR_ERROR;
 }
 
-BOOL fsIsUrlRelative (LPCSTR pszUrl)
+BOOL fsIsUrlRelative (LPCTSTR pszUrl)
 {
-	return strnicmp (pszUrl, "http://", 7) && strnicmp (pszUrl, "https://", 8) && strnicmp (pszUrl, "ftp://", 6);
+	return _tcsncicmp (pszUrl, _T("http://"), 7) && _tcsncicmp (pszUrl, _T("https://"), 8) && _tcsncicmp (pszUrl, _T("ftp://"), 6);
 }
 
-void fsRemoveWWW (LPCSTR pszUrl)
+void fsRemoveWWW (LPCTSTR pszUrl)
 {
 	
 	
-	char* psz = const_cast<char*>(max (strstr (pszUrl, "://"), strstr (pszUrl, ":\\\\")));
+	TCHAR* psz = const_cast<TCHAR*>(max (_tcsstr (pszUrl, _T("://")), _tcsstr (pszUrl, _T(":\\\\"))));
 
 	if (psz)
-		if (strnicmp (psz+3, "www.", 4) == 0)
-			strcpy (psz+3, psz+7);
+		if (_tcsncicmp (psz+3, _T("www."), 4) == 0)
+			_tcscpy (psz+3, psz+7);
 }
 
-BOOL fsIsServersEqual (LPCSTR pszServ1, LPCSTR pszServ2, BOOL bExcludeSubDomainNameFrom2Site)
+BOOL fsIsServersEqual (LPCTSTR pszServ1, LPCTSTR pszServ2, BOOL bExcludeSubDomainNameFrom2Site)
 {
 	if (pszServ1 == NULL || pszServ2 == NULL)
 		return FALSE;
@@ -409,28 +460,28 @@ BOOL fsIsServersEqual (LPCSTR pszServ1, LPCSTR pszServ2, BOOL bExcludeSubDomainN
 
 	
 
-	if (strnicmp (pszServ1, "www.", 4) == 0)
+	if (_tcsncicmp (pszServ1, _T("www."), 4) == 0)
 		n1 = 4;
 
-	if (strnicmp (pszServ2, "www.", 4) == 0)
+	if (_tcsncicmp (pszServ2, _T("www."), 4) == 0)
 		n2 = 4;
 
 	if (bExcludeSubDomainNameFrom2Site)
 	{
-		int l1 = strlen (pszServ1);
-		int l2 = strlen (pszServ2);
+		int l1 = _tcslen (pszServ1);
+		int l2 = _tcslen (pszServ2);
 
 		
 		
 		if (l1-n1 < l2-n2)
 		{
 			
-			if (pszServ2 [l2 - (l1 - n1) - 1] == '.')
+			if (pszServ2 [l2 - (l1 - n1) - 1] == _T('.'))
 				n2 = l2 - (l1 - n1);	
 		}
 	}
 
-	return stricmp (pszServ1 + n1, pszServ2 + n2) == 0;
+	return _tcsicmp (pszServ1 + n1, pszServ2 + n2) == 0;
 }
 
 fsInternetResult fsDownloadFile (fsInternetURLFile* file, LPBYTE* ppBuf, UINT* puSize, BOOL* pbAbort)

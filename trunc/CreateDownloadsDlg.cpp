@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -197,7 +197,7 @@ void CCreateDownloadsDlg::OnAdvanced()
     _DlgMgr.OnEndDialog (&sheet);
 }
 
-void CCreateDownloadsDlg::BuildDownloads(fs::tree <fsFileInfo*>* pTree, LPCSTR pszRootUrl)
+void CCreateDownloadsDlg::BuildDownloads(fs::tree <fsFileInfo*>* pTree, LPCTSTR pszRootUrl)
 {
 	fs::tree <fsFileInfo*> *pCur = pTree;
 	
@@ -207,7 +207,7 @@ void CCreateDownloadsDlg::BuildDownloads(fs::tree <fsFileInfo*>* pTree, LPCSTR p
 
 		CString strUrl;	
 
-		char* pszRes;
+		TCHAR* pszRes;
 
 		fsUrlToFullUrl (pszRootUrl, file->strName, &pszRes);
 
@@ -216,8 +216,8 @@ void CCreateDownloadsDlg::BuildDownloads(fs::tree <fsFileInfo*>* pTree, LPCSTR p
 		
 		if (pCur->Right ())	
 		{
-			if (strUrl [strUrl.GetLength () - 1] != '/')	
-				strUrl += '/';				
+			if (strUrl [strUrl.GetLength () - 1] != _T('/'))	
+				strUrl += _T('/');				
 			BuildDownloads (pCur->Right (), strUrl);	
 		}
 		else if (file->bFolder == FALSE)	
@@ -281,7 +281,7 @@ void CCreateDownloadsDlg::OnOK()
 	if (FALSE == CCreateDownloadDlg::_CheckFolderName (this, IDC_OUTFOLDER))
 		return;
 
-	fsPathToGoodPath ((LPSTR)(LPCSTR)strFolder);
+	fsPathToGoodPath ((LPTSTR)(LPCTSTR)strFolder);
 
 	_LastFolders.AddRecord (strFolder);
 	if (strFolder [strFolder.GetLength () - 1] != '\\' && 
@@ -318,7 +318,7 @@ void CCreateDownloadsDlg::OnOK()
 	CDialog::OnOK();
 }
 
-void CCreateDownloadsDlg::CreateDownloads(HTREEITEM hTree, LPCSTR pszRootDir, BOOL bCreate)
+void CCreateDownloadsDlg::CreateDownloads(HTREEITEM hTree, LPCTSTR pszRootDir, BOOL bCreate)
 {
 	static int nDld;	
 
@@ -344,8 +344,8 @@ void CCreateDownloadsDlg::CreateDownloads(HTREEITEM hTree, LPCSTR pszRootDir, BO
 		{
 			strDir += file->strName;
 
-			if (strDir [strDir.GetLength () - 1] != '\\' || strDir [strDir.GetLength () - 1] != '/')
-				strDir += '\\'; 
+			if (strDir [strDir.GetLength () - 1] != _T('\\') || strDir [strDir.GetLength () - 1] != _T('/'))
+				strDir += _T('\\'); 
 			BOOL b = m_wndFiles.IsChecked (hCur);	
 			CreateDownloads (hCur, strDir, b && bCreate);	
 		}
@@ -357,8 +357,8 @@ void CCreateDownloadsDlg::CreateDownloads(HTREEITEM hTree, LPCSTR pszRootDir, BO
 				dld->pGroup = m_pGroup;
 				dld->bAutoStart = m_bAutoStart;
 				fsDownload_Properties *dp = dld->pMgr->GetDownloadMgr ()->GetDP ();
-				fsnew (dp->pszFileName, char, strDir.GetLength () + 1);
-				strcpy (dp->pszFileName, strDir);
+				fsnew (dp->pszFileName, TCHAR, (strDir.GetLength () + 1) * sizeof(TCHAR));
+				_tcscpy (dp->pszFileName, strDir);
 
 				m_vpDldsToStart.push_back (dld);
 			}

@@ -1,11 +1,10 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 #include "Iefdmdm.h"
 #include "IEWGDM.h"
-#include <shlguid.h>
 #include "vmsIETmpCookies.h"
 #include "vmsBindStatusCallback.h"
 #include "DlgDownloading.h"
@@ -14,6 +13,8 @@
 #include "vmsHttpHelper.h"
 #include "..\..\FDM.h"
 #include "vmsIeHKCU.h"
+#include "../../common/component_crash_rep.h"
+#include "../../common/vms_sifdm_cl/inet/http/vmsHttpRequestParser.h"
 
 _COM_SMARTPTR_TYPEDEF(IFdmUiWindow, __uuidof(IFdmUiWindow));
 
@@ -409,14 +410,13 @@ BOOL fsUrlToFdm (LPCSTR pszUrl, LPCSTR pszReferer, LPCSTR pszCookies, LPCSTR psz
 }
 
 #include "../UrlMonSpy/vmsUrlMonRequest.h"
-#include "../../AppWinSockSniffDll/vmsHttpRequestParser.h"
-#include "../../AppWinSockSniffDll/vmsHttpRequestParser.cpp"
-#include "../../AppWinSockSniffDll/vmsHttpParser.cpp"
 
 STDMETHODIMP CIEWGDM::Download(IMoniker *pmk, IBindCtx *pbc, 
 	DWORD dwBindVerb, LONG grfBINDF, BINDINFO *pBindInfo, 
 	LPCOLESTR pszHeaders, LPCOLESTR pszRedir, UINT uiCP)
 {
+	makeSureCrashReporterInitialized ();
+
 	ATLASSERT (dwBindVerb == BINDVERB_GET || dwBindVerb == BINDVERB_POST);
 	if (dwBindVerb != BINDVERB_GET && dwBindVerb != BINDVERB_POST)
 		return E_FAIL;
@@ -491,13 +491,21 @@ STDMETHODIMP CIEWGDM::Download(IMoniker *pmk, IBindCtx *pbc,
 		reqHdrs.ParseHeader (spRequest->getRequestHeaders ());
 		const vmsHttpRequestParser::HdrField *pHdr = reqHdrs.FieldByName ("Referer");
 		if (pHdr)
+		{
 			strReferer = pHdr->strValue;
+		}
+		else
+		{
+			auto srcUrl = spRequest->getSrcTabUrl ();
+			if (srcUrl)
+				strReferer = utf8FromWide (srcUrl);
+		}
 		pHdr = reqHdrs.FieldByName ("Cookie");
 		if (pHdr)
 			strCookies = pHdr->strValue;
 		assert (spRequest->getUrl () != NULL);
 		if (wcscmp (spRequest->getUrl (), wstrUrl.c_str ()))
-			strOriginalURL = W2CA (spRequest->getUrl ());
+			strOriginalURL = utf8FromWide (spRequest->getUrl ());
 		pHdr = reqHdrs.FieldByName ("User-Agent");
 		if (pHdr)
 			strUserAgent = pHdr->strValue;

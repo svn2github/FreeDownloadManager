@@ -1,9 +1,9 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
-#include "FDMUrlReceiver.h"
 #include "common.h"
+#include "FDMUrlReceiver.h"
 #include <nsMemory.h>
 #include "xrfix.h"
 
@@ -32,7 +32,8 @@ NS_IMETHODIMP CFDMUrlReceiver::SetUrl(IFDMUrl *url)
     if (m_spUrlRcvr == NULL)
 		return NS_ERROR_FAILURE;
 
-	CC (ApplyUrlToReceiver (m_spUrlRcvr, url));
+	if (NS_OK != ApplyUrlToReceiver (m_spUrlRcvr, url))
+		return NS_ERROR_FAILURE;
 
 	return NS_OK;
 }

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsInternetURLFileDownloader.h"
@@ -17,7 +17,7 @@ fsInternetURLFileDownloader::~fsInternetURLFileDownloader()
 	Free_FileBuffer ();
 }
 
-fsInternetResult fsInternetURLFileDownloader::Download(LPCSTR pszUrl)
+fsInternetResult fsInternetURLFileDownloader::Download(LPCTSTR pszUrl)
 {
 	fsURL url;
 	fsInternetResult ir;

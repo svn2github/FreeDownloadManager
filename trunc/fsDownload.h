@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __FS_DOWNLOAD_
@@ -23,7 +23,27 @@ struct fsDownloadEvents
 	int iImage;		
 };
 
-typedef DWORD (*fntDownloadsMgrEventFunc)(struct fsDownload* dld, struct fsDLHistoryRecord *phst, enum fsDownloadsMgrEvent ev, LPVOID);
+struct YouTubeDownloadDetails{
+	enum MediaType{EMPTY, AUDIO, VIDEO, AUDIOVIDEO};
+	MediaType mediaType;		
+	tstring youTubeID;
+	tstring format;
+	UINT64 fileSize;
+	bool isMerged;
+	bool isHidden;
+	bool is3D;
+	tstring originalURL;
+};
+
+class vmsPostDownloadTask
+{
+public:
+	virtual ~vmsPostDownloadTask () {}
+};
+
+const LPCWSTR avmergePostDownloadTaskName = L"avmerge";
+
+typedef DWORD (*fntDownloadsMgrEventFunc)(struct fsDownload* dld, struct fsDLHistoryRecord *phst, enum fsDownloadsMgrEvent ev, UINT_PTR, LPVOID);
 
 #define DLD_CHANGENOTRECOMMENDED		(1 << 0)
 
@@ -73,9 +93,12 @@ typedef DWORD (*fntDownloadsMgrEventFunc)(struct fsDownload* dld, struct fsDLHis
 #define DLD_WAS_DELETED					(1 << 24)
 
 #define DLD_TP_DOWNLOAD					(1 << 25)
+#define DLD_YOUTUBE_FILESIZE_MERGED		(1 << 26)
+#define DLD_YOUTUBE_RELOAD_URL_IF_START_FAILED		(1 << 27)
 
 #define DLDS_FILE_WAS_LAUNCHED_AT_LEAST_ONCE	(1 << 0)
 #define DLDS_REGISTERED_IN_TRAFFICUSGMGR		(1 << 1)
+#define DLDS_YOUTUBE_URL_RELOADING				(1 << 2)
 
 struct fsDownload : public vmsObject, public vmsPersistObject
 {
@@ -88,6 +111,8 @@ struct fsDownload : public vmsObject, public vmsPersistObject
 	UINT nID;			
 	DWORD dwFlags;				
 	DWORD dwReserved;
+	YouTubeDownloadDetails youTubeDetails;
+	std::map <std::wstring, std::unique_ptr <vmsPostDownloadTask>> postDownloadTasks;
 protected:
 	DWORD dwState; 
 public:
@@ -130,6 +155,7 @@ public:
 		dateCompleted = dld.dateCompleted;
 		CopyMemory (adwTimeAllowed, dld.adwTimeAllowed, sizeof (adwTimeAllowed));
 		ticksLastStopByProcessDownloadsFn = dld.ticksLastStopByProcessDownloadsFn;
+		youTubeDetails = dld.youTubeDetails;
 
 		pfnDownloadEventsFunc = dld.pfnDownloadEventsFunc;
 		lpEventsParam = dld.lpEventsParam;
@@ -154,6 +180,11 @@ public:
 		ZeroMemory (&dateCompleted, sizeof (dateCompleted));
 		pMgr.CreateInstance ();
 		getPersistObjectChildren ()->addPersistObject (pMgr);
+		youTubeDetails.mediaType = YouTubeDownloadDetails::EMPTY;		
+		youTubeDetails.fileSize = 0;
+		youTubeDetails.isMerged = false;		
+		youTubeDetails.isHidden = false;		
+		youTubeDetails.is3D = false;	
 	}
 
 	void setDownloadMgr (vmsDownloadMgrEx *a_pMgr)
@@ -169,13 +200,14 @@ public:
 	bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 
 	BOOL isTorrent () {return (dwFlags & DLD_TORRENT_DOWNLOAD) != 0 || pMgr->IsBittorrent ();}
+	BOOL isYouTube () {return youTubeDetails.mediaType != YouTubeDownloadDetails::EMPTY;}
 
 	void LockStateSection (bool bLock) {
 		static vmsCriticalSection _cs;
 		if (bLock)
-			EnterCriticalSection (&_cs);
+			EnterCriticalSection (_cs);
 		else
-			LeaveCriticalSection (&_cs);
+			LeaveCriticalSection (_cs);
 	}
 	DWORD getState () const {return dwState;}
 	void setStateFlags (DWORD dwFlags) {LockStateSection (true); dwState |= dwFlags; LockStateSection (false);}

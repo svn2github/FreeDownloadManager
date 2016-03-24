@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_ZIPPREVIEWDLG_H__6D19EE44_DCBD_463B_B861_4F53B970BFB4__INCLUDED_)
@@ -61,7 +61,7 @@ protected:
 	};	
 
 	void TreeToDlg (HTREEITEM hRoot, fs::ListTree <fsFile>* root);
-	void AddToTree (LPCSTR pszFile, int iIndex, fs::ListTree <fsFile>* root);
+	void AddToTree (LPCTSTR pszFile, int iIndex, fs::ListTree <fsFile>* root);
 	void BuildTreeOfFiles();
 	CImageList m_checks;
 	

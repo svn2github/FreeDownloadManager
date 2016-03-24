@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_CREATEDOWNLOADSDLG_H__E22D64EE_8C08_40A3_8958_2A867A894D35__INCLUDED_)
@@ -58,12 +58,12 @@ protected:
 	
 	
 	
-	void CreateDownloads (HTREEITEM hTree, LPCSTR pszRootDir, BOOL bCreate);
+	void CreateDownloads (HTREEITEM hTree, LPCTSTR pszRootDir, BOOL bCreate);
 	void UpdateEnabled();
 	
 	
 	
-	void BuildDownloads (fs::tree <fsFileInfo*>* pTree, LPCSTR pszRootUrl);
+	void BuildDownloads (fs::tree <fsFileInfo*>* pTree, LPCTSTR pszRootUrl);
 	DLDS_LIST m_vpDlds;	
 	DLDS_LIST m_vpDldsToStart;	
 	CImageList m_checks;

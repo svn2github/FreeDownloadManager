@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -144,9 +144,9 @@ void CTpDld_General::OnChoosefolder()
 
 	if ((GetFileAttributes (str) & FILE_ATTRIBUTE_DIRECTORY) == 0)
 	{
-		char sz [MY_MAX_PATH];
-		fsGetPath (str, sz);
-		str = sz;
+		TCHAR tsz [MY_MAX_PATH];
+		fsGetPath (str, tsz);
+		str = tsz;
 	}
 
 	if (str.GetLength () > 3 && 

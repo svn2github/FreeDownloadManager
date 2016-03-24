@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -22,16 +22,16 @@ vmsArchiveMgr::~vmsArchiveMgr()
 
 }
 
-bool vmsArchiveMgr::Extract(LPCSTR pszArchive, LPCSTR pszOutFolder)
+bool vmsArchiveMgr::Extract(LPCTSTR pszArchive, LPCTSTR pszOutFolder)
 {
 	m_pUsedArchive = &m_7zip;
 
-	LPCSTR pszExt;
-	pszExt = strrchr (pszArchive, '.');
+	LPCTSTR pszExt;
+	pszExt = _tcsrchr (pszArchive, _T('.'));
 	if (pszExt)
 	{
 		pszExt++;
-		if (lstrcmpi (pszExt, "rar") == 0)
+		if (lstrcmpi (pszExt, _T("rar")) == 0)
 			m_pUsedArchive = &m_rar;
 	}
 

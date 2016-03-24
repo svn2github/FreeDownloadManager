@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -99,7 +99,7 @@ BOOL CCreateBatchDownload::OnInitDialog()
 	m_schScheduleParam.schTask.uWaitForConfirmation = 0;
 
 	
-	LPCSTR pszUrl = _ClipbrdMgr.Text ();
+	LPCTSTR pszUrl = _ClipbrdMgr.Text ();
 	if (pszUrl && *pszUrl)
 	{
 		fsURL url;
@@ -137,7 +137,7 @@ BOOL CCreateBatchDownload::OnInitDialog()
 	GetDlgItem (IDC_URL)->SetFocus ();
 
 	if (IR_SUCCESS != m_dld->pMgr->GetDownloadMgr ()->CreateByUrl (m_strUrl, TRUE) && m_strUrl != "http://")
-		m_dld->pMgr->GetDownloadMgr ()->CreateByUrl ("http://", TRUE);
+		m_dld->pMgr->GetDownloadMgr ()->CreateByUrl (_T("http://"), TRUE);
 
 	m_bGroupChanged = m_bAuthChanged = FALSE;
 
@@ -145,8 +145,8 @@ BOOL CCreateBatchDownload::OnInitDialog()
 	if (IR_SUCCESS == url.Crack (m_strUrl) && *url.GetHostName ())
 	{
 		fsURL u;
-		char szUrl [10000];
-		DWORD dwLen = 10000;
+		TCHAR szUrl [10000];
+		DWORD dwLen = _countof (szUrl);
 		u.Create (url.GetInternetScheme (), url.GetHostName (), url.GetPort (), NULL, NULL, url.GetPath (), szUrl, &dwLen);
 		m_strUrl = szUrl;	
 
@@ -159,7 +159,7 @@ BOOL CCreateBatchDownload::OnInitDialog()
 	
 	Update_User_Password ();
 
-	SetDlgItemText (IDC_URL, m_strUrl == "http://url/" ? "http://" : m_strUrl);
+	SetDlgItemText (IDC_URL, m_strUrl == _T("http://url/") ? _T("http://") : m_strUrl);
 	((CEdit*) GetDlgItem (IDC_URL))->SetSel (0, -1);
 
 	UrlChanged ();
@@ -255,8 +255,8 @@ void CCreateBatchDownload::Update_User_Password()
 
 void CCreateBatchDownload::UrlChanged()
 {
-	CHAR szFile [10000];
-	*szFile = 0;
+	TCHAR tszFile [10000];
+	*tszFile = 0;
 	fsURL url;
 
 	m_bBLParametersChanged = true;
@@ -269,24 +269,24 @@ void CCreateBatchDownload::UrlChanged()
 	if (m_bGroupChanged == FALSE)
 	{
 		fsFileNameFromUrlPath (url.GetPath (), url.GetInternetScheme () == INTERNET_SCHEME_FTP, 
-			TRUE, szFile, sizeof (szFile));
+			TRUE, tszFile, sizeof (tszFile));
 
-		int len = strlen (szFile);
+		int len = _tcslen (tszFile);
 		vmsDownloadsGroupSmartPtr grp;
 
 		if (len)
 		{
 			int i;
 			for (i = len-1; i > 0; i--)
-				if (szFile [i] == '.')	
+				if (tszFile [i] == _T('.'))	
 					break;
 
 			if (i && i < len-1)
 			{
 				i++;
-				CHAR szExt [1000];
-				strcpy (szExt, szFile + i);
-				grp = _DldsGrps.FindGroupByExt (szExt);
+				TCHAR tszExt [1000];
+				_tcscpy (tszExt, tszFile + i);
+				grp = _DldsGrps.FindGroupByExt (tszExt);
 			}
 		}
 
@@ -598,8 +598,8 @@ BOOL CCreateBatchDownload::BuildBatchList()
 	m_iAlphaTo   = m_iAlphaFrom + m_wndZ.GetCurSel () + 1;
 	CString strNumbers;
 	GetDlgItemText (IDC_NUMBERS, strNumbers);
-	if (false == m_bl.Create (m_strUrl, strNumbers, (char)('A' + m_iAlphaFrom), 
-			(char)('A' + m_iAlphaTo))) {
+	if (false == m_bl.Create (m_strUrl, strNumbers, (TCHAR)(_T('A') + m_iAlphaFrom), 
+			(TCHAR)(_T('A') + m_iAlphaTo))) {
 		MessageBox (LS (L_SYNTAXERROR), LS (L_INPERR), MB_ICONERROR);
 		GetDlgItem (IDC_NUMBERS)->SetFocus ();
 		return FALSE;
@@ -628,9 +628,9 @@ BOOL CCreateBatchDownload::CheckUrl()
 	}
 
 	
-	if (m_strUrl.Find ("(*)") == -1 &&
-			m_strUrl.Find ("(*A)") == -1 &&
-			m_strUrl.Find ("(*a)") == -1)
+	if (m_strUrl.Find (_T("(*)")) == -1 &&
+			m_strUrl.Find (_T("(*A)")) == -1 &&
+			m_strUrl.Find (_T("(*a)")) == -1)
 	{
 		MessageBox (LS (L_USEBDS2), LS (L_INPERR), MB_ICONEXCLAMATION);
 		GetDlgItem (IDC_URL)->SetFocus ();
@@ -669,7 +669,7 @@ void CCreateBatchDownload::OnOK()
 			return;
 		}
 
-		if (strcspn (m_blSaveAs.get_Result (0), "\\/:*?\"<>|") != strlen (m_blSaveAs.get_Result (0)))
+		if (_tcscspn (m_blSaveAs.get_Result (0), _T("\\/:*?\"<>|")) != _tcslen (m_blSaveAs.get_Result (0)))
 		{
 			MessageBox (LS (L_INVFILENAME), LS (L_INPERR), MB_ICONEXCLAMATION);
 			GetDlgItem (IDC_SAVEAS)->SetFocus ();
@@ -694,7 +694,7 @@ void CCreateBatchDownload::OnOK()
 
 	GetDlgItemText (IDC_OUTFOLDER, strOutFolder);
 
-	fsPathToGoodPath ((LPSTR)(LPCSTR)strOutFolder);
+	fsPathToGoodPath ((LPTSTR)(LPCTSTR)strOutFolder);
 
 	if (strOutFolder.GetLength () == 0)
 	{
@@ -706,9 +706,9 @@ void CCreateBatchDownload::OnOK()
 	_LastFolders.AddRecord (strOutFolder);
 	_LastBatchUrls.AddRecord (m_strUrl);
 
-	if (strOutFolder [strOutFolder.GetLength () - 1] != '\\' && 
-		strOutFolder [strOutFolder.GetLength () - 1] != '/')
-		strOutFolder += '\\';
+	if (strOutFolder [strOutFolder.GetLength () - 1] != _T('\\') && 
+		strOutFolder [strOutFolder.GetLength () - 1] != _T('/'))
+		strOutFolder += _T('\\');
 
         if (_App.NewGrp_SelectWay () == NGSW_USE_ALWAYS_SAME_GROUP_WITH_OUTFOLDER_AUTO_UPDATE)
 	{
@@ -722,8 +722,8 @@ void CCreateBatchDownload::OnOK()
 		}
 	}
 
-	fsnew (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, CHAR, strOutFolder.GetLength () + 1);
-	strcpy (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, strOutFolder);
+	fsnew (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, TCHAR, (strOutFolder.GetLength () + 1) * sizeof(TCHAR));
+	_tcscpy (m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, strOutFolder);
 
 	m_dld->pGroup = m_wndGroups.GetSelectedGroup ();
 
@@ -744,10 +744,10 @@ void CCreateBatchDownload::OnOK()
 	{
 		fsURL url;
 		url.Crack (m_strUrl);
-		LPCSTR pszServer = url.GetHostName ();
-		if (strstr (pszServer, "(*)") == NULL &&
-			strstr (pszServer, "(*a)") == NULL &&
-			strstr (pszServer, "(*A)") == NULL)
+		LPCTSTR pszServer = url.GetHostName ();
+		if (_tcsstr (pszServer, _T("(*)")) == NULL &&
+			_tcsstr (pszServer, _T("(*a)")) == NULL &&
+			_tcsstr (pszServer, _T("(*A)")) == NULL)
 		{
 			CCreateDownloadDlg::_SavePassword (pszServer, fsSchemeToNP (url.GetInternetScheme ()),
 				m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszUserName, m_dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszPassword);
@@ -783,17 +783,17 @@ BOOL CCreateBatchDownload::ReadAuth()
 		strPassword = url.GetPassword ();
 	}
 
-	if (strUser != "")
+	if (strUser != _T(""))
 	{
 		fsDownload_NetworkProperties *dnp = m_dld->pMgr->GetDownloadMgr ()->GetDNP ();
 		
 		SAFE_DELETE_ARRAY (dnp->pszUserName);
 		SAFE_DELETE_ARRAY (dnp->pszPassword);
 
-		fsnew (dnp->pszUserName, CHAR, strUser.GetLength ()+1);
-		fsnew (dnp->pszPassword, CHAR, strPassword.GetLength ()+1);
-		strcpy (dnp->pszUserName, strUser);
-		strcpy (dnp->pszPassword, strPassword);
+		fsnew (dnp->pszUserName, TCHAR, (strUser.GetLength ()+1) * sizeof(TCHAR));
+		fsnew (dnp->pszPassword, TCHAR, (strPassword.GetLength ()+1) * sizeof(TCHAR));
+		_tcscpy (dnp->pszUserName, strUser);
+		_tcscpy (dnp->pszPassword, strPassword);
 	}
 
 	return TRUE;
@@ -807,18 +807,18 @@ void CCreateBatchDownload::GenerateAndAddDownloads()
 
 	
 	ASSERT (m_blSaveAs.get_ResultCount () == 0 || m_blSaveAs.get_ResultCount () == (int)m_pvDownloads->size ());
-	LPCSTR psz = m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
+	LPCTSTR psz = m_dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
 	int len = lstrlen (psz);
 	size_t i = 0;
 	for (i = 0; i < (size_t)m_blSaveAs.get_ResultCount (); i++)
 	{
 		fsDownload_Properties* dp = m_pvDownloads->at (i)->pMgr->GetDownloadMgr ()->GetDP ();
-		LPCSTR pszAs = m_blSaveAs.get_Result (i);
+		LPCTSTR pszAs = m_blSaveAs.get_Result (i);
 
 		if (dp->pszFileName)
 			delete [] dp->pszFileName;
 
-		dp->pszFileName = new char [len + lstrlen (pszAs) + 1];
+		dp->pszFileName = new TCHAR [(len + lstrlen (pszAs) + 1) * sizeof(TCHAR)];
 		lstrcpy (dp->pszFileName, psz);
 		lstrcat (dp->pszFileName, pszAs);
 	}
@@ -924,7 +924,7 @@ DWORD WINAPI CCreateBatchDownload::_threadCalculateSize(LPVOID lp)
 		uSummSize += uSize;
 
 		CString str;
-		str.Format ("%s (%d - %s, %d - %s)", LS (L_QUERINGSIZE), i+1, LS (L_DONE), iFailed, LS (L_ERR));
+		str.Format (_T("%s (%d - %s, %d - %s)"), LS (L_QUERINGSIZE), i+1, LS (L_DONE), iFailed, LS (L_ERR));
 		dlg->SetDlgItemText (IDC_MESSAGE, str);	
 
 		info->iProgress = (int) ((double) i / pThis->m_pvDownloads->size () * 100);
@@ -940,10 +940,10 @@ DWORD WINAPI CCreateBatchDownload::_threadCalculateSize(LPVOID lp)
 		{
 			if (_pwndDownloads->IsSizesInBytes () == FALSE)
 			{
-				char szDim [50];
+				TCHAR szDim [100];
 				float fSize;
 				BytesToXBytes (uSummSize, &fSize, szDim);
-				strSize.Format ("%.*g %s", fSize > 999 ? 4 : 3, fSize, szDim);
+				strSize.Format (_T("%.*g %s"), fSize > 999 ? 4 : 3, fSize, szDim);
 			}
 			else
 				strSize = fsBytesToStr (uSummSize);

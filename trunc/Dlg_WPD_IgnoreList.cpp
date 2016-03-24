@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -57,7 +57,7 @@ BOOL CDlg_WPD_IgnoreList::OnInitDialog()
 	
 	CRect rc;
 	m_wndList.GetClientRect (&rc);
-	m_wndList.InsertColumn (0, "URL", LVCFMT_LEFT, rc.Width () - 2*70);
+	m_wndList.InsertColumn (0, _T("URL"), LVCFMT_LEFT, rc.Width () - 2*70);
 	m_wndList.InsertColumn (1, LS (L_TYPE), LVCFMT_LEFT, 70);
 	m_wndList.InsertColumn (2, LS (L_SUBFOLDERS), LVCFMT_LEFT, 70);
 

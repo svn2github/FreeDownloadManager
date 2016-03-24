@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSWAITDLG_H__56854275_0940_4F32_9253_7960323D17AB__INCLUDED_)
@@ -9,6 +9,7 @@
 #pragma once
 #endif 
 
+#include "common.h"
 #include <windows.h>
 #include <string>
 
@@ -17,7 +18,7 @@ class vmsWaitDlg
 public:
 	HICON m_hIcon;
 	bool m_bPostQuitMsg;
-	std::string m_strMsg;
+	tstring m_strMsg;
 	HANDLE m_hevCloseDlg;
 	BOOL Create (HINSTANCE hInstance, LPCTSTR lpTemplate, HWND hWndParent);
 	HWND m_hwnd;

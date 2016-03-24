@@ -1,11 +1,13 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __STR_PARSING__H_
 #define __STR_PARSING__H_
 
-inline BOOL fsStrIsDivider (char c)
+#include <tchar.h>
+
+inline BOOL fsStrIsDividerA (CHAR c)
 {
 	if (c == ' ' || c == '\n' || c == '\r' || c == '\t')
 		return TRUE;
@@ -13,24 +15,58 @@ inline BOOL fsStrIsDivider (char c)
 	return FALSE;
 }
 
-inline LPCSTR fsStrSkipDividers (LPCSTR psz)
+inline LPCSTR fsStrSkipDividersA (LPCSTR psz)
 {
-	while (fsStrIsDivider (*psz)) 
+	while (fsStrIsDividerA (*psz)) 
 		psz ++;
 
 	return psz;
 }
 
-inline const char* fsStrSkipSpaces (const char* psz)
+inline BOOL fsStrIsDividerW (WCHAR c)
 {
-	while (*psz == ' ') 
+	if (c == L' ' || c == L'\n' || c == L'\r' || c == L'\t')
+		return TRUE;
+	
+	return FALSE;
+}
+
+inline LPCWSTR fsStrSkipDividersW (LPCWSTR psz)
+{
+	while (fsStrIsDividerW (*psz)) 
 		psz ++;
 
 	return psz;
 }
 
-extern LPCSTR fsStrStrNoCase(LPCSTR pszIn, LPCSTR pszWhat);
+#ifdef UNICODE
+#define fsStrIsDivider fsStrIsDividerW
+#define fsStrSkipDividers fsStrSkipDividersW
+#else
+#define fsStrIsDivider fsStrIsDividerA
+#define fsStrSkipDividers fsStrSkipDividersA
+#endif
 
-extern LPCSTR fsStrGetStrUpToChar (LPCSTR pszFrom, LPCSTR pszCharTo, LPSTR* ppszResult);
+inline const TCHAR* fsStrSkipSpaces (const TCHAR* psz)
+{
+	while (*psz == _T(' ')) 
+		psz ++;
+
+	return psz;
+}
+
+extern LPCWSTR fsStrStrNoCaseW(LPCWSTR pszIn, LPCWSTR pszWhat);
+extern LPCSTR fsStrStrNoCaseA(LPCSTR pszIn, LPCSTR pszWhat);
+
+extern LPCWSTR fsStrGetStrUpToCharW (LPCWSTR pszFrom, LPCWSTR pszCharTo, LPWSTR* ppszResult);
+extern LPCSTR fsStrGetStrUpToCharA (LPCSTR pszFrom, LPCSTR pszCharTo, LPSTR* ppszResult);
+
+#ifdef UNICODE
+#define fsStrGetStrUpToChar fsStrGetStrUpToCharW
+#define fsStrStrNoCase fsStrStrNoCaseW
+#else
+#define fsStrGetStrUpToChar fsStrGetStrUpToCharA
+#define fsStrStrNoCase fsStrStrNoCaseA
+#endif
 
 #endif

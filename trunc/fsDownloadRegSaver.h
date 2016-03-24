@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSDOWNLOADREGSAVER_H__C91EBD46_B85B_4D4B_A864_1648A483A8F0__INCLUDED_)
@@ -15,7 +15,7 @@
 
 typedef DLDS_LIST t_downloads;
 
-#define DLFILE_CURRENT_VERSION	(18)
+#define DLFILE_CURRENT_VERSION	(20)
 
 #define DLFILE_SIG "FDM Downloads  "
 
@@ -50,11 +50,11 @@ public:
 	
 	
 	
-	fsDLLoadResult Load (t_downloads* vDownloads, LPCSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt = DLLFT_SAV, BOOL bErrIfNotExists = FALSE);
+	fsDLLoadResult Load (t_downloads* vDownloads, LPCTSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt = DLLFT_SAV, BOOL bErrIfNotExists = FALSE);
 	
-	fsDLLoadResult Load (vmsDownloadList& vDownloads, LPCSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt = DLLFT_SAV, BOOL bErrIfNotExists = FALSE);
+	fsDLLoadResult Load (vmsDownloadList& vDownloads, LPCTSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt = DLLFT_SAV, BOOL bErrIfNotExists = FALSE);
 	
-	BOOL Save(vmsDownloadList& vDownloads, LPCSTR pszFileName);
+	BOOL Save(vmsDownloadList& vDownloads, LPCTSTR pszFileName);
 	bool IsStoringLogTurnedOn();
 
 	fsDownloadRegSaver();

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSHASH_H__A22980FB_579D_4BD9_825C_699E3BED340F__INCLUDED_)
@@ -34,18 +34,18 @@ class vmsHash
 public:
 	void set_SHA2Strength (vmsHash_SHA2Strength en);
 	void set_EventsHandler (vmsHashEvents* pEvents);
-	std::string Hash (LPCSTR pszFile, vmsHashAlgorithm enHA = HA_MD5);
+	tstring Hash (LPCTSTR pszFile, vmsHashAlgorithm enHA = HA_MD5);
 
 	vmsHash();
 	virtual ~vmsHash();
 
 protected:
-	std::string Hash_SHA2 (LPCSTR pszFile);
-	std::string Hash_SHA1 (LPCSTR pszFile);
-	std::string Hash_CRC32 (LPCSTR pszFile);
-	std::string Hash_ResultToStr (unsigned char* pHR, int nSize);
-	std::string Hash_MD5 (LPCSTR pszFile);
-	UINT64 Hash_MD5_File (const char *fn, unsigned long seed, void *mdContext);
+	tstring Hash_SHA2 (LPCTSTR pszFile);
+	tstring Hash_SHA1 (LPCTSTR pszFile);
+	tstring Hash_CRC32 (LPCTSTR pszFile);
+	tstring Hash_ResultToStr (unsigned char* pHR, int nSize);
+	tstring Hash_MD5 (LPCTSTR pszFile);
+	UINT64 Hash_MD5_File (LPCTSTR fn, unsigned long seed, void *mdContext);
 	vmsHashEvents* m_pEvents;
 	int m_nSHA2Strength;
 };

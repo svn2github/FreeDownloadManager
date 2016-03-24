@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __FDMIEBHO_H_
@@ -27,9 +27,9 @@ public:
 	{
 		Instance inst;
 		inst.pBHO = this;
-		EnterCriticalSection (&_csInstances);
+		EnterCriticalSection (_csInstances);
 		_vInstances.push_back (inst);
-		LeaveCriticalSection (&_csInstances);
+		LeaveCriticalSection (_csInstances);
 
 		#ifndef DISABLE_OLD_MONITORING_HELPER
 			m_hFile = INVALID_HANDLE_VALUE;		
@@ -47,12 +47,12 @@ public:
 		WaitForSingleObject (m_htGetIt, 10*1000);
 		DeleteCriticalSection (&m_csGetItBtn);
 
-		EnterCriticalSection (&_csInstances);
+		EnterCriticalSection (_csInstances);
 		int nIndex = findInstanceIndex (this);
 		assert (nIndex != -1);
 		if (nIndex != -1)
 			_vInstances.erase (_vInstances.begin () + nIndex);
-		LeaveCriticalSection (&_csInstances);
+		LeaveCriticalSection (_csInstances);
 	}
 
 DECLARE_REGISTRY_RESOURCEID(IDR_FDMIEBHO)

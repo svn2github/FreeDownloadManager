@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -47,12 +47,12 @@ HRESULT fsIECatchMgr::Initialize()
 	return S_OK;
 }
 
-BOOL fsIECatchMgr::OnBeforeNavigate(LPCSTR pszUrl, BOOL bCheckALT)
+BOOL fsIECatchMgr::OnBeforeNavigate(LPCTSTR pszUrl, BOOL bCheckALT)
 {
 	try 
 	{
-		CHAR szFile [MY_MAX_PATH] = "";
-		LPCSTR pszExt;
+		TCHAR szFile [MY_MAX_PATH] = _T("");
+		LPCTSTR pszExt;
 		fsURL url;
 
 		if (bCheckALT)
@@ -72,7 +72,7 @@ BOOL fsIECatchMgr::OnBeforeNavigate(LPCSTR pszUrl, BOOL bCheckALT)
 		if (*szFile == 0)
 			return TRUE;
 
-		pszExt = strrchr (szFile, '.');
+		pszExt = _tcsrchr (szFile, '.');
 		if (pszExt) 
 			pszExt++;
 		else
@@ -89,7 +89,7 @@ BOOL fsIECatchMgr::OnBeforeNavigate(LPCSTR pszUrl, BOOL bCheckALT)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsIECatchMgr::OnBeforeNavigate " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsIECatchMgr::OnBeforeNavigate " + std::string(ex.what()));
 		return TRUE;
 	}
 	catch (...)
@@ -148,26 +148,15 @@ BOOL fsIECatchMgr::IsIE2Active()
 	return _App.Monitor_IE2 ();
 }
 
-BOOL fsIECatchMgr::InstallIeIntegration(BOOL bInstall, BOOL bCurrentUserOnly, BOOL bOverrideHKCR)
+BOOL fsIECatchMgr::InstallIeIntegration(BOOL bInstall, BOOL bCurrentUserOnly)
 {
-	bOverrideHKCR = bCurrentUserOnly && bOverrideHKCR;
-
-	if (bOverrideHKCR)
-	{
-		CRegKey key;
-		if (ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, _T ("Software\\Classes"), KEY_ALL_ACCESS))
-			RegOverridePredefKey (HKEY_CLASSES_ROOT, key);
-	}
-
-	typedef HRESULT (_stdcall *fntDllRegUnregServer)(void);
 	typedef HRESULT (_stdcall *fntInstaller)(bool, bool);
-	fntDllRegUnregServer pfnDll = NULL;
 	fntInstaller pfnInstaller = NULL;
 
 	bool bFdmdm = false, bBho = false;
 
 	
-	HMODULE hLib = LoadLibrary ("iefdmdm.dll");
+	HMODULE hLib = LoadLibrary (_T("iefdmdm.dll"));
 	if (hLib)
 	{
 		pfnInstaller = (fntInstaller) GetProcAddress (hLib, "vmsInstaller");
@@ -177,17 +166,15 @@ BOOL fsIECatchMgr::InstallIeIntegration(BOOL bInstall, BOOL bCurrentUserOnly, BO
 	}
 
 	
-	hLib = LoadLibrary ("iefdm2.dll");
+	hLib = LoadLibrary (_T("iefdm2.dll"));
+
 	if (hLib)
 	{
-		pfnDll = (fntDllRegUnregServer) GetProcAddress (hLib, bInstall ? "DllRegisterServer" : "DllUnregisterServer");
-		if (pfnDll)
-			bBho = SUCCEEDED (pfnDll ());
+		pfnInstaller = (fntInstaller) GetProcAddress (hLib, "vmsInstaller");
+		if (pfnInstaller)
+			bBho = SUCCEEDED (pfnInstaller (bInstall, bCurrentUserOnly));
 		FreeLibrary (hLib);
 	}
-
-	if (bOverrideHKCR)
-		RegOverridePredefKey (HKEY_CLASSES_ROOT, NULL);
 
 	return bFdmdm && bBho;
 }
@@ -197,23 +184,23 @@ void fsIECatchMgr::CleanIEPluginKey()
 	CRegKey key;
 
 	if (ERROR_SUCCESS != key.Open (HKEY_LOCAL_MACHINE, 
-			"Software\\Microsoft\\Internet Explorer\\Plugins\\Extension"))
+			_T("Software\\Microsoft\\Internet Explorer\\Plugins\\Extension")))
 		return;
 
 	int i = 0;
-	char szKey [1000];
+	TCHAR szKey [1000];
 	fs::list <fsString> vKeys;
 	while (RegEnumKey (key, i++, szKey, sizeof (szKey)) == ERROR_SUCCESS)
 	{
 		CRegKey key2;
 		key2.Open (key, szKey);
 
-		char szValue [1000]; DWORD dw = sizeof (szValue);
+		TCHAR szValue [1000]; DWORD dw = sizeof (szValue);
 		key2.QueryValue (szValue, NULL, &dw);
 		
 		key2.Close ();
 
-		if (strnicmp (szValue, "Free Download Manager", strlen ("Free Download Manager")) == 0)
+		if (_tcsncicmp (szValue, _T("Free Download Manager"), _tcslen (_T("Free Download Manager"))) == 0)
 			vKeys.add (szKey);
 	}
 
@@ -223,19 +210,10 @@ void fsIECatchMgr::CleanIEPluginKey()
 
 BOOL fsIECatchMgr::IsMonitoringDllRegistered()
 {
-	IUnknown* p;
+	IUnknownPtr p;
 	
-
-	HRESULT hr2 = CoCreateInstance (CLSID_IEWGDM, NULL, CLSCTX_ALL, IID_IUnknown, (void**) &p);
-
-	if (SUCCEEDED (hr2)) 
-		p->Release ();
-
-	
-	if (SUCCEEDED (hr2))
-		InstallIeIntegration (TRUE);
-
-	return SUCCEEDED (hr2);
+	return SUCCEEDED (CoCreateInstance (
+		CLSID_IEWGDM, NULL, CLSCTX_ALL, IID_IUnknown, (void**) &p));
 }
 
 DWORD WINAPI fsIECatchMgr::_threadMonitorIEActivity(LPVOID lp)

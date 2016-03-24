@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -52,15 +52,15 @@ void vmsSingleLineTooltip::setText(LPCTSTR ptszHtml)
 			vmsStringParser::GetWordBeforeChar (ptszHtml, '>', tstrTag);
 			if (tstrTag.empty ())
 				return;
-			if (_tcsicmp (tstrTag.c_str (), "B") == 0)
+			if (_tcsicmp (tstrTag.c_str (), _T("B")) == 0)
 			{
 				bBold = true;
 			}
-			else if (_tcsicmp (tstrTag.c_str (), "/B") == 0)
+			else if (_tcsicmp (tstrTag.c_str (), _T("/B")) == 0)
 			{
 				bBold = false;
 			}
-			else if (_tcsicmp (tstrTag.c_str (), "A") == 0)
+			else if (_tcsicmp (tstrTag.c_str (), _T("A")) == 0)
 			{
 				vmsStringParser::SkipWhiteChars (ptszHtml);
 				tstring tstrVN, tstrVV;
@@ -86,7 +86,7 @@ void vmsSingleLineTooltip::setText(LPCTSTR ptszHtml)
 						vmsStringParser::GetWordBeforeChar (ptszHtml, '>', tstrVV);
 					}
 					
-					if (_tcsicmp (tstrVN.c_str (), "href") == 0)
+					if (_tcsicmp (tstrVN.c_str (), _T("href")) == 0)
 						tstrLinkUrl = tstrVV;
 
 					if (*ptszHtml != '>')
@@ -97,7 +97,7 @@ void vmsSingleLineTooltip::setText(LPCTSTR ptszHtml)
 				} 
 				while (*ptszHtml);
 			}
-			else if (_tcsicmp (tstrTag.c_str (), "/A") == 0)
+			else if (_tcsicmp (tstrTag.c_str (), _T("/A")) == 0)
 			{
 				tstrLinkUrl = _T ("");
 			}

@@ -1,10 +1,11 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 #include "vmsSecurity.h"
 #include <wincrypt.h>
+#include "common/vms_sifdm_cl/win/security/vmsWinVerifyTrust.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -24,6 +25,16 @@ vmsSecurity::~vmsSecurity()
 
 bool vmsSecurity::VerifySign(LPCTSTR ptszFile, LPCTSTR ptszPubKey)
 {
+	if (vmsWinVerifyTrust::VerifyFileSignature (ptszFile))
+	{
+		std::wstring wstrSubjectName;
+		if (vmsWinVerifyTrust::GetSubjectName (ptszFile, wstrSubjectName))
+		{
+			if (wstrSubjectName == L"Softdeluxe" || wstrSubjectName == L"Softdeluxe Ltd.")
+				return true;
+		}
+	}
+
 	HCRYPTPROV hProv = NULL;
 	BOOL bOK = CryptAcquireContext (&hProv, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT);	
 	if (!bOK)

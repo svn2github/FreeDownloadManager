@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -68,7 +68,7 @@ void CDlg_Unpack_InstAddPack::OnVisitwebsite()
 	if (IsDlgButtonChecked (IDC_DONTASKAGAIN) == BST_CHECKED)
 		_App.DontShowInstallAP (TRUE);
 
-	fsOpenUrlInBrowser ("http://www.freedownloadmanager.org/download.htm");
+	fsOpenUrlInBrowser (_T("http://www.freedownloadmanager.org/download.htm"));
 	EndDialog (IDCANCEL);
 }
 
@@ -84,7 +84,7 @@ void CDlg_Unpack_InstAddPack::OnOK()
 		DWDCDAP_F_NOGRPAUTOCHANGE;
 
 	_pwndDownloads->CreateDownload (
-		"http://files.freedownloadmanager.org/fdmapinst.exe",
+		_T("http://files.freedownloadmanager.org/fdmapinst.exe"),
 		FALSE, LS (L_ARCPACK), NULL, TRUE, DWCD_FORCEAUTOLAUNCH_NOCONF,
 		&bAutoStart, &ap, NULL);	
 

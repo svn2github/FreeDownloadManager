@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSWEBPAGEDOWNLOADSMGR_H__856D7E6C_DA34_4BA8_B335_8B32762296EA__INCLUDED_)
@@ -13,7 +13,7 @@
 #include "fsWebPageDownloader.h"
 #include "vmsPersistObject.h"
 
-#define SPIDERFILE_CURRENT_VERSION	(6)
+#define SPIDERFILE_CURRENT_VERSION	(7)
 #define SPIDERFILE_SIG     "FDM Web Pages  "
 struct fsSpiderFileHdr
 {

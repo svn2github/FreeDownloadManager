@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSLOCALFILE_H__1DDB29EB_F880_4374_BF2A_7C3A1A12F898__INCLUDED_)
@@ -17,13 +17,13 @@ class fsLocalFile : public fsInternetFile
 {
 public:
 	fsInternetResult Write (LPBYTE pBuffer, DWORD dwSize, DWORD *pdwWritten);
-	fsInternetResult OpenEx (LPCSTR pszFilePath, UINT64 uStartPos, UINT64 uUploadPartSize = _UI64_MAX, UINT64 uUploadTotalSize = _UI64_MAX);
+	fsInternetResult OpenEx (LPCTSTR pszFilePath, UINT64 uStartPos, UINT64 uUploadPartSize = _UI64_MAX, UINT64 uUploadTotalSize = _UI64_MAX);
 	
-	virtual fsInternetResult QuerySize (LPCSTR pszFilePath);
+	virtual fsInternetResult QuerySize (LPCTSTR pszFilePath);
 	virtual void CloseHandle();
-	void Initialize (LPCSTR pszServer);
+	void Initialize (LPCTSTR pszServer);
 	fsInternetResult Read (LPBYTE pBuffer, DWORD dwSize, DWORD *pdwRead);
-	fsInternetResult Open (LPCSTR pszFilePath, UINT64 uStartPos);
+	fsInternetResult Open (LPCTSTR pszFilePath, UINT64 uStartPos);
 	fsLocalFile();
 	virtual ~fsLocalFile();
 

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -40,7 +40,7 @@ bool vmsIeHelper::RegisterExeAsSafeToRun(LPCTSTR ptszAppGuid)
 	TCHAR tsz [MY_MAX_PATH] = _T ("");
 	GetModuleFileName (NULL, tsz, MY_MAX_PATH);
 
-	LPTSTR ptsz = strrchr (tsz, '\\');
+	LPTSTR ptsz = _tcsrchr (tsz, _T('\\'));
 	if (!ptsz)
 		return false;
 
@@ -73,7 +73,7 @@ bool vmsIeHelper::RegisterExeAsSafeToDragDrop(LPCTSTR ptszAppGuid)
 	TCHAR tsz [MY_MAX_PATH] = _T ("");
 	GetModuleFileName (NULL, tsz, MY_MAX_PATH);
 	
-	LPTSTR ptsz = strrchr (tsz, '\\');
+	LPTSTR ptsz = _tcsrchr (tsz, '\\');
 	if (!ptsz)
 		return false;
 	

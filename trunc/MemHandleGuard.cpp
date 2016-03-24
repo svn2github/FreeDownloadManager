@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "StdAfx.h"
@@ -29,7 +29,7 @@ CMemHandleGuard::~CMemHandleGuard()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CMemHandleGuard::~CMemHandleGuard " + tstring(ex.what()));
+		vmsLogger::WriteLog("CMemHandleGuard::~CMemHandleGuard " + std::string(ex.what()));
 		m_bFailedToRelease = true;
 	}
 	catch (...)

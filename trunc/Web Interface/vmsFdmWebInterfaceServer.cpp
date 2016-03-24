@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -8,6 +8,7 @@
 #include "..\Fdm.h"
 #include <comdef.h>
 #include <atlbase.h>
+#include <memory>
 
 _COM_SMARTPTR_TYPEDEF (IWGUrlReceiver, __uuidof (IWGUrlReceiver));
 _COM_SMARTPTR_TYPEDEF (IFDMDownloadsStat, __uuidof (IFDMDownloadsStat));
@@ -32,14 +33,21 @@ vmsFdmWebInterfaceServer::~vmsFdmWebInterfaceServer()
 BOOL vmsFdmWebInterfaceServer::ProcessRequest(vmsHttpRequest &request, vmsHttpResponse &response)
 {
 	
-	if (lstrcmpi (request.get_RequestType (), "GET"))
+	if (lstrcmpiA (request.get_RequestType (), "GET"))
 		return FALSE;
 
-	CString strU = AfxGetApp ()->GetProfileString ("Network", "Login"), 
-		strP = AfxGetApp ()->GetProfileString ("Network", "Password");
+	CString strU = AfxGetApp ()->GetProfileString (_T("Network"), _T("Login")), 
+		strP = AfxGetApp ()->GetProfileString (_T("Network"), _T("Password"));
 	
+	CString strAuth = strU + ":" + strP;
+#ifdef UNICODE
+	_bstr_t bstrAuth((LPCWSTR)strAuth);
+#else
+	_bstr_t bstrAuth((LPCSTR)strAuth);
+#endif
+
 	if (strU.IsEmpty () == FALSE && 
-			lstrcmp (request.get_Auth (), strU + ":" + strP))
+			lstrcmpA (request.get_Auth (), (LPCSTR)bstrAuth))
 	{
 		response.set_ResponseCode ("401 Authorization Required");
 		return FALSE;
@@ -47,13 +55,13 @@ BOOL vmsFdmWebInterfaceServer::ProcessRequest(vmsHttpRequest &request, vmsHttpRe
 
 	LPCSTR pszRes = request.get_ResourcePath ();
 
-	if (lstrcmp (pszRes, "/") == 0)
+	if (lstrcmpA (pszRes, "/") == 0)
 		return RequestRootPage (response);
 
-	if (strncmp (pszRes, "/adddownload.req?", lstrlen ("/adddownload.req?")) == 0)
+	if (strncmp (pszRes, "/adddownload.req?", lstrlenA ("/adddownload.req?")) == 0)
 		return RequestCreateNewDownload (pszRes, response);
 
-	if (strncmp (pszRes, "/compdlds.req", lstrlen ("/compdlds.req")) == 0)
+	if (strncmp (pszRes, "/compdlds.req", lstrlenA ("/compdlds.req")) == 0)
 		return RequestListOfCompletedDownloads (pszRes, response);
 
 	response.set_ResponseCode ("404 Not Found");
@@ -73,7 +81,7 @@ BOOL vmsFdmWebInterfaceServer::RequestRootPage(vmsHttpResponse &response)
 	long lCount = 0;
 	spDlds->get_DownloadCount (&lCount);
 
-	CString strDldsHtml;
+	CStringA strDldsHtml;
 
 	if (lCount == 0)
 	{
@@ -121,7 +129,9 @@ BOOL vmsFdmWebInterfaceServer::RequestRootPage(vmsHttpResponse &response)
 		strDldsHtml += "</table>";
 	}
 
-	CString str = m_strRootHtml.c_str ();
+	_bstr_t bstrStr(m_strRootHtml.c_str ());
+
+	CStringA str = (const char*)bstrStr;
 	str.Replace ("%ActiveDownloads%", strDldsHtml);
 
 	response.set_Body (str, str.GetLength ());
@@ -140,7 +150,8 @@ BOOL vmsFdmWebInterfaceServer::RequestCreateNewDownload(LPCSTR pszRes, vmsHttpRe
 	if (spUrlRcvr == NULL)
 	{
 		CoUninitialize ();
-		response.set_Body (m_strAddDownloadRes_err.c_str (), m_strAddDownloadRes_err.length ());
+		_bstr_t bstrAddDownloadRes_err(m_strAddDownloadRes_err.c_str ());
+		response.set_Body ((const char*)bstrAddDownloadRes_err, m_strAddDownloadRes_err.length ());
 		return TRUE;
 	}
 
@@ -150,12 +161,13 @@ BOOL vmsFdmWebInterfaceServer::RequestCreateNewDownload(LPCSTR pszRes, vmsHttpRe
 	spUrlRcvr->put_DisableMaliciousChecking (TRUE);
 	spUrlRcvr->put_DisableURLExistsCheck (TRUE);
 
-	CString strUrl;
-	pszRes += lstrlen ("/adddownload.req?");
+	CStringA strUrl;
+	pszRes += lstrlenA ("/adddownload.req?");
 	if (strnicmp (pszRes, "URL=", 4))
 	{
 		CoUninitialize ();
-		response.set_Body (m_strAddDownloadRes_err.c_str (), m_strAddDownloadRes_err.length ());
+		_bstr_t bstrAddDownloadRes_err(m_strAddDownloadRes_err.c_str ());
+		response.set_Body ((const char*)bstrAddDownloadRes_err, m_strAddDownloadRes_err.length ());
 		return FALSE;
 	}
 	pszRes += 4;
@@ -200,7 +212,7 @@ BOOL vmsFdmWebInterfaceServer::RequestCreateNewDownload(LPCSTR pszRes, vmsHttpRe
 		if (strUrl [i] == '&' && strUrl [i+1] == '#')
 		{
 			int k = i + 2;
-			CString str2; 
+			CStringA str2; 
 			bool bHex = false;
 			if (k < strUrl.GetLength ())
 				bHex = strUrl [k] == 'x';
@@ -261,10 +273,13 @@ BOOL vmsFdmWebInterfaceServer::RequestCreateNewDownload(LPCSTR pszRes, vmsHttpRe
 		bAdded = bstrState == L"added";
 	}
 
+	_bstr_t bstrAddDownloadRes_err(m_strAddDownloadRes_err.c_str ());
+	_bstr_t bstrAddDownloadRes_ok(m_strAddDownloadRes_ok.c_str ());
+
 	if (bAdded == FALSE)
-		response.set_Body (m_strAddDownloadRes_err.c_str (), m_strAddDownloadRes_err.length ());
+		response.set_Body ((const char*)bstrAddDownloadRes_err, m_strAddDownloadRes_err.length ());
 	else
-		response.set_Body (m_strAddDownloadRes_ok.c_str (), m_strAddDownloadRes_ok.length ());
+		response.set_Body ((const char*)bstrAddDownloadRes_ok, m_strAddDownloadRes_ok.length ());
 
 	spUrlRcvr = NULL;
 	CoUninitialize ();
@@ -275,52 +290,99 @@ BOOL vmsFdmWebInterfaceServer::RequestCreateNewDownload(LPCSTR pszRes, vmsHttpRe
 void vmsFdmWebInterfaceServer::LoadDocuments()
 {
 	CFile file;
-	CString str;
+	CStringA str;
+	int nHtmlLen = 0;
+	std::auto_ptr<WCHAR> apchStr;
+	WCHAR* wszStr = 0;
 
 	LPCSTR pszVer = "1.0";
 
-	file.Open ("Server/index.html", CFile::modeRead);
+	file.Open (_T("Server/index.html"), CFile::modeRead);
 	int nLen = file.GetLength ();
 	LPSTR psz = new char [nLen];
 	file.Read (psz, nLen);
 	strncpy (str.GetBuffer (nLen + 1), psz, nLen);
 	str.ReleaseBuffer (nLen);
 	str.Replace ("%ver%", pszVer);
+	delete [] psz;
+
+#ifdef UNICODE
+	nHtmlLen = ::MultiByteToWideChar(CP_ACP, 0, str.GetBuffer(str.GetLength()), -1, 0, 0);
+	apchStr.reset( new WCHAR[nHtmlLen + 1] );
+	wszStr = apchStr.get();
+	memset(wszStr, 0, (nHtmlLen + 1) * sizeof(WCHAR));
+	::MultiByteToWideChar(CP_ACP, 0, str.GetBuffer(str.GetLength()), -1, wszStr, nHtmlLen);
+	m_strRootHtml = wszStr;
+#else
 	m_strRootHtml = str;
-	delete [] psz;
+#endif
+
 	file.Close ();
 
-	file.Open ("Server/adddownloadres_ok.html", CFile::modeRead);
+	file.Open (_T("Server/adddownloadres_ok.html"), CFile::modeRead);
 	nLen = file.GetLength ();
 	psz = new char [nLen];
 	file.Read (psz, nLen);
 	strncpy (str.GetBuffer (nLen + 1), psz, nLen);
 	str.ReleaseBuffer (nLen);
 	str.Replace ("%ver%", pszVer);
+	delete [] psz;
+
+#ifdef UNICODE
+	nHtmlLen = ::MultiByteToWideChar(CP_ACP, 0, str.GetBuffer(str.GetLength()), -1, 0, 0);
+	apchStr.reset( new WCHAR[nHtmlLen + 1] );
+	wszStr = apchStr.get();
+	memset(wszStr, 0, (nHtmlLen + 1) * sizeof(WCHAR));
+	::MultiByteToWideChar(CP_ACP, 0, str.GetBuffer(str.GetLength()), -1, wszStr, nHtmlLen);
+	m_strRootHtml = wszStr;
+#else
 	m_strAddDownloadRes_ok = str;
-	delete [] psz;
+#endif
+
 	file.Close ();
 
-	file.Open ("Server/adddownloadres_err.html", CFile::modeRead);
+	file.Open (_T("Server/adddownloadres_err.html"), CFile::modeRead);
 	nLen = file.GetLength ();
 	psz = new char [nLen];
 	file.Read (psz, nLen);
 	strncpy (str.GetBuffer (nLen + 1), psz, nLen);
 	str.ReleaseBuffer (nLen);
 	str.Replace ("%ver%", pszVer);
+	delete [] psz;
+
+#ifdef UNICODE
+	nHtmlLen = ::MultiByteToWideChar(CP_ACP, 0, str.GetBuffer(str.GetLength()), -1, 0, 0);
+	apchStr.reset( new WCHAR[nHtmlLen + 1] );
+	wszStr = apchStr.get();
+	memset(wszStr, 0, (nHtmlLen + 1) * sizeof(WCHAR));
+	::MultiByteToWideChar(CP_ACP, 0, str.GetBuffer(str.GetLength()), -1, wszStr, nHtmlLen);
+	m_strRootHtml = wszStr;
+#else
 	m_strAddDownloadRes_err = str;
-	delete [] psz;
+#endif
+
 	file.Close ();
 
-	file.Open ("Server/compdlds.html", CFile::modeRead);
+	file.Open (_T("Server/compdlds.html"), CFile::modeRead);
 	nLen = file.GetLength ();
 	psz = new char [nLen];
 	file.Read (psz, nLen);
 	strncpy (str.GetBuffer (nLen + 1), psz, nLen);
 	str.ReleaseBuffer (nLen);
 	str.Replace ("%ver%", pszVer);
-	m_strCompDldsHtml = str;
 	delete [] psz;
+
+#ifdef UNICODE
+	nHtmlLen = ::MultiByteToWideChar(CP_ACP, 0, str.GetBuffer(str.GetLength()), -1, 0, 0);
+	apchStr.reset( new WCHAR[nHtmlLen + 1] );
+	wszStr = apchStr.get();
+	memset(wszStr, 0, (nHtmlLen + 1) * sizeof(WCHAR));
+	::MultiByteToWideChar(CP_ACP, 0, str.GetBuffer(str.GetLength()), -1, wszStr, nHtmlLen);
+	m_strRootHtml = wszStr;
+#else
+	m_strCompDldsHtml = str;
+#endif
+
 	file.Close ();
 }
 
@@ -337,7 +399,7 @@ BOOL vmsFdmWebInterfaceServer::RequestListOfCompletedDownloads(LPCSTR pszRes, vm
 	long lCount = 0;
 	spDlds->get_DownloadCount (&lCount);
 
-	CString strDldsHtml;
+	CStringA strDldsHtml;
 
 	if (lCount == 0)
 	{
@@ -360,7 +422,7 @@ BOOL vmsFdmWebInterfaceServer::RequestListOfCompletedDownloads(LPCSTR pszRes, vm
 			spDlds->get_Download (i, &spDld);
 			ASSERT (spDld != NULL);
 
-			CString str;
+			CStringA str;
 
 			str += "<tr>";
 		
@@ -377,7 +439,7 @@ BOOL vmsFdmWebInterfaceServer::RequestListOfCompletedDownloads(LPCSTR pszRes, vm
 				else
 				{
 					spDld->get_Url (&bstr);
-					CString str2 = bstr;
+					CStringA str2 = bstr;
 					str += "<a href=\""; str += str2; str += "\">"; 
 					str += str2; str += "</a>";
 				}
@@ -393,7 +455,8 @@ BOOL vmsFdmWebInterfaceServer::RequestListOfCompletedDownloads(LPCSTR pszRes, vm
 		strDldsHtml += "</table>";
 	}
 
-	CString str = m_strCompDldsHtml.c_str ();
+	_bstr_t bstrCompDldsHtml(m_strCompDldsHtml.c_str ());
+	CStringA str = (const char*)bstrCompDldsHtml;
 	str.Replace ("%compdlds%", strDldsHtml);
 
 	response.set_Body (str, str.GetLength ());

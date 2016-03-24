@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -55,18 +55,18 @@ BEGIN_MESSAGE_MAP(CDownloadProperties_ProtocolPage, CPropertyPage)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-LPCSTR _ppszAgentNames [] = {
+LPCTSTR _ppszAgentNames [] = {
 	vmsFdmAppMgr::getAppAgentNameUf (),		
-	"Microsoft Internet Explorer 5.0",
-	"Netscape Communicator 4.0",
-	"Opera 3.6"
+	_T("Microsoft Internet Explorer 5.0"),
+	_T("Netscape Communicator 4.0"),
+	_T("Opera 3.6")
 };
 
-LPCSTR _ppszAgentValues [] = {
+LPCTSTR _ppszAgentValues [] = {
 	vmsFdmAppMgr::getAppAgentName (),
-	"Mozilla/4.0 (compatible; MSIE 5.0; Windows 98)",
-	"Mozilla/4.05 [en] (Win95; I)",
-	"Mozilla/4.0 (Windows 95;US) Opera 3.60  [en]"
+	_T("Mozilla/4.0 (compatible; MSIE 5.0; Windows 98)"),
+	_T("Mozilla/4.05 [en] (Win95; I)"),
+	_T("Mozilla/4.0 (Windows 95;US) Opera 3.60  [en]")
 };
 
 #define DNP_OFFSET(member) ( LPBYTE (&dnp.member) - LPBYTE (&dnp) )
@@ -89,12 +89,12 @@ BOOL CDownloadProperties_ProtocolPage::OnInitDialog()
 
 	if (DNPEntry_IsAllEqual (m_pvDlds, DNP_OFFSET (pszAgent), 0, TRUE))
 	{
-		LPCSTR pszAgent = dnp0->pszAgent;
+		LPCTSTR pszAgent = dnp0->pszAgent;
 		BOOL bSelected = FALSE;
 
 		for (int i = 0; i < sizeof (_ppszAgentValues) / sizeof (LPCSTR); i++)
 		{
-			if (stricmp (pszAgent, _ppszAgentValues [i]) == 0)
+			if (_tcsicmp (pszAgent, _ppszAgentValues [i]) == 0)
 			{
 				m_wndUserAgent.SelectString (-1, _ppszAgentNames [i]);
 				bSelected = TRUE;

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSFILERECENTLIST_H__A4B7CD08_47AB_4114_8532_B8287C88932C__INCLUDED_)
@@ -18,16 +18,16 @@ public:
 	
 	int get_Count () const;
 	
-	LPCSTR get_FilePathName(int nIndex) const;
+	LPCTSTR get_FilePathName(int nIndex) const;
 	
-	LPCSTR get_FileDispName (int nIndex) const;
+	LPCTSTR get_FileDispName (int nIndex) const;
 	
 	void Clear(bool bDontQueryStoringStateInformation = false);
 	
-	BOOL Load (HANDLE hFile);
+	BOOL Load (HANDLE hFile, WORD wVer);
 	BOOL Save (HANDLE hFile);
 	
-	void Add (LPCSTR pszFileDispName, LPCSTR pszFilePathName, bool bDontQueryStoringStateInformation = false);
+	void Add (LPCTSTR pszFileDispName, LPCTSTR pszFilePathName, bool bDontQueryStoringStateInformation = false);
 
 	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
 	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);

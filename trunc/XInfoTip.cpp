@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"			
@@ -83,7 +83,7 @@ BOOL CXInfoTip::Create(CWnd* pParentWnd)
 	return bSuccess;
 }
 
-void CXInfoTip::Show(LPCSTR pszCaption, CString szText, BOOL bAutoHide , CPoint *pt )
+void CXInfoTip::Show(LPCTSTR pszCaption, CString szText, BOOL bAutoHide , CPoint *pt )
 {
 	if (pt != NULL)
 		m_ptOrigin	= *pt;
@@ -349,7 +349,7 @@ void CXInfoTip::RelayEvent(LPMSG lpMsg)
 					
 					m_ptOrigin = point;
 					SetIcon(Info.hIcon);
-					Show("", Info.szText, TRUE, &point);
+					Show(_T(""), Info.szText, TRUE, &point);
 				}
 			}
 		}

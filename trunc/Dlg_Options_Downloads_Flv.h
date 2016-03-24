@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DLG_OPTIONS_DOWNLOADS_FLV_H__A179B91A_92BF_42E4_BF6D_7F642A4AD542__INCLUDED_)
@@ -11,6 +11,8 @@
 
 #include "Dlg_Options_Page.h"
 #include "resource.h"
+#include "WaitDlg2.h"
+#include "vmsVideoMonitoringModulesUiManager.h"
 
 class CDlg_Options_Downloads_Flv : public CDlg_Options_Page
 {
@@ -34,6 +36,7 @@ public:
 
 protected:
 	DWORD m_dwOldFSDI, m_dwInitialFSDI;
+	vmsVideoMonitoringModulesUiManager m_vmm;
 	void UpdateEnabled();
 	void ApplyLanguage();
 

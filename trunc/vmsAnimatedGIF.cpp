@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -28,7 +28,7 @@ vmsAnimatedGIF::~vmsAnimatedGIF()
 	Free ();
 }
 
-BOOL vmsAnimatedGIF::Load(LPCSTR pszFile)
+BOOL vmsAnimatedGIF::Load(LPCTSTR pszFile)
 {
 	HANDLE hFile = CreateFile (pszFile, GENERIC_READ, FILE_SHARE_READ,
 		NULL, OPEN_EXISTING, 0, NULL);
@@ -459,7 +459,7 @@ HGLOBAL vmsAnimatedGIF::GetNextGraphicBlock(UINT *pBlockLen, UINT *pDelay, SIZE 
 	return hGlobal;
 }
 
-int vmsAnimatedGIF::SaveGIFFrames(LPCSTR pszFileTemplate)
+int vmsAnimatedGIF::SaveGIFFrames(LPCTSTR pszFileTemplate)
 {
 	UINT nBlockLen;
 	HGLOBAL hFrameData;
@@ -474,8 +474,8 @@ int vmsAnimatedGIF::SaveGIFFrames(LPCSTR pszFileTemplate)
 				&frame.m_nDelay, &frame.m_frameSize,
 				&frame.m_frameOffset, &frame.m_nDisposal)) != NULL)
 	{
-		char szFile [MY_MAX_PATH];
-		wsprintf (szFile, pszFileTemplate, nCurFrame);
+		TCHAR szFile [MY_MAX_PATH];
+		_stprintf (szFile, pszFileTemplate, nCurFrame);
 		if (FALSE == WriteDataOnDisk (szFile, hFrameData, nBlockLen))
 			break;
 
@@ -539,7 +539,7 @@ BOOL vmsAnimatedGIF::Load()
 	return TRUE;
 }
 
-BOOL vmsAnimatedGIF::WriteDataOnDisk(LPCSTR pszFile, HGLOBAL hData, DWORD dwSize)
+BOOL vmsAnimatedGIF::WriteDataOnDisk(LPCTSTR pszFile, HGLOBAL hData, DWORD dwSize)
 {
 	HANDLE hFile = CreateFile (pszFile, GENERIC_WRITE, 0, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);

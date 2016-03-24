@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -63,7 +63,7 @@ void CDlgExportDownloads::ApplyLanguage()
 		fsDlgLngInfo (IDCANCEL, L_CANCEL),
 	};
 
-	CString str = _LngMgr.GetStringNP (L_EXPORT);
+	CString str = _LngMgr.GetStringNP (L_EXPORT).c_str ();
 	str += "...";
 	SetDlgItemText (IDC__EXPORT, str);
 
@@ -131,7 +131,7 @@ void CDlgExportDownloads::ExportDownloads(int iWhich, BOOL bNoDone, BOOL bAppend
 				catch (const std::exception& ex)
 				{
 					ASSERT (FALSE);
-					vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads " + tstring(ex.what()));
+					vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads " + std::string(ex.what()));
 					dld = NULL;
 				}
 				catch (...)
@@ -166,7 +166,7 @@ void CDlgExportDownloads::ExportDownloads(int iWhich, BOOL bNoDone, BOOL bAppend
 				catch (const std::exception& ex)
 				{
 					ASSERT (FALSE);
-					vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads " + tstring(ex.what()));
+					vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads " + std::string(ex.what()));
 					dld = NULL;
 				}
 				catch (...)
@@ -190,25 +190,25 @@ void CDlgExportDownloads::ExportDownloads(int iWhich, BOOL bNoDone, BOOL bAppend
 	else 
 	{
 		CString strFilter;
-		strFilter.Format ("%s (*.txt)|*.txt|%s (*.xml)|*.xml||", LS (L_URLLISTFILES), LS (L_DLINFOLISTFILES));
+		strFilter.Format (_T("%s (*.txt)|*.txt|%s (*.xml)|*.xml||"), LS (L_URLLISTFILES), LS (L_DLINFOLISTFILES));
 		UINT flags = OFN_NOCHANGEDIR;
 		if (bAppend == FALSE)
 			flags |= OFN_OVERWRITEPROMPT;
-		CFileDialog dlg (FALSE, "txt", NULL, flags, strFilter, NULL);
+		CFileDialog dlg (FALSE, _T("txt"), NULL, flags, strFilter, NULL);
 
 		if (_DlgMgr.DoModal (&dlg) == IDCANCEL)
 			return;
 
 		
 
-		if (dlg.GetFileExt ().CollateNoCase ("txt") == 0)
+		if (dlg.GetFileExt ().CollateNoCase (_T("txt")) == 0)
 			ExportDownloads_ToURLListFile (dlg.GetPathName (), &vpDlds, bAppend);
 		else
 			ExportDownloads_ToDLInfoListFile (dlg.GetPathName (), &vpDlds, bAppend);
 	}
 }
 
-BOOL CDlgExportDownloads::ExportDownloads_ToURLListFile(LPCSTR pszFile, DLDS_LIST* pvpDlds, BOOL bAppend)
+BOOL CDlgExportDownloads::ExportDownloads_ToURLListFile(LPCTSTR pszFile, DLDS_LIST* pvpDlds, BOOL bAppend)
 {
 	CStdioFile file;
 
@@ -231,12 +231,12 @@ BOOL CDlgExportDownloads::ExportDownloads_ToURLListFile(LPCSTR pszFile, DLDS_LIS
 		try 
 		{
 			file.WriteString (pvpDlds->at (i)->pMgr->get_URL ());
-			file.WriteString ("\n");
+			file.WriteString (_T("\n"));
 		} 
 		catch (const std::exception& ex)
 		{
 			ASSERT (FALSE);
-			vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads_ToURLListFile " + tstring(ex.what()));
+			vmsLogger::WriteLog("CDlgExportDownloads::ExportDownloads_ToURLListFile " + std::string(ex.what()));
 			return FALSE;
 		}
 		catch (...)
@@ -250,7 +250,7 @@ BOOL CDlgExportDownloads::ExportDownloads_ToURLListFile(LPCSTR pszFile, DLDS_LIS
 	return TRUE;
 }
 
-BOOL CDlgExportDownloads::ExportDownloads_ToDLInfoListFile(LPCSTR pszFile, DLDS_LIST* pvpDlds, BOOL bAppend)
+BOOL CDlgExportDownloads::ExportDownloads_ToDLInfoListFile(LPCTSTR pszFile, DLDS_LIST* pvpDlds, BOOL bAppend)
 {
 	IXMLDOMDocumentPtr spXML;
 	IXMLDOMNodePtr spNode, spNode2;
@@ -289,7 +289,7 @@ BOOL CDlgExportDownloads::ExportDownloads_ToDLInfoListFile(LPCSTR pszFile, DLDS_
 	spXML->get_xml (&bstr);
 
 	CString str = bstr;
-	str.Replace ("><", ">\n<");
+	str.Replace (_T("><"), _T(">\n<"));
 
 	bstr = str;
 

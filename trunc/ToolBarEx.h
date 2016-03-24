@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_TOOLBAREX_H__58B8C9AE_B53F_41DE_913E_E539488B949D__INCLUDED_)
@@ -58,7 +58,7 @@ public:
 	
 	
 	
-	void UpdateGroupToolTips (int iGrp, LPCSTR* ppszTips, UINT uSize);
+	void UpdateGroupToolTips (int iGrp, LPCTSTR* ppszTips, UINT uSize);
 	
 	BOOL Create(CWnd* pParent);
 	virtual ~CToolBarEx();

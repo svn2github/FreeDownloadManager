@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsHttpConnection.h"
@@ -15,7 +15,7 @@ fsHttpConnection::~fsHttpConnection()
 
 }
 
-fsInternetResult fsHttpConnection::Connect(LPCSTR pszServer, LPCSTR pszUser, LPCSTR pszPassword, INTERNET_PORT nPort)
+fsInternetResult fsHttpConnection::Connect(LPCTSTR pszServer, LPCTSTR pszUser, LPCTSTR pszPassword, INTERNET_PORT nPort)
 {
 	if (!m_pSession)
 		return IR_NOTINITIALIZED;

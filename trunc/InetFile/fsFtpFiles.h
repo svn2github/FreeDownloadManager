@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSFTPFILES_H__9903206C_EB0F_46C8_A778_FF0D15F795F5__INCLUDED_)
@@ -17,9 +17,9 @@ class fsFtpFiles : public fsInternetFiles
 {
 public:
 	
-	fsInternetResult GetList (LPCSTR pszUrl);
+	fsInternetResult GetList (LPCTSTR pszUrl);
 	void Abort();
-	LPCSTR GetLastError();
+	LPCTSTR GetLastError();
 	
 
 	

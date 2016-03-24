@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -12,7 +12,7 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-vmsUnRARDLL::vmsUnRARDLL(LPCSTR pszDll) :
+vmsUnRARDLL::vmsUnRARDLL(LPCTSTR pszDll) :
 	vmsDLL (pszDll)
 {
 	m_pfnRAROpenArchiveEx = NULL;
@@ -27,7 +27,7 @@ vmsUnRARDLL::~vmsUnRARDLL()
 
 }
 
-bool vmsUnRARDLL::Load(LPCSTR pszDll)
+bool vmsUnRARDLL::Load(LPCTSTR pszDll)
 {
 	if (false == vmsDLL::Load (pszDll))
 		return false;

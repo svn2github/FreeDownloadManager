@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -76,7 +76,7 @@ BOOL CDlg_Unpack_AskOverwrite::OnInitDialog()
 	m_bForAll = false;
 
 	CString str;
-	char szFileName [MY_MAX_PATH];
+	TCHAR szFileName [MY_MAX_PATH];
 	fsGetFileName (m_strFile, szFileName);
 
 	CString str1; 
@@ -95,7 +95,7 @@ BOOL CDlg_Unpack_AskOverwrite::OnInitDialog()
 		str1 = GetFileInfoString (&timeLastWrite, &uli.QuadPart);
 	}
 	else
-		str1.Format ("%s, %s", LS (L_UNKNOWN), LS (L_UNKNOWN));
+		str1.Format (_T("%s, %s"), LS (L_UNKNOWN), LS (L_UNKNOWN));
 
 	str2 = GetFileInfoString (m_ptimeNewLastModified, m_puNewSize);
 
@@ -115,14 +115,14 @@ CString CDlg_Unpack_AskOverwrite::GetFileInfoString(FILETIME *time, UINT64 *size
 	{
 		SYSTEMTIME systime;
 		FileTimeToSystemTime (time, &systime);
-		char szDate [1000], szTime [1000];
+		TCHAR szDate [1000], szTime [1000];
 		SystemTimeToStr (&systime, szDate, szTime, TRUE);
-		str2 = szDate; str2 += ", "; str2 += szTime;
+		str2 = szDate; str2 += _T(", "); str2 += szTime;
 	}
 	else
 		str2 = LS (L_UNKNOWN);
 
-	str.Format ("%s, %s", size ? BytesToString (*size) : LS (L_UNKNOWN), 
+	str.Format (_T("%s, %s"), size ? BytesToString (*size) : LS (L_UNKNOWN), 
 		str2);
 
 	return str;

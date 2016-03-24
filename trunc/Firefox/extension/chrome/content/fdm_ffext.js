@@ -39,7 +39,7 @@ function freeDldMgr_dlURL (strUrl)
   var url = Components.classes["@freedownloadmanager.org/FDMUrl;1"].createInstance ();
   url = url.QueryInterface (Components.interfaces.IFDMUrl);
   url.Url = strUrl;
-  url.Referer = document.commandDispatcher.focusedWindow.document.URL;
+  url.Referer = document.commandDispatcher.focusedWindow.document.location.href;
   url.Cookies = freeDldMgr_gatherCookieForHost (document.commandDispatcher.focusedWindow.document.location.hostname, document.commandDispatcher.focusedWindow.document.cookie);
   url.UserAgent = window.navigator.userAgent;
 
@@ -205,7 +205,7 @@ function freeDldMgr_dlvideo ()
   /*freeDldMgr_FDM.ProcessVideoDocument (document.commandDispatcher.focusedWindow.document.domain, 
   	"", document.commandDispatcher.focusedWindow.document.documentElement.innerHTML);*/
 
-  freeDldMgr_FDM.CreateVideoDownloadFromUrl (window.content.document.URL);
+  freeDldMgr_FDM.CreateVideoDownloadFromUrl (window.content.document.location.href);
 }
 
 // add urls of all or selected only elements of current web page to fdm
@@ -233,7 +233,7 @@ function freeDldMgr_gatherAllElements (bSelectedOnly, cookie)
 {
   var url = Components.classes["@freedownloadmanager.org/FDMUrl;1"].createInstance ();
   url = url.QueryInterface (Components.interfaces.IFDMUrl);
-  url.Referer = document.commandDispatcher.focusedWindow.document.URL;
+  url.Referer = document.commandDispatcher.focusedWindow.document.location.href;
   url.Cookies = cookie;
 
   var urlListRcvr = Components.classes["@freedownloadmanager.org/FDMUrlListReceiver;1"].createInstance ();

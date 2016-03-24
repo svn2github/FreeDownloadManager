@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "vmsHttpRedirectList.h"
@@ -57,9 +57,9 @@ const vmsHttpRedirectList::Redirect* vmsHttpRedirectList::getRedirect(int nIndex
 void vmsHttpRedirectList::Lock(bool bLock)
 {
 	if (bLock)
-		EnterCriticalSection (&m_csRedirects);
+		EnterCriticalSection (m_csRedirects);
 	else
-		LeaveCriticalSection (&m_csRedirects);
+		LeaveCriticalSection (m_csRedirects);
 }
 
 vmsHttpRedirectList& vmsHttpRedirectList::o(void)

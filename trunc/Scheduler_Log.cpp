@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -41,7 +41,7 @@ BOOL CScheduler_Log::Create(CWnd *pParent)
 	if (!CWndLog::Create (pParent))
 		return FALSE;
 
-	ReadState ("SchedulerLog");
+	ReadState (_T("SchedulerLog"));
 
 	return TRUE;
 }

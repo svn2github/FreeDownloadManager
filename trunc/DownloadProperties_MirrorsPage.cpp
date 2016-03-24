@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -155,14 +155,14 @@ void CDownloadProperties_MirrorsPage::UpdateMirrSpeed()
 		{
 			if (uPT != UINT_MAX)
 			{
-				str.Format ("%.*g", 3, fBasePing / double (uPT) * 100.0);
-				str += "%";
+				str.Format (_T("%.*g"), 3, fBasePing / double (uPT) * 100.0);
+				str += _T("%");
 			}
 			else
 				str = LS (L_UNKNOWN);
 		}
 		else
-			str = "local";
+			str = _T("local");
 		m_wndMirrs.SetItemText (i, 1, str);
 	}
 }
@@ -176,7 +176,7 @@ void CDownloadProperties_MirrorsPage::UpdateMirrUsing()
 		int cRefs = dldr->GetMirrorRefs (i);
 		CString str = "";
 		if (cRefs)
-			str.Format ("%d", cRefs);
+			str.Format (_T("%d"), cRefs);
 		m_wndMirrs.SetItemText (i, 2, str);
 	}
 }
@@ -227,8 +227,8 @@ void CDownloadProperties_MirrorsPage::OnFindmirrors()
 
 	if (m_dld->pMgr->GetDownloadMgr ()->GetDownloader ()->GetFoundMirrorCount ())
 	{
-		char sz [10000];
-		sprintf (sz, LS (L_NMIRRORSFOUND), m_dld->pMgr->GetDownloadMgr ()->GetDownloader ()->GetFoundMirrorCount ());
+		TCHAR sz [10000];
+		_stprintf (sz, LS (L_NMIRRORSFOUND), m_dld->pMgr->GetDownloadMgr ()->GetDownloader ()->GetFoundMirrorCount ());
 		MessageBox (sz, LS (L_DONE));
 		CancelToClose ();
 	}
@@ -305,7 +305,7 @@ DWORD WINAPI CDownloadProperties_MirrorsPage::_threadFindMirrors2(LPVOID lp)
 
 	if (ir != IR_SUCCESS)
 	{
-		char szErr [10000];
+		TCHAR szErr [10000];
 		fsIRToStr (ir, szErr, sizeof (szErr));
 		pThis->MessageBox (szErr, LS (L_ERR), MB_ICONERROR);
 	}
@@ -323,11 +323,11 @@ void CDownloadProperties_MirrorsPage::FillMirrsList()
 	{
 		fsDownload_NetworkProperties *dnp = dldr->MirrorDNP (i);
 		fsURL url;
-		char szUrl [10000];
-		DWORD dwLen = sizeof (szUrl);
+		TCHAR szUrl [10000];
+		DWORD dwLen = _countof (szUrl);
 
 		url.Create (fsNPToScheme (dnp->enProtocol), dnp->pszServerName,
-			dnp->uServerPort, "", "", dnp->pszPathName, szUrl, &dwLen);
+			dnp->uServerPort, _T(""), _T(""), dnp->pszPathName, szUrl, &dwLen);
 
 		m_wndMirrs.InsertItem (i, szUrl);
 	}
@@ -433,5 +433,5 @@ void CDownloadProperties_MirrorsPage::OnRemove()
 	UpdateEnabled ();
 
 	if (bAllWasDeleted == FALSE)
-		MessageBox ("Failed to remove mirros(s).\nPlease try again later.", "Failed", MB_OK | MB_ICONEXCLAMATION);
+		MessageBox (_T("Failed to remove mirros(s).\nPlease try again later."), _T("Failed"), MB_OK | MB_ICONEXCLAMATION);
 }

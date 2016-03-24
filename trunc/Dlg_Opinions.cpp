@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -47,10 +47,10 @@ BOOL CDlg_Opinions::OnInitDialog()
 	m_wbEvents.Attach ();
 
 	CString str;
-	str.Format ("http://fdm.freedownloadmanager.org/fromfdm/showopinions.html?url=%s",
+	str.Format (_T("http://fdm.freedownloadmanager.org/fromfdm/showopinions.html?url=%s"),
 		vmsMaliciousDownloadChecker::EncodeUrl (m_pszUrl));
 	CString strLoading;
-	strLoading.Format ("about:%s...", LS (L_LOADING));
+	strLoading.Format (_T("about:%s..."), LS (L_LOADING));
 
 	m_wndWB.Navigate (strLoading, 0, 0, 0, 0);
 	m_wndWB.Navigate (str, NULL, NULL, NULL, NULL);

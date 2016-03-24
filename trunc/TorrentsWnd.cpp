@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -70,12 +70,12 @@ void CTorrentsWnd::Plugin_GetToolBarInfo(wgTButtonInfo **ppButtons, int *pcButto
 {
 	static wgTButtonInfo btns [] = 
 	{
-		wgTButtonInfo (ID_BTDLD_ADDFROMURL, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_BTDLD_ADDFROMFILE, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_BTDLD_CREATENEWTORRENT, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (0, TBSTYLE_SEP, ""),
-		wgTButtonInfo (ID_BTDLD_START, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_BTDLD_STOP, TBSTYLE_BUTTON, ""),
+		wgTButtonInfo (ID_BTDLD_ADDFROMURL, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_BTDLD_ADDFROMFILE, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_BTDLD_CREATENEWTORRENT, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (0, TBSTYLE_SEP, _T("")),
+		wgTButtonInfo (ID_BTDLD_START, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_BTDLD_STOP, TBSTYLE_BUTTON, _T("")),
 	};
 	
 	btns [0].pszToolTip = LS (L_BTDLD_ADDFROMURL);
@@ -110,10 +110,10 @@ void CTorrentsWnd::Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int* )
 	*ppItems = NULL;
 }
 
-void CTorrentsWnd::Plugin_GetPluginNames(LPCSTR *ppszLong, LPCSTR *ppszShort)
+void CTorrentsWnd::Plugin_GetPluginNames(LPCTSTR *ppszLong, LPCTSTR *ppszShort)
 {
 	static CString strName;
-	strName = LSNP (L_TORRENTS);
+	strName = LSNP (L_TORRENTS).c_str ();
 	*ppszLong = *ppszShort = strName;
 }
 
@@ -161,7 +161,7 @@ int CTorrentsWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndSplitter.SetWnd1 (m_wndTasks);
 	m_wndSplitter.SetWnd2 (m_wndBtTab);
 
-	m_wndSplitter.SetRatio (_App.View_SplitterRatio ("Torrents_DL_BTINFO"));
+	m_wndSplitter.SetRatio (_App.View_SplitterRatio (_T("Torrents_DL_BTINFO")));
 
 	DLDS_LIST v;
 
@@ -241,7 +241,7 @@ void CTorrentsWnd::SaveAll(DWORD dwWhat)
 	if (dwWhat & 2)
 	{
 		m_wndTasks.SaveState ();
-		_App.View_SplitterRatio ("Torrents_DL_BTINFO", m_wndSplitter.GetRatio ());
+		_App.View_SplitterRatio (_T("Torrents_DL_BTINFO"), m_wndSplitter.GetRatio ());
 	}
 }
 
@@ -257,7 +257,7 @@ void CTorrentsWnd::ApplyLanguageToMenuView(CMenu *menu)
 	
 	UINT aCmds [] = {ID_DLLIST_1, ID_DLLIST_2, ID_DLLIST_3, ID_DLLIST_4, ID_DLLIST_5, 
 		ID_DLLIST_6, ID_DLLIST_7, ID_DLLIST_8, ID_DLLIST_9 };
-	LPCSTR apszCmds [] = {LS (L_FILENAME), LS (L_SIZE), LS (L_DOWNLOADED),
+	LPCTSTR apszCmds [] = {LS (L_FILENAME), LS (L_SIZE), LS (L_DOWNLOADED),
 		LS (L_TIMELEFT), LS (L_RATIO), LS (L_SECTIONS), LS (L_SPEED), LS (L_COMMENT), LS (L_ADDED) };
 	
 	for (int i = 0; i < sizeof (aCmds) / sizeof (UINT); i++)

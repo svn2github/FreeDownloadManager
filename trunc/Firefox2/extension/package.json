@@ -1,0 +1,18 @@
+{
+  "id": "fdm_ffext@freedownloadmanager.org",
+  "title": "Free Download Manager extension",
+  "name": "fdm_extension",
+  "version": "2.1.4",
+  "description": "Free Download Manager integration with Firefox browser.",
+  "main": "main.js",
+  "author": "FreeDownloadManager.ORG",
+  "engines": {
+    "firefox": "38.0 - 46.0"
+  },
+  "license": "MPL 2.0",
+  "updateURL": "https://freedownloadmanager.org/update/ffext.rdf",
+  "permissions": {
+	"private-browsing": true,
+	"multiprocess": true
+  }
+}

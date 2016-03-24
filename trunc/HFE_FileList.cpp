@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -77,7 +77,7 @@ BOOL CHFE_FileList::Create(CWnd *pParent)
 	InsertColumn (1, LS (L_SIZE), LVCFMT_LEFT, 80, 0);
 	InsertColumn (2, LS (L_DATE), LVCFMT_LEFT, 170, 0);
 
-	ReadState ("HFEFileList");
+	ReadState (_T("HFEFileList"));
 
 	ShowWindow (SW_SHOW);
 
@@ -103,7 +103,7 @@ void CHFE_FileList::UpdateList()
 	if (mgr->IsCurrentPathRoot () == FALSE)
 	{
 		
-		int iItem = AddItem ("..", GetSysColor (COLOR_WINDOW), GetSysColor (COLOR_WINDOWTEXT), 0);
+		int iItem = AddItem (_T(".."), GetSysColor (COLOR_WINDOW), GetSysColor (COLOR_WINDOWTEXT), 0);
 		SetItemData (iItem, NULL);
 	}
 
@@ -122,10 +122,10 @@ void CHFE_FileList::UpdateList()
 
 			if (_pwndDownloads->IsSizesInBytes () == FALSE)
 			{
-				CHAR szDim [10];
+				TCHAR szDim [100];
 				float val;
 				BytesToXBytes (file->uSize, &val, szDim);
-				str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+				str.Format (_T("%.*g %s"), val > 999 ? 4 : 3, val, szDim);
 			}
 			else
 				str = fsBytesToStr (file->uSize);
@@ -137,14 +137,14 @@ void CHFE_FileList::UpdateList()
 		if (file->date.dwHighDateTime != UINT_MAX || file->date.dwLowDateTime != UINT_MAX)
 		{
 			SYSTEMTIME time;
-			CHAR strTime [1000], strDate [1000];
+			TCHAR strTime [1000], strDate [1000];
 
 			FileTimeToSystemTime (&file->date, &time);
 
 			SystemTimeToStr (&time, strDate, strTime);
 
-			strcat (strTime, " ");
-			strcat (strTime, strDate);
+			_tcscat (strTime, _T(" "));
+			_tcscat (strTime, strDate);
 			SetItemText (iItem, 2, strTime);
 		}
 	}
@@ -329,7 +329,7 @@ int CALLBACK CHFE_FileList::_SortFunc(LPARAM item1, LPARAM item2, LPARAM )
 	else if (file2->bFolder && file1->bFolder == FALSE)
 		return 1;
 
-	return stricmp (file1->strName, file2->strName);
+	return _tcsicmp (file1->strName, file2->strName);
 }
 
 void CHFE_FileList::OnHfeOpenfolder() 
@@ -471,7 +471,7 @@ void CHFE_FileList::DownloadSelected()
 		_pwndHFE->LogFailedMessage (LS (L_FAILED));
 }
 
-fs::tree <fsFileInfo*>* CHFE_FileList::BuildList(LPCSTR pszFolder, BOOL *pbNeedStop, int* piProgress, int iProgressDone)
+fs::tree <fsFileInfo*>* CHFE_FileList::BuildList(LPCTSTR pszFolder, BOOL *pbNeedStop, int* piProgress, int iProgressDone)
 {
 	fsInternetFileListMgr *mgr = _pwndHFE->GetMgr ();
 	fs::tree <fsFileInfo*> *pRoot = NULL;
@@ -537,7 +537,7 @@ fs::tree <fsFileInfo*>* CHFE_FileList::BuildList(LPCSTR pszFolder, BOOL *pbNeedS
 
 			
 			str [str.Length ()-1] = 0;
-			if (strchr (str, '\\') || strchr (str, '/'))
+			if (_tcschr (str, _T('\\')) || _tcschr (str, _T('/')))
 				continue;
 
 			
@@ -551,7 +551,7 @@ fs::tree <fsFileInfo*>* CHFE_FileList::BuildList(LPCSTR pszFolder, BOOL *pbNeedS
 			catch (const std::exception& ex)
 			{
 				ASSERT (FALSE);
-				vmsLogger::WriteLog(" " + tstring(ex.what()));
+				vmsLogger::WriteLog(" " + std::string(ex.what()));
 				SAFE_DELETE (pRoot);
 				throw 1;
 			}
@@ -659,7 +659,7 @@ DWORD WINAPI CHFE_FileList::_threadBuildList(LPVOID lp)
 			catch (const std::exception& ex)
 			{
 				ASSERT (FALSE);
-				vmsLogger::WriteLog(" " + tstring(ex.what()));
+				vmsLogger::WriteLog(" " + std::string(ex.what()));
 				bFatalError = true;
 				break;
 			}

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSSHELLBROWSERSEVENTS_H__7A084469_2A99_4025_A3F4_D7545A51F633__INCLUDED_)

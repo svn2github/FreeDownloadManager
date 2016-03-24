@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -71,7 +71,7 @@ void fsContextHelpMgr::OnWT()
 	popup.clrForeground = UINT (-1);
 	popup.clrBackground = UINT (-1);
 	popup.rcMargins = CRect (-1, -1, -1, -1);
-	popup.pszFont = "MS Sans Serif, 8, DEFAULT_CHARSET";
+	popup.pszFont = _T("MS Sans Serif, 8, DEFAULT_CHARSET");
 
 	HtmlHelp (m_pLastDlg->m_hWnd, NULL, HH_DISPLAY_TEXT_POPUP, (DWORD) &popup);		
 

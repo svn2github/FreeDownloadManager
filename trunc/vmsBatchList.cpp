@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -22,29 +22,29 @@ vmsBatchList::~vmsBatchList()
 
 }
 
-bool vmsBatchList::Create(LPCSTR pszTemplate, LPCSTR pszNumbers, char chStart, char chEnd)
+bool vmsBatchList::Create(LPCTSTR pszTemplate, LPCTSTR pszNumbers, char chStart, char chEnd)
 {
 	m_v.clear ();
 
-	if (pszNumbers == NULL || strstr (pszTemplate, "(*)") == NULL)
+	if (pszNumbers == NULL || _tcsstr (pszTemplate, _T("(*)")) == NULL)
 		return CreateAZBatch (pszTemplate, chStart, chEnd);
 
-	BOOL bAZ = strstr (pszTemplate, "(*a)") || strstr (pszTemplate, "(*A)");
+	BOOL bAZ = _tcsstr (pszTemplate, _T("(*a)")) || _tcsstr (pszTemplate, _T("(*A)"));
 
 	while (*pszNumbers)
 	{
 		int nStart, nEnd, nStep = 1, nWB = 1;
 
-#define skip_digits while (*pszNumbers >= '0' && *pszNumbers <= '9') pszNumbers++;
-#define skip_spaces while (*pszNumbers == ' ') pszNumbers++;
+#define skip_digits while (*pszNumbers >= _T('0') && *pszNumbers <= _T('9')) pszNumbers++;
+#define skip_spaces while (*pszNumbers == _T(' ')) pszNumbers++;
 #define skip_number {skip_digits; skip_spaces;}
 #define check_nz if (*pszNumbers == 0) return false;
 
 		
-		nStart = nEnd = atoi (pszNumbers);
+		nStart = nEnd = _tstoi (pszNumbers);
 		skip_number;
 
-		if (*pszNumbers == 0 || *pszNumbers == ',') {
+		if (*pszNumbers == 0 || *pszNumbers == _T(',')) {
 			if (*pszNumbers) {
 				
 				pszNumbers++;
@@ -52,23 +52,23 @@ bool vmsBatchList::Create(LPCSTR pszTemplate, LPCSTR pszNumbers, char chStart, c
 			}
 		}
 		else {
-			if (*pszNumbers == '-')
+			if (*pszNumbers == _T('-'))
 			{
 				pszNumbers++;
 				skip_spaces;
 				check_nz;
 
 				
-				nEnd = atoi (pszNumbers);
+				nEnd = _tstoi (pszNumbers);
 				skip_number;
 			}
 
-			while (*pszNumbers && *pszNumbers != ',') {
+			while (*pszNumbers && *pszNumbers != _T(',')) {
 
 				char chWhat = *pszNumbers++;
 				skip_spaces;
 
-				int nValue = atoi (pszNumbers);
+				int nValue = _tstoi (pszNumbers);
 				skip_number;
 
 				switch (chWhat) {
@@ -83,7 +83,7 @@ bool vmsBatchList::Create(LPCSTR pszTemplate, LPCSTR pszNumbers, char chStart, c
 			if (nEnd < nStart || nStep == 0)
 				return false; 
 
-			if (*pszNumbers == ',') {
+			if (*pszNumbers == _T(',')) {
 				pszNumbers++;
 				skip_spaces;
 			}
@@ -95,10 +95,10 @@ bool vmsBatchList::Create(LPCSTR pszTemplate, LPCSTR pszNumbers, char chStart, c
 		{
 			CString str = pszTemplate;
 			CString strN;
-			strN.Format ("%d", n);
+			strN.Format (_T("%d"), n);
 			int j = nWB - strN.GetLength ();
-			while (j-- > 0) strN.Insert (0, '0');
-			str.Replace ("(*)", strN);
+			while (j-- > 0) strN.Insert (0, _T('0'));
+			str.Replace (_T("(*)"), strN);
 
 			
 			
@@ -126,12 +126,12 @@ int vmsBatchList::get_ResultCount()
 	return m_v.size ();
 }
 
-LPCSTR vmsBatchList::get_Result(int nIndex)
+LPCTSTR vmsBatchList::get_Result(int nIndex)
 {
 	return m_v [nIndex];
 }
 
-bool vmsBatchList::CreateAZBatch(LPCSTR pszTemplate, char chStart, char chEnd)
+bool vmsBatchList::CreateAZBatch(LPCTSTR pszTemplate, char chStart, char chEnd)
 {
 	for (char c = chStart; c <= chEnd; c++)
 	{
@@ -141,8 +141,8 @@ bool vmsBatchList::CreateAZBatch(LPCSTR pszTemplate, char chStart, char chEnd)
 		strA.MakeUpper ();
 		stra.MakeLower ();
 		
-		str.Replace ("(*A)", strA);
-		str.Replace ("(*a)", stra);
+		str.Replace (_T("(*A)"), strA);
+		str.Replace (_T("(*a)"), stra);
 
 		m_v.add (str);
 	}

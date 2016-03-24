@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -106,10 +106,12 @@ BOOL vmsPluginSupport::LoadPlugin(vmsLoadedPlugin &plug)
 	char sz1 [3000] = "", sz2 [3000] = "", sz3 [3000] = "", sz4 [3000] = "";
 	pfn (sz1, sz2, sz3, sz4);
 
-	plug.strShortName = sz1;
-	plug.strLongName = sz2;
-	plug.strVersion = sz3;
-	plug.strDescription = sz4;
+	USES_CONVERSION;
+	
+	plug.strShortName = CA2T(sz1);
+	plug.strLongName = CA2T(sz2);
+	plug.strVersion = CA2T(sz3);
+	plug.strDescription = CA2T(sz4);
 
 	return TRUE;
 }

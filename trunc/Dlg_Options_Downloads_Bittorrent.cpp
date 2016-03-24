@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -8,7 +8,6 @@
 #include "vmsTorrentExtension.h"
 #include "vmsMagnetExtension.h"
 #include "vmsDialogHelper.h"
-#include "vistafx/vistafx.h"
 #include "vmsFdmUtils.h"
 
 #ifdef _DEBUG
@@ -57,9 +56,9 @@ BOOL CDlg_Options_Downloads_Bittorrent::OnInitDialog()
 	m_iOldMode = 0;
 	
 	CString str;
-	str.Format ("%s/%s", LS (L_B), LS (L_S)); m_wndLimitDim.AddString (str);
-	str.Format ("%s/%s", LS (L_KB), LS (L_S)); m_wndLimitDim.AddString (str);
-	str.Format ("%s/%s", LS (L_MB), LS (L_S)); m_wndLimitDim.AddString (str);
+	str.Format (_T("%s/%s"), LS (L_B), LS (L_S)); m_wndLimitDim.AddString (str);
+	str.Format (_T("%s/%s"), LS (L_KB), LS (L_S)); m_wndLimitDim.AddString (str);
+	str.Format (_T("%s/%s"), LS (L_MB), LS (L_S)); m_wndLimitDim.AddString (str);
 	m_wndLimitDim.SetCurSel (0);
 	
 	UINT aSpinIds [] = {
@@ -102,6 +101,12 @@ BOOL CDlg_Options_Downloads_Bittorrent::OnInitDialog()
 
 	CheckDlgButton (IDC_ENABLE_NAT_PMP,
 		_App.Bittorrent_EnableNATPMP () ? BST_CHECKED : BST_UNCHECKED);
+
+	CheckDlgButton (IDC_UTPEX,
+		_App.Bittorrent_EnableUTPEX () ? BST_CHECKED : BST_UNCHECKED);
+
+	CheckDlgButton(IDC_SEQUENTIAL,
+		_App.Bittorrent_EnableSequentialDownloading() ? BST_CHECKED : BST_UNCHECKED);
 
 	CheckDlgButton (IDC_ASSOCWITHTORRENT, 
 		vmsTorrentExtension::IsAssociatedWithUs () ? BST_CHECKED : BST_UNCHECKED);
@@ -146,11 +151,12 @@ BOOL CDlg_Options_Downloads_Bittorrent::Apply()
 	_App.Bittorrent_Enable (bEn);
 	
 	BOOL bAssoc = IsDlgButtonChecked (IDC_ASSOCWITHTORRENT) == BST_CHECKED;
+	vmsWinOsVersion osver;
 	
 	if (bAssoc == FALSE && vmsTorrentExtension::IsAssociatedWithUs ())
 	{
 		if (FALSE == vmsTorrentExtension::AssociateWith (_App.Bittorrent_OldTorrentAssociation ()) && 
-				GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
+				GetLastError () == ERROR_ACCESS_DENIED && osver.isVistaOrHigher ())
 		{
 			m_tstrFdmElevateArgs += _T ("-assocwithtorrent=0 ");
 			setElevateRequired (true);
@@ -159,7 +165,8 @@ BOOL CDlg_Options_Downloads_Bittorrent::Apply()
 	else if (bAssoc && vmsTorrentExtension::IsAssociatedWithUs () == FALSE)
 	{
 		_App.Bittorrent_OldTorrentAssociation (vmsTorrentExtension::GetCurrentAssociation ());
-		if (FALSE == vmsTorrentExtension::Associate () && GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
+		if (FALSE == vmsTorrentExtension::Associate () && GetLastError () == ERROR_ACCESS_DENIED && 
+			osver.isVistaOrHigher ())
 		{
 			m_tstrFdmElevateArgs += _T ("-assocwithtorrent=1 ");
 			setElevateRequired (true);
@@ -168,7 +175,8 @@ BOOL CDlg_Options_Downloads_Bittorrent::Apply()
 
 	bAssoc = IsDlgButtonChecked (IDC_ASSOCWITHMAGNET) == BST_CHECKED;
 	if (!vmsFdmUtils::AssociateFdmWithMagnetLinks (bAssoc) && 
-			GetLastError () == ERROR_ACCESS_DENIED && VistaFx::IsVistaOrHigher ())
+			GetLastError () == ERROR_ACCESS_DENIED && 
+			osver.isVistaOrHigher ())
 	{
 		m_tstrFdmElevateArgs += bAssoc ? _T ("-assocwithmagnet=1 ") : _T ("-assocwithmagnet=0 ");
 		setElevateRequired (true);
@@ -203,8 +211,16 @@ BOOL CDlg_Options_Downloads_Bittorrent::Apply()
 	_App.Bittorrent_EnableLocalPeerDiscovery (IsDlgButtonChecked (IDC_LOCAL_PEER) == BST_CHECKED);
 	_App.Bittorrent_EnableUPnP (IsDlgButtonChecked (IDC_ENABLE_UPNP) == BST_CHECKED);
 	_App.Bittorrent_EnableNATPMP (IsDlgButtonChecked (IDC_ENABLE_NATPMP) == BST_CHECKED);
+	_App.Bittorrent_EnableSequentialDownloading(IsDlgButtonChecked(IDC_SEQUENTIAL) == BST_CHECKED);
+
+	BOOL utpexEnabledOldValue = _App.Bittorrent_EnableUTPEX();
+	bool bUtpexEnabled = ( IsDlgButtonChecked (IDC_UTPEX) == BST_CHECKED );	
+	_App.Bittorrent_EnableUTPEX (IsDlgButtonChecked (IDC_UTPEX) == BST_CHECKED);
+	if ( utpexEnabledOldValue != bUtpexEnabled )
+		setApplicationRestartRequired( true );
 
 	_BT.ApplyDHTSettings ();
+	_BT.ApplyAdditionalTorrentSettings();
 	
 	return TRUE;
 }
@@ -291,7 +307,7 @@ void CDlg_Options_Downloads_Bittorrent::UpdateEnabled()
 			IDC_LIMITCONNS, IDC_CONNSLIMITVAL, IDC_CONNSLIMITVALSPIN,
 			IDC__USEPORTS, IDC_PORT_FROM, IDC_PORT_FROM_SPIN, IDC__TO,
 			IDC_PORT_TO, IDC_PORT_TO_SPIN, IDC_USE_DHT,IDC_LOCAL_PEER,
-			IDC_ENABLE_UPNP, IDC_ENABLE_NATPMP,
+			IDC_ENABLE_UPNP, IDC_ENABLE_NATPMP, IDC_UTPEX, IDC_SEQUENTIAL,
 			IDC__MAXHALFS, IDC_MAXHALFSVAL, IDC_MAXHALFSSPIN,
 	};
 	for (int i = 0; i < sizeof (aIDs) / sizeof (UINT); i++)
@@ -329,9 +345,11 @@ void CDlg_Options_Downloads_Bittorrent::ApplyLanguage()
 		fsDlgLngInfo (IDC_LOCAL_PEER, L_ENABLE_LOCAL_PEERS),
 		fsDlgLngInfo (IDC_ENABLE_UPNP, L_ENABLE_UPNP),
 		fsDlgLngInfo (IDC_ENABLE_NATPMP, L_ENABLE_NATPMP),
+		fsDlgLngInfo (IDC_UTPEX, L_UTPEX),
 		fsDlgLngInfo (IDC_ASSOCWITHTORRENT, L_ASSOCWITHTORRENT),
 		fsDlgLngInfo (IDC_ASSOCWITHMAGNET, L_ASSOCWITHMAGNET),
 		fsDlgLngInfo (IDC__MAXHALFS, L_MAXHALFCONNS, TRUE),
+		fsDlgLngInfo(IDC_SEQUENTIAL, L_ENABLE_SEQUENTIAL),
 	};
 	
 	_LngMgr.ApplyLanguage (	this, lnginfo, sizeof (lnginfo) / sizeof (fsDlgLngInfo), 0);
@@ -359,7 +377,8 @@ void CDlg_Options_Downloads_Bittorrent::OnLimitconns()
 
 void CDlg_Options_Downloads_Bittorrent::OnAssocwithtorrent()
 {
-	if (VistaFx::IsVistaOrHigher () && !vmsTorrentExtension::CheckAccessRights ())
+	vmsWinOsVersion osver;
+	if (osver.isVistaOrHigher () && !vmsTorrentExtension::CheckAccessRights ())
 	{
 		bool bAssoc = IsDlgButtonChecked (IDC_ASSOCWITHTORRENT) == BST_CHECKED;
 		bool bNeedElevate = false;
@@ -375,7 +394,8 @@ void CDlg_Options_Downloads_Bittorrent::OnAssocwithtorrent()
 
 void CDlg_Options_Downloads_Bittorrent::OnAssocwithMagnet()
 {
-	if (VistaFx::IsVistaOrHigher () && !vmsTorrentExtension::CheckAccessRights ())
+	vmsWinOsVersion osver;
+	if (osver.isVistaOrHigher () && !vmsTorrentExtension::CheckAccessRights ())
 	{
 		bool bAssoc = IsDlgButtonChecked (IDC_ASSOCWITHMAGNET) == BST_CHECKED;
 		bool bNeedElevate = false;

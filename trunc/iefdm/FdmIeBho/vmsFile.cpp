@@ -1,9 +1,9 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "StdAfx.h"
-
+#include "Utils.h"
 #include "vmsFile.h"
 
 vmsFile::vmsFile()
@@ -16,11 +16,22 @@ vmsFile::~vmsFile()
 	close ();
 }
 
-bool vmsFile::open(LPCSTR pszName, LPCSTR pszMode)
+bool vmsFile::open(LPCTSTR pszName, LPCTSTR pszMode)
 {
 	close ();
 
-	m_file = fopen (pszName, pszMode);
+	std::string sName;
+	std::string sNode;
+
+#ifdef UNICODE
+	UniToAnsi(std::wstring(pszName), sName);
+	UniToAnsi(std::wstring(pszMode), sNode);
+#else
+	sName = pszName;
+	sNode = pszMode;
+#endif
+
+	m_file = fopen (sName.c_str(), sNode.c_str());
 
 	return m_file != NULL;
 }
@@ -34,10 +45,11 @@ void vmsFile::close()
 	}
 }
 
-bool vmsFile::read(std::string& str)
+bool vmsFile::read(tstring& str)
 {
+	std::string sTmp;
 	char sz [1000] = "";
-	str = "";
+	sTmp = "";
 
 	for (;;)
 	{
@@ -45,21 +57,27 @@ bool vmsFile::read(std::string& str)
 
 		if (psz == NULL && !feof (m_file))
 		{
-			str = "";
+			sTmp = "";
 			return false;
 		}
 
 		if (psz == NULL)
 			return false;
 
-		str += sz;
-		if (lstrlen (sz) < sizeof (sz) - 1 ||
-				str [str.length () - 1] == '\n')
+		sTmp += sz;
+		if (strlen (sz) < sizeof (sz) - 1 ||
+				sTmp [str.length () - 1] == '\n')
 			break;
 	};
 
-	if (str [str.length () - 1] == '\n')
-		str.erase (str.begin () + str.length () - 1);
+	if (sTmp [str.length () - 1] == '\n')
+		sTmp.erase (sTmp.begin () + sTmp.length () - 1);
+
+#ifdef UNICODE
+	AnsiToUni(sTmp, str);
+#else
+	str = sTmp;
+#endif
 
 	return true;
 }

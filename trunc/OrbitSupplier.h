@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef ORBIT_SUPPLIER_INCLUDED_FILE
@@ -25,12 +25,12 @@ private:
 	
 	void OpenFile(HANDLE& hFile, const CString& sDldListFilePath, LangPhrase enMsg) const;
 	
-	void ReadOrbitDldList(const CString& sDldListFilePath, CString& sDldList) const;
+	void ReadOrbitDldList(const CString& sDldListFilePath, CStringA& sDldList) const;
 	bool retrieveDownloadFilePath(const TOrbitDownload& tOrbitDownload, CString& sDownloadFilePath) const;
 	void configureDownloadFileName(const CString& sDownloadFilePath, vmsDownloadSmartPtr dld) const;
 	void processDldImportedFromOrbit(const TOrbitDownload& tOrbitDownload, TImportResult& tImportResult) const;
 	void processDldsImportedFromOrbit(OrbitDownloadsArray& arrDownloads, informer fnInformer, void* pData, TImportResult& tImportResult) const;
-	void retrieveOrbitDownloadList(CString& sDldList) const;
+	void retrieveOrbitDownloadList(CStringA& sDldList) const;
 	void retrieveOrbitDownloads(OrbitDownloadsArray& arrDownloads) const;
 	void ReadFile(HANDLE& hFile, BYTE* bBuffer, DWORD& dwBytesRead, LangPhrase enMsg) const;
 	void ReadOrbitDldFile(const CString& sDownloadFilePath, vmsDownloadSmartPtr dld) const;

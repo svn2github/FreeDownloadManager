@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -55,7 +55,7 @@ vms7zipArchive::~vms7zipArchive()
 
 }
 
-bool vms7zipArchive::Extract(LPCSTR pszArchive, LPCSTR pszOutFolder)
+bool vms7zipArchive::Extract(LPCTSTR pszArchive, LPCTSTR pszOutFolder)
 {
 	CInFileStream *fileSpec = new CInFileStream;
 	CMyComPtr <IInStream> spFile = fileSpec;
@@ -74,7 +74,7 @@ bool vms7zipArchive::Extract(LPCSTR pszArchive, LPCSTR pszOutFolder)
 
 	m_errExtract = AEE_NO_ERROR;
 
-	char sz [MY_MAX_PATH];
+	TCHAR sz [MY_MAX_PATH];
 	fsGetFileName (pszArchive, sz);
 
 	vms7zipArchiveExtractCallback aec (spArc, pszOutFolder, m_pAC, sz);
@@ -97,10 +97,10 @@ bool vms7zipArchive::Extract(LPCSTR pszArchive, LPCSTR pszOutFolder)
 	return true;
 }
 
-bool vms7zipArchive::Find7zipDLL(vms7zipFormatDLL &dll, LPCSTR pszArchive, bool bByExt, CMyComPtr <IInStream> &spFile, CMyComPtr <IInArchive> &spArc)
+bool vms7zipArchive::Find7zipDLL(vms7zipFormatDLL &dll, LPCTSTR pszArchive, bool bByExt, CMyComPtr <IInStream> &spFile, CMyComPtr <IInArchive> &spArc)
 {
 	WIN32_FIND_DATA wfd;
-	HANDLE hFind = FindFirstFile ("Archive\\7-zip\\Formats\\*.dll", &wfd);
+	HANDLE hFind = FindFirstFile (_T("Archive\\7-zip\\Formats\\*.dll"), &wfd);
 	if (hFind == INVALID_HANDLE_VALUE)
 		return false;
 
@@ -108,7 +108,7 @@ bool vms7zipArchive::Find7zipDLL(vms7zipFormatDLL &dll, LPCSTR pszArchive, bool 
 
 	do
 	{
-		CString str = "Archive\\7-zip\\Formats\\"; str += wfd.cFileName;
+		CString str = _T("Archive\\7-zip\\Formats\\"); str += wfd.cFileName;
 		if (false == dll.Load (str))
 			continue;
 		

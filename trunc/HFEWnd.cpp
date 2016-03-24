@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -150,7 +150,7 @@ void CHFEWnd::_EventsFunc(fsInternetFileListMgr* mgr, fsInternetFileListMgrEvent
 	CHFEWnd* pThis = (CHFEWnd*) lp;
 
 	fsDescEvent event;
-	LPCSTR psz = NULL;
+	LPCTSTR psz = NULL;
 	CString str;
 
 	switch (ev)
@@ -235,15 +235,15 @@ void CHFEWnd::_EventsFunc(fsInternetFileListMgr* mgr, fsInternetFileListMgrEvent
 
 	if (ev == FLME_ERROR)	
 	{
-		char str [1000];
+		TCHAR str [1000];
 		*str = 0;
 		
 		
 		fsIRToStr (mgr->GetLastError (), str, 1000);
 
 		
-		fsnew (event.pszEvent, char, strlen (str) + 1);
-		strcpy (event.pszEvent, str);
+		fsnew (event.pszEvent, TCHAR, _tcslen (str) + 1);
+		_tcscpy (event.pszEvent, str);
 		pThis->m_evMgr.add (&event);
 		pThis->m_wndListLog.m_wndLog.AddRecord (&event);
 
@@ -251,27 +251,27 @@ void CHFEWnd::_EventsFunc(fsInternetFileListMgr* mgr, fsInternetFileListMgrEvent
 		if (mgr->GetLastError () == IR_EXTERROR)
 		{
 			
-			LPCSTR pszExtError = pThis->m_mgr.GetLastErrorDesc ();
-			LPCSTR pszErr1 = pszExtError;
-			LPCSTR pszErr2 = pszErr1;
+			LPCTSTR pszExtError = pThis->m_mgr.GetLastErrorDesc ();
+			LPCTSTR pszErr1 = pszExtError;
+			LPCTSTR pszErr2 = pszErr1;
 
 			
 			while (pszErr1)
 			{
 				
-				pszErr1 = strstr (pszErr1, "\r\n");
+				pszErr1 = _tcsstr (pszErr1, _T("\r\n"));
 				if (pszErr1)	
 				{
 					
-					strncpy (str, pszErr2, pszErr1 - pszErr2);
+					_tcsncpy (str, pszErr2, pszErr1 - pszErr2);
 					str [pszErr1 - pszErr2] = 0;
 				}
 				else
-					strcpy (str, pszErr2);	
+					_tcscpy (str, pszErr2);	
 					
 				
-				fsnew (event.pszEvent, char, strlen (str) + 1);
-				strcpy (event.pszEvent, str);
+				fsnew (event.pszEvent, TCHAR, _tcslen (str) + 1);
+				_tcscpy (event.pszEvent, str);
 				pThis->m_evMgr.add (&event);
 				pThis->m_wndListLog.m_wndLog.AddRecord (&event);
 
@@ -285,8 +285,8 @@ void CHFEWnd::_EventsFunc(fsInternetFileListMgr* mgr, fsInternetFileListMgrEvent
 	}
 	else if (psz)
 	{
-		fsnew (event.pszEvent, char, strlen (psz) + 1);
-		strcpy (event.pszEvent, psz);
+		fsnew (event.pszEvent, TCHAR, _tcslen (psz) + 1);
+		_tcscpy (event.pszEvent, psz);
 		pThis->m_evMgr.add (&event);
 		pThis->m_wndListLog.m_wndLog.AddRecord (&event);
 	}
@@ -346,17 +346,17 @@ DWORD WINAPI CHFEWnd::_threadGoUrl(LPVOID lp)
 {
 	CHFEWnd* pThis = (CHFEWnd*) lp;
 
-	EnterCriticalSection (&pThis->m_csGo);
+	EnterCriticalSection(pThis->m_csGo);
 
-	EnterCriticalSection (&pThis->m_csLastGoUrl);
+	EnterCriticalSection(pThis->m_csLastGoUrl);
 	CString strUrl = pThis->m_strLastGoUrl;
-	LeaveCriticalSection (&pThis->m_csLastGoUrl);
+	LeaveCriticalSection (pThis->m_csLastGoUrl);
 
 	if (pThis->m_mgr.IsRunning ())
 		pThis->m_mgr.Stop ();
  	pThis->m_mgr.GetList (strUrl, NULL, NULL);
 
-	LeaveCriticalSection (&pThis->m_csGo);
+	LeaveCriticalSection (pThis->m_csGo);
 
 	return 0;
 }
@@ -365,9 +365,9 @@ void CHFEWnd::Plugin_GetToolBarInfo(wgTButtonInfo **ppButtons, int *pcButtons)
 {
 	static wgTButtonInfo btns [] = 
 	{
-		wgTButtonInfo (ID_HFE_DOWNLOAD, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_HFE_STOP, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_HFE_REFRESH, TBSTYLE_BUTTON, ""),
+		wgTButtonInfo (ID_HFE_DOWNLOAD, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_HFE_STOP, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_HFE_REFRESH, TBSTYLE_BUTTON, _T("")),
 	};
 
 	btns [0].pszToolTip = LS (L_DOWNLOADSELECTED);
@@ -420,7 +420,7 @@ void CHFEWnd::OnHfeDisconnect()
 void CHFEWnd::Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int * cItems)
 {
 	static wgMenuViewItem aItems [] = {
-		wgMenuViewItem ("", &_pwndHFE->m_wndListLog.m_bShowLog),
+		wgMenuViewItem (_T(""), &_pwndHFE->m_wndListLog.m_bShowLog),
 	};
 
 	aItems [0].pszName = LS (L_EXPLORERLOG);
@@ -440,11 +440,11 @@ void CHFEWnd::SaveAll(DWORD dwWhat)
 		m_wndListLog.SaveState ();
 }
 
-void CHFEWnd::Plugin_GetPluginNames(LPCSTR *ppszLong, LPCSTR *ppszShort)
+void CHFEWnd::Plugin_GetPluginNames(LPCTSTR *ppszLong, LPCTSTR *ppszShort)
 {
 	static CString strNameLong, strNameShort;
-	strNameLong = LSNP (L_HFE);
-	strNameShort = LSNP (L_EXPLORER);
+	strNameLong = LSNP (L_HFE).c_str ();
+	strNameShort = LSNP (L_EXPLORER).c_str ();
 	*ppszLong = strNameLong;
 	*ppszShort = strNameShort;
 }
@@ -470,7 +470,7 @@ void CHFEWnd::ApplyLanguageToMenuView(CMenu *menu)
 	menu->ModifyMenu (1, MF_BYPOSITION | MF_STRING, 0, LS (L_EXPLORERLOG));
 
 	UINT aCmds [] = {ID_LISTOFFILES_1, ID_LISTOFFILES_2, ID_LISTOFFILES_3, ID_LOG_1, ID_LOG_2, ID_LOG_3};
-	LPCSTR apszCmds [] = {LS (L_FILENAME), LS (L_SIZE), LS (L_DATE), LS (L_TIME),
+	LPCTSTR apszCmds [] = {LS (L_FILENAME), LS (L_SIZE), LS (L_DATE), LS (L_TIME),
 		LS (L_DATE), LS (L_INFORMATION)};
 	
 	for (int i = 0; i < sizeof (aCmds) / sizeof (UINT); i++)
@@ -530,13 +530,13 @@ void CHFEWnd::ClearHistory()
 	m_wndUrl.ClearHistory ();
 }
 
-void CHFEWnd::LogFailedMessage(LPCSTR pszMsg)
+void CHFEWnd::LogFailedMessage(LPCTSTR pszMsg)
 {
 	fsDescEvent event;
 	event.clrBg = CLR_RESPONSE_E;
 	event.clrText = RGB (0, 0, 0);
 	event.iImage = 3;
-	fsnew (event.pszEvent, char, lstrlen (pszMsg) + 1);
+	fsnew (event.pszEvent, TCHAR, lstrlen (pszMsg) + 1);
 	lstrcpy (event.pszEvent, pszMsg);
 	m_evMgr.add (&event);
 	m_wndListLog.m_wndLog.AddRecord (&event);

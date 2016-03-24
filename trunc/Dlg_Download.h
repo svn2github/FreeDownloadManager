@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DLG_DOWNLOAD_H__E3399BF6_086C_4A61_90C8_D1D7DD78BBBB__INCLUDED_)
@@ -13,7 +13,9 @@
 #include "Wnd_DownloadProgress.h"	
 #include "fsDownloadsMgr.h"
 
-class CDlg_Download : public CDialog
+class CDlg_Download : 
+	public CDialog,
+	public vmsThreadSafe
 {
 
 public:
@@ -35,6 +37,20 @@ public:
 	virtual void DoDataExchange(CDataExchange* pDX);    
 	//}}AFX_VIRTUAL
 
+public:
+	bool ui_locked () const
+	{
+		vmsTHREAD_SAFE_SCOPE;
+		return m_bUiLocked;
+	}
+
+	void schedule_close () 
+	{
+		vmsTHREAD_SAFE_SCOPE;
+		assert (m_bUiLocked);
+		m_bScheduleClose = true;
+	}
+
 protected:
 	CWnd_DownloadProgress m_wndProgress;
 	
@@ -42,9 +58,11 @@ protected:
 	
 	CFont m_fntBold;
 	
-	void SetDlgItemText2 (UINT nID, LPCSTR pszText);
+	void SetDlgItemText2 (UINT nID, LPCTSTR pszText);
 	void ApplyLanguage();
 	vmsDownloadSmartPtr m_dld;
+	bool m_bUiLocked;
+	bool m_bScheduleClose;
 
 	
 	//{{AFX_MSG(CDlg_Download)

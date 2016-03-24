@@ -1,8 +1,9 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
+#include "vmsInetUtils.h"
 #include "FdmApp.h"
 #include "WgUrlListReceiver.h"
 #include "CreateDownloadListDlg.h"
@@ -77,19 +78,19 @@ STDMETHODIMP CWgUrlListReceiver::AddUrlToList()
 {
 	USES_CONVERSION;
 
-	LPCSTR pszUrl = W2A (m_bstrUrl);
+	LPCTSTR pszUrl = W2T (m_bstrUrl);
 
 	if (pszUrl == NULL)
 		return E_INVALIDARG;
 
 	for (int i = 0; i < m_vUrls.size (); i++)
-		if (stricmp (pszUrl, m_vUrls [i]) == 0)
+		if (_tcsicmp (pszUrl, m_vUrls [i]) == 0)
 			return S_FALSE;
 
 	m_vUrls.add (pszUrl);
-	m_vReferers.add (W2A (m_bstrReferer));
-	m_vComments.add (W2A (m_bstrComment));
-	m_vCookies.add (W2A (m_bstrCookies));
+	m_vReferers.add (W2T (m_bstrReferer));
+	m_vComments.add (W2T (m_bstrComment));
+	m_vCookies.add (W2T (m_bstrCookies));
 
 	return S_OK;
 }
@@ -152,19 +153,22 @@ STDMETHODIMP CWgUrlListReceiver::GetUrlListFromDocumentSelection(IDispatch *pDis
 	if (FAILED (doc->get_URL (&bstrRootURL)))
 		return E_FAIL;
 
-	LPCSTR pszRootURL = W2A (bstrRootURL);
+	LPCTSTR pszRootURL = W2T (bstrRootURL);
 
 	for (int i = 0; i < parser.GetUrlCount (); i ++)
 	{
+		TCHAR tszUrl[10000] = {0,};
 		LPCSTR pszUrl = parser.GetUrl (i);
+		DWORD dwSize = sizeof(tszUrl) / sizeof(TCHAR);
+		vmsAnsiUrlToUnicode(pszUrl, tszUrl, &dwSize);
 
 		
-		if (*pszUrl == '#')
+		if (tszUrl[0] == '#')
 			continue;	
 
-		LPSTR pszFullUrl;
+		LPTSTR pszFullUrl;
 		
-		fsUrlToFullUrl (pszRootURL, pszUrl, &pszFullUrl);
+		fsUrlToFullUrl (pszRootURL, tszUrl, &pszFullUrl);
 		if (pszFullUrl == NULL)
 			continue;
 
@@ -181,7 +185,7 @@ STDMETHODIMP CWgUrlListReceiver::GetUrlListFromDocumentSelection(IDispatch *pDis
 			continue;
 		}
 
-		put_Url (A2W (pszFullUrl));
+		put_Url (T2W (pszFullUrl));
 		AddUrlToList ();
 
 		delete [] pszFullUrl;

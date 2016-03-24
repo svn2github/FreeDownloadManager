@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -47,77 +47,77 @@ BOOL vmsUploadsDllCallerSettings::UseCookie()
 	return _App.UseCookie ();
 }
 
-LPCSTR vmsUploadsDllCallerSettings::HttpAgent()
+LPCTSTR vmsUploadsDllCallerSettings::HttpAgent()
 {
 	static CString str;
 	str = _App.Agent ();
 	return str;
 }
 
-LPCSTR vmsUploadsDllCallerSettings::FtpAsciiExts()
+LPCTSTR vmsUploadsDllCallerSettings::FtpAsciiExts()
 {
 	static CString str;
 	str = _App.ASCIIExts ();
 	return str;
 }
 
-LPCSTR vmsUploadsDllCallerSettings::FtpProxy_Name()
+LPCTSTR vmsUploadsDllCallerSettings::FtpProxy_Name()
 {
 	static CString str;
 	str = _App.FtpProxy_Name ();
 	return str;
 }
 
-LPCSTR vmsUploadsDllCallerSettings::FtpProxy_Password()
+LPCTSTR vmsUploadsDllCallerSettings::FtpProxy_Password()
 {
 	static CString str;
 	str = _App.FtpProxy_Password ();
 	return str;
 }
 
-LPCSTR vmsUploadsDllCallerSettings::FtpProxy_UserName()
+LPCTSTR vmsUploadsDllCallerSettings::FtpProxy_UserName()
 {
 	static CString str;
 	str = _App.FtpProxy_UserName ();
 	return str;
 }
 
-LPCSTR vmsUploadsDllCallerSettings::HttpProxy_Name()
+LPCTSTR vmsUploadsDllCallerSettings::HttpProxy_Name()
 {
 	static CString str;
 	str = _App.HttpProxy_Name ();
 	return str;
 }
 
-LPCSTR vmsUploadsDllCallerSettings::HttpProxy_Password()
+LPCTSTR vmsUploadsDllCallerSettings::HttpProxy_Password()
 {
 	static CString str;
 	str = _App.HttpProxy_Password ();
 	return str;
 }
 
-LPCSTR vmsUploadsDllCallerSettings::HttpProxy_UserName()
+LPCTSTR vmsUploadsDllCallerSettings::HttpProxy_UserName()
 {
 	static CString str;
 	str = _App.HttpProxy_UserName ();
 	return str;
 }
 
-LPCSTR vmsUploadsDllCallerSettings::HttpsProxy_Name()
+LPCTSTR vmsUploadsDllCallerSettings::HttpsProxy_Name()
 {
 	static CString str;
 	str = _App.HttpsProxy_Name ();
 	return str;
 }
 
-LPCSTR vmsUploadsDllCallerSettings::HttpsProxy_Password()
+LPCTSTR vmsUploadsDllCallerSettings::HttpsProxy_Password()
 {
 	static CString str;
 	str = _App.HttpsProxy_Password ();
 	return str;
 }
 
-LPCSTR vmsUploadsDllCallerSettings::HttpsProxy_UserName()
+LPCTSTR vmsUploadsDllCallerSettings::HttpsProxy_UserName()
 {
 	static CString str;
 	str = _App.HttpsProxy_UserName ();
@@ -134,19 +134,19 @@ int vmsUploadsDllCallerSettings::FirefoxSettings_Proxy_Type()
 	return _App.FirefoxSettings_Proxy_Type ();
 }
 
-LPCSTR vmsUploadsDllCallerSettings::FirefoxSettings_Proxy_Addr(LPCSTR pszProtocol)
+LPCTSTR vmsUploadsDllCallerSettings::FirefoxSettings_Proxy_Addr(LPCTSTR pszProtocol)
 {
 	static CString str;
 	str = _App.FirefoxSettings_Proxy_Addr (pszProtocol);
 	return str;
 }
 
-int vmsUploadsDllCallerSettings::FirefoxSettings_Proxy_Port(LPCSTR pszProtocol)
+int vmsUploadsDllCallerSettings::FirefoxSettings_Proxy_Port(LPCTSTR pszProtocol)
 {
 	return _App.FirefoxSettings_Proxy_Port (pszProtocol);
 }
 
-BOOL vmsUploadsDllCallerSettings::GetSettingsByName(LPCSTR pszName, LPVOID pData, DWORD dwDataSize)
+BOOL vmsUploadsDllCallerSettings::GetSettingsByName(LPCTSTR pszName, LPVOID pData, DWORD dwDataSize)
 {
 	return FALSE;
 }

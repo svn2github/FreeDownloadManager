@@ -1,20 +1,16 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #define WINVER 0x501
 #define _WIN32_IE 0x501
 #define _WIN32_WINNT 0x501
 
+#include <memory>
+#include "Utils.h"
 #include "fsAVIIdx1Builder.h"
 #include <fsString.h>
 #include "../system.h"
-
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
 
 fsAVIIdx1Builder::fsAVIIdx1Builder()
 {
@@ -31,10 +27,28 @@ inline BOOL Read (HANDLE hFile, LPVOID pBuf, DWORD dwSize)
 	return ReadFile (hFile, pBuf, dwSize, &dwSize, NULL);
 }
 
-inline BOOL Read (HANDLE hFile, LPSTR pStr, DWORD dwSize)
+inline BOOL Read (HANDLE hFile, LPTSTR pStr, DWORD dwSize)
 {
 	pStr [dwSize] = 0;
-	return ReadFile (hFile, pStr, dwSize, &dwSize, NULL);
+
+	std::auto_ptr<char> apchStrGuard( new char[dwSize * sizeof(TCHAR)] );
+	char* szStr = apchStrGuard.get();
+	if (szStr == 0) 
+		return  FALSE;
+	memset(szStr, 0, dwSize);
+
+	if (!ReadFile (hFile, szStr, dwSize, &dwSize, NULL))
+		return FALSE;
+
+#ifdef UNICODE
+	int nLen = ::MultiByteToWideChar(CP_ACP, 0, szStr, -1, 0, 0);
+	if (nLen + 1 > dwSize)
+		return FALSE;
+	::MultiByteToWideChar(CP_ACP, 0, szStr, -1, pStr, nLen);
+#else
+	strcpy_s(pStr, dwSize, szStr);
+#endif
+
 }
 
 inline BOOL Write (HANDLE hFile, LPVOID pBuf, DWORD dwSize)
@@ -90,18 +104,18 @@ BOOL fsAVIIdx1Builder::BuildIdx1(HANDLE in, HANDLE out, UINT64 uInMaxPos)
 	do
 	{
 		
-		Read (in, strChunk, 4);
+		Read (in, strChunk.pszString, 4);
 		Read (in, &dw, 4);
 		uPos += 8;
 
-		if (strChunk == "JUNK" || strChunk == "JUNQ")
+		if (strChunk == _T("JUNK") || strChunk == _T("JUNQ"))
 		{
 			uPos += dw;
 			fsSetFilePointer (in, uPos, FILE_BEGIN);
 			continue;
 		}
 
-		if (strChunk != "LIST")
+		if (strChunk != _T("LIST"))
 			return FALSE; 
 
 		m_uIdx1Start = uPos + dw;
@@ -109,16 +123,16 @@ BOOL fsAVIIdx1Builder::BuildIdx1(HANDLE in, HANDLE out, UINT64 uInMaxPos)
 		Read (in, strChunk, 4);
 		uPos += 4;
 
-		if (strChunk != "movi")
+		if (strChunk != _T("movi"))
 		{
 			uPos += dw-4;
 			fsSetFilePointer (in, uPos, FILE_BEGIN);
 			continue;
 		}
 	}
-	while (strChunk != "movi");
+	while (strChunk != _T("movi"));
 
-	Write (out, "idx1", 4);
+	Write (out, _T("idx1"), 4);
 	Write (out, &dw, 4); 
 
 	DWORD dwOffset = 4;
@@ -127,19 +141,19 @@ BOOL fsAVIIdx1Builder::BuildIdx1(HANDLE in, HANDLE out, UINT64 uInMaxPos)
 	{
 		for (int i = 0; i < 16; i++)
 		{
-			Read (in, strChunk, 4);
-			if (stricmp (strChunk+2, "wb") == 0 ||
-					stricmp (strChunk+2, "dc") == 0 ||
-					stricmp (strChunk+2, "db") == 0)
+			Read (in, strChunk.pszString, 4);
+			if (_tcsicmp (strChunk+2, _T("wb")) == 0 ||
+					_tcsicmp (strChunk+2, _T("dc")) == 0 ||
+					_tcsicmp (strChunk+2, _T("db")) == 0)
 				break;
 
 			fsSetFilePointer (in, ++uPos, FILE_BEGIN);	
 			dwOffset++;
 		}
 
-		if (stricmp (strChunk+2, "wb") &&
-				stricmp (strChunk+2, "dc") &&
-				stricmp (strChunk+2, "db"))
+		if (_tcsicmp (strChunk+2, _T("wb")) &&
+				_tcsicmp (strChunk+2, _T("dc")) &&
+				_tcsicmp (strChunk+2, _T("db")))
 			return FALSE;
 
 		Read (in, &dw, 4);
@@ -148,12 +162,25 @@ BOOL fsAVIIdx1Builder::BuildIdx1(HANDLE in, HANDLE out, UINT64 uInMaxPos)
 		if (uPos + dw > uInMaxPos)
 			break;
 
+		char* szChunk = 0;
+#ifdef UNICODE
+		int nLen = ::WideCharToMultiByte(CP_ACP, 0, strChunk.pszString, -1, 0, 0, 0, 0);
+		std::auto_ptr<char> apszChunkGuard( new char[nLen + 1] );
+		szChunk = apszChunkGuard.get();
+		if (szChunk == 0)
+			return FALSE;
+		memset(szChunk, 0, nLen + 1);
+		::WideCharToMultiByte(CP_ACP, 0, strChunk.pszString, -1, szChunk, nLen, 0, 0);
+#else
+		szChunk = strChunk.pszString;
+#endif
+
 		AVIINDEXENTRY e;
-		e.ckid = *((LPDWORD)(LPSTR)strChunk);
+		e.ckid = *((LPDWORD)(LPSTR)szChunk);
 		e.dwChunkLength = dw;
 		e.dwChunkOffset = dwOffset;
 		e.dwFlags = 0;
-		if (strChunk == "LIST")
+		if (strChunk == _T("LIST"))
 			e.dwFlags |= 0x1; 
 
 		Write (out, &e, sizeof (e));

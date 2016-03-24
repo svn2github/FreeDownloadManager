@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef _XPOPUPTIP_H_INCLUDE_
@@ -62,7 +62,7 @@ public:
 	void AddTool(CWnd *pWnd, LPCTSTR szTooltipText, HICON hIcon = NULL);
 	void RemoveTool(CWnd *pWnd);
 
-	void Show(LPCSTR pszCaption, CString szText, BOOL bAutoHide = TRUE, CPoint *pt = NULL);
+	void Show(LPCTSTR pszCaption, CString szText, BOOL bAutoHide = TRUE, CPoint *pt = NULL);
 	void Hide() { 
 		ShowWindow(SW_HIDE); 
 		if (m_nTimer == timerShowNAH)

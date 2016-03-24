@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DOWNLOADPROPERTIES_PROXYPAGE_H__2D6926B0_70AF_4201_807B_D2AECC4980B8__INCLUDED_)
@@ -61,7 +61,7 @@ protected:
 
 	
 	
-	BOOL CrackProxyName (LPCSTR pszName, CString& strName, USHORT &uPort);
+	BOOL CrackProxyName (LPCTSTR pszName, CString& strName, USHORT &uPort);
 
 	fs::list <ProxyInfo> m_vProxies;	
 

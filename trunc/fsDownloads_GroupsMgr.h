@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSDOWNLOADS_GROUPSMGR_H__735C5C82_46AB_40DB_A0B2_065CA6D69679__INCLUDED_)
@@ -15,13 +15,13 @@
 
 #define MAX_EXTS_LEN	1000
 
-#define GRP_OTHER_NAME	"Other"
+#define GRP_OTHER_NAME	_T("Other")
 
 struct fsDownloadGroup
 {
-	CHAR szName [MAX_GROUP_LEN+1];	
-	CHAR szOutFolder [MY_MAX_PATH+1];	
-	CHAR szExts [MAX_EXTS_LEN+1];	
+	TCHAR szName [MAX_GROUP_LEN+1];	
+	TCHAR szOutFolder [MY_MAX_PATH+1];	
+	TCHAR szExts [MAX_EXTS_LEN+1];	
 	BOOL bOther;			
 
 	fsDownloadGroup () {
@@ -32,19 +32,19 @@ struct fsDownloadGroup
 class fsDownloads_GroupsMgr
 {
 public:
-	void SetGroupFolder(int iGrp, LPCSTR pszFldr);
-	LPCSTR GetGroupFolder (int iGrp);
+	void SetGroupFolder(int iGrp, LPCTSTR pszFldr);
+	LPCTSTR GetGroupFolder (int iGrp);
 	
 	void CreateGroup (fsDownloadGroup* grp);
 	
-	void DeleteGroup (LPCSTR pszGroup);
+	void DeleteGroup (LPCTSTR pszGroup);
 	
 	
-	int FindGroupByName (LPCSTR pszName);
+	int FindGroupByName (LPCTSTR pszName);
 	
-	int FindGroupByExt (LPCSTR pszExt);
+	int FindGroupByExt (LPCTSTR pszExt);
 	
-	LPCSTR GetGroupName (int iGrp);
+	LPCTSTR GetGroupName (int iGrp);
 	
 	
 	void UpdateGroup (int iGrp, fsDownloadGroup *grp);

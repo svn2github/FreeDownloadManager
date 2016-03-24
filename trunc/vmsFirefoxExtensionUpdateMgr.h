@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -24,5 +24,8 @@ public:
 	bool CheckForUpdates(void);
 	bool isNewVersionAvailable () const {return !m_tstrExtensionNewVerURL.empty ();}
 	bool PerformUpdate(void);
+
+private:
+	bool AdjustInstallConfig(const std::wstring& installationPath);
 };
 

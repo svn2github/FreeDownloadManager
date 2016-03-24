@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -54,7 +54,7 @@ public:
 	vmsSourceCodeLogger (LPCTSTR ptszThisModuleName = _T ("unknown"), int bufSizePerThread = 64*1024)
 	{
 		QueryPerformanceFrequency (&m_liQpFrequency);
-		m_vThreadsLogs.reserve (300);
+		m_vThreadsLogs.reserve (1000);
 		m_nBufSizePerThread = bufSizePerThread;
 		m_tstrThisModuleName = ptszThisModuleName;
 		InitializeLogsFolder ();
@@ -253,9 +253,13 @@ protected:
 
 	threadCtx* getCurrentThreadContext()
 	{
-		int n = findCurrentThreadIndex ();
-		if (n != -1)
-			return &m_vThreadsLogs [n];
+		{
+			vmsAUTOLOCKSECTION (m_csObject);
+			int n = findCurrentThreadIndex ();
+			if (n != -1)
+				return &m_vThreadsLogs [n];
+		}
+		
 		return CreateCurrentThreadContext ();
 	}
 	threadCtx* CreateCurrentThreadContext ()
@@ -274,6 +278,7 @@ protected:
 		assert (t.hLogFile != INVALID_HANDLE_VALUE);
 		if (t.hLogFile == INVALID_HANDLE_VALUE)
 			return NULL;
+		vmsAUTOLOCKSECTION (m_csObject);
 		m_vThreadsLogs.push_back (t);
 		threadCtx *thr = &m_vThreadsLogs [findCurrentThreadIndex ()];
 		thr->strLog.reserve (m_nBufSizePerThread + 3000);
@@ -303,6 +308,7 @@ protected:
 	tstring m_tstrThisModuleName;
 	tstring m_tstrLogsFolder;
 	LARGE_INTEGER m_liQpFrequency; 
+	mutable vmsCriticalSection m_csObject;
 };
 
 class vmsSourceCodeLogger_Function

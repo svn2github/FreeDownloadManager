@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSDOWNLOADMGREX_H__A5D098FD_2C7B_4051_B405_8B1F25F3C3FA__INCLUDED_)
@@ -51,7 +51,7 @@ public:
 	fsInternetResult RestartDownloading();
 	BOOL IsCantStart();
 	BOOL IsStoppedByUser();
-	BOOL MoveToFolder (LPCSTR pszPath);
+	BOOL MoveToFolder (LPCTSTR pszPath);
 	UINT GetSpeed();
 	UINT64 GetBytesLeft();
 	void StopSection();
@@ -79,6 +79,7 @@ public:
 	void Attach (vmsBtDownloadManager* pBtMgr);
 	void Attach (fsDownloadMgr *pMgr);
 	void Attach(vmsTpDownloadMgr *pTpMgr);
+	fsString get_OutputPath();
 	vmsDownloadMgrEx();
 	virtual ~vmsDownloadMgrEx();
 

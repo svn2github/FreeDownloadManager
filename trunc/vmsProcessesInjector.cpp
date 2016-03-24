@@ -1,11 +1,12 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 #include "fdm.h"
 #include "vmsProcessesInjector.h"
-#include "vmsProcessList.h"
+#include "common\vms_sifdm_cl\win\vmsProcessList.h"
+#include "common\vms_sifdm_cl\win\process\util.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -34,7 +35,7 @@ void vmsProcessesInjector::DoJob()
 
 	std::vector <DWORD> vdwPIDs;
 
-	EnterCriticalSection (&m_csProcessList);
+	EnterCriticalSection(&m_csProcessList);
 
 	for (int i = 0; i < pl.getProcessCount (); i++)
 	{
@@ -102,96 +103,9 @@ void vmsProcessesInjector::DoJob()
 	LeaveCriticalSection (&m_csProcessList);
 }
 
-HMODULE LoadDllIntoProcess (HANDLE hProcess, LPCSTR pszDllName)
-{
-	HANDLE hThread = NULL;
-	
-	void* pLibRemote = NULL;   
-	
-	DWORD  hLibModule = 0;   
-	HMODULE hKernel32 = ::GetModuleHandle(_T ("Kernel32"));
-	
-	
-	
-	
-	
-	
-	pLibRemote = ::VirtualAllocEx (hProcess, NULL, strlen (pszDllName)+1, MEM_COMMIT, 
-		PAGE_READWRITE);
-	if (!pLibRemote)
-		return NULL;
-	if (!::WriteProcessMemory (hProcess, pLibRemote, (void*)pszDllName, strlen (pszDllName)+1, 
-		NULL))
-	{
-		::VirtualFreeEx (hProcess, pLibRemote, strlen (pszDllName)+1, MEM_RELEASE);
-		return NULL;
-	}
-	
-	static const char _TMP_SZ [] = "_FDM_DEALWITHKAV__LoadLibraryA";
-	int len = strlen (_TMP_SZ);
-	LPSTR psz = (LPSTR) GetModuleHandle (NULL);
-	while (strncmp (psz, _TMP_SZ, len))
-		psz++;
-	psz += 18;
-	
-	
-	
-	hThread = CreateRemoteThread (hProcess, NULL, 0, 
-		(LPTHREAD_START_ROUTINE)GetProcAddress (hKernel32, psz), 
-		pLibRemote, 0, NULL);
-	if (hThread != NULL)
-	{
-		::WaitForSingleObject (hThread, INFINITE);
-		
-		
-		::GetExitCodeThread (hThread, &hLibModule);
-		
-		
-		::CloseHandle (hThread);
-	}
-		
-	::VirtualFreeEx (hProcess, pLibRemote, strlen (pszDllName)+1, MEM_RELEASE);
-	
-	return (HMODULE)hLibModule;
-}
-
-BOOL FreeDllFromProcess (HANDLE hProcess, HMODULE hDll)
-{
-	HANDLE hThread = NULL;
-	HMODULE hKernel32 = ::GetModuleHandle(_T ("Kernel32"));
-	
-	static const char _TMP_SZ [] = "_FDM_DEALWITHKAV__FreeLibrary";
-	int len = strlen (_TMP_SZ);
-	LPSTR psz = (LPSTR) GetModuleHandle (NULL);
-	while (strncmp (psz, _TMP_SZ, len))
-		psz++;
-	psz += 18;
-	
-	
-	
-	hThread = CreateRemoteThread (hProcess, NULL, 0, 
-		(LPTHREAD_START_ROUTINE)GetProcAddress (hKernel32, psz), 
-		hDll, 0, NULL);
-	
-	DWORD dwResult = FALSE;
-	
-	if (hThread)
-	{
-		::WaitForSingleObject (hThread, INFINITE);
-		
-		
-		::GetExitCodeThread (hThread, &dwResult);
-		
-		
-		::CloseHandle (hThread);
-	}
-	
-	return dwResult;
-}
-
 void vmsProcessesInjector::InjectIntoProcess(ProcessedProcess *pp)
 {
-	HANDLE hProcess = OpenProcess (PROCESS_ALL_ACCESS, FALSE, pp->dwPID);
+	HANDLE hProcess = OpenProcess (PROCESS_ALL_ACCESS__XP, FALSE, pp->dwPID);
 	ASSERT (hProcess != NULL);
 
 	pp->vhInjectedDlls.clear ();
@@ -201,7 +115,8 @@ void vmsProcessesInjector::InjectIntoProcess(ProcessedProcess *pp)
 
 	for (size_t i = 0; i < m_vtstrDllsToInject.size (); i++)
 	{
-		HMODULE h = LoadDllIntoProcess (hProcess, m_vtstrDllsToInject [i].c_str ());
+		HMODULE h = vmsLoadDllIntoProcess (hProcess, 
+			m_vtstrDllsToInject [i].c_str ());
 		if (h)
 			pp->vhInjectedDlls.push_back (h);
 	}
@@ -211,7 +126,7 @@ void vmsProcessesInjector::InjectIntoProcess(ProcessedProcess *pp)
 
 void vmsProcessesInjector::FreeDllsFromProcesses()
 {
-	EnterCriticalSection (&m_csProcessList);
+	EnterCriticalSection(&m_csProcessList);
 
 	for (size_t i = 0; i < m_vProcesses.size (); i++)
 		FreeDllsFromProcess (&m_vProcesses [i]);
@@ -223,12 +138,12 @@ void vmsProcessesInjector::FreeDllsFromProcesses()
 
 void vmsProcessesInjector::FreeDllsFromProcess(ProcessedProcess *pp)
 {
-	HANDLE hProcess = OpenProcess (PROCESS_ALL_ACCESS, FALSE, pp->dwPID);
+	HANDLE hProcess = OpenProcess (PROCESS_ALL_ACCESS__XP, FALSE, pp->dwPID);
 	if (!hProcess)
 		return;
 	
 	for (size_t j = 0; j < pp->vhInjectedDlls.size (); j++)
-		FreeDllFromProcess (hProcess, pp->vhInjectedDlls [j]);
+		vmsFreeDllFromProcess (hProcess, pp->vhInjectedDlls [j]);
 
 	CloseHandle (hProcess);
 }

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsServerConnection.h"
@@ -30,7 +30,7 @@ fsInternetResult fsInternetServerConnection::Initialize(fsInternetSession *pSess
 	return IR_SUCCESS;
 }
 
-LPCSTR fsInternetServerConnection::GetLastError()
+LPCTSTR fsInternetServerConnection::GetLastError()
 {
 	return m_pszLastError;
 }
@@ -49,7 +49,7 @@ fsInternetSession* fsInternetServerConnection::GetSession()
 	return m_pSession;
 }
 
-LPCSTR fsInternetServerConnection::GetServerName()
+LPCTSTR fsInternetServerConnection::GetServerName()
 {
 	return m_strServer;
 }
@@ -58,4 +58,3 @@ INTERNET_PORT fsInternetServerConnection::GetServerPort()
 {
 	return m_uPort;
 }
-

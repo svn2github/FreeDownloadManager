@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -39,15 +39,15 @@ BEGIN_MESSAGE_MAP(CDlg_UnpackProgress, CDialog)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-bool CDlg_UnpackProgress::BeforeExtract(LPCSTR pszFile)
+bool CDlg_UnpackProgress::BeforeExtract(LPCTSTR pszFile)
 {
 	CString str;
-	str.Format ("Extracting: %s...", pszFile);
+	str.Format (_T("Extracting: %s..."), pszFile);
 	SetDlgItemText (IDC__EXTRACTING, str);
 	return m_bNeedStop == false;
 }
 
-bool CDlg_UnpackProgress::AfterExtract(LPCSTR pszFile, vmsAC_ExtractResult res)
+bool CDlg_UnpackProgress::AfterExtract(LPCTSTR pszFile, vmsAC_ExtractResult res)
 {
 	return true;
 }
@@ -97,7 +97,7 @@ DWORD WINAPI CDlg_UnpackProgress::_threadExtract(LPVOID lp)
 	if (pthis->m_bNeedStop == false)
 	{
 		pthis->m_bDone = true;
-		pthis->SetDlgItemText (IDCANCEL, "OK");
+		pthis->SetDlgItemText (IDCANCEL, _T("OK"));
 		pthis->GetDlgItem (IDC_OPENFOLDER)->EnableWindow (TRUE);
 		pthis->m_wndProgress.SetPos (100);
 		pthis->SetDlgItemText (IDC__EXTRACTING, LS (L_DONE));
@@ -130,7 +130,7 @@ void CDlg_UnpackProgress::OnCancel()
 
 void CDlg_UnpackProgress::OnOpenfolder() 
 {
-	ShellExecute (NULL, "explore", m_strDstFolder, NULL, NULL, SW_SHOW);
+	ShellExecute (NULL, _T("explore"), m_strDstFolder, NULL, NULL, SW_SHOW);
 	EndDialog (IDOK);
 }
 

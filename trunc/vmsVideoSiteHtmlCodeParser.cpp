@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -29,7 +29,9 @@ vmsVideoSiteHtmlCodeParser::~vmsVideoSiteHtmlCodeParser()
 
 BOOL vmsVideoSiteHtmlCodeParser::Parse(LPCSTR pszSite, LPCSTR pszHtml)
 {
-	switch (GetSupportedSiteIndex (pszSite))
+	USES_CONVERSION;
+	tstring sSite = CA2T(pszSite);
+	switch (GetSupportedSiteIndex (sSite.c_str()))
 	{
 	case 0:
 		return Parse_Youtube (pszHtml);
@@ -62,7 +64,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse(LPCSTR pszSite, LPCSTR pszHtml)
 
 BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube(LPCSTR pszHtml)
 {
-	fsString strTitle, strUrl; 
+	std::string strTitle, strUrl; 
 
 	
 	
@@ -75,7 +77,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube(LPCSTR pszHtml)
 		psz = strstr (psz, "content=");
 		if (psz)
 		{
-			psz += lstrlen ("content=");
+			psz += strlen ("content=");
 			if (*psz == '"')
 			{
 				psz++;
@@ -101,15 +103,15 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube(LPCSTR pszHtml)
 		return FALSE;
 	psz++;
 
-	fsString strBase = "http://youtube.com/"; 
-	fsString strParams;
+	std::string strBase = "http://youtube.com/"; 
+	std::string strParams;
 	
 	while (*psz != '}')
 	{
 		while (*psz == ' ' || *psz == ',')
 			psz++;
 
-		fsString str;
+		std::string str;
 	
 		while (*psz && *psz != ':')
 		{
@@ -121,7 +123,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube(LPCSTR pszHtml)
 			str += *psz++;
 		}
 
-		if (str.IsEmpty ())
+		if (str.empty ())
 			break;
 
 		if (*psz == ':')
@@ -129,19 +131,20 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube(LPCSTR pszHtml)
 		while (*psz == ' ')
 			psz++;
 
-		if (str.Length () > 2 && str [0] == '"' && str [str.Length () - 1] == '"')
+		if (str.length () > 2 && str [0] == '"' && str [str.length () - 1] == '"')
 		{
-			lstrcpy (str, str.pszString+1);
-			str [str.Length () - 1] = 0;
+			
+			str = str.substr(1);
+			str [str.length () - 1] = 0;
 		}
 
-		if (lstrcmpi (str, "BASE_YT_URL") == 0)
+		if (strcmpi (str.c_str(), "BASE_YT_URL") == 0)
 		{
 			strBase = ExtractValue (psz);
 		}
 		else
 		{
-			if (strParams.IsEmpty () == FALSE)
+			if (strParams.empty () == FALSE)
 				strParams += '&';
 
 			strParams += str; strParams += "="; strParams += ExtractValue (psz);
@@ -166,20 +169,20 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube(LPCSTR pszHtml)
 
 LPCSTR vmsVideoSiteHtmlCodeParser::get_VideoTitle()
 {
-	return m_strVideoTitle;
+	return m_strVideoTitle.c_str();
 }
 
 LPCSTR vmsVideoSiteHtmlCodeParser::get_VideoUrl()
 {
-	return m_strVideoUrl;
+	return m_strVideoUrl.c_str();
 }
 
 LPCSTR vmsVideoSiteHtmlCodeParser::get_VideoType()
 {
-	return m_strVideoType;
+	return m_strVideoType.c_str();
 }
 
-BOOL vmsVideoSiteHtmlCodeParser::IsSiteSupported(LPCSTR pszHost)
+BOOL vmsVideoSiteHtmlCodeParser::IsSiteSupported(LPCTSTR pszHost)
 {
 	return GetSupportedSiteIndex (pszHost) != -1;
 }
@@ -196,14 +199,14 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_GoogleVideo(LPCSTR pszHtml)
 	if (psz == NULL)
 		return FALSE;
 
-	fsString strUrl;
+	std::string strUrl;
 	while (*psz && *psz != '"')
 		strUrl += *psz++;
-	if (strUrl [strUrl.GetLength () - 1] == '\\')
-		strUrl [strUrl.GetLength () - 1] = 0;
+	if (strUrl [strUrl.length () - 1] == '\\')
+		strUrl [strUrl.length () - 1] = 0;
 	fsDecodeHtmlUrl (strUrl);
 
-	fsString strTitle;
+	std::string strTitle;
 	psz = strstr (pszHtml, "pvprogtitle");
 	if (psz)
 	{
@@ -221,8 +224,8 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_GoogleVideo(LPCSTR pszHtml)
 				else 
 					psz++;
 			}
-			while (strTitle.GetLength () && strTitle [strTitle.GetLength () - 1] == ' ')
-				strTitle [strTitle.GetLength () - 1] = 0;
+			while (strTitle.length () && strTitle [strTitle.length () - 1] == ' ')
+				strTitle [strTitle.length () - 1] = 0;
 			fsDecodeHtmlText (strTitle);
 		}
 	}
@@ -237,7 +240,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_GoogleVideo(LPCSTR pszHtml)
 
 BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube_RootPage(LPCSTR pszHtml)
 {
-	fsString strUrl; 
+	std::string strUrl; 
 
 	LPCSTR psz = strstr (pszHtml, "/admp.swf");
 	if (psz == NULL)
@@ -249,7 +252,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Youtube_RootPage(LPCSTR pszHtml)
 		return FALSE;
 	psz++;
 
-	fsString strId;
+	std::string strId;
 
 	while (*psz && *psz != '&')
 		strId += *psz++;
@@ -276,7 +279,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_LiveDigital(LPCSTR pszHtml)
 	if (psz == NULL)
 		psz = strstr (pszHtml, "flashVars");
 	
-	fsString strC, strH;
+	std::string strC, strH;
 
 	if (psz)
 	{
@@ -301,20 +304,20 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_LiveDigital(LPCSTR pszHtml)
 		psz = strstr (pszHtml, "content_id/");
 		if (psz)
 		{
-			psz += lstrlen ("content_id/");
+			psz += strlen ("content_id/");
 			while (isdigit (*psz))
 				strC += *psz++;
 		}
 
-		if (strC.IsEmpty ())
+		if (strC.empty ())
 		{
 			psz = strstr (pszHtml, "/content/");
 			if (psz)
 			{
-				psz += lstrlen ("/content/");
+				psz += strlen ("/content/");
 				while (isdigit (*psz))
 					strC += *psz++;
-				if (strC.IsEmpty ())
+				if (strC.empty ())
 					return FALSE;
 			}
 		}
@@ -322,7 +325,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_LiveDigital(LPCSTR pszHtml)
 		strH = "livedigital.com";
 	}
 
-	fsString strUrl = "http://";
+	std::string strUrl = "http://";
 	strUrl += strH;
 	strUrl += "/content/flash_load_content/";
 	strUrl += strC;
@@ -337,7 +340,8 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_LiveDigital(LPCSTR pszHtml)
 
 BOOL vmsVideoSiteHtmlCodeParser::Parse_Further(LPCSTR pszSite, LPCSTR pszHtml)
 {
-	switch (GetSupportedSiteIndex (pszSite))
+	tstring sSite = CA2CT(pszSite);
+	switch (GetSupportedSiteIndex (sSite.c_str()))
 	{
 	case 2:
 		return Parse_Further_LiveDigital (pszHtml);
@@ -356,19 +360,19 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Further_LiveDigital(LPCSTR pszTxt)
 	if (psz == NULL)
 		return FALSE;
 
-	fsString strUrl;
-	psz += lstrlen ("content_url=");
+	std::string strUrl;
+	psz += strlen ("content_url=");
 	while (*psz && *psz != '&')
 		strUrl += *psz++;
 
 	fsDecodeHtmlUrl (strUrl);
 
-	fsString strTitle;
+	std::string strTitle;
 
 	psz = strstr (pszTxt, "title=");
 	if (psz)
 	{
-		psz += lstrlen ("title=");
+		psz += strlen ("title=");
 		while (*psz && *psz != '&')
 		{
 			if (is_valid_char (*psz))
@@ -381,7 +385,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Further_LiveDigital(LPCSTR pszTxt)
 
 	m_strVideoTitle = strTitle;
 	m_strVideoUrl   = strUrl;
-	m_strVideoType  = (LPCSTR)strUrl + strUrl.GetLength () - 3;
+	m_strVideoType  = (LPCSTR)strUrl.c_str() + strUrl.length () - 3;
 	m_bDirectLink   = TRUE;
 
 	return TRUE;
@@ -389,7 +393,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Further_LiveDigital(LPCSTR pszTxt)
 
 BOOL vmsVideoSiteHtmlCodeParser::Parse_MySpace(LPCSTR pszHtml)
 {
-	CString str; 
+	CStringA str; 
 
 	LPCSTR psz = strstr (pszHtml, "flashvars=");
 	if (psz == NULL)
@@ -433,9 +437,9 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_MySpace(LPCSTR pszHtml)
 			str += *psz++;
 	}
 
-	fsString strUrl;
+	std::string strUrl;
 	strUrl = "http://"; strUrl += "mediaservices.myspace.com/services/rss.ashx?";
-	strUrl += str;
+	strUrl += (LPCSTR)str;
 
 	m_strVideoTitle = "";
 	m_strVideoUrl   = strUrl;
@@ -508,7 +512,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Further_MySpace(LPCSTR pszHtml)
 	m_strVideoTitle = W2A (bstrTitle);
 	fsDecodeHtmlText (m_strVideoTitle);
 	m_strVideoUrl   = W2A (vtUrl.bstrVal);
-	m_strVideoType  = (LPCSTR)m_strVideoUrl + m_strVideoUrl.GetLength () - 3;
+	m_strVideoType  = m_strVideoUrl.c_str() + m_strVideoUrl.length () - 3;
 	m_bDirectLink	= TRUE;
 
 	return TRUE;
@@ -524,20 +528,20 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Sharkle(LPCSTR pszHtml)
 	if (psz == NULL)
 		return FALSE;
 
-	fsString strRnd;
+	std::string strRnd;
 
 	psz += 4;
 	while (*psz && *psz != '&')
 		strRnd += *psz++;
-	if (strRnd.IsEmpty ())
+	if (strRnd.empty ())
 		return FALSE;
 
-	fsString strUrl;
+	std::string strUrl;
 	strUrl = "http://sharkle.com/inc/misc/about.php?rnd=";
 	strUrl += strRnd;
 	strUrl += "&ssd=ZeleninGalaburda";
 
-	fsString strTitle;
+	std::string strTitle;
 
 	psz = strstr (pszHtml, "blog_header");
 	if (psz != NULL)
@@ -556,8 +560,8 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Sharkle(LPCSTR pszHtml)
 				else
 					psz++;
 			}
-			while (strTitle.GetLength () && strTitle [strTitle.GetLength () - 1] == ' ')
-				strTitle [strTitle.GetLength () - 1] = 0;
+			while (strTitle.length () && strTitle [strTitle.length () - 1] == ' ')
+				strTitle [strTitle.length () - 1] = 0;
 		}
 	}
 
@@ -585,13 +589,13 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Blennus(LPCSTR pszHtml)
 	psz += 4;
 	if (*psz++ != '"')
 		return FALSE;
-	fsString strUrl;
+	std::string strUrl;
 	while (*psz && *psz != '"')
 		strUrl += *psz++;
-	if (strUrl.IsEmpty ())
+	if (strUrl.empty ())
 		return FALSE;
 
-	fsString strTitle;
+	std::string strTitle;
 	psz = strstr (pszHtml, "contentheading");
 	if (psz != NULL)
 	{
@@ -610,8 +614,8 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Blennus(LPCSTR pszHtml)
 					psz++;
 			}
 			fsDecodeHtmlText (strTitle);
-			while (strTitle.GetLength () && strTitle [strTitle.GetLength () - 1] == ' ')
-				strTitle [strTitle.GetLength () - 1] = 0;
+			while (strTitle.length () && strTitle [strTitle.length () - 1] == ' ')
+				strTitle [strTitle.length () - 1] = 0;
 		}
 	}
 
@@ -641,12 +645,12 @@ _lSearchUrl:
 	if (strncmp (psz, "rev=", 4) == 0)
 		goto _lSearchUrl;
 
-	fsString strUrl;
+	std::string strUrl;
 	while (*psz && *psz != '&')
 		strUrl += *psz++;
 	fsDecodeHtmlUrl (strUrl);
 
-	fsString strTitle;
+	std::string strTitle;
 	psz = strstr (pszHtml, "<h1");
 	if (psz == NULL)
 		psz = strstr (pszHtml, "<H1");
@@ -667,8 +671,8 @@ _lSearchUrl:
 					psz++;
 			}
 			fsDecodeHtmlText (strTitle);
-			while (strTitle.GetLength () && strTitle [strTitle.GetLength () - 1] == ' ')
-				strTitle [strTitle.GetLength () - 1] = 0;
+			while (strTitle.length () && strTitle [strTitle.length () - 1] == ' ')
+				strTitle [strTitle.length () - 1] = 0;
 		}
 	}
 
@@ -687,11 +691,11 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Grouper(LPCSTR pszHtml)
 		return FALSE;
 	psz += 7;
 
-	fsString strUrl;
+	std::string strUrl;
 	while (*psz && *psz != '&')
 		strUrl += *psz++;
 
-	fsString strTitle;
+	std::string strTitle;
 	psz = strstr (pszHtml, "<h1");
 	if (psz == NULL)
 		psz = strstr (pszHtml, "<H1");
@@ -712,8 +716,8 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Grouper(LPCSTR pszHtml)
 					psz++;
 			}
 			fsDecodeHtmlText (strTitle);
-			while (strTitle.GetLength () && strTitle [strTitle.GetLength () - 1] == ' ')
-				strTitle [strTitle.GetLength () - 1] = 0;
+			while (strTitle.length () && strTitle [strTitle.length () - 1] == ' ')
+				strTitle [strTitle.length () - 1] = 0;
 		}
 	}
 
@@ -725,7 +729,7 @@ BOOL vmsVideoSiteHtmlCodeParser::Parse_Grouper(LPCSTR pszHtml)
 	return TRUE;
 }
 
-fsString vmsVideoSiteHtmlCodeParser::ExtractValue(LPSTR &psz)
+std::string vmsVideoSiteHtmlCodeParser::ExtractValue(LPSTR &psz)
 {
 	char c;
 	while (*psz == ' ')
@@ -734,7 +738,7 @@ fsString vmsVideoSiteHtmlCodeParser::ExtractValue(LPSTR &psz)
 		c = *psz++;
 	else 
 		c = ',';
-	fsString strRes;
+	std::string strRes;
 	while (*psz && *psz != c)
 	{
 		if (*psz == '}' && c == ',')

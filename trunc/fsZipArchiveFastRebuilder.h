@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSZIPARCHIVEFASTREBUILDER_H__93697060_3D86_4D64_896A_B16DEEDF296B__INCLUDED_)
@@ -18,8 +18,8 @@ class fsZipArchiveFastRebuilder : public fsZipArchiveRebuilder
 {
 public:
 	
-	virtual BOOL RebuildArchive(fs::list <fsString> vFileNames);
-	virtual fsString GetFileName (int iIndex);
+	virtual BOOL RebuildArchive(fs::list <fsStringA> vFileNames);
+	virtual fsStringA GetFileName (int iIndex);
 	virtual int GetFileCount();
 	fsZipArchiveFastRebuilder();
 	virtual ~fsZipArchiveFastRebuilder();

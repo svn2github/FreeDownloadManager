@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -185,17 +185,17 @@ void CDownloads_VideoPreview::Play()
 			if (FAILED (hr))
 			{
 				fsString strFile = m_pActiveDownload->pMgr->get_OutputFilePathName ();
-				LPCSTR psz = strrchr (strFile, '.');
+				LPCTSTR psz = _tcsrchr (strFile, _T('.'));
 				if (psz++)
 				{
-					if (lstrcmpi (psz, "flv") == 0)
+					if (lstrcmpi (psz, _T("flv")) == 0)
 					{
 						CRect rc (0,0,0,0);
 						m_wndVideo.GetWindowRect (&rc);
 						ScreenToClient (&rc);
 						m_wndVideo2.Create (NULL, WS_CHILD, rc, this, 0x111a);
 						m_wndVideo2.SetBackgroundColor (0);
-						m_wndVideo2.LoadMovie (0, ((CFdmApp*)AfxGetApp ())->m_strAppPath + "player.swf");
+						m_wndVideo2.LoadMovie (0, ((CFdmApp*)AfxGetApp ())->m_strAppPath + _T("player.swf"));
 
 						m_wndVideo.ShowWindow (SW_HIDE);
 						m_wndVideo2.ShowWindow (SW_SHOW);
@@ -302,9 +302,9 @@ void CDownloads_VideoPreview::Set_Volume(long lVolume)
 CString CDownloads_VideoPreview::Get_FileName()
 {
 	if (m_pActiveDownload == NULL)
-		return "";
+		return _T("");
 
-	char szFile [10000];
+	TCHAR szFile [10000];
 	*szFile = 0;
 	CDownloads_Tasks::GetFileName (m_pActiveDownload, szFile);
 	return szFile;
@@ -391,10 +391,10 @@ BOOL CDownloads_VideoPreview::OpenFile()
  
  	if (m_hFile == INVALID_HANDLE_VALUE)
  	{
-		char szErr [10000];
+		TCHAR szErr [10000];
 		fsErrorToStr (szErr, 10000, NULL);
 		CString strErr = LS (L_FAILEDTOOPENFILE);
-		strErr += "\n\n"; strErr += szErr;
+		strErr += _T("\n\n"); strErr += szErr;
 		MessageBox (strErr, LS (L_ERR), MB_ICONERROR);
 		return FALSE;
 	}

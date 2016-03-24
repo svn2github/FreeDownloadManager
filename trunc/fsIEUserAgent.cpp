@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -27,16 +27,16 @@ void fsIEUserAgent::OpenUAKey()
 	if (m_keyUA.m_hKey)
 		return;
 
-	m_keyUA.Create (HKEY_LOCAL_MACHINE, "Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\5.0\\User Agent\\Post Platform");
+	m_keyUA.Create (HKEY_LOCAL_MACHINE, _T("Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings\\5.0\\User Agent\\Post Platform"));
 }
 
-void fsIEUserAgent::SetPP(LPCSTR pszPP)
+void fsIEUserAgent::SetPP(LPCTSTR pszPP)
 {
 	if (m_keyUA.m_hKey)
-		m_keyUA.SetValue ("", pszPP);
+		m_keyUA.SetValue (_T(""), pszPP);
 }
 
-void fsIEUserAgent::RemovePP(LPCSTR pszPP)
+void fsIEUserAgent::RemovePP(LPCTSTR pszPP)
 {
 	if (m_keyUA.m_hKey)
 		m_keyUA.DeleteValue (pszPP);

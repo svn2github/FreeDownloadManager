@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -113,7 +113,7 @@ BOOL vmsSystem::IsWow64()
 {
 	typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE hProcess,PBOOL Wow64Process);
     LPFN_ISWOW64PROCESS fnIsWow64Process = (LPFN_ISWOW64PROCESS)
-		GetProcAddress (GetModuleHandle ("kernel32"), "IsWow64Process");
+		GetProcAddress (GetModuleHandle (_T("kernel32")), "IsWow64Process");
     BOOL bIsWow64 = FALSE;
     
     if (NULL != fnIsWow64Process)

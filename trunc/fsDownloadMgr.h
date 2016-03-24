@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSDOWNLOADMGR_H__DE09A9F2_AF9D_41C0_A7D5_DEBF2CFDBA03__INCLUDED_)
@@ -8,7 +8,6 @@
 #include "fsInternetDownloader.h"	
 #include "DownloadProperties.h"	
 #include "fsTicksMgr.h"	
-#include "vmsCriticalSection.h"	
 #include "vmsPersistObject.h"
 
 #if _MSC_VER > 1000
@@ -49,9 +48,9 @@ enum fsDownloadMgr_EventDescType
 	EDT_RESPONSE_S2,		
 };
 
-typedef DWORD (*fntDownloadMgrEventFunc)(class fsDownloadMgr *pMgr, fsDownloaderEvent, UINT, LPVOID);
+typedef DWORD (*fntDownloadMgrEventFunc)(class fsDownloadMgr *pMgr, fsDownloaderEvent, UINT_PTR, LPVOID);
 
-typedef void (*fntEventDescFunc)(fsDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCSTR pszDesc, LPVOID lp);
+typedef void (*fntEventDescFunc)(fsDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCTSTR pszDesc, LPVOID lp);
 
 #define DFF_NEED_INIT_FILE			1
 #define DFF_USE_PORTABLE_DRIVE		2
@@ -69,8 +68,8 @@ public:
 	
 	fsString get_URL();
 	
-	BOOL MoveToFolder (LPCSTR pszFolder);
-	BOOL MoveFile (LPCSTR pszNewFileName);
+	BOOL MoveToFolder (LPCTSTR pszFolder);
+	BOOL MoveFile (LPCTSTR pszNewFileName);
 	
 	static void set_GlobalOffline(BOOL bOffline);
 	static BOOL is_GlobalOffline();
@@ -87,7 +86,7 @@ public:
 	
 	void Set_MirrRecalcSpeedTime(UINT u);
 	
-	fsInternetResult StartDownloading();
+	fsInternetDownloaderResult StartDownloading();
 	void StopDownloading();
 	
 	void CreateOneMoreSection();
@@ -109,7 +108,7 @@ public:
 	void StopSection();
 	
 	
-	fsInternetResult RestartDownloading();
+	fsInternetDownloaderResult RestartDownloading();
 	
 	BOOL IsSectionCanBeAdded();
 	
@@ -118,9 +117,9 @@ public:
 	BOOL IsFileInit();
 	
 	
-	BOOL InitFile (BOOL bCreateOnDisk = FALSE, LPCSTR pszSetExt = NULL);
+	BOOL InitFile (BOOL bCreateOnDisk = FALSE, LPCTSTR pszSetExt = NULL);
 	
-	fsInternetResult GetLastError();
+	fsInternetDownloaderResult GetLastError();
 	
 	BOOL DeleteFile ();
 	
@@ -134,16 +133,17 @@ public:
 	
 	BOOL LoadState (LPVOID lpBuffer, LPDWORD pdwSize, WORD wVer);
 	
+	
 	void CloneSettings (fsDownloadMgr* src);
 	
 	void SetEventDescFunc (fntEventDescFunc pfn, LPVOID lpParam);
 	void SetEventFunc (fntDownloadMgrEventFunc pfnEvents, LPVOID lpParam);
 	
-	void SetOutputFileName (LPCSTR pszName);
+	void SetOutputFileName (LPCTSTR pszName);
 	
 	
 	
-	fsInternetResult CreateByUrl (LPCSTR pszUrl, BOOL bAcceptHTMLPathes = FALSE);
+	fsInternetResult CreateByUrl (LPCTSTR pszUrl, BOOL bAcceptHTMLPathes = FALSE);
 	fsInternetDownloader* GetDownloader();
 	
 	fsDownload_Properties* GetDP();
@@ -162,6 +162,7 @@ public:
 
 	bool IsFailedToCreateDestinationFile() const;
 	bool IsNotEnoughDiskSpace() const;
+	void SetURLUpdated(bool bUrlUpdated);
 
 	fsDownloadMgr (struct fsDownload* dld = NULL);
 	virtual ~fsDownloadMgr();
@@ -228,9 +229,9 @@ protected:
 	BOOL ReserveDiskSpace();
 	
 	
-	BOOL BuildFileName(LPCSTR pszSetExt = NULL);
+	BOOL BuildFileName(LPCTSTR pszSetExt = NULL);
 	
-	void Event (LPCSTR pszEvent, fsDownloadMgr_EventDescType enType = EDT_INQUIRY);
+	void Event (LPCTSTR pszEvent, fsDownloadMgr_EventDescType enType = EDT_INQUIRY);
 	
 	DWORD Event (fsDownloaderEvent ev, UINT uInfo);
 	
@@ -244,7 +245,7 @@ protected:
 	void RenameFile(BOOL bFormat1 = TRUE);
 	
 	BOOL OnNeedFile();
-	BOOL m_uNeedStartFrom; 
+	uint64_t m_needStartFrom; 
 	
 	
 	void OnSectionStopped();
@@ -256,11 +257,11 @@ protected:
 	HANDLE m_hOutFile;					
 	
 	void StopDownload();
-	fsInternetResult m_lastError;	
+	fsInternetDownloaderResult m_lastError;	
 	
-	fsInternetResult StartDownload();
+	fsInternetDownloaderResult StartDownload();
 	
-	static DWORD _DownloaderEvents (fsDownloaderEvent enEvent, UINT uInfo, LPVOID lp);
+	static DWORD _DownloaderEvents (fsDownloaderEvent enEvent, UINT_PTR uInfo, LPVOID lp);
 	DWORD m_dwState;	
 	vmsCriticalSection m_csState;
 	void setStateFlags (DWORD dwFlags);
@@ -277,10 +278,15 @@ protected:
 	fntDownloadMgrEventFunc m_pfnEvents;	
 	LPVOID m_lpParamEvents;		
 	BOOL TruncFile(const CString& sFileName);
-	void RenameFile(const char* szFileName, BOOL bFormat1 = 1);
+	void RenameFile(const TCHAR* szFileName, BOOL bFormat1 = 1);
 	void RemoveIncompleteFileExt();
+	bool LoadDpStringProps(LPBYTE& pB, LPVOID lpBuffer, LPDWORD pdwSize, WORD wVer);
+	bool LoadDpStringProps_old(LPBYTE& pB, LPVOID lpBuffer, LPDWORD pdwSize, WORD wVer);
+	bool LoadDnpStringProps(fsDownload_NetworkProperties* dnp, LPBYTE& pB, LPVOID lpBuffer, LPDWORD pdwSize, WORD wVer);
+	bool LoadDnpStringProps_old(fsDownload_NetworkProperties* dnp, LPBYTE& pB, LPVOID lpBuffer, LPDWORD pdwSize, WORD wVer);
 	bool m_bFailedToCreateDestinationFile;
 	bool m_bIsNotEnoughDiskSpace;
+	bool m_bURLUpdated;
 private:
 	
 	
@@ -302,6 +308,8 @@ public:
 	bool isRequiresTraffic(bool bForDownload);
 	bool isSpeedCanBeLimitedBySomeInternalReasons (bool bForDownload);
 	bool isInternetTraffic (bool bForDownload);
+protected:
+	bool CheckFileSystem(bool log_event = true);
 };
 
 #endif 

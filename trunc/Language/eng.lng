@@ -1784,3 +1784,35 @@ Associate with magnet links
 Enable Local Peer Discovery
 Enable UPnP
 Enable NAT-PMP
+Enable uTorrent Peer Exchange
+Changes will take effect after you restart Free Download Manager
+The video you selected has the audio data stream in a separate file.\nIt must be downloaded also for the video to have audio channel.\nThe appropriate audio file has been selected for downloading.\nIt will be automatically merged with the video download as soon as both downloads completes.
+The video(s) you selected has the audio data stream in a separate file.\nThis audio download must be downloaded also for the video to have audio channel.\nAre you sure you do not want it to be downloaded?\nChoose Yes to download video file without audio channel.
+Waiting for the media merge task to begin
+Media merge task succeeded
+Media merge task failed
+Media merge task has started
+Download YouTube video
+Video formats found on this page
+YouTube video download detected.\nWould you like to download it as YouTube video?
+Video monitoring
+Video downloads
+Additional components required for this feature to work.\nWould you like to download them?
+Downloading and installing additional components
+Error installing additional components.
+A tiny button which helps to download videos from YouTube.com with few clicks.\nIn order to enable this button for other video sites - please enable "Monitor flash downloads in browsers" option.
+File size is too large for the target file system.
+; %s means browser name; do not remove it
+Administrator rights are required to integrate FDM into %s.
+Please don't pause this downloads for a long time; otherwise it may need to be restarted.
+You have unfinished YouTube downloads. If you stop them now, you might not be able to resume them later. Exit anyway?
+If you stop this download for a long time, you might not be able to resume them later. Continue?
+Cannot resume download, please restart it manually.
+Sequential downloads
+New version of flash video monitoring module is available. Would you like to update?
+Skip this update
+Security check failure
+Certificate host name is incorrect
+Certificate is expired
+Invalid certificate
+Security check failed for host

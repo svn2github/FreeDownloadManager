@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -108,7 +108,7 @@ LRESULT CDownloads_Opinions::OnUpdateContent(WPARAM, LPARAM)
 			{
 				
 				m_enCS = DOCS_BLANK;
-				m_wb.Navigate ("about:blank", NULL, NULL, NULL, NULL);
+				m_wb.Navigate (_T("about:blank"), NULL, NULL, NULL, NULL);
 			}
 		}
 		else
@@ -130,7 +130,7 @@ LRESULT CDownloads_Opinions::OnUpdateContent(WPARAM, LPARAM)
 				
 				
 				m_enCS = DOCS_OPINION;
-				m_wb.Navigate ("http://fdm.freedownloadmanager.org/fromfdm/opinion.html", NULL, NULL, NULL, NULL);
+				m_wb.Navigate (_T("http://fdm.freedownloadmanager.org/fromfdm/opinion.html"), NULL, NULL, NULL, NULL);
 			}
 			else
 			{
@@ -146,7 +146,7 @@ LRESULT CDownloads_Opinions::OnUpdateContent(WPARAM, LPARAM)
 						strUrl = m_dld->pMgr->GetBtDownloadMgr ()->get_InfoHash ();
 					else
 						strUrl = vmsMaliciousDownloadChecker::EncodeUrl (m_dld->pMgr->get_URL ());
-					str.Format ("http://fdm.freedownloadmanager.org/fromfdm/showopinions.html?url=%s", strUrl);
+					str.Format (_T("http://fdm.freedownloadmanager.org/fromfdm/showopinions.html?url=%s"), (LPCTSTR)strUrl);
 					m_wb.Navigate (str, NULL, NULL, NULL, NULL);
 				}
 			}
@@ -155,7 +155,7 @@ LRESULT CDownloads_Opinions::OnUpdateContent(WPARAM, LPARAM)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloads_Opinions::OnUpdateContent " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloads_Opinions::OnUpdateContent " + std::string(ex.what()));
 	}
 	catch (...)
 	{

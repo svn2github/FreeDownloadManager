@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -70,9 +70,9 @@ BOOL CCreateTPDownloadDlg::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	SetDlgItemText (IDC_URL, m_strUrl);
-	CHAR szFile [10000];
-	*szFile = 0;
-	fsFileNameFromUrlPath (m_strUrl, FALSE, TRUE, szFile, sizeof (szFile));
+	TCHAR tszFile [10000];
+	*tszFile = 0;
+	fsFileNameFromUrlPath (m_strUrl, FALSE, TRUE, tszFile, sizeof (tszFile));
 
 	m_schScheduleParam.schTask.hts.enType = HTS_ONCE;
 	m_schScheduleParam.schTask.hts.last.dwHighDateTime = m_schScheduleParam.schTask.hts.last.dwLowDateTime = UINT_MAX;
@@ -108,23 +108,23 @@ BOOL CCreateTPDownloadDlg::OnInitDialog()
 	GetDlgItem (IDC_URL)->SetFocus ();
 	UrlChanged ();
 
-	if (strlen(szFile) == 0)
+	if (_tcslen(tszFile) == 0)
 	{
 		
 		CString strDateTime;
 		SYSTEMTIME systime;
 		GetLocalTime (&systime);
-		char szDate [100], szTime [100];
-		GetDateFormat (LOCALE_USER_DEFAULT, 0, &systime, "yyyy-MM-dd", szDate, 100);
-		GetTimeFormat (LOCALE_USER_DEFAULT, 0, &systime, "HHmmss", szTime, 100);
-		strDateTime = szDate; strDateTime += " "; strDateTime += szTime; strDateTime += ".asf";
+		wchar_t tszDate [100], tszTime [100];
+		GetDateFormat (LOCALE_USER_DEFAULT, 0, &systime, _T("yyyy-MM-dd"), tszDate, 100);
+		GetTimeFormat (LOCALE_USER_DEFAULT, 0, &systime, _T("HHmmss"), tszTime, 100);
+		strDateTime = tszDate; strDateTime += _T(" "); strDateTime += tszTime; strDateTime += _T(".asf");
 		SetDlgItemText (IDC_SAVEAS, strDateTime);
 	}
 	else
 	{
-		if (strchr(szFile, '.') == 0)
-		 strcat(szFile, ".asf");
-		SetDlgItemText (IDC_SAVEAS, szFile);
+		if (_tcschr(tszFile, _T('.')) == 0)
+		 _tcscat(tszFile, _T(".asf"));
+		SetDlgItemText (IDC_SAVEAS, tszFile);
 	}
 	
 
@@ -218,8 +218,8 @@ void CCreateTPDownloadDlg::UrlChanged()
 		return;
 	}
 
-	CHAR szFile [10000];
-	*szFile = 0;
+	TCHAR tszFile [10000];
+	*tszFile = 0;
 
 	m_bUrlChanged = TRUE;
 
@@ -231,28 +231,28 @@ void CCreateTPDownloadDlg::UrlChanged()
 
 	if (m_bGroupChanged == FALSE)
 	{
-		fsFileNameFromUrlPath (m_strUrl, FALSE, TRUE, szFile, sizeof (szFile));
+		fsFileNameFromUrlPath (m_strUrl, FALSE, TRUE, tszFile, sizeof (tszFile));
 
-		int len = strlen (szFile);
+		int len = _tcslen (tszFile);
 		vmsDownloadsGroupSmartPtr grp;
 
 		if (len)
 		{
-			if (strchr(szFile, '.') == 0)
-				strcat(szFile, ".asf");
-			SetDlgItemText (IDC_SAVEAS, szFile);
+			if (_tcschr(tszFile, _T('.')) == 0)
+				_tcscat(tszFile, _T(".asf"));
+			SetDlgItemText (IDC_SAVEAS, tszFile);
 
 			int i;
 			for (i = len-1; i > 0; i--)
-				if (szFile [i] == '.')	
+				if (tszFile [i] == _T('.'))	
 					break;
 
 			if (i && i < len-1)
 			{
 				i++;
-				CHAR szExt [1000];
-				strcpy (szExt, szFile + i);
-				grp = _DldsGrps.FindGroupByExt (szExt);
+				TCHAR tszExt [1000];
+				_tcscpy (tszExt, tszFile + i);
+				grp = _DldsGrps.FindGroupByExt (tszExt);
 			}
 		}
 
@@ -265,7 +265,7 @@ void CCreateTPDownloadDlg::UrlChanged()
 				OnChangeGroups();
 		}
 	}
-	bool bRtsp = (m_strUrl.Find("rtsp://") != -1);
+	bool bRtsp = (m_strUrl.Find(_T("rtsp://")) != -1);
 	GetDlgItem (IDC_STRSPEED)->EnableWindow(bRtsp);
 	GetDlgItem (IDC_STRSPEED_SPIN)->EnableWindow(bRtsp);
 	GetDlgItem (IDC_QSIZE)->EnableWindow ();
@@ -304,7 +304,7 @@ void CCreateTPDownloadDlg::OnFileauto()
 {
 	CString str;
 	GetDlgItemText (IDC_SAVEAS, str);
-	if (str == "" && IsDlgButtonChecked (IDC_FILEAUTO) == BST_UNCHECKED)
+	if (str == _T("") && IsDlgButtonChecked (IDC_FILEAUTO) == BST_UNCHECKED)
 	{
 
 	}
@@ -358,7 +358,7 @@ int CCreateTPDownloadDlg::_CheckDownloadAlrExists(vmsDownloadSmartPtr dld, BOOL 
 
 				case IDC_LAUNCH:
 					if (d->pMgr->GetDownloadMgr ()->IsDone ())
-						ShellExecute (::GetDesktopWindow (), "open", d->pMgr->GetTpDownloadMgr ()->get_OutputFilePathName() , 
+						ShellExecute (::GetDesktopWindow (), _T("open"), d->pMgr->GetTpDownloadMgr ()->get_OutputFilePathName() , 
 							NULL, NULL, SW_SHOW);
 					break;
 
@@ -382,7 +382,7 @@ void CCreateTPDownloadDlg::OnOutfolderSetdefault()
 	_SetDownloadOutputFolderAsDefault (this, strOutFolder, m_wndGroups.GetSelectedGroup ());
 }
 
-BOOL CCreateTPDownloadDlg::_SetDownloadOutputFolderAsDefault(CWnd *pwndParent, LPCSTR pszFolder, vmsDownloadsGroupSmartPtr pGroup)
+BOOL CCreateTPDownloadDlg::_SetDownloadOutputFolderAsDefault(CWnd *pwndParent, LPCTSTR pszFolder, vmsDownloadsGroupSmartPtr pGroup)
 {
 	CMyMessageBox dlg (pwndParent);
 	dlg.m_hIcon = LoadIcon (NULL, IDI_QUESTION);
@@ -402,11 +402,11 @@ BOOL CCreateTPDownloadDlg::_SetDownloadOutputFolderAsDefault(CWnd *pwndParent, L
 	_App.View_SetOutputFolderAsDefForAllGrpsChecked (dlg.m_bChecked);
 
 	CString strFolder;
-	if (pszFolder [lstrlen (pszFolder) - 1] != '\\' &&
-			pszFolder [lstrlen (pszFolder) - 1] != '/')
+	if (pszFolder [lstrlen (pszFolder) - 1] != _T('\\') &&
+			pszFolder [lstrlen (pszFolder) - 1] != _T('/'))
 	{
 		strFolder = pszFolder;
-		strFolder += '\\';
+		strFolder += _T('\\');
 		pszFolder = strFolder;
 	}
 
@@ -430,7 +430,7 @@ BOOL CCreateTPDownloadDlg::_CheckFileName(CDialog *pdlg, UINT nIdCtrl)
 {
 	CString str;
 	pdlg->GetDlgItemText (nIdCtrl, str);
-	LPCSTR pszInvChars = "\\/:*?\"<>|";
+	LPCTSTR pszInvChars = _T("\\/:*?\"<>|");
 	if (str.FindOneOf (pszInvChars) != -1)
 	{
 		pdlg->MessageBox (LS (L_INVFILENAME), LS (L_INPERR), MB_ICONEXCLAMATION);
@@ -445,8 +445,8 @@ BOOL CCreateTPDownloadDlg::_CheckFolderName(CDialog *pdlg, UINT nIdCtrl)
 {
 	CString str;
 	pdlg->GetDlgItemText (nIdCtrl, str);
-	LPCSTR pszInvChars = ":*?\"<>|";
-	if (str.GetLength () > 2 && str [1] == ':')
+	LPCTSTR pszInvChars = _T(":*?\"<>|");
+	if (str.GetLength () > 2 && str [1] == _T(':'))
 		str.Delete (1);	
 	if (str.FindOneOf (pszInvChars) != -1)
 	{
@@ -482,9 +482,9 @@ void CCreateTPDownloadDlg::OnOk()
 
 	if (nDldType == 1)	
 	{
-		char sz [MY_MAX_PATH];
-		GetTempPath (sizeof (sz), sz);
-		m_strOutFolder = sz;
+		TCHAR tsz [MY_MAX_PATH];
+		GetTempPath (_countof (tsz), tsz);
+		m_strOutFolder = tsz;
 	}
 	else
 	{
@@ -494,7 +494,7 @@ void CCreateTPDownloadDlg::OnOk()
 	
 		if (IsDlgButtonChecked (IDC_FILEAUTO) == BST_UNCHECKED)
 		{
-			if (m_strFileName == "")
+			if (m_strFileName == _T(""))
 			{
 				MessageBox (LS (L_EMPTY), LS (L_INPERR), MB_ICONEXCLAMATION);
 				GetDlgItem (IDC_SAVEAS)->SetFocus ();
@@ -508,8 +508,8 @@ void CCreateTPDownloadDlg::OnOk()
 			_App.NewDL_GenerateNameAutomatically (TRUE);
 	}
 
-	fsPathToGoodPath ((LPSTR)(LPCSTR)m_strOutFolder);
-	fsPathToGoodPath ((LPSTR)(LPCSTR)m_strFileName);
+	fsPathToGoodPath ((LPTSTR)(LPCTSTR)m_strOutFolder);
+	fsPathToGoodPath ((LPTSTR)(LPCTSTR)m_strFileName);
 
 	if (m_strOutFolder.GetLength () == 0)
 	{
@@ -522,9 +522,9 @@ void CCreateTPDownloadDlg::OnOk()
 		_LastFolders.AddRecord (m_strOutFolder);
 	_LastUrlFiles.AddRecord (m_strUrl);
 
-	if (m_strOutFolder [m_strOutFolder.GetLength () - 1] != '\\' && 
-		m_strOutFolder [m_strOutFolder.GetLength () - 1] != '/')
-		m_strOutFolder += '\\';
+	if (m_strOutFolder [m_strOutFolder.GetLength () - 1] != _T('\\') && 
+		m_strOutFolder [m_strOutFolder.GetLength () - 1] != _T('/'))
+		m_strOutFolder += _T('\\');
 
 	if (_App.NewGrp_SelectWay () == NGSW_USE_ALWAYS_SAME_GROUP_WITH_OUTFOLDER_AUTO_UPDATE)
 	{
@@ -594,20 +594,20 @@ void CCreateTPDownloadDlg::OnCancel()
 	CDialog::OnCancel();
 }
 
-fsInternetResult CCreateTPDownloadDlg::Crack(LPCSTR pszUrl)
+fsInternetResult CCreateTPDownloadDlg::Crack(LPCTSTR pszUrl)
 {
-	CHAR m_szScheme [URL_SCHEME_SIZE];	
-	CHAR m_szHost [URL_HOSTNAME_SIZE];	
-	CHAR m_szUser [URL_USERNAME_SIZE];	
-	CHAR m_szPassword [URL_PASSWORD_SIZE];	
-	CHAR m_szPath [URL_PATH_SIZE];		
+	TCHAR m_szScheme [URL_SCHEME_SIZE];	
+	TCHAR m_szHost [URL_HOSTNAME_SIZE];	
+	TCHAR m_szUser [URL_USERNAME_SIZE];	
+	TCHAR m_szPassword [URL_PASSWORD_SIZE];	
+	TCHAR m_szPath [URL_PATH_SIZE];		
 
-	DWORD urlLen = strlen (pszUrl) * 2;
-	CHAR *pszCanUrl = NULL;
+	DWORD urlLen = _tcslen (pszUrl) * 2;
+	TCHAR *pszCanUrl = NULL;
 	fsString strUrl;
 
 	
-	if (*pszUrl == '"' || *pszUrl == '\'')
+	if (*pszUrl == _T('"') || *pszUrl == _T('\''))
 	{
 		
 		
@@ -618,7 +618,7 @@ fsInternetResult CCreateTPDownloadDlg::Crack(LPCSTR pszUrl)
 		m_strUrl = pszUrl = strUrl;
 	}
 
-	fsnew (pszCanUrl, CHAR, urlLen);
+	fsnew (pszCanUrl, TCHAR, urlLen);
 
 	
 	if (!InternetCanonicalizeUrl (pszUrl, pszCanUrl, &urlLen, ICU_BROWSER_MODE))
@@ -627,7 +627,7 @@ fsInternetResult CCreateTPDownloadDlg::Crack(LPCSTR pszUrl)
 
 		if (GetLastError () == ERROR_INSUFFICIENT_BUFFER)
 		{
-			fsnew (pszCanUrl, CHAR, urlLen+1);
+			fsnew (pszCanUrl, TCHAR, urlLen+1);
 			if (!InternetCanonicalizeUrl (pszUrl, pszCanUrl, &urlLen, ICU_BROWSER_MODE))
 			{
 				delete pszCanUrl;
@@ -662,10 +662,10 @@ fsInternetResult CCreateTPDownloadDlg::Crack(LPCSTR pszUrl)
 
 	delete pszCanUrl;
 
-	if (strstr (m_url.lpszScheme, "mmsh") == NULL 
-		&& strstr (m_url.lpszScheme, "mmst") == NULL
-		&& strstr (m_url.lpszScheme, "mms") == NULL
-		&& strstr (m_url.lpszScheme, "rtsp") == NULL
+	if (_tcsstr (m_url.lpszScheme, _T("mmsh")) == NULL 
+		&& _tcsstr (m_url.lpszScheme, _T("mmst")) == NULL
+		&& _tcsstr (m_url.lpszScheme, _T("mms")) == NULL
+		&& _tcsstr (m_url.lpszScheme, _T("rtsp")) == NULL
 		|| m_url.dwHostNameLength == 0)
 		return IR_BADURL;
 
@@ -692,7 +692,7 @@ DWORD WINAPI CCreateTPDownloadDlg::_threadQSize(LPVOID lp)
 		CString strSize;
 		UINT64 uSize = 0;
 		vmsTpDownloadMgr* pMgr = pThis->m_dld->pMgr->GetTpDownloadMgr ();
-		if (pMgr->CreateTPDownload (pThis->m_strUrl, "", "", 1))
+		if (pMgr->CreateTPDownload (pThis->m_strUrl, _T(""), _T(""), 1))
 		{
 			pMgr->StartDownloading (FALSE);
 
@@ -712,13 +712,13 @@ DWORD WINAPI CCreateTPDownloadDlg::_threadQSize(LPVOID lp)
 			{
 				if (_pwndDownloads->IsSizesInBytes () == FALSE)
 				{
-					char szDim [50];
+					wchar_t szDim [50];
 					float fSize;
 					BytesToXBytes (uSize, &fSize, szDim);
 					if (pMgr->GetPercentDone () == -1)
-						strSize.Format ("%s", LS (L_LIVESTREAMING));
+						strSize.Format (_T("%s"), LS (L_LIVESTREAMING));
 					else
-						strSize.Format ("%.*g %s", fSize > 999 ? 4 : 3, fSize, szDim);
+						strSize.Format (_T("%.*g %s"), fSize > 999 ? 4 : 3, fSize, szDim);
 				}
 				else
 					strSize = fsBytesToStr (uSize); 
@@ -734,7 +734,7 @@ DWORD WINAPI CCreateTPDownloadDlg::_threadQSize(LPVOID lp)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CCreateTPDownloadDlg::_threadQSize " + tstring(ex.what()));
+		vmsLogger::WriteLog("CCreateTPDownloadDlg::_threadQSize " + std::string(ex.what()));
 	}
 	catch (...)
 	{

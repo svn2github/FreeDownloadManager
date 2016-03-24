@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSBTDOWNLOADMANAGER_H__8322A330_304D_470C_BCD6_15403F57E210__INCLUDED_)
@@ -13,7 +13,6 @@
 #include "fsTicksMgr.h"
 #include "vmsDownloadMgrEx.h"
 #include "tree.h"
-#include "vmsCriticalSection.h"	
 
 #define	BTDF_LAUNCH_WHEN_DONE					1
 #define BTDF_LAUNCH_WHEN_DONE_NO_CONFIRM		(1 << 1)
@@ -75,7 +74,7 @@ public:
 	int getFilePriority (int nFileIndex);
 	void getPartialDownloadProgress (UINT64 *pnBytesToDownload, UINT64 *pnBytesDownloaded);
 	void PrioritizeFiles (int *piPriorities);
-	BOOL LoadTorrent(LPCSTR pszFile, BOOL isMagnet = FALSE, vmsBtFile* tempTorrent = NULL);
+	BOOL LoadTorrent(LPCTSTR pszFile, BOOL isMagnet = FALSE, vmsBtFile* tempTorrent = NULL);
 	struct vmsFile {
 		fsString strName;
 		UINT64 nFileSize;
@@ -105,7 +104,7 @@ public:
 	fsInternetResult RestartDownloading();
 	BOOL IsBtDownloadRunning(bool *pbReason = NULL);
 	BOOL IsCantStart();
-	BOOL MoveToFolder(LPCSTR pszPath);
+	BOOL MoveToFolder(LPCTSTR pszPath);
 	UINT GetSpeed();
 	int GetDownloadingSectionCount(bool bFromCache = true);
 	void GetSectionInfo(int nIndex, vmsSectionInfo *sect);
@@ -118,7 +117,7 @@ public:
 	float GetPercentDone();
 	fsString get_OutputFilePathName();
 	vmsBtDownload* get_BtDownload();
-	int get_NextAnnounceInterval(LPCSTR pszTrackerUrl);
+	int get_NextAnnounceInterval(LPCTSTR pszTrackerUrl);
 	vmsBtDownloadPeerInfoList* get_PeerInfoList();
 	void get_PeersStat (int *pnPeersConnected, int *pnSeedsTotal, int *pnLeechersTotal, int *pnSeedsConnected);
 	UINT64 get_WastedByteCount();
@@ -131,17 +130,17 @@ public:
 	UINT64 get_FileSize(int nIndex);
 	fsString get_FileName(int nIndex);
 	fsString get_TorrentComment();
-	void set_TrackerLogin(LPCSTR pszUser, LPCSTR pszPassword);
+	void set_TrackerLogin(LPCTSTR pszUser, LPCTSTR pszPassword);
 	void disable_Flags(DWORD dw);
 	void enable_Flags(DWORD dw);
 	DWORD get_Flags();
 	fsString get_URL();
 	void get_TrackerLogin (fsString &strUser, fsString &strPassword);
-	LPCSTR get_TorrentUrl();
+	LPCTSTR get_TorrentUrl();
 	fsString get_InfoHash();
 	BOOL getInfoHash2(LPBYTE pb, LPDWORD pdwBufSize);
 	void SetEventsHandler (fntBtDownloadManagerEventHandler pfn, LPVOID pData);
-	LPCSTR get_OutputPath();
+	LPCTSTR get_OutputPath();
 	fsString get_OutputFilePathName (int nIndex);
 	int get_FileCount();
 	UINT GetUploadSpeed();
@@ -149,7 +148,7 @@ public:
 	vmsBtDownloadStateEx get_State();
 	vmsBtFile* GetTorrentFile();
 
-	BOOL CreateByTorrentFile (LPCSTR pszTorrentFile, LPCSTR pszOutputPath, LPCSTR pszTorrentUrl, BOOL bSeedOnly = FALSE);
+	BOOL CreateByTorrentFile (LPCTSTR pszTorrentFile, LPCTSTR pszOutputPath, LPCTSTR pszTorrentUrl, BOOL bSeedOnly = FALSE);
 	BOOL CreateByMagnetLink (LPCTSTR pszMagnetLink, LPCTSTR pszOutputPath);
 	BOOL CreateByMagnetMetadata (vmsBtFile* vmsfile, LPCTSTR pszOutputPath);
 	void DeleteBtDownload();
@@ -170,7 +169,7 @@ protected:
 
 protected:
 	void onSeedingFilesChangedUnexpectively ();
-	std::string m_strLastTrackerStatus;
+	tstring m_strLastTrackerStatus;
 	vmsCriticalSection m_csTorrentFile, m_csDownload, m_csMisc;
 	void AddToDldsList();
 	void DeleteFromDldsList();
@@ -178,7 +177,7 @@ protected:
 	void ApplyNewFilesPriorities();
 	void CalculateFilesPieces ();
 	void calculateFoldersSizesInTree(fs::ListTree <vmsFile> *pTree);
-	void addFileToTree (fs::ListTree <vmsFile> *pTree, LPCSTR pszFile, int nFileIndex);
+	void addFileToTree (fs::ListTree <vmsFile> *pTree, LPCTSTR pszFile, int nFileIndex);
 	bool m_bNeedRaiseFatalError;
 	
 	struct _inc_CachedValues {
@@ -257,9 +256,9 @@ protected:
 
 	vmsBtDownloadErrorState m_errorState;
 public:
-	void setLastTracker(LPCSTR pszUrl);
-	void setLastTrackerStatus(LPCSTR pszStatus);
-	std::string getLastTrackerStatus(void);
+	void setLastTracker(LPCTSTR pszUrl);
+	void setLastTrackerStatus(LPCTSTR pszStatus);
+	tstring getLastTrackerStatus(void);
 	UINT64 getSpeed(bool bOfDownload);
 	void setSpeedLimit(bool bOfDownload, UINT64 uLimit);
 	UINT64 getSpeedLimit(bool bOfDownload);

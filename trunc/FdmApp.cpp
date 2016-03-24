@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -12,7 +12,6 @@
 #include <initguid.h>
 #include "WGUrlReceiver.h"
 #include "Fdm_i.c"
-#include "UEDlg.h"
 #include "fsIEUserAgent.h"
 #include "WgUrlListReceiver.h"
 #include "CFDM.h"
@@ -31,7 +30,6 @@
 #include "FdmTorrentFilesRcvr.h"
 #include "FDMFlashVideoDownloads.h"
 #include "vmsUploadsDllCaller.h"
-#include "vistafx/vistafx.h"
 #include "inetutil.h"
 #include "vmsNotEverywhereSupportedFunctions.h"
 #include "SpiderWnd.h"
@@ -43,16 +41,21 @@ extern CSpiderWnd *_pwndSpider;
 #include "CmdHistorySaver.h"
 #include "vmsAppMutex.h"
 #include "vmsElevatedFdm.h"
-#include "vmsFdmCrashReporter.h"
+#include "common/vms_sifdm_cl/exceptions/unh_exc_handler/vmsAppCrashReporter.h"
+#include "common/vms_sifdm_cl/app/vmsRunningAppVersionInfo.h"
 #include "vmsAppGlobalObjects.h"
 #include "vmsFirefoxExtensionInfo.h"
-#include "vmsFirefoxUtil.h"
+#include "common/vmsFirefoxUtil.h"
 #include "vmsTmpFileName.h"
 #include "vmsRegisteredAppPath.h"
 #include "vmsFdmFilesDeleter.h"
 #include "vmsFdmUiDetails.h"
-#include "vmsWinSecurity.h"
 #include "vmsFdmUtils.h"
+#include "vmsFdmBrowserPluginMonitoring.h"
+#include "vmsYouTubeParserDllMgr.h"
+#include "vmsAVMergingMgr.h"
+#include "vmsAVMergerFFMPEG.h"
+#include "vmsYouTubeAfterMergeAction.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -82,58 +85,73 @@ CFdmApp::CFdmApp()
 CFdmApp theApp;
 vmsAppMutex _appMutex (_T ("Free Download Manager"));
 
-vmsFdmCrashReporter _CrashReporter;
+vmsRunningAppVersionInfo g_appVersion;
+std::unique_ptr <vmsAppCrashReporter> g_crashReporter;
 
 BOOL CFdmApp::InitInstance()
 {
-	
-
-	AfxEnableControlContainer ();
-
-	
-	SetRegistryKey (IDS_COMPANY);
+	g_crashReporter.reset (new vmsAppCrashReporter (
+		g_appVersion.getVersion ()->m_tstrProductName,
+		L"",
+		g_appVersion.getVersion ()->m_tstrFileVersion,
+		L"freedownloadmanager.org", L"/dump.php"));
 
 	bool bContinue = true;
-	if (_CrashReporter.CheckIfSubmitDumpIsRequestedByCommandLine (bContinue))
+	if (g_crashReporter->CheckIfSubmitDumpIsRequestedByCommandLine (bContinue))
 	{
 		if (!bContinue)
 			return FALSE;
 	}
+
+	g_crashReporter->InitializeCrashCatcher ();
+
+	AfxEnableControlContainer ();
+
+	{
+		_configthreadlocale (_DISABLE_PER_THREAD_LOCALE);
+		tstringstream tss;
+		tss << _T (".") << GetACP ();
+		_tsetlocale(LC_ALL, tss.str ().c_str ());
+		_configthreadlocale (_ENABLE_PER_THREAD_LOCALE);
+	}
+
+	
+	SetRegistryKey (IDS_COMPANY);
 
 	CheckRegistry ();
 
 	fsIECatchMgr::CleanIEPluginKey ();
 
 	
-	CString strPath = GetProfileString ("", "Path", "");
+	CString strPath = GetProfileString (_T(""), _T("Path"), _T(""));
 	BOOL bNeedLocalRegister = FALSE;
-	if (strPath == "")
+	if (strPath == _T(""))
 	{
 		CRegKey key;
-		if (ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Download Manager", KEY_WRITE))
-			vmsSHCopyKey (HKEY_LOCAL_MACHINE, "Software\\FreeDownloadManager.ORG\\Free Download Manager", key);
-		strPath = GetProfileString ("", "Path", "");
+		if (ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG\\Free Download Manager"), KEY_WRITE))
+			vmsSHCopyKey (HKEY_LOCAL_MACHINE, _T("Software\\FreeDownloadManager.ORG\\Free Download Manager"), key);
+		strPath = GetProfileString (_T(""), _T("Path"), _T(""));
 		bNeedLocalRegister = strPath != "";
 	}
 
-	if (GetFileAttributes (strPath + "\\fdm.exe") == DWORD (-1))
+	if (GetFileAttributes (strPath + _T("\\fdm.exe")) == DWORD (-1))
 	{
-		strPath = "";
+		strPath = _T("");
 		bNeedLocalRegister = false;
 	}
 
 	
 	
-	if (strPath == "" || FALSE == SetCurrentDirectory (strPath))
+	if (strPath == _T("") || FALSE == SetCurrentDirectory (strPath))
 		_dwAppState |= APPSTATE_PORTABLE_MODE;
 
-	char szExeDir [MY_MAX_PATH], szExeFile [MY_MAX_PATH];
-	GetModuleFileName (NULL, szExeFile, sizeof (szExeFile));
-	fsGetPath (szExeFile, szExeDir);
+	TCHAR tszExeDir [MY_MAX_PATH], tszExeFile [MY_MAX_PATH];
+	GetModuleFileName (NULL, tszExeFile, sizeof (tszExeFile));
+	fsGetPath (tszExeFile, tszExeDir);
 
 	if (IS_PORTABLE_MODE)
 	{
-		strPath = szExeDir;
+		strPath = tszExeDir;
 		SetCurrentDirectory (strPath);
 	}
 
@@ -147,17 +165,17 @@ BOOL CFdmApp::InitInstance()
 
 	if (IS_PORTABLE_MODE == false)
 	{
-		CString strDataFldr = szExeDir; strDataFldr += "Data";
+		CString strDataFldr = tszExeDir; strDataFldr += _T("Data");
 		
 		
 		
-		if (m_strAppPath.CompareNoCase (szExeDir) &&
+		if (m_strAppPath.CompareNoCase (tszExeDir) &&
 			 DWORD (-1) != GetFileAttributes (strDataFldr))
 		{
 			
 			_dwAppState |= APPSTATE_PORTABLE_MODE;
 			_dwAppState |= APPSTATE_PORTABLE_MODE_NOREG;
-			m_strAppPath = szExeDir;
+			m_strAppPath = tszExeDir;
 		}
 	}
 
@@ -176,9 +194,9 @@ BOOL CFdmApp::InitInstance()
 	if (FALSE == InitLanguage ())
 		bNoLng = TRUE;
 
-	if (strcmp (m_lpCmdLine, "-suis") == 0 || 
-			strcmp (m_lpCmdLine, "-euis") == 0 ||
-			strcmp (m_lpCmdLine, "-duis") == 0)
+	if (_tcscmp (m_lpCmdLine, _T("-suis")) == 0 || 
+			_tcscmp (m_lpCmdLine, _T("-euis")) == 0 ||
+			_tcscmp (m_lpCmdLine, _T("-duis")) == 0)
 	{
 		IntegrationSettings ();
 		return FALSE;
@@ -189,10 +207,10 @@ BOOL CFdmApp::InitInstance()
 		
 		
 		
-		char szTmpFile [MY_MAX_PATH];
-		CString str = m_strAppPath; str += "Data";
+		TCHAR szTmpFile [MY_MAX_PATH];
+		CString str = m_strAppPath; str += _T("Data");
 		CreateDirectory (str, NULL);
-		if (0 == GetTempFileName (str, "fdm", 0, szTmpFile))
+		if (0 == GetTempFileName (str, _T("fdm"), 0, szTmpFile))
 			MessageBox (NULL, LS (L_NOWRITEACCESSTODATAFOLDER), vmsFdmAppMgr::getAppName (), MB_ICONWARNING);
 		else
 			DeleteFile (szTmpFile);
@@ -236,7 +254,12 @@ BOOL CFdmApp::InitInstance()
 
 	if (cmdline.isNeedRegisterServer ())
 	{
-		onNeedRegisterServer ();
+		onNeedRegisterServer ( false );
+		return FALSE;
+	}
+	else if (cmdline.isNeedRegisterServerUserOnly ())
+	{
+		onNeedRegisterServer ( true );
 		return FALSE;
 	}
 	else if (cmdline.isNeedUnregisterServer ())
@@ -245,7 +268,8 @@ BOOL CFdmApp::InitInstance()
 		return FALSE;
 	}
 
-	if (vmsWinSecurity::IsVistaOrHigher () && strncmp (m_lpCmdLine, "-nelvcheck", 10) && stricmp (m_lpCmdLine, "-autorun"))
+	if (vmsWinSecurity::os_supports_elevation () && 
+		_tcsncmp (m_lpCmdLine, _T("-nelvcheck"), 10) && _tcsicmp (m_lpCmdLine, _T("-autorun")))
 	{
 		if (vmsWinSecurity::IsProcessElevated ())
 		{
@@ -320,13 +344,15 @@ BOOL CFdmApp::InitInstance()
 		return FALSE;
 	}
 
-	if (!_App.get_SettingsStore ()->GetProfileInt (_T ("State"), _T ("FfExtChecked"), FALSE))
-	{
-		DWORD dwResult;
-		CheckFirefoxExtension (&dwResult);
-		if (!(dwResult & (1 << 1)))
-			_App.get_SettingsStore ()->WriteProfileInt (_T ("State"), _T ("FfExtChecked"), TRUE); 
-	}
+	auto ytdllmgr = std::make_shared <vmsYouTubeParserDllMgr> (
+		std::make_shared <vmsAppDataFolder> (L"FreeDownloadManager.ORG", L"Free Download Manager"),
+		currentVersionFirstRun);
+	vmsYouTubeParserDllMgr::reset (ytdllmgr);
+
+	auto avMerger = std::make_shared<vmsAVMergerFFMPEG>();
+	auto avAfterMergeAction = std::make_shared<vmsYouTubeAfterMergeAction>();
+	auto avYouTubeMergingMgr = std::make_shared <vmsAVMergingMgr>( avMerger, avAfterMergeAction, 1 );	
+	_YouTubeDldsMgr.setYouTubeAVMergingMgr( avYouTubeMergingMgr );
 
 	CMainFrame* pFrame = NULL;
 	fsnew1 (pFrame, CMainFrame);
@@ -342,7 +368,7 @@ BOOL CFdmApp::InitInstance()
 	
 	BOOL bHidden = _tcscmp (m_lpCmdLine, _T ("-autorun")) == 0;
 
-	_App.View_ReadWndPlacement (pFrame, "MainFrm", 
+	_App.View_ReadWndPlacement (pFrame, _T("MainFrm"), 
 		bHidden ? fsAppSettings::RWPA_FORCE_SWHIDE_AND_KEEP_MINIMIZED_MAXIMIZED_STATE : fsAppSettings::RWPA_NONE);
 
 	if (!bHidden)
@@ -382,7 +408,7 @@ BOOL CFdmApp::InitInstance()
 			
 			
 			
-			MessageBox( NULL, (LPCTSTR)lpMsgBuf, "Error", MB_OK | MB_ICONINFORMATION );
+			MessageBox( NULL, (LPCTSTR)lpMsgBuf, nullptr, MB_OK | MB_ICONINFORMATION );
 			
 			LocalFree( lpMsgBuf );
 	}
@@ -424,8 +450,8 @@ CAboutDlg::CAboutDlg() : CDialog(CAboutDlg::IDD)
 {
 	//{{AFX_DATA_INIT(CAboutDlg)
 	//}}AFX_DATA_INIT
-	m_fontRegInfo.CreateFont (10, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "MS Sans Serif");
-	m_fontWarn.CreateFont (12, 0, 0, 0, FW_LIGHT, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "Arial");
+	m_fontRegInfo.CreateFont (10, 0, 0, 0, FW_BOLD, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("MS Sans Serif"));
+	m_fontWarn.CreateFont (12, 0, 0, 0, FW_LIGHT, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Arial"));
 }
 
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
@@ -483,8 +509,8 @@ BOOL CAboutDlg::OnInitDialog()
 	m_wndDLURL.SetUrl ("http://www.freedownloadmanager.org/download.htm");
 	
 	CString strVer;
-	char szVer [] = "%s %s build %s";
-	strVer.Format (szVer, LS (L_VERSION), vmsFdmAppMgr::getVersion ()->m_tstrProductVersion.c_str (), 
+	TCHAR tszVer [] = _T("%s %s build %s");
+	strVer.Format (tszVer, LS (L_VERSION), vmsFdmAppMgr::getVersion ()->m_tstrProductVersion.c_str (), 
 		vmsFdmAppMgr::getBuildNumberAsString ());
 	SetDlgItemText (IDC__VER, strVer);
 
@@ -552,14 +578,9 @@ void CFdmApp::LoadHistory()
 
 void CFdmApp::SaveHistory()
 {
+
 	CCmdHistorySaver& chsSaver = CCmdHistorySaver::Instance();
 	chsSaver.Save();
-
-	
-	
-	
-	
-	
 }
 
 	
@@ -625,7 +646,14 @@ BOOL CFdmApp::InitLanguage()
 	m_nNoLngsErrReason = 0;
 	
 	
-	if (FALSE == _LngMgr.Initialize ())
+	tstring strPath = (LPCTSTR) GetProfileString (_T(""), _T("Path"), _T(""));
+	if (!strPath.empty ())
+	{
+		if (strPath.back () != '\\')
+			strPath += '\\';
+		strPath += _T("Language");
+	}
+	if (FALSE == _LngMgr.Initialize (strPath))
 	{
 		m_nNoLngsErrReason = 1;
 		return FALSE;
@@ -653,7 +681,7 @@ BOOL CFdmApp::InitLanguage()
 
 BOOL CFdmApp::CheckFdmStartedAlready(BOOL bSetForIfEx)
 {
-	LPCSTR pszMainWnd = "Free Download Manager Main Window";
+	LPCTSTR pszMainWnd = _T("Free Download Manager Main Window");
 	
 	
 	if (_appMutex.isAnotherInstanceStartedAlready ())
@@ -692,57 +720,6 @@ CFdmApp::~CFdmApp()
 		CoUninitialize();
 }
 
-LONG CFdmApp::_UEF(_EXCEPTION_POINTERS *info)
-{
-	static BOOL _b = FALSE;
-
-	if (_b)
-		return EXCEPTION_EXECUTE_HANDLER;
-
-	_b = TRUE;
-
-	typedef BOOL (WINAPI *FNMDWD)(HANDLE, DWORD, HANDLE, MINIDUMP_TYPE, 
-		PMINIDUMP_EXCEPTION_INFORMATION, PMINIDUMP_USER_STREAM_INFORMATION, PMINIDUMP_CALLBACK_INFORMATION);
-	vmsDLL dll ("dbghelp.dll");
-	FNMDWD pfnMiniDumpWriteDump;
-	pfnMiniDumpWriteDump = (FNMDWD) dll.GetProcAddress ("MiniDumpWriteDump");
-	if (pfnMiniDumpWriteDump == NULL)
-		return EXCEPTION_EXECUTE_HANDLER;
-	
-	
-	
-	MINIDUMP_EXCEPTION_INFORMATION eInfo;
-    eInfo.ThreadId = GetCurrentThreadId();
-    eInfo.ExceptionPointers = info;
-    eInfo.ClientPointers = FALSE;
-
-	char szFile [MAX_PATH]; char szName [100];
-	wsprintf (szName, "fdm%s.dmp", vmsFdmAppMgr::getBuildNumberAsString ());
-	GetTempPath (MAX_PATH, szFile);
-	lstrcat (szFile, szName);
-	HANDLE hFile = CreateFile (szFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
-		0, NULL);
-
-    
-    pfnMiniDumpWriteDump(
-        GetCurrentProcess(),
-        GetCurrentProcessId(),
-        hFile,
-        MiniDumpNormal,
-        &eInfo,
-        NULL,
-        NULL);
-
-	CloseHandle (hFile);
-
-	CUEDlg dlg;
-	dlg.DoModal ();
-
-	
-	TerminateProcess (GetCurrentProcess (), 0);
-	return 0; 
-}
-
 #include "FDM.h"
 #include "FDMDownloadsStat.h"
 #include "FDMDownload.h"
@@ -761,7 +738,7 @@ void CFdmApp::CheckLocked()
 
 	do 
 	{
-		HANDLE hMx = CreateMutex (NULL, TRUE, "_mx_FDM_Lock_Start_");
+		HANDLE hMx = CreateMutex (NULL, TRUE, _T("_mx_FDM_Lock_Start_"));
 		dwRes = GetLastError ();
 		CloseHandle (hMx);
 
@@ -774,18 +751,18 @@ void CFdmApp::CheckLocked()
 void CFdmApp::UninstallCustomizations()
 {
 	CRegKey key;
-	key.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Download Manager");
+	key.Open (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG\\Free Download Manager"));
 
-	char sz [MY_MAX_PATH];
+	TCHAR sz [MY_MAX_PATH];
 	DWORD dw = MY_MAX_PATH;
 	
 	
-	key.QueryValue (sz, "CLSM_File", &dw);
+	key.QueryValue (sz, _T("CLSM_File"), &dw);
 	DeleteFile (sz);
 
 	
 	dw = MY_MAX_PATH;
-	key.QueryValue (sz, "CLFM_File", &dw);
+	key.QueryValue (sz, _T("CLFM_File"), &dw);
 	DeleteFile (sz);
 
 	
@@ -794,40 +771,40 @@ void CFdmApp::UninstallCustomizations()
 
 	
 
-	char szIEOP [10000] = "about:blank";
-	char szIECP [10000] = "about:blank";
+	TCHAR szIEOP [10000] = _T("about:blank");
+	TCHAR szIECP [10000] = _T("about:blank");
 
 	CRegKey fdmkey;
-	fdmkey.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Download Manager");
+	fdmkey.Open (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG\\Free Download Manager"));
 
 	dw = sizeof (szIECP);
-	fdmkey.QueryValue (szIECP, "CustSite", &dw);
+	fdmkey.QueryValue (szIECP, _T("CustSite"), &dw);
 	dw = sizeof (szIEOP);
-	if (ERROR_SUCCESS == fdmkey.QueryValue (szIEOP, "CIEOP", &dw))
+	if (ERROR_SUCCESS == fdmkey.QueryValue (szIEOP, _T("CIEOP"), &dw))
 	{
-		key.Open (HKEY_CURRENT_USER, "Software\\Microsoft\\Internet Explorer\\Main");
+		key.Open (HKEY_CURRENT_USER, _T("Software\\Microsoft\\Internet Explorer\\Main"));
 
-		char sz2 [10000] = "about:blank";
+		TCHAR sz2 [10000] = _T("about:blank");
 		dw = sizeof (sz2);
-		key.QueryValue (sz2, "Start Page", &dw);
+		key.QueryValue (sz2, _T("Start Page"), &dw);
 
 		if (lstrcmp (sz2, szIECP) == 0)
-			key.SetValue (szIEOP, "Start Page");
+			key.SetValue (szIEOP, _T("Start Page"));
 	}
 }
 
-BOOL CFdmApp::RegisterServer(BOOL bGlobal)
+BOOL CFdmApp::RegisterServer(BOOL bGlobal, bool bRegisterForUserOnly )
 {
 	LOG ("Registering server (%s)...", bGlobal ? "global" : "local");
 
-	bool bRegisterForUserOnly = IS_PORTABLE_MODE && !Is9xME;
+	bRegisterForUserOnly = bRegisterForUserOnly || ( IS_PORTABLE_MODE && !Is9xME );
 
 	if (bRegisterForUserOnly)
 	{
 		LOGsnl ("Portable mode: overriding HKCR...");
 		HKEY hKey;
 		LONG lRes;
-		lRes = RegOpenKeyEx (HKEY_CURRENT_USER, "Software\\Classes", 0, KEY_ALL_ACCESS, &hKey);
+		lRes = RegOpenKeyEx (HKEY_CURRENT_USER, _T("Software\\Classes"), 0, KEY_ALL_ACCESS, &hKey);
 		LOGRESULT (" open cu key", lRes);
 		lRes = vmsNotEverywhereSupportedFunctions::RegOverridePredefKey (HKEY_CLASSES_ROOT, hKey);
 		LOGRESULT (" override HKCR key", lRes);
@@ -851,8 +828,8 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 		
 		
 		
-		if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, "Software\\FreeDownloadManager.ORG\\Free Download Manager", KEY_WRITE))
-			vmsSHCopyKey (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Download Manager", key);
+		if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, _T("Software\\FreeDownloadManager.ORG\\Free Download Manager"), KEY_WRITE))
+			vmsSHCopyKey (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG\\Free Download Manager"), key);
 
 		
 		HRESULT hr = _Module.UpdateRegistryFromResource (IDR_FDM, TRUE);
@@ -873,7 +850,7 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 				szDir[AtlGetDirLen(szDir)] = 0;
 			
 				typedef HRESULT (WINAPI *FNRTLFU)(ITypeLib*,OLECHAR*,OLECHAR*);
-				FNRTLFU pfn = (FNRTLFU) GetProcAddress (GetModuleHandle ("oleaut32.dll"), "RegisterTypeLibForUser");
+				FNRTLFU pfn = (FNRTLFU) GetProcAddress (GetModuleHandle (_T("oleaut32.dll")), "RegisterTypeLibForUser");
 				if (pfn)
 					hr = pfn (pTypeLib, bstrPath, szDir);
 				else
@@ -888,7 +865,7 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 		if (SUCCEEDED (hr = LoadTypeLibEx (L"fdm.tlb", REGKIND_REGISTER, &pLib)))
 			pLib->Release ();
 		else
-			MessageBox (0, "Failed to load Free Download Manager type lib","Error",0);
+			MessageBox (0, _T("Failed to load Free Download Manager type lib"),_T("Error"),0);
 		LOGRESULT ("register fdm.tlb", hr);
 
 		if (_AppMgr.IsBtInstalled ())
@@ -911,10 +888,10 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 		}
 	}
 
-	WriteProfileInt ("", "cverID", 0);
+	WriteProfileInt (_T(""), _T("cverID"), 0);
 
-	if (GetProfileInt ("Settings\\Monitor", "IECMInited", 0) == 0)
-		WriteProfileInt ("Settings\\Monitor", "IECMInited", TRUE);
+	if (GetProfileInt (_T("Settings\\Monitor"), _T("IECMInited"), 0) == 0)
+		WriteProfileInt (_T("Settings\\Monitor"), _T("IECMInited"), TRUE);
 	_IECMM.DeleteIEMenus (); 
 	fsIEContextMenuMgr::DeleteAllFDMsIEMenus ();
 	_IECMM.AddIEMenus ();
@@ -922,7 +899,8 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 	
 	const DWORD dwMUSO = _App.Monitor_UserSwitchedOn ();
 				
-	BOOL bIeOK = _IECatchMgr.InstallIeIntegration ((dwMUSO & MONITOR_USERSWITCHEDON_IE) != 0, bRegisterForUserOnly, FALSE);
+	BOOL bIeOK = _IECatchMgr.InstallIeIntegration (
+		(dwMUSO & MONITOR_USERSWITCHEDON_IE) != 0, bRegisterForUserOnly);
 
 	vmsFirefoxMonitoring::Install (true);
 	if (vmsFirefoxMonitoring::IsInstalled () == false)
@@ -932,12 +910,25 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 	
 	
 
-	if (!vmsChromeExtensionInstaller::IsInstalled())
-		vmsChromeExtensionInstaller::Install ();
-	if (!vmsChromeExtensionInstaller::IsInstalled())
-		_App.Monitor_Chrome (FALSE);
-	else
-		_App.Monitor_Chrome (TRUE);
+	if (bRegisterForUserOnly)
+		vmsNotEverywhereSupportedFunctions::ResetHKCR();
+
+	if (!_App.Monitor_Chrome_Cancel())
+	{
+		_App.Monitor_Chrome_Cancel(TRUE);
+		bool isEnabledExtension = false;
+		vmsChromeExtensionInstaller::Enabled(isEnabledExtension);
+		if (!vmsChromeExtensionInstaller::IsInstalled() || (vmsChromeExtensionInstaller::IsInstalled() && !isEnabledExtension))
+		{
+			_App.Monitor_Chrome(TRUE);
+			vmsChromeExtensionInstaller::Install ();
+			_App.Monitor_ChromeInstalled( vmsChromeExtensionInstaller::IsChromeInstalled() );
+		}
+	}
+
+	if (bRegisterForUserOnly)
+		vmsNotEverywhereSupportedFunctions::OverrideHKCRForUser();
+
 	
 	_NOMgr.getPluginInstaller(vmsKnownBrowsers::Chrome).DeinstallPlugin ();
 
@@ -967,12 +958,12 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 	}
 
 	CRegKey key;
-	if (ERROR_SUCCESS != key.Create (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Upload Manager"))
-		key.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Upload Manager");
-	key.SetValue (fsGetAppDataFolder (), "force_data_folder");
+	if (ERROR_SUCCESS != key.Create (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG\\Free Upload Manager")))
+		key.Open (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG\\Free Upload Manager"));
+	key.SetValue (fsGetAppDataFolder (), _T("force_data_folder"));
 
 	if (bRegisterForUserOnly)
-		vmsNotEverywhereSupportedFunctions::RegOverridePredefKey (HKEY_CLASSES_ROOT, NULL);
+		vmsNotEverywhereSupportedFunctions::ResetHKCR();
 
 	if (!bIeOK && (dwMUSO & MONITOR_USERSWITCHEDON_IE) != 0 && _App.Monitor_IE2 () && IS_PORTABLE_MODE)
 		vmsElevatedFdm::o ().InstallIeIntegration (true);
@@ -980,7 +971,7 @@ BOOL CFdmApp::RegisterServer(BOOL bGlobal)
 	return TRUE;
 }
 
-void CFdmApp::Install_RegisterServer()
+void CFdmApp::Install_RegisterServer( bool bUserOnly )
 {
 	if (m_bATLInited == FALSE)
 	{
@@ -988,14 +979,15 @@ void CFdmApp::Install_RegisterServer()
 		_Module.Init(ObjectMap, AfxGetInstanceHandle());
 		_Module.dwThreadID = GetCurrentThreadId();
 	}
-	RegisterServer (TRUE);
+	_App.UserOnly( bUserOnly );
+	RegisterServer (TRUE, bUserOnly);
 }
 
 void CFdmApp::Install_UnregisterServer()
 {
 	LOGsnl ("Unregister server...");
 
-	bool bUnregisterForUserOnly = IS_PORTABLE_MODE;
+	bool bUnregisterForUserOnly = _App.UserOnly() || IS_PORTABLE_MODE;
 	
 	if (bUnregisterForUserOnly)
 	{
@@ -1052,7 +1044,7 @@ void CFdmApp::Install_UnregisterServer()
 	
 	
 	if (_IECMM.IsIEMenusPresent ())
-		WriteProfileInt ("Settings\\Monitor", "IECMInited", 0);
+		WriteProfileInt (_T("Settings\\Monitor"), _T("IECMInited"), 0);
 
 	fsIEContextMenuMgr::DeleteAllFDMsIEMenus ();
 	
@@ -1060,12 +1052,19 @@ void CFdmApp::Install_UnregisterServer()
 	_NOMgr.DeinstallAllPlugins (vBrowserPluginFiles);
 	if (!vBrowserPluginFiles.empty ())
 		vmsFdmFilesDeleter::DeleteBrowserPluginFiles (vBrowserPluginFiles);
-	_IECatchMgr.InstallIeIntegration (FALSE, bUnregisterForUserOnly, FALSE);
+	_IECatchMgr.InstallIeIntegration (FALSE, bUnregisterForUserOnly);
 	fsIEUserAgent ua;
 	ua.RemovePP (IE_USERAGENT_ADDITION);
 	UninstallCustomizations ();
 	vmsFirefoxMonitoring::Install (false);
+
+	if (bUnregisterForUserOnly)
+		vmsNotEverywhereSupportedFunctions::ResetHKCR();
+
 	vmsChromeExtensionInstaller::Uninstall();
+
+	if (bUnregisterForUserOnly)
+		vmsNotEverywhereSupportedFunctions::OverrideHKCRForUser();
 
 	
 	if (vmsTorrentExtension::IsAssociatedWithUs ())
@@ -1082,7 +1081,7 @@ void CFdmApp::SaveSettings()
 	{
 		
 		vmsAppSettingsStore* pStgs = _App.get_SettingsStore ();
-		CString strStgsFile = fsGetDataFilePath ("settings.dat");
+		CString strStgsFile = fsGetDataFilePath (_T("settings.dat"));
 		pStgs->SaveSettingsToFile (strStgsFile);
 	}
 }
@@ -1096,7 +1095,7 @@ void CFdmApp::IntegrationSettings()
 	CString strFP = fsGetFumProgramFilesFolder ();
 	hUploadsDll = LoadLibrary (strFP + "fumcore.dll");
 	#else
-	hUploadsDll = LoadLibrary ("E:\\VCW\\FDM\\FDM\\Uploader\\CoreDll\\Debug\\fumcore.dll");
+	hUploadsDll = LoadLibrary (_T("E:\\VCW\\FDM\\FDM\\Uploader\\CoreDll\\Debug\\fumcore.dll"));
 	ASSERT (hUploadsDll != NULL);
 	#endif
 
@@ -1108,7 +1107,7 @@ void CFdmApp::IntegrationSettings()
 	ASSERT (pfnSetCaller != NULL);
 	pfnSetCaller (&udc);
 
-	if (lstrcmpi (m_lpCmdLine, "-suis") == 0)
+	if (lstrcmpi (m_lpCmdLine, _T("-suis")) == 0)
 	{
 		vmsUploadsDll::FNSIS pfnShowIntegrationSettings = (vmsUploadsDll::FNSIS) GetProcAddress (hUploadsDll, 
 			"_ShowIntegrationSettings");
@@ -1120,7 +1119,7 @@ void CFdmApp::IntegrationSettings()
 		vmsUploadsDll::FNEI pfnEnableIntegration = (vmsUploadsDll::FNEI) GetProcAddress (hUploadsDll, 
 			"_EnableIntegration");			 
 		ASSERT (pfnEnableIntegration != NULL);
-		pfnEnableIntegration  (lstrcmpi (m_lpCmdLine, "-euis") == 0, 0);
+		pfnEnableIntegration  (lstrcmpi (m_lpCmdLine, _T("-euis")) == 0, 0);
 	}
 
 	FreeLibrary (hUploadsDll);
@@ -1144,33 +1143,35 @@ void CFdmApp::ScheduleExitProcess(DWORD dwSeconds)
 
 void CFdmApp::CheckRegistry()
 {
-	fsString str = "%56%69%63%4D%61%6E%20%53%6F%66%74%77%61%72%65";
+	std::string str = "%56%69%63%4D%61%6E%20%53%6F%66%74%77%61%72%65";
 	fsDecodeHtmlUrl (str);
-	CString strOldKey = "Software\\"; strOldKey += str; 
+	USES_CONVERSION;
+	tstring sStr = CA2T(str.c_str());
+	CString strOldKey = "Software\\"; strOldKey += sStr.c_str(); 
 	CString strOldRKey = strOldKey;
-	strOldKey += "\\Free Download Manager";
+	strOldKey += _T("\\Free Download Manager");
 
 	
 	CRegKey key;
 	if (ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, strOldKey))
 	{
 		CRegKey key2;
-		if (ERROR_SUCCESS != key2.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Download Manager\\Settings\\History"))
+		if (ERROR_SUCCESS != key2.Open (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG\\Free Download Manager\\Settings\\History")))
 		{
-			LONG lRes = key2.Create (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG");
+			LONG lRes = key2.Create (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG"));
 			if (lRes != ERROR_SUCCESS)
-				lRes = key2.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG");
+				lRes = key2.Open (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG"));
 
 			if (ERROR_SUCCESS == lRes)
 			{
 				key.Open (HKEY_CURRENT_USER, strOldRKey);
 
-				CString strPath = GetProfileString ("", "Path", "");
-				LONG nRes = fsCopyKey (key, key2, "Free Download Manager", "Free Download Manager");
+				CString strPath = GetProfileString (_T(""), _T("Path"), _T(""));
+				LONG nRes = fsCopyKey (key, key2, _T("Free Download Manager"), _T("Free Download Manager"));
 				nRes; 
-				WriteProfileString ("", "Path", strPath); 
+				WriteProfileString (_T(""), _T("Path"), strPath); 
 				
-				key.RecurseDeleteKey ("Free Download Manager");
+				key.RecurseDeleteKey (_T("Free Download Manager"));
 			}
 		}
 	}
@@ -1181,9 +1182,9 @@ AFX_MODULE_STATE* CFdmApp::GetModuleState()
 	return m_pModuleState;
 }
 
-bool CFdmApp::onNeedRegisterServer(void)
+bool CFdmApp::onNeedRegisterServer(bool bUserOnly)
 {
-	Install_RegisterServer ();
+	Install_RegisterServer ( bUserOnly );
 	return false;
 }
 
@@ -1192,7 +1193,7 @@ bool CFdmApp::onNeedUnregisterServer(void)
 	BOOL bWaitShutdown = FALSE;
 	if (CheckFdmStartedAlready (FALSE))
 	{
-		UINT nMsg = RegisterWindowMessage ("FDM - shutdown");
+		UINT nMsg = RegisterWindowMessage (_T("FDM - shutdown"));
 		if (nMsg)
 		{
 			PostMessage (HWND_BROADCAST, nMsg, 0, 0);
@@ -1200,14 +1201,14 @@ bool CFdmApp::onNeedUnregisterServer(void)
 		}
 		else
 		{
-			MessageBox (NULL, "Unable to shutdown Free Download Manager.\nPlease do that yourself.", "Error", MB_ICONEXCLAMATION);
+			MessageBox (NULL, _T("Unable to shutdown Free Download Manager.\nPlease do that yourself."), _T("Error"), MB_ICONEXCLAMATION);
 		}
 	}
 
-	HANDLE hMxWi = CreateMutex (NULL, FALSE, "FDM - remote control server");
+	HANDLE hMxWi = CreateMutex (NULL, FALSE, _T("FDM - remote control server"));
 	if (GetLastError () == ERROR_ALREADY_EXISTS)
 	{
-		UINT nMsg = RegisterWindowMessage ("FDM - remote control server - shutdown");
+		UINT nMsg = RegisterWindowMessage (_T("FDM - remote control server - shutdown"));
 		if (nMsg)
 			PostMessage (HWND_BROADCAST, nMsg, 0, 0);
 	}
@@ -1243,6 +1244,11 @@ void CFdmApp::RunAsElevatedTasksProcessor(fsFDMCmdLineParser& cmdline)
 	if (!vBrowsersToDeinstall.empty ())
 		_NOMgr.DeinstallPluginsEx (vBrowsersToDeinstall);
 
+	if (cmdline.isNeedInstallChromeIntegration())
+	{
+		vmsChromeExtensionInstaller::Install ();
+	}
+
 	if (cmdline.isNeedInstallIeIntegration ())
 	{
 		_IECatchMgr.InstallIeIntegration (TRUE, TRUE);
@@ -1260,26 +1266,3 @@ void CFdmApp::RunAsElevatedTasksProcessor(fsFDMCmdLineParser& cmdline)
 	}
 }
 
-void CFdmApp::CheckFirefoxExtension(LPDWORD pdwResult)
-{
-	if (pdwResult)
-		*pdwResult = 0;
-
-	bool bEnabled;
-	if (!vmsFirefoxMonitoring::IsEnabledInFirefox (bEnabled) || bEnabled)
-		return;
-
-	if (pdwResult)
-		*pdwResult |= 1;
-
-	if (IDYES != MessageBox (NULL, _T ("Free Download Manager extension for Firefox is disabled. You need to enable it in order to use the integration with Firefox. Would you like to enable it?"), 
-			_T ("Free Download Manager"), MB_YESNO))
-		return;
-
-	if (pdwResult)
-		*pdwResult |= (1 << 1);
-
-	MessageBox (NULL, _T ("Firefox addons page will be opened. You need to enable the extension there."), _T ("Free Download Manager"), MB_OK);
-
-	ShellExecute (NULL, _T ("open"), _T ("firefox.exe"), _T ("about:addons"), NULL, SW_SHOWNORMAL);
-}

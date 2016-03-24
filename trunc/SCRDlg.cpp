@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -70,8 +70,8 @@ BOOL CSCRDlg::OnInitDialog()
 	((CStatic*) GetDlgItem (IDC_DLGICON))->SetIcon (LoadIcon (NULL, IDI_QUESTION));
 
 	CString str;
-	char szUrl [10000];
-	DWORD dwLen = 10000;
+	TCHAR szUrl [10000];
+	DWORD dwLen = _countof (szUrl);
 	fsURL url;
 
 	url.Create (fsNPToScheme (m_dnp->enProtocol), m_dnp->pszServerName, m_dnp->uServerPort,

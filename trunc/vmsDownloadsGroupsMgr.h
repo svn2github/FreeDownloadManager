@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSDOWNLOADSGROUPSMGR_H__C90C07E2_3147_4BB8_A890_781C75428830__INCLUDED_)
@@ -44,7 +44,7 @@ typedef vmsObjectSmartPtr <vmsDownloadsGroup> vmsDownloadsGroupSmartPtr;
 
 typedef fs::ListTree <vmsDownloadsGroupSmartPtr>* PDLDS_GROUPS_TREE;
 
-#define DLDSGRPSFILE_CURRENT_VERSION		((WORD)1)
+#define DLDSGRPSFILE_CURRENT_VERSION		((WORD)2)
 #define DLDSGRPSFILE_SIG					"FDM Groups"
 struct vmsDownloadsGroupsFileHdr
 {
@@ -76,8 +76,8 @@ struct TGroupLoadEventData
 class vmsDownloadsGroupsMgr : public vmsPersistObject
 {
 public:
-	static LPCSTR GetAudioExts();
-	static LPCSTR GetVideoExts ();
+	static LPCTSTR GetAudioExts();
+	static LPCTSTR GetVideoExts ();
 	
 	
 	
@@ -100,8 +100,9 @@ public:
 
 	
 	vmsDownloadsGroupSmartPtr FindGroup (UINT nId);
-	vmsDownloadsGroupSmartPtr FindGroupByName (LPCSTR pszName);
-	vmsDownloadsGroupSmartPtr FindGroupByExt (LPCSTR pszExt);
+	vmsDownloadsGroupSmartPtr FindGroupByName (LPCTSTR pszName);
+	vmsDownloadsGroupSmartPtr FindGroupByNameA (LPCSTR pszName);
+	vmsDownloadsGroupSmartPtr FindGroupByExt (LPCTSTR pszExt);
 	fsString GetGroupFullName (UINT nId);
 	
 	PDLDS_GROUPS_TREE FindGroupInTree (vmsDownloadsGroupSmartPtr pGroup);
@@ -109,7 +110,7 @@ public:
 	
 	
 	
-	void SetGroupsRootOutFolder (LPCSTR psz);
+	void SetGroupsRootOutFolder (LPCTSTR psz);
 	fsString GetGroupsRootOutFolder();
 	
 	void GetGroupWithSubgroups (vmsDownloadsGroupSmartPtr pGroup, std::vector <vmsDownloadsGroupSmartPtr> &v);
@@ -129,10 +130,10 @@ protected:
 	void RebuildGroupsList();
 	BOOL SaveGroupToFile (HANDLE hFile, vmsDownloadsGroupSmartPtr pGroup);
 	BOOL SaveGroupsTreeToFile(HANDLE hFile, PDLDS_GROUPS_TREE pRoot);
-	vmsDownloadsGroupSmartPtr FindGroupByName (LPCSTR pszName, PDLDS_GROUPS_TREE pRoot);
-	BOOL LoadGroupFromFile (HANDLE hFile, vmsDownloadsGroupSmartPtr pGroup);
-	BOOL LoadGroupsTreeFromFile (HANDLE hFile, PDLDS_GROUPS_TREE pRoot);
-	void SetGroupsRootOutFolder (PDLDS_GROUPS_TREE pRoot, LPCSTR pszFolder);
+	vmsDownloadsGroupSmartPtr FindGroupByName (LPCTSTR pszName, PDLDS_GROUPS_TREE pRoot);
+	BOOL LoadGroupFromFile (HANDLE hFile, vmsDownloadsGroupSmartPtr pGroup, WORD wVer);
+	BOOL LoadGroupsTreeFromFile (HANDLE hFile, PDLDS_GROUPS_TREE pRoot, WORD wVer);
+	void SetGroupsRootOutFolder (PDLDS_GROUPS_TREE pRoot, LPCTSTR pszFolder);
 	void GetSubgroups (PDLDS_GROUPS_TREE pGroup, std::vector <vmsDownloadsGroupSmartPtr> &v);
 	UINT m_nGrpNextId; 
 	

@@ -1,11 +1,12 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
+#include "Common.h"
 #include <windows.h>
 #include "vmsFlvSniffDll.h"
 #include <string>
-#include "vmsFdmTranslations.h"
+#include "../../common/vmsFdmTranslations.h"
 
 vmsFlvSniffDll::vmsFlvSniffDll()
 {
@@ -20,7 +21,7 @@ vmsFlvSniffDll::~vmsFlvSniffDll()
 
 void vmsFlvSniffDll::OnDownloadItBtnClicked (const char* pszWebPageUrl)
 {
-	HMODULE hDll = GetModuleHandle ("flvsniff.dll");
+	HMODULE hDll = GetModuleHandle (_T("flvsniff.dll"));
 	if (!hDll)
 	{
 		m_enBR = ButtonResult::E_SNIFF_MODULE_NOT_FOUND;
@@ -48,7 +49,7 @@ void vmsFlvSniffDll::OnDownloadItBtnClicked (const char* pszWebPageUrl)
 
 void vmsFlvSniffDll::OnDownloadItBtnClicked2 (const char* pszWebPageUrl, const char* pszSwfUrl, const char* pszFlashVars)
 {
-	HMODULE hDll = GetModuleHandle ("flvsniff.dll");
+	HMODULE hDll = GetModuleHandle (_T("flvsniff.dll"));
 	if (!hDll)
 	{
 		m_enBR = ButtonResult::E_SNIFF_MODULE_NOT_FOUND;
@@ -76,7 +77,7 @@ void vmsFlvSniffDll::OnDownloadItBtnClicked2 (const char* pszWebPageUrl, const c
 
 void vmsFlvSniffDll::OnDownloadItBtnClicked3 (const char* pszWebPageUrl, const char* pszFrameUrl, const char* pszSwfUrl, const char* pszFlashVars, const char* pszOtherSwfUrls, const char* pszOtherFlashVars)
 {
-	HMODULE hDll = GetModuleHandle ("flvsniff.dll");
+	HMODULE hDll = GetModuleHandle (_T("flvsniff.dll"));
 	if (!hDll)
 	{
 		m_enBR = ButtonResult::E_SNIFF_MODULE_NOT_FOUND;
@@ -104,7 +105,7 @@ void vmsFlvSniffDll::OnDownloadItBtnClicked3 (const char* pszWebPageUrl, const c
 
 BOOL vmsFlvSniffDll::IsVideoFlash (const char* pszWebPageUrl, const char* pszFrameUrl, const char* pszSwfUrl, const char* pszFlashVars, const char* pszOtherSwfUrls, const char* pszOtherFlashVars)
 {
-	HMODULE hDll = GetModuleHandle ("flvsniff.dll");
+	HMODULE hDll = GetModuleHandle (_T("flvsniff.dll"));
 	if (!hDll)
 		return FALSE;
 	typedef BOOL (WINAPI *FNIVF)(LPCSTR, LPCSTR, LPCSTR, LPCSTR, LPCSTR, LPCSTR);
@@ -116,35 +117,35 @@ BOOL vmsFlvSniffDll::IsVideoFlash (const char* pszWebPageUrl, const char* pszFra
 
 void vmsFlvSniffDll::OnDownloadItBtnClicked_ShowMsgIfReq(HWND hwndParent) const
 {
-	std::string strMsg;
+	tstring strMsg;
 	
 	switch (m_enBR)
 	{
 	case E_SNIFF_MODULE_NOT_FOUND:
 		strMsg = vmsFdmTranslations::o ().GetString (L_FLVSNIFFMODULE_NOTFOUND);
 		if (strMsg.empty ())
-			strMsg = "Flash video monitoring module is not loaded. Make sure FDM is running and you've enabled this option in FDM (see Options | Downloads | Flash Video).";
+			strMsg = _T("Flash video monitoring module is not loaded. Make sure FDM is running and you've enabled this option in FDM (see Options | Downloads | Flash Video).");
 		break;
 		
 	case E_FAILED:
 		strMsg = vmsFdmTranslations::o ().GetString (L_FAILEDTRANSFERDLDSTOFDM);
 		if (strMsg.empty ())
-			strMsg = "An error occurred while trying to transfer downloads to FDM.\nError: 0x%x.";
-		char sz [300]; *sz = 0;
-		sprintf (sz, strMsg.c_str (), m_hrLast);
+			strMsg = _T("An error occurred while trying to transfer downloads to FDM.\nError: 0x%x.");
+		TCHAR sz [300]; *sz = 0;
+		_stprintf (sz, strMsg.c_str (), m_hrLast);
 		strMsg = sz;
 		break;
 		
 	case E_NO_FLV_FOUND:
 		strMsg = vmsFdmTranslations::o ().GetString (L_NOFLVSFOUND);
 		if (strMsg.empty ())
-			strMsg = "There were no flash videos found on this page. Make sure the videos on this page are playing or try to reload it (refresh page or clear browser's cache).";
+			strMsg = _T("There were no flash videos found on this page. Make sure the videos on this page are playing or try to reload it (refresh page or clear browser's cache).");
 		break;
 		
 	case E_URL_NOT_FOUND:
 		strMsg = vmsFdmTranslations::o ().GetString (L_FLVWEBPAGENOTFOUND);
 		if (strMsg.empty ())
-			strMsg = "Failed to found information about this web page. Please force your browser to reload it.";
+			strMsg = _T("Failed to found information about this web page. Please force your browser to reload it.");
 		break;		
 	}
 	
@@ -154,7 +155,7 @@ void vmsFlvSniffDll::OnDownloadItBtnClicked_ShowMsgIfReq(HWND hwndParent) const
 
 UINT vmsFlvSniffDll::onNewHttpDialog(LPCSTR pszUrl, LPCSTR pszRequestHdrs, LPCSTR pszRespHdrs)
 {
-	HMODULE hDll = GetModuleHandle ("flvsniff.dll");
+	HMODULE hDll = GetModuleHandle (_T("flvsniff.dll"));
 	if (!hDll)
 		return UINT_MAX;
 	typedef UINT (WINAPI *FNNHD)(LPCSTR, LPCSTR, LPCSTR);
@@ -166,7 +167,7 @@ UINT vmsFlvSniffDll::onNewHttpDialog(LPCSTR pszUrl, LPCSTR pszRequestHdrs, LPCST
 
 void vmsFlvSniffDll::onHttpDialogDataReceived(UINT nUID, LPBYTE pbData, UINT nSize)
 {
-	HMODULE hDll = GetModuleHandle ("flvsniff.dll");
+	HMODULE hDll = GetModuleHandle (_T("flvsniff.dll"));
 	if (!hDll)
 		return;
 	typedef UINT (WINAPI *FNHDDR)(UINT, LPBYTE, UINT);
@@ -177,7 +178,7 @@ void vmsFlvSniffDll::onHttpDialogDataReceived(UINT nUID, LPBYTE pbData, UINT nSi
 
 void vmsFlvSniffDll::onHttpDialogClosed(UINT nUID)
 {
-	HMODULE hDll = GetModuleHandle ("flvsniff.dll");
+	HMODULE hDll = GetModuleHandle (_T("flvsniff.dll"));
 	if (!hDll)
 		return;
 	typedef UINT (WINAPI *FNHDC)(UINT);
@@ -188,7 +189,7 @@ void vmsFlvSniffDll::onHttpDialogClosed(UINT nUID)
 
 void vmsFlvSniffDll::OnNewHttpRequest(LPCSTR pszUrl, LPCSTR pszSrcTabUrl)
 {
-	HMODULE hDll = GetModuleHandle ("flvsniff.dll");
+	HMODULE hDll = GetModuleHandle (_T("flvsniff.dll"));
 	if (!hDll)
 		return;
 	typedef void (WINAPI *FNONHR)(LPCSTR, LPCSTR);

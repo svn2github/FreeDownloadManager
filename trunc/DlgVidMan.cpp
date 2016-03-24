@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -169,7 +169,7 @@ void CDlgVidMan::Update()
 
 		SetDlgItemText (IDC__FILENAME, m_parent->Get_FileName ());
 
-		char szDim [100];
+		TCHAR szDim [100];
 		CString str;
 		UINT64 u;
 		float val;
@@ -182,7 +182,7 @@ void CDlgVidMan::Update()
 			else
 			{
 				BytesToXBytes (u, &val, szDim);
-				str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+				str.Format (_T("%.*g %s"), val > 999 ? 4 : 3, val, szDim);
 			}
 		}
 		else
@@ -193,7 +193,7 @@ void CDlgVidMan::Update()
 		if (u || m_parent->Get_FileSize ())
 		{
 			BytesToXBytes (u, &val, szDim);
-			str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+			str.Format (_T("%.*g %s"), val > 999 ? 4 : 3, val, szDim);
 		}
 		else
 			str = "";
@@ -206,7 +206,7 @@ void CDlgVidMan::Update()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDlgVidMan::Update " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDlgVidMan::Update " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -296,7 +296,7 @@ void CDlgVidMan::ApplyVolumeSettings()
 void CDlgVidMan::UpdateVolumePerc()
 {
 	CString str;
-	str.Format ("%d%%", m_wndVol.GetPos ());
+	str.Format (_T("%d%%"), m_wndVol.GetPos ());
 	SetDlgItemText (IDC__VOLPERC, str);
 }
 
@@ -343,6 +343,7 @@ void CDlgVidMan::SaveSettings()
 BOOL CDlgVidMan::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult) 
 {
 	LPNMHDR nm = (LPNMHDR) lParam;
+	USES_CONVERSION;
 
 	int nID = 0;
 
@@ -366,19 +367,19 @@ BOOL CDlgVidMan::OnNotify(WPARAM wParam, LPARAM lParam, LRESULT* pResult)
 			switch (nID)
 			{
 				case ID_DLD_VID_MUTE:
-					strcpy (inf->pszText, LS (L_MUTE));
+					strcpy (inf->pszText, CT2CA((LPCTSTR)LS (L_MUTE)));
 					break;
 
 				case ID_DLD_VID_PLAY:
-					strcpy (inf->pszText, LS (L_PLAY));
+					strcpy (inf->pszText, CT2CA((LPCTSTR)LS (L_PLAY)));
 					break;
 
 				case ID_DLD_VID_PAUSE:
-					strcpy (inf->pszText, LS (L_PAUSE));
+					strcpy (inf->pszText, CT2CA((LPCTSTR)LS (L_PAUSE)));
 					break;
 
 				case ID_DLD_VID_STOP:
-					strcpy (inf->pszText, LS (L_STOP));
+					strcpy (inf->pszText, CT2CA((LPCTSTR)LS (L_STOP)));
 					break;
 
 			}

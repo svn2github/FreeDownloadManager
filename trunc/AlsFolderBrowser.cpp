@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "StdAfx.h"
@@ -74,7 +74,11 @@ BOOL AlsFolderBrowser::Create(LPCTSTR pszTitle, LPCTSTR pszPath, LPCTSTR pszRoot
 			ULONG dwAttributes;
 
 			wchar_t str [MAX_PATH];
+#ifdef UNICODE
+			wcscpy(str, pszRoot);
+#else
 			mbtowc (str, pszRoot, _tcslen (pszRoot));
+#endif
 
 			pFolder->ParseDisplayName (NULL, NULL, str, &chEaten, &pIdl, &dwAttributes);
 			pFolder->Release ();

@@ -1,8 +1,9 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
+#include <tchar.h>
 #include <windows.h>
 #include "npapi.h"
 #include "npupp.h"
@@ -14,7 +15,7 @@
 HICON _Icon = NULL;
 NPPluginFuncs* g_plugFuncs;
 HINSTANCE _hModule;
-const LPCSTR _pszWndClass = "FDM OpNetCatcher wnd class";
+const LPCTSTR _pszWndClass = _T("FDM OpNetCatcher wnd class");
 
 LRESULT WINAPI WndProc (HWND hWnd, UINT uMsg, WPARAM wp, LPARAM lp);
 
@@ -90,12 +91,12 @@ void UrlToFdm (LPCSTR pszUrl)
 	HRESULT hr;
 	if (FAILED (hr=CoCreateInstance (CLSID_WGUrlReceiver, NULL, CLSCTX_ALL, IID_IWGUrlReceiver, (void**) &wg)))
 	{
-		char szMsg [1000];
-		lstrcpy (szMsg, "Free Download Manager is not properly installed! Please reinstall Free Download Manager\n\nIf you want to download with your browser please remove \"npfdm.dll\" file in the Plugin directory of your browser.\n\nError code: ");
-		char sz [100];
-		_itoa_s (hr, sz, 100, 16);
+		TCHAR szMsg [1000] = {0,};
+		lstrcpy (szMsg, _T("Free Download Manager is not properly installed! Please reinstall Free Download Manager\n\nIf you want to download with your browser please remove \"npfdm.dll\" file in the Plugin directory of your browser.\n\nError code: "));
+		TCHAR sz [100];
+		_itot_s (hr, sz, 100, 16);
 		lstrcat (szMsg, sz);
-		MessageBox (NULL, szMsg, "Error", MB_ICONERROR);
+		MessageBox (NULL, szMsg, _T("Error"), MB_ICONERROR);
 		return;
 	}
 
@@ -158,7 +159,7 @@ LRESULT WINAPI WndProc (HWND hWnd, UINT uMsg, WPARAM wp, LPARAM lp)
 			GetClientRect (hWnd, &rc);
 			Rectangle (dc, rc.left, rc.top, rc.right, rc.bottom);
 			DrawIcon (dc, 5, 5, _Icon);
-			LPCSTR pszMsg = "Download was transferred to Free Download Manager...\nPlease use \"Back\" button to go back";
+			LPCTSTR pszMsg = _T("Download was transferred to Free Download Manager...\nPlease use \"Back\" button to go back");
 			RECT rcT = rc;
 			rcT.left = 40; rcT.top = 5;
 			DrawText (dc, pszMsg, lstrlen (pszMsg), &rcT, DT_LEFT | DT_TOP);
@@ -185,7 +186,7 @@ NPError NPP_SetWindow (NPP npp, NPWindow* wnd)
 
 	if (npp->pdata == NULL)
 	{
-		npp->pdata = CreateWindowEx (0, _pszWndClass, "", WS_CHILD | WS_VISIBLE, 
+		npp->pdata = CreateWindowEx (0, _pszWndClass, _T(""), WS_CHILD | WS_VISIBLE, 
 			0, 0, wnd->width, wnd->height, hWndParent, NULL, _hModule, NULL);
 	}
 	else

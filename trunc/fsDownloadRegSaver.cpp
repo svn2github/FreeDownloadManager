@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -27,7 +27,7 @@ fsDownloadRegSaver::~fsDownloadRegSaver()
 
 }
 
-fsDLLoadResult fsDownloadRegSaver::Load (vmsDownloadList& vDownloads, LPCSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt, BOOL bErrIfNotExists)
+fsDLLoadResult fsDownloadRegSaver::Load (vmsDownloadList& vDownloads, LPCTSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt, BOOL bErrIfNotExists)
 {
 	HANDLE hFile = INVALID_HANDLE_VALUE;
 	fsDLLoadFromType nlt = DLLFT_SAV; 
@@ -38,12 +38,12 @@ fsDLLoadResult fsDownloadRegSaver::Load (vmsDownloadList& vDownloads, LPCSTR psz
 	switch (lt)
 	{
 	case DLLFT_SAV:
-		strFileName += ".sav";
+		strFileName += _T(".sav");
 		nlt = DLLFT_BAK;
 		break;
 
 	case DLLFT_BAK:
-		strFileName += ".bak";
+		strFileName += _T(".bak");
 		nlt = DLLFT_SAV;
 		break;
 	}
@@ -197,7 +197,7 @@ _lErr:
 	return Load (vDownloads, pszFileName, bDontLoadIfTooLarge, nlt, bErrIfNotExists);
 }
 
-BOOL fsDownloadRegSaver::Save(vmsDownloadList& vDownloads, LPCSTR pszFileName)
+BOOL fsDownloadRegSaver::Save(vmsDownloadList& vDownloads, LPCTSTR pszFileName)
 {
 	
 
@@ -225,8 +225,8 @@ BOOL fsDownloadRegSaver::Save(vmsDownloadList& vDownloads, LPCSTR pszFileName)
 	fsString strFileName = pszFileName;
 	fsString strFileNameBak = pszFileName;
 
-	strFileName += ".sav";
-	strFileNameBak += ".bak";
+	strFileName += _T(".sav");
+	strFileNameBak += _T(".bak");
 
 	strFileName = fsGetDataFilePath (strFileName);
 	strFileNameBak = fsGetDataFilePath (strFileNameBak);
@@ -260,7 +260,7 @@ BOOL fsDownloadRegSaver::Save(vmsDownloadList& vDownloads, LPCSTR pszFileName)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDownloadRegSaver::Save " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDownloadRegSaver::Save " + std::string(ex.what()));
 
 		if (pBuffer)
 			delete [] pBuffer;
@@ -310,7 +310,7 @@ BOOL fsDownloadRegSaver::Save(vmsDownloadList& vDownloads, LPCSTR pszFileName)
 	return bOK;
 }
 
-fsDLLoadResult fsDownloadRegSaver::Load(t_downloads *vDownloads, LPCSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt, BOOL bErrIfNotExists)
+fsDLLoadResult fsDownloadRegSaver::Load(t_downloads *vDownloads, LPCTSTR pszFileName, BOOL bDontLoadIfTooLarge, fsDLLoadFromType lt, BOOL bErrIfNotExists)
 {
 	HANDLE hFile = INVALID_HANDLE_VALUE;
 	fsDLLoadFromType nlt = DLLFT_SAV; 
@@ -321,12 +321,12 @@ fsDLLoadResult fsDownloadRegSaver::Load(t_downloads *vDownloads, LPCSTR pszFileN
 	switch (lt)
 	{
 	case DLLFT_SAV:
-		strFileName += ".sav";
+		strFileName += _T(".sav");
 		nlt = DLLFT_BAK;
 		break;
 
 	case DLLFT_BAK:
-		strFileName += ".bak";
+		strFileName += _T(".bak");
 		nlt = DLLFT_SAV;
 		break;
 	}
@@ -433,7 +433,7 @@ fsDLLoadResult fsDownloadRegSaver::Load(t_downloads *vDownloads, LPCSTR pszFileN
 		catch (const std::exception& ex)
 		{
 			ASSERT (FALSE);
-			vmsLogger::WriteLog("fsDownloadRegSaver::Load " + tstring(ex.what()));
+			vmsLogger::WriteLog("fsDownloadRegSaver::Load " + std::string(ex.what()));
 			goto _lErr;
 		}
 		catch (...)
@@ -476,7 +476,10 @@ BOOL fsDownloadRegSaver::LoadDownload(vmsDownloadSmartPtr dld, LPVOID lpBuffer, 
 	LPBYTE pB = LPBYTE (lpBuffer);
 	DWORD dw = *lpdwSize;
 	LPSTR szStr;
+	LPTSTR tszStr;
 	int iReserved;
+
+	USES_CONVERSION;
 
 	if (FALSE == dld->pMgr->LoadState (pB, &dw, wVer))
 		return FALSE;
@@ -499,12 +502,31 @@ BOOL fsDownloadRegSaver::LoadDownload(vmsDownloadSmartPtr dld, LPVOID lpBuffer, 
 
 	CHECK_BOUNDS (sizeof (dw));
 
+	
+
 	CopyMemory (&dw, pB, sizeof (dw));
 	CHECK_BOUNDS (int (dw));
-	pB += sizeof (dw); fsnew (szStr, CHAR, dw+1);
-	CopyMemory (szStr, pB, dw);
-	szStr [dw] = 0; dld->strComment = szStr; delete [] szStr;
-	pB += dw;
+	pB += sizeof (dw); 
+
+	if (wVer > LAST_ANSI_DL_FILE_VERSION) {
+	
+		fsnew (tszStr, TCHAR, dw+1);
+		CopyMemory (tszStr, pB, dw);
+		tszStr [dw] = 0; dld->strComment = tszStr; delete [] tszStr;
+		pB += dw * sizeof(TCHAR);
+
+	} else {
+
+		fsnew (szStr, CHAR, dw+1);
+		CopyMemory (szStr, pB, dw);
+		szStr [dw] = 0;
+		tstring sStr = CA2CT(szStr);
+		dld->strComment = sStr.c_str(); delete [] szStr;
+		pB += dw;
+
+	}
+
+	
 
 	if (wVer < 9)
 	{
@@ -515,7 +537,7 @@ BOOL fsDownloadRegSaver::LoadDownload(vmsDownloadSmartPtr dld, LPVOID lpBuffer, 
 		pB += sizeof (dw); fsnew (szStr, CHAR, dw+1);
 		CopyMemory (szStr, pB, dw);
 		szStr [dw] = 0; 
-		dld->pGroup = _DldsGrps.FindGroupByName (szStr);
+		dld->pGroup = _DldsGrps.FindGroupByNameA (szStr);
 		delete [] szStr;
 		pB += dw;
 	}
@@ -583,12 +605,31 @@ BOOL fsDownloadRegSaver::LoadDownload(vmsDownloadSmartPtr dld, LPVOID lpBuffer, 
 
 		CHECK_BOUNDS (sizeof (dw));
 
+		
+
 		CopyMemory (&dw, pB, sizeof (dw));
 		CHECK_BOUNDS (int (dw));
-		pB += sizeof (dw); fsnew (szStr, CHAR, dw+1);
-		CopyMemory (szStr, pB, dw);
-		szStr [dw] = 0; ev.strEvent = szStr; delete [] szStr;
-		pB += dw;
+		pB += sizeof (dw); 
+
+		if (wVer > LAST_ANSI_DL_FILE_VERSION) {
+		
+			fsnew (tszStr, TCHAR, dw+1);
+			CopyMemory (tszStr, pB, dw);
+			tszStr [dw] = 0; ev.strEvent = tszStr; delete [] tszStr;
+			pB += dw * sizeof(TCHAR);
+
+		} else {
+
+			fsnew (szStr, CHAR, dw+1);
+			CopyMemory (szStr, pB, dw);
+			szStr [dw] = 0;
+			tstring sStr = CA2CT(szStr);
+			ev.strEvent = sStr.c_str(); delete [] szStr;
+			pB += dw;
+
+		}
+
+		
 
 		dld->vEvents.add (ev);
 	}
@@ -601,11 +642,14 @@ BOOL fsDownloadRegSaver::LoadDownload(vmsDownloadSmartPtr dld, LPVOID lpBuffer, 
 BOOL fsDownloadRegSaver::OLD_LoadDownload(vmsDownloadSmartPtr dld, LPVOID lpBuffer, LPDWORD lpdwSize)
 {
 	#define CHECK_BOUNDS(need) if (need < 0 || need > int(*lpdwSize) - (pB - LPBYTE (lpBuffer))) return FALSE;
+
+	USES_CONVERSION;
 	
 	LPBYTE pB = LPBYTE (lpBuffer);
 	DWORD dw = *lpdwSize;
 	LPSTR szStr;
 	int iReserved = 0;
+	tstring sStr;
 
 	if (FALSE == dld->pMgr->LoadState (pB, &dw, 0))
 		return FALSE;
@@ -632,7 +676,7 @@ BOOL fsDownloadRegSaver::OLD_LoadDownload(vmsDownloadSmartPtr dld, LPVOID lpBuff
 	CHECK_BOUNDS (int (dw));
 	pB += sizeof (dw); fsnew (szStr, CHAR, dw+1);
 	CopyMemory (szStr, pB, dw);
-	szStr [dw] = 0; dld->strComment = szStr; delete [] szStr;
+	szStr [dw] = 0; sStr = CA2CT(szStr); dld->strComment = sStr.c_str(); delete [] szStr;
 	pB += dw;
 
 	CHECK_BOUNDS (sizeof (dw));
@@ -642,7 +686,7 @@ BOOL fsDownloadRegSaver::OLD_LoadDownload(vmsDownloadSmartPtr dld, LPVOID lpBuff
 	pB += sizeof (dw);  fsnew (szStr, CHAR, dw+1);
 	CopyMemory (szStr, pB, dw);
 	szStr [dw] = 0; 
-	dld->pGroup = _DldsGrps.FindGroupByName (szStr);
+	dld->pGroup = _DldsGrps.FindGroupByNameA (szStr);
 	if (dld->pGroup == NULL)
 		dld->pGroup = _DldsGrps.FindGroup (GRP_OTHER_ID);
 	delete [] szStr;
@@ -687,7 +731,7 @@ BOOL fsDownloadRegSaver::OLD_LoadDownload(vmsDownloadSmartPtr dld, LPVOID lpBuff
 		CHECK_BOUNDS (int (dw));
 		pB += sizeof (dw); fsnew (szStr, CHAR, dw+1);
 		CopyMemory (szStr, pB, dw);
-		szStr [dw] = 0; ev.strEvent = szStr; delete [] szStr;
+		szStr [dw] = 0; sStr = CA2CT(szStr); ev.strEvent = sStr.c_str(); delete [] szStr;
 		pB += dw;
 
 		dld->vEvents.add (ev);

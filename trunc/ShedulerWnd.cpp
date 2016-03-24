@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -125,7 +125,7 @@ int CShedulerWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_wndSplitter.SetWnd1 (m_wndTasks);
 	m_wndSplitter.SetWnd2 (m_wndLog);
-	m_wndSplitter.SetRatio (_App.View_SplitterRatio ("Scheduler_T_L"));
+	m_wndSplitter.SetRatio (_App.View_SplitterRatio (_T("Scheduler_T_L")));
 
 	LoadTasks ();
 
@@ -202,9 +202,59 @@ void CShedulerWnd::OnProperties(fsSchedule *task)
 	m_mgr.OnTaskUpdated (task);
 }
 
+void CShedulerWnd::LoadTasks_old(HANDLE hFile)
+{
+	if (!m_mgr.LoadStateFromFile (hFile, 0)) {	
+			CloseHandle (hFile);
+
+		
+
+		return;
+	}
+
+	
+	if (_App.App_2_0_SchedulerFixPerformed () == FALSE)
+	{
+		_App.App_2_0_SchedulerFixPerformed (TRUE);
+
+		int pos;
+
+		while (-1 != (pos = m_mgr.FindTask (WTS_SHUTDOWN)))
+			m_mgr.DeleteTask (m_mgr.GetTask (pos));
+
+		while (-1 != (pos = m_mgr.FindTask (WTS_EXIT)))
+			m_mgr.DeleteTask (m_mgr.GetTask (pos));
+
+		while (-1 != (pos = m_mgr.FindTask (WTS_HANGUP)))
+			m_mgr.DeleteTask (m_mgr.GetTask (pos));
+	}
+	
+
+	int cTasks = m_mgr.GetTaskCount ();
+	for (int i = 0; i < cTasks; i++)
+	{
+		m_wndTasks.AddTask (m_mgr.GetTask (i));
+	}
+
+	
+
+	
+	if (!m_evMgr.Load (hFile, 0))
+		MessageBox (LS (L_CANTLOADSCHEDULERLOG), LS (L_ERR), MB_ICONERROR);
+	else
+	{
+		int cEvents = m_evMgr.GetEventCount ();
+
+		for (int i = 0; i < cEvents; i++)
+			m_wndLog.AddRecord (m_evMgr.GetEvent (i));
+	}
+
+	CloseHandle (hFile);
+}
+
 void CShedulerWnd::LoadTasks()
 {
-	CString strFile = fsGetDataFilePath ("schedules.sav");
+	CString strFile = fsGetDataFilePath (_T("schedules.sav"));
 
 	if (GetFileAttributes (strFile) == DWORD (-1))
 		return;
@@ -220,6 +270,33 @@ void CShedulerWnd::LoadTasks()
 		return;
 	}
 
+	fsSchedulerTasksFileHdr hdr;
+	bool bIsOldver = false;
+
+	if (dwRequiredSize < sizeof(hdr))
+		bIsOldver = true;
+
+	if (!bIsOldver) {
+		DWORD dw;
+		if (!ReadFile (hFile, &hdr, sizeof(hdr), &dw, NULL) || dw != sizeof(hdr)) {
+			return;
+		}
+		if (strncmp(hdr.szSig, SCHEDULER_TASKS_SIG, strlen(SCHEDULER_TASKS_SIG)))
+			bIsOldver = true;
+	}
+
+	if (bIsOldver) {
+		::SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+		
+		LoadTasks_old(hFile);
+		return;
+	}
+
+	if (hdr.wVer > SCHEDULER_TASKS_FILE_CURRENT_VERSION)
+		return;
+
+	dwRequiredSize -= sizeof(hdr);
+
 	std::auto_ptr<BYTE> pbtBufferGuard( new BYTE[dwRequiredSize] );
 	LPBYTE pbtBuffer = pbtBufferGuard.get();
 	if (pbtBuffer == 0) {
@@ -233,7 +310,7 @@ void CShedulerWnd::LoadTasks()
 		return;
 	}
 
-	if (!loadFromStateBuffer(pbtBuffer, &dwRequiredSize, 0)) {
+	if (!loadFromStateBuffer(pbtBuffer, &dwRequiredSize, hdr.wVer)) {
 		CloseHandle (hFile);
 
 		if (m_bIsSchedulerMgrLoadedSuccessfully && !m_bIsEventsMgrLoadedSuccessfully) {
@@ -250,29 +327,6 @@ void CShedulerWnd::LoadTasks()
 	int cEvents = m_evMgr.GetEventCount ();
 	for (int i = 0; i < cEvents; i++)
 		m_wndLog.AddRecord (m_evMgr.GetEvent (i));
-
-	
-	
-	
-
-		
-
-	
-	
-
-	
-	
-	
-	
-
-	
-	
-
-	
-
-	
-	
-	
 }
 
 bool CShedulerWnd::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer)
@@ -287,7 +341,7 @@ fsScheduleMgr* CShedulerWnd::GetMgr()
 	return &m_mgr;
 }
 
-void CShedulerWnd::_ScheduleMgrEventDesc(LPCSTR pszEvent, fsScheduleMgrEventType enType, LPVOID lp)
+void CShedulerWnd::_ScheduleMgrEventDesc(LPCTSTR pszEvent, fsScheduleMgrEventType enType, LPVOID lp)
 {
 	CShedulerWnd *pThis = (CShedulerWnd*) lp;
 
@@ -314,8 +368,8 @@ void CShedulerWnd::_ScheduleMgrEventDesc(LPCSTR pszEvent, fsScheduleMgrEventType
 		break;
 	}
 
-	fsnew (ev.pszEvent, char, strlen (pszEvent) + 1);
-	strcpy (ev.pszEvent, pszEvent);
+	fsnew (ev.pszEvent, TCHAR, _tcslen (pszEvent) + 1);
+	_tcscpy (ev.pszEvent, pszEvent);
 
 	pThis->m_evMgr.add (&ev);
 	pThis->m_wndLog.AddRecord (&ev);
@@ -372,9 +426,9 @@ void CShedulerWnd::SaveAll(DWORD dwWhat)
 
 	if (dwWhat & 2)
 	{
-		_App.View_SplitterRatio ("Scheduler_T_L", m_wndSplitter.GetRatio ());
-		m_wndTasks.SaveState ("SchedulerTasks");
-		m_wndLog.SaveState ("SchedulerLog");
+		_App.View_SplitterRatio (_T("Scheduler_T_L"), m_wndSplitter.GetRatio ());
+		m_wndTasks.SaveState (_T("SchedulerTasks"));
+		m_wndLog.SaveState (_T("SchedulerLog"));
 	}
 }
 
@@ -382,8 +436,8 @@ void CShedulerWnd::Plugin_GetToolBarInfo(wgTButtonInfo **ppButtons, int *pcButto
 {
 	static wgTButtonInfo btns [] = 
 	{
-		wgTButtonInfo (ID_CREATENEWTASK, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_TASKS_PROPERTIES, TBSTYLE_BUTTON, ""),
+		wgTButtonInfo (ID_CREATENEWTASK, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_TASKS_PROPERTIES, TBSTYLE_BUTTON, _T("")),
 	};
 
 	btns [0].pszToolTip = LS (L_NEWTASK);
@@ -598,7 +652,7 @@ void CShedulerWnd::TurnoffWhenDone(fsShutdownType enST, BOOL bUse)
 void CShedulerWnd::Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int * cItems)
 {
 	static wgMenuViewItem aItems [] = {
-		wgMenuViewItem ("", &_pwndScheduler->m_bShowLog),
+		wgMenuViewItem (_T(""), &_pwndScheduler->m_bShowLog),
 	};
 
 	aItems [0].pszName = LS (L_SCHEDULERLOG);
@@ -626,10 +680,10 @@ void CShedulerWnd::ShowLog(BOOL bShow)
 	OnSize (0, rc.right, rc.bottom);
 }
 
-void CShedulerWnd::Plugin_GetPluginNames(LPCSTR *ppszLong, LPCSTR *ppszShort)
+void CShedulerWnd::Plugin_GetPluginNames(LPCTSTR *ppszLong, LPCTSTR *ppszShort)
 {
 	static CString strName;
-	strName = LSNP (L_SCHEDULER);
+	strName = LSNP (L_SCHEDULER).c_str ();
 	*ppszLong = *ppszShort = strName;
 }
 
@@ -641,10 +695,17 @@ BOOL CShedulerWnd::SaveSchedules()
 	DWORD dwRequiredSize = 0;
 	DWORD dw = 0;
 
-	CString strFile = fsGetDataFilePath ("schedules.sav");
+	CString strFile = fsGetDataFilePath (_T("schedules.sav"));
 
 	HANDLE hFile = CreateFile (strFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
 		FILE_ATTRIBUTE_HIDDEN, NULL);
+
+	fsSchedulerTasksFileHdr hdr;
+
+	if (!WriteFile (hFile, &hdr, sizeof(hdr), &dw, NULL) || dw != sizeof(hdr)) {
+		CloseHandle (hFile);
+		return FALSE;
+	}
 
 	getStateBuffer(0, &dwRequiredSize, false);
 
@@ -671,8 +732,6 @@ BOOL CShedulerWnd::SaveSchedules()
 	onStateSavedSuccessfully();
 
 	return TRUE;
-
-	
 }
 
 void CShedulerWnd::getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage)
@@ -702,7 +761,7 @@ void CShedulerWnd::ApplyLanguageToMenuView(CMenu *menu)
 	menu->ModifyMenu (1, MF_BYPOSITION | MF_STRING, 0, LS (L_SCHEDULERLOG));
 
 	UINT aCmds [] = {ID_TASKS_1, ID_TASKS_2, ID_TASKS_3, ID_TASKS_4, ID_LOG_1, ID_LOG_2, ID_LOG_3 };
-	LPCSTR apszCmds [] = {LS (L_WTS), LS (L_HTS), LS (L_NEXTSTART), LS (L_LASTSTART), LS (L_TIME),
+	LPCTSTR apszCmds [] = {LS (L_WTS), LS (L_HTS), LS (L_NEXTSTART), LS (L_LASTSTART), LS (L_TIME),
 		LS (L_DATE), LS (L_INFORMATION)};
 	
 	for (int i = 0; i < sizeof (aCmds) / sizeof (UINT); i++)

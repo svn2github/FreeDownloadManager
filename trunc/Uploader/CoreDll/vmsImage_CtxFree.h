@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSIMAGE_CTXFREE_H__387C75BC_AD47_430E_95FF_8B90F9C49F7B__INCLUDED_)

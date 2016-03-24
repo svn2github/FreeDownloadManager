@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsInternetFile.h"
@@ -29,7 +29,7 @@ fsInternetResult fsInternetFile::Initialize(fsInternetServerConnection *pServer)
 	return IR_SUCCESS;
 }
 
-LPCSTR fsInternetFile::GetLastError()
+LPCTSTR fsInternetFile::GetLastError()
 {
 	return m_pszLastError;
 }
@@ -50,12 +50,12 @@ BOOL fsInternetFile::GetLastModifiedDate(FILETIME *pTime)
 	return m_bDateValid;
 }
 
-BOOL fsInternetFile::GetContentType(LPSTR pszType)
+BOOL fsInternetFile::GetContentType(LPTSTR pszType)
 {
 	*pszType = 0;
 
 	if (m_bContentTypeValid)
-		strcpy (pszType, m_strContentType);
+		_tcscpy (pszType, m_strContentType);
 		
 	return m_bContentTypeValid;
 }
@@ -65,12 +65,12 @@ fsResumeSupportType fsInternetFile::IsResumeSupported()
 	return m_enRST;
 }
 
-LPCSTR fsInternetFile::GetSuggestedFileName()
+LPCTSTR fsInternetFile::GetSuggestedFileName()
 {
 	return m_strSuggFileName;
 }
 
-fsInternetResult fsInternetFile::QuerySize(LPCSTR)
+fsInternetResult fsInternetFile::QuerySize(LPCTSTR)
 {
 	
 	return IR_S_FALSE;
@@ -79,4 +79,14 @@ fsInternetResult fsInternetFile::QuerySize(LPCSTR)
 HINTERNET fsInternetFile::GetRawHandle()
 {
 	return m_hFile;
+}
+
+void fsInternetFile::SetSecurityCheckIgnoreFlags (DWORD flags)
+{
+	m_sctIgnoreFlags = flags;
+}
+
+fsSecurityCheckType fsInternetFile::get_lastSctFailure () const
+{
+	return m_lastSctFailure;
 }

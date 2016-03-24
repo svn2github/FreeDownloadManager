@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -36,7 +36,7 @@ void CFDCButton::Create(CWnd *pWndParent)
 	CWnd::CreateEx (WS_EX_TRANSPARENT,
 			AfxRegisterWndClass (0, NULL,
 				NULL, NULL), 
-			"", WS_CHILD|WS_VISIBLE,
+			_T(""), WS_CHILD|WS_VISIBLE,
 			CRect (0, 0, 120, _TB_SIZE_Y > FDCB_MIN_SIZE ? _TB_SIZE_Y : FDCB_MIN_SIZE+9), pWndParent, 0);
 
 	CRect rc;
@@ -62,7 +62,7 @@ void CFDCButton::SetupButton()
 	m_tbFDC.GetToolBarCtrl ().SetImageList (&m_FDCImage);
 
 	
-	CString strFile = fsGetDataFilePath ("fdmcsbn.ico");
+	CString strFile = fsGetDataFilePath (_T("fdmcsbn.ico"));
 	HANDLE hFile = CreateFile (strFile, GENERIC_WRITE, 0, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
 	if (hFile != INVALID_HANDLE_VALUE)
@@ -78,7 +78,7 @@ void CFDCButton::SetupButton()
 
 	UINT id = ID_FDC;
 	m_tbFDC.SetButtons (&id, 1);
-	m_tbFDC.SetButtonText (0, m_pCusts->get_ButtonInfo ()->pszText);
+	m_tbFDC.SetButtonText (0, wideFromUtf8 (m_pCusts->get_ButtonInfo ()->pszText).c_str ());
 }
 
 void CFDCButton::OnSize(UINT nType, int cx, int cy) 
@@ -99,6 +99,6 @@ int CFDCButton::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 void CFDCButton::OnFDC() 
 {
-	fsOpenUrlInBrowser (m_pCusts->get_ButtonInfo ()->pszLinksTo);
+	fsOpenUrlInBrowser (wideFromUtf8 (m_pCusts->get_ButtonInfo ()->pszLinksTo).c_str ());
 }
 

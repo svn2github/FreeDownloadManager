@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DLG_OPTIONS_PAGE_H__B00A0DA1_8AF4_4293_B6A6_9A25A7734225__INCLUDED_)
@@ -14,13 +14,15 @@ class CDlg_Options_Page : public CDialog
 public:
 	bool isBrowserRestartRequired () {return m_bRestartOfBrowserIsRequired;}
 	void setBrowserRestartRequired (bool b) {m_bRestartOfBrowserIsRequired = b;}
+	bool isApplicationRestartRequired () {return m_bRestartOfApplicationIsRequired;}
+	void setApplicationRestartRequired (bool b) {m_bRestartOfApplicationIsRequired = b;}
 	bool isElevateRequired();
 	LPCTSTR getFdmElevateArgs () const {return m_tstrFdmElevateArgs;}
 	virtual CString get_PageTitle () = NULL;
 	virtual CString get_PageShortTitle () = NULL;
 	virtual BOOL Apply () = NULL;
 
-	LPCSTR get_Template();
+	LPCTSTR get_Template();
 
 	CDlg_Options_Page(UINT u, CWnd* wnd);
 	virtual ~CDlg_Options_Page();
@@ -31,7 +33,7 @@ protected:
 	CString m_tstrFdmElevateArgs;
 	CWnd* get_ReflectParent();
 	int m_nReflectLevel;
-	bool m_bRestartOfBrowserIsRequired;
+	bool m_bRestartOfBrowserIsRequired, m_bRestartOfApplicationIsRequired;
 	virtual void OnCancel();
 	virtual void OnOK ();
 

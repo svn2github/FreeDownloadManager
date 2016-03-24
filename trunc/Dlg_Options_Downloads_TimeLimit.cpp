@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -96,7 +96,7 @@ BOOL CDlg_Options_Downloads_TimeLimit::Apply()
 
 void CDlg_Options_Downloads_TimeLimit::FillTimes(CComboBox *pbox)
 {
-	char sz [100]; SYSTEMTIME st; ZeroMemory (&st, sizeof (st)); 
+	TCHAR sz [100]; SYSTEMTIME st; ZeroMemory (&st, sizeof (st)); 
 
 	pbox->ResetContent ();
 
@@ -104,8 +104,8 @@ void CDlg_Options_Downloads_TimeLimit::FillTimes(CComboBox *pbox)
 	{
 		st.wHour = i;
 		GetTimeFormat (LOCALE_USER_DEFAULT, TIME_NOSECONDS, &st, NULL, sz, 100);
-		if (strlen (sz) <= 2)
-			strcat (sz, LS (L_HR));
+		if (_tcslen (sz) <= 2)
+			_tcscat (sz, LS (L_HR));
 		pbox->AddString (sz);
 	}
 }

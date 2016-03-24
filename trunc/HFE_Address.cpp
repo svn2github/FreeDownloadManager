@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -58,10 +58,10 @@ int CHFE_Address::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	for (int i = 0; i < _LastUrlPaths.GetRecordCount (); i++)
 		m_wndUrl.AddString (_LastUrlPaths.GetRecord (i));
 
-	m_wndUrl.SetWindowText (_LastUrlPaths.GetRecordCount () ? _LastUrlPaths.GetRecord (0) : "ftp://");
+	m_wndUrl.SetWindowText (_LastUrlPaths.GetRecordCount () ? _LastUrlPaths.GetRecord (0) : _T("ftp://"));
 	m_wndUrl.SetReturnID (ID_HFE_GO);
 
-	m_font.CreateFont (15, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "MS Sans Serif");
+	m_font.CreateFont (15, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("MS Sans Serif"));
 
 	CreateBars ();
 	
@@ -119,30 +119,30 @@ void CHFE_Address::OnHfeGo()
 	HfeGo ();
 }
 
-LPCSTR CHFE_Address::GetUrl()
+LPCTSTR CHFE_Address::GetUrl()
 {
 	m_wndUrl.GetWindowText (m_strUrl);
 
 	
-	if (strnicmp (m_strUrl, "ftp.", 4) == 0)
+	if (_tcsncicmp (m_strUrl, _T("ftp."), 4) == 0)
 	{
 		
-		CString str = "ftp://";
+		CString str = _T("ftp://");
 		str += m_strUrl;
 		m_strUrl = str;
 	}
-	else if (strnicmp (m_strUrl, "www.", 3) == 0)	
+	else if (_tcsncicmp (m_strUrl, _T("www."), 3) == 0)	
 	{
 		
-		CString str = "http://";
+		CString str = _T("http://");
 		str += m_strUrl;
 		m_strUrl = str;
 	}
 
-	if (strnicmp (m_strUrl, "ftp://", 6) == 0)
+	if (_tcsncicmp (m_strUrl, _T("ftp://"), 6) == 0)
 	{
-		if (m_strUrl.Right (1) != '/' && m_strUrl.Right (1) != '\\')
-			m_strUrl += '/';
+		if (m_strUrl.Right (1) != _T('/') && m_strUrl.Right (1) != _T('\\'))
+			m_strUrl += _T('/');
 	}
 
 	
@@ -199,7 +199,7 @@ void CHFE_Address::CreateBars()
 	UINT uID = ID_HFE_GO;
 	m_barGo.SetButtons (&uID, 1);
 	
-	m_barGo.SetButtonText (0, "Go");
+	m_barGo.SetButtonText (0, _T("Go"));
 
 	
 	m_barBack.SetSizes (CSize (35, 23), CSize (28, 16));
@@ -224,7 +224,7 @@ void CHFE_Address::CreateBars()
 	m_barBack.GetToolBarCtrl ().EnableButton (ID_HFE_BACK, FALSE);
 }
 
-void CHFE_Address::PushUrl(LPCSTR pszUrl)
+void CHFE_Address::PushUrl(LPCTSTR pszUrl)
 {
 	if (m_vAddrs.size ())
 		if (m_vAddrs [m_vAddrs.size () - 1] == pszUrl)
@@ -239,8 +239,8 @@ void CHFE_Address::PushUrl(LPCSTR pszUrl)
 
 	url.Crack (pszUrl);
 
-	char szUrl [10000];
-	DWORD dw = sizeof (szUrl);
+	TCHAR szUrl [10000];
+	DWORD dw = _countof (szUrl);
 	fsURL url1;
 
 	
@@ -300,11 +300,11 @@ BOOL CHFE_Address::OnNotify(WPARAM , LPARAM lParam, LRESULT *pResult)
 	{
 		case TBN_GETINFOTIPA:	
 		{
-			LPNMTBGETINFOTIPA inf = (LPNMTBGETINFOTIPA) nm;
+			LPNMTBGETINFOTIP inf = (LPNMTBGETINFOTIP) nm;
 			if (nID == ID_HFE_BACK)
-				strcpy (inf->pszText, LS (L_BACK));
+				_tcscpy (inf->pszText, LS (L_BACK));
 			else
-				strcpy (inf->pszText, LS (L_GO));
+				_tcscpy (inf->pszText, LS (L_GO));
 		}
 		break;
 	}

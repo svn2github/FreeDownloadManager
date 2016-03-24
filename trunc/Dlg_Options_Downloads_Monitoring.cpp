@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -10,11 +10,11 @@
 #include "DlgCustomizeIEMenu.h"
 #include "DownloaderProperties_MonitorPage_SkipList.h"
 #include "FolderBrowser.h"
-#include "vistafx/vistafx.h"
 #include "DlgElevateRequired.h"
 #include "vmsElevatedFdm.h"
 #include "vmsFdmUiDetails.h"
 #include "vmsChromeExtensionInstaller.h"
+#include "vmsFdmBrowserPluginMonitoring.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -74,9 +74,13 @@ BOOL CDlg_Options_Downloads_Monitoring::OnInitDialog()
 	}
 	CheckDlgButton (IDC_FIREFOX, bFF ? BST_CHECKED : BST_UNCHECKED);
 
-	bool bChromeEnabled = true;
-	vmsChromeExtensionInstaller::Enabled(bChromeEnabled);
-	BOOL bChrome = _App.Monitor_Chrome() && vmsChromeExtensionInstaller::IsInstalled() && bChromeEnabled;
+	BOOL bChrome = _App.Monitor_Chrome () && vmsChromeExtensionInstaller::IsInstalled ();
+	if (bChrome)
+	{
+		bool bChromeEnabled = true;
+		vmsChromeExtensionInstaller::Enabled (bChromeEnabled);
+		bChrome = bChromeEnabled;
+	}
 	CheckDlgButton (IDC_CHROME, bChrome ? BST_CHECKED : BST_UNCHECKED);
 	
 	
@@ -137,78 +141,21 @@ BOOL CDlg_Options_Downloads_Monitoring::Apply()
 	BOOL bRR = FALSE;	
 
 	BOOL bFF = IsDlgButtonChecked (IDC_FIREFOX) == BST_CHECKED;
-	if (bFF && vmsFirefoxMonitoring::IsInstalled () == false)
-	{
-		if (vmsFirefoxMonitoring::Install (true) == false)
-		{
-			MessageBox (LS (L_CANTINITFFMONITOR), LS (L_ERR), MB_ICONERROR);
-			CheckDlgButton (IDC_FIREFOX, BST_UNCHECKED);
-			bFF = FALSE;
-		}
-	}
-	if (bFF && vmsFirefoxMonitoring::IsFlashGotInstalled ())
-	{
-		MessageBox (LS (L_FLASHGOTDETECTED), vmsFdmAppMgr::getAppName (), MB_ICONWARNING);
-		CheckDlgButton (IDC_FIREFOX, BST_UNCHECKED);
-		bFF = FALSE;
-	}
-	if (bFF)
-	{
-		DWORD dwResult = 0;
-		((CFdmApp*)AfxGetApp ())->CheckFirefoxExtension (&dwResult);
-		if (dwResult)
-		{
-			if (!(dwResult & (1<<1)))
-			{
-				CheckDlgButton (IDC_FIREFOX, BST_UNCHECKED);
-				bFF = FALSE;
-			}
-			else
-			{
-				
-				_App.get_SettingsStore ()->WriteProfileInt (_T ("State"), _T ("FfExtChecked"), FALSE);
-			}
-		}
-	}
-	if (bFF)
-		dwMUSO |= MONITOR_USERSWITCHEDON_FIREFOX;
-	_App.Monitor_Firefox (bFF);
-	if (bFF)
-		vmsFirefoxMonitoring::Install (true); 
 
-	BOOL bChrome = IsDlgButtonChecked(IDC_CHROME) == BST_CHECKED;
-	bool bChromeEnabled = true;
-	vmsChromeExtensionInstaller::Enabled(bChromeEnabled);
-	BOOL bOldChrome = _App.Monitor_Chrome() && vmsChromeExtensionInstaller::IsInstalled() && bChromeEnabled;
-	_App.Monitor_Chrome (bChrome);
-	if(bChrome)
-	{
-		if(!bOldChrome && !vmsChromeExtensionInstaller::IsInstalled())
-		{
-			if(!vmsChromeExtensionInstaller::Install())
-				MessageBox (LS (L_CANTINITCHROMEMONITOR), LS (L_ERR), MB_ICONERROR);
-			if(!vmsChromeExtensionInstaller::IsInstalled())
-			{
-				_App.Monitor_Chrome (FALSE);
-				bChrome = FALSE;
-			}
-		}
-		else
-		{
-			if(!bOldChrome && vmsChromeExtensionInstaller::IsInstalled() && bChromeEnabled)
-				bRR = TRUE;
-		}
+	bFF = vmsFdmBrowserPluginMonitoring::MonitorFF( bFF, bRR );
+	
+	if (bFF){		
+		dwMUSO |= MONITOR_USERSWITCHEDON_FIREFOX;
 	}
 	else
-	{
-		
-		if(bOldChrome)
-			bRR = TRUE;
-	}
-	if(bChrome)
-		if(!bChromeEnabled)
-			vmsChromeExtensionInstaller::Enable();
+		CheckDlgButton (IDC_FIREFOX, BST_UNCHECKED);	
 
+	bool bChrome = IsDlgButtonChecked(IDC_CHROME) == BST_CHECKED;
+	bool needRestartChrome;
+	vmsFdmBrowserPluginMonitoring::MonitorChrome( &bChrome, &needRestartChrome );
+	if (needRestartChrome)
+		bRR = TRUE;
+	
 	
 	if ((bIE2 == FALSE && bIE2Active) || (bIE2 && bIE2Active == FALSE))
 	{
@@ -216,7 +163,12 @@ BOOL CDlg_Options_Downloads_Monitoring::Apply()
 		{
 			BOOL bOK = _IECatchMgr.InstallIeIntegration (TRUE, IS_PORTABLE_MODE);
 			if (!bOK)
-				bOK = vmsElevatedFdm::o ().InstallIeIntegration (true);
+			{
+				if (!IS_PORTABLE_MODE)
+					bOK = _IECatchMgr.InstallIeIntegration (TRUE, TRUE);
+				if (!bOK)
+					bOK = vmsElevatedFdm::o ().InstallIeIntegration (true);
+			}
 			if (!bOK)
 			{
 				MessageBox (LS (L_ERRIE), LS (L_ERR), MB_ICONERROR);

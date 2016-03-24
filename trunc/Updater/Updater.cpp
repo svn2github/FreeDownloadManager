@@ -1,11 +1,12 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
+#include <tchar.h>
 #include <string>
 
-HANDLE StartProcess (LPCSTR pszName, LPCSTR pszArgs)
+HANDLE StartProcess (LPCTSTR pszName, LPCTSTR pszArgs)
 {
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
@@ -14,13 +15,13 @@ HANDLE StartProcess (LPCSTR pszName, LPCSTR pszArgs)
 	si.cb = sizeof (si);
 	ZeroMemory (&pi, sizeof (pi));
 
-	char sz [MAX_PATH] = "\"";
+	TCHAR sz [MAX_PATH] = _T("\"");
 	lstrcat (sz, pszName);
-	lstrcat (sz, "\"");
+	lstrcat (sz, _T("\""));
 	
 	if (pszArgs && *pszArgs)
 	{
-		lstrcat (sz, " ");
+		lstrcat (sz, _T(" "));
 		lstrcat (sz, pszArgs);
 	}
 
@@ -40,48 +41,48 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
 	
 
-	if (*lpCmdLine++ != '"')
+	if (*lpCmdLine++ != _T('"'))
 		return 0;
 
-	std::string strProcessExe, strAppMutex, strUpgradeExe, strUpgradeExeArgs,
+	tstring strProcessExe, strAppMutex, strUpgradeExe, strUpgradeExeArgs,
 		strDeleteDistribFlags;
 
-	while (*lpCmdLine && *lpCmdLine != '"')
+	while (*lpCmdLine && *lpCmdLine != _T('"'))
 		strProcessExe += *lpCmdLine++;
 	if (*lpCmdLine == 0)
 		return 0;
 	lpCmdLine += 2;
 
-	if (*lpCmdLine++ != '"')
+	if (*lpCmdLine++ != _T('"'))
 		return 0;
-	while (*lpCmdLine && *lpCmdLine != '"')
+	while (*lpCmdLine && *lpCmdLine != _T('"'))
 		strAppMutex += *lpCmdLine++;
 	if (*lpCmdLine == 0)
 		return 0;
 	lpCmdLine += 2;
 
-	if (*lpCmdLine++ != '"')
+	if (*lpCmdLine++ != _T('"'))
 		return 0;
-	while (*lpCmdLine && *lpCmdLine != '"')
+	while (*lpCmdLine && *lpCmdLine != _T('"'))
 		strUpgradeExe += *lpCmdLine++;
 	if (*lpCmdLine == 0)
 		return 0;
 	lpCmdLine += 2;
 
-	if (*lpCmdLine++ != '"')
+	if (*lpCmdLine++ != _T('"'))
 		return 0;
-	while (*lpCmdLine && *lpCmdLine != '"')
+	while (*lpCmdLine && *lpCmdLine != _T('"'))
 		strUpgradeExeArgs += *lpCmdLine++;
 	if (*lpCmdLine == 0)
 		return 0;
 	lpCmdLine += 2;
 
-	if (*lpCmdLine++ != '"')
+	if (*lpCmdLine++ != _T('"'))
 		return 0;
-	while (*lpCmdLine && *lpCmdLine != '"')
+	while (*lpCmdLine && *lpCmdLine != _T('"'))
 		strDeleteDistribFlags += *lpCmdLine++;
 	
-	if (strProcessExe == "" || strAppMutex == "" || strUpgradeExe == "")
+	if (strProcessExe == _T("") || strAppMutex == _T("") || strUpgradeExe == _T(""))
 		return 0;
 
 	
@@ -101,11 +102,11 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	HANDLE hUpdate = StartProcess (strUpgradeExe.c_str (), strUpgradeExeArgs.c_str ());
 
 	if (hUpdate == NULL)
-		MessageBox (NULL, "Can't find upgrade distributive file.", "Update error", MB_ICONERROR);
+		MessageBox (NULL, _T("Can't find upgrade distributive file."), _T("Update error"), MB_ICONERROR);
 	else
 		WaitForSingleObject (hUpdate, INFINITE);
 
-	if (strDeleteDistribFlags == "1")
+	if (strDeleteDistribFlags == _T("1"))
 		DeleteFile (strUpgradeExe.c_str ());
 
 	

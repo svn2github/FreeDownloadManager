@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -9,10 +9,14 @@
 
 void vmsLogger::WriteLog(const tstring& message)
 {
-	tstring logFile = fsGetDataFilePath("fdmlog.txt");
+	tstring logFile = fsGetDataFilePath(_T("fdmlog.txt"));
+
+	tstringstream tss;
+	tss << GetTimeStamp() << _T(" ") << message << std::endl;
 
 	std::fstream file(logFile, std::ios_base::app);
-	file << GetTimeStamp() << _T(" ") << message << std::endl;
+	file << stringFromTstring (tss.str ());
+	
 }
 
 tstring vmsLogger::GetTimeStamp()
@@ -27,3 +31,10 @@ tstring vmsLogger::GetTimeStamp()
 
 	return bufa.str();
 }
+
+#ifdef UNICODE
+void vmsLogger::WriteLog(const std::string& message)
+{
+	WriteLog (tstringFromString (message));
+}
+#endif

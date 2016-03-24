@@ -8,3 +8,4 @@ EXPORTS
 	DllRegisterServer   PRIVATE
 	DllUnregisterServer	PRIVATE
 	fdmbho_getTabUrl
+	vmsInstaller

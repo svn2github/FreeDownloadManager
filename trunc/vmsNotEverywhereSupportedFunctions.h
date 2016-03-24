@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSNOTEVERYWHERESUPPORTEDFUNCTIONS_H__0FED89AF_F5BC_411C_9AC5_7E54AC78C984__INCLUDED_)
@@ -12,7 +12,9 @@
 class vmsNotEverywhereSupportedFunctions  
 {
 public:
-	static LONG RegOverridePredefKey (HKEY, HKEY);
+	static LONG RegOverridePredefKey (HKEY, HKEY);	
+	static BOOL OverrideHKCRForUser();
+	static BOOL ResetHKCR();
 	vmsNotEverywhereSupportedFunctions();
 	virtual ~vmsNotEverywhereSupportedFunctions();
 };

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -115,16 +115,16 @@ BOOL CDownloads_Tasks::Create(CWnd *pParent)
 	m_selimages.Add (&bmp2, RGB (255, 0, 255));
 	SetSelectedImages (&m_selimages);
 
-	InsertColumn (0, "", LVCFMT_LEFT, 200, 0);
-	InsertColumn (1, "", LVCFMT_LEFT, 50, 0);
-	InsertColumn (2, "", LVCFMT_LEFT, 100, 0);
-	InsertColumn (3, "", LVCFMT_LEFT, 60, 0);
-	InsertColumn (4, "", LVCFMT_LEFT, 58, 0);
-	InsertColumn (5, "", LVCFMT_LEFT, 70, 0);
-	InsertColumn (6, "", LVCFMT_LEFT, 200, 0);
-	InsertColumn (7, "", LVCFMT_LEFT, 120, 0);
+	InsertColumn (0, _T(""), LVCFMT_LEFT, 200, 0);
+	InsertColumn (1, _T(""), LVCFMT_LEFT, 50, 0);
+	InsertColumn (2, _T(""), LVCFMT_LEFT, 100, 0);
+	InsertColumn (3, _T(""), LVCFMT_LEFT, 60, 0);
+	InsertColumn (4, _T(""), LVCFMT_LEFT, 58, 0);
+	InsertColumn (5, _T(""), LVCFMT_LEFT, 70, 0);
+	InsertColumn (6, _T(""), LVCFMT_LEFT, 200, 0);
+	InsertColumn (7, _T(""), LVCFMT_LEFT, 120, 0);
 
-	ReadState ("DownloadsList");
+	ReadState (_T("DownloadsList"));
 	InitSortImages ();	
 
 	ShowWindow (SW_SHOW);
@@ -297,7 +297,7 @@ void CDownloads_Tasks::UpdateActiveDownload(int adjSelected)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloads_Tasks::UpdateActiveDownload " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloads_Tasks::UpdateActiveDownload " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -363,7 +363,7 @@ void CDownloads_Tasks::DeleteSelected(BOOL bDontConfirmFileDeleting)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloads_Tasks::DeleteSelected " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloads_Tasks::DeleteSelected " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -471,12 +471,17 @@ void CDownloads_Tasks::OnDldstop()
 
 	if (pos == NULL)
 		return;
+
+	bool bExistsRunningYouTubeDownload = false;
 	
 	while (pos)
 	{
 		vmsDownloadSmartPtr dld = m_vDownloads [GetNextSelectedItem (pos)];
-		if (dld->pMgr->IsRunning ())
-			vDlds.push_back (dld);
+		if (dld->pMgr->IsRunning()){
+			vDlds.push_back(dld);
+			if (dld->isYouTube())
+				bExistsRunningYouTubeDownload = true;
+		}
 		else if (dld->bAutoStart)
 		{
 			dld->bAutoStart = FALSE;
@@ -484,6 +489,9 @@ void CDownloads_Tasks::OnDldstop()
 			UpdateDownload (dld);
 		}
 	}	
+	if (bExistsRunningYouTubeDownload && (MessageBox(LS(L_YOUTUBE_MESSAGE_ON_STOP), _T("Free Download Manager"), MB_OKCANCEL | MB_ICONWARNING) == IDCANCEL)){
+		return;
+	}
 
 	if (vDlds.size ())
 		_DldsMgr.StopDownloads (vDlds, TRUE);
@@ -690,7 +698,7 @@ void CDownloads_Tasks::UpdateMenu(CMenu *pPopup)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloads_Tasks::UpdateMenu " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloads_Tasks::UpdateMenu " + std::string(ex.what()));
 		UpdateMenu (pPopup);
 	}
 	catch (...)
@@ -875,7 +883,7 @@ int CDownloads_Tasks::OnUpdateToolBar(UINT nID)
 			catch (const std::exception& ex)
 			{
 				ASSERT (FALSE);
-				vmsLogger::WriteLog("CDownloads_Tasks::OnUpdateToolBar " + tstring(ex.what()));
+				vmsLogger::WriteLog("CDownloads_Tasks::OnUpdateToolBar " + std::string(ex.what()));
 			}
 			catch (...)
 			{
@@ -1254,14 +1262,14 @@ void CDownloads_Tasks::Sort()
 	}
 }
 
-void CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld, LPSTR pszFileName)
+void CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld, LPTSTR pszFileName)
 {
-	strcpy (pszFileName, GetFileName (dld).c_str ());
+	_tcscpy (pszFileName, GetFileName (dld).c_str ());
 }
 
-std::string CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld)
+tstring CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld)
 {
-	std::string strResult;
+	tstring strResult;
 
 	if (dld->pMgr->GetTpDownloadMgr ())
 	{
@@ -1274,11 +1282,11 @@ std::string CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld)
 		
 		
 		if (str.IsEmpty ())
-			return "";
+			return _T("");
 
-		if (str [str.GetLength () - 1] != '\\')
+		if (str [str.GetLength () - 1] != _T('\\'))
 		{
-			LPCSTR psz = strrchr (str, '\\');
+			LPCTSTR psz = _tcsrchr (str, _T('\\'));
 			if (psz)
 				str	= psz + 1;
 		}
@@ -1301,18 +1309,18 @@ std::string CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld)
 		ASSERT (fl > 0);
 
 		if (!fl)
-			return "index.html";
+			return _T("index.html");
 
 		
-		if (strFile [fl-1] == '\\' || strFile [fl-1] == '/')
+		if (strFile [fl-1] == _T('\\') || strFile [fl-1] == _T('/'))
 		{
-			LPCSTR psz = pMgr->GetDownloader ()->Get_FileName ();
+			LPCTSTR psz = pMgr->GetDownloader ()->Get_FileName ();
 
 			if (psz && *psz)
 				strResult = psz;
 			else
 			{
-				char sz [10000] = "";
+				TCHAR sz [10000] = _T("");
 				
 				fsFileNameFromUrlPath (pMgr->GetDNP ()->pszPathName, 
 					pMgr->GetDNP ()->enProtocol == NP_FTP, TRUE, sz, 10000);
@@ -1321,20 +1329,20 @@ std::string CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld)
 		}
 		else
 		{
-			char sz [10000] = "";
+			TCHAR sz [10000] = _T("");
 			
 			
 			fsGetFileName (strFile, sz);
 			if (pMgr->GetDP ()->pszAdditionalExt && *pMgr->GetDP ()->pszAdditionalExt)
 			{
-				char* pszAddExt = sz;
+				TCHAR* pszAddExt = sz;
 				while (TRUE)
 				{
-					pszAddExt = strstr (pszAddExt, pMgr->GetDP ()->pszAdditionalExt);
+					pszAddExt = _tcsstr (pszAddExt, pMgr->GetDP ()->pszAdditionalExt);
 					if (pszAddExt == NULL)
 						break;
 
-					if (*(pszAddExt-1) == '.' && *(pszAddExt + strlen (pMgr->GetDP ()->pszAdditionalExt)) == 0)
+					if (*(pszAddExt-1) == _T('.') && *(pszAddExt + _tcslen (pMgr->GetDP ()->pszAdditionalExt)) == 0)
 						break;
 
 					pszAddExt++;
@@ -1347,7 +1355,7 @@ std::string CDownloads_Tasks::GetFileName(vmsDownloadSmartPtr dld)
 		}
 
 		if (strResult.empty ())	
-			strResult = "index.html";	
+			strResult = _T("index.html");	
 	}
 
 	return strResult;
@@ -1471,7 +1479,7 @@ void CDownloads_Tasks::OnGetdispinfo(NMHDR *pNMHDR, LRESULT *pResult)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloads_Tasks::OnGetdispinfo " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloads_Tasks::OnGetdispinfo " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1485,21 +1493,21 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 	
 	if (nSubItem == 0)
 	{
-		CHAR szFile [10000];	
-		GetFileName (dld, szFile);
-		if (lstrlen (szFile) > 233)
+		TCHAR tszFile [10000];	
+		GetFileName (dld, tszFile);
+		if (lstrlen (tszFile) > 233)
 		{
-			szFile [233] = 0;
-			lstrcat (szFile, "...");
+			tszFile [233] = 0;
+			lstrcat (tszFile, _T("..."));
 		}
-		return szFile;
+		return tszFile;
 	}
 
 	
 	if (nSubItem == 1)
 	{
 		if (dld->pMgr->IsBittorrent () == FALSE && dld->pMgr->GetNumberOfSections () == 0)
-			return "";
+			return _T("");
 
 		UINT64 uSize = dld->pMgr->GetLDFileSize ();
 
@@ -1512,7 +1520,7 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 				if (nToDownload != uSize)
 				{
 					CString str;
-					str.Format ("%s (%s)", (LPCSTR)BytesToString (nToDownload), (LPCSTR)BytesToString (uSize));
+					str.Format (_T("%s (%s)"), (LPCTSTR)BytesToString (nToDownload), (LPCTSTR)BytesToString (uSize));
 					return str;
 				}
 			}
@@ -1520,21 +1528,21 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 			return BytesToString (uSize);
 		}
 		else
-			return "?";	
+			return _T("?");	
 	}
 
 	
 	if (nSubItem == 2)
 	{
 		if (dld->pMgr->IsBittorrent () == FALSE && dld->pMgr->GetNumberOfSections () == 0)
-			return "";
+			return _T("");
 
 		if (dld->pMgr->IsBittorrent () && dld->pMgr->IsReservingDiskSpace ())
 		{
 			CString str;
 			if (dld->pMgr->get_ReservingDiskSpaceProgress () == -1)
-				return "RD";
-			str.Format ("RD: %d%%", dld->pMgr->get_ReservingDiskSpaceProgress ());
+				return _T("RD");
+			str.Format (_T("RD: %d%%"), dld->pMgr->get_ReservingDiskSpaceProgress ());
 			return str;
 		}
 
@@ -1555,18 +1563,18 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 				if (_pwndDownloads->IsSizesInBytes () == FALSE)
 				{
 					float val, val0;
-					char szDim [10], szDim0 [10];
+					TCHAR szDim [100], szDim0 [100];
 					BytesToXBytes (uDone, &val, szDim);
 					BytesToXBytes (nDownloaded, &val0, szDim0);
-					str.Format ("%d%% [%.*g %s] (%d%% [%.*g %s])", iPercents, val0 > 999 ? 4 : 3, (double)val0, szDim0,
+					str.Format (_T("%d%% [%.*g %s] (%d%% [%.*g %s])"), iPercents, val0 > 999 ? 4 : 3, (double)val0, szDim0,
 						(int)((double)(INT64)uDone / (INT64)uSize * 100), val > 999 ? 4 : 3, (double)val, szDim);
 				}
 				else
 				{
 					CString s = fsBytesToStr (uDone);
 					CString s0 = fsBytesToStr (nDownloaded);
-					str.Format ("%d%% [%s] (%d%% [%s])", iPercents, (LPCSTR)s0,
-						(int)((double)(INT64)uDone / (INT64)uSize * 100), (LPCSTR)s);
+					str.Format (_T("%d%% [%s] (%d%% [%s])"), iPercents, (LPCTSTR)s0,
+						(int)((double)(INT64)uDone / (INT64)uSize * 100), (LPCTSTR)s);
 				}
 				return str;
 			}
@@ -1575,20 +1583,20 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 		if (_pwndDownloads->IsSizesInBytes () == FALSE)
 		{
 			float val;
-			char szDim [10];
+			TCHAR szDim [100];
 			BytesToXBytes (uDone, &val, szDim);
 			if (dld->pMgr->IsTp() && dld->pMgr->GetPercentDone () == -1)
-				str.Format ("%.*g %s [%s]", val > 999 ? 4 : 3, val, szDim, LS (L_LIVESTREAMING));
+				str.Format (_T("%.*g %s [%s]"), val > 999 ? 4 : 3, val, szDim, LS (L_LIVESTREAMING));
 			else if (uSize != _UI64_MAX && uSize != 0)
-				str.Format ("%d%% [%.*g %s]", (int)((double)(INT64)uDone / (INT64)uSize * 100), val > 999 ? 4 : 3, val, szDim);
+				str.Format (_T("%d%% [%.*g %s]"), (int)((double)(INT64)uDone / (INT64)uSize * 100), val > 999 ? 4 : 3, val, szDim);
 			else
-				str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+				str.Format (_T("%.*g %s"), val > 999 ? 4 : 3, val, szDim);
 		}
 		else
 		{
 			CString s = fsBytesToStr (uDone);
 			if (uSize != _UI64_MAX)
-				str.Format ("%d%% [%s]", (int)((double)(INT64)uDone / (INT64)uSize * 100), s);
+				str.Format (_T("%d%% [%s]"), (int)((double)(INT64)uDone / (INT64)uSize * 100), s);
 			else
 				str = s;
 		}
@@ -1600,15 +1608,15 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 	if (nSubItem == 3)
 	{
 		if (dld->pMgr->IsRunning () == FALSE)
-			return "";
+			return _T("");
 		
 		UINT64 uSpeed = dld->pMgr->GetSpeed ();
 		if (uSpeed == 0)
-			return "";		
+			return _T("");		
 
 		UINT64 uLeft = dld->pMgr->GetBytesLeft ();
 		if (uLeft == _UI64_MAX)
-			return "";
+			return _T("");
 
 		if (dld->pMgr->IsBittorrent ())
 		{
@@ -1626,7 +1634,7 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 	if (nSubItem == 4)
 	{
 		CString str;
-		str.Format ("%d/%d", dld->pMgr->GetDownloadingSectionCount (), 
+		str.Format (_T("%d/%d"), dld->pMgr->GetDownloadingSectionCount (), 
 			dld->pMgr->GetNumberOfSections ());
 		return str;
 	}
@@ -1639,24 +1647,24 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 			if (dld->pMgr->IsBittorrent () && dld->pMgr->GetBtDownloadMgr ()->isSeeding ())
 			{
 				CString str;
-				str.Format ("%s/%s; %s/%s", BytesToString (0), LS (L_S),
+				str.Format (_T("%s/%s; %s/%s"), BytesToString (0), LS (L_S),
 					BytesToString (dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ()), LS (L_S));
 				return str;
 			}
 
-			return "";
+			return _T("");
 		}
 
 		CString str;
 
 		if (dld->pMgr->IsBittorrent () && dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed () != 0)
 		{
-			str.Format ("%s/%s; %s/%s", BytesToString (dld->pMgr->GetSpeed ()), LS (L_S),
+			str.Format (_T("%s/%s; %s/%s"), BytesToString (dld->pMgr->GetSpeed ()), LS (L_S),
 				BytesToString (dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed ()), LS (L_S));
 		}
 		else
 		{
-			str.Format ("%s/%s", BytesToString (dld->pMgr->GetSpeed ()), LS (L_S));
+			str.Format (_T("%s/%s"), BytesToString (dld->pMgr->GetSpeed ()), LS (L_S));
 		}
 		return str;
 	}
@@ -1665,21 +1673,21 @@ CString CDownloads_Tasks::GetDownloadText(vmsDownloadSmartPtr dld, int nSubItem)
 	if (nSubItem == 6)
 	{
 		CString str = dld->strComment;
-		str.Replace ("\r", " ");
-		str.Replace ("\n", " ");
+		str.Replace (_T("\r"), _T(" "));
+		str.Replace (_T("\n"), _T(" "));
 		return str;
 	}
 
 	
 	if (nSubItem == 7)
 	{
-		char szDate [100], szTime [100];
+		TCHAR szDate [100], szTime [100];
 		FileTimeToStr (&dld->dateAdded, szDate, szTime, TRUE);
-		CString str = szDate; str += ", "; str += szTime;
+		CString str = szDate; str += _T(", "); str += szTime;
 		return str;
 	}
 
-	return "";
+	return _T("");
 }
 
 void CDownloads_Tasks::DeleteAllItems()
@@ -1697,64 +1705,58 @@ void CDownloads_Tasks::SortDownloads()
 	if (N < 2)
 		return;
 
-	vmsDownloadSmartPtr *pDlds = new vmsDownloadSmartPtr [N];
+	std::vector <vmsDownloadSmartPtr> vDldsSorted;
 
 	int i = 0;
 	for (i = 0; i < N; i++)
-		pDlds [i] = m_vDownloads [i];
+		vDldsSorted.push_back (m_vDownloads [i]);
 
 	switch (m_iSortCol)
 	{
 	case 0:
-		qsort (pDlds, N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByFileName);
+		qsort (&vDldsSorted.front (), N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByFileName);
 		break;
 
 	case 1:
-		qsort (pDlds, N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByLDFileSize);
+		qsort (&vDldsSorted.front (), N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByLDFileSize);
 		break;
 
 	case 2:
-		qsort (pDlds, N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByDownloadedByteCount);
+		qsort (&vDldsSorted.front (), N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByDownloadedByteCount);
 		break;
 
 	case 3:
-		qsort (pDlds, N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByTimeRamaining);
+		qsort (&vDldsSorted.front (), N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByTimeRamaining);
 		break;
 
 	case 4:
-		qsort (pDlds, N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByNumberOfSections);
+		qsort (&vDldsSorted.front (), N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByNumberOfSections);
 		break;
 
 	case 5:
-		qsort (pDlds, N, sizeof (vmsDownloadSmartPtr), _compareDownloadsBySpeed);
+		qsort (&vDldsSorted.front (), N, sizeof (vmsDownloadSmartPtr), _compareDownloadsBySpeed);
 		break;
 
 	case 6:
-		qsort (pDlds, N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByComment);
+		qsort (&vDldsSorted.front (), N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByComment);
 		break;
 
 	case 7:
-		qsort (pDlds, N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByDateAdded);
+		qsort (&vDldsSorted.front (), N, sizeof (vmsDownloadSmartPtr), _compareDownloadsByDateAdded);
 		break;
 
 	default:
 		ASSERT (FALSE);
-		delete [] pDlds;
 		return;
 	}
 
-	DLDS_LIST vOld = m_vDownloads;
+	DLDS_LIST vOld (m_vDownloads);
 
-	m_vDownloads.clear ();
+	_DldsMgr.ReorderDownloads (vOld, vDldsSorted, true);
 
-	for (i = 0; i < N; i++)
-		m_vDownloads.push_back (pDlds [i]);
+	m_vDownloads.swap (vDldsSorted);
 
-	delete [] pDlds;
-
-	_DldsMgr.ReorderDownloads (vOld, m_vDownloads, true);
-
-	RedrawItems (0, GetItemCount ()-1);
+	RedrawItems (0, GetItemCount () - 1);
 }
 
 vmsDownloadSmartPtr CDownloads_Tasks::GetItemData(int nItem)
@@ -1791,12 +1793,12 @@ void CDownloads_Tasks::OnDldunpack()
 	CDlg_UnpackSettings dlgS;
 
 	dlgS.m_strDstFolder = strArchive;
-	dlgS.m_strDstFolder.Replace ('/', '\\');
+	dlgS.m_strDstFolder.Replace (_T('/'), _T('\\'));
 
-	LPCSTR pszE = strrchr (dlgS.m_strDstFolder, '\\');
+	LPCTSTR pszE = _tcsrchr (dlgS.m_strDstFolder, _T('\\'));
 	if (pszE)
-		dlgS.m_strDstFolder.Insert (pszE - dlgS.m_strDstFolder + 1, "_extracted\\");
-	dlgS.m_strDstFolder += ".extracted\\";
+		dlgS.m_strDstFolder.Insert (pszE - dlgS.m_strDstFolder + 1, _T("_extracted\\"));
+	dlgS.m_strDstFolder += _T(".extracted\\");
 
 	if (IDCANCEL == _DlgMgr.DoModal (&dlgS))
 		return;
@@ -1909,7 +1911,7 @@ void CDownloads_Tasks::OnDldcheckintegrity()
 	if (dld->pMgr->GetDownloadMgr () == NULL)
 		return;
 
-	LPCSTR pszFile = dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
+	LPCTSTR pszFile = dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
 
 	if (GetFileAttributes (pszFile) == DWORD (-1))
 		return;
@@ -1925,7 +1927,7 @@ void CDownloads_Tasks::OnDldcheckintegrity()
 		return;
 
 	SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum);
-	dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum = new char [dlg.m_strChecksum.GetLength () + 1];
+	dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum = new TCHAR [dlg.m_strChecksum.GetLength () + 1];
 	lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszCheckSum, dlg.m_strChecksum);
 	dld->pMgr->GetDownloadMgr ()->GetDP ()->dwIntegrityCheckAlgorithm = MAKELONG (dlg.m_nAlgorithm, dlg.m_nSHA2Strength);
 	dld->pMgr->GetDownloadMgr ()->setDirty();
@@ -1943,7 +1945,7 @@ void CDownloads_Tasks::OnDldcheckintegrity()
 	{
 		CDlg_CheckFileIntegrity_Result dlg3;
 		dlg3.m_bResultOK = dlg2.is_CheckingSucceeded ();
-		char sz [MY_MAX_PATH];
+		TCHAR sz [MY_MAX_PATH];
 		fsGetFileName (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, sz);
 		dlg3.m_strFileName = sz;
 		dlg3.m_strUrl = dld->pMgr->GetDownloadMgr ()->GetDownloader ()->get_URL ();
@@ -2185,7 +2187,7 @@ int CDownloads_Tasks::_compareDownloadsByFileName(LPCVOID p1, LPCVOID p2)
 {
 	vmsDownloadSmartPtr *a1 = (vmsDownloadSmartPtr*)p1;
 	vmsDownloadSmartPtr *a2 = (vmsDownloadSmartPtr*)p2;
-	char szFile1 [10000];  char szFile2 [10000];
+	TCHAR szFile1 [10000];  TCHAR szFile2 [10000];
 	GetFileName (*a1, szFile1);
 	GetFileName (*a2, szFile2);
 	return lstrcmpi (szFile1, szFile2);

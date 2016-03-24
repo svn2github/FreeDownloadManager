@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSSINGLEINSTANCE_H__63F59A67_04AD_4F96_B174_02D846146257__INCLUDED_)
@@ -26,7 +26,7 @@ public:
 	void set_1stInstanceHWND (HWND hwnd);
 
 	
-	vmsSingleInstance(LPCSTR pszAppName);
+	vmsSingleInstance(LPCTSTR pszAppName);
 	virtual ~vmsSingleInstance();
 
 protected:

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -56,7 +56,7 @@ int CHFE_ListLog::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_wndSplitter.SetWnd1 (m_wndFileList);
 	m_wndSplitter.SetWnd2 (m_wndLog);
-	m_wndSplitter.SetRatio (_App.View_SplitterRatio ("HFE_FL_L"));
+	m_wndSplitter.SetRatio (_App.View_SplitterRatio (_T("HFE_FL_L")));
 
 	ShowLog (m_bShowLog);
 	
@@ -87,9 +87,9 @@ void CHFE_ListLog::ShowLog(BOOL bShow)
 
 void CHFE_ListLog::SaveState()
 {
-	_App.View_SplitterRatio ("HFE_FL_L", m_wndSplitter.GetRatio ());
-	m_wndFileList.SaveState ("HFEFileList");
-	m_wndLog.SaveState ("HFELog");
+	_App.View_SplitterRatio (_T("HFE_FL_L"), m_wndSplitter.GetRatio ());
+	m_wndFileList.SaveState (_T("HFEFileList"));
+	m_wndLog.SaveState (_T("HFELog"));
 }
 
 void CHFE_ListLog::ApplyLanguage()

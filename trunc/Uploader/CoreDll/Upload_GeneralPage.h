@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_UPLOAD_GENERALPAGE_H__4A6191B7_DD9F_4010_93ED_08E1DD4DEA6D__INCLUDED_)

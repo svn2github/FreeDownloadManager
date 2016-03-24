@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSPLUGINMGR_H__EC8A6B33_6965_4A53_A4E5_94455A78EAD6__INCLUDED_)
@@ -19,7 +19,7 @@ typedef HMENU (*fntGetViewMenu)();
 typedef void (*fntGetMenuImages)(wgMenuItemImage**, int *);
 typedef void (*fntGetTBInfo)(wgTButtonInfo**, int*);
 typedef void (*fntGetMenuViewItems)(wgMenuViewItem** ppItems, int* cItems);
-typedef void (*fntGetPluginNames)(LPCSTR* ppszLongName, LPCSTR* ppszShortName);
+typedef void (*fntGetPluginNames)(LPCTSTR* ppszLongName, LPCTSTR* ppszShortName);
 typedef void (*fntSetLanguage)(wgLanguage, HMENU, HMENU);
 typedef BOOL (*fntReadyToShutdown)();
 typedef void (*fntShutdown)();
@@ -68,7 +68,7 @@ public:
 	
 	BOOL QueryExit();
 	
-	void OnNewLng (LPCSTR pszLng);
+	void OnNewLng (LPCTSTR pszLng);
 	
 	int OnUpdateToolBar (UINT nID);
 	

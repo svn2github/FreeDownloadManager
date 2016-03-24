@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -197,7 +197,7 @@ void CDlgDownloadsHistory::OnOK()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDlgDownloadsHistory::OnOK " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDlgDownloadsHistory::OnOK " + std::string(ex.what()));
 	}
 	catch (...)
 	{

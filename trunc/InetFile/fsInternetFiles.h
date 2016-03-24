@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSINTERNETFILES_H__0E0074EB_2AD0_438E_A57C_4EFA0D8855E7__INCLUDED_)
@@ -37,17 +37,17 @@ public:
 	
 	
 	
-	virtual fsInternetResult GetList (LPCSTR pszPath) = NULL;
+	virtual fsInternetResult GetList (LPCTSTR pszPath) = NULL;
 	
 	virtual void Abort () = NULL;
 	
 	UINT GetFileCount();
 	
 	
-	LPCSTR GetCurrentPath();
+	LPCTSTR GetCurrentPath();
 	
 	fsFileInfo* GetFileInfo (UINT uIndex);
-	virtual LPCSTR GetLastError () = NULL;
+	virtual LPCTSTR GetLastError () = NULL;
 	fsInternetFiles();
 	virtual ~fsInternetFiles();
 

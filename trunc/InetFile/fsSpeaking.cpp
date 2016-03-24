@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "common.h"
@@ -23,7 +23,7 @@ void fsSpeaking::SetDialogFunc(fntInetFileDialogFunc pfn, LPVOID lpParam1, LPVOI
 	m_lpDlgParam2 = lpParam2;
 }
 
-void fsSpeaking::Dialog(fsInetFileDialogDirection enDir, LPCSTR pszMsg)
+void fsSpeaking::Dialog(fsInetFileDialogDirection enDir, LPCTSTR pszMsg)
 {
 	
 	if (m_pfnDlgFunc && m_bMute == FALSE)
@@ -34,11 +34,11 @@ void fsSpeaking::DialogFtpResponse()
 {
 	if (m_pfnDlgFunc && m_bMute == FALSE)
 	{
-		char sz [10000];
+		TCHAR sz [10000];
 		DWORD dwErr, dwLen = sizeof (sz);
 		
 		
-		if (InternetGetLastResponseInfo (&dwErr, sz, &dwLen))
+		if	(InternetGetLastResponseInfo (&dwErr, sz, &dwLen))
 			m_pfnDlgFunc (IFDD_FROMSERVER, sz, m_lpDlgParam1, m_lpDlgParam2);
 	}
 }
@@ -51,8 +51,16 @@ void fsSpeaking::DialogHttpResponse(HINTERNET hInet)
 		DWORD dwLen = sizeof (sz), dwIndex = 0;
 		
 		
-		if (HttpQueryInfo (hInet, HTTP_QUERY_RAW_HEADERS_CRLF, sz, &dwLen, &dwIndex))
+		if (HttpQueryInfoA (hInet, HTTP_QUERY_RAW_HEADERS_CRLF, sz, &dwLen, &dwIndex)) {
+#ifdef UNICODE
+			wchar_t wsz[10000] = {0,};
+			int nLen = ::MultiByteToWideChar(CP_ACP, 0, sz, -1, 0, 0);
+			::MultiByteToWideChar(CP_ACP, 0, sz, -1, wsz, nLen);
+			m_pfnDlgFunc (IFDD_FROMSERVER, wsz, m_lpDlgParam1, m_lpDlgParam2);
+#else
 			m_pfnDlgFunc (IFDD_FROMSERVER, sz, m_lpDlgParam1, m_lpDlgParam2);
+#endif
+		}
 	}
 }
 

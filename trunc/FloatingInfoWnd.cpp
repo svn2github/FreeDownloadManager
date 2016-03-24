@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -66,16 +66,16 @@ int CFloatingInfoWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_wndList.SetExtendedStyle (LVS_EX_FULLROWSELECT|LVS_EX_INFOTIP);
 
-	m_wndList.InsertColumn (0, "", LVCFMT_LEFT, 100, 0);
-	m_wndList.InsertColumn (1, "", LVCFMT_RIGHT, 50, 0);
-	m_wndList.InsertColumn (2, "", LVCFMT_RIGHT, 50, 0);
+	m_wndList.InsertColumn (0, _T(""), LVCFMT_LEFT, 100, 0);
+	m_wndList.InsertColumn (1, _T(""), LVCFMT_RIGHT, 50, 0);
+	m_wndList.InsertColumn (2, _T(""), LVCFMT_RIGHT, 50, 0);
 
 	m_wndList.Initialize ();
 
 	m_wndList.ShowWindow (SW_SHOW);
 
-	m_cxPercent = m_wndList.GetStringWidth ("100%") + 5;
-	m_cxSpeed = m_wndList.GetStringWidth ("9999.9 KB/s") + 5;
+	m_cxPercent = m_wndList.GetStringWidth (_T("100%")) + 5;
+	m_cxSpeed = m_wndList.GetStringWidth (_T("9999.9 KB/s")) + 5;
 
 	SetTimer (1, 1000, NULL);
 	SetTimer (2, 500, NULL);
@@ -105,7 +105,7 @@ BOOL CFloatingInfoWnd::Create()
 
 	
 
-	_App.View_ReadWndPlacement (this, "FloatingInfoWnd", fsAppSettings::RWPA_FORCE_SWHIDE);
+	_App.View_ReadWndPlacement (this, _T("FloatingInfoWnd"), fsAppSettings::RWPA_FORCE_SWHIDE);
 
 	
 
@@ -121,8 +121,8 @@ void CFloatingInfoWnd::OnSize(UINT , int cx, int cy)
 {
 	m_wndList.MoveWindow (0, 0, cx, cy);
 
-	m_cxPercent = m_wndList.GetStringWidth ("100%") + 5;
-	m_cxSpeed = m_wndList.GetStringWidth ("9999.9 KB/s") + 5;
+	m_cxPercent = m_wndList.GetStringWidth (_T("100%")) + 5;
+	m_cxSpeed = m_wndList.GetStringWidth (_T("9999.9 KB/s")) + 5;
 	
 	m_wndList.SetColumnWidth (0, cx - m_cxPercent - m_cxSpeed );
 	m_wndList.SetColumnWidth (1, m_cxPercent);
@@ -180,7 +180,7 @@ void CFloatingInfoWnd::RebuildList()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CFloatingInfoWnd::RebuildList " + tstring(ex.what()));
+		vmsLogger::WriteLog("CFloatingInfoWnd::RebuildList " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -196,7 +196,7 @@ void CFloatingInfoWnd::RebuildList()
 
 void CFloatingInfoWnd::AddDownloadToList(vmsDownloadSmartPtr dld, bool bUploadInfo)
 {
-	char szFile [MY_MAX_PATH];
+	TCHAR szFile [MY_MAX_PATH];
 	CDownloads_Tasks::GetFileName (dld, szFile);
 
 	m_mxList.Lock ();
@@ -226,19 +226,21 @@ void CFloatingInfoWnd::UpdateDownloadProgress(int nItem)
 			{
 				UINT64 uDone = (int)((fsDownload*) m_wndList.GetItemData (nItem))->pMgr->GetDownloadedBytesCount ();
 				float val;
-				char szDim [10];
+				TCHAR szDim [100];
 				BytesToXBytes (uDone, &val, szDim);
-				str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+				str.Format (_T("%.*g %s"), val > 999 ? 4 : 3, val, szDim);
 			}
 			else
-				str.Format ("%d%%", nPercentDone);
+			{
+				str.Format (_T("%d%%"), nPercentDone);
+			}
 		}
 		m_wndList.SetItemText (nItem, 1, str);
 	}
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CFloatingInfoWnd::UpdateDownloadProgress " + tstring(ex.what()));
+		vmsLogger::WriteLog("CFloatingInfoWnd::UpdateDownloadProgress " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -276,7 +278,7 @@ void CFloatingInfoWnd::OnTimer(UINT nIDEvent)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CFloatingInfoWnd::OnTimer " + tstring(ex.what()));
+		vmsLogger::WriteLog("CFloatingInfoWnd::OnTimer " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -304,7 +306,7 @@ void CFloatingInfoWnd::OnTimer(UINT nIDEvent)
 
 void CFloatingInfoWnd::SaveState()
 {
-	_App.View_SaveWndPlacement (this, "FloatingInfoWnd");
+	_App.View_SaveWndPlacement (this, _T("FloatingInfoWnd"));
 }
 
 void CFloatingInfoWnd::NeedToShow(BOOL b)
@@ -322,7 +324,7 @@ void CFloatingInfoWnd::UpdateDownloadSpeed(int nItem)
 	try
 	{
 		CString str;
-		CHAR szDim [10];
+		TCHAR szDim [100];
 		float val;
 
 		bool bUpload = m_wndList.GetItemImage (nItem) == 1;
@@ -331,13 +333,13 @@ void CFloatingInfoWnd::UpdateDownloadSpeed(int nItem)
 
 		BytesToXBytes (bUpload ? dld->pMgr->GetBtDownloadMgr ()->GetUploadSpeed () : 
 			dld->pMgr->GetSpeed (), &val, szDim);
-		str.Format ("%.*g %s/s", val > 999 ? 4 : 3, val, szDim);
+		str.Format (_T("%.*g %s/s"), val > 999 ? 4 : 3, val, szDim);
 		m_wndList.SetItemText (nItem, 2, str);
 	}
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CFloatingInfoWnd::UpdateDownloadSpeed " + tstring(ex.what()));
+		vmsLogger::WriteLog("CFloatingInfoWnd::UpdateDownloadSpeed " + std::string(ex.what()));
 	}
 	catch (...)
 	{

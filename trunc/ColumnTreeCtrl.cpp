@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -184,8 +184,8 @@ void CCustomTreeChildCtrl::OnMouseMove(UINT nFlags, CPoint point)
     {
         TOOLINFO ti;
 		WPARAM wp = MAKEWPARAM (point.x, point.y);
-		ti.lpszText = (char*)malloc (1000);
-		strcpy (ti.lpszText, "");
+		ti.lpszText = (TCHAR*)malloc (1000 * sizeof(TCHAR));
+		_tcscpy (ti.lpszText, _T(""));
 		GetParent ()->SendMessage (ID_CTCC_GETTOOLTIPTEXT, wp, (LPARAM)&ti);
 
 		static CString _strOld;
@@ -1371,7 +1371,7 @@ int CCustomTreeChildCtrl::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
 	
 
-    if (m_ttip.Create (this, TTS_ALWAYSTIP) && m_ttip.AddTool(this, ""))
+    if (m_ttip.Create (this, TTS_ALWAYSTIP) && m_ttip.AddTool(this, _T("")))
     {
         m_ttip.SendMessage (TTM_SETMAXTIPWIDTH, 0, SHRT_MAX);
         m_ttip.SendMessage (TTM_SETDELAYTIME, TTDT_AUTOPOP, SHRT_MAX);
@@ -1415,7 +1415,7 @@ LRESULT CColumnTreeCtrl::OnCtccGetToolTipText(WPARAM wp, LPARAM lp)
 		return 0;
 	
 	TOOLINFO *pTI = (TOOLINFO*)lp;
-	strncpy (pTI->lpszText, strText, 500-1);
+	_tcsncpy (pTI->lpszText, strText, 500-1);
 	pTI->lpszText [500-1] = 0;
 	m_Tree.GetItemRect (hItem, &pTI->rect, FALSE);
 	return 0;

@@ -1,10 +1,8 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
-
-#include "vmsCreatesThreads.h"
 
 class vmsAsyncTask
 {
@@ -98,15 +96,13 @@ protected:
 	{
 		bool bNeedCreateThread = false;
 		bool bMayCreateThread = false;
-		EnterCriticalSection (&m_csThreads);
-		bMayCreateThread = m_vhtThreads.size () < m_u8MaxThreads;
-		LeaveCriticalSection (&m_csThreads);
+		bMayCreateThread = get_thread_count () < m_u8MaxThreads;
 		vmsAUTOLOCKSECTION (m_csTasks);
-		bNeedCreateThread = m_vhtThreads.empty ();
+		bNeedCreateThread = get_thread_count () == 0;
 		if (!bNeedCreateThread)
 			bNeedCreateThread = WaitForSingleObject (m_hevHasTasks, 0) == WAIT_OBJECT_0;
 		if (bNeedCreateThread && bMayCreateThread)
-			onThreadCreated ((HANDLE)_beginthreadex (NULL, 0, _threadPerformTasks, this, 0, NULL));
+			CreateThread (_threadPerformTasks, this);
 		SetEvent (m_hevHasTasks);
 	}
 	static UINT WINAPI _threadPerformTasks (LPVOID pvParam)

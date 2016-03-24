@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -24,7 +24,7 @@ vmsAppSettingsStore::~vmsAppSettingsStore()
 
 }
 
-UINT vmsAppSettingsStore::GetProfileInt(LPCSTR pszSection, LPCSTR pszEntry, INT nDefault)
+UINT vmsAppSettingsStore::GetProfileInt(LPCTSTR pszSection, LPCTSTR pszEntry, INT nDefault)
 {
 	if (m_bUseRegistry)
 		return m_app->GetProfileInt (pszSection, pszEntry, nDefault);
@@ -34,7 +34,7 @@ UINT vmsAppSettingsStore::GetProfileInt(LPCSTR pszSection, LPCSTR pszEntry, INT 
 	return iValue;
 }
 
-BOOL vmsAppSettingsStore::WriteProfileInt(LPCSTR pszSection, LPCSTR pszEntry, int nValue)
+BOOL vmsAppSettingsStore::WriteProfileInt(LPCTSTR pszSection, LPCTSTR pszEntry, int nValue)
 {
 	if (m_bUseRegistry)
 		return m_app->WriteProfileInt (pszSection, pszEntry, nValue);
@@ -52,7 +52,7 @@ BOOL vmsAppSettingsStore::WriteProfileInt(LPCSTR pszSection, LPCSTR pszEntry, in
 	return TRUE;
 }
 
-UINT64 vmsAppSettingsStore::GetProfileUint64(LPCSTR pszSection, LPCSTR pszEntry, UINT64 nDefault)
+UINT64 vmsAppSettingsStore::GetProfileUint64(LPCTSTR pszSection, LPCTSTR pszEntry, UINT64 nDefault)
 {
 	LPBYTE pData; UINT uSize;
 	if (!GetProfileBinary (pszSection, pszEntry, &pData, &uSize))
@@ -62,28 +62,28 @@ UINT64 vmsAppSettingsStore::GetProfileUint64(LPCSTR pszSection, LPCSTR pszEntry,
 	return uRes;
 }
 
-BOOL vmsAppSettingsStore::WriteProfileUint64(LPCSTR pszSection, LPCSTR pszEntry, UINT64 nValue)
+BOOL vmsAppSettingsStore::WriteProfileUint64(LPCTSTR pszSection, LPCTSTR pszEntry, UINT64 nValue)
 {
 	return WriteProfileBinary (pszSection, pszEntry, (LPBYTE)&nValue, sizeof (nValue));
 }
 
-CString vmsAppSettingsStore::GetProfileString(LPCSTR pszSection, LPCSTR pszEntry, LPCSTR pszDefault)
+CString vmsAppSettingsStore::GetProfileString(LPCTSTR pszSection, LPCTSTR pszEntry, LPCTSTR pszDefault)
 {
 	if (m_bUseRegistry)
 		return m_app->GetProfileString (pszSection, pszEntry, pszDefault);
 
-	LPCSTR pszValue = pszDefault;
+	LPCTSTR pszValue = pszDefault;
 	m_file.get_Value (pszSection, pszEntry, pszValue);
 	return pszValue;
 }
 
-BOOL vmsAppSettingsStore::WriteProfileString(LPCSTR pszSection, LPCSTR pszEntry, LPCSTR pszValue)
+BOOL vmsAppSettingsStore::WriteProfileString(LPCTSTR pszSection, LPCTSTR pszEntry, LPCTSTR pszValue)
 {
 	if (m_bUseRegistry)
 		return m_app->WriteProfileString (pszSection, pszEntry, pszValue);
 
 	bool bIsChanged = false;
-	LPCSTR pszOldValue = 0;
+	LPCTSTR pszOldValue = 0;
 	if (!m_file.get_Value (pszSection, pszEntry, pszOldValue)) {
 		bIsChanged = true;
 	}
@@ -99,7 +99,7 @@ BOOL vmsAppSettingsStore::WriteProfileString(LPCSTR pszSection, LPCSTR pszEntry,
 	return TRUE;
 }
 
-BOOL vmsAppSettingsStore::GetProfileBinary(LPCSTR pszSection, LPCSTR pszEntry, LPBYTE *ppData, UINT *pBytes)
+BOOL vmsAppSettingsStore::GetProfileBinary(LPCTSTR pszSection, LPCTSTR pszEntry, LPBYTE *ppData, UINT *pBytes)
 {
 	if (m_bUseRegistry)
 		return m_app->GetProfileBinary (pszSection, pszEntry, ppData, pBytes);
@@ -119,7 +119,7 @@ BOOL vmsAppSettingsStore::GetProfileBinary(LPCSTR pszSection, LPCSTR pszEntry, L
 	return TRUE;
 }
 
-BOOL vmsAppSettingsStore::WriteProfileBinary(LPCSTR pszSection, LPCSTR pszEntry, LPBYTE pbData, UINT nBytes)
+BOOL vmsAppSettingsStore::WriteProfileBinary(LPCTSTR pszSection, LPCTSTR pszEntry, LPBYTE pbData, UINT nBytes)
 {
 	if (m_bUseRegistry)
 		return m_app->WriteProfileBinary (pszSection, pszEntry, pbData, nBytes);
@@ -145,7 +145,7 @@ BOOL vmsAppSettingsStore::WriteProfileBinary(LPCSTR pszSection, LPCSTR pszEntry,
 	return TRUE;
 }
 
-void vmsAppSettingsStore::LoadSettingsFromFile(LPCSTR pszFile)
+void vmsAppSettingsStore::LoadSettingsFromFile(LPCTSTR pszFile)
 {
 	m_bUseRegistry = false;
 
@@ -162,6 +162,33 @@ void vmsAppSettingsStore::LoadSettingsFromFile(LPCSTR pszFile)
 			CloseHandle (hFile);
 			return;
 		}
+
+		vmsAppSettingsFileHdr hdr;
+		bool bIsOldVer = false;
+		if (dwRequiredSize < sizeof(hdr))
+			bIsOldVer = true;
+
+		if (!bIsOldVer) {
+			if (!ReadFile (hFile, &hdr, sizeof(hdr), &dw, NULL) || dw != sizeof(hdr)) {
+				CloseHandle (hFile);
+				return;
+			}
+
+			if (strcmp(hdr.szSig, APPSETTINGS_FILE_SIG))
+				bIsOldVer = true;
+		}
+
+		if (bIsOldVer) {
+			::SetFilePointer(hFile, 0, 0, FILE_BEGIN);
+			m_file.LoadFromFile_old(hFile);
+			CloseHandle (hFile);
+			return;
+		}
+
+		if (hdr.wVer > APPSETTINGS_FILE_CURRENT_VERSION)
+			return;
+
+		dwRequiredSize -= sizeof(hdr);
 
 		std::auto_ptr<BYTE> pbtBufferGuard( new BYTE[dwRequiredSize] );
 		LPBYTE pbtBuffer = pbtBufferGuard.get();
@@ -187,16 +214,16 @@ void vmsAppSettingsStore::LoadSettingsFromFile(LPCSTR pszFile)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("vmsAppSettingsStore::LoadSettingsFromFile " + tstring(ex.what()));
+		vmsLogger::WriteLog(_T ("vmsAppSettingsStore::LoadSettingsFromFile ") + tstringFromString(ex.what()));
 	}
 	catch (...)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("vmsAppSettingsStore::LoadSettingsFromFile unknown exception");
+		vmsLogger::WriteLog(_T("vmsAppSettingsStore::LoadSettingsFromFile unknown exception"));
 	}
 }
 
-void vmsAppSettingsStore::SaveSettingsToFile(LPCSTR pszFile)
+void vmsAppSettingsStore::SaveSettingsToFile(LPCTSTR pszFile)
 {
 	if (!isDirty())
 		return;
@@ -207,8 +234,16 @@ void vmsAppSettingsStore::SaveSettingsToFile(LPCSTR pszFile)
 	if (hFile == INVALID_HANDLE_VALUE)
 		return;
 
-	try 
-	{
+	vmsAppSettingsFileHdr hdr;
+
+	DWORD dw;
+	if (!WriteFile (hFile, &hdr, sizeof(hdr), &dw, NULL) || dw != sizeof(hdr)) {
+		CloseHandle (hFile);
+		return;
+	}
+
+	try {
+		
 		DWORD dwRequiredSize = 0;
 		DWORD dw = 0;
 
@@ -235,12 +270,12 @@ void vmsAppSettingsStore::SaveSettingsToFile(LPCSTR pszFile)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("vmsAppSettingsStore::SaveSettingsToFile " + tstring(ex.what()));
+		vmsLogger::WriteLog(_T("vmsAppSettingsStore::SaveSettingsToFile ") + tstringFromString(ex.what()));
 	}
 	catch (...)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("vmsAppSettingsStore::SaveSettingsToFile unknown exception");
+		vmsLogger::WriteLog(_T("vmsAppSettingsStore::SaveSettingsToFile unknown exception"));
 	}
 }
 

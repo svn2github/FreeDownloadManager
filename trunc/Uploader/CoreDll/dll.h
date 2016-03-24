@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __UPLOADS_DLL_H_
@@ -11,7 +11,7 @@ namespace vmsUploadsDll
 const int DLL_INTERFACE_VERSION = 2;
 const int DLL_BUILD_NUMBER = 640;
 
-const char* const MSG_NAME_1 = "msg - fumcore - uplds deleted";
+const TCHAR* const MSG_NAME_1 = _T("msg - fumcore - uplds deleted");
 
 #include "vmsUploadsWnd.h"
 #include "vmsDllCaller.h"

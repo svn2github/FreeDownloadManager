@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -22,7 +22,7 @@ vmsComDLL::~vmsComDLL()
 	CoUninitialize ();
 }
 
-bool vmsComDLL::Load(LPCSTR pszDll)
+bool vmsComDLL::Load(LPCTSTR pszDll)
 {
 	if (false == vmsDLL::Load (pszDll))
 		return false;

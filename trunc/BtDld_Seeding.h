@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_BTDLD_SEEDING_H__CD98DAFB_5AB4_46C0_B3DF_41003245D221__INCLUDED_)

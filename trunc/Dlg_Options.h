@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DLG_OPTIONS_H__FB7201D6_472A_482C_BE35_8EEF034A8684__INCLUDED_)
@@ -21,7 +21,7 @@ protected:
 		CString strJustCaption; 
 
 		OptionsTreeItem (CDlg_Options_Page* p) {page = p;}
-		OptionsTreeItem (LPCSTR psz) {page = NULL; strJustCaption = psz;}
+		OptionsTreeItem (LPCTSTR psz) {page = NULL; strJustCaption = psz;}
 		OptionsTreeItem () {page = NULL;}
 	};
 	typedef fs::ListTree <OptionsTreeItem>* LPOPTIONS_PAGES_TREE;
@@ -45,7 +45,7 @@ protected:
 	bool m_bIsElevReqLastValue;
 	bool m_bDontShowNeedElevateMessage;
 	bool OptionsTree_isElevateRequired(LPOPTIONS_PAGES_TREE ptRoot = NULL);
-	BOOL OptionsTree_Apply (LPOPTIONS_PAGES_TREE ptRoot = NULL, bool *pbBrowserRestartRequired = NULL, CString *ptstrFdmElevateArgs = NULL);
+	BOOL OptionsTree_Apply (LPOPTIONS_PAGES_TREE ptRoot = NULL, bool *pbBrowserRestartRequired = NULL, CString *ptstrFdmElevateArgs = NULL, bool *pbApplicationRestartRequired = NULL);
 	void FillPagesList(LPOPTIONS_PAGES_TREE ptRoot = NULL, HTREEITEM htRoot = TVI_ROOT);
 	virtual void InitializeData () = NULL;
 	CImageList m_imgsPages;

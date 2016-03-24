@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -116,14 +116,14 @@ BOOL CPrg_Data::OnApply()
 		_App.DataFolder (str);
 
 		CRegKey key;
-		if (ERROR_SUCCESS != key.Create (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Upload Manager"))
-			key.Open (HKEY_CURRENT_USER, "Software\\FreeDownloadManager.ORG\\Free Upload Manager");
+		if (ERROR_SUCCESS != key.Create (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG\\Free Upload Manager")))
+			key.Open (HKEY_CURRENT_USER, _T("Software\\FreeDownloadManager.ORG\\Free Upload Manager"));
 
-		key.SetValue (fsGetAppDataFolder (), "force_data_folder");
+		key.SetValue (fsGetAppDataFolder (), _T("force_data_folder"));
 
 		if (IDYES == MessageBox (LS (L_COPYDATAFILESNOW), NULL, MB_YESNO))
 		{
-			vmsCopyFiles (fsGetAppDataFolder (), _App.DataFolder (), "*.sav");
+			vmsCopyFiles (fsGetAppDataFolder (), _App.DataFolder (), _T("*.sav"));
 			extern bool _bNeedRecalcAppDataFolder;
 			_bNeedRecalcAppDataFolder = true;
 		}

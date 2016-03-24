@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef UTILS_INCLUDED_FILE
@@ -10,6 +10,14 @@ bool ComErrToSysErrCode(HRESULT hr, DWORD& dwErr);
 void FormatMessageByErrCode(CString& sMsg, DWORD dwErr, bool& bFailedToRetreive);
 
 void appendDiagnostics(CString&sMsg, const CString& sDiagnostics);
+
+void UniToAnsi(const std::wstring& sSrc, std::string& sTar);
+void AnsiToUni(const std::string& sSrc, std::wstring& sTar);
+void CopyString(LPTSTR* tszDest, LPCSTR szSrc);
+
+FILE* FopenForRead(const tstring& sStr);
+void Fclose(FILE* pfFile);
+bool Fgets(FILE* pfFile, std::string& sStr);
 
 const int g_nGrowBy = 128;
 
@@ -67,7 +75,37 @@ void CopyArray(CArray<T, T&>& arrDest, const CArray<T, T&>& arrSrc)
 #define BOOLEAN_CHECK_BUFFER_BOUNDS(buff_size, size) if (pbtBuffer != NULL && (buff_size - (pbtCurrentPos - pbtBuffer) < size)) return false;
 
 void putStrToBuffer(LPCTSTR tszStr, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize, DWORD* pdwSizeReuiqred);
-bool getStrFromBuffer(LPTSTR* ptszStr, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize);
+template <typename CHARTYPE>
+bool getStrFromBuffer(CHARTYPE** ptszStr, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize)
+{
+	int nLen = 0;
+	BOOLEAN_CHECK_BUFFER_BOUNDS(dwBufferSizeSize, sizeof(nLen));
+	CopyMemory(&nLen, pbtCurrentPos, sizeof(nLen));
+	pbtCurrentPos += sizeof(nLen);
+
+	if (nLen < -1)
+		return false;
+
+	if (nLen == -1) {
+		*ptszStr = 0;
+		return true;
+	}
+
+	if ((UINT)nLen > 100000)
+		return false;
+
+	std::unique_ptr <CHARTYPE[]> pstring (new CHARTYPE [nLen + 1]);
+
+	BOOLEAN_CHECK_BUFFER_BOUNDS(dwBufferSizeSize, (sizeof(CHARTYPE) * nLen));
+	CopyMemory(pstring.get (), pbtCurrentPos, sizeof(CHARTYPE) * nLen);
+	pstring [nLen] = 0;
+
+	pbtCurrentPos += sizeof(CHARTYPE) * nLen;
+	*ptszStr = pstring.release();
+
+	return true;
+}
+bool getStrFromBuffer_ANSI_to_UNICODE(LPTSTR* ptszStr, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize);
 
 template <class T>
 void putVarToBuffer(const T& t, LPBYTE& pbtCurrentPos, LPBYTE pbtBuffer, DWORD dwBufferSizeSize, DWORD* pdwSizeReuiqred)
@@ -158,5 +196,11 @@ bool getListFromBuffer(fs::list<T>* pvList, LPBYTE& pbtCurrentPos, LPBYTE pbtBuf
 	pvList->unlock();
 	return true;
 }
+
+std::string fromUnicode(const std::wstring &wstr, UINT codePage);
+std::wstring toUnicode(const std::string &str, UINT codePage);
+std::string loadStringFromBufferA( LPBYTE& pB, DWORD dw );
+std::wstring loadStringFromBufferW( LPBYTE& pB, DWORD dw );
+tstring loadStringFromBuffer( LPBYTE& pB, DWORD dw );
 
 #endif

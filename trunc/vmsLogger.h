@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -12,5 +12,8 @@ class vmsLogger
 	static tstring GetTimeStamp();
 public:
 	static void WriteLog(const tstring& message);
+#ifdef UNICODE
+	static void WriteLog(const std::string& message);
+#endif
 };
 

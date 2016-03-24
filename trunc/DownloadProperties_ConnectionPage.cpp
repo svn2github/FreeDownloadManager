@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -105,15 +105,15 @@ BOOL CDownloadProperties_ConnectionPage::OnInitDialog()
 	pBox = (CComboBox*) GetDlgItem (IDC_TRAFFICLIMITDIM);
 	CString str; 
 	
-	str.Format ("%s/%s", LS (L_B), LS (L_S));	pBox->AddString (str); 
-	str.Format ("%s/%s", LS (L_KB), LS (L_S)); pBox->AddString (str); 
-	str.Format ("%s/%s", LS (L_MB), LS (L_S)); pBox->AddString (str);
+	str.Format (_T("%s/%s"), LS (L_B), LS (L_S));	pBox->AddString (str); 
+	str.Format (_T("%s/%s"), LS (L_KB), LS (L_S)); pBox->AddString (str); 
+	str.Format (_T("%s/%s"), LS (L_MB), LS (L_S)); pBox->AddString (str);
 
 	if (DP_EQ (uRetriesTime, FALSE))	
 		
 		SetDlgItemInt (IDC_PAUSEBETWEEN, dp0->uRetriesTime / 1000, FALSE);
 	else
-		SetDlgItemText (IDC_PAUSEBETWEEN, "");	
+		SetDlgItemText (IDC_PAUSEBETWEEN, _T(""));	
 
 	
 
@@ -142,13 +142,13 @@ BOOL CDownloadProperties_ConnectionPage::OnInitDialog()
 		else
 			CheckDlgButton (IDC_USEMAXATTEMPTS, bUse ? BST_CHECKED : BST_UNCHECKED);
 
-		SetDlgItemText (IDC_MAXATTEMPTS, "");
+		SetDlgItemText (IDC_MAXATTEMPTS, _T(""));
 	}
 
 	if (DP_EQ (uTimeout, FALSE))
 		SetDlgItemInt (IDC_TIMEOUT, dp0->uTimeout / 1000, FALSE);
 	else
-		SetDlgItemText (IDC_TIMEOUT, "");
+		SetDlgItemText (IDC_TIMEOUT, _T(""));
 
 	if (DP_EQ (uSectionMinSize, FALSE))
 		vmsDialogHelper::SetDlgBytesGroup (this, dp0->uSectionMinSize, IDC_SECTMINSIZE, IDC_SECTMINSIZEDIM);
@@ -158,7 +158,7 @@ BOOL CDownloadProperties_ConnectionPage::OnInitDialog()
 	if (DP_EQ (uMaxSections, FALSE))
 		SetDlgItemInt (IDC_SECTMAXCOUNT, dp0->uMaxSections, FALSE);
 	else
-		SetDlgItemText (IDC_SECTMAXCOUNT, "");
+		SetDlgItemText (IDC_SECTMAXCOUNT, _T(""));
 
 	BOOL bLimit = dp0->uTrafficRestriction != UINT_MAX;
 	CheckDlgButton (IDC_LIMITTRAFFIC, bLimit ? BST_CHECKED : BST_UNCHECKED);
@@ -196,7 +196,7 @@ BOOL CDownloadProperties_ConnectionPage::OnInitDialog()
 	if (DNP_EQ (wLowSpeed_Duration, FALSE))
 		SetDlgItemInt (IDC_LOWSPEED_DURATION, dnp0->wLowSpeed_Duration, FALSE);
 	else
-		SetDlgItemText (IDC_LOWSPEED_DURATION, "");
+		SetDlgItemText (IDC_LOWSPEED_DURATION, _T(""));
 
 	UpdateEnabled ();
 
@@ -293,7 +293,7 @@ BOOL CDownloadProperties_ConnectionPage::OnApply()
 
 #define CHECK_RANGE(id, min) if (val < min) { ErrMustBeGreaterThan (id, min); return FALSE; }
 
-#define SET_VAL_EX(id, min, Value, Mul) GetDlgItemText (id, str); if (str.GetLength ()) { int  val = atoi (str); CHECK_RANGE (id, min); val*= Mul; DP_SET (Value, FALSE, &val); }
+#define SET_VAL_EX(id, min, Value, Mul) GetDlgItemText (id, str); if (str.GetLength ()) { int  val = _tstoi (str); CHECK_RANGE (id, min); val*= Mul; DP_SET (Value, FALSE, &val); }
 #define SET_VAL(id, min, Value) SET_VAL_EX (id, min, Value, 1)
 
 	CString str;

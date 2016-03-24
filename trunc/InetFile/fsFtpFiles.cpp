@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsFtpFiles.h"
@@ -17,7 +17,7 @@ fsFtpFiles::~fsFtpFiles()
 
 }
 
-fsInternetResult fsFtpFiles::GetList(LPCSTR pszPath)
+fsInternetResult fsFtpFiles::GetList(LPCTSTR pszPath)
 {
 	fsInternetResult ir;
 
@@ -54,7 +54,7 @@ fsInternetResult fsFtpFiles::BuildList()
 		{
 			fsFileInfo file;
 
-			if (strcmp (wfd.cFileName, ".") == 0 || strcmp (wfd.cFileName, "..") == 0)
+			if (_tcscmp (wfd.cFileName, _T(".")) == 0 || _tcscmp (wfd.cFileName, _T("..")) == 0)
 				continue;
 
 			file.strName = wfd.cFileName;
@@ -96,7 +96,7 @@ void fsFtpFiles::Reload(BOOL bReload)
 	m_bReload = bReload;
 }
 
-LPCSTR fsFtpFiles::GetLastError()
+LPCTSTR fsFtpFiles::GetLastError()
 {
 	return m_pServer->GetLastError ();
 }

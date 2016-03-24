@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -68,12 +68,16 @@ BOOL CZipPreviewDlg::OnInitDialog()
 void CZipPreviewDlg::BuildTreeOfFiles()
 {
 	for (int i = 0; i < m_ar->GetFileCount (); i++)
-		AddToTree (m_ar->GetFileName (i), i, m_tFiles);
+	{
+		USES_CONVERSION;
+		CString str = A2CW_CP ((LPCSTR)m_ar->GetFileName (i), CP_OEMCP);
+		AddToTree (str, i, m_tFiles);
+	}
 }
 
-void CZipPreviewDlg::AddToTree(LPCSTR pszFile, int iIndex, fs::ListTree <fsFile>* root)
+void CZipPreviewDlg::AddToTree(LPCTSTR pszFile, int iIndex, fs::ListTree <fsFile>* root)
 {
-	LPCSTR pszNextDir = strpbrk (pszFile, "/\\");
+	LPCTSTR pszNextDir = _tcspbrk (pszFile, _T("/\\"));
 
 	if (pszNextDir)
 		pszNextDir++;
@@ -147,7 +151,7 @@ BOOL CZipPreviewDlg::ApplyTreeChecks()
 	if (vFiles.size () == 0)
 		return FALSE;
 
-	fs::list <fsString> vstrFiles;
+	fs::list <fsStringA> vstrFiles;
 
 	for (int i = 0; i < vFiles.size (); i++)
 		vstrFiles.add (m_ar->GetFileName (vFiles [i]));

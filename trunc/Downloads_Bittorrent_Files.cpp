@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -54,16 +54,16 @@ void CDownloads_Bittorrent_Files::ApplyLanguage()
 	HDITEM item;
 	item.mask = HDI_TEXT;
 
-	item.pszText = (LPSTR) LS (L_NAME);
+	item.pszText = (LPTSTR) LS (L_NAME);
 	GetHeaderCtrl ().SetItem (0, &item);
 
-	item.pszText = (LPSTR) LS (L_SIZE);
+	item.pszText = (LPTSTR) LS (L_SIZE);
 	GetHeaderCtrl ().SetItem (1, &item);
 
-	item.pszText = (LPSTR) LS (L_PROGRESS);
+	item.pszText = (LPTSTR) LS (L_PROGRESS);
 	GetHeaderCtrl ().SetItem (2, &item);
 
-	item.pszText = (LPSTR) LS (L_PRIORITY);
+	item.pszText = (LPTSTR) LS (L_PRIORITY);
 	GetHeaderCtrl ().SetItem (3, &item);
 }
 
@@ -96,7 +96,7 @@ void CDownloads_Bittorrent_Files::UpdateProgress()
 		int nFile = GetTreeCtrl ().GetItemData (hItem);
 		if (nFile != -1)
 		{
-			CString str; str.Format ("%d%%", m_dld->pMgr->GetBtDownloadMgr ()->get_FilePercentDone (nFile));
+			CString str; str.Format (_T("%d%%"), m_dld->pMgr->GetBtDownloadMgr ()->get_FilePercentDone (nFile));
 			SetItemText (hItem, 2, str);
 		}
 		hItem = GetTreeCtrl ().GetNextVisibleItem (hItem);
@@ -121,7 +121,7 @@ void CDownloads_Bittorrent_Files::AddFiles(fs::ListTree <vmsBtDownloadManager::v
 			HTREEITEM hItem = pTreeCtrl->GetTreeCtrl ().InsertItem (TVIF_TEXT | TVIF_PARAM | TVIF_PARAM, 
 				file.strName, 0, 0, 0, 0, file.nIndex, hRoot, TVI_LAST);
 			pTreeCtrl->SetItemText (hItem, 1, BytesToString (file.nFileSize));
-			CString str; str.Format ("%d%%", m_dld->pMgr->GetBtDownloadMgr ()->get_FilePercentDone (file.nIndex));
+			CString str; str.Format (_T("%d%%"), m_dld->pMgr->GetBtDownloadMgr ()->get_FilePercentDone (file.nIndex));
 			pTreeCtrl->SetItemText (hItem, 2, str);
 			if (file.iPriority == 0)
 				pTreeCtrl->SetItemText (hItem, 3, LS (L_PRIORITY_SKIP));

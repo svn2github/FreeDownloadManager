@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -31,7 +31,7 @@ fsInternetFileListMgr::~fsInternetFileListMgr()
 	Free ();
 }
 
-fsInternetResult fsInternetFileListMgr::GetList(LPCSTR pszUrl, LPCSTR pszUser, LPCSTR pszPassword)
+fsInternetResult fsInternetFileListMgr::GetList(LPCTSTR pszUrl, LPCTSTR pszUser, LPCTSTR pszPassword)
 {
 	if (IsRunning ())
 		return IR_S_FALSE;
@@ -65,7 +65,7 @@ fsInternetResult fsInternetFileListMgr::GetList(LPCSTR pszUrl, LPCSTR pszUser, L
 	else
 	{
 		m_files = m_vFiles [iIndex];
-		m_bCurPathIsRoot = strcmp (GetCurrentPath (), "/") == 0 || strcmp (GetCurrentPath (), "\\") == 0;
+		m_bCurPathIsRoot = _tcscmp (GetCurrentPath (), _T("/")) == 0 || _tcscmp (GetCurrentPath (), _T("\\")) == 0;
 		m_lastError = IR_SUCCESS;
 		m_bConnected = TRUE;
 		Event (FLME_DONE_FROM_CACHE);
@@ -86,7 +86,7 @@ void fsInternetFileListMgr::Stop(BOOL bWaitStop)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsInternetFileListMgr::Stop " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsInternetFileListMgr::Stop " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -101,7 +101,7 @@ void fsInternetFileListMgr::Stop(BOOL bWaitStop)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsInternetFileListMgr::Stop " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsInternetFileListMgr::Stop " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -116,7 +116,7 @@ void fsInternetFileListMgr::Stop(BOOL bWaitStop)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsInternetFileListMgr::Stop " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsInternetFileListMgr::Stop " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -179,7 +179,7 @@ DWORD WINAPI fsInternetFileListMgr::_threadGetList(LPVOID lp)
 		}
 	}
 
-	pThis->m_bCurPathIsRoot = strcmp (url.GetPath (), "/") == 0 || strcmp (url.GetPath (), "\\") == 0;
+	pThis->m_bCurPathIsRoot = _tcscmp (url.GetPath (), _T("/")) == 0 || _tcscmp (url.GetPath (), _T("\\")) == 0;
 
 _lConnect:
 
@@ -233,7 +233,7 @@ _lConnect:
 					fsSiteInfo *site = _SitesMgr.FindSite (url.GetHostName (), fsNPToSiteValidFor (fsSchemeToNP (url.GetInternetScheme ())));
 					if (site && site->strUser)
 					{
-						CString strPass = site->strPassword ? site->strPassword : "";
+						CString strPass = site->strPassword ? site->strPassword : _T("");
 						if (site->strUser != pThis->m_strUser || strPass != pThis->m_strPassword)
 						{
 							
@@ -408,12 +408,12 @@ BOOL fsInternetFileListMgr::IsCurrentPathRoot()
 	return m_bCurPathIsRoot;
 }
 
-LPCSTR fsInternetFileListMgr::GetLastErrorDesc()
+LPCTSTR fsInternetFileListMgr::GetLastErrorDesc()
 {
 	return m_files ? m_files->GetLastError () : NULL;
 }
 
-int fsInternetFileListMgr::FindFiles(LPCSTR pszFilesUrl)
+int fsInternetFileListMgr::FindFiles(LPCTSTR pszFilesUrl)
 {
 	fsURL url;
 
@@ -423,19 +423,19 @@ int fsInternetFileListMgr::FindFiles(LPCSTR pszFilesUrl)
 	if (IR_SUCCESS != url.Crack (pszFilesUrl))
 		return -1;
 
-	if (stricmp (url.GetHostName (), m_server.GetServerName ()) || url.GetPort () != m_server.GetServerPort () ||
+	if (_tcsicmp (url.GetHostName (), m_server.GetServerName ()) || url.GetPort () != m_server.GetServerPort () ||
 		 url.GetInternetScheme () != m_server.GetScheme ()  )
 		return -1;
 
 	if (m_strUser.Length ())
 	{
-		if (strcmp (url.GetUserName (), m_strUser) || strcmp (url.GetPassword (), m_strPassword))
+		if (_tcscmp (url.GetUserName (), m_strUser) || _tcscmp (url.GetPassword (), m_strPassword))
 			return -1;
 	}
 
 	for (int i = m_vFiles.size () - 1; i >= 0; i--)
 	{
-		if (strcmp (url.GetPath (), m_vFiles [i]->GetCurrentPath ()) == 0)
+		if (_tcscmp (url.GetPath (), m_vFiles [i]->GetCurrentPath ()) == 0)
 			return i;
 	}
 
@@ -454,7 +454,7 @@ void fsInternetFileListMgr::Free(BOOL bStopBeforeFree)
 	m_vFiles.clear ();
 }
 
-LPCSTR fsInternetFileListMgr::GetCurrentPath()
+LPCTSTR fsInternetFileListMgr::GetCurrentPath()
 {
 	return m_files ? m_files->GetCurrentPath () : NULL;
 }
@@ -487,7 +487,7 @@ fsInternetResult fsInternetFileListMgr::GoParentFolder()
 	return GetList (strUrl, NULL, NULL);
 }
 
-fsInternetResult fsInternetFileListMgr::GoFolder(LPCSTR pszFolder)
+fsInternetResult fsInternetFileListMgr::GoFolder(LPCTSTR pszFolder)
 {
 	if (m_files == NULL)
 		return IR_S_FALSE;
@@ -501,7 +501,7 @@ fsInternetResult fsInternetFileListMgr::GoFolder(LPCSTR pszFolder)
 	return GetList (strUrl, NULL, NULL);
 }
 
-fsInternetResult fsInternetFileListMgr::GetFullUrl(LPCSTR pszRelOrNotUrl, fsString &strUrl)
+fsInternetResult fsInternetFileListMgr::GetFullUrl(LPCTSTR pszRelOrNotUrl, fsString &strUrl)
 {
 	fsURL url;
 
@@ -511,7 +511,7 @@ fsInternetResult fsInternetFileListMgr::GetFullUrl(LPCSTR pszRelOrNotUrl, fsStri
 	fsString strUrlCurrent;
 	GetCurrentUrl (strUrlCurrent);
 
-	char* pszRes;
+	TCHAR* pszRes;
 
 	fsUrlToFullUrl (strUrlCurrent, pszRelOrNotUrl, &pszRes);
 
@@ -523,11 +523,11 @@ fsInternetResult fsInternetFileListMgr::GetFullUrl(LPCSTR pszRelOrNotUrl, fsStri
 
 void fsInternetFileListMgr::GetCurrentUrl(fsString &strUrl, BOOL bIncludeUser, BOOL bIncludePassword)
 {
-	strUrl = "";
+	strUrl = _T("");
 
 	if (m_files != NULL)
 	{
-		char szUrl [10000] = ""; DWORD dwLen = sizeof (szUrl);
+		TCHAR szUrl [10000] = _T(""); DWORD dwLen = _countof (szUrl);
 		fsURL url;
 		if (IR_SUCCESS == url.Create (m_server.GetScheme (), m_server.GetServerName (), m_server.GetServerPort (),
 				bIncludeUser ? m_strUser : NULL, bIncludePassword ? m_strPassword : NULL, m_files->GetCurrentPath (), szUrl, &dwLen))
@@ -577,7 +577,7 @@ void fsInternetFileListMgr::_HttpEvents(fsHttpFiles* , fsHttpFilesEvent enEvent,
 	}
 }
 
-BOOL fsInternetFileListMgr::AskForLogin(LPCSTR pszHostName)
+BOOL fsInternetFileListMgr::AskForLogin(LPCTSTR pszHostName)
 {
 	CLoginDlg dlg;
 
@@ -627,11 +627,11 @@ void fsInternetFileListMgr::ReadSettings()
 	m_bFtpPassiveMode = _App.HFE_FtpPassiveMode ();
 }
 
-void fsInternetFileListMgr::FolderToUrl(LPCSTR pszFolder, fsString &strUrl)
+void fsInternetFileListMgr::FolderToUrl(LPCTSTR pszFolder, fsString &strUrl)
 {
-	strUrl = "";
+	strUrl = _T("");
 
-	char* pszRes;
+	TCHAR* pszRes;
 
 	GetCurrentUrl (strUrl);
 	fsUrlToFullUrl (strUrl, pszFolder, &pszRes);
@@ -640,8 +640,8 @@ void fsInternetFileListMgr::FolderToUrl(LPCSTR pszFolder, fsString &strUrl)
 	delete [] pszRes;
 
 	int len = strUrl.Length ();
-	if (len > 0 && strUrl [len - 1] != '\\' && strUrl [len - 1] != '/')
-		strUrl += '/';
+	if (len > 0 && strUrl [len - 1] != _T('\\') && strUrl [len - 1] != _T('/'))
+		strUrl += _T('/');
 }
 
 void fsInternetFileListMgr::GetParentFolderUrl(fsString &strUrl)

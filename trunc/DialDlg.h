@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DIALDLG_H__5FD947D4_2E26_4DFD_BF2E_0E8A3F551C47__INCLUDED_)
@@ -51,7 +51,7 @@ protected:
 	
 	void SleepInterval();
 	
-	void Log (LPCSTR pszRecord);
+	void Log (LPCTSTR pszRecord);
 	RASDIALPARAMS m_rp;	
 	
 	

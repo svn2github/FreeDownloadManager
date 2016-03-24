@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_STDAFX_H__3DEDF9D7_1A31_481A_8FBD_C2D53CEFE688__INCLUDED_)
@@ -9,16 +9,19 @@
 #pragma once
 #endif 
 
+#define _CONVERSION_DONT_USE_THREAD_LOCALE
+
 #define VC_EXTRALEAN		
 
-#define WINVER 0x501
-#define _WIN32_IE 0x501
-#define _WIN32_WINNT 0x500
+#define WINVER _WIN32_WINNT_WINXP
+#define _WIN32_WINNT _WIN32_WINNT_WINXP
+#define _WIN32_IE _WIN32_IE_IE70
+
+#define DIRECTDRAW_VERSION 0x0800
+#define DIRECTINPUT_VERSION 0x0800 
 
 #pragma warning(disable : 4995)
 #pragma warning(disable : 4996)
-
-const char* const IE_USERAGENT_ADDITION	= "FDM";
 
 #ifdef SCL_ENABLE
 #pragma message ("============== WARNING: SCL_ENABLE is defined ==============")
@@ -35,6 +38,9 @@ const char* const IE_USERAGENT_ADDITION	= "FDM";
 #ifndef _AFX_NO_AFXCMN_SUPPORT
 #include <afxcmn.h>			
 #endif 
+#include <afxdialogex.h>
+
+const TCHAR* const IE_USERAGENT_ADDITION	= _T("FDM");
 
 #include <intsafe.h>
 
@@ -65,6 +71,7 @@ _COM_SMARTPTR_TYPEDEF(IXMLDOMNodeList, __uuidof(IXMLDOMNodeList));
 
 #define _ATL_APARTMENT_THREADED
 #include <atlbase.h>
+#include <atlwin.h>
 
 class CFdmModule : public CComModule
 {
@@ -86,20 +93,30 @@ extern CFdmModule _Module;
 #define MY_MAX_PATH		10000
 
 #include <assert.h>
-
-#pragma warning (push, 3)
 #include <vector>
 #include <list>
 #include <string>
 #include <xlocale>
 #include <algorithm>
-#pragma warning (pop)
+#include <iterator>
+#include <set>
+#include <map>
+#include <functional>
+#include <memory>
+#include <regex>
+#include <stdint.h>
+#include <future>
+#include <unordered_map>
 
-#include "Include.Add/tstring.h"
+#include "common/vms_sifdm_cl/base.h"
+#include "common/vms_sifdm_cl/archive/vmsZip.h"
+#include "common/vms_sifdm_cl/archive/vmsUnzip.h"
+#include "common/vms_sifdm_cl/inet/wininet/vmsPostRequest.h"
+#include "common/vms_sifdm_cl/win/defs.h"
+#include "common/vms_sifdm_cl/threadsafe/vmsThreadSafe4.h"
 
 #define delta(a,b) (((a) > (b)) ? ((a)-(b)) : ((b)-(a)))
 
-#include <vmsCriticalSection.h>
 #include <vmsReaderWriterLock.h>
 #include <vmsObject.h>
 
@@ -138,9 +155,8 @@ extern CFdmModule _Module;
 #include "vmsTheme.h"
 #include "fsPluginMgr.h"
 #include "Include.Add/zlib/zlib.h"
-#include "include.add/vmsPostRequest.h"
-#include "Include.Add/vmsZip.h"
-#include "Include.Add/vmsUnZip.h"
+#include "vmsYouTubeDownloadsMgr.h"
+#include "vmsDownloaderSecCheckFailureIgnoreList.h"
 
 #define SBMP(id) _SkinMgr.bmp (id)
 #define SICO(id) _SkinMgr.icon (id)
@@ -177,6 +193,8 @@ extern FILETIME _timeAppHasStarted;
 extern vmsBtSupport _BT;
 extern vmsMediaConvertMgr _MediaConvertMgr;
 extern vmsFdmAppMgr _AppMgr;
+extern vmsYouTubeDownloadsMgr _YouTubeDldsMgr;
+extern std::shared_ptr <vmsDownloaderSecCheckFailureIgnoreList> _DldrSecCheckFailureIgnoreList;
 
 #define APPSTATE_PORTABLE_MODE					1
 #define APPSTATE_PORTABLE_MODE_NOREG			2
@@ -194,5 +212,7 @@ extern DWORD _dwAppState;
 #define TRAY_ICON_DOWNLOADING	1
 #define TRAY_ICON_ERRORS		2
 #define TRAY_ICON_UNKNOWN		3
+
+#define LAST_ANSI_DL_FILE_VERSION 18
 
 #endif 

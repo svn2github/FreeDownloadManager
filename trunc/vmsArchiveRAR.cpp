@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -24,12 +24,13 @@ vmsArchiveRAR::~vmsArchiveRAR()
 
 #pragma warning (disable: 4701)
 
-bool vmsArchiveRAR::Extract(LPCSTR pszArchive, LPCSTR pszOutFolder)
+bool vmsArchiveRAR::Extract(LPCTSTR pszArchive, LPCTSTR pszOutFolder)
 {
 	m_errExtract = AEE_GENERIC_ERROR;
+	USES_CONVERSION;
 
 	if (m_unrar.is_Loaded () == false) {
-		if (false == m_unrar.Load ("Archive\\unrar.dll"))
+		if (false == m_unrar.Load (_T("Archive\\unrar.dll")))
 			return false;
 	}
 
@@ -64,8 +65,8 @@ bool vmsArchiveRAR::Extract(LPCSTR pszArchive, LPCSTR pszOutFolder)
 	DWORD dwProcessed = 0;
 
 	CString strOutFolder = pszOutFolder;
-	if (strOutFolder [strOutFolder.GetLength () - 1] != '\\')
-		strOutFolder += '\\';
+	if (strOutFolder [strOutFolder.GetLength () - 1] != _T('\\'))
+		strOutFolder += _T('\\');
 
 	vmsAC_OverwriteMode enOM;
 	bool bAskOverwrite = true;
@@ -78,7 +79,8 @@ bool vmsArchiveRAR::Extract(LPCSTR pszArchive, LPCSTR pszOutFolder)
 		bool bSkip = false;
 
 		if (m_pAC) {
-			if (false == m_pAC->BeforeExtract (HeaderData.FileName)) {
+			tstring sFileName = CA2T(HeaderData.FileName);
+			if (false == m_pAC->BeforeExtract (sFileName.c_str())) {
 				RHCode = ERAR_END_ARCHIVE;
 				break;
 			}
@@ -122,15 +124,18 @@ bool vmsArchiveRAR::Extract(LPCSTR pszArchive, LPCSTR pszOutFolder)
 
 		if (PFCode == 0) {
 			if (m_pAC) {
-				m_pAC->AfterExtract (HeaderData.FileName, AC_ER_OK);
+				tstring sFileName = CA2T(HeaderData.FileName);
+				m_pAC->AfterExtract (sFileName.c_str(), AC_ER_OK);
 				dwProcessed += HeaderData.PackSize;
 				m_pAC->SetProgress (MulDiv (dwProcessed, 100, dwPkdSize));
 			}
 		}
 		else
 		{
-			if (m_pAC)
-				m_pAC->AfterExtract (HeaderData.FileName, AC_ER_FAILED);
+			if (m_pAC) {
+				tstring sFileName = CA2T(HeaderData.FileName);
+				m_pAC->AfterExtract (sFileName.c_str(), AC_ER_FAILED);
+			}
 			break;
 		}
 	}

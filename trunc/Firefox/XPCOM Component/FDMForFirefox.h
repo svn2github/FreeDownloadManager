@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __FDMFORFIREFOX_H_
@@ -11,7 +11,7 @@
 #include <vector>
 #include "vmsObject.h"
 #include <assert.h>
-#include "vmsCriticalSection.h"
+#include "../../common/vms_sifdm_cl/vmsCriticalSection.h"
 #include "vmsbrowseractivitymonitor.h"
 
 using namespace std;

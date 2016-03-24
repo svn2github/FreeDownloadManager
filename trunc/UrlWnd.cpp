@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -34,10 +34,10 @@ void CUrlWnd::Init()
 
 void CUrlWnd::OnLButtonDown(UINT , CPoint )
 {
-	if (strnicmp (m_strUrl, "mailto:", 7))
+	if (_tcsncicmp (m_strUrl, _T("mailto:"), 7))
 		fsOpenUrlInBrowser (m_strUrl);
 	else
-		ShellExecute (::GetDesktopWindow (), "open", m_strUrl, NULL, NULL, SW_SHOW);
+		ShellExecute (::GetDesktopWindow (), _T("open"), m_strUrl, NULL, NULL, SW_SHOW);
 }
 
 void CUrlWnd::SetUrl(LPCSTR pszUrl)

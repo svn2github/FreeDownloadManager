@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -64,7 +64,7 @@ void fsClipboardCatchMgr::Enable(BOOL bEnable)
 
 void fsClipboardCatchMgr::OnDrawClipboard() 
 {
-	LPCSTR pszUrl = _ClipbrdMgr.Text ();
+	LPCTSTR pszUrl = _ClipbrdMgr.Text ();
 
 	if (pszUrl)
 	{

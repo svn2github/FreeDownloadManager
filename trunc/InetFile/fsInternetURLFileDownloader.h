@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSINTERNETURLFILEDOWNLOADER_H__2BB778E5_7CEF_48DC_93FA_6AC802EA0222__INCLUDED_)
@@ -32,7 +32,7 @@ public:
 	fsInternetURLFile* Get_File();
 	void Abort();
 	fsInternetResult Initialize(fsInternetSession *pSession);
-	fsInternetResult Download (LPCSTR pszUrl);
+	fsInternetResult Download (LPCTSTR pszUrl);
 	fsInternetURLFileDownloader();
 	virtual ~fsInternetURLFileDownloader();
 

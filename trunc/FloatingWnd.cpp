@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -60,7 +60,7 @@ BOOL CFloatingWnd::Create()
 
 	SetBlend (_App.DropBoxWndBlend ());
 	
-	_App.View_ReadWndPlacement (this, "FloatingWnd", 
+	_App.View_ReadWndPlacement (this, _T("FloatingWnd"), 
 		_App.View_FloatingWindow () == FALSE ? fsAppSettings::RWPA_FORCE_SWHIDE : fsAppSettings::RWPA_NONE);
 
 	SetWindowPos (NULL, 0, 0, 40, 40, SWP_NOMOVE | SWP_NOZORDER);
@@ -91,7 +91,7 @@ void CFloatingWnd::OnPaint()
 
 void CFloatingWnd::SaveState()
 {
-	_App.View_SaveWndPlacement (this, "FloatingWnd");
+	_App.View_SaveWndPlacement (this, _T("FloatingWnd"));
 	
 }
 
@@ -201,7 +201,7 @@ void CFloatingWnd::ShowTip()
 	GetWindowRect (&rc);
 	CPoint pt (rc.left + rc.Width () / 2, rc.top + rc.Height () / 2);
 	CString sTipMessage = LS (L_DROPBOXINTRO);
-	sTipMessage.Replace("&", "&&");
+	sTipMessage.Replace(_T("&"), _T("&&"));
 	m_wndTip.Show (LS (L_FDMDROPBOX), sTipMessage, TRUE, &pt);
 }
 

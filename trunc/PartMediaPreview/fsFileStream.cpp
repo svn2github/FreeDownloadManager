@@ -1,11 +1,12 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #define WINVER 0x501
 #define _WIN32_IE 0x501
 #define _WIN32_WINNT 0x501
 
+#include "Utils.h"
 #include "fsFileStream.h"
 #include "../system.h"
 
@@ -126,10 +127,10 @@ void fsFileStream::Attach(HANDLE hFile, UINT64 uInMaxAvail)
 		{
 			
 
-			char szTmp [MAX_PATH], szTmpFile [MAX_PATH];
+			TCHAR szTmp [MAX_PATH], szTmpFile [MAX_PATH];
 			GetTempPath (MAX_PATH, szTmp); 
 						
-			GetTempFileName (szTmp, "afs", 0, szTmpFile);
+			GetTempFileName (szTmp, _T("afs"), 0, szTmpFile);
 
 			m_hIdx1File = CreateFile (szTmpFile, GENERIC_READ|GENERIC_WRITE,
 				0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_TEMPORARY | FILE_FLAG_DELETE_ON_CLOSE,

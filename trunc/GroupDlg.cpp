@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -136,7 +136,7 @@ void CGroupDlg::OnOK()
 		return;
 	}
 
-	if (-1 != strName.FindOneOf ("/\\"))
+	if (-1 != strName.FindOneOf (_T("/\\")))
 	{
 		MessageBox (LS (L_INVALIDGROUPNAME), LS (L_INPERR), MB_ICONEXCLAMATION);
 		GetDlgItem (IDC_GRPNAME)->SetFocus ();
@@ -286,28 +286,28 @@ void CGroupDlg::OnMacroses()
 	menu.CreatePopupMenu ();
 
 	CString str;
-	str.Format ("%%server%%  - %s", LS (L_SERVER_MACROS_DESC));
+	str.Format (_T("%%server%%  - %s"), LS (L_SERVER_MACROS_DESC));
 	menu.InsertMenu (0, MF_BYPOSITION | MF_STRING, ID_FOLDER_MACROS_0, str);
 
-	str.Format ("%%path_on_server%%  - %s", LS (L_PATHONSERVER_MACROS_DESC));
+	str.Format (_T("%%path_on_server%%  - %s"), LS (L_PATHONSERVER_MACROS_DESC));
 	menu.InsertMenu (1, MF_BYPOSITION | MF_STRING, ID_FOLDER_MACROS_0 + 1, str);
 
-	str.Format ("%%year%%  - %s", LS (L_YEAR_MACROS_DESC));
+	str.Format (_T("%%year%%  - %s"), LS (L_YEAR_MACROS_DESC));
 	menu.InsertMenu (2, MF_BYPOSITION | MF_STRING, ID_FOLDER_MACROS_0 + 2, str);
 
-	str.Format ("%%month%%  - %s", LS (L_MONTH_MACROS_DESC));
+	str.Format (_T("%%month%%  - %s"), LS (L_MONTH_MACROS_DESC));
 	menu.InsertMenu (3, MF_BYPOSITION | MF_STRING, ID_FOLDER_MACROS_0 + 3, str);
 
-	str.Format ("%%day%%  - %s", LS (L_DAY_MACROS_DESC));
+	str.Format (_T("%%day%%  - %s"), LS (L_DAY_MACROS_DESC));
 	menu.InsertMenu (4, MF_BYPOSITION | MF_STRING, ID_FOLDER_MACROS_0 + 4, str);
 
-	str.Format ("%%date%%  - %s", LS (L_DATE_MACROS_DESC));
+	str.Format (_T("%%date%%  - %s"), LS (L_DATE_MACROS_DESC));
 	menu.InsertMenu (5, MF_BYPOSITION | MF_STRING, ID_FOLDER_MACROS_0 + 5, str);
 
-	str.Format ("%%sdrive%% - %s", LS (L_STARTDRIVELETTER));
+	str.Format (_T("%%sdrive%% - %s"), LS (L_STARTDRIVELETTER));
 	menu.InsertMenu (6, MF_BYPOSITION | MF_STRING, ID_FOLDER_MACROS_0 + 6, str);
 
-	str.Format ("%%userprofile%% - %s", LS (L_PATHTOPROFILE));
+	str.Format (_T("%%userprofile%% - %s"), LS (L_PATHTOPROFILE));
 	menu.InsertMenu (7, MF_BYPOSITION | MF_STRING, ID_FOLDER_MACROS_0 + 7, str);
 
 	CPoint pt;
@@ -317,22 +317,22 @@ void CGroupDlg::OnMacroses()
 
 void CGroupDlg::OnInsertMacros(UINT nIDMacrosCmd)
 {
-	LPCSTR ppsz [] = {
-		"%server%", "%path_on_server%", "%year%", "%month%",
-		"%day%", "%date%", "%sdrive%", "%userprofile%"
+	LPCTSTR ppsz [] = {
+		_T("%server%"), _T("%path_on_server%"), _T("%year%"), _T("%month%"),
+		_T("%day%"), _T("%date%"), _T("%sdrive%"), _T("%userprofile%")
 	};
 
-	LPCSTR pszMacros = ppsz [nIDMacrosCmd - ID_FOLDER_MACROS_0];
+	LPCTSTR pszMacros = ppsz [nIDMacrosCmd - ID_FOLDER_MACROS_0];
 
 	CString str;
 	GetDlgItemText (IDC_GRPFOLDER, str);
 
-	if (str.IsEmpty () == FALSE && str [str.GetLength () - 1] != '\\')
-		str += '\\';
+	if (str.IsEmpty () == FALSE && str [str.GetLength () - 1] != _T('\\'))
+		str += _T('\\');
 
 	str += pszMacros;
 
-	str += '\\';
+	str += _T('\\');
 
 	SetDlgItemText (IDC_GRPFOLDER, str);
 }

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -61,8 +61,8 @@ void CDlgExportHistory::ApplyLanguage()
 		fsDlgLngInfo (IDCANCEL, L_CANCEL),
 	};
 
-	CString str = _LngMgr.GetStringNP (L_EXPORT);
-	str += "...";
+	CString str = _LngMgr.GetStringNP (L_EXPORT).c_str ();
+	str += ("...");
 	SetDlgItemText (IDC__EXPORT, str);
 
 	_LngMgr.ApplyLanguage (this, lnginfo, sizeof (lnginfo) / sizeof (fsDlgLngInfo), L_EXPORTDLHIST);
@@ -144,11 +144,11 @@ void CDlgExportHistory::ExportHistory(int iWhich, BOOL bCompletedOnly, BOOL bApp
 	}
 
 	CString strFilter;
-	strFilter.Format ("%s (*.html)|*.html||", LS (L_HTMLFILES));
+	strFilter.Format (_T("%s (*.html)|*.html||"), LS (L_HTMLFILES));
 	UINT flags = OFN_NOCHANGEDIR;
 	if (bAppend == FALSE)
 		flags |= OFN_OVERWRITEPROMPT;
-	CFileDialog dlg (FALSE, "html", NULL, flags, strFilter, NULL);
+	CFileDialog dlg (FALSE, _T("html"), NULL, flags, strFilter, NULL);
 
 	if (_DlgMgr.DoModal (&dlg) == IDCANCEL)
 		return;
@@ -156,7 +156,7 @@ void CDlgExportHistory::ExportHistory(int iWhich, BOOL bCompletedOnly, BOOL bApp
 	ExportHistory (dlg.GetPathName (), vpHist, bAppend);
 }
 
-BOOL CDlgExportHistory::ExportHistory(LPCSTR pszFile, fs::list <fsDLHistoryRecord*> &vpHist, BOOL bAppend)
+BOOL CDlgExportHistory::ExportHistory(LPCTSTR pszFile, fs::list <fsDLHistoryRecord*> &vpHist, BOOL bAppend)
 {
 	HANDLE hFile = CreateFile (pszFile, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_ALWAYS,
 		FILE_ATTRIBUTE_NORMAL, NULL);
@@ -184,7 +184,7 @@ BOOL CDlgExportHistory::ExportHistory(LPCSTR pszFile, fs::list <fsDLHistoryRecor
 		ReadFile (hFile, psz, dwSize, &dw, NULL);
 		psz [dwSize] = 0;
 
-		int nLen = lstrlen (psz);
+		int nLen = strlen (psz);
 
 		if (nLen != (int) dwSize)
 		{
@@ -225,18 +225,18 @@ BOOL CDlgExportHistory::ExportHistory(LPCSTR pszFile, fs::list <fsDLHistoryRecor
 		
 
 		SetEndOfFile (hFile);
-		str = "<html>\n"; 
-		str += "<style type=\"text/css\">\n";
-		str += "<!--\n";
-		str += "H3 { font-size: 19px; font-family: Tahoma; color: #cc0000;}\n";
-		str += "TR { font-size: 12px; font-family: Tahoma; color: #000033}\n";
-		str += "TD { font-size: 12px; font-family: Tahoma; color: #000033}\n";
-		str += "A,A:visited,A:active { text-decoration: none; }\n";
-		str += "A:hover { text-decoration: underline; }\n";
-		str += "-->\n";
-		str += "</style>\n";
-		str += "<body>\n";
-		str += "<h3>"; str += LS (L_FDMHIST); str += "</h3>\n";
+		str = _T("<html>\n"); 
+		str += _T("<style type=\"text/css\">\n");
+		str += _T("<!--\n");
+		str += _T("H3 { font-size: 19px; font-family: Tahoma; color: #cc0000;}\n");
+		str += _T("TR { font-size: 12px; font-family: Tahoma; color: #000033}\n");
+		str += _T("TD { font-size: 12px; font-family: Tahoma; color: #000033}\n");
+		str += _T("A,A:visited,A:active { text-decoration: none; }\n");
+		str += _T("A:hover { text-decoration: underline; }\n");
+		str += _T("-->\n");
+		str += _T("</style>\n");
+		str += _T("<body>\n");
+		str += _T("<h3>"); str += LS (L_FDMHIST); str += _T("</h3>\n");
 		
 	}
 
@@ -244,33 +244,35 @@ BOOL CDlgExportHistory::ExportHistory(LPCSTR pszFile, fs::list <fsDLHistoryRecor
 	{
 		fsDLHistoryRecord* rec = vpHist [i];
 
-		str += "<table width=\"75%\" border=\"1\">\n";
-		str += "<tr><td width=\"180\">"; str += LS (L_URLOFDOWNLOAD); str += ":</td>"; 
-		str += "<td><a href=\""; str += rec->strURL; str += "\"> "; str += rec->strURL; str += "</a></td></tr>\n";
+		str += _T("<table width=\"75%\" border=\"1\">\n");
+		str += _T("<tr><td width=\"180\">"); str += LS (L_URLOFDOWNLOAD); str += _T(":</td>"); 
+		str += _T("<td><a href=\""); str += rec->strURL; str += _T("\"> "); str += rec->strURL; str += _T("</a></td></tr>\n");
 
 		if (rec->dateDownloaded.dwHighDateTime) {
-			str += "<tr><td>"; str += LS (L_DLDEDTOFILE); str += ":</td><td>"; str += rec->strSavedTo; str += "</td></tr>\n";
-			str += "<tr><td>"; str += LS (L_SIZEOFFILE); str += ":</td><td>"; str += BytesToString (rec->uFileSize); str += "</td></tr>\n";
-			str += "<tr><td>"; str += LS (L_DLDWASCOMPLETED); str += ":</td><td>"; str += TimeToStr (rec->dateDownloaded); str += "</td></tr>\n";
+			str += _T("<tr><td>"); str += LS (L_DLDEDTOFILE); str += _T(":</td><td>"); str += rec->strSavedTo; str += _T("</td></tr>\n");
+			str += _T("<tr><td>"); str += LS (L_SIZEOFFILE); str += _T(":</td><td>"); str += BytesToString (rec->uFileSize); str += _T("</td></tr>\n");
+			str += _T("<tr><td>"); str += LS (L_DLDWASCOMPLETED); str += _T(":</td><td>"); str += TimeToStr (rec->dateDownloaded); str += _T("</td></tr>\n");
 		}
 		else {	
-			str += "<tr><td>"; str += LS (L_DLDWASDELETED); str += ":</td><td>"; str += TimeToStr (rec->dateRecordAdded); str += "</td></tr>\n";
+			str += _T("<tr><td>"); str += LS (L_DLDWASDELETED); str += _T(":</td><td>"); str += TimeToStr (rec->dateRecordAdded); str += _T("</td></tr>\n");
 		}
 		
-		if (rec->strComment != "")
+		if (rec->strComment != _T(""))
 		{
-			CString str2 = rec->strComment; str2.Replace ("\n", "<br>");
-			str += "<tr><td>"; str += LS (L_DESC); str += ":</td><td>"; str += str2; str += "</td></tr>\n";
+			CString str2 = rec->strComment; str2.Replace (_T("\n"), _T("<br>"));
+			str += _T("<tr><td>"); str += LS (L_DESC); str += _T(":</td><td>"); str += str2; str += _T("</td></tr>\n");
 		}
 
-		str += "</table><br>\n";
+		str += _T("</table><br>\n");
 	}
 
 	
-	str += "</body></html>";
+	str += _T("</body></html>");
 
+	USES_CONVERSION;
+	std::string sStr = CT2CA((LPCTSTR)str);
 	DWORD dw;
-	WriteFile (hFile, str, str.GetLength (), &dw, NULL);
+	WriteFile (hFile, sStr.c_str(), sStr.length(), &dw, NULL);
 
 	CloseHandle (hFile);
 
@@ -279,8 +281,8 @@ BOOL CDlgExportHistory::ExportHistory(LPCSTR pszFile, fs::list <fsDLHistoryRecor
 
 CString CDlgExportHistory::TimeToStr(FILETIME &time)
 {
-	char szDate [100], szTime [100];
+	TCHAR szDate [100], szTime [100];
 	FileTimeToStr (&time, szDate, szTime, TRUE);
-	CString str = szDate; str += ", "; str += szTime;
+	CString str = szDate; str += _T(", "); str += szTime;
 	return str;
 }

@@ -29,14 +29,14 @@
 #include "stdafx.h"
 
 #include "msdl.h"
-#include "msdllib.h"
+
 #include "network.h"
 #include "getopt_long.h"
 
 #include "TransferProtocolObjectImpl.h"
 #include "TransferProtocolDownloader.h"
 #include "TransferProtocolDownloaderImpl.h"
-
+#include "msdllib.h"
 static void print_usage(void);
 static struct list_h *set_options(struct options_t *options,int argc,char **argv);
 

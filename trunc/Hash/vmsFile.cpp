@@ -1,7 +1,9 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
+#include "StdAfx.h"
+#include <tchar.h>
 #include "vmsFile.h"
 #include <string>
 
@@ -24,24 +26,24 @@ void vmsFile::Close()
 	}
 }
 
-void vmsFile::Open(LPCSTR pszFile, BOOL bRead)
+void vmsFile::Open(LPCTSTR pszFile, BOOL bRead)
 {
 	Close ();
 
 	m_hFile = CreateFile (pszFile, bRead ? GENERIC_READ : GENERIC_WRITE,
 		bRead ? FILE_SHARE_READ : 0, NULL, OPEN_EXISTING, 0, NULL);
 	if (m_hFile == INVALID_HANDLE_VALUE)
-		throw "failed to open file";
+		throw _T("failed to open file");
 }
 
-void vmsFile::Create(LPCSTR pszFile)
+void vmsFile::Create(LPCTSTR pszFile)
 {
 	Close ();
 
 	m_hFile = CreateFile (pszFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, 
 		FILE_ATTRIBUTE_NORMAL, NULL);
 	if (m_hFile == INVALID_HANDLE_VALUE)
-		throw "failed to create file";
+		throw _T("failed to create file");
 }
 
 UINT64 vmsFile::get_Size()

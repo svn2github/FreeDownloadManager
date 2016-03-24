@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -38,25 +38,25 @@ BOOL vmsFdmAppMgr::IsBtInstalled()
 
 BOOL vmsFdmAppMgr::IsMediaFeaturesInstalled()
 {
-	return GetFileAttributes (((CFdmApp*)AfxGetApp ())->m_strAppPath + "mediaconverter.dll") != DWORD (-1);
+	return GetFileAttributes (((CFdmApp*)AfxGetApp ())->m_strAppPath + _T("mediaconverter.dll")) != DWORD (-1);
 }
 
 void vmsFdmAppMgr::ShowInstallMediaFeaturesMessage()
 {
-	MessageBox (NULL, LS (L_INST_MEDIA_FEATURES), "Free Download Manager", 0);
+	MessageBox (NULL, LS (L_INST_MEDIA_FEATURES), _T("Free Download Manager"), 0);
 }
 
 void vmsFdmAppMgr::ShowInstallBtMessage()
 {
-	MessageBox (NULL, LS (L_INST_BT_SUPPORT), "Free Download Manager", 0);
+	MessageBox (NULL, LS (L_INST_BT_SUPPORT), _T("Free Download Manager"), 0);
 }
 
-LPCSTR vmsFdmAppMgr::getBuildNumberAsString()
+LPCTSTR vmsFdmAppMgr::getBuildNumberAsString()
 {
-	static std::string str;
+	static tstring str;
 	if (!str.empty ())
 		return str.c_str ();
-	str = getVersion ()->m_appVersion.size () > 2 ? getVersion ()->m_appVersion [2].toString () : "???";
+	str = getVersion ()->m_appVersion.size () > 2 ? getVersion ()->m_appVersion [2].toString () : _T("???");
 	return str.c_str ();
 }
 
@@ -77,32 +77,32 @@ const vmsBinaryFileVersionInfo* vmsFdmAppMgr::getVersion()
 	return &bfvi;
 }
 
-LPCSTR vmsFdmAppMgr::getAppVersionedName()
+LPCTSTR vmsFdmAppMgr::getAppVersionedName()
 {
-	static std::string str;
+	static tstring str;
 	if (str.empty ())
 	{
 		str = getAppName ();
-		str += ' ';
+		str += _T(' ');
 		str += getVersion ()->m_tstrProductVersion;
 	}
 	return str.c_str ();
 }
 
-LPCSTR vmsFdmAppMgr::getAppAgentName()
+LPCTSTR vmsFdmAppMgr::getAppAgentName()
 {
-	static std::string str;
+	static tstring str;
 	if (str.empty ())
 	{
-		str = "FDM ";
-		char sz [100];
-		str += itoa (getVersion ()->m_appVersion [0].dwVal, sz, 10);
-		str += ".x"; 
+		str = _T("FDM ");
+		TCHAR sz [100];
+		str += _itot (getVersion ()->m_appVersion [0].dwVal, sz, 10);
+		str += _T(".x"); 
 	}
 	return str.c_str ();
 }
 
-LPCSTR vmsFdmAppMgr::getAppName()
+LPCTSTR vmsFdmAppMgr::getAppName()
 {
 	return getVersion ()->m_tstrProductName.c_str ();
 }
@@ -148,32 +148,32 @@ BOOL vmsFdmAppMgr::MakeSureBtInstalled()
 	return TRUE;
 }
 
-LPCSTR vmsFdmAppMgr::getAppAgentNameUf()
+LPCTSTR vmsFdmAppMgr::getAppAgentNameUf()
 {
-	static std::string str;
+	static tstring str;
 	if (str.empty ())
 	{
-		str = "Free Download Manager ";
-		char sz [100];
-		str += itoa (getVersion ()->m_appVersion [0].dwVal, sz, 10);
-		str += ".x"; 
+		str = _T("Free Download Manager ");
+		TCHAR sz [100];
+		str += _itot (getVersion ()->m_appVersion [0].dwVal, sz, 10);
+		str += _T(".x"); 
 	}
 	return str.c_str ();
 }
 
-LPCSTR vmsFdmAppMgr::getAppBtAgentName()
+LPCTSTR vmsFdmAppMgr::getAppBtAgentName()
 {
-	static std::string str;
+	static tstring str;
 	if (str.empty ())
 	{
-		str = "FDM/";
-		char sz [100];
-		str += itoa (getVersion ()->m_appVersion [0].dwVal, sz, 10);
-		str += '.';
-		str += itoa (getVersion ()->m_appVersion [1].dwVal, sz, 10);
-		str += '(';
-		str += itoa (getVersion ()->m_appVersion [2].dwVal, sz, 10);
-		str += ')';
+		str = _T("FDM/");
+		TCHAR sz [100];
+		str += _itot (getVersion ()->m_appVersion [0].dwVal, sz, 10);
+		str += _T('.');
+		str += _itot (getVersion ()->m_appVersion [1].dwVal, sz, 10);
+		str += _T('(');
+		str += _itot (getVersion ()->m_appVersion [2].dwVal, sz, 10);
+		str += _T(')');
 	}
 	return str.c_str ();
 }

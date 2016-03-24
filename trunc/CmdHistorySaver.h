@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef CMDHISTORYSAVER_INCLUDED_FILE
@@ -7,7 +7,7 @@
 
 #include "vmsPersistObject.h"
 
-#define HISTFILE_CURRENT_VERSION	(2)
+#define HISTFILE_CURRENT_VERSION	(3)
 
 #define HISTFILE_SIG "FDM History"
 

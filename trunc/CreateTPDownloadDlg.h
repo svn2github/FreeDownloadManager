@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_CREATETPDOWNLOADDLG_H__03F2DDF0_42A2_447A_A6F5_59C47F718201__INCLUDED_)
@@ -24,7 +24,7 @@ public:
 	static BOOL _CheckFileName (CDialog* pdlg, UINT nIdCtrl);
 	
 	
-	static BOOL _SetDownloadOutputFolderAsDefault (CWnd* pwndParent, LPCSTR pszFolder, vmsDownloadsGroupSmartPtr pGroup);
+	static BOOL _SetDownloadOutputFolderAsDefault (CWnd* pwndParent, LPCTSTR pszFolder, vmsDownloadsGroupSmartPtr pGroup);
 	
 	bool m_bPlaceAtTop;
 	
@@ -46,7 +46,7 @@ public:
 	int m_nStreamingSpeed;
 
 	CCreateTPDownloadDlg(vmsDownloadSmartPtr dld, CWnd* pParent = NULL);
-	fsInternetResult Crack(LPCSTR pszUrl);
+	fsInternetResult Crack(LPCTSTR pszUrl);
 
 	//{{AFX_DATA(CCreateDownloadDlg)
 	enum { IDD = IDD_CREATETPDOWNLOAD };

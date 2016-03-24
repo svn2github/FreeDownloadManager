@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSSIMPLEFILEDOWNLOADER_H__539BE448_3975_4D2A_858C_84EFAD3E3300__INCLUDED_)
@@ -13,12 +13,24 @@
 class vmsSimpleFileDownloader  
 {
 public:
-	fsInternetResult Download (LPCSTR pszUrl, LPCSTR pszFileName);
+	fsInternetResult Download (LPCTSTR pszUrl, LPCTSTR pszFileName);
 	
 	void Stop();
 	
-	fsInternetResult GetLastError();
+	fsInternetDownloaderResult GetLastError();
 	bool IsRunning();
+
+	LPCTSTR out_file_name () const
+	{
+		assert (m_dldr);
+		return m_dldr->GetDP ()->pszFileName;
+	}
+
+	double getProgressInPercentage () const
+	{
+		assert (m_dldr);
+		return m_dldr->GetDownloader ()->GetPercentDone ();
+	}
 	
 	vmsSimpleFileDownloader();
 	virtual ~vmsSimpleFileDownloader();
@@ -26,7 +38,7 @@ public:
 protected:
 	void CreateDownloader();
 	static DWORD _DownloadMgrEvents(fsDownloadMgr* pMgr, fsDownloaderEvent ev, UINT uInfo, LPVOID lp);
-	static void _DownloadMgrDescEvents(fsDownloadMgr* , fsDownloadMgr_EventDescType , LPCSTR pszDesc, LPVOID lp);
+	static void _DownloadMgrDescEvents(fsDownloadMgr* , fsDownloadMgr_EventDescType , LPCTSTR pszDesc, LPVOID lp);
 	fsDownloadMgr *m_dldr;
 };
 

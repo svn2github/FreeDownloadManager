@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSMEDIACONVERTER_H__1762A7AC_DBF0_48DE_84F5_ED51698BCC51__INCLUDED_)
@@ -13,12 +13,13 @@
 class vmsMediaConverter  
 {
 public:
-	static BOOL ConvertMedia(LPCSTR pszSrcFile, LPCSTR pszDstFile, LPCSTR pszDstFormat,
-						  LPCSTR pszAudioCodec, int nAudioChannels, int nAudioBitrate, 
+	static BOOL ConvertMedia(LPCTSTR pszSrcFile, LPCTSTR pszDstFile, LPCTSTR pszDstFormat,
+						  LPCTSTR pszAudioCodec, int nAudioChannels, int nAudioBitrate, 
 						  int nAudioRate,
-						  LPCSTR pszVideoCodec, int nVideoBitrate, int nVideoFrameRate,
+						  LPCTSTR pszVideoCodec, int nVideoBitrate, int nVideoFrameRate,
 						  int nVideoFrameWidth, int nVideoFrameHeight,
-						  int* pnProgress, BOOL *pbCancel);
+						  int* pnProgress, BOOL *pbCancel, int *ffmpegErrCode,
+						  std::string *ffmpegErrorMessage);
 	vmsMediaConverter();
 	virtual ~vmsMediaConverter();
 

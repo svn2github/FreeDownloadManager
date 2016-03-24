@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSHTTPFILES_H__50AB10C6_642A_4EEE_96AE_6E16668CF6F0__INCLUDED_)
@@ -29,7 +29,7 @@ class fsHttpFiles : public fsInternetFiles
 public:
 	
 	
-	fsInternetResult GetList (LPCSTR pszPath);
+	fsInternetResult GetList (LPCTSTR pszPath);
 	void Abort();
 
 	
@@ -38,7 +38,7 @@ public:
 	void SetEventFunc (fntHttpFilesEventFunc pfn, LPVOID lpParam);
 	
 	void UseSecure (BOOL bUse);
-	LPCSTR GetLastError();
+	LPCTSTR GetLastError();
 	
 	void SetServer (fsHttpConnection* pServer);
 	
@@ -47,18 +47,18 @@ public:
 	fsHttpFiles();
 	virtual ~fsHttpFiles();
 protected:
-	LPCSTR m_pszBaseURL;
+	LPCTSTR m_pszBaseURL;
 	
 	void Event (fsHttpFilesEvent enEvent);
 	
 	
-	void CalcUrl (fsFileInfo* pInfo, LPCSTR pszSomeUrl);
+	void CalcUrl (fsFileInfo* pInfo, LPCTSTR pszSomeUrl);
 	
 	void CheckFolder (fsFileInfo* file);
 	
 	
 	
-	fsInternetResult GetUrlInfo (LPCSTR pszUrl, fsFileInfo *pInfo);
+	fsInternetResult GetUrlInfo (LPCTSTR pszUrl, fsFileInfo *pInfo);
 	
 	fsInternetResult BuildFileList();
 	

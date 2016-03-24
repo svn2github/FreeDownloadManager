@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -18,6 +18,8 @@ using namespace std;
 #include "vmsFlvSniffDllLoader.h"
 #include "vmsDomHelper.h"
 #include "vmsUrl.h"
+#include "../common/util.h"
+#include "../common/component_crash_rep.h"
 
 #include "vmsFlashHelper.h"
 _COM_SMARTPTR_TYPEDEF(IShockwaveFlash, __uuidof(IShockwaveFlash));
@@ -53,11 +55,11 @@ IHTMLDocument2Ptr doc_from_hwnd (HWND hwnd)
 	if (hInst == NULL)
 		return NULL;
 
-	LPFNOBJECTFROMLRESULT pfObjectFromLresult = (LPFNOBJECTFROMLRESULT)::GetProcAddress( hInst, _T("ObjectFromLresult") );
+	LPFNOBJECTFROMLRESULT pfObjectFromLresult = (LPFNOBJECTFROMLRESULT)::GetProcAddress( hInst, "ObjectFromLresult" );
 	if (pfObjectFromLresult == NULL)
 		return NULL;
 
-	UINT nMsg = RegisterWindowMessage ("WM_HTML_GETOBJECT");
+	UINT nMsg = RegisterWindowMessage (_T("WM_HTML_GETOBJECT"));
 	
 	LRESULT lRes;
 	::SendMessageTimeout (hwnd, nMsg, 0L, 0L, SMTO_ABORTIFHUNG, 1000, (DWORD*)&lRes );
@@ -88,7 +90,9 @@ BOOL is_okpage (HWND hwnd)
 
 	USES_CONVERSION;
 
-	if (vmsVideoSiteHtmlCodeParser::GetSupportedSiteIndex (W2A (bstrHost)) != -1)
+	_bstr_t bsHost(bstrHost, false);
+
+	if (vmsVideoSiteHtmlCodeParser::GetSupportedSiteIndex ((LPCTSTR)bsHost) != -1)
 		return TRUE;
 
 	return FALSE;
@@ -108,7 +112,7 @@ BOOL GetIEVersion(DWORD *pMajor, DWORD *pMinor, DWORD *pBuild, DWORD *pSubBuild)
         lRet = rk.QueryValue (szBuff, _T("Version"), &dwCount);
         if(lRet == 0)
         {
-            sscanf(szBuff, "%u.%u.%u.%u", pMajor, pMinor, pBuild, pSubBuild);
+            _stscanf_s(szBuff, _T("%u.%u.%u.%u"), pMajor, pMinor, pBuild, pSubBuild);
             return TRUE;
         }
     }
@@ -133,10 +137,10 @@ HWND find_ie_server (HWND hwnd)
 		if (hwnd2 == NULL)
 			return NULL;
 
-		char sz [1000];
+		TCHAR sz [1000];
 		GetClassName (hwnd2, sz, sizeof (sz));
 
-		if (lstrcmpi (sz, "Internet Explorer_Server") == 0)
+		if (lstrcmpi (sz, _T("Internet Explorer_Server")) == 0)
 			return hwnd2;
 
 		HWND hwnd3 = find_ie_server (hwnd2);
@@ -149,6 +153,8 @@ vmsFlvSniffDllLoader _SniffDllLoader (1);
 
 STDMETHODIMP CFDMIEBHO::SetSite(IUnknown *pSite)
 {
+	makeSureCrashReporterInitialized ();
+
 	if (pSite)
 	{
 		vmsCriticalSectionAutoLock csal (&_csInstances);
@@ -159,7 +165,7 @@ STDMETHODIMP CFDMIEBHO::SetSite(IUnknown *pSite)
 
 		
 
-		if (GetModuleHandle ("fdmumsp.dll") == NULL)
+		if (GetModuleHandle (_T("fdmumsp.dll")) == NULL)
 		{
 			TCHAR tsz [MAX_PATH] = _T ("");
 			GetModuleFileName (_Module.GetModuleInstance (), tsz, MAX_PATH);
@@ -794,9 +800,17 @@ void CFDMIEBHO::OnHtmlEvent(IUnknown *pDocUnk, DISPID idEvent, VARIANT *pVarResu
 		spEvent->get_srcElement (&spElem);
 		if (spElem)
 		{
-			IShockwaveFlashPtr spFlash (spElem);
+			bool videoElement = false;
 
-			if (spFlash == NULL)
+			CComBSTR tagName;
+			spElem->get_tagName (&tagName);
+			videoElement = tagName == L"VIDEO";
+
+			IShockwaveFlashPtr spFlash (spElem);
+			if (spFlash)
+				videoElement = true;
+
+			if (!videoElement)
 			{
 				CComBSTR bsType;
 				spEvent->get_type (&bsType);
@@ -873,7 +887,8 @@ void CFDMIEBHO::OnHtmlEvent(IUnknown *pDocUnk, DISPID idEvent, VARIANT *pVarResu
 					if (m_wstrFrameUrl == m_wstrPageUrl)
 						m_wstrFrameUrl = L"";
 
-					GetFlashMovie (spDoc, spFlash, m_wstrSwfUrl);
+					if (spFlash)
+						GetFlashMovie (spDoc, spFlash, m_wstrSwfUrl);
 
 					CComBSTR bstrFuncName = getJSFunc_fdm_fmb_getElementParam (JSFunc_Name);
 
@@ -893,10 +908,15 @@ void CFDMIEBHO::OnHtmlEvent(IUnknown *pDocUnk, DISPID idEvent, VARIANT *pVarResu
 
 					GatherAllSwfUrlsAndFlashVars (spRootDoc, m_wstrOtherSwfUrls, m_wstrOtherFlashVars, spFlash);
 
-					USES_CONVERSION;
-					BOOL bVideo = vmsFlvSniffDll::IsVideoFlash (W2CA (m_wstrPageUrl.c_str ()),
-						W2CA (m_wstrFrameUrl.c_str ()), W2CA (m_wstrSwfUrl.c_str ()), W2CA (m_wstrFlashVars.c_str ()), 
-						W2CA (m_wstrOtherSwfUrls.c_str ()), W2CA (m_wstrOtherFlashVars.c_str ()));
+					BOOL bVideo = vmsIsYouTubeVideoPage (m_wstrPageUrl);
+
+					if (!bVideo)
+					{
+						USES_CONVERSION;
+						bVideo = vmsFlvSniffDll::IsVideoFlash (W2CA (m_wstrPageUrl.c_str ()),
+							W2CA (m_wstrFrameUrl.c_str ()), W2CA (m_wstrSwfUrl.c_str ()), W2CA (m_wstrFlashVars.c_str ()), 
+							W2CA (m_wstrOtherSwfUrls.c_str ()), W2CA (m_wstrOtherFlashVars.c_str ()));
+					}				
 					
 					if (bVideo)
 						ShowGetItButton (BST_SHOW, &rc);
@@ -921,12 +941,13 @@ DWORD WINAPI CFDMIEBHO::_threadFlash_GetItButton(LPVOID lp)
 	HWND hwndIE = pthis->m_hWnd;
 
 	USES_CONVERSION;
-	pthis->m_pGetItBtn->m_strHtmlPageUrl = W2CA (pthis->m_wstrPageUrl.c_str ());
+	pthis->m_pGetItBtn->m_wstrHtmlPageUrl = pthis->m_wstrPageUrl;
 	pthis->m_pGetItBtn->m_strFrameUrl = W2CA (pthis->m_wstrFrameUrl.c_str ());
 	pthis->m_pGetItBtn->m_strSwfUrl = W2CA (pthis->m_wstrSwfUrl.c_str ());
 	pthis->m_pGetItBtn->m_strFlashVars = W2CA (pthis->m_wstrFlashVars.c_str ());
 	pthis->m_pGetItBtn->m_strOtherSwfUrls = W2CA (pthis->m_wstrOtherSwfUrls.c_str ());
 	pthis->m_pGetItBtn->m_strOtherFlashVars = W2CA (pthis->m_wstrOtherFlashVars.c_str ());
+	pthis->m_pGetItBtn->m_youtubeVideo = vmsIsYouTubeVideoPage (pthis->m_wstrPageUrl);
 	pthis->m_pGetItBtn->Create (pthis->m_hWndIeServer, &pthis->m_rcFlash);
 
 	HWND hwndDlIt = pthis->m_pGetItBtn->getHWND ();
@@ -949,7 +970,7 @@ DWORD WINAPI CFDMIEBHO::_threadFlash_GetItButton(LPVOID lp)
 	if (SUCCEEDED (hrCoInit))
 		CoUninitialize ();
 
-	if (p->Clicked ())
+	if (p->Clicked () && !p->m_youtubeVideo)
 		p->getSniffDll ()->OnDownloadItBtnClicked_ShowMsgIfReq (hwndIE);
 	delete p;
 

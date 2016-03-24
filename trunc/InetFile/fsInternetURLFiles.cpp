@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsInternetURLFiles.h"
@@ -14,7 +14,7 @@ fsInternetURLFiles::~fsInternetURLFiles()
 
 }
 
-fsInternetResult fsInternetURLFiles::GetList(fsInternetURLServer *pServer, LPCSTR pszPath)
+fsInternetResult fsInternetURLFiles::GetList(fsInternetURLServer *pServer, LPCTSTR pszPath)
 {
 	
 	if (pServer->IsHttpServer () || pServer->IsHttpsServer ())
@@ -52,12 +52,12 @@ void fsInternetURLFiles::Abort()
 		m_pFiles->Abort ();
 }
 
-LPCSTR fsInternetURLFiles::GetLastError()
+LPCTSTR fsInternetURLFiles::GetLastError()
 {
 	return m_pFiles->GetLastError ();
 }
 
-LPCSTR fsInternetURLFiles::GetCurrentPath()
+LPCTSTR fsInternetURLFiles::GetCurrentPath()
 {
 	return m_pFiles ? m_pFiles->GetCurrentPath () : NULL;
 }

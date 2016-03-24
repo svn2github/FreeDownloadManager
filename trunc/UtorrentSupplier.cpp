@@ -1,11 +1,11 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "StdAfx.h"
 #include "UtorrentSupplier.h"
 #include "Utils.h"
-#include "vmsFileUtil.h"
+#include "common/vmsFileUtil.h"
 #include "vmsLogger.h"
 
 CUtorrentSupplier::CUtorrentSupplier()
@@ -18,7 +18,7 @@ CUtorrentSupplier::~CUtorrentSupplier()
 
 bool CUtorrentSupplier::CheckSupplier() const
 {
-	char szPath [MAX_PATH];
+	TCHAR szPath [MAX_PATH];
 	return UtorrentInstalled(szPath);
 }
 
@@ -26,10 +26,12 @@ void CUtorrentSupplier::Import(informer fnInformer, void* pData, TImportResult& 
 {
 	try 
 	{
-		char szPath [MAX_PATH];
+		TCHAR szPath [MAX_PATH];
 		if(!UtorrentInstalled(szPath)) {
 			CString sMsg = LS (L_UTORRENT_SAVEFOLDER_NOTFOUND);
-			throw std::runtime_error((const char*)sMsg);
+			USES_CONVERSION;
+			std::string _sMsg = CT2A(sMsg);
+			throw std::runtime_error(_sMsg.c_str());
 		}
 		ImportUtorrentDownloads(fnInformer, pData, tImportResult, this, szPath);
 	}
@@ -47,7 +49,9 @@ void CUtorrentSupplier::Import(informer fnInformer, void* pData, TImportResult& 
 		}
 		pExc->Delete();
 
-		throw std::runtime_error((const char*)sMsg);
+		USES_CONVERSION;
+		std::string _sMsg = CT2A(sMsg);
+		throw std::runtime_error(_sMsg);
 	}
 }
 
@@ -75,13 +79,13 @@ void CUtorrentSupplier::appendErrorCode(CString& sMsg, HRESULT hr) const
 	sMsg += sTmp;
 }
 
-bool CUtorrentSupplier::UtorrentInstalled(LPSTR szPath)
+bool CUtorrentSupplier::UtorrentInstalled(LPTSTR szPath)
 {
-	vmsFileUtil::GetAppDataPath("uTorrent", szPath);
-	return vmsFileUtil::DirectoryExists(szPath) != FALSE;
+	vmsFDM::vmsFileUtil::GetAppDataPath(_T("uTorrent"), szPath);
+	return vmsFDM::vmsFileUtil::DirectoryExists(szPath) != FALSE;
 }
 
-void CUtorrentSupplier::ImportUtorrentDownloads(informer fnInformer, void* pData, TImportResult& tImportResult, const CUtorrentSupplier* pUtorrentSupplier, LPSTR szPath)
+void CUtorrentSupplier::ImportUtorrentDownloads(informer fnInformer, void* pData, TImportResult& tImportResult, const CUtorrentSupplier* pUtorrentSupplier, LPTSTR szPath)
 {
 	CString uTorrentPath = szPath;
 	vmsObjectSmartPtr <vmsUTorrentDownloadsDb> spUTorrentDownloads = _BT.CreateUTorrentDownloadsDbObject ();
@@ -89,7 +93,9 @@ void CUtorrentSupplier::ImportUtorrentDownloads(informer fnInformer, void* pData
 	if (!spUTorrentDownloads)
 		return;
 
-	spUTorrentDownloads->ImportUtorrentDownloads(uTorrentPath + "resume.dat");
+	
+	CString sFile = uTorrentPath + _T("resume.dat");
+	spUTorrentDownloads->ImportUtorrentDownloads((LPCTSTR)sFile);
 
 	tImportResult.nFailure = 0;
 	tImportResult.nSuccess = 0;

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSUNRARDLL_H__3C62C56A_FEA7_4A2A_A83A_D6F5809CB142__INCLUDED_)
@@ -21,10 +21,10 @@ public:
 	void RARSetCallback (HANDLE hArcData,UNRARCALLBACK Callback,LONG UserData);
 	HANDLE RAROpenArchiveEx (struct RAROpenArchiveDataEx *ArchiveData);
 
-	virtual bool Load (LPCSTR pszDll);
+	virtual bool Load (LPCTSTR pszDll);
 	virtual void Free();
 
-	vmsUnRARDLL(LPCSTR pszDll = NULL);
+	vmsUnRARDLL(LPCTSTR pszDll = NULL);
 	virtual ~vmsUnRARDLL();
 
 protected:

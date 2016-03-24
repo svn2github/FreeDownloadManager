@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_CREATEDOWNLOADDLG_H__03F2DDF0_42A2_447A_A6F5_59C47F718201__INCLUDED_)
@@ -13,7 +13,20 @@
 #include "fsScheduleMgr.h"
 #include "DownloadsGroupsComboBox.h"
 
-#define ID_DLNOTADDED (IDCANCEL+100)
+#define ID_DLNOTADDED_EXISTS				(IDCANCEL+100)
+#define ID_DLNOTADDED_NEEDSPECIFICCREATION	(IDCANCEL+101)
+
+namespace DownloadType { 
+enum DownloadType {
+	UNKNOWN,
+	YOUTUBE_DOWNLOAD
+};
+
+ENUM_STREAM_SUPPORT_BEGIN (DownloadType)
+	ENUM_STREAM_SUPPORT_ENTRY (YOUTUBE_DOWNLOAD, L"YtDownload")
+ENUM_STREAM_SUPPORT_END (DownloadType)
+
+}
 
 class CCreateDownloadDlg : public CDialog
 {
@@ -26,11 +39,11 @@ public:
 	static BOOL _CheckFileName (CDialog* pdlg, UINT nIdCtrl);
 	
 	
-	static BOOL _SetDownloadOutputFolderAsDefault (CWnd* pwndParent, LPCSTR pszFolder, vmsDownloadsGroupSmartPtr pGroup);
+	static BOOL _SetDownloadOutputFolderAsDefault (CWnd* pwndParent, LPCTSTR pszFolder, vmsDownloadsGroupSmartPtr pGroup);
 	
 	LPCSTR m_pszPostData;
 	
-	LPCSTR m_pszCookies;
+	LPCTSTR m_pszCookies;
 	
 	bool m_bPlaceAtTop;
 	
@@ -40,7 +53,7 @@ public:
 	
 	static fsSiteInfo* _SavePassword (vmsDownloadSmartPtr dld);
 	
-	static fsSiteInfo* _SavePassword(LPCSTR pszServer, fsNetworkProtocol np, LPCSTR pszUser, LPCSTR pszPwd);
+	static fsSiteInfo* _SavePassword(LPCTSTR pszServer, fsNetworkProtocol np, LPCTSTR pszUser, LPCTSTR pszPwd);
 	
 	
 	
@@ -54,6 +67,7 @@ public:
 	BOOL m_bAuthorization;		
 	CString m_strUrl;			
 	class CFdmUiWindow *m_pUiWindow;
+	BOOL m_useSpecificCreationMethodIfApplicable;
 
 	CCreateDownloadDlg(vmsDownloadSmartPtr dld, CWnd* pParent = NULL);
 
@@ -130,6 +144,10 @@ protected:
 	afx_msg void OnOutfolderSetdefault();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+public:
+	static bool AskUserToUseSpecificCreationMethod(CWnd *parentWindow, 
+		DownloadType::DownloadType type, bool topmostUi);
+	static DownloadType::DownloadType GetDownloadType(LPCTSTR url);
 };
 
 //{{AFX_INSERT_LOCATION}}

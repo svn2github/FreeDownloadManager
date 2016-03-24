@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSINTERNETURLSERVER_H__8100FC18_F1BF_4F7F_B866_0CB57B83B9DD__INCLUDED_)
@@ -17,10 +17,10 @@ class fsInternetURLServer
 {
 public:
 	
-	fsInternetResult Connect (LPCSTR pszUrl, LPCSTR pszUser, LPCSTR pszPassword, INTERNET_PORT nPort);
+	fsInternetResult Connect (LPCTSTR pszUrl, LPCTSTR pszUser, LPCTSTR pszPassword, INTERNET_PORT nPort);
 	void CloseHandle();
 	INTERNET_PORT GetServerPort();
-	LPCSTR GetServerName();
+	LPCTSTR GetServerName();
 	HINTERNET GetHandle();
 	fsInternetResult Initialize (fsInternetSession* pSession);
 

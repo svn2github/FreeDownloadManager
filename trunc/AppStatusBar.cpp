@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -38,7 +38,7 @@ int CAppStatusBar::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_ttip.SendMessage(TTM_SETMAXTIPWIDTH, 0, (UINT)(WORD)-1);
 
 	CRect rc (0, 0, 0, 0);
-	m_ttip.AddTool (this, " ", &rc, ID_SB_TRAFFIC_THISMONTH);
+	m_ttip.AddTool (this, _T(" "), &rc, ID_SB_TRAFFIC_THISMONTH);
 	m_ttip.AddTool (this, LS (L_TOTAL_SPEED_SBTEXT), &rc, ID_SB_TOTALSPEED);
 	
 	return 0;
@@ -58,7 +58,7 @@ void CAppStatusBar::OnSize(UINT nType, int cx, int cy)
 	m_ttip.SetToolRect (this, ID_SB_TOTALSPEED, &rc);	
 }
 
-void CAppStatusBar::SetToolTipText(UINT nIDTip, LPCSTR pszText)
+void CAppStatusBar::SetToolTipText(UINT nIDTip, LPCTSTR pszText)
 {
 	m_ttip.UpdateTipText (pszText, this, nIDTip);
 }

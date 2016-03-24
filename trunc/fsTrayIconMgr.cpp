@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -17,8 +17,6 @@ fsTrayIconMgr::fsTrayIconMgr()
 {
 	m_pIcons = NULL;
 	m_iCurIconIndex = 0;
-
-	m_cbNIDSize = GetShell32Version () >= 5 ? sizeof (NOTIFYICONDATA) : NOTIFYICONDATA_V1_SIZE;
 }
 
 fsTrayIconMgr::~fsTrayIconMgr()
@@ -26,7 +24,7 @@ fsTrayIconMgr::~fsTrayIconMgr()
 
 }
 
-BOOL fsTrayIconMgr::Create(HWND hWnd, UINT *pIcons, UINT cIcons, LPCSTR pszTooltip, UINT uCallbackMsg)
+BOOL fsTrayIconMgr::Create(HWND hWnd, UINT *pIcons, UINT cIcons, LPCTSTR pszTooltip, UINT uCallbackMsg)
 {
 	LoadIcons (pIcons, cIcons);
 	m_hWnd = hWnd;
@@ -50,9 +48,9 @@ void fsTrayIconMgr::LoadIcons(UINT *pIcons, UINT cIcons)
 
 void fsTrayIconMgr::Remove()
 {
-	NOTIFYICONDATA data;
+	NOTIFYICONDATA data = {0};
 
-	data.cbSize = m_cbNIDSize;
+	data.cbSize = sizeof (NOTIFYICONDATA);
 	data.hWnd = m_hWnd;
 	data.uID = m_nID;
 
@@ -61,12 +59,12 @@ void fsTrayIconMgr::Remove()
 
 BOOL fsTrayIconMgr::ShowIcon(int iIndex)
 {
-	NOTIFYICONDATA data;
+	NOTIFYICONDATA data = {0};
 
 	if (m_pIcons == NULL)
 		return FALSE;
 
-	data.cbSize = m_cbNIDSize;
+	data.cbSize = sizeof (NOTIFYICONDATA);
 	data.hIcon = m_pIcons [m_iCurIconIndex = iIndex];
 	data.hWnd = m_hWnd;
 	data.uFlags = NIF_ICON;
@@ -80,15 +78,15 @@ BOOL fsTrayIconMgr::InitializeTrayIcon()
 	if (m_pIcons == NULL)
 		return FALSE;
 
-	NOTIFYICONDATA data;
+	NOTIFYICONDATA data = {0};
 
-	data.cbSize = m_cbNIDSize;
+	data.cbSize = sizeof (NOTIFYICONDATA);
 	data.hIcon = m_pIcons [0];
 	data.hWnd = m_hWnd;
-	strcpy (data.szTip, m_strTip);
+	_tcscpy (data.szTip, m_strTip);
 	data.uCallbackMessage = m_uCallbackMsg;
 	data.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
-	data.uID = m_nID = 0;
+	data.uID = m_nID = 1;
 
 	return Shell_NotifyIcon (NIM_ADD, &data);
 }
@@ -102,33 +100,33 @@ void fsTrayIconMgr::TestIcon()
 	}
 }
 
-BOOL fsTrayIconMgr::ShowBalloon(LPCSTR pszInfo, LPCSTR pszInfoTitle, DWORD dwNiifIcon)
+BOOL fsTrayIconMgr::ShowBalloon(LPCTSTR pszInfo, LPCTSTR pszInfoTitle, DWORD dwNiifIcon)
 {
 	if (GetShell32Version () < 5)
 		return FALSE;
 		
-	NOTIFYICONDATA data;
+	NOTIFYICONDATA data = {0};
 
-	data.cbSize = m_cbNIDSize;
+	data.cbSize = sizeof (NOTIFYICONDATA);
 	data.hWnd = m_hWnd;
 	data.uID = m_nID;
 	data.uFlags = NIF_INFO;
 	
-	if (strlen (pszInfo) > 255)
+	if (_tcslen (pszInfo) > 255)
 	{
-		strncpy (data.szInfo, pszInfo, 255);
+		_tcsncpy (data.szInfo, pszInfo, 255);
 		data.szInfo [255] = 0;
 	}
 	else
-		strcpy (data.szInfo, pszInfo);
+		_tcscpy (data.szInfo, pszInfo);
 
-	if (strlen (pszInfoTitle) > 63)
+	if (_tcslen (pszInfoTitle) > 63)
 	{
-		strncpy (data.szInfoTitle, pszInfoTitle, 63);
+		_tcsncpy (data.szInfoTitle, pszInfoTitle, 63);
 		data.szInfoTitle [63] = 0;
 	}
 	else
-		strcpy (data.szInfoTitle, pszInfoTitle);
+		_tcscpy (data.szInfoTitle, pszInfoTitle);
 
 	data.dwInfoFlags = dwNiifIcon;
 	data.uTimeout = UINT_MAX;
@@ -136,24 +134,24 @@ BOOL fsTrayIconMgr::ShowBalloon(LPCSTR pszInfo, LPCSTR pszInfoTitle, DWORD dwNii
 	return Shell_NotifyIcon (NIM_MODIFY, &data);
 }
 
-void fsTrayIconMgr::setTip(LPCSTR pszTip)
+void fsTrayIconMgr::setTip(LPCTSTR pszTip)
 {
-	NOTIFYICONDATA data;
+	NOTIFYICONDATA data = {0};
 	
 	if (m_pIcons == NULL)
 		return;
 	
-	data.cbSize = m_cbNIDSize;
+	data.cbSize = sizeof (NOTIFYICONDATA);
 	data.hWnd = m_hWnd;
 	data.uFlags = NIF_TIP;
 	data.uID = m_nID;
-	strcpy (data.szTip, pszTip);
+	_tcscpy (data.szTip, pszTip);
 	m_strTip = pszTip;
 	
 	Shell_NotifyIcon (NIM_MODIFY, &data);
 }
 
-LPCSTR fsTrayIconMgr::getTip() const
+LPCTSTR fsTrayIconMgr::getTip() const
 {
 	return m_strTip;
 }

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -86,7 +86,7 @@ void CDlg_TUMChanged::ApplyLanguage()
 		fsDlgLngInfo (IDC_DONTSHOW, L_DONTSHOWTHISWINDOWAGAIN),
 	};
 
-	CString str = LS (L_TUMCHANGED_TOP); str.Replace ("\\n", "\n");
+	CString str = LS (L_TUMCHANGED_TOP); str.Replace (_T("\\n"), _T("\n"));
 	SetDlgItemText (IDC__TOPMSG, str);
 
 	_LngMgr.ApplyLanguage (this, lnginfo, sizeof (lnginfo) / sizeof (fsDlgLngInfo), L_TUMCHANGED);

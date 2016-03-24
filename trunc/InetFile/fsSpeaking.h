@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSSPEAKING_H__F6C6F409_5AA9_4555_8ECF_52ECC50EF0BE__INCLUDED_)
@@ -15,7 +15,7 @@ enum fsInetFileDialogDirection
 	IFDD_FROMSERVER				
 };
 
-typedef void (*fntInetFileDialogFunc) (fsInetFileDialogDirection enDir, LPCSTR pszMsg, LPVOID lp1, LPVOID lp2);
+typedef void (*fntInetFileDialogFunc) (fsInetFileDialogDirection enDir, LPCTSTR pszMsg, LPVOID lp1, LPVOID lp2);
 
 class fsSpeaking  
 {
@@ -37,7 +37,7 @@ protected:
 	
 	
 	
-	virtual void Dialog (fsInetFileDialogDirection enDir, LPCSTR pszMsg);
+	virtual void Dialog (fsInetFileDialogDirection enDir, LPCTSTR pszMsg);
 
 	fntInetFileDialogFunc m_pfnDlgFunc;		
 	LPVOID m_lpDlgParam1, m_lpDlgParam2;	

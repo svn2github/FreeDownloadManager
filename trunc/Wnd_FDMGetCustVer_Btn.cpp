@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -72,15 +72,15 @@ BOOL CWnd_FDMGetCustVer_Btn::Create(CWnd *pwndParent)
 		AfxRegisterWndClass (0, LoadCursor (AfxGetInstanceHandle (), 
 					MAKEINTRESOURCE (IDC_HAND_)),
 				(HBRUSH)(COLOR_3DFACE+1), NULL), 
-			"", WS_CHILD|WS_VISIBLE,
+			_T(""), WS_CHILD|WS_VISIBLE,
 			CRect (0, 0, 130, _TB_SIZE_Y > GCVB_MIN_HEIGHT ? _TB_SIZE_Y : GCVB_MIN_HEIGHT), pwndParent, 0);
 
 	m_bmBtn.LoadBitmap (IDB_FDM_GETCVER_BTN);
 
-	m_fntText.CreateFont (12, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 0, 0, "Tahoma");
+	m_fntText.CreateFont (12, 0, 0, 0, FW_BOLD, 0, 0, 0, 0, 0, 0, 0, 0, _T("Tahoma"));
 
 	if (is_BtnCanBeMultiline () == FALSE)
-		m_strBtnText.Remove ('\n');
+		m_strBtnText.Remove (_T('\n'));
 
 	CalculateTextRect ();
 

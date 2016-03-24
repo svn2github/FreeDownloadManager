@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -39,9 +39,9 @@ BOOL CDlg_CheckFileIntegrity::OnInitDialog()
 {
 	CDialog::OnInitDialog();
 
-	LPCSTR ppszAlgs [] = {
-		"MD5", "SHA-1", "SHA-2 256", "SHA-2 384", "SHA-2 512",
-		"CRC 32"
+	LPCTSTR ppszAlgs [] = {
+		_T("MD5"), _T("SHA-1"), _T("SHA-2 256"), _T("SHA-2 384"), _T("SHA-2 512"),
+		_T("CRC 32")
 	};
 
 	
@@ -54,7 +54,7 @@ BOOL CDlg_CheckFileIntegrity::OnInitDialog()
 
 	CString strLastAlg = _App.Hash_LastAlgorithm ();
 
-	for (int i = 0; i < sizeof (ppszAlgs) / sizeof (LPCSTR); i++)
+	for (int i = 0; i < sizeof (ppszAlgs) / sizeof (LPCTSTR); i++)
 	{
 		m_wndAlgorithm.AddString (ppszAlgs [i]);
 		m_wndAlgorithm.SetItemData (i, ppnAlgs [i]);
@@ -136,16 +136,16 @@ void CDlg_CheckFileIntegrity::OnPastefromclipboard()
 
 void CDlg_CheckFileIntegrity::PasteChecksum(bool bCheckValid)
 {
-	LPCSTR psz = _ClipbrdMgr.Text ();
+	LPCTSTR psz = _ClipbrdMgr.Text ();
 	if (psz) {
 		if (bCheckValid) {
-			LPCSTR psz2 = psz;
+			LPCTSTR psz2 = psz;
 			while (*psz2) {
 				if (!(
-					  (*psz2 >= '0' && *psz2 <= '9') ||
-					  (*psz2 >= 'a' && *psz2 <= 'f') ||
-					  (*psz2 >= 'A' && *psz2 <= 'F') ||
-					  (*psz2 == ' ' || *psz2 == '-')
+					  (*psz2 >= _T('0') && *psz2 <= _T('9')) ||
+					  (*psz2 >= _T('a') && *psz2 <= _T('f')) ||
+					  (*psz2 >= _T('A') && *psz2 <= _T('F')) ||
+					  (*psz2 == _T(' ') || *psz2 == _T('-'))
 					  ))
 					return; 
 				psz2++;

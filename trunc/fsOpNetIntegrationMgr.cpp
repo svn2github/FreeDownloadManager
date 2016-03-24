@@ -1,12 +1,11 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 #include "FdmApp.h"
 #include "fsOpNetIntegrationMgr.h"
 #include "FolderBrowser.h"
-#include "vmsCommandLine.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -39,7 +38,7 @@ bool vmsNpPluginInstaller::IsPluginInstalled (bool bQueryPluginDirIfUnknown)
 
 		
 		
-		if (_tcsnicmp (m_tstrPluginsPath.c_str () + m_tstrPluginsPath.length () - 8, "Plugins\\", 8))
+		if (_tcsnicmp (m_tstrPluginsPath.c_str () + m_tstrPluginsPath.length () - 8, _T("Plugins\\"), 8))
 		{
 			if (GetFileAttributes ((m_tstrPluginsPath + _T ("program\\plugins")).c_str ()) != DWORD (-1))
 				m_tstrPluginsPath += _T ("program\\plugins\\");	
@@ -49,7 +48,7 @@ bool vmsNpPluginInstaller::IsPluginInstalled (bool bQueryPluginDirIfUnknown)
 	}
 
 	tstring tstr = m_tstrPluginsPath;
-	tstr += "npfdm.dll";
+	tstr += _T("npfdm.dll");
 	return GetFileAttributes (tstr.c_str ()) != DWORD (-1);
 }
 
@@ -147,11 +146,11 @@ void vmsNpPluginInstallerForOpera::Initialize ()
 {
 	CRegKey key;
 
-	if (ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, "Software\\Opera Software", KEY_READ))
+	if (ERROR_SUCCESS == key.Open (HKEY_CURRENT_USER, _T("Software\\Opera Software"), KEY_READ))
 	{
-		char szPath [MY_MAX_PATH] = "";
+		TCHAR szPath [MY_MAX_PATH] = _T("");
 		DWORD dw = sizeof (szPath);
-		if (ERROR_SUCCESS == key.QueryValue (szPath, "Plugin Path", &dw))
+		if (ERROR_SUCCESS == key.QueryValue (szPath, _T("Plugin Path"), &dw))
 		{
 			if (*szPath)
 			{
@@ -163,7 +162,7 @@ void vmsNpPluginInstallerForOpera::Initialize ()
 	}
 
 	if (m_tstrPluginsPath.empty () && ERROR_SUCCESS == key.Open (HKEY_CLASSES_ROOT, 
-		"Applications\\Opera.exe\\shell\\open\\command", KEY_READ))
+		_T("Applications\\Opera.exe\\shell\\open\\command"), KEY_READ))
 	{
 		QueryPluginsPathFromShellOpenCommandKey (key);
 	}
@@ -185,25 +184,25 @@ void vmsNpPluginInstallerForOpera::Initialize ()
 
 void vmsNpPluginInstaller::QueryPluginsPathFromRegistry (CRegKey key)
 {
-	char szPath [MY_MAX_PATH] = "";
+	TCHAR szPath [MY_MAX_PATH] = _T("");
 	DWORD dw = sizeof (szPath);
-	key.QueryValue (szPath, "Path", &dw);
+	key.QueryValue (szPath, _T("Path"), &dw);
 	if (*szPath)
 	{
 		m_tstrPluginsPath = szPath;
 		if (m_tstrPluginsPath [m_tstrPluginsPath.length () - 1] != '\\' || m_tstrPluginsPath [m_tstrPluginsPath.length () - 1] != '/')
 			m_tstrPluginsPath += '\\';
-		if (GetFileAttributes ((m_tstrPluginsPath + "program\\plugins").c_str ()) != DWORD (-1))
-			m_tstrPluginsPath += "program\\plugins\\";	
+		if (GetFileAttributes ((m_tstrPluginsPath + _T("program\\plugins")).c_str ()) != DWORD (-1))
+			m_tstrPluginsPath += _T("program\\plugins\\");	
 		else
-			m_tstrPluginsPath += "Plugins\\";
+			m_tstrPluginsPath += _T("Plugins\\");
 	}
 	key.Close ();
 }
 
 void vmsNpPluginInstaller::QueryPluginsPathFromShellOpenCommandKey (CRegKey key)
 {
-	char sz [MY_MAX_PATH] = "";
+	TCHAR sz [MY_MAX_PATH] = _T("");
 	DWORD dw = sizeof (sz);
 	key.QueryValue (sz, NULL, &dw);
 	vmsCommandLine cl;
@@ -217,10 +216,10 @@ void vmsNpPluginInstaller::QueryPluginsPathFromShellOpenCommandKey (CRegKey key)
 			m_tstrPluginsPath = sz;
 			if (m_tstrPluginsPath [m_tstrPluginsPath.length () - 1] != '\\' || m_tstrPluginsPath [m_tstrPluginsPath.length () - 1] != '/')
 				m_tstrPluginsPath += '\\';
-			if (GetFileAttributes ((m_tstrPluginsPath + "program\\plugins").c_str ()) != DWORD (-1))
-				m_tstrPluginsPath += "program\\plugins\\";
+			if (GetFileAttributes ((m_tstrPluginsPath + _T("program\\plugins")).c_str ()) != DWORD (-1))
+				m_tstrPluginsPath += _T("program\\plugins\\");
 			else
-				m_tstrPluginsPath += "Plugins\\";
+				m_tstrPluginsPath += _T("Plugins\\");
 		}
 	}
 }
@@ -229,10 +228,10 @@ void vmsNpPluginInstallerForNetscape::Initialize()
 {
 	CRegKey key;
 
-	CString strNetKey1 = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Netscp.exe";
-	CString strNetKey2 = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Netscp6.exe";
-	CString strNetKey3 = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Netscape.exe";
-	CString strNetKey4 = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\navigator.exe";
+	CString strNetKey1 = _T("Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Netscp.exe");
+	CString strNetKey2 = _T("Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Netscp6.exe");
+	CString strNetKey3 = _T("Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Netscape.exe");
+	CString strNetKey4 = _T("Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\navigator.exe");
 
 	if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strNetKey1, KEY_READ) ||
 		ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strNetKey2, KEY_READ) || 
@@ -251,7 +250,7 @@ void vmsNpPluginInstallerForFirefox::Initialize()
 {
 	CRegKey key;
 
-	CString strFfKey = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Firefox.exe";
+	CString strFfKey = _T("Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\Firefox.exe");
 
 	if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strFfKey, KEY_READ))
 	{
@@ -267,8 +266,8 @@ void vmsNpPluginInstallerForMozillaSuite::Initialize()
 {
 	CRegKey key;
 
-	CString strMozSKey1 = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\SeaMonkey.exe";
-	CString strMozSKey2 = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\mozilla.exe";
+	CString strMozSKey1 = _T("Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\SeaMonkey.exe");
+	CString strMozSKey2 = _T("Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\mozilla.exe");
 
 	if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strMozSKey1, KEY_READ) ||
 		ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, strMozSKey2, KEY_READ))
@@ -286,7 +285,7 @@ void vmsNpPluginInstallerForSafari::Initialize()
 {
 	CRegKey key;
 
-	if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, "Software\\Clients\\StartMenuInternet\\Safari.exe\\shell\\open\\command", KEY_READ))
+	if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, _T("Software\\Clients\\StartMenuInternet\\Safari.exe\\shell\\open\\command"), KEY_READ))
 	{
 		QueryPluginsPathFromShellOpenCommandKey (key);
 	}
@@ -300,8 +299,8 @@ void vmsNpPluginInstallerForChrome::Initialize()
 {
 	CRegKey key;
 
-	if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, "Software\\Clients\\StartMenuInternet\\chrome.exe\\shell\\open\\command", KEY_READ) || 
-		ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, "Software\\Clients\\StartMenuInternet\\Google Chrome\\shell\\open\\command", KEY_READ))
+	if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, _T("Software\\Clients\\StartMenuInternet\\chrome.exe\\shell\\open\\command"), KEY_READ) || 
+		ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, _T("Software\\Clients\\StartMenuInternet\\Google Chrome\\shell\\open\\command"), KEY_READ))
 	{
 		QueryPluginsPathFromShellOpenCommandKey (key);
 	}

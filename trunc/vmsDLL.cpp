@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -12,7 +12,7 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-vmsDLL::vmsDLL(LPCSTR pszDll)
+vmsDLL::vmsDLL(LPCTSTR pszDll)
 {
 	m_hDLL = NULL;
 	if (pszDll)
@@ -24,7 +24,7 @@ vmsDLL::~vmsDLL()
 
 }
 
-bool vmsDLL::Load(LPCSTR pszDll)
+bool vmsDLL::Load(LPCTSTR pszDll)
 {
 	Free ();
 	m_hDLL = LoadLibrary (pszDll);

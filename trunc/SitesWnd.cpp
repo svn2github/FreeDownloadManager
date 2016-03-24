@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -90,7 +90,7 @@ BOOL CSitesWnd::Create(CWnd *pWndParent)
 	InsertColumn (2, LS (L_LOGIN), LVCFMT_LEFT, 100, 0);
 	InsertColumn (3, LS (L_GROUP2), LVCFMT_LEFT, 100, 0);
 
-	ReadState ("SitesList");
+	ReadState (_T("SitesList"));
 
 	ShowWindow (SW_SHOW);
 
@@ -112,8 +112,8 @@ void CSitesWnd::Plugin_GetToolBarInfo(wgTButtonInfo **ppButtons, int *pcButtons)
 {
 	static wgTButtonInfo btns [] = 
 	{
-		wgTButtonInfo (ID_SITES_ADD, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_SITES_PROPERTIES, TBSTYLE_BUTTON, ""),
+		wgTButtonInfo (ID_SITES_ADD, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_SITES_PROPERTIES, TBSTYLE_BUTTON, _T("")),
 	};
 
 	btns [0].pszToolTip = LS (L_ADDSITE);
@@ -353,7 +353,7 @@ void CSitesWnd::OnSitesTemprorary()
 
 void CSitesWnd::AddSiteToList(fsSiteInfo *pSite)
 {
-	int iItem = AddItem ("", GetSysColor (COLOR_WINDOW), GetSysColor (COLOR_WINDOWTEXT));
+	int iItem = AddItem (_T(""), GetSysColor (COLOR_WINDOW), GetSysColor (COLOR_WINDOWTEXT));
 	SetItemData (iItem, (DWORD)pSite);
 	UpdateSite (pSite);
 }
@@ -371,13 +371,13 @@ void CSitesWnd::UpdateSite(fsSiteInfo *pSite)
 
 	CString str, strConn;
 	if (pSite->cMaxConns != UINT_MAX)
-		str.Format ("%d", pSite->cMaxConns);
+		str.Format (_T("%d"), pSite->cMaxConns);
 	else
-		str = "+";
-	strConn.Format ("%d/%s", pSite->cConnsNow, str);
+		str = _T("+");
+	strConn.Format (_T("%d/%s"), pSite->cConnsNow, str);
 	SetItemText (iItem, 1, strConn);
 
-	SetItemText (iItem, 2, pSite->strUser == NULL ? "" : pSite->strUser);
+	SetItemText (iItem, 2, pSite->strUser == NULL ? _T("") : pSite->strUser);
 
 	if (pSite->pGroup)
 	{
@@ -387,7 +387,7 @@ void CSitesWnd::UpdateSite(fsSiteInfo *pSite)
 			SetItemText (iItem, 3, pSite->pGroup->strName);
 	}
 	else
-		SetItemText (iItem, 3, "");
+		SetItemText (iItem, 3, _T(""));
 
 	SetItemImage (iItem, pSite->bTemp ? 1 : 0);
 }
@@ -411,7 +411,7 @@ void CSitesWnd::_SitesMgrEvents(fsSitesMgrEvent ev, fsSiteInfo *site, LPVOID lp)
 
 void CSitesWnd::LoadSites()
 {
-	CString strFile = fsGetDataFilePath ("sites.sav");
+	CString strFile = fsGetDataFilePath (_T("sites.sav"));
 
 	if (GetFileAttributes (strFile) == DWORD (-1))
 	{
@@ -492,7 +492,7 @@ void CSitesWnd::LoadSites()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CSitesWnd::LoadSites " + tstring(ex.what()));
+		vmsLogger::WriteLog("CSitesWnd::LoadSites " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -500,7 +500,7 @@ void CSitesWnd::LoadSites()
 		vmsLogger::WriteLog("CSitesWnd::LoadSites unknown exception");
 	}
 
-	_DldsMgr.RebuildServerList ();
+    _DldsMgr.RebuildServerList ();
 }
 
 void CSitesWnd::SaveSites()
@@ -508,7 +508,7 @@ void CSitesWnd::SaveSites()
 	if (!_SitesMgr.isDirty())
 		return;
 
-	CString strFile = fsGetDataFilePath ("sites.sav");
+	CString strFile = fsGetDataFilePath (_T("sites.sav"));
 
 	HANDLE hFile = CreateFile (strFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,
 		FILE_ATTRIBUTE_HIDDEN, NULL);
@@ -556,13 +556,13 @@ void CSitesWnd::SaveAll(DWORD dwWhat)
 	if (dwWhat & 1)
 		SaveSites ();
 	if (dwWhat & 2)
-		SaveState ("SitesList");
+		SaveState (_T("SitesList"));
 }
 
-void CSitesWnd::Plugin_GetPluginNames(LPCSTR *ppszLong, LPCSTR *ppszShort)
+void CSitesWnd::Plugin_GetPluginNames(LPCTSTR *ppszLong, LPCTSTR *ppszShort)
 {
 	static CString strName;
-	strName = LSNP (L_SITESMGR);
+	strName = LSNP (L_SITESMGR).c_str ();
 	*ppszLong = *ppszShort = strName;
 }
 
@@ -653,7 +653,7 @@ void CSitesWnd::ApplyLanguageToMenuView(CMenu *menu)
 	menu->ModifyMenu (0, MF_BYPOSITION | MF_STRING, 0, LS (L_LISTOFSITES));
 
 	UINT aCmds [] = {ID_SITES_1, ID_SITES_2, ID_SITES_3, ID_SITES_4};
-	LPCSTR apszCmds [] = {LS (L_SITENAME), LS (L_CONNS), LS (L_LOGIN), LS (L_GROUP2)};
+	LPCTSTR apszCmds [] = {LS (L_SITENAME), LS (L_CONNS), LS (L_LOGIN), LS (L_GROUP2)};
 	
 	for (int i = 0; i < sizeof (aCmds) / sizeof (UINT); i++)
 		menu->ModifyMenu (aCmds [i], MF_BYCOMMAND|MF_STRING, aCmds [i], apszCmds [i]);

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -12,7 +12,9 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-fsMFCLangMgr::fsMFCLangMgr()
+fsMFCLangMgr::fsMFCLangMgr(LPCTSTR builtinLngResId, 
+	LPCTSTR builtinLngResType) :
+	fsLangMgr (builtinLngResId, builtinLngResType)
 {
 
 }

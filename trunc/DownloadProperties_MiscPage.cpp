@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -321,7 +321,7 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 		}
 	}
 	else if (uChecked == BST_UNCHECKED)
-		DP_SET (pszAdditionalExt, TRUE, "");
+		DP_SET (pszAdditionalExt, TRUE, _T(""));
 
 	uChecked = IsDlgButtonChecked (IDC_USECREATEEXT);
 	if (uChecked == BST_CHECKED)
@@ -341,7 +341,7 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 		}
 	}
 	else if (uChecked == BST_UNCHECKED)
-		DP_SET (pszCreateExt, TRUE, "");
+		DP_SET (pszCreateExt, TRUE, _T(""));
 
 	uChecked = IsDlgButtonChecked (IDC_USEHIDDENFLAG);
 	if (uChecked != BST_INDETERMINATE)
@@ -349,7 +349,7 @@ BOOL CDownloadProperties_MiscPage::OnApply()
 		for (size_t i = 0; i < m_pvDlds->size (); i++)
 		{
 			vmsDownloadSmartPtr dld = m_pvDlds->at (i);
-			LPCSTR pszFile = dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
+			LPCTSTR pszFile = dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
 			DWORD dw = DWORD (-1);
 			if (pszFile)
 				dw = GetFileAttributes (pszFile);

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsLocalFile.h"
@@ -31,15 +31,15 @@ bool fsSetFilePointer (HANDLE hFile, __int64 iPosition, DWORD dwMethod)
 }
 }
 
-fsInternetResult fsLocalFile::Open(LPCSTR pszFilePath, UINT64 uStartPos)
+fsInternetResult fsLocalFile::Open(LPCTSTR pszFilePath, UINT64 uStartPos)
 {
 	CloseHandle ();
 
 	fsString strPath;
-	if (m_strServer != "")
+	if (m_strServer != _T(""))
 	{
 		
-		strPath = "\\\\";
+		strPath = _T("\\\\");
 		strPath += m_strServer;
 	}
 	strPath += pszFilePath;
@@ -71,7 +71,7 @@ fsInternetResult fsLocalFile::Read(LPBYTE pBuffer, DWORD dwSize, DWORD *pdwRead)
 	return IR_SUCCESS;
 }
 
-void fsLocalFile::Initialize(LPCSTR pszServer)
+void fsLocalFile::Initialize(LPCTSTR pszServer)
 {
 	m_strServer = pszServer;
 }
@@ -85,7 +85,7 @@ void fsLocalFile::CloseHandle()
 	}
 }
 
-fsInternetResult fsLocalFile::QuerySize(LPCSTR pszFilePath)
+fsInternetResult fsLocalFile::QuerySize(LPCTSTR pszFilePath)
 {
 	HANDLE hFile = CreateFile (pszFilePath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
 		0, NULL);
@@ -102,7 +102,7 @@ fsInternetResult fsLocalFile::QuerySize(LPCSTR pszFilePath)
 	return IR_SUCCESS;
 }
 
-fsInternetResult fsLocalFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 , UINT64 uUploadTotalSize)
+fsInternetResult fsLocalFile::OpenEx(LPCTSTR pszFilePath, UINT64 uStartPos, UINT64 , UINT64 uUploadTotalSize)
 {
 	if (uUploadTotalSize != _UI64_MAX)
 		return IR_ERROR;

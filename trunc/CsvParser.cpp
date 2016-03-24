@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "StdAfx.h"
@@ -14,7 +14,7 @@ CCsvParser::~CCsvParser()
 {
 }
 
-void CCsvParser::Init(const CString& sStr, const CString& sTextQulifier, const CString& sDelimiter)
+void CCsvParser::Init(const CStringA& sStr, const CStringA& sTextQulifier, const CStringA& sDelimiter)
 {
 	m_sCsvContent = sStr;
 
@@ -42,7 +42,7 @@ bool CCsvParser::ParseNextRecord()
 	return false;
 }
 
-int CCsvParser::countQuote(int nStartChar, const CString& sValue)
+int CCsvParser::countQuote(int nStartChar, const CStringA& sValue)
 {
 	if (nStartChar < 0 || nStartChar > sValue.GetLength() - 1)
 		return -1;
@@ -55,7 +55,7 @@ int CCsvParser::countQuote(int nStartChar, const CString& sValue)
 	return nCount;
 }
 
-int CCsvParser::findSingleQuote(int nStartChar, const CString& sValue)
+int CCsvParser::findSingleQuote(int nStartChar, const CStringA& sValue)
 {
 	if (nStartChar < 0 || nStartChar > sValue.GetLength() - 1)
 		return -1;
@@ -106,14 +106,14 @@ int CCsvParser::findDelimiter(bool& bIsQuote, int& nClosingQuotePos)
 	return nDelimPos;
 }
 
-void CCsvParser::decodeValue(bool bIsQuote, int nClosingQuotePos, CString& sValue)
+void CCsvParser::decodeValue(bool bIsQuote, int nClosingQuotePos, CStringA& sValue)
 {
 	if (bIsQuote) {
 		ASSERT((nClosingQuotePos == -1 || nClosingQuotePos >= 2) && 
 				(nClosingQuotePos <= sValue.GetLength() - 1));
 
-		CString sFirstPart;
-		CString sSecondPart;
+		CStringA sFirstPart;
+		CStringA sSecondPart;
 		
 		if (nClosingQuotePos != -1) {
 
@@ -125,7 +125,7 @@ void CCsvParser::decodeValue(bool bIsQuote, int nClosingQuotePos, CString& sValu
 			sFirstPart = sValue.Mid(1);
 		}
 
-		CString sDoubleTextQulifier = m_sTextQulifier + m_sTextQulifier;
+		CStringA sDoubleTextQulifier = m_sTextQulifier + m_sTextQulifier;
 
 		sFirstPart.Replace(sDoubleTextQulifier, m_sTextQulifier);
 		sValue = sFirstPart + sSecondPart;
@@ -133,28 +133,28 @@ void CCsvParser::decodeValue(bool bIsQuote, int nClosingQuotePos, CString& sValu
 	}
 }
 
-void CCsvParser::procLastField(bool bIsQuote, int nClosingQuotePos, CString& sValue)
+void CCsvParser::procLastField(bool bIsQuote, int nClosingQuotePos, CStringA& sValue)
 {
 	sValue = m_sRow;
 	m_sRow = "";
 	decodeValue(bIsQuote, nClosingQuotePos, sValue);
 }
 
-void CCsvParser::procLastButOneField(bool bIsQuote, int nClosingQuotePos, CString& sValue)
+void CCsvParser::procLastButOneField(bool bIsQuote, int nClosingQuotePos, CStringA& sValue)
 {
 	sValue = m_sRow.Mid(0, m_sRow.GetLength() - 1);
 	m_sRow = "";
 	decodeValue(bIsQuote, nClosingQuotePos, sValue);
 }
 
-void CCsvParser::procField(int nDelimPos, bool bIsQuote, int nClosingQuotePos, CString& sValue)
+void CCsvParser::procField(int nDelimPos, bool bIsQuote, int nClosingQuotePos, CStringA& sValue)
 {
 	sValue = m_sRow.Mid(0, nDelimPos);
 	m_sRow = m_sRow.Mid(nDelimPos + 1);
 	decodeValue(bIsQuote, nClosingQuotePos, sValue);
 }
 
-bool CCsvParser::GetNextField(CString& sValue)
+bool CCsvParser::GetNextField(CStringA& sValue)
 {
 	bool bIsQuote = false;
 	int nClosingQuotePos = -1;
@@ -189,7 +189,7 @@ void CCsvParser::Sgets()
 	ASSERT((m_nPos >= 0) && (m_sCsvContent.IsEmpty() || m_nPos <= m_sCsvContent.GetLength() - 1));
 
 	m_sRow.Empty();
-	wchar_t c = 0;
+	char c = 0;
 
 	bool bIsTextQulifierScope = true;
 	bool bIsField = false;
@@ -209,7 +209,7 @@ void CCsvParser::Sgets()
 			bIsTextQulifierScope = true;
 		}
 
-		if (c != L'\r')
+		if (c != '\r')
 			bIsLineFeed = false;
 		else
 			bIsLineFeed = true;
@@ -222,7 +222,7 @@ void CCsvParser::Sgets()
 	}
 
 	
-	if (c == L'\n' && bIsLineFeed) {
+	if (c == '\n' && bIsLineFeed) {
 		ASSERT(m_sRow.GetLength() >= 1);
 
 		m_sRow = m_sRow.Mid(0, m_sRow.GetLength() - 1);

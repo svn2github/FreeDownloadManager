@@ -1,10 +1,9 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
 
-#include "vmsBinaryFileVersionInfo.h"
 #include <shlobj.h>
 
 class vmsInternetExplorerVersion : public vmsBinaryFileVersionInfo

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-#include <vmsCriticalSection.h>
+#include "../../common/vms_sifdm_cl/vmsCriticalSection.h"
 #include "../../include.add/vmsBrowsersSharedData.h"
 
 class vmsBrowserActivityMonitor

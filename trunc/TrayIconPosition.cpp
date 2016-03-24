@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -154,7 +154,7 @@ BOOL CTrayIconPosition::FindOutPositionOfIconDirectly(const HWND a_hWndOwner, co
 		return FALSE;
 	}
 
-	HANDLE hTrayProc = OpenProcess(PROCESS_ALL_ACCESS, 0, dwTrayProcessID);
+	HANDLE hTrayProc = OpenProcess(PROCESS_ALL_ACCESS__XP, 0, dwTrayProcessID);
 	if(hTrayProc == NULL)
 	{
 		return FALSE;

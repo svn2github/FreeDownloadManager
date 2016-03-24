@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -27,7 +27,7 @@ CWebInterfaceDlg::CWebInterfaceDlg(CWnd* pParent )
 	//}}AFX_DATA_INIT
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 
-	m_nShutdownMsg = RegisterWindowMessage ("FDM - remote control server - shutdown");
+	m_nShutdownMsg = RegisterWindowMessage (_T("FDM - remote control server - shutdown"));
 }
 
 void CWebInterfaceDlg::DoDataExchange(CDataExchange* pDX)
@@ -58,9 +58,9 @@ BOOL CWebInterfaceDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		
 
 	UINT nIdIcon = IDR_MAINFRAME;
-	_TrayMgr.Create (m_hWnd, &nIdIcon, 1, "FDM remote control server", WM_TRAYMSG);
+	_TrayMgr.Create (m_hWnd, &nIdIcon, 1, _T("FDM remote control server"), WM_TRAYMSG);
 
-	m_http.set_Port (AfxGetApp ()->GetProfileInt ("Network", "Port", 80));
+	m_http.set_Port (AfxGetApp ()->GetProfileInt (_T("Network"), _T("Port"), 80));
 	SetDlgItemInt (IDC_PORT, m_http.get_Port ());
 	
 	m_http.Start ();
@@ -70,8 +70,8 @@ BOOL CWebInterfaceDlg::OnInitDialog()
 	fsAutorunMgr am;
 	CheckDlgButton (IDC_AUTORUN, am.IsAutoStart () ? BST_CHECKED : BST_UNCHECKED);
 
-	CString strU = AfxGetApp ()->GetProfileString ("Network", "Login", "");
-	CString strP = AfxGetApp ()->GetProfileString ("Network", "Password", "");
+	CString strU = AfxGetApp ()->GetProfileString (_T("Network"), _T("Login"), _T(""));
+	CString strP = AfxGetApp ()->GetProfileString (_T("Network"), _T("Password"), _T(""));
 
 	if (strU.IsEmpty () == FALSE)
 	{
@@ -164,7 +164,7 @@ void CWebInterfaceDlg::OnOK()
 
 	if (nPort != m_http.get_Port ())
 	{
-		AfxGetApp ()->WriteProfileInt ("Network", "Port", nPort);
+		AfxGetApp ()->WriteProfileInt (_T("Network"), _T("Port"), nPort);
 
 		m_http.Shutdown ();
 		m_http.set_Port (nPort);
@@ -181,13 +181,13 @@ void CWebInterfaceDlg::OnOK()
 	{
 		GetDlgItemText (IDC_USER, strU);
 		GetDlgItemText (IDC_PWD, strP);
-		AfxGetApp ()->WriteProfileString ("Network", "Login", strU);
-		AfxGetApp ()->WriteProfileString ("Network", "Password", strP);
+		AfxGetApp ()->WriteProfileString (_T("Network"), _T("Login"), strU);
+		AfxGetApp ()->WriteProfileString (_T("Network"), _T("Password"), strP);
 	}
 	else
 	{
-		AfxGetApp ()->WriteProfileString ("Network", "Login", "");
-		AfxGetApp ()->WriteProfileString ("Network", "Password", "");
+		AfxGetApp ()->WriteProfileString (_T("Network"), _T("Login"), _T(""));
+		AfxGetApp ()->WriteProfileString (_T("Network"), _T("Password"), _T(""));
 	}
 
 	ShowWindow (SW_HIDE);
@@ -290,13 +290,13 @@ void CWebInterfaceDlg::UpdateAddress()
 	CString str;
 	if (nPort == 80)
 	{
-		str.Format ("http://%d.%d.%d.%d/", (int)(BYTE)he->h_addr_list [0][0],
+		str.Format (_T("http://%d.%d.%d.%d/"), (int)(BYTE)he->h_addr_list [0][0],
 			(int)(BYTE)he->h_addr_list [0][1], (int)(BYTE)he->h_addr_list [0][2], 
 			(int)(BYTE)he->h_addr_list [0][3]);
 	}
 	else
 	{
-		str.Format ("http://%d.%d.%d.%d:%d/", (int)(BYTE)he->h_addr_list [0][0],
+		str.Format (_T("http://%d.%d.%d.%d:%d/"), (int)(BYTE)he->h_addr_list [0][0],
 			(int)(BYTE)he->h_addr_list [0][1], (int)(BYTE)he->h_addr_list [0][2], 
 			(int)(BYTE)he->h_addr_list [0][3], nPort);
 	}
@@ -304,22 +304,22 @@ void CWebInterfaceDlg::UpdateAddress()
 	SetDlgItemText (IDC_SERV_ADDR, str);
 }
 
-void fsOpenUrlInBrowser (LPCSTR pszUrl)
+void fsOpenUrlInBrowser (LPCTSTR pszUrl)
 {
-	char szReg [100];
-	char szBrowser [1000];
+	TCHAR szReg [100];
+	TCHAR szBrowser [1000];
 	DWORD dwBrowserLen = 1000;
 
 	
 
-	if (strnicmp (pszUrl, "http", 4) == 0)
-		strcpy (szReg, "http");
-	else if (strnicmp (pszUrl, "https", 5) == 0)
-		strcpy (szReg, "https");
+	if (_tcsncicmp (pszUrl, _T("http"), 4) == 0)
+		_tcscpy_s (szReg, 100, _T("http"));
+	else if (_tcsncicmp (pszUrl, _T("https"), 5) == 0)
+		_tcscpy_s (szReg, 100, _T("https"));
 	else
-		strcpy (szReg, "ftp");
+		_tcscpy_s (szReg, 100, _T("ftp"));
 
-	strcat (szReg, "\\shell\\open\\command");
+	_tcscat_s (szReg, 100, _T("\\shell\\open\\command"));
 
 	HKEY hReg;
 
@@ -334,23 +334,23 @@ void fsOpenUrlInBrowser (LPCSTR pszUrl)
 
 	RegCloseKey (hReg);
 
-	strlwr (szBrowser);
-	LPSTR pszExe;
-	pszExe = strstr (szBrowser, ".exe");
+	_tcslwr_s (szBrowser, 1000);
+	LPTSTR pszExe;
+	pszExe = _tcsstr (szBrowser, _T(".exe"));
 
 	if (pszExe == NULL)
 		goto _lErr;
 
 	pszExe [4] = 0;
 
-	if (32 >= (int)ShellExecute (HWND_DESKTOP, "open", szBrowser [0] == '"' ? szBrowser+1 : szBrowser, pszUrl, NULL, SW_SHOW))
+	if (32 >= (int)ShellExecute (HWND_DESKTOP, _T("open"), szBrowser [0] == _T('"') ? szBrowser+1 : szBrowser, pszUrl, NULL, SW_SHOW))
 		goto _lErr;
 
 	return;
 
 _lErr:
-	if (32 >= (int) ShellExecute (HWND_DESKTOP, "open", pszUrl, NULL, NULL, SW_SHOW))
-		MessageBox (NULL, pszUrl, "failed to open", MB_ICONERROR);
+	if (32 >= (int) ShellExecute (HWND_DESKTOP, _T("open"), pszUrl, NULL, NULL, SW_SHOW))
+		MessageBox (NULL, pszUrl, _T("failed to open"), MB_ICONERROR);
 }
 
 void CWebInterfaceDlg::OnOpenInBrowser() 

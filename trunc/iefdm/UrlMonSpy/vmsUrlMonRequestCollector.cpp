@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "StdAfx.h"
@@ -25,6 +25,29 @@ vmsUrlMonRequestCollector::~vmsUrlMonRequestCollector(void)
 {
 	SetEvent (m_hevShutdown);
 	WaitForSingleObject (m_htJob, INFINITE);
+
+	
+	
+	
+	
+	
+	
+	
+	for (auto& req : m_vReq)
+	{
+		if (req->spBindInfo)
+			req->spBindInfo.Detach ();
+		if (req->spHttpNegotiate)
+			req->spHttpNegotiate.Detach ();
+		if (req->spProt)
+			req->spProt.Detach ();
+		if (req->spSink)
+			req->spSink.Detach ();
+		if (req->spUri)
+			req->spUri.Detach ();
+	}
+	
+
 	CloseTimedoutRequests ();
 }
 
@@ -285,7 +308,7 @@ void vmsUrlMonRequestCollector::onInternetProtocolSink_ReportResult(IInternetPro
 {
 	vmsCriticalSectionAutoLock csal (&m_csReq);
 	int nIndex = findRequestIndexBySink (pSink);
-	ATLASSERT (nIndex != -1);
+	
 	if (nIndex == -1)
 		return;
 	Request *req = getRequest (nIndex);
@@ -376,9 +399,9 @@ void vmsUrlMonRequestCollector::CloseRequest(Request* request)
 void vmsUrlMonRequestCollector::Lock(bool bLock)
 {
 	if (bLock)
-		EnterCriticalSection (&m_csReq);
+		EnterCriticalSection (m_csReq);
 	else 
-		LeaveCriticalSection (&m_csReq);
+		LeaveCriticalSection (m_csReq);
 }
 
 int vmsUrlMonRequestCollector::getRequestCount(void) const

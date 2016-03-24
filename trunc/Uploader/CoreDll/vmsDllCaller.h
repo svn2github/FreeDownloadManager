@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSDLLCALLER_H__4906328A_9106_4AEC_B3A4_C37928C3303E__INCLUDED_)
@@ -26,40 +26,40 @@ public:
 	virtual BOOL   UseHttp11 () = NULL;
 	virtual int    FtpTransferType () = NULL;
 	virtual BOOL   UseCookie () = NULL;
-	virtual LPCSTR HttpAgent () = NULL;
-	virtual LPCSTR FtpAsciiExts () = NULL;
+	virtual LPCTSTR HttpAgent () = NULL;
+	virtual LPCTSTR FtpAsciiExts () = NULL;
 
-	virtual LPCSTR FtpProxy_Name () = NULL;
-	virtual LPCSTR FtpProxy_Password () = NULL;
-	virtual LPCSTR FtpProxy_UserName () = NULL;
+	virtual LPCTSTR FtpProxy_Name () = NULL;
+	virtual LPCTSTR FtpProxy_Password () = NULL;
+	virtual LPCTSTR FtpProxy_UserName () = NULL;
 
-	virtual LPCSTR HttpProxy_Name () = NULL;
-	virtual LPCSTR HttpProxy_Password () = NULL;
-	virtual LPCSTR HttpProxy_UserName () = NULL;
+	virtual LPCTSTR HttpProxy_Name () = NULL;
+	virtual LPCTSTR HttpProxy_Password () = NULL;
+	virtual LPCTSTR HttpProxy_UserName () = NULL;
 
-	virtual LPCSTR HttpsProxy_Name () = NULL;
-	virtual LPCSTR HttpsProxy_Password () = NULL;
-	virtual LPCSTR HttpsProxy_UserName () = NULL;
+	virtual LPCTSTR HttpsProxy_Name () = NULL;
+	virtual LPCTSTR HttpsProxy_Password () = NULL;
+	virtual LPCTSTR HttpsProxy_UserName () = NULL;
 
 	virtual BOOL   ShowSizesInBytes () = NULL;
 
 	virtual int    FirefoxSettings_Proxy_Type () = NULL;
-	virtual LPCSTR FirefoxSettings_Proxy_Addr (LPCSTR pszProtocol) = NULL;
-	virtual int    FirefoxSettings_Proxy_Port (LPCSTR pszProtocol) = NULL;
+	virtual LPCTSTR FirefoxSettings_Proxy_Addr (LPCTSTR pszProtocol) = NULL;
+	virtual int    FirefoxSettings_Proxy_Port (LPCTSTR pszProtocol) = NULL;
 
 	
-	virtual BOOL   GetSettingsByName (LPCSTR pszName, LPVOID pData, DWORD dwDataSize) = NULL;
+	virtual BOOL   GetSettingsByName (LPCTSTR pszName, LPVOID pData, DWORD dwDataSize) = NULL;
 };
 
 class vmsDllPersist
 {
 public:
-	virtual BOOL GetProfileString (LPCSTR pszSecion, LPCSTR pszName, LPCSTR pszDefValue, LPSTR pszValue, DWORD *pdwValueSize) = NULL;
-	virtual void WriteProfileString (LPCSTR pszSecion, LPCSTR pszName, LPCSTR pszValue) = NULL;
-	virtual UINT GetProfileInt (LPCSTR pszSecion, LPCSTR pszName, UINT nDefValue) = NULL;
-	virtual void WriteProfileInt (LPCSTR pszSecion, LPCSTR pszName, UINT nValue) = NULL;
-	virtual BOOL GetProfileBinary (LPCSTR pszSecion, LPCSTR pszName, LPBYTE *ppData, UINT *pnDataSize) = NULL;
-	virtual void WriteProfileBinary (LPCSTR pszSection, LPCSTR pszName, LPVOID pvData, UINT nDataSize) = NULL;
+	virtual BOOL GetProfileString (LPCTSTR pszSecion, LPCTSTR pszName, LPCTSTR pszDefValue, LPTSTR pszValue, DWORD *pdwValueSize) = NULL;
+	virtual void WriteProfileString (LPCTSTR pszSecion, LPCTSTR pszName, LPCTSTR pszValue) = NULL;
+	virtual UINT GetProfileInt (LPCTSTR pszSecion, LPCTSTR pszName, UINT nDefValue) = NULL;
+	virtual void WriteProfileInt (LPCTSTR pszSecion, LPCTSTR pszName, UINT nValue) = NULL;
+	virtual BOOL GetProfileBinary (LPCTSTR pszSecion, LPCTSTR pszName, LPBYTE *ppData, UINT *pnDataSize) = NULL;
+	virtual void WriteProfileBinary (LPCTSTR pszSection, LPCTSTR pszName, LPVOID pvData, UINT nDataSize) = NULL;
 
 	virtual void FreeBuffer (LPBYTE pb) = NULL;
 };
@@ -71,13 +71,13 @@ class vmsDllCallerEx
 class vmsDllCaller  
 {
 public:
-	virtual LPCSTR GetTranslatedString (int nId) = NULL;
+	virtual LPCTSTR GetTranslatedString (int nId) = NULL;
 	
 	virtual vmsDllCallerSettings* GetSettings () = NULL;
 	virtual vmsDllPersist* GetPersist () = NULL;
 	
 	
-	virtual void IRToStr (int ir, char *sz, UINT cch) = NULL;
+	virtual void IRToStr (int ir, TCHAR *sz, UINT cch) = NULL;
 	
 	virtual HBITMAP GetBitmap (vmsWhichBitmap) = NULL;
 
@@ -93,10 +93,10 @@ public:
 
 	
 	
-	virtual void GetDataFilePath (LPCSTR pszName, LPSTR pszResult) = NULL;
+	virtual void GetDataFilePath (LPCTSTR pszName, LPTSTR pszResult) = NULL;
 
 	
-	virtual void GetCommonFilesFolder (LPSTR pszResult) = NULL;
+	virtual void GetCommonFilesFolder (LPTSTR pszResult) = NULL;
 
 	virtual vmsDllCallerEx* GetExtendedFeatures () = NULL;
 };

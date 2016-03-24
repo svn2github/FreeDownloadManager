@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -53,42 +53,58 @@ vmsAppSmallTipsMgr& vmsAppSmallTipsMgr::o()
 	return o;
 }
 
+std::unique_ptr <CStdioFile> mfc_open_text_file (const tstring& name)
+{
+	
+	auto file = open_text_file (name);
+	std::unique_ptr <CStdioFile> result;
+	if (file)
+		result.reset (new CStdioFile (file));
+	return result;
+}
+
 void vmsAppSmallTipsMgr::Load_imp(LPCTSTR ptszFile, std::vector <tstring> &vTips, bool bIgnoreServiceInformation)
 {
 	vTips.clear ();
 
 	try
 	{
-		CStdioFile file (ptszFile, CFile::modeRead | CFile::typeText | CFile::shareDenyNone);
+		auto file = mfc_open_text_file (ptszFile);
+		if (!file)
+			return;
 
-		CString str; 
+		CString strLine;
+		tstring tip;
 		bool b1stLine = true;
 		bool bForceShow = false;
 		int iForceTipIndex = -1;
 
-		while (file.ReadString (str) && str.IsEmpty () == FALSE)
+		while (file->ReadString (strLine) && strLine.IsEmpty () == FALSE)
 		{
 			if (b1stLine)
 			{
-				if (str.GetLength () >= 3 && BYTE (str [0]) == 0xEF && BYTE (str [1]) == 0xBB && BYTE (str [2]) == 0xBF)
-					str.Delete (0, 3); 
+				if (strLine.GetLength () >= 3 && BYTE (strLine [0]) == 0xEF && BYTE (strLine [1]) == 0xBB && BYTE (strLine [2]) == 0xBF)
+					strLine.Delete (0, 3); 
 				b1stLine = false;
-				if (str.IsEmpty ())
+				if (strLine.IsEmpty ())
 					continue;
 			}
 
-			if (str [0] == ';')
+			if (strLine [0] == ';')
 				continue; 
 
-			vmsUtf8ToAscii (str.GetBuffer (str.GetLength ()));
-			str.ReleaseBuffer ();
+#ifndef UNICODE
+			vmsUtf8ToAscii (strLine.GetBuffer (strLine.GetLength ()));
+			strLine.ReleaseBuffer ();
+			tip = (LPCTSTR)strLine;
+#endif
 
-			if (_tcsnicmp (str, _T ("ForceShow"), 9) == 0)
+			if (_tcsnicmp (tip.c_str(), _T ("ForceShow"), 9) == 0)
 			{
 				if (bIgnoreServiceInformation)
 					continue;
 
-				LPCTSTR ptsz = str;
+				LPCTSTR ptsz = tip.c_str();
 				ptsz += 9;
 				vmsStringParser::SkipWhiteChars (ptsz);
 				if (*ptsz == '=')
@@ -111,12 +127,12 @@ void vmsAppSmallTipsMgr::Load_imp(LPCTSTR ptszFile, std::vector <tstring> &vTips
 
 				continue;
 			}
-			else if (_tcsnicmp (str, _T ("ForceTipIndex"), 13) == 0)
+			else if (_tcsnicmp (tip.c_str(), _T ("ForceTipIndex"), 13) == 0)
 			{
 				if (bIgnoreServiceInformation)
 					continue;
 
-				LPCTSTR ptsz = str;
+				LPCTSTR ptsz = tip.c_str();
 				ptsz += 13;
 				vmsStringParser::SkipWhiteChars (ptsz);
 				if (*ptsz == '=')
@@ -132,7 +148,7 @@ void vmsAppSmallTipsMgr::Load_imp(LPCTSTR ptszFile, std::vector <tstring> &vTips
 				continue;
 			}
 
-			vTips.push_back ((LPCTSTR)str);
+			vTips.push_back (tip);
 		}
 
 		if (!bIgnoreServiceInformation && bForceShow && iForceTipIndex != -1)
@@ -146,7 +162,7 @@ void vmsAppSmallTipsMgr::Load_imp(LPCTSTR ptszFile, std::vector <tstring> &vTips
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("vmsAppSmallTipsMgr::Load_imp " + tstring(ex.what()));
+		vmsLogger::WriteLog(_T("vmsAppSmallTipsMgr::Load_imp ") + tstringFromString(ex.what()));
 	}
 	catch (...)	{}
 }
@@ -158,8 +174,8 @@ void vmsAppSmallTipsMgr::Load()
 	m_vTips.clear ();
 	std::vector <tstring> vEngTips;
 
-	Load_imp (fsGetDataFilePath ("tips.dat"), m_vTips, false);
-	Load_imp (fsGetProgramFilePath ("tips.dat"), vEngTips, !m_vTips.empty ());	
+	Load_imp (fsGetDataFilePath (_T("tips.dat")), m_vTips, false);
+	Load_imp (fsGetProgramFilePath (_T("tips.dat")), vEngTips, !m_vTips.empty ());	
 
 	if (vEngTips.size () > m_vTips.size ())
 	{
@@ -172,37 +188,37 @@ bool vmsAppSmallTipsMgr::UpdateTipsFile()
 {
 	CString strUrl;
 	CString strLng = _LngMgr.GetLngFileNameWoExt (_LngMgr.GetCurLng ());
-	strUrl.Format ("%stips/%s.dat", (LPCTSTR)_App.Update_URL (), (LPCTSTR)strLng);
-	CString strFile = fsGetDataFilePath ("tips.bak");
+	strUrl.Format (_T("%stips/%s.dat"), (LPCTSTR)_App.Update_URL (), (LPCTSTR)strLng);
+	CString strFile = fsGetDataFilePath (_T("tips.bak"));
 	fsInternetResult ir = vmsAppUtil::UrlDownloadToFile (strUrl, strFile);
-	if (ir != IR_SUCCESS && strLng.CompareNoCase ("eng") != 0)
+	if (ir != IR_SUCCESS && strLng.CompareNoCase (_T("eng")) != 0)
 	{
 		strUrl = _App.Update_URL ();
-		strUrl += "tips/eng.dat";
+		strUrl += _T("tips/eng.dat");
 		ir = vmsAppUtil::UrlDownloadToFile (strUrl, strFile);
 	}
 	if (ir != IR_SUCCESS)
 		return false;
 	CString strKeyFile = ((CFdmApp*)AfxGetApp ())->m_strAppPath;
-	strKeyFile += "sigkey.dat";
+	strKeyFile += _T("sigkey.dat");
 	if (GetFileAttributes (strKeyFile) == DWORD (-1))
-		strKeyFile = fsGetProgramFilePath ("sigkey.dat");
+		strKeyFile = fsGetProgramFilePath (_T("sigkey.dat"));
 	if (false == vmsSecurity::VerifySign (strFile, strKeyFile))
 	{
 		DeleteFile (strFile);
 		return false;
 	}
-	if (false == vmsSecurity::ExtractFileFromSignedFile (strFile, fsGetDataFilePath ("tips.dat")))
+	if (false == vmsSecurity::ExtractFileFromSignedFile (strFile, fsGetDataFilePath (_T("tips.dat"))))
 	{
 		ASSERT (false);
 		return false; 
 	}
 	DeleteFile (strFile);
 	BOOL b = _App.SmallTips_Show ();
-	EnterCriticalSection (&m_csTipAcc);
+	EnterCriticalSection (m_csTipAcc);
 	Load ();
 	SetupCurrentTipIndex ();
-	LeaveCriticalSection (&m_csTipAcc);
+	LeaveCriticalSection (m_csTipAcc);
 	if (b == FALSE && _App.SmallTips_Show ())
 		((CMainFrame*)AfxGetApp ()->m_pMainWnd)->ApplyShowSmallTipsSetting ();
 	return true;

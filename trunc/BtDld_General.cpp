@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -202,18 +202,18 @@ void CBtDld_General::OnChangeComment()
 
 void CBtDld_General::OnChoosefolder() 
 {
-	CString str = "";
+	CString str = _T("");
 	GetDlgItemText (IDC_SAVEIN, str);
 
 	if ((GetFileAttributes (str) & FILE_ATTRIBUTE_DIRECTORY) == 0)
 	{
-		char sz [MY_MAX_PATH];
+		TCHAR sz [MY_MAX_PATH];
 		fsGetPath (str, sz);
 		str = sz;
 	}
 
 	if (str.GetLength () > 3 && 
-			(str [str.GetLength () - 1] == '\\' || str [str.GetLength () - 1] == '/'))
+			(str [str.GetLength () - 1] == _T('\\') || str [str.GetLength () - 1] == _T('/')))
 	{
 		str.GetBuffer (0) [str.GetLength () - 1] = 0;
 		str.ReleaseBuffer ();

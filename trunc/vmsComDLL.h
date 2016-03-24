@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSCOMDLL_H__897037E0_6B9C_43C9_AD42_EC05A479F4B9__INCLUDED_)
@@ -17,7 +17,7 @@ public:
 	
 	HRESULT RegisterServer (bool bRegister);
 	
-	virtual bool Load(LPCSTR pszDll);
+	virtual bool Load(LPCTSTR pszDll);
 
 	vmsComDLL();
 	virtual ~vmsComDLL();

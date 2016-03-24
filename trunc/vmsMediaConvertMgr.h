@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSMEDIACONVERTMGR_H__E56F64FA_0DF5_42D7_AD8D_7A05F234E360__INCLUDED_)
@@ -28,7 +28,9 @@ enum vmsMediaConvertMgr_OptionsSource
 	MCM_OS_SHOW_OPTIONS_UI,
 };
 
-class vmsMediaConvertMgr : public vmsPersistObject
+class vmsMediaConvertMgr : 
+	public vmsPersistObject,
+	public vmsThreadSafe4
 {
 public:
 	
@@ -41,8 +43,6 @@ public:
 	BOOL SaveState();
 	
 	void AddTask (vmsDownloadSmartPtr dld, const vmsMediaFileConvertSettings &stgs);
-	
-	
 	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
 	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
 
@@ -73,16 +73,15 @@ protected:
 
 	typedef vmsObjectSmartPtr<vmsMediaConvertMgr::vmsConvertMediaFileContext> vmsConvertMediaFileContextSmartPtr;
 
+	bool LoadContext(HANDLE hFile, vmsConvertMediaFileContextSmartPtr& ctx, WORD wVer);
+	bool LoadContext_old(HANDLE hFile, vmsConvertMediaFileContextSmartPtr& ctx, WORD wVer);
+
 	std::vector <vmsConvertMediaFileContextSmartPtr> m_vTasks;
 
 	static bool FdmCtfxLoadEventhandler(int nId, vmsMediaConvertMgr::vmsConvertMediaFileContext* ctx, void* pvData);
 
 	
-	
-	
-
-	
-	#define MCMGRFILE_CURRENT_VERSION	(1)
+	#define MCMGRFILE_CURRENT_VERSION	(2)
 	
 	#define MCMGRFILE_SIG "FDM Media Convert Tasks"
 	

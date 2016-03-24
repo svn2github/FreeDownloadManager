@@ -1,9 +1,10 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsHttpFile.h"
 #include <stdio.h>
+#include <memory>
 #include "common.h"
 #include <limits.h>
 #include "fsInternetSession.h"
@@ -15,7 +16,7 @@ fsHttpFile::fsHttpFile()
 	m_pszReferer = NULL;
 	m_pszCookies = NULL;
 	m_pszPostData = NULL;
-	m_pszHttpVersion = new char [100];
+	m_pszHttpVersion = new TCHAR [100];
 	m_dwFlags = INTERNET_FLAG_KEEP_CONNECTION;
 	UseHttp11 (FALSE);
 	m_bHeadersOnly = FALSE;
@@ -39,7 +40,7 @@ fsHttpFile::~fsHttpFile()
 	delete [] m_pszHttpVersion;
 }
 
-fsInternetResult fsHttpFile::Open(LPCSTR pszFilePath, UINT64 uStartPos)
+fsInternetResult fsHttpFile::Open(LPCTSTR pszFilePath, UINT64 uStartPos)
 {
 	return OpenEx (pszFilePath, uStartPos, _UI64_MAX);
 }
@@ -61,19 +62,19 @@ fsInternetResult fsHttpFile::Read(LPBYTE pBuffer, DWORD dwToRead, DWORD *pdwRead
 void fsHttpFile::UseHttp11(BOOL bUse)
 {
 	if (bUse)
-		strcpy (m_pszHttpVersion, "HTTP/1.1");
+		_tcscpy (m_pszHttpVersion, _T("HTTP/1.1"));
 	else
-		strcpy (m_pszHttpVersion, "HTTP/1.0");
+		_tcscpy (m_pszHttpVersion, _T("HTTP/1.0"));
 }
 
-void fsHttpFile::SetReferer(LPCSTR pszReferer)
+void fsHttpFile::SetReferer(LPCTSTR pszReferer)
 {
 	SAFE_DELETE_ARRAY (m_pszReferer);
 
 	if (pszReferer)
 	{
-		fsnew (m_pszReferer, CHAR, strlen (pszReferer) + 1);
-		strcpy (m_pszReferer, pszReferer);
+		fsnew (m_pszReferer, TCHAR, _tcslen (pszReferer) + 1);
+		_tcscpy_s (m_pszReferer, _tcslen (pszReferer) + 1, pszReferer);
 	}
 }
 
@@ -109,12 +110,12 @@ void fsHttpFile::RetreiveHeadersOnly(BOOL b)
 fsInternetResult fsHttpFile::ProcessRangesResponse()
 {
 	CHAR sz [10000];
-	DWORD dw = sizeof (sz);
+	DWORD dw = _countof (sz);
 
 	
 	
 	BOOL bAcceptRanges = FALSE;
-	if (HttpQueryInfo (m_hFile, HTTP_QUERY_ACCEPT_RANGES, sz, &dw, NULL))
+	if (HttpQueryInfoA (m_hFile, HTTP_QUERY_ACCEPT_RANGES, sz, &dw, NULL))
 	{
 		if (stricmp (sz, "bytes") == 0)
 			bAcceptRanges = TRUE;
@@ -122,11 +123,11 @@ fsInternetResult fsHttpFile::ProcessRangesResponse()
 
 	m_enRST = RST_NONE;
 
-	dw = sizeof (sz);
+	dw = _countof (sz);
 
 	
 	
-	if (!HttpQueryInfo (m_hFile, HTTP_QUERY_CONTENT_RANGE, sz, &dw, NULL))
+	if (!HttpQueryInfoA (m_hFile, HTTP_QUERY_CONTENT_RANGE, sz, &dw, NULL))
 		return bAcceptRanges ? IR_DOUBTFUL_RANGESRESPONSE : IR_RANGESNOTAVAIL;
 
 	
@@ -166,17 +167,17 @@ fsInternetResult fsHttpFile::ProcessRangesResponse()
 
 void fsHttpFile::RetreiveSuggFileName()
 {
-	m_strSuggFileName = "";
+	m_strSuggFileName = _T("");
 
 	char sz [MAX_PATH];
-	char szFile [MAX_PATH];
+	char szFile [MAX_PATH] = {0,};
 	DWORD dwFL = MAX_PATH;
 	
-	if (FALSE == HttpQueryInfo (m_hFile, HTTP_QUERY_CONTENT_DISPOSITION, sz, &dwFL, NULL))
+	if (FALSE == HttpQueryInfoA (m_hFile, HTTP_QUERY_CONTENT_DISPOSITION, sz, &dwFL, NULL))
 		return;
 
 	
-	LPCSTR psz = fsStrStrNoCase (sz, "filename");
+	LPCSTR psz = fsStrStrNoCaseA (sz, "filename");
 	if (psz == NULL)
 		return;
 
@@ -224,15 +225,25 @@ void fsHttpFile::RetreiveSuggFileName()
 			}
 			else
 			{
-				lstrcpy (szFile, psz+2);
+				
+				strcpy (szFile, psz+2);
 			}			
 		}
 	}
 
+#ifdef UNICODE
+	int nLen = ::MultiByteToWideChar(CP_ACP, 0, szFile, -1, 0, 0);
+	std::auto_ptr<WCHAR> apwszFileGuard( new WCHAR[nLen + 1] );
+	WCHAR* wszFile = apwszFileGuard.get();
+	memset(wszFile, 0, sizeof(WCHAR) * (nLen + 1));
+	::MultiByteToWideChar(CP_ACP, 0, szFile, -1, wszFile, nLen);
+	m_strSuggFileName = wszFile;
+#else
 	m_strSuggFileName = szFile;
+#endif
 }
 
-fsInternetResult fsHttpFile::QuerySize(LPCSTR pszFilePath)
+fsInternetResult fsHttpFile::QuerySize(LPCTSTR pszFilePath)
 {
 	
 	fsInternetResult ir;
@@ -246,7 +257,7 @@ fsInternetResult fsHttpFile::QuerySize(LPCSTR pszFilePath)
 	return ir;
 }
 
-fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int cTryings)
+fsInternetResult fsHttpFile::Open_imp(LPCTSTR pszFilePath, UINT64 uStartPos, int cTryings)
 {
 	if (!m_pServer) 
 		return IR_NOTINITIALIZED;
@@ -270,22 +281,22 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 	if (m_bEnableAutoRedirect == FALSE)
 		dwFlags |= INTERNET_FLAG_NO_AUTO_REDIRECT;
 
-	LPTSTR ppszAcceptedTypes [2] = { "*/*", NULL }; 
+	LPTSTR ppszAcceptedTypes [2] = { _T("*/*"), NULL }; 
 
 	
 	
 	
 	
 
-	LPCSTR pszVerb = "GET";
+	LPCTSTR pszVerb = _T("GET");
 	if (m_pszPostData)
-		pszVerb = "POST";
+		pszVerb = _T("POST");
 	else if (m_bHeadersOnly)
-		pszVerb = "HEAD";
+		pszVerb = _T("HEAD");
 
 	
 	m_hFile = HttpOpenRequest (hServer, pszVerb, pszFilePath, m_pszHttpVersion,
-		m_pszReferer, (LPCSTR*) ppszAcceptedTypes, 
+		m_pszReferer, (LPCTSTR*) ppszAcceptedTypes, 
 		dwFlags | INTERNET_FLAG_RELOAD | INTERNET_FLAG_PRAGMA_NOCACHE | 
 		INTERNET_FLAG_NO_CACHE_WRITE, NULL);
 
@@ -300,63 +311,72 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 	}
 
 	
-	CHAR szHdr [20000] = "";
+	TCHAR szHdr [20000] = _T("");
 
 	if (uStartPos)
-		sprintf (szHdr, "Range: bytes=%I64u-\r\n", uStartPos); 
+		_stprintf_s (szHdr, _T("Range: bytes=%I64u-\r\n"), uStartPos); 
 
 	if (m_pszCookies)
-		sprintf (szHdr + lstrlen (szHdr), "Cookie: %s\r\n", m_pszCookies); 
+		_stprintf_s (szHdr + lstrlen (szHdr), 20000 - lstrlen (szHdr), _T("Cookie: %s\r\n"), m_pszCookies); 
 
 	if (m_pszPostData)
-		strcat (szHdr, "Content-Type: application/x-www-form-urlencoded\r\n");
+		_tcscat_s (szHdr, 20000, _T("Content-Type: application/x-www-form-urlencoded\r\n"));
 
 	if (m_pszAdditionalHeaders)
-		strcat (szHdr, m_pszAdditionalHeaders);
+		_tcscat_s (szHdr, 20000, m_pszAdditionalHeaders);
 
 	if (cTryings == 0)
 	{
 		
-		char szReq [90000];
-		sprintf (szReq, "%s %s %s\r\nReferer: %s", pszVerb, 
+		TCHAR szReq [90000] = {0,};
+		_stprintf_s (szReq, _T("%s %s %s\r\nReferer: %s"), pszVerb, 
 			pszFilePath, m_pszHttpVersion, 
-			m_pszReferer ? m_pszReferer : "-");
+			m_pszReferer ? m_pszReferer : _T("-"));
 
 		if (*szHdr)
 		{
-			strcat (szReq, "\r\n");
-			strcat (szReq, szHdr);
-			szReq [strlen (szReq) - 2] = 0;	
+			_tcscat_s (szReq, _T("\r\n"));
+			_tcscat_s (szReq, szHdr);
+			szReq [_tcslen (szReq) - 2] = 0;	
 		}
 
 		if ((dwFlags & INTERNET_FLAG_NO_COOKIES) == 0)
 		{
-			char szUrl [10000]; DWORD dw = sizeof (szUrl);
+			TCHAR szUrl [10000]; DWORD dw = _countof (szUrl);
 			fsURL url;
 			url.Create (m_dwFlags & INTERNET_FLAG_SECURE ? INTERNET_SCHEME_HTTPS : INTERNET_SCHEME_HTTP,
 				m_pServer->GetServerName (), m_pServer->GetServerPort (), 
 				NULL, NULL, pszFilePath, szUrl, &dw);
 
-			char szCookie [10000]; dw = sizeof (szCookie);
+			TCHAR szCookie [10000]; dw = _countof (szCookie);
 			*szCookie = 0;
 			
 			InternetGetCookie (szUrl, NULL, szCookie, &dw);
 
 			if (*szCookie)
 			{
-				strcat (szReq, "\r\n");
-				strcat (szReq, "Cookie: ");
-				strcat (szReq, szCookie);
+				_tcscat_s (szReq, _T("\r\n"));
+				_tcscat_s (szReq, _T("Cookie: "));
+				_tcscat_s (szReq, szCookie);
 			}
 		}
 
-		strcat (szReq, "\r\nHost: ");
-		strcat (szReq, m_pServer->GetServerName ());
+		_tcscat_s (szReq, _T("\r\nHost: "));
+
+#ifdef UNICODE
+		_stprintf_s (szReq + wcslen(szReq), 90000 - wcslen(szReq), L"%s", m_pServer->GetServerName ());
+#else
+		_tcscat_s (szReq, m_pServer->GetServerName ());
+#endif
 
 		if (m_pszPostData)
 		{
-			strcat (szReq, "\r\n");
+			_tcscat_s  (szReq, _T("\r\n"));
+#ifdef UNICODE
+			_stprintf_s (szReq + _tcslen(szReq), 90000 - _tcslen(szReq), _T("%S"), m_pszPostData);
+#else
 			strcat (szReq, m_pszPostData);
+#endif
 		}
 
 		Dialog (IFDD_TOSERVER, szReq);	
@@ -365,11 +385,18 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 	
 	IgnoreSecurityProblems ();
 
+	auto headersToSend = utf8FromWide (szHdr);
+
 	
-	if (!HttpSendRequest (m_hFile, *szHdr ? szHdr : NULL, (UINT)-1, 
-			m_pszPostData, m_pszPostData ? lstrlen (m_pszPostData) : 0))
+	
+	
+	if (!HttpSendRequestA (m_hFile, 
+		!headersToSend.empty () ? headersToSend.c_str () : nullptr, (UINT)-1, 
+		m_pszPostData, m_pszPostData ? strlen (m_pszPostData) : 0))
 	{
 		ir = fsWinInetErrorToIR ();
+		if (ir == IR_SEC_CHECK_FAILURE)
+			m_lastSctFailure = fsWinInetErrorToSCT ();
 
 		DialogHttpResponse (m_hFile);	
 									
@@ -378,10 +405,10 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 	}
 
 	char szResp [10000];
-	DWORD dwRespLen = sizeof (szResp), dwIndex = 0;
+	DWORD dwRespLen = _countof (szResp), dwIndex = 0;
 	
 	
-	if (HttpQueryInfo (m_hFile, HTTP_QUERY_RAW_HEADERS_CRLF, szResp, &dwRespLen, &dwIndex))
+	if (HttpQueryInfoA (m_hFile, HTTP_QUERY_RAW_HEADERS_CRLF, szResp, &dwRespLen, &dwIndex))
 	{
 		int cLines = 0; 
 
@@ -413,7 +440,9 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 	DWORD dwSize = sizeof (DWORD);
 	if (!HttpQueryInfo(m_hFile, HTTP_QUERY_STATUS_CODE|HTTP_QUERY_FLAG_NUMBER, 
 			&dwStatusCode, &dwSize, NULL))	
+	{
 		return fsWinInetErrorToIR ();
+	}
 
 	if (dwStatusCode < 200 || dwStatusCode >= 300)	
 	{
@@ -423,23 +452,26 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 		{
 			DWORD dwNeedLen = 0;
 
-			HttpQueryInfo (m_hFile, HTTP_QUERY_LOCATION, NULL, &dwNeedLen,
-				NULL);
+			HttpQueryInfoA (m_hFile, HTTP_QUERY_LOCATION, NULL, &dwNeedLen,	NULL);
 
 			if (::GetLastError () == ERROR_INSUFFICIENT_BUFFER)
 			{
 				SAFE_DELETE_ARRAY (m_pszLastError);
-				try {
-					m_pszLastError = new char [++dwNeedLen];
-				}catch (...) {return IR_OUTOFMEMORY;}
-				if (m_pszLastError == NULL)
-					return IR_OUTOFMEMORY;
-				if (!HttpQueryInfo (m_hFile, HTTP_QUERY_LOCATION, m_pszLastError, &dwNeedLen,
-						NULL)) 
+				std::string sLocation;
+				sLocation.resize (++dwNeedLen);
+				
+				if (!HttpQueryInfoA (m_hFile, HTTP_QUERY_LOCATION, &sLocation.front (), &dwNeedLen, NULL)) 
 					return IR_SERVERUNKERROR;
+
+				tstring location = tstringFromString (sLocation);
+
+				m_pszLastError = new TCHAR [location.length () + 1];
+				_tcscpy (m_pszLastError, location.c_str ());
 			}
 			else
+			{
 				return IR_SERVERUNKERROR;
+			}
 
 		}
 
@@ -448,8 +480,8 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 
 	
 	char szContLen [1000];
-	DWORD dwLen = sizeof (szContLen);
-	if (HttpQueryInfo (m_hFile, HTTP_QUERY_CONTENT_LENGTH,	szContLen, &dwLen, NULL)) {
+	DWORD dwLen = _countof (szContLen);
+	if (HttpQueryInfoA (m_hFile, HTTP_QUERY_CONTENT_LENGTH,	szContLen, &dwLen, NULL)) {
 		__int64 iSize = _atoi64 (szContLen);
 		if (iSize < 0)
 			return IR_SERVERUNKERROR;
@@ -469,10 +501,10 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 	else
 	{
 		CHAR sz [10000];
-		DWORD dw = sizeof (sz);
+		DWORD dw = _countof (sz);
 		
 		
-		if (HttpQueryInfo (m_hFile, HTTP_QUERY_ACCEPT_RANGES, sz, &dw, NULL))
+		if (HttpQueryInfoA (m_hFile, HTTP_QUERY_ACCEPT_RANGES, sz, &dw, NULL))
 		{
 			if (stricmp (sz, "bytes") == 0)
 				m_enRST = RST_PRESENT;
@@ -487,10 +519,26 @@ fsInternetResult fsHttpFile::Open_imp(LPCSTR pszFilePath, UINT64 uStartPos, int 
 	m_bDateValid = FALSE;
 
 	CHAR szContentType [10000];	
-	DWORD dwCL = sizeof (szContentType);
-	if (HttpQueryInfo (m_hFile, HTTP_QUERY_CONTENT_TYPE, szContentType, &dwCL, NULL))
+	DWORD dwCL = _countof (szContentType);
+	if (HttpQueryInfoA (m_hFile, HTTP_QUERY_CONTENT_TYPE, szContentType, &dwCL, NULL))
 	{
+#ifdef UNICODE
+		int nLen = ::MultiByteToWideChar(CP_ACP, 0, szContentType, -1, 0, 0);
+		std::auto_ptr<WCHAR> apwszContentTypeGuard;
+		try {
+			apwszContentTypeGuard.reset( new WCHAR[nLen] );
+		} catch (...) {
+			return IR_OUTOFMEMORY;
+		}
+		WCHAR* wszContentType = apwszContentTypeGuard.get();
+		if (wszContentType == 0)
+			return IR_OUTOFMEMORY;
+
+		::MultiByteToWideChar(CP_ACP, 0, szContentType, -1, wszContentType, nLen);
+		m_strContentType = wszContentType;
+#else
 		m_strContentType = szContentType;
+#endif
 		m_bContentTypeValid = TRUE;
 	}
 
@@ -515,19 +563,13 @@ BOOL fsHttpFile::Is_Secure()
 
 void fsHttpFile::IgnoreSecurityProblems()
 {
-	DWORD dwFlags;
+	DWORD dwFlags = 0;
     DWORD dwBuffLen = sizeof(dwFlags);
 
     InternetQueryOption (m_hFile, INTERNET_OPTION_SECURITY_FLAGS,
          (LPVOID)&dwFlags, &dwBuffLen);
 
-    dwFlags |= SECURITY_FLAG_IGNORE_UNKNOWN_CA | 
-		SECURITY_FLAG_IGNORE_WRONG_USAGE |
-		SECURITY_FLAG_IGNORE_REVOCATION |
-		SECURITY_FLAG_IGNORE_REDIRECT_TO_HTTPS | 
-		SECURITY_FLAG_IGNORE_REDIRECT_TO_HTTP |
-		SECURITY_FLAG_IGNORE_CERT_DATE_INVALID | 
-		SECURITY_FLAG_IGNORE_CERT_CN_INVALID;
+    dwFlags |= fsSCTflagsToWinInetIgnoreFlags (m_sctIgnoreFlags); 
 	
     InternetSetOption (m_hFile, INTERNET_OPTION_SECURITY_FLAGS,
          &dwFlags, sizeof (dwFlags));
@@ -535,10 +577,10 @@ void fsHttpFile::IgnoreSecurityProblems()
 
 BOOL fsHttpFile::get_UseHttp11()
 {
-	return lstrcmpi (m_pszHttpVersion, "HTTP/1.1") == 0;
+	return lstrcmpi (m_pszHttpVersion, _T("HTTP/1.1")) == 0;
 }
 
-LPCSTR fsHttpFile::get_Referer()
+LPCTSTR fsHttpFile::get_Referer()
 {
 	return m_pszReferer;
 }
@@ -548,13 +590,13 @@ BOOL fsHttpFile::get_UseCookie()
 	return (m_dwFlags & INTERNET_FLAG_NO_COOKIES) == 0;
 }
 
-void fsHttpFile::SetCookies(LPCSTR pszCookies)
+void fsHttpFile::SetCookies(LPCTSTR pszCookies)
 {
 	SAFE_DELETE_ARRAY (m_pszCookies);
 
 	if (pszCookies && *pszCookies)
 	{
-		fsnew (m_pszCookies, CHAR, lstrlen (pszCookies) + 1);
+		fsnew (m_pszCookies, TCHAR, lstrlen (pszCookies) + 1);
 		lstrcpy (m_pszCookies, pszCookies);
 	}
 }
@@ -565,12 +607,12 @@ void fsHttpFile::SetPostData(LPCSTR pszPostData)
 
 	if (pszPostData && *pszPostData)
 	{
-		fsnew (m_pszPostData, CHAR, lstrlen (pszPostData) + 1);
-		lstrcpy (m_pszPostData, pszPostData);
+		fsnew (m_pszPostData, CHAR, strlen (pszPostData) + 1);
+		strcpy (m_pszPostData, pszPostData);
 	}
 }
 
-LPCSTR fsHttpFile::GetCookies()
+LPCTSTR fsHttpFile::GetCookies()
 {
 	return m_pszCookies;
 }
@@ -580,7 +622,7 @@ LPCSTR fsHttpFile::GetPostData()
 	return m_pszPostData;
 }
 
-void fsHttpFile::SetAdditionalHeaders(LPCSTR pszAdditionalHeaders)
+void fsHttpFile::SetAdditionalHeaders(LPCTSTR pszAdditionalHeaders)
 {
 	SAFE_DELETE_ARRAY (m_pszAdditionalHeaders);
 
@@ -590,17 +632,17 @@ void fsHttpFile::SetAdditionalHeaders(LPCSTR pszAdditionalHeaders)
 		int l = lstrlen (pszAdditionalHeaders);
 		if (l < 2)
 			return;
-		if (pszAdditionalHeaders [l - 2] != '\r')
+		if (pszAdditionalHeaders [l - 2] != _T('\r'))
 			return;
-		if (pszAdditionalHeaders [l - 1] != '\n')
+		if (pszAdditionalHeaders [l - 1] != _T('\n'))
 			return;
 
-		fsnew (m_pszAdditionalHeaders, CHAR, lstrlen (pszAdditionalHeaders) + 1);
+		fsnew (m_pszAdditionalHeaders, TCHAR, lstrlen (pszAdditionalHeaders) + 1);
 		lstrcpy (m_pszAdditionalHeaders, pszAdditionalHeaders);
 	}
 }
 
-fsInternetResult fsHttpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64 uUploadPartSize, UINT64 uUploadTotalSize)
+fsInternetResult fsHttpFile::OpenEx(LPCTSTR pszFilePath, UINT64 uStartPos, UINT64 uUploadPartSize, UINT64 uUploadTotalSize)
 {
 	if (uUploadTotalSize == _UI64_MAX)
 		return Open_imp (pszFilePath, uStartPos, 0);
@@ -625,7 +667,7 @@ fsInternetResult fsHttpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64
 	fsString strFileName;
 	if (m_bUseMultipart)
 	{
-		LPSTR psz = strrchr (strFilePath, '/');
+		LPTSTR psz = _tcsrchr (strFilePath, _T('/'));
 		if (psz)
 		{
 			strFileName = psz + 1;
@@ -635,13 +677,18 @@ fsInternetResult fsHttpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64
 			strFileName = pszFilePath;
 	}
 
-	LPTSTR ppszAcceptedTypes [2] = { "*/*", NULL }; 
+	LPTSTR ppszAcceptedTypes [2] = { _T("*/*"), NULL }; 
 
-	m_hFile = HttpOpenRequest (hServer, "POST", strFilePath, m_pszHttpVersion,
-		NULL, (LPCSTR*)ppszAcceptedTypes, INTERNET_FLAG_NO_CACHE_WRITE | INTERNET_FLAG_KEEP_CONNECTION, 0);
+	m_hFile = HttpOpenRequest (hServer, _T("POST"), strFilePath, m_pszHttpVersion,
+		NULL, (LPCTSTR*)ppszAcceptedTypes, INTERNET_FLAG_NO_CACHE_WRITE | INTERNET_FLAG_KEEP_CONNECTION, 0);
 
 	if (m_hFile == NULL)
-		return fsWinInetErrorToIR ();
+	{
+		auto ir = fsWinInetErrorToIR ();
+		if (ir == IR_SEC_CHECK_FAILURE)
+			m_lastSctFailure = fsWinInetErrorToSCT ();
+		return ir;
+	}
 
 	fsInternetResult ir = SetupProxy ();
 	if (ir != IR_SUCCESS)
@@ -651,16 +698,16 @@ fsInternetResult fsHttpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64
 	}
 
 	
-	CHAR szHdr [10000] = "";
+	TCHAR szHdr [10000] = _T("");
 	
 	if (m_bUseMultipart)
-		lstrcpy (szHdr, "Content-Type: multipart/form-data; boundary=---------------------------284583012225247");
+		lstrcpy (szHdr, _T("Content-Type: multipart/form-data; boundary=---------------------------284583012225247"));
 	else
 	{
-		lstrcpy (szHdr, "Content-Type: application/x-www-form-urlencoded");
+		lstrcpy (szHdr, _T("Content-Type: application/x-www-form-urlencoded"));
 		if (m_strCharset.IsEmpty () == FALSE)
 		{
-			lstrcat (szHdr, "; charset=");
+			lstrcat (szHdr, _T("; charset="));
 			lstrcat (szHdr, m_strCharset);
 		}
 	}
@@ -668,22 +715,22 @@ fsInternetResult fsHttpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64
 	if (uStartPos || uUploadPartSize != uUploadTotalSize)
 	{
 		if (*szHdr)
-			lstrcat (szHdr, "\r\n");
-		sprintf (szHdr + lstrlen (szHdr), "Range: bytes=%I64u-%I64u/%I64u", uStartPos, 
+			lstrcat (szHdr, _T("\r\n"));
+		_stprintf_s (szHdr + lstrlen (szHdr), 10000 - lstrlen (szHdr), _T("Range: bytes=%I64u-%I64u/%I64u"), uStartPos, 
 			uStartPos + uUploadPartSize - 1, uUploadTotalSize); 
 	}
 
 	if (m_pszCookies)
 	{
 		if (*szHdr)
-			lstrcat (szHdr, "\r\n");
-		sprintf (szHdr + lstrlen (szHdr), "Cookie: %s", m_pszCookies); 
+			lstrcat (szHdr, _T("\r\n"));
+		_stprintf_s (szHdr + lstrlen (szHdr), 10000 - lstrlen (szHdr), _T("Cookie: %s"), m_pszCookies); 
 	}
 
 	if (m_pszAdditionalHeaders)
 	{
 		if (*szHdr)
-			lstrcat (szHdr, "\r\n");
+			lstrcat (szHdr, _T("\r\n"));
 		lstrcat (szHdr, m_pszAdditionalHeaders);
 	}
 
@@ -695,12 +742,12 @@ fsInternetResult fsHttpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64
 
 	if (m_bUseMultipart)
 	{
-		m_strLabel = "-----------------------------284583012225247";
+		m_strLabel = _T("-----------------------------284583012225247");
 
-		strMultipartHdr = m_strLabel; strMultipartHdr += "\r\n";
-		strMultipartHdr += "Content-Disposition: form-data; name=\"uploadFormFile\"; filename=\"";
-		strMultipartHdr += strFileName; strMultipartHdr += "\"\r\n";
-		strMultipartHdr += "Content-Type: application/octet-stream\r\n\r\n";
+		strMultipartHdr = m_strLabel; strMultipartHdr += _T("\r\n");
+		strMultipartHdr += _T("Content-Disposition: form-data; name=\"uploadFormFile\"; filename=\"");
+		strMultipartHdr += strFileName; strMultipartHdr += _T("\"\r\n");
+		strMultipartHdr += _T("Content-Type: application/octet-stream\r\n\r\n");
 
 		nSizeAdd = strMultipartHdr.GetLength () + m_strLabel.GetLength () + 6;
 	}
@@ -714,6 +761,8 @@ fsInternetResult fsHttpFile::OpenEx(LPCSTR pszFilePath, UINT64 uStartPos, UINT64
 	if (!HttpSendRequestEx (m_hFile, &BufferIn, NULL, HSR_INITIATE, 0))
 	{
 		ir = fsWinInetErrorToIR ();
+		if (ir == IR_SEC_CHECK_FAILURE)
+			m_lastSctFailure = fsWinInetErrorToSCT ();
 		CloseHandle ();
 		return  ir; 
 	}
@@ -762,7 +811,7 @@ fsInternetResult fsHttpFile::Write(LPBYTE pBuffer, DWORD dwSize, DWORD *pdwWritt
 	{
 		if (m_bUseMultipart)
 		{
-			fsString str = "\r\n"; str += m_strLabel; str += "--\r\n";
+			fsString str = _T("\r\n"); str += m_strLabel; str += _T("--\r\n");
 			DWORD dw;
 			if (FALSE == InternetWriteFile (m_hFile, str, str.GetLength (), &dw))
 				return fsWinInetErrorToIR ();
@@ -784,12 +833,16 @@ void fsHttpFile::set_UseMultipart(BOOL b)
 fsString fsHttpFile::GetCookiesFromResponse()
 {
 	char sz [10000];
-	DWORD dw = sizeof (sz) - 1;
+	DWORD dw = _countof (sz) - 1;
 
-	if (FALSE == HttpQueryInfo (m_hFile, HTTP_QUERY_SET_COOKIE, sz, &dw, NULL))
-		return "";
+	if (FALSE == HttpQueryInfoA (m_hFile, HTTP_QUERY_SET_COOKIE, sz, &dw, NULL))
+		return _T("");
 
-	return sz;
+	WCHAR apwszCookies[10000] = {0,};
+	int nLen = ::MultiByteToWideChar(CP_ACP, 0, sz, -1, 0, 0);
+	::MultiByteToWideChar(CP_ACP, 0, sz, -1, apwszCookies, nLen);
+
+	return apwszCookies;
 }
 
 void fsHttpFile::set_EnableAutoRedirect(BOOL b)
@@ -797,7 +850,7 @@ void fsHttpFile::set_EnableAutoRedirect(BOOL b)
 	m_bEnableAutoRedirect = b;
 }
 
-void fsHttpFile::set_Charset(LPCSTR psz)
+void fsHttpFile::set_Charset(LPCTSTR psz)
 {
 	m_strCharset = psz;
 }

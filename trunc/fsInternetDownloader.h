@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSINTERNETDOWNLOADER_H__0EEB4A27_85D5_4B6A_BB66_2B11A70AEB7C__INCLUDED_)
@@ -16,8 +16,9 @@
 #include "fsMutex.h"
 #include "fsArchiveInternetStream.h"
 #include "fsArchiveRebuilder.h"
-#include "vmsCriticalSection.h"
 #include "vmsPersistObject.h"
+
+using fsInternetDownloaderResult = std::pair <fsInternetResult, fsSecurityCheckType>;
 
 enum fsSectionState
 {
@@ -166,7 +167,13 @@ struct fsSection
 	}
 };
 
-typedef DWORD (*fsDownloaderEventFunc)(enum fsDownloaderEvent ev, UINT uParam, LPVOID lpAppParam);
+typedef DWORD (*fsDownloaderEventFunc)(enum fsDownloaderEvent ev, UINT_PTR uParam, LPVOID lpAppParam);
+
+struct fsDownloaderEventSecCheckFailureInfo
+{
+	fsDownload_NetworkProperties *dnp = nullptr;
+	DWORD sctFlags = 0;
+};
 
 enum fsDownloaderEvent
 {
@@ -267,12 +274,16 @@ enum fsDownloaderEvent
 	
 	DE_SPEEDISTOOLOW,
 
+	
+	
+	
+	DE_SEC_CHECK_FAILURE,
 };
 
 struct fsDlgWithServerInfo
 {
 	fsInetFileDialogDirection dir;	
-	LPCSTR pszMsg;					
+	LPCTSTR pszMsg;					
 	int iSection;					
 };
 
@@ -314,13 +325,13 @@ public:
 	
 	void UseZipPreview (BOOL b);
 	
-	LPCSTR Get_FileName();
+	LPCTSTR Get_FileName();
 	
 	UINT64 GetDownloadedBytesCount();
 	
 	int GetFoundMirrorCount();
 	
-	LPCSTR GetContentType();
+	LPCTSTR GetContentType();
 	
 	void Set_MirrPingTime (int iMirr, DWORD dw);
 	
@@ -355,14 +366,14 @@ public:
 	
 	fsInternetResult FindMirrors();
 	
-	fsInternetResult AddMirrorURL (LPCSTR pszUrl, LPCSTR pszUser = NULL, LPCSTR pszPassword = NULL, BOOL bDontMeasureSpeed = FALSE);
+	fsInternetResult AddMirrorURL (LPCTSTR pszUrl, LPCTSTR pszUser = NULL, LPCTSTR pszPassword = NULL, BOOL bDontMeasureSpeed = FALSE);
 	
 	int GetMirrorURLCount();
 	
 	fsDownload_NetworkProperties* MirrorDNP (int iMirror);
 	
 	
-	fsInternetResult StartDownloading(UINT uStartFrom = 0);
+	fsInternetDownloaderResult StartDownloading (uint64_t uStartFrom = 0);
 	
 	void StopDownloading();
 	
@@ -374,7 +385,7 @@ public:
 	
 	fsInternetResult QuerySize();
 	
-	LPCSTR GetSuggestedFileName();
+	LPCTSTR GetSuggestedFileName();
 	
 	void StopSection();
 	
@@ -462,17 +473,23 @@ public:
 	
 	
 	
-	fsInternetResult AddSection(BOOL bQueryCreation = TRUE);
+	fsInternetDownloaderResult AddSection(BOOL bQueryCreation = TRUE);
 	
 	fsDownload_NetworkProperties* DNP(int nSection = -1);
 	
-	void ApplyProperties(class fsInternetURLFile *pFile, fsDownload_NetworkProperties* dnp);
-	void ApplyProxySettings (fsInternetSession* pSession, fsDownload_NetworkProperties* dnp);
+	static void ApplyProperties(class fsInternetURLFile *pFile, fsDownload_NetworkProperties* dnp);
+	static void ApplyProxySettings (fsInternetSession* pSession, fsDownload_NetworkProperties* dnp, UINT uTimeout);
 	void CreateCompleteSection(UINT64 uFileSize); 
 	void SetFileSize(UINT64 uFileSize); 
 	void AddSection(UINT64 uStart, UINT64 uEnd, UINT64 uCurrent);
 	void SetManagerPersistObject(vmsPersistObject* pManagerPersistObject);
 	void setDirty();
+	UINT Get_Timeout () const {return m_uTimeout;}
+	static tstring ExtractRedirectURL (fsInternetURLFile *file, fsDownload_NetworkProperties *dnp);
+	
+	
+	static fsInternetResult ApplyRedirectURL (fsInternetURLFile *file, fsDownload_NetworkProperties *dnp, 
+		std::unique_ptr <fsDownload_NetworkProperties>& upRedirectedDnp);
 
 	fsInternetDownloader();
 	virtual ~fsInternetDownloader();
@@ -548,7 +565,7 @@ protected:
 	fsMirrorURLsMgr* m_pMirrURLMgr;
 	BOOL m_bDetLog;				
 	
-	static void _InetFileDialogFunc (fsInetFileDialogDirection dir, LPCSTR pszMsg, LPVOID lp1, LPVOID lp2);
+	static void _InetFileDialogFunc (fsInetFileDialogDirection dir, LPCTSTR pszMsg, LPVOID lp1, LPVOID lp2);
 	
 	fsInternetResult QuerySize (fsInternetURLFile* file);
 	fsString m_strSuggFileName;	
@@ -576,7 +593,7 @@ protected:
 	BOOL SleepInterval();
 	vmsCriticalSection m_csAddSection;	
 	
-	DWORD Event (fsDownloaderEvent enEvent, UINT uDesc = 0);
+	DWORD Event (fsDownloaderEvent enEvent, UINT_PTR uDesc = 0);
 	UINT m_uTrafficLimit;		
 	
 	
@@ -594,19 +611,19 @@ protected:
 	
 	
 	
-	fsInternetResult OpenUrl (UINT64 uStartPos, fsInternetURLFile **ppFile, int iSectIndex, UINT &nMirror, BOOL bCheckFileSize = FALSE, LPCSTR pszContentTypeReq = NULL);
-	fsInternetResult OpenUrl_imp (UINT64 uStartPos, fsInternetURLFile **ppFile, int iSectIndex, UINT &nMirror, BOOL bCheckFileSize, int iAttempt, LPCSTR pszContentTypeReq = NULL, fsDownload_NetworkProperties *pDNPRedirectedUrl = NULL, bool bIsRedirected = false);
+	fsInternetDownloaderResult OpenUrl (UINT64 uStartPos, fsInternetURLFile **ppFile, int iSectIndex, UINT &nMirror, BOOL bCheckFileSize = FALSE, LPCTSTR pszContentTypeReq = NULL);
+	fsInternetDownloaderResult OpenUrl_imp (UINT64 uStartPos, fsInternetURLFile **ppFile, int iSectIndex, UINT &nMirror, BOOL bCheckFileSize, int iAttempt, LPCTSTR pszContentTypeReq = NULL, fsDownload_NetworkProperties *pDNPRedirectedUrl = NULL, bool bIsRedirected = false);
 	
 	
 	static DWORD WINAPI _threadDownload(LPVOID lp);
 	
-	fsInternetResult CreateAdditionalSection (BOOL bQueryCreation = TRUE);
+	fsInternetDownloaderResult CreateAdditionalSection (BOOL bQueryCreation = TRUE);
 	
 	
 	
 	BOOL CreateSection (fsSection &sect, BOOL bCreateThread = TRUE, BOOL bReduceSCN = TRUE);
 	
-	fsInternetResult CreateMainSection (UINT uStartFrom = 0, BOOL bQueryCreation = TRUE);
+	fsInternetDownloaderResult CreateMainSection (uint64_t uStartFrom = 0, BOOL bQueryCreation = TRUE);
 	BOOL m_bErrDownloading;			
 	fsDownload_NetworkProperties m_dnp;	
 
@@ -614,6 +631,7 @@ protected:
 	{
 		DWORD dwCacheLen;
 		bool bSleep;
+		fsSecurityCheckType lastSecCheckFailure = SCT_NONE;
 	
 		fsSectionEx (const fsSection& s) {
 			CopyMemory (this, &s, sizeof (s));
@@ -624,6 +642,13 @@ protected:
 		fsSectionEx () {
 			dwCacheLen = 0;
 			bSleep = false;
+		}
+
+		void setLastError (fsInternetResult ir, const fsInternetURLFile *file)
+		{
+			lastErr = ir;
+			if (file && ir == IR_SEC_CHECK_FAILURE)
+				lastSecCheckFailure = file->get_lastSctFailure ();
 		}
 	};
 	fs::list <fsSectionEx> m_vSections;	

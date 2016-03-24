@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -75,7 +75,7 @@ UINT fsRASMgr::GetEntriesCount()
 	return m_vEntries.size ();
 }
 
-LPCSTR fsRASMgr::GetEntry(UINT nEntry)
+LPCTSTR fsRASMgr::GetEntry(UINT nEntry)
 {
 	ASSERT (nEntry < (UINT)m_vEntries.size ());
 

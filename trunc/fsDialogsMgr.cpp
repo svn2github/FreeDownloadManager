@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -58,7 +58,7 @@ void fsDialogsMgr::EndAllDialogs()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsDialogsMgr::EndAllDialogs " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsDialogsMgr::EndAllDialogs " + std::string(ex.what()));
 	}
 	catch (...)
 	{

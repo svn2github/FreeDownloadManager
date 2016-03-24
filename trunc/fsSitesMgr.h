@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSSITESMGR_H__211935DF_F52C_4919_ADEC_506651483E6F__INCLUDED_)
@@ -40,9 +40,9 @@ typedef vmsObjectSmartPtr <fsSiteInfo> fsSiteInfoPtr;
 
 struct fsSiteInfo_v2
 {
-	fsString strName;	
-	fsString strUser;	
-	fsString strPassword;	
+	fsStringA strName;	
+	fsStringA strUser;	
+	fsStringA strPassword;	
 	UINT cMaxConns;		
 	UINT cConnsNow;		
 	fsString strGroup;	
@@ -53,9 +53,9 @@ struct fsSiteInfo_v2
 
 struct fsSiteInfo_v1
 {
-	fsString strName;
-	fsString strUser;	
-	fsString strPassword;
+	fsStringA strName;
+	fsStringA strUser;	
+	fsStringA strPassword;
 	UINT cMaxConns;
 	UINT cConnsNow;
 	fsString strGroup;	
@@ -63,7 +63,7 @@ struct fsSiteInfo_v1
 	BOOL bTemp;	
 };
 
-#define SITESFILE_CURRENT_VERSION	((WORD)3)
+#define SITESFILE_CURRENT_VERSION	((WORD)4)
 #define SITESFILE_SIG     "FDM Sites  "
 
 struct fsSitesFileHdr
@@ -114,7 +114,7 @@ public:
 	
 	
 	
-	fsSiteInfo* FindSite (LPCSTR pszSite, DWORD dwValidFor, BOOL bAllReq = TRUE);
+	fsSiteInfo* FindSite (LPCTSTR pszSite, DWORD dwValidFor, BOOL bAllReq = TRUE);
 	
 	fsSiteInfo* GetSite (int iIndex);
 	

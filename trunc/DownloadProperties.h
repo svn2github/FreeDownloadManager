@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __DOWNLOADPROPERTIES_H_
@@ -27,7 +27,62 @@ enum fsInternetAccessTypeEx
 	IATE_FIREFOXPROXY,							
 };
 
-struct fsDownload_NetworkProperties
+struct fsDownload_NetworkProperties_v19
+{
+	WORD wRollBackSize;		
+
+	
+	LPTSTR pszAgent;	
+
+	
+	fsInternetAccessTypeEx enAccType;	
+	LPTSTR pszProxyName;		
+	LPTSTR pszProxyUserName;	
+	LPTSTR pszProxyPassword;	
+
+	
+	fsNetworkProtocol enProtocol;	
+	LPTSTR pszServerName;	
+	INTERNET_PORT  uServerPort;	
+	LPTSTR pszUserName;	
+	LPTSTR pszPassword;
+
+	
+	LPTSTR pszPathName;	
+
+	
+	BOOL  bUseHttp11;	
+	LPTSTR pszReferer;	
+	BOOL  bUseCookie;	
+
+	
+	DWORD dwFtpFlags;	
+	fsFtpTransferType enFtpTransferType;	
+	
+	
+	LPTSTR pszASCIIExts;
+
+	
+	LPTSTR pszCookies;	
+	LPSTR pszPostData; 
+
+	
+	DWORD dwFlags;				
+	
+	
+	WORD  wLowSpeed_Factor;
+	
+	WORD  wLowSpeed_Duration;
+
+};
+
+struct fsDownload_NetworkProperties : 
+	public fsDownload_NetworkProperties_v19
+{
+	DWORD sctIgnoreFlags = 0; 
+};
+
+struct fsDownload_NetworkProperties_v15
 {
 	WORD wRollBackSize;		
 
@@ -109,7 +164,8 @@ enum fsDownloadFileError
 enum fsDownloadFileErrorProcessing
 {
 	DFEP_STOP,		
-	DFEP_IGNORE		
+	DFEP_IGNORE,		
+	DFEP_ONLYNOTIFY		
 };
 
 enum fsAlreadyExistReaction
@@ -138,21 +194,64 @@ enum vmsIntegrityCheckFailedReaction
 };
 
 #define DPF_DONTRESTARTIFNORESUME		1	
-#define DPF_USEZIPPREVIEW				2
+#define DPF_USEZIPPREVIEW				(1<<1)
 
-#define DPF_USEHIDDENATTRIB				4
+#define DPF_USEHIDDENATTRIB				(1<<2)
 
-#define DPF_APPENDCOMMENTTOFILENAME		8
+#define DPF_APPENDCOMMENTTOFILENAME		(1<<3)
 
-#define DPF_STARTWHENDONE				16
+#define DPF_STARTWHENDONE				(1<<4)
 
-#define DPF_STARTWHENDONE_NOCONF		32
+#define DPF_STARTWHENDONE_NOCONF		(1<<5)
 
-#define DPF_RETRDATEFROMSERVER			64
+#define DPF_RETRDATEFROMSERVER			(1<<6)
 
-#define DPF_GENERATEDESCFILE			128
+#define DPF_GENERATEDESCFILE			(1<<7)
+#define DPF_FORCE_NO_RECOVERY			(1<<8)
 
 struct fsDownload_Properties
+{
+	WORD  wStructSize;	
+
+	
+	UINT  uTrafficRestriction;	
+	UINT  uMaxAttempts;			
+	UINT  uRetriesTime;			
+	UINT  uTimeout;				
+	
+	
+	UINT  uSectionMinSize;		
+	UINT  uMaxSections;			
+	BOOL  bRestartSpeedLow;		
+
+	
+	LPTSTR pszFileName;			
+	BOOL  bReserveDiskSpace;	
+	
+	
+	BOOL  bIgnoreRestrictions;	
+	
+	
+	fsDownloadFileErrorProcessing aEP [DFE_UNKNOWN];
+	fsAlreadyExistReaction enAER;	
+	fsSizeChangeReaction enSCR;	
+	LPTSTR pszAdditionalExt;		
+	DWORD dwFlags;	
+	LPTSTR pszCreateExt;			
+
+	
+	BOOL bCheckIntegrityWhenDone;	
+	vmsIntegrityCheckFailedReaction enICFR;	
+	LPTSTR pszCheckSum;		
+	
+	
+	
+	
+	DWORD dwIntegrityCheckAlgorithm;
+
+};
+
+struct fsDownload_Properties_v15
 {
 	WORD  wStructSize;	
 
@@ -194,22 +293,25 @@ struct fsDownload_Properties
 
 };
 
+void CopyDp(fsDownload_Properties& dpDest, const fsDownload_Properties_v15& dpSrc);
+void CopyDnp(fsDownload_NetworkProperties& dpDest, const fsDownload_NetworkProperties_v15& dpSrc);
+
 struct fsDP_BuffersInfo
 {
 	UINT nAdditionalExtSize;	
 };
 
-extern void fsDNP_SetAuth (fsDownload_NetworkProperties* dnp, LPCSTR pszUser, LPCSTR pszPassword);
+extern void fsDNP_SetAuth (fsDownload_NetworkProperties* dnp, LPCTSTR pszUser, LPCTSTR pszPassword);
 
 extern BOOL fsDNP_GetDefaults (fsDownload_NetworkProperties *pDNP, fsDNP_BuffersInfo* pBuffs, BOOL bAllocate);
 
 extern void fsDNP_GetDefaults_Free (fsDownload_NetworkProperties *pDNP);
 
-extern fsInternetResult fsDNP_ApplyUrl (fsDownload_NetworkProperties *dnp, LPCSTR pszUrl);
+extern fsInternetResult fsDNP_ApplyUrl (fsDownload_NetworkProperties *dnp, LPCTSTR pszUrl);
 
 extern BOOL fsDP_GetDefaults (fsDownload_Properties *pDP, fsDP_BuffersInfo* pBuffs, BOOL bAllocate);
 
-extern fsInternetResult fsDNP_GetByUrl (fsDownload_NetworkProperties *pDNP, fsDNP_BuffersInfo* pBuffs, BOOL bAllocate, LPCSTR pszUrl);
+extern fsInternetResult fsDNP_GetByUrl (fsDownload_NetworkProperties *pDNP, fsDNP_BuffersInfo* pBuffs, BOOL bAllocate, LPCTSTR pszUrl);
 
 extern void fsDNP_GetByUrl_Free (fsDownload_NetworkProperties *pDNP);
 
@@ -222,6 +324,6 @@ extern BOOL fsGetProxy (fsNetworkProtocol np, CString& strProxy, CString& strUse
 
 extern BOOL fsDNP_CloneSettings (fsDownload_NetworkProperties *dst, fsDownload_NetworkProperties *src);
 
-extern void fsDNP_GetURL (fsDownload_NetworkProperties* dnp, LPSTR pszURL);
+extern void fsDNP_GetURL (fsDownload_NetworkProperties* dnp, LPTSTR pszURL);
 
 #endif

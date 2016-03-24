@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __WAITDLG_H_
@@ -8,14 +8,14 @@
 #include "resource.h"       
 #include <atlhost.h>
 #include <string>
-#include "vmsFdmTranslations.h"
+#include "../../common/vmsFdmTranslations.h"
 
 class CWaitDlg : 
 	public CAxDialogImpl<CWaitDlg>
 {
 public:
 	HANDLE m_hEvCloseDlg;
-	std::string m_strMsg;
+	tstring m_strMsg;
 	CWaitDlg()
 	{
 		m_hEvCloseDlg = NULL;
@@ -37,7 +37,7 @@ END_MSG_MAP()
 	LRESULT OnInitDialog(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
 		SetDlgItemText (IDC__MSG, m_strMsg.c_str ());
-		std::string str = vmsFdmTranslations::o ().GetString (L_PLEASEWAIT);
+		tstring str = vmsFdmTranslations::o ().GetString (L_PLEASEWAIT);
 		if (str.empty ())
 			str = _T ("Please wait...");
 		SetWindowText (str.c_str ());

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -22,21 +22,24 @@ vmsRegisteredApp::~vmsRegisteredApp()
 
 }
 
-CString vmsRegisteredApp::GetFullPath(LPCSTR pszExeName)
+CString vmsRegisteredApp::GetFullPath(LPCTSTR pszExeName, bool bUser)
 {
 	CRegKey key;
-	CString str = "Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\";
+	CString str = _T("Software\\Microsoft\\Windows\\CurrentVersion\\App Paths\\");
+	HKEY hkey = HKEY_LOCAL_MACHINE;
+	if ( bUser )
+		hkey = HKEY_CURRENT_USER;
 	str += pszExeName;
-	if (ERROR_SUCCESS == key.Open (HKEY_LOCAL_MACHINE, str, KEY_READ))
+	if (ERROR_SUCCESS == key.Open (hkey, str, KEY_READ))
 	{
-		char szPath [MY_MAX_PATH];
-		DWORD dw = sizeof (szPath);
+		TCHAR szPath [MY_MAX_PATH];
+		DWORD dw = sizeof (szPath) * sizeof(TCHAR);
 
-		if (ERROR_SUCCESS == key.QueryValue (szPath, "Path", &dw))
+		if (ERROR_SUCCESS == key.QueryValue (szPath, _T("Path"), &dw))
 		{
 			str = szPath;
-			if (str [str.GetLength () - 1] != '\\' && str [str.GetLength () - 1] != '/')
-				str += '\\';
+			if (str [str.GetLength () - 1] != _T('\\') && str [str.GetLength () - 1] != _T('/'))
+				str += _T('\\');
 			str += pszExeName;
 			return str;
 		}
@@ -44,7 +47,7 @@ CString vmsRegisteredApp::GetFullPath(LPCSTR pszExeName)
 		if (ERROR_SUCCESS == key.QueryValue (szPath, NULL, &dw))
 		{
 			str = szPath;
-			if (str != "" && str [0] == '"')
+			if (str != _T("") && str [0] == _T('"'))
 			{
 				str.Delete (0);
 				str.Delete (str.GetLength () - 1);
@@ -53,5 +56,13 @@ CString vmsRegisteredApp::GetFullPath(LPCSTR pszExeName)
 		}
 	}
 
-	return "";
+	return _T("");
+}
+
+CString vmsRegisteredApp::GetFullPath2(LPCTSTR pszExeName)
+{
+	auto result = GetFullPath (pszExeName, true);
+	if (result.IsEmpty ())
+		result = GetFullPath (pszExeName, false);
+	return result;
 }

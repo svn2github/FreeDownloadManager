@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -88,7 +88,7 @@ BOOL CToolBarEx::InsertGroup(wgTButtonInfo *pButtons, CBitmap *pBitmap, CBitmap 
 		if (pButtons [i].pszName)
 		{
 			CString str;
-			str.Format("%s\0", pButtons [i].pszName);
+			str.Format(_T("%s\0"), pButtons [i].pszName);
 			GetToolBarCtrl().AddStrings(str);
 			tb.iName = m_cNames++;
 		}
@@ -164,7 +164,7 @@ BOOL CToolBarEx::OnNotify(LPNMHDR nm)
 	if (nm->hwndFrom != m_hWnd)
 		return FALSE;
 
-	int nID = ((LPNMTBGETINFOTIPA) nm)->iItem;
+	int nID = ((LPNMTBGETINFOTIP) nm)->iItem;
  
 	fsTBInfo *tb = FindButton (nID);
 
@@ -173,19 +173,19 @@ BOOL CToolBarEx::OnNotify(LPNMHDR nm)
 
 	switch (nm->code)
 	{
-		case TBN_GETINFOTIPA:
+		case TBN_GETINFOTIP:
 		{
-			LPNMTBGETINFOTIPA inf = (LPNMTBGETINFOTIPA) nm;
-			strcpy (inf->pszText, tb->strToolTip);
+			LPNMTBGETINFOTIP inf = (LPNMTBGETINFOTIP) nm;
+			_tcscpy (inf->pszText, tb->strToolTip);
 		}
 		break;
 
-		case TBN_GETINFOTIPW:
-		{
-			return FALSE;
+		
+		
+		
 			
-		}
-		break;
+		
+		
 
 		default:
 			return FALSE;
@@ -223,7 +223,7 @@ CToolBarEx::fsTBInfo* CToolBarEx::FindButton(UINT nID)
 	return NULL;
 }
 
-void CToolBarEx::UpdateGroupToolTips(int iGrp, LPCSTR *ppszTips, UINT uSize)
+void CToolBarEx::UpdateGroupToolTips(int iGrp, LPCTSTR *ppszTips, UINT uSize)
 {
 	int cTips = min ((int)uSize, m_vGroups [iGrp].size ());
 	for (int i = 0; i < cTips; i++)

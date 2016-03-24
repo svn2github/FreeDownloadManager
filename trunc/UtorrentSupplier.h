@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef UTORRENT_SUPPLIER_INCLUDED_FILE
@@ -18,8 +18,8 @@ public:
 	virtual bool CheckSupplier() const; 
 	virtual void Import(informer, void* pData, TImportResult& tImportResult) const; 
 	virtual CString GetSupplierName() const; 
-	static bool UtorrentInstalled(LPSTR szPath);
-	static void ImportUtorrentDownloads(informer fnInformer, void* pData, TImportResult& tImportResult, const CUtorrentSupplier* pUtorrentSupplier, LPSTR szPath);
+	static bool UtorrentInstalled(LPTSTR szPath);
+	static void ImportUtorrentDownloads(informer fnInformer, void* pData, TImportResult& tImportResult, const CUtorrentSupplier* pUtorrentSupplier, LPTSTR szPath);
 
 	
 

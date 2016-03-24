@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_PLUGFRAME2TABS_H__D7DB4034_ADD8_47E1_808A_ABF0973CD2AC__INCLUDED_)

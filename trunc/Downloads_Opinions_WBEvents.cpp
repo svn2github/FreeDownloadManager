@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -92,15 +92,15 @@ void CDownloads_Opinions_WBEvents::OnDocumentComplete(LPDISPATCH pdWB, VARIANT *
 
 	CString strVersion;
 	CMainFrame* pFrm = (CMainFrame*)AfxGetApp ()->m_pMainWnd;
-	strVersion.Format ("%s_%d", vmsFdmAppMgr::getBuildNumberAsString (), pFrm->m_Customizations.get_AffiliateID ());
+	strVersion.Format (_T("%s_%d"), vmsFdmAppMgr::getBuildNumberAsString (), pFrm->m_Customizations.get_AffiliateID ());
 
 	CString strState;
 	if (m_pwndOpinions->m_dld->pMgr->IsDone ())
-		strState = "Downloaded";
+		strState = _T("Downloaded");
 	else if (m_pwndOpinions->m_dld->pMgr->IsRunning ())
-		strState = "Downloading";
+		strState = _T("Downloading");
 	else
-		strState = "Paused";
+		strState = _T("Paused");
 	CString strSize;
 	UINT64 u = m_pwndOpinions->m_dld->pMgr->GetSSFileSize ();
 	if (u != _UI64_MAX) {
@@ -109,11 +109,11 @@ void CDownloads_Opinions_WBEvents::OnDocumentComplete(LPDISPATCH pdWB, VARIANT *
 		strSize = sz;
 	}
 	else
-		strSize = "Unknown";
+		strSize = _T("Unknown");
 	CString strComment = m_pwndOpinions->m_dld->strComment;
-	strComment.Replace ("\r\n", " ");
-	strComment.Replace ("\r", " ");
-	strComment.Replace ("\n", " ");
+	strComment.Replace (_T("\r\n"), _T(" "));
+	strComment.Replace (_T("\r"), _T(" "));
+	strComment.Replace (_T("\n"), _T(" "));
 
 	
 
@@ -203,12 +203,14 @@ CString CDownloads_Opinions_WBEvents::GetFormInputElementText(IHTMLFormElement *
 {
 	bFound = false;
 	IDispatchPtr spdelInp;
-	pForm->item (COleVariant (pszElementName), COleVariant ((long)0), &spdelInp);
+	USES_CONVERSION;
+	tstring sElementName = CA2T(pszElementName);
+	pForm->item (COleVariant (sElementName.c_str()), COleVariant ((long)0), &spdelInp);
 	if (spdelInp == NULL)
-		return "";
+		return _T("");
 	IHTMLInputElementPtr spelInp (spdelInp);
 	if (spelInp == NULL)
-		return "";
+		return _T("");
 	BSTR bstr;
 	spelInp->get_defaultValue (&bstr);
 	CString strEl = bstr;

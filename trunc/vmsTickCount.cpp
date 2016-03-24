@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -21,7 +21,7 @@ UINT64 vmsTickCount::GetTickCount64(void)
 	static FNGetTickCount64 _pfnGetTickCount64 = NULL;
 	if (!_pfnGetTickCount64)
 	{
-		HMODULE hDll = GetModuleHandle ("kernel32.dll");
+		HMODULE hDll = GetModuleHandle (_T("kernel32.dll"));
 		if (hDll)
 			_pfnGetTickCount64 = (FNGetTickCount64) GetProcAddress (hDll, "GetTickCount64");
 		if (!_pfnGetTickCount64)

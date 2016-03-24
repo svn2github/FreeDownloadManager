@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -60,10 +60,25 @@ bool fsCmdHistoryMgr::fs1DayRecords::loadObjectItselfFromStateBuffer(LPBYTE pbtB
 
 	while (cRecs--) {
 
-		char *pszRec = 0;
+		TCHAR *pszRec = 0;
 
-		if (!getStrFromBuffer(&pszRec, pbtCurrentPos, pbtBuffer, *pdwSize))
-			return false;
+		if (dwVer <= 2) {
+
+			
+
+			LPSTR pszStr = 0;
+
+			if (!getStrFromBuffer(&pszStr, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+
+			CopyString(&pszRec, pszStr);
+			delete pszStr;
+
+		} else {
+
+			if (!getStrFromBuffer(&pszRec, pbtCurrentPos, pbtBuffer, *pdwSize))
+				return false;
+		}
 		
 		vRecs.add (pszRec);
 		delete [] pszRec;
@@ -157,13 +172,24 @@ BOOL fsCmdHistoryMgr::ReadFromFile(HANDLE hFile)
 
 		while (cRecs--)
 		{
-			char *pszRec;
+			if (hdr.wVer > 1) {
+				
+				
+				
+				ASSERT(false);
+			}
 
-			if (!fsReadStrFromFile (&pszRec, hFile))
-				return FALSE;
+			if (hdr.wVer == 1) {
+				char *pszRec;
+
+				if (!fsReadStrFromFileA (&pszRec, hFile))
+					return FALSE;
 		
-			pRecPtr->vRecs.add (pszRec);
-			delete [] pszRec;
+				USES_CONVERSION;
+				tstring sRec = CA2T(pszRec);
+				pRecPtr->vRecs.add (sRec.c_str());
+				delete [] pszRec;
+			}
 		}
 
 		m_vRecs.add (pRecPtr);
@@ -229,7 +255,7 @@ int fsCmdHistoryMgr::GetRecordCount()
 	return cRecords;
 }
 
-void fsCmdHistoryMgr::AddRecord(LPCSTR pszRecord)
+void fsCmdHistoryMgr::AddRecord(LPCTSTR pszRecord)
 {
 	if (m_bNoHistory)
 		return;
@@ -327,7 +353,7 @@ void fsCmdHistoryMgr::AddRecord(LPCSTR pszRecord)
 	}
 }
 
-LPCSTR fsCmdHistoryMgr::GetRecord(int iRec)
+LPCTSTR fsCmdHistoryMgr::GetRecord(int iRec)
 {
 	
 	

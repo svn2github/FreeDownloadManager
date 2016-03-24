@@ -1,7 +1,9 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
+#include "StdAfx.h"
+#include <tchar.h>
 #include "vmsHash.h"
 #include "md5.h"
 #include "crc32.h"
@@ -20,7 +22,7 @@ vmsHash::~vmsHash()
 
 }
 
-std::string vmsHash::Hash(LPCSTR pszFile, vmsHashAlgorithm enHA)
+tstring vmsHash::Hash(LPCTSTR pszFile, vmsHashAlgorithm enHA)
 {
 	switch (enHA) {
 	case HA_MD5:
@@ -36,19 +38,19 @@ std::string vmsHash::Hash(LPCSTR pszFile, vmsHashAlgorithm enHA)
 		return Hash_SHA2 (pszFile);
 
 	default:
-		return "";
+		return _T("");
 	}
 }
 
-std::string vmsHash::Hash_MD5(LPCSTR pszFile)
+tstring vmsHash::Hash_MD5(LPCTSTR pszFile)
 {
 	MD5_CTX md5;
 	if (0 == Hash_MD5_File (pszFile, 0, &md5))
-		return "";
+		return _T("");
 	return Hash_ResultToStr (md5.digest, 16);		
 }
 
-UINT64 vmsHash::Hash_MD5_File(const char *fn, unsigned long seed, void *pvContext)
+UINT64 vmsHash::Hash_MD5_File(LPCTSTR fn, unsigned long seed, void *pvContext)
 {
 	MD5_CTX *mdContext = (MD5_CTX*) pvContext;
 	vmsFile file;
@@ -89,18 +91,18 @@ UINT64 vmsHash::Hash_MD5_File(const char *fn, unsigned long seed, void *pvContex
 	return trb ;
 }
 
-std::string vmsHash::Hash_ResultToStr(unsigned char *pHR, int nSize)
+tstring vmsHash::Hash_ResultToStr(unsigned char *pHR, int nSize)
 {
-	std::string str;
+	tstring str;
 
 	for (int i = 0; i < nSize; i++)
 	{
-		char sz [3];
-		_itoa_s (*pHR++, sz, 3, 16);
+		TCHAR sz [3];
+		_itot_s (*pHR++, sz, 3, 16);
 		if (sz [1] == 0) {
 			sz [1] = sz [0];
 			sz [2] = 0;
-			sz [0] = '0';
+			sz [0] = _T('0');
 		}
 
 		str += sz; 
@@ -114,7 +116,7 @@ void vmsHash::set_EventsHandler(vmsHashEvents *pEvents)
 	m_pEvents = pEvents;
 }
 
-std::string vmsHash::Hash_CRC32(LPCSTR pszFile)
+tstring vmsHash::Hash_CRC32(LPCTSTR pszFile)
 {
 	DWORD dwCrc32;
 	CCrc32Static crc32;
@@ -150,16 +152,16 @@ std::string vmsHash::Hash_CRC32(LPCSTR pszFile)
 	}
 
 	}
-	catch(...) {return "";}
+	catch(...) {return _T("");}
 	
 	dwCrc32 = ~dwCrc32;
 
-	char sz [100];
-	sprintf_s (sz, 100, "%08x", dwCrc32);
+	TCHAR sz [100];
+	_stprintf_s (sz, 100, _T("%08x"), dwCrc32);
 	return sz;
 }
 
-std::string vmsHash::Hash_SHA1(LPCSTR pszFile)
+tstring vmsHash::Hash_SHA1(LPCTSTR pszFile)
 {
 	sha1_ctx sha1;
 	vmsFile file;
@@ -191,14 +193,14 @@ std::string vmsHash::Hash_SHA1(LPCSTR pszFile)
 	sha1_end (abRes, &sha1);
 
 	if (trb == 0 && uSize != 0)
-		return "";
+		return _T("");
 	
 	return Hash_ResultToStr (abRes, 20);
 
-	}catch (...) {return "";}
+	}catch (...) {return _T("");}
 }
 
-std::string vmsHash::Hash_SHA2(LPCSTR pszFile)
+tstring vmsHash::Hash_SHA2(LPCTSTR pszFile)
 {
 	sha2_ctx sha2;
 	vmsFile file;
@@ -230,11 +232,11 @@ std::string vmsHash::Hash_SHA2(LPCSTR pszFile)
 	sha2_end (abRes, &sha2);
 
 	if (trb == 0 && uSize != 0)
-		return "";
+		return _T("");
 	
 	return Hash_ResultToStr (abRes, m_nSHA2Strength / 8);
 
-	}catch (...) {return "";}
+	}catch (...) {return _T("");}
 }
 
 void vmsHash::set_SHA2Strength(vmsHash_SHA2Strength en)

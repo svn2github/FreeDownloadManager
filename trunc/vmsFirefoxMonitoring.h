@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSFIREFOXMONITORING_H__5A4260CA_6142_4971_8707_4D8DAD852589__INCLUDED_)
@@ -23,6 +23,9 @@ public:
 	
 	
 	static bool IsEnabledInFirefox(bool &bEnabled);
+	
+	static bool IsFFInstalled ();
+	static bool ProfileExists();
 
 	vmsFirefoxMonitoring();
 	virtual ~vmsFirefoxMonitoring();

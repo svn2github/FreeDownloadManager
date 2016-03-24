@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -27,12 +27,16 @@ void fsClipboardMgr::Initialize(HWND hWnd)
 	m_hWnd = hWnd;
 }
 
-LPCSTR fsClipboardMgr::Text()
+LPCTSTR fsClipboardMgr::Text()
 {
 	if (FALSE == OpenClipboard (m_hWnd))
 		return NULL;
 
+#ifdef UNICODE
+	HANDLE hMem = GetClipboardData (CF_UNICODETEXT);
+#else
 	HANDLE hMem = GetClipboardData (CF_TEXT);
+#endif
 
 	if (hMem == NULL)
 	{
@@ -40,7 +44,7 @@ LPCSTR fsClipboardMgr::Text()
 		return FALSE;
 	}
 
-	LPCSTR pszText = (LPCSTR) GlobalLock (hMem);
+	LPCTSTR pszText = (LPCTSTR) GlobalLock (hMem);
 	m_strText = pszText;
 	GlobalUnlock (hMem);
 
@@ -49,25 +53,32 @@ LPCSTR fsClipboardMgr::Text()
 	return m_strText;
 }
 
-BOOL fsClipboardMgr::Text(LPCSTR psz)
+BOOL fsClipboardMgr::Text(LPCTSTR psz)
 {
 	if (FALSE == OpenClipboard (m_hWnd))
 		return FALSE;
 
 	EmptyClipboard ();
 
-	HANDLE hText = GlobalAlloc (GMEM_MOVEABLE, strlen (psz)+1);
+	HANDLE hText = GlobalAlloc (GMEM_MOVEABLE, (_tcslen (psz)+1) * sizeof(TCHAR));
 	if (hText == NULL)
 	{
 		CloseClipboard ();
 		return FALSE;
 	}
 
-	LPSTR pszText = (LPSTR) GlobalLock (hText);
-	strcpy (pszText, psz);
+	LPTSTR pszText = (LPTSTR) GlobalLock (hText);
+	_tcscpy (pszText, psz);
 	GlobalUnlock (hText);
 
-	SetClipboardData (CF_TEXT, hText);
+	CLIPFORMAT cfmtText;
+#ifdef UNICODE
+	cfmtText = CF_UNICODETEXT;
+#else
+	cfmtText = CF_TEXT;
+#endif
+
+	SetClipboardData (cfmtText, hText);
 
 	CloseClipboard ();
 

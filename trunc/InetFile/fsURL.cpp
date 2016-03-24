@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsURL.h"
@@ -16,22 +16,22 @@ fsURL::~fsURL()
 
 }
 
-fsInternetResult fsURL::Crack(LPCSTR pszUrl, BOOL bCheckScheme)
+fsInternetResult fsURL::Crack(LPCTSTR pszUrl, BOOL bCheckScheme)
 {
 	
-	if (lstrcmpi (pszUrl, "http://") == 0)
-		pszUrl = "http://url";
-	else if (lstrcmpi (pszUrl, "ftp://") == 0)
-		pszUrl = "ftp://url";
-	else if (lstrcmpi (pszUrl, "https://") == 0)
-		pszUrl = "https://url";
+	if (lstrcmpi (pszUrl, _T("http://")) == 0)
+		pszUrl = _T("http://url");
+	else if (lstrcmpi (pszUrl, _T("ftp://")) == 0)
+		pszUrl = _T("ftp://url");
+	else if (lstrcmpi (pszUrl, _T("https://")) == 0)
+		pszUrl = _T("https://url");
 
-	DWORD urlLen = strlen (pszUrl) * 2;
-	CHAR *pszCanUrl = NULL;
+	DWORD urlLen = _tcslen (pszUrl) * 2;
+	LPTSTR pszCanUrl = NULL;
 	fsString strUrl;
 
 	
-	if (*pszUrl == '"' || *pszUrl == '\'')
+	if (*pszUrl == _T('"') || *pszUrl == _T('\''))
 	{
 		
 		
@@ -42,17 +42,17 @@ fsInternetResult fsURL::Crack(LPCSTR pszUrl, BOOL bCheckScheme)
 		pszUrl = strUrl;
 	}
 		
-	fsnew (pszCanUrl, CHAR, urlLen);
+	fsnew (pszCanUrl, TCHAR, urlLen+1);
 	bool isMagnet = false;
-	const char* magnetStart = _tcsstr (pszUrl, _T("magnet:"));
+	LPCTSTR magnetStart = _tcsstr (pszUrl, _T("magnet:"));
 	isMagnet = (magnetStart != 0 && pszUrl == magnetStart);
 
 	
 	if ((pszUrl [0] == '\\' && pszUrl [1] == '\\') || isMagnet)
 	{
 		m_url.nScheme = INTERNET_SCHEME_FILE; 
-		strcpy (m_szPath, pszUrl);
-		strcpy (m_szScheme, "file");
+		_tcscpy_s (m_szPath, 10000, pszUrl);
+		_tcscpy_s (m_szScheme, 100, _T("file"));
 		*m_szUser = 0;
 		*m_szPassword = 0;
 		m_url.nPort = 0;
@@ -63,7 +63,7 @@ fsInternetResult fsURL::Crack(LPCSTR pszUrl, BOOL bCheckScheme)
 	}
 	else 
 	{
-		if (strnicmp (pszUrl, "file://", 7)) 
+		if (_tcsnicmp (pszUrl, _T ("file://"), 7)) 
 		{
 			
 			if (!InternetCanonicalizeUrl (pszUrl, pszCanUrl, &urlLen, ICU_BROWSER_MODE))
@@ -72,7 +72,7 @@ fsInternetResult fsURL::Crack(LPCSTR pszUrl, BOOL bCheckScheme)
 
 				if (GetLastError () == ERROR_INSUFFICIENT_BUFFER)
 				{
-					fsnew (pszCanUrl, CHAR, urlLen+1);
+					fsnew (pszCanUrl, TCHAR, urlLen+1);
 					if (!InternetCanonicalizeUrl (pszUrl, pszCanUrl, &urlLen, ICU_BROWSER_MODE))
 					{
 						delete pszCanUrl;
@@ -86,7 +86,7 @@ fsInternetResult fsURL::Crack(LPCSTR pszUrl, BOOL bCheckScheme)
 		else
 		{
 			
-			strcpy (pszCanUrl, pszUrl);
+			_tcscpy (pszCanUrl, pszUrl);
 		}
 
 		ZeroMemory (&m_url, sizeof (m_url));
@@ -106,7 +106,7 @@ fsInternetResult fsURL::Crack(LPCSTR pszUrl, BOOL bCheckScheme)
 
 		
 		if (!InternetCrackUrl (pszCanUrl, urlLen, 
-				_strnicmp (pszCanUrl, "ftp://", 6) == 0 ? ICU_DECODE : 0, &m_url))
+				_tcsnicmp (pszCanUrl, _T ("ftp://"), 6) == 0 ? ICU_DECODE : 0, &m_url))
 		{
 			delete pszCanUrl;
 			return fsWinInetErrorToIR ();
@@ -130,43 +130,43 @@ fsInternetResult fsURL::Crack(LPCSTR pszUrl, BOOL bCheckScheme)
 	if (m_url.nScheme == INTERNET_SCHEME_FILE)
 	{
 		
-		if (m_szPath [0] == '\\' && m_szPath [1] == '\\') 
+		if (m_szPath [0] == _T('\\') && m_szPath [1] == _T('\\')) 
 														
 		{
 			
-			size_t iPathStart = strcspn (m_szPath + 2, "\\/") + 2; 
-			if (iPathStart == strlen (m_szPath))
+			size_t iPathStart = _tcscspn (m_szPath + 2, _T("\\/")) + 2; 
+			if (iPathStart == _tcslen (m_szPath))
 				return IR_BADURL;
-			strncpy (m_szHost, m_szPath + 2, iPathStart - 2); 
+			_tcsncpy_s (m_szHost, m_szPath + 2, iPathStart - 2); 
 			m_szHost [iPathStart - 2] = 0;
-			strcpy (m_szPath, m_szPath + iPathStart);	
+			_tcscpy_s (m_szPath, 10000, m_szPath + iPathStart);	
 		}
 	}
 
 	return IR_SUCCESS;
 }
 
-LPCSTR fsURL::GetPath()
+LPCTSTR fsURL::GetPath()
 {
 	return m_szPath;
 }
 
-LPCSTR fsURL::GetHostName()
+LPCTSTR fsURL::GetHostName()
 {
 	return m_szHost;
 }
 
-LPCSTR fsURL::GetScheme()
+LPCTSTR fsURL::GetScheme()
 {
 	return m_szScheme;
 }
 
-LPCSTR fsURL::GetUserName()
+LPCTSTR fsURL::GetUserName()
 {
 	return m_szUser;
 }
 
-LPCSTR fsURL::GetPassword()
+LPCTSTR fsURL::GetPassword()
 {
 	return m_szPassword;
 }
@@ -181,7 +181,7 @@ INTERNET_PORT fsURL::GetPort()
 	return m_url.nPort;
 }
 
-fsInternetResult fsURL::Create(INTERNET_SCHEME nScheme, LPCTSTR lpszHostName, INTERNET_PORT nPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, LPCTSTR lpszUrlPath, LPSTR lpszUrl, DWORD *pdwUrlLength)
+fsInternetResult fsURL::Create(INTERNET_SCHEME nScheme, LPCTSTR lpszHostName, INTERNET_PORT nPort, LPCTSTR lpszUserName, LPCTSTR lpszPassword, LPCTSTR lpszUrlPath, LPTSTR lpszUrl, DWORD *pdwUrlLength)
 {
 	if (!lpszUrl)
 		return IR_ERROR;
@@ -212,26 +212,26 @@ fsInternetResult fsURL::Create(INTERNET_SCHEME nScheme, LPCTSTR lpszHostName, IN
 		if (strHost.Length ())
 		{
 			fsString str;
-			str = "\\\\"; 
+			str = _T("\\\\"); 
 			str += strHost; 
-			if (strPath [0] != '\\' && strPath [0] != '/')
-				str += '\\';
+			if (strPath [0] != _T('\\') && strPath [0] != _T('/'))
+				str += _T('\\');
 			str += strPath;	
-			strHost = "";
+			strHost = _T("");
 			strPath = str;
 		}
 
 		
-		const char* magnetStart = _tcsstr (strPath, _T("magnet:"));
+		LPCTSTR magnetStart = _tcsstr (strPath, _T("magnet:"));
 		if (magnetStart == 0 || strPath != magnetStart)
 		{
-			strcpy (lpszUrl, "file://");
+			_tcscpy (lpszUrl, _T ("file://"));
 		}
-		strcat (lpszUrl, strPath);	
+		_tcscat (lpszUrl, strPath);	
 		return IR_SUCCESS;
 	}
 
-	char szUser [1000] = "", szPwd [1000] = "";
+	TCHAR szUser [1000] = _T(""), szPwd [1000] = _T("");
 	if (lpszUserName)
 	{
 		Encode (lpszUserName, szUser);
@@ -260,25 +260,32 @@ fsInternetResult fsURL::Create(INTERNET_SCHEME nScheme, LPCTSTR lpszHostName, IN
 
 void fsURL::FixWinInetBug()
 {
-	LPSTR psz = strchr (m_szHost, '@');
+	LPTSTR psz = _tcschr (m_szHost, _T('@'));
 	if (psz == NULL)
 		return;
 
-	strcat (m_szPassword, "@");
-	strncat (m_szPassword, m_szHost, psz - m_szHost);
-	strcpy (m_szHost, psz + 1);
+	_tcscat_s (m_szPassword, 100, _T("@"));
+	_tcsncat_s (m_szPassword, 100, m_szHost, psz - m_szHost);
+	_tcscpy_s  (m_szHost, 1000, psz + 1);
 }
 
-void fsURL::Encode(LPCSTR psz, LPSTR sz)
+void fsURL::Encode(LPCTSTR psz, LPTSTR sz)
 {
 	while (*psz)
 	{
-		char c = *psz++;
-		char sz2 [10];
+		char chChar = 0;
+		TCHAR c = *psz++;
+		TCHAR sz2 [10];
 
-		if (c == ':' || c == '@' || c == '%')
+		if (c == _T(':') || c == _T('@') || c == _T('%'))
 		{
-			sprintf (sz2, "%%%x", (int)(BYTE)c);		
+#ifdef UNICODE
+			wctomb(&chChar, c);
+#else
+			chChar = c;
+#endif
+
+			_stprintf (sz2, _T("%%%x"), (int)(BYTE)chChar);
 		}
 		else
 		{

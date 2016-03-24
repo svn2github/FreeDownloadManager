@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -38,7 +38,7 @@ BOOL CCBD_SeeResultsDlg::OnInitDialog()
 	
 	CRect rc;
 	m_wndList.GetClientRect (&rc);
-	m_wndList.InsertColumn (0, "", LVCFMT_LEFT, rc.right);
+	m_wndList.InsertColumn (0, _T(""), LVCFMT_LEFT, rc.right);
 
 	for (int i = 0; i < m_bl->get_ResultCount (); i++)
 		m_wndList.InsertItem (i, m_bl->get_Result (i));

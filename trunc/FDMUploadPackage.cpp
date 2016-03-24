@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -9,21 +9,21 @@
 STDMETHODIMP CFDMUploadPackage::Add(BSTR bstrPathName)
 {
 	USES_CONVERSION;
-	m_vFiles.push_back (W2A (bstrPathName));
+	m_vFiles.push_back (W2T (bstrPathName));
 	return S_OK;
 }
 
 STDMETHODIMP CFDMUploadPackage::get_Name(BSTR *pVal)
 {
 	USES_CONVERSION;
-	*pVal = SysAllocString (A2W (m_strName)); 	
+	*pVal = SysAllocString (T2W (m_strName)); 	
 	return S_OK;
 }
 
 STDMETHODIMP CFDMUploadPackage::put_Name(BSTR newVal)
 {
 	USES_CONVERSION;
-	m_strName = W2A (newVal);
+	m_strName = W2T (newVal);
 	return S_OK;
 }
 
@@ -36,6 +36,6 @@ STDMETHODIMP CFDMUploadPackage::GetFileCount(long *pCount)
 STDMETHODIMP CFDMUploadPackage::GetFilePath(long nIndex, BSTR *pbstrPathName)
 {
 	USES_CONVERSION;
-	*pbstrPathName = SysAllocString (A2W (m_vFiles [nIndex]));
+	*pbstrPathName = SysAllocString (T2W (m_vFiles [nIndex]));
 	return S_OK;
 }

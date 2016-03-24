@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -17,15 +17,15 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-vms7zipArchiveExtractCallback::vms7zipArchiveExtractCallback(IInArchive* pArc, LPCSTR pszOutFolder, vmsArchiveCallback* pAC, LPCSTR pszSrcArcFileName)
+vms7zipArchiveExtractCallback::vms7zipArchiveExtractCallback(IInArchive* pArc, LPCTSTR pszOutFolder, vmsArchiveCallback* pAC, LPCTSTR pszSrcArcFileName)
 {
 	m_pArc = pArc;
 	m_pAC = pAC;
 	_bstr_t bstr = pszOutFolder;
 	m_strOutFolder = bstr;
 
-	if (m_strOutFolder [m_strOutFolder.Length () - 1] != '\\')
-		m_strOutFolder += '\\';
+	if (m_strOutFolder [m_strOutFolder.Length () - 1] != _T('\\'))
+		m_strOutFolder += _T('\\');
 
 	CString str = m_strOutFolder;
 	fsBuildPathToFile (str);
@@ -99,7 +99,7 @@ STDMETHODIMP vms7zipArchiveExtractCallback::GetStream(UInt32 index, ISequentialO
 		
 
 		m_strFurtherExtractFile = m_strSrcArcFileName;
-		LPCSTR psz = strrchr (m_strFurtherExtractFile, '.');
+		LPCTSTR psz = _tcsrchr (m_strFurtherExtractFile, _T('.'));
 		if (psz) 
 		{
 			int pos = psz - m_strFurtherExtractFile;
@@ -112,7 +112,7 @@ STDMETHODIMP vms7zipArchiveExtractCallback::GetStream(UInt32 index, ISequentialO
 	}
 	else 
 	{
-		m_strFurtherExtractFile = "";
+		m_strFurtherExtractFile = _T("");
 	}
 
 	m_bSplit = false;
@@ -331,7 +331,7 @@ bool vms7zipArchiveExtractCallback::is_AbortedByUser()
 	return m_bAbortedByUser;
 }
 
-LPCSTR vms7zipArchiveExtractCallback::get_FurtherExtractFile()
+LPCTSTR vms7zipArchiveExtractCallback::get_FurtherExtractFile()
 {
 	return m_strFurtherExtractFile;
 }

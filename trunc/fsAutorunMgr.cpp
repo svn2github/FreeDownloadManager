@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -37,8 +37,13 @@ BOOL fsAutorunMgr::SetAutoStart(BOOL bSet)
 	if (bSet)
 	{
 		
-		_tcscat (szModule, _T (" -autorun"));
-		bRet = ERROR_SUCCESS == RegSetValueEx (m_hAutoStart, _T ("Free Download Manager"), 0, REG_SZ, (CONST BYTE*) szModule, _tcslen (szModule) + 1);
+		tstringstream tss;
+		tss << _T ("\"") << szModule << _T ("\" -autorun");
+		auto runstr = tss.str ();
+		
+		bRet = ERROR_SUCCESS == RegSetValueEx (m_hAutoStart, 
+			_T ("Free Download Manager"), 0, 
+			REG_SZ, (CONST BYTE*) runstr.c_str (), (runstr.length ()+1) * sizeof (TCHAR));
 	}
 	else
 	{

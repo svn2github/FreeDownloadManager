@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -18,7 +18,9 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 CDlg_Download::CDlg_Download(CWnd* pParent )
-	: CDialog(CDlg_Download::IDD, pParent)
+	: CDialog(CDlg_Download::IDD, pParent),
+	m_bUiLocked (false),
+	m_bScheduleClose (false)
 {
 	//{{AFX_DATA_INIT(CDlg_Download)
 		
@@ -199,26 +201,26 @@ void CDlg_Download::Update()
 
 	SetDlgItemText2 (IDC__TIMELEFT, CDownloads_Tasks::GetDownloadText (m_dld, 3));
 
-	char szName [10000] = "";
+	TCHAR szName [10000] = _T("");
 	CDownloads_Tasks::GetFileName (m_dld, szName);
 	CString str;
 
 	switch (nProgress)
 	{
 	case 100:
-		str.Format ("%s - %s", szName, LS (L_DONE));
+		str.Format (_T("%s - %s"), szName, LS (L_DONE));
 		break;
 	case -1: {
 		UINT64 uDone = m_dld->pMgr->GetDownloadedBytesCount ();
 		float val;
-		char szDim [10];
+		TCHAR szDim [100];
 		BytesToXBytes (uDone, &val, szDim);
-		str.Format ("%s - %.*g %s", szName, val > 999 ? 4 : 3, val, szDim);
+		str.Format (_T("%s - %.*g %s"), szName, val > 999 ? 4 : 3, val, szDim);
 		break;
 			}
 
 	default:
-		str.Format ("[%d%%] - %s", nProgress, szName);
+		str.Format (_T("[%d%%] - %s"), nProgress, szName);
 		break;
 	}
 
@@ -227,7 +229,7 @@ void CDlg_Download::Update()
 	m_wndProgress.Invalidate (FALSE);
 }
 
-void CDlg_Download::SetDlgItemText2(UINT nID, LPCSTR pszText)
+void CDlg_Download::SetDlgItemText2(UINT nID, LPCTSTR pszText)
 {
 	CString str; 
 	GetDlgItemText (nID, str);
@@ -273,10 +275,29 @@ void CDlg_Download::OnHide()
 	if (_App.DownloadDialog_DontAskOnHide () == FALSE && m_dld->pMgr->IsDone () == FALSE && 
 			m_dld->pMgr->IsRunning ())
 	{
+		{
+			vmsTHREAD_SAFE_SCOPE;
+			m_bUiLocked = true;
+		}
+
 		CDlg_Download_OnHide dlg (this);
-	
-		if (_DlgMgr.DoModal (&dlg) == IDCANCEL)
+
+		auto result = _DlgMgr.DoModal (&dlg);
+
+		{
+			vmsTHREAD_SAFE_SCOPE;
+			m_bUiLocked = false;
+		}
+		
+		if (result == IDCANCEL)
+		{
+			{
+				vmsTHREAD_SAFE_SCOPE;
+				if (m_bScheduleClose)
+					goto labelClose;
+			}
 			return;
+		}
 
 		
 		
@@ -301,7 +322,9 @@ void CDlg_Download::OnHide()
 			m_dld->setDirty();
 			break;
 		}
-	}	
+	}
+
+labelClose:
 
 	if (_pwndDownloads)
 	{
@@ -342,9 +365,12 @@ void CDlg_Download::OnStop()
 	DLDS_LIST vDlds;
 	
 	vDlds.push_back (m_dld);
-
-	if (m_dld->pMgr->IsRunning ())
-		_DldsMgr.StopDownloads (vDlds, TRUE);
+	
+	if (m_dld->pMgr->IsRunning()){
+		if (m_dld->isYouTube() && (MessageBox(LS(L_YOUTUBE_MESSAGE_ON_STOP), _T("Free Download Manager"), MB_OKCANCEL | MB_ICONWARNING) == IDCANCEL))
+			return;
+		_DldsMgr.StopDownloads(vDlds, TRUE);
+	}
 	else
 		_DldsMgr.StartDownloads (vDlds, TRUE);	
 }

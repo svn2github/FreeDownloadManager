@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMS7ZIPFORMATDLL_H__088B0073_2E34_4ABB_B1B2_76A6276ED383__INCLUDED_)
@@ -16,7 +16,7 @@ public:
 	HRESULT get_GUID (GUID* guid);
 	
 	
-	bool IsSupportedArchive(LPCSTR pszArchive);
+	bool IsSupportedArchive(LPCTSTR pszArchive);
 	
 	HRESULT GetHandlerProperty(PROPID propID, PROPVARIANT *value);
 	
@@ -24,9 +24,9 @@ public:
 	
 	void Free();
 	
-	bool Load (LPCSTR pszDll);
+	bool Load (LPCTSTR pszDll);
 
-	vms7zipFormatDLL(LPCSTR pszDll = NULL);
+	vms7zipFormatDLL(LPCTSTR pszDll = NULL);
 	virtual ~vms7zipFormatDLL();
 
 protected:

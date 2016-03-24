@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -56,7 +56,7 @@ BOOL vmsDialogHelper::GetDlgBytesGroup(CDialog *pDlg, UINT nIDVal, UINT nIDDim, 
 		return FALSE;
 	}
 
-	double d = atof (str);
+	double d = _tstof (str);
 
 	while (iDim--)	
 		d *= 1024;	
@@ -78,7 +78,7 @@ void vmsDialogHelper::SetDlgBytesGroup(CDialog *pDlg, UINT64 uVal, UINT nIDVal, 
 	}
 
 	CString str;
-	str.Format ("%.*g", d > 999 ? 4 : 3, d);
+	str.Format (_T("%.*g"), d > 999 ? 4 : 3, d);
 
 	pDlg->SetDlgItemText (nIDVal, str);
 	((CComboBox*) pDlg->GetDlgItem (nIDDim))->SetCurSel (i);

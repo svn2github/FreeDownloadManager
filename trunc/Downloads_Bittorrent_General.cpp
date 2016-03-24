@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -37,8 +37,8 @@ BOOL CDownloads_Bittorrent_General::Create(CWnd *pParent)
 
 	SetExtendedStyle (LVS_EX_FULLROWSELECT);
 
-	InsertColumn (0, "");
-	InsertColumn (1, "");
+	InsertColumn (0, _T(""));
+	InsertColumn (1, _T(""));
 
 	return TRUE;
 }
@@ -68,51 +68,51 @@ void CDownloads_Bittorrent_General::UpdateStat()
 	
 	
 
-	CString str = LS (L_INFO_HASH); str += ':';
+	CString str = LS (L_INFO_HASH); str += _T(':');
 	InsertItem (0, str);
 	str = mgr->get_InfoHash ();
 	str.MakeUpper ();
-	str.Insert (8, ' ');
-	str.Insert (8+8+1, ' ');
-	str.Insert (8+8+8+2, ' ');
-	str.Insert (8+8+8+8+3, ' ');
+	str.Insert (8, _T(' '));
+	str.Insert (8+8+1, _T(' '));
+	str.Insert (8+8+8+2, _T(' '));
+	str.Insert (8+8+8+8+3, _T(' '));
 	SetItemText (0, 1, str);
 
-	str = LS (L_PIECES); str += ':';
+	str = LS (L_PIECES); str += _T(':');
 	InsertItem (1, str);
-	str.Format ("%d x %s", mgr->get_PieceCount (),
+	str.Format (_T("%d x %s"), mgr->get_PieceCount (),
 		BytesToString (mgr->get_PieceSize ())); 
 	SetItemText (1, 1, str);
 
-	InsertItem (2, "");
+	InsertItem (2, _T(""));
 
 	
-	str = LS (L_TRACKER); str += ':';
+	str = LS (L_TRACKER); str += _T(':');
 	InsertItem (3, str);
 	SetItemText (3, 1, mgr->get_LastTracker ());
-	str = LS (L_TRACKER_STATUS); str += ':';
+	str = LS (L_TRACKER_STATUS); str += _T(':');
 	InsertItem (4, str);
 	SetItemText (4, 1, mgr->getLastTrackerStatus ().c_str ());
 
-	InsertItem (5, "");
+	InsertItem (5, _T(""));
 
-	str = LS (L_UPLOAD_SPEED); str += ':';
+	str = LS (L_UPLOAD_SPEED); str += _T(':');
 	InsertItem (6, str);
-	str = LS (L_BYTES_UPLOADED); str += ':';
+	str = LS (L_BYTES_UPLOADED); str += _T(':');
 	InsertItem (7, str);
-	str = LS (L_SHARE_RATING); str += ':';
+	str = LS (L_SHARE_RATING); str += _T(':');
 	InsertItem (8, str);
 	UpdateUploadStat ();
 
-	InsertItem (9, "");
+	InsertItem (9, _T(""));
 
-	str = LS (L_PEERS); str += ':';
+	str = LS (L_PEERS); str += _T(':');
 	InsertItem (10, str);
 	UpdatePeersStat ();
 
-	InsertItem (11, "");
+	InsertItem (11, _T(""));
 
-	str = LS (L_WASTED_BYTE_COUNT); str += ':';
+	str = LS (L_WASTED_BYTE_COUNT); str += _T(':');
 	InsertItem (12, str);
 	UpdateWastedStat ();
 
@@ -140,12 +140,12 @@ void CDownloads_Bittorrent_General::UpdateUploadStat()
 	vmsBtDownloadManager *mgr = m_dld->pMgr->GetBtDownloadMgr ();
 
 	CString str = BytesToString (mgr->GetUploadSpeed ());
-	str += '/'; str += LS (L_S);
+	str += _T('/'); str += LS (L_S);
 	SetItemText (6, 1, str);
 
 	SetItemText (7, 1, BytesToString (mgr->get_TotalUploadedByteCount ()));
 
-	str.Format ("%.*g", 4, (float)mgr->getRatio ());
+	str.Format (_T("%.*g"), 4, (float)mgr->getRatio ());
 	SetItemText (8, 1, str);
 }
 
@@ -162,10 +162,10 @@ void CDownloads_Bittorrent_General::UpdatePeersStat()
 	m_dld->pMgr->GetBtDownloadMgr ()->get_PeersStat (
 		&nPeersConnected, &nSeedsTotal,	&nLeechersTotal, &nSeedsConnected);
 	if (nSeedsTotal != -1 && nLeechersTotal != -1)
-		str.Format ("total: %d, seeds: %d, connected: %d (%d - seeds)",
+		str.Format (_T("total: %d, seeds: %d, connected: %d (%d - seeds)"),
 			nSeedsTotal+nLeechersTotal, nSeedsTotal, nPeersConnected, nSeedsConnected);
 	else
-		str.Format ("connected: %d (%d - seeds)", nPeersConnected, nSeedsConnected);
+		str.Format (_T("connected: %d (%d - seeds)"), nPeersConnected, nSeedsConnected);
 	SetItemText (10, 1, str);
 }
 

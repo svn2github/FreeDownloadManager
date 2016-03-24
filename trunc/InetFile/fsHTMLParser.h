@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSHTMLPARSER_H__AE1402E9_034A_41A0_8BD2_74430D5938AB__INCLUDED_)
@@ -10,7 +10,7 @@
 #endif 
 
 #include <windows.h>
-#include <fsString.h>
+#include <string>
 #include "../list.h"
 
 enum fsLinkRelType
@@ -29,6 +29,7 @@ class fsHTMLParser
 {
 public:
 	void ReplaceFrameUrl(int iIndex, LPCSTR pszNewUrl);
+	void ReplaceFrameUrl(int iIndex, LPCWSTR pszNewUrl);
 	LPCSTR GetFrameUrl  (int iIndex);
 	int GetFrameUrlCount();
 	void RemoveBaseTag();
@@ -40,6 +41,7 @@ public:
 	
 	
 	void ReplaceLinkUrl(int iIndex, LPCSTR pszNewUrl);
+	void ReplaceLinkUrl(int iIndex, LPCWSTR pszNewUrl);
 	
 	fsLinkRelType GetLinkUrlRelType (int iIndex);
 	
@@ -48,8 +50,10 @@ public:
 	int GetLinkUrlCount();
 	
 	void ReplaceImage (int iIndex, LPCSTR pszNewImg);
+	void ReplaceImage (int iIndex, LPCWSTR pszNewImg);
 	
 	void ReplaceUrl (int iIndex, LPCSTR pszNewUrl);
+	void ReplaceUrl (int iIndex, LPCWSTR pszNewUrl);
 	
 	int GetImageLinkTo (int iImage);
 	
@@ -112,13 +116,13 @@ protected:
 	LPCSTR Parse_HTMLGiving (LPCSTR pszGiving, LPSTR* ppszValue, LPCSTR pszAddEnds = NULL);
 	
 	LPSTR m_pszHTML;	
-	fs::list <fsString> m_vUrls, m_vImgs, m_vLinkUrls, m_vFrameUrls; 
+	fs::list <std::string> m_vUrls, m_vImgs, m_vLinkUrls, m_vFrameUrls; 
 	fs::list <fsTextRegion> m_vUrlsRgns, m_vImgsRgns, m_vLinkUrlsRgns, m_vFrameRgns;	
 	fs::list <fsLinkRelType> m_vLRTs;	
 	fs::list <int> m_vImgsLinksTo;		
 	int m_htmlLen;					
 	BOOL m_bKillDupes;				
-	fsString m_strBaseURL;
+	std::string m_strBaseURL;
 	fsTextRegion m_BaseURLPosition;
 private:
 	int m_iTagAOpened;				

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSUPLOADSDLLCALLERSETTINGS_H__45BF1D8A_6AF4_4958_80D8_EAEA14634588__INCLUDED_)
@@ -14,22 +14,22 @@
 class vmsUploadsDllCallerSettings : public vmsUploadsDll::vmsDllCallerSettings
 {
 public:
-	BOOL GetSettingsByName (LPCSTR pszName, LPVOID pData, DWORD dwDataSize);
-	int FirefoxSettings_Proxy_Port (LPCSTR pszProtocol);
-	LPCSTR FirefoxSettings_Proxy_Addr (LPCSTR pszProtocol);
+	BOOL GetSettingsByName (LPCTSTR pszName, LPVOID pData, DWORD dwDataSize);
+	int FirefoxSettings_Proxy_Port (LPCTSTR pszProtocol);
+	LPCTSTR FirefoxSettings_Proxy_Addr (LPCTSTR pszProtocol);
 	int FirefoxSettings_Proxy_Type();
 	BOOL ShowSizesInBytes();
-	LPCSTR HttpProxy_UserName();
-	LPCSTR HttpProxy_Password();
-	LPCSTR HttpProxy_Name();
-	LPCSTR HttpsProxy_UserName();
-	LPCSTR HttpsProxy_Password();
-	LPCSTR HttpsProxy_Name();
-	LPCSTR FtpProxy_UserName();
-	LPCSTR FtpProxy_Password();
-	LPCSTR FtpProxy_Name();
-	LPCSTR FtpAsciiExts();
-	LPCSTR HttpAgent();
+	LPCTSTR HttpProxy_UserName();
+	LPCTSTR HttpProxy_Password();
+	LPCTSTR HttpProxy_Name();
+	LPCTSTR HttpsProxy_UserName();
+	LPCTSTR HttpsProxy_Password();
+	LPCTSTR HttpsProxy_Name();
+	LPCTSTR FtpProxy_UserName();
+	LPCTSTR FtpProxy_Password();
+	LPCTSTR FtpProxy_Name();
+	LPCTSTR FtpAsciiExts();
+	LPCTSTR HttpAgent();
 	BOOL UseCookie();
 	int FtpTransferType();
 	BOOL UseHttp11();

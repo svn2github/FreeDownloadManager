@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -87,9 +87,9 @@ void CDlgSpecifyNetworkSpeedValue::ApplyInBitsToDim(void)
 
 	if (!bBits)
 	{
-		str0.Format ("%s/%s", LS (L_B), LS (L_S)); 
-		str1.Format ("%s/%s", LS (L_KB), LS (L_S));
-		str2.Format ("%s/%s", LS (L_MB), LS (L_S));
+		str0.Format (_T("%s/%s"), LS (L_B), LS (L_S)); 
+		str1.Format (_T("%s/%s"), LS (L_KB), LS (L_S));
+		str2.Format (_T("%s/%s"), LS (L_MB), LS (L_S));
 	}
 	else
 	{

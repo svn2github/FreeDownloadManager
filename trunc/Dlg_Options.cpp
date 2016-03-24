@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -181,7 +181,7 @@ void CDlg_Options::FillPagesList(LPOPTIONS_PAGES_TREE ptRoot, HTREEITEM htRoot)
 	}
 }
 
-BOOL CDlg_Options::OptionsTree_Apply(LPOPTIONS_PAGES_TREE ptRoot, bool *pbBrowserRestartRequired, CString *ptstrFdmElevateArgs)
+BOOL CDlg_Options::OptionsTree_Apply(LPOPTIONS_PAGES_TREE ptRoot, bool *pbBrowserRestartRequired, CString *ptstrFdmElevateArgs, bool *pbApplicationRestartRequired)
 {
 	if (!ptRoot)
 		ptRoot = m_tPages;
@@ -189,6 +189,10 @@ BOOL CDlg_Options::OptionsTree_Apply(LPOPTIONS_PAGES_TREE ptRoot, bool *pbBrowse
 	bool bBrowserRestartRequired = false;
 	if (!pbBrowserRestartRequired)
 		pbBrowserRestartRequired = &bBrowserRestartRequired;
+	bool bApplicationRestartRequired = false;
+	if (!pbApplicationRestartRequired)
+		pbApplicationRestartRequired = &bApplicationRestartRequired;
+
 	CString tstrFdmElevateArgs;
 	if (!ptstrFdmElevateArgs)
 		ptstrFdmElevateArgs = &tstrFdmElevateArgs;
@@ -213,6 +217,11 @@ BOOL CDlg_Options::OptionsTree_Apply(LPOPTIONS_PAGES_TREE ptRoot, bool *pbBrowse
 				*pbBrowserRestartRequired = true;
 				page->setBrowserRestartRequired (false);
 			}
+			if (page->isApplicationRestartRequired ())
+			{
+				*pbApplicationRestartRequired = true;
+				page->setApplicationRestartRequired (false);
+			}
 			if (page->isElevateRequired ())
 			{
 				if (!ptstrFdmElevateArgs->IsEmpty ())
@@ -223,7 +232,7 @@ BOOL CDlg_Options::OptionsTree_Apply(LPOPTIONS_PAGES_TREE ptRoot, bool *pbBrowse
 		
 		if (ptPage->GetLeafCount ())
 		{
-			if (FALSE == OptionsTree_Apply (ptPage, pbBrowserRestartRequired, ptstrFdmElevateArgs))
+			if (FALSE == OptionsTree_Apply (ptPage, pbBrowserRestartRequired, ptstrFdmElevateArgs, pbApplicationRestartRequired))
 			{
 				bOK = FALSE;
 				break;
@@ -238,6 +247,8 @@ BOOL CDlg_Options::OptionsTree_Apply(LPOPTIONS_PAGES_TREE ptRoot, bool *pbBrowse
 	{
 		if (bBrowserRestartRequired)
 			MessageBox (LS (L_BROWSERRESTARTREQ));
+		if (bApplicationRestartRequired)
+			MessageBox (LS (L_APPLICATIONRESTARTREQ));
 
 		if (!tstrFdmElevateArgs.IsEmpty ())
 		{

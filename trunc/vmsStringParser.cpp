@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -33,7 +33,12 @@ void vmsStringParser::GetWord(LPCTSTR &ptsz, tstring &tstr)
 
 bool vmsStringParser::isWhiteChar(TCHAR tch)
 {
-	return tch == ' ' || tch == '\t' || tch == '\r' || tch == '\n';
+	return tch == _T(' ') || tch == _T('\t') || tch == _T('\r') || tch == _T('\n');
+}
+
+bool vmsStringParser::isWhiteCharA(CHAR ch)
+{
+	return ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n';
 }
 
 void vmsStringParser::GetTextBeforeChar(LPCTSTR &ptsz, TCHAR tch, tstring &tstr)
@@ -62,6 +67,12 @@ void vmsStringParser::RemoveNonSpaceWhiteChars(tstring &tstr)
 void vmsStringParser::SkipWhiteChars(LPCTSTR &ptsz)
 {
 	while (isWhiteChar (*ptsz))
+		ptsz++;
+}
+
+void vmsStringParser::SkipWhiteCharsA (LPCSTR &ptsz)
+{
+	while (isWhiteCharA (*ptsz))
 		ptsz++;
 }
 

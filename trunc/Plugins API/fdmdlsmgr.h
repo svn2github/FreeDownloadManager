@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __FDMDLSMGR_H_
@@ -19,7 +19,7 @@ public:
 
 struct vmsFdmApiCreateDownloadParameters
 {
-	LPCSTR pszUrl;
+	LPCTSTR pszUrl;
 };
 
 #endif 

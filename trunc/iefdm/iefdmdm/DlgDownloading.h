@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef __DLGDOWNLOADING_H_
@@ -8,11 +8,9 @@
 #include "resource.h"       
 #include "vmsBindStatusCallback.h"
 #include "vmsFileExtension.h"
-#include <commctrl.h>
 #include "DlgRunOrSave.h"
 #include "vmsStringsHelper.h"
 #include "vmsIeProtectedMode.h"
-#include <shlobj.h>
 #include "vmsUrlWnd.h"
 #include "DlgDownloadingOptions.h"
 

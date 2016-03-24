@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSDOWNLOADSMGR_H__49230334_5704_46DF_95BA_2F7535E427DE__INCLUDED_)
@@ -26,6 +26,13 @@
 #include "vmsPersistableListOfDownloads.h"
 #include "StateInfo.h"
 #include <map>
+
+struct fsDownloaderEventReceived2Info
+{
+	fsDownloaderEvent ev;
+	fsDownloaderEventSecCheckFailureInfo *secCheckFailureInfo = nullptr;
+
+};
 
 enum fsDownloadsMgrEvent
 {
@@ -60,6 +67,10 @@ enum fsDownloadsMgrEvent
 	DME_RECYCLEBINCONTENTCHANGED,	
 	DME_BTDLD_STAT_CHANGED,		
 	DME_DLD_CHANGED_TO_BT_TYPE,
+	DME_POST_DOWNLOAD_TASK_CREATED,
+	DME_POST_DOWNLOAD_TASK_STARTED,
+	DME_POST_DOWNLOAD_TASK_FINISHED,
+	DME_DOWNLOADEREVENTRECEIVED2,
 };
 
 enum fsDeleteDownloadReaction
@@ -105,7 +116,7 @@ struct vmsDldErrorStamp
 
 const UINT MAX_SUMMS = 24*60*(60/5);
 
-#define DLMGRFILE_CURRENT_VERSION	(1)
+#define DLMGRFILE_CURRENT_VERSION	(2)
 #define DLMGRFILE_SIG		"FDM Dl Mgr SI"
 struct fsStateInfoFileHdr
 {
@@ -141,6 +152,9 @@ public:
 	void ApplyDDRs (DLDS_LIST_REF vDlds, std::vector <fsDeleteDownloadReaction> &vDDRs, BOOL bNoCancel);
 	vmsDownloadSmartPtr findBtDownloadByHash (vmsBtDownloadManager *pMgr);
 	vmsDownloadSmartPtr findBtDownloadByHash (LPBYTE pbHash, DWORD dwHashSize);
+	vmsDownloadSmartPtr findYouTubeDownload (tstring youTubeID, tstring format, YouTubeDownloadDetails::MediaType mediaType );
+	void findYouTubeDownloads (tstring youTubeID, tstring format, YouTubeDownloadDetails::MediaType mediaType, DLDS_LIST &v );
+	void findDownloadsByIds (std::vector<unsigned int> ids, DLDS_LIST &v );
 	const TotalProgress& getTotalProgress () const;
 	void ChangeDownloadGroup (fsDownload* dld, vmsDownloadsGroupSmartPtr spGrp, bool bMoveFiles = true);
 	
@@ -149,7 +163,7 @@ public:
 	DWORD m_dwPDTimeLimit;
 	BOOL AllowStartNewDownloads();
 	vmsDownloadSmartPtr get_HighestPriorityDownload();
-	void AddEvent (vmsDownloadSmartPtr dld, LPCSTR pszEvent, fsDownloadMgr_EventDescType enType = EDT_RESPONSE_S);
+	void AddEvent (vmsDownloadSmartPtr dld, LPCTSTR pszEvent, fsDownloadMgr_EventDescType enType = EDT_RESPONSE_S);
 	void DownloadStateChanged (vmsDownloadSmartPtr dld);
 	
 	
@@ -309,6 +323,9 @@ public:
 	fsDownloadsMgr();
 	virtual ~fsDownloadsMgr();
 	void ProcessDownloads();
+	
+	void OnDldDoneCheckIfNeedDel(vmsDownloadSmartPtr dld);
+
 protected:
 	
 	void ApplyTrafficLimit();
@@ -335,14 +352,21 @@ protected:
 	bool isAllowedToPDCurrently () const;
 	void ManagePD ();
 	static DWORD WINAPI _threadStartSeeding (LPVOID lp);
-	void EventEx (vmsDownloadSmartPtr dld, LPCSTR pszEvent, fsDownloadMgr_EventDescType enType, int nMaxCharsPerLine);
+	void EventEx (vmsDownloadSmartPtr dld, LPCTSTR pszEvent, fsDownloadMgr_EventDescType enType, int nMaxCharsPerLine);
 
 	
 	void GetRunningDownloads (DLDS_LIST &v);
 	vmsDownloadSmartPtr m_dldHighestPriority;
 	TotalProgress m_totalProgess;
+	UINT m_currentTotalDownloadingSpeed;
+public:
+	UINT getCurrentTotalDownloadingSpeed () const
+	{
+		return m_currentTotalDownloadingSpeed;
+	}
+protected:
 	
-	void OnDownloadDescEventRcvd (vmsDownloadSmartPtr dld, fsDownloadMgr_EventDescType enType, LPCSTR pszEvent);
+	void OnDownloadDescEventRcvd (vmsDownloadSmartPtr dld, fsDownloadMgr_EventDescType enType, LPCTSTR pszEvent);
 	
 	BOOL OnDownloadStoppedOrDone (vmsDownloadSmartPtr dld);
 	
@@ -352,7 +376,7 @@ protected:
 	static void _BtSessionEventsHandler (class vmsBtSession*, struct vmsBtSessionEvent*, LPVOID lp);
 	
 	static DWORD _TpDownloadManagerEventHandler(vmsTpDownloadMgr *pMgr, fsDownloaderEvent enEvent, UINT uInfo, LPVOID lp);
-	static void _TpDownloadManagerEventDesc(vmsTpDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCSTR pszDesc, LPVOID lp);
+	static void _TpDownloadManagerEventDesc(vmsTpDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCTSTR pszDesc, LPVOID lp);
 	
 	static DWORD WINAPI _threadDeleteDownloadMgrEx (LPVOID lp);
 	
@@ -375,8 +399,6 @@ protected:
 	
 	long m_cThreadsRunning;
 	
-	void OnDldDoneCheckIfNeedDel (vmsDownloadSmartPtr dld);
-	
 	static DWORD WINAPI _threadIntegrityCheckAndVirCheckAndLaunch (LPVOID lp);
 	
 	
@@ -395,7 +417,7 @@ protected:
 #ifndef FDM_DLDR__RAWCODEONLY
 	
 	void Event (fsDLHistoryRecord* rec, fsDownloadsMgrEvent ev);
-	DWORD Event (fsDownload* dld, fsDownloadsMgrEvent ev);
+	DWORD Event (fsDownload* dld, fsDownloadsMgrEvent ev, UINT_PTR ev_info = 0);
 	
 	static void _HistoryMgrEvents (fsDownloadsHistoryMgrEvent ev, fsDLHistoryRecord *rec, LPVOID);
 #endif
@@ -428,7 +450,7 @@ protected:
 	BOOL IsMaxConnsReached();
 	
 	
-	BOOL IsServerFilled (LPCSTR pszServer, DWORD dwReqProtocols);
+	BOOL IsServerFilled (LPCTSTR pszServer, DWORD dwReqProtocols);
 
 	
 	
@@ -457,7 +479,7 @@ protected:
 	void ManageTraffic();
 	
 	void OnSectionStop (vmsDownloadSmartPtr dld);
-	void Event (vmsDownloadSmartPtr dld, LPCSTR pszEvent, fsDownloadMgr_EventDescType enType = EDT_RESPONSE_S);
+	void Event (vmsDownloadSmartPtr dld, LPCTSTR pszEvent, fsDownloadMgr_EventDescType enType = EDT_RESPONSE_S);
 	
 	
 	BOOL OnQueryNewSection (vmsDownloadSmartPtr dld, UINT nUsingMirror);
@@ -474,10 +496,10 @@ protected:
 	};
 	static DWORD WINAPI _threadDeleteDownloads(LPVOID lp);
 	fsDownloadRegSaver m_saver;	
-	DWORD Event (fsDownload* dld, fsDLHistoryRecord *phst, fsDownloadsMgrEvent ev);
+	DWORD Event (fsDownload* dld, fsDLHistoryRecord *phst, fsDownloadsMgrEvent ev, UINT_PTR ev_info);
 	
-	static void _DownloadMgrEventDesc (fsDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCSTR pszEvent, LPVOID lp);
-	static DWORD _DownloadMgrEvents (fsDownloadMgr *pMgr, fsDownloaderEvent enEvent, UINT uInfo, LPVOID lp);
+	static void _DownloadMgrEventDesc (fsDownloadMgr *pMgr, fsDownloadMgr_EventDescType enType, LPCTSTR pszEvent, LPVOID lp);
+	static DWORD _DownloadMgrEvents (fsDownloadMgr *pMgr, fsDownloaderEvent enEvent, UINT_PTR uInfo, LPVOID lp);
 	vmsDownloadList m_vDownloads;	
 	vmsReaderWriterLock m_rwlDownloads;
 	
@@ -539,6 +561,18 @@ protected:
 	
 	std::map<vmsBtDownloadErrorState, int> m_errorTimeouts;
 	std::map<vmsDownloadSmartPtr, vmsDldErrorStamp> m_dldErrorsMap;
+public:
+	void onPostDownloadTaskCreated(vmsDownloadSmartPtr dld, LPCWSTR id);
+	void onPostDownloadTaskFinished(vmsDownloadSmartPtr dld, LPCWSTR id, bool result);
+	void onPostDownloadTaskStarted(vmsDownloadSmartPtr dld, LPCWSTR id);
+protected:
+	bool m_atLeast1CompletedDuringSession;
+public:
+
+	bool atLeast1CompletedDuringSession () const
+	{
+		return m_atLeast1CompletedDuringSession;
+	}
 };
 
 #endif 

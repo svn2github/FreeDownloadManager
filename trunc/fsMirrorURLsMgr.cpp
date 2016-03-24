@@ -1,8 +1,9 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
+#include "vmsInetUtils.h"
 #include "fsMirrorURLsMgr.h"
 #include "inetutil.h"
 
@@ -22,7 +23,7 @@ fsMirrorURLsMgr::~fsMirrorURLsMgr()
 
 }
 
-void fsMirrorURLsMgr::Initialize(LPCSTR pszFileName, UINT64 uSize, LPCSTR pszBaseServer, fsInternetSession* pSession)
+void fsMirrorURLsMgr::Initialize(LPCTSTR pszFileName, UINT64 uSize, LPCTSTR pszBaseServer, fsInternetSession* pSession)
 {
 	m_strFile = pszFileName;
 	m_uSize = uSize;
@@ -30,7 +31,7 @@ void fsMirrorURLsMgr::Initialize(LPCSTR pszFileName, UINT64 uSize, LPCSTR pszBas
 	m_dldr.Initialize (pSession);
 }
 
-void fsMirrorURLsMgr::Set_SearchURL(LPCSTR pszUrl)
+void fsMirrorURLsMgr::Set_SearchURL(LPCTSTR pszUrl)
 {
 	m_strSearchURL = pszUrl;
 }
@@ -40,7 +41,7 @@ int fsMirrorURLsMgr::Get_MirrorURLCount()
 	return m_vMirrorURLs.size ();
 }
 
-LPCSTR fsMirrorURLsMgr::Get_MirrorURL(int iIndex)
+LPCTSTR fsMirrorURLsMgr::Get_MirrorURL(int iIndex)
 {
 	return m_vMirrorURLs [iIndex];
 }
@@ -51,24 +52,24 @@ fsInternetResult fsMirrorURLsMgr::SearchForMirrors()
 
 	CString strURL = m_strSearchURL;
 
-	strURL.Replace ("%file%", m_strFile);
+	strURL.Replace (_T("%file%"), m_strFile);
 
 	if (m_uSize != _UI64_MAX)
 	{
 		CString strSize;
-		strSize.Format ("%I64u", m_uSize);
-		strURL.Replace ("%size%", strSize);
+		strSize.Format (_T("%I64u"), m_uSize);
+		strURL.Replace (_T("%size%"), strSize);
 	}
 	else
-		strURL.Replace ("%size%", "");
+		strURL.Replace (_T("%size%"), _T(""));
 
 	m_bAbort = FALSE;
 
-	LPCTSTR ptsz = _tcsrchr (strURL,  '/');
+	LPCTSTR ptsz = _tcsrchr (strURL,  _T('/'));
 	if (ptsz)
 	{
 		tstring tstrReferer;
-		LPCTSTR ptsz2 = _tcsrchr (strURL,  '?');
+		LPCTSTR ptsz2 = _tcsrchr (strURL,  _T('?'));
 		if (ptsz2 < ptsz)
 		{
 			tstrReferer.assign (strURL, ptsz2 - (LPCTSTR)strURL);
@@ -131,10 +132,22 @@ fsInternetResult fsMirrorURLsMgr::OnSearchScriptResultsReceived()
 
 	m_vMirrorURLs.clear ();
 
+#ifdef UNICODE
+	WCHAR wszUrl[10000] = {0,};
+	DWORD dwSize = 0;
+#endif
+
 	for (int i = 0; i < parser.GetUrlCount () && m_bAbort == FALSE; i++)
 	{
 		fsURL url;
-		LPCSTR pszUrl = parser.GetUrl (i);
+		LPCTSTR pszUrl = 0;
+#ifdef UNICODE
+		dwSize = sizeof(wszUrl);
+		vmsAnsiUrlToUnicode(parser.GetUrl (i), wszUrl, &dwSize);
+		pszUrl = &wszUrl[0];
+#else
+		LPCTSTR pszUrl = parser.GetUrl (i);
+#endif
 
 		if (IR_SUCCESS != url.Crack (pszUrl))
 			continue;
@@ -143,11 +156,11 @@ fsInternetResult fsMirrorURLsMgr::OnSearchScriptResultsReceived()
 			fsIsServersEqual (m_strBaseServer, url.GetHostName (), TRUE)    )
 			continue;
 
-		char szFileName [10000];
+		TCHAR szFileName [10000];
 		fsFileNameFromUrlPath (url.GetPath (), url.GetInternetScheme () == INTERNET_SCHEME_FTP,
 			TRUE, szFileName, sizeof (szFileName));
 
-		if (stricmp (szFileName, m_strFile) == 0)
+		if (_tcsicmp (szFileName, m_strFile) == 0)
 		{
 			
 
@@ -167,7 +180,7 @@ fsInternetResult fsMirrorURLsMgr::OnSearchScriptResultsReceived()
 	return IR_SUCCESS;
 }
 
-BOOL fsMirrorURLsMgr::IsMirrorURLGood(LPCSTR )
+BOOL fsMirrorURLsMgr::IsMirrorURLGood(LPCTSTR )
 {
 	return TRUE;
 }
@@ -190,9 +203,9 @@ fsMirrorURLsMgr_FileMirrorsDotCom::~fsMirrorURLsMgr_FileMirrorsDotCom()
 
 void fsMirrorURLsMgr_FileMirrorsDotCom::Set_SearchURL(int nURL)
 {
-	static LPCSTR _ppszURLs [] = {
-		"http://www.filesearching.com/cgi-bin/s?q=%file%&w=a&t=f&e=on&m=20&o=n&s1=%size%&s2=%size%&d=&p=&p2=&x=28&y=14",
-		"http://findfiles.com/list.php?string=%file%&db=Mirrors&size=%size%",
+	static LPCTSTR _ppszURLs [] = {
+		_T("http://www.filesearching.com/cgi-bin/s?q=%file%&w=a&t=f&e=on&m=20&o=n&s1=%size%&s2=%size%&d=&p=&p2=&x=28&y=14"),
+		_T("http://findfiles.com/list.php?string=%file%&db=Mirrors&size=%size%"),
 	};
 
 	if (nURL < sizeof (_ppszURLs) / sizeof (LPCSTR))

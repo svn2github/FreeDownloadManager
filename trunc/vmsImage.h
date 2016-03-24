@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSIMAGE_H__23C3F1D7_011F_4A56_B3CF_025736AEE582__INCLUDED_)
@@ -18,7 +18,7 @@ class vmsImage
 {
 public:
 	
-	HRESULT Load (LPCSTR pszFile);
+	HRESULT Load (LPCTSTR pszFile);
 	
 	int get_FrameCount();
 	
@@ -40,7 +40,7 @@ public:
 
 protected:
 	
-	IImgCtx* LoadImage (LPCSTR pszFile);
+	IImgCtx* LoadImage (LPCTSTR pszFile);
 	IImgCtx* m_pImage;	
 	
 	std::vector <IImgCtx*> m_vFrames;

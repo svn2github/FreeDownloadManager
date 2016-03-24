@@ -1,27 +1,23 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
+#include "common.h"
 #include "FDMForFirefox.h"
 #include <windows.h>
-#include "vmsFirefoxExtensionInstaller.h"
+#include "../../common/vmsFirefoxExtensionInstaller.h"
 #include "FDMUrlReceiver.h"
 #include <assert.h>
 #include <atlbase.h>
 #include <fsString.h>
 #include <nsmemory.h>
-#include "vmsFdmTranslations.h"
 #include "vmsFlvSniffDll.h"
 #include "vmsWaitDlg.h"
 #include "resource.h"
 #include "xrfix.h"
 #include "vmsHttpRedirectList.h"
-
-#if defined (_UNICODE) || defined (UNICODE)
-#define tstring std::wstring
-#else 
-#define tstring std::string
-#endif
+#include <regex>
+#include "../../common/util.h"
 
 #ifdef _DEBUG
 #define SCL_ENABLE
@@ -34,21 +30,21 @@ SCL_INITOBJECT (_T ("vmsfdmff"), 0);
 _COM_SMARTPTR_TYPEDEF(IFDMFlashVideoDownloads, __uuidof(IFDMFlashVideoDownloads));
 _COM_SMARTPTR_TYPEDEF(IFdmUiWindow, __uuidof(IFdmUiWindow));
 
-#define FLASHGOT_CID	"{19503e42-ca3c-4c27-b1e2-9cdb2170ee34}"
+#define FLASHGOT_CID	_T("{19503e42-ca3c-4c27-b1e2-9cdb2170ee34}")
 
 XRFIX_NS_IMPL_ISUPPORTS1 (CFDMForFirefox, IFDMForFirefox, IFDMFORFIREFOX_IID)
 
 CFDMForFirefox::CFDMForFirefox()
 {
 	m_keyFDM.Open (HKEY_CURRENT_USER, 
-		"Software\\FreeDownloadManager.ORG\\Free Download Manager");
+		_T("Software\\FreeDownloadManager.ORG\\Free Download Manager"));
 
-	m_keyFDMMonitor.Open (m_keyFDM,	"Settings\\Monitor", KEY_READ);
+	m_keyFDMMonitor.Open (m_keyFDM,	_T("Settings\\Monitor"), KEY_READ);
 
 	
 	
-	if (ERROR_SUCCESS != m_keyFDMFfStgs.Open (m_keyFDM, "FirefoxSettings\\Proxy"))
-		m_keyFDMFfStgs.Create (m_keyFDM, "FirefoxSettings\\Proxy");
+	if (ERROR_SUCCESS != m_keyFDMFfStgs.Open (m_keyFDM, _T("FirefoxSettings\\Proxy")))
+		m_keyFDMFfStgs.Create (m_keyFDM, _T("FirefoxSettings\\Proxy"));
 
 	CoInitialize (NULL);
 }
@@ -63,53 +59,53 @@ NS_IMETHODIMP CFDMForFirefox::GetLngString(const char *strIDString, PRUnicharIDL
 {
 	*_retval = NULL;
 
-	LPCSTR psz = NULL;
+	LPCTSTR psz = NULL;
 	
-	if (lstrcmp (strIDString, "dllink") == 0)
+	if (strcmp (strIDString, "dllink") == 0)
 	{
 		psz = vmsFdmTranslations::o ().GetString (L_DLTHISIEMENU);
 		if (psz == NULL || *psz == 0)
-			psz = "Download with Free Download Manager";
+			psz = _T("Download with Free Download Manager");
 	}
 
-	else if (lstrcmp (strIDString, "dlall") == 0)
+	else if (strcmp (strIDString, "dlall") == 0)
 	{
 		psz = vmsFdmTranslations::o ().GetString (L_DLALLIEMENU);
 		if (psz == NULL || *psz == 0)
-			psz = "Download all with Free Download Manager";
+			psz = _T("Download all with Free Download Manager");
 	}
 
-	else if (lstrcmp (strIDString, "dlselected") == 0)
+	else if (strcmp (strIDString, "dlselected") == 0)
 	{
 		psz = vmsFdmTranslations::o ().GetString (L_DLSELECTEDIEMENU);
 		if (psz == NULL || *psz == 0)
-			psz = "Download selected with Free Download Manager";
+			psz = _T("Download selected with Free Download Manager");
 	}
 
-	else if (lstrcmp (strIDString, "dlvideo") == 0)
+	else if (strcmp (strIDString, "dlvideo") == 0)
 	{
 		psz = vmsFdmTranslations::o ().GetString (L_DLFLASHVIDEOIEMENU);
 		if (psz == NULL || *psz == 0)
-			psz = "Download video with Free Download Manager";
+			psz = _T("Download video with Free Download Manager");
 	}
 
-	else if (lstrcmp (strIDString, "dlbyfdm") == 0)
+	else if (strcmp (strIDString, "dlbyfdm") == 0)
 	{
 		psz = vmsFdmTranslations::o ().GetString (L_DLBYFDM);
 		if (psz == NULL || *psz == 0)
-			psz = "Download by FDM";
+			psz = _T("Download by FDM");
 	}
 
-	else if (lstrcmp (strIDString, "showthisbtn") == 0)
+	else if (strcmp (strIDString, "showthisbtn") == 0)
 	{
 		psz = vmsFdmTranslations::o ().GetString (L_SHOW_THIS_BUTTON);
 		if (psz == NULL || *psz == 0)
-			psz = "Show This Button";
+			psz = _T("Show This Button");
 	}
 
 	if (psz && *psz)
 	{
-		*_retval = (PRUnicharIDL*) nsMemory::Clone (CA2WEX <128> (psz), 
+		*_retval = (PRUnicharIDL*) nsMemory::Clone (CT2WEX <128> (psz), 
 			(lstrlen (psz)+1) * sizeof (wchar_t));
 	}
 
@@ -128,43 +124,43 @@ NS_IMETHODIMP CFDMForFirefox::IsContextMenuItemShouldBeHidden(const char *strMen
 
 	
 
-	key.Open (m_keyFDM, "Settings\\Monitor\\IEMenu", KEY_READ);
+	key.Open (m_keyFDM, _T("Settings\\Monitor\\IEMenu"), KEY_READ);
 
 	DWORD dwShow = TRUE;
 
-	HANDLE hmx = CreateMutex (NULL, FALSE, "mx::fdm: brmenu_disable");
+	HANDLE hmx = CreateMutex (NULL, FALSE, _T("mx::fdm: brmenu_disable"));
 	if (GetLastError () == ERROR_ALREADY_EXISTS)
 		dwShow = FALSE;
 	else
-		key.QueryValue (dwShow, "Enable");
+		key.QueryValue (dwShow, _T("Enable"));
 	CloseHandle (hmx);
 	
 	if (dwShow)
 	{
 		fsString strMxName, strValName;
 
-		if (lstrcmp (strMenuItemID, "dllink") == 0)
+		if (strcmp (strMenuItemID, "dllink") == 0)
 		{
-			strValName = "DLThis";
-			strMxName = "mx::fdm: dllink_disable";
+			strValName = _T("DLThis");
+			strMxName = _T("mx::fdm: dllink_disable");
 		}
 
-		else if (lstrcmp (strMenuItemID, "dlall") == 0)
+		else if (strcmp (strMenuItemID, "dlall") == 0)
 		{
-			strValName = "DLAll";
-			strMxName = "mx::fdm: dlall_disable";
+			strValName = _T("DLAll");
+			strMxName = _T("mx::fdm: dlall_disable");
 		}
 
-		else if (lstrcmp (strMenuItemID, "dlselected") == 0)
+		else if (strcmp (strMenuItemID, "dlselected") == 0)
 		{
-			strValName = "DLSelected";
-			strMxName = "mx::fdm: dlselected_disable";
+			strValName = _T("DLSelected");
+			strMxName = _T("mx::fdm: dlselected_disable");
 		}
 
-		else if (lstrcmp (strMenuItemID, "dlvideo") == 0)
+		else if (strcmp (strMenuItemID, "dlvideo") == 0)
 		{
-			strValName = "DLFlashVideo";
-			strMxName = "mx::fdm: dlvideo_disable";
+			strValName = _T("DLFlashVideo");
+			strMxName = _T("mx::fdm: dlvideo_disable");
 		}
 
 		HANDLE hmx = CreateMutex (NULL, FALSE, strMxName);
@@ -184,7 +180,7 @@ bool CFDMForFirefox::is_FlashGotInstalled()
 {
 	static int _isInstalled = -1;
 	if (_isInstalled == -1)
-		_isInstalled = vmsFirefoxExtensionInstaller::IsInstalled (FLASHGOT_CID, true);
+		_isInstalled = vmsFirefoxExtensionInstaller::IsInstalledInProfile (FLASHGOT_CID, true, _T(""));
 	return _isInstalled != 0;
 }
 
@@ -198,10 +194,10 @@ NS_IMETHODIMP CFDMForFirefox::IsALTShouldBePressed(XULSDK_PRBool *_retval)
 
    	DWORD dw1 = TRUE, dw2 = FALSE;
 	
-	m_keyFDMMonitor.QueryValue (dw1, "Firefox");
+	m_keyFDMMonitor.QueryValue (dw1, _T("Firefox"));
 
 	if (dw1)
-		m_keyFDMMonitor.QueryValue (dw2, "ALTShouldPressed");
+		m_keyFDMMonitor.QueryValue (dw2, _T("ALTShouldPressed"));
 
 	*_retval = dw1 && dw2;
 
@@ -217,12 +213,12 @@ NS_IMETHODIMP CFDMForFirefox::IsLinkShouldBeSkipped(IFDMUrl *url, const PRUnicha
 
 	DWORD dw = TRUE;
 
-	m_keyFDMMonitor.QueryValue (dw, "Firefox");
+	m_keyFDMMonitor.QueryValue (dw, _T("Firefox"));
 	if (dw == FALSE)
 		return NS_OK;
 
 	dw = FALSE;
-	m_keyFDMMonitor.QueryValue (dw, "ALTShouldPressed");
+	m_keyFDMMonitor.QueryValue (dw, _T("ALTShouldPressed"));
 	if (dw)
 		return NS_OK;
 
@@ -280,14 +276,14 @@ LPCSTR strcmp_m (LPCSTR pszWhere, LPCSTR pszWhat)
 
 LPCSTR strcmpi_m (LPCSTR pszWhere, LPCSTR pszWhat)
 {
-	char *psz1 = new char [lstrlen (pszWhere) + 1];
-	char *psz2 = new char [lstrlen (pszWhat) + 1];
+	char *psz1 = new char [strlen (pszWhere) + 1];
+	char *psz2 = new char [strlen (pszWhat) + 1];
 
-	lstrcpy (psz1, pszWhere);
-	lstrcpy (psz2, pszWhat);
+	strcpy (psz1, pszWhere);
+	strcpy (psz2, pszWhat);
 
-	CharLower (psz1);
-	CharLower (psz2);
+	strlwr (psz1);
+	strlwr (psz2);
 
 	LPCSTR psz = strcmp_m (psz1, psz2);
 	LPCSTR pszRet = NULL;
@@ -310,7 +306,7 @@ BOOL IsExtInExtsStr (LPCSTR pszExts, LPCSTR pszExt)
 	if (pszExt == NULL)
 		return FALSE;
 
-	int len = lstrlen (pszExts);
+	int len = strlen (pszExts);
 	int i = 0;
 	CHAR szExt [10000];
 
@@ -337,7 +333,7 @@ BOOL IsServerInServersStr (LPCSTR pszServers, LPCSTR pszServer)
 	if (pszServer == NULL)
 		return FALSE;
 
-	int len = lstrlen (pszServers);
+	int len = strlen (pszServers);
 	int i = 0;
 	CHAR szServer [10000];
 
@@ -354,7 +350,7 @@ BOOL IsServerInServersStr (LPCSTR pszServers, LPCSTR pszServer)
 		if (IsExtStrEq (szServer, pszServer))
 			return TRUE;
 
-		fsString str;
+		fsStringA str;
 		str = "*."; str += szServer;
 		if (IsExtStrEq (str, pszServer))
 			return TRUE;
@@ -364,7 +360,7 @@ BOOL IsServerInServersStr (LPCSTR pszServers, LPCSTR pszServer)
 	return FALSE;
 }
 
-fsString DomainFromUrl(LPCSTR pszUrl)
+fsStringA DomainFromUrl(LPCSTR pszUrl)
 {
 	LPCSTR pszS = strstr (pszUrl, "://");
 	if (pszS == NULL)
@@ -381,7 +377,9 @@ fsString DomainFromUrl(LPCSTR pszUrl)
 	if (pszE - pszS > sizeof (sz))
 		return "";
 
-	lstrcpyn (sz, pszS, pszE - pszS + 1);
+	assert (!"tested");
+	strncpy (sz, pszS, pszE - pszS);
+	sz [pszE - pszS] = 0;
 	return sz;
 }
 
@@ -389,13 +387,13 @@ bool CFDMForFirefox::IsServerToSkip (IFDMUrl *url)
 {
 	wchar_t_IDL *wsz;
 	url->GetUrl (&wsz);
-	fsString strDomain = DomainFromUrl (CW2AEX <128> (pwchar_t_IDL_to_pwchar_t (wsz)));
+	fsStringA strDomain = DomainFromUrl (CW2AEX <128> (pwchar_t_IDL_to_pwchar_t (wsz)));
 	nsMemory::Free (wsz);
 
-	char szServers [10000] = ""; DWORD dw = sizeof (szServers);
-	m_keyFDMMonitor.QueryValue (szServers, "SkipServers", &dw);
+	TCHAR szServers [10000] = _T(""); DWORD dw = _countof (szServers);
+	m_keyFDMMonitor.QueryValue (szServers, _T("SkipServers"), &dw);
 
-	return IsServerInServersStr (szServers, strDomain) != 0;
+	return IsServerInServersStr (CT2AEX<128>(szServers), strDomain) != 0;
 }
 
 bool CFDMForFirefox::IsUrlShouldBeSkipped(IFDMUrl *url, const PRUnicharIDL *pwszSuggFileName)
@@ -406,8 +404,8 @@ bool CFDMForFirefox::IsUrlShouldBeSkipped(IFDMUrl *url, const PRUnicharIDL *pwsz
 	if (!pwszSuggFileName)
 		return false;
 
-	char szExts [10000] = "pls m3u"; DWORD dw = sizeof (szExts);
-	m_keyFDMMonitor.QueryValue (szExts, "SkipExtensions", &dw);
+	TCHAR szExts [10000] = _T("pls m3u"); DWORD dw = _countof (szExts);
+	m_keyFDMMonitor.QueryValue (szExts, _T("SkipExtensions"), &dw);
 
 	char szFile [1000] = "";
 	WideCharToMultiByte (CP_ACP, 0, pwchar_t_IDL_to_pwchar_t (pwszSuggFileName), -1, szFile, sizeof (szFile), 
@@ -418,7 +416,7 @@ bool CFDMForFirefox::IsUrlShouldBeSkipped(IFDMUrl *url, const PRUnicharIDL *pwsz
 	if (pszExt++ == NULL) 
 		return false;
 
-	return IsExtInExtsStr (szExts, pszExt) != FALSE ||
+	return IsExtInExtsStr (CT2AEX<128>(szExts), pszExt) != FALSE ||
 		IsServerToSkip (url);
 }
 
@@ -460,7 +458,7 @@ XULSDK_PRBool CFDMForFirefox::TransferUrlToFDM(IFDMUrl *url)
 	}
 
 	DWORD dwAllow = TRUE;
-	m_keyFDMMonitor.QueryValue (dwAllow, "AllowDownload");
+	m_keyFDMMonitor.QueryValue (dwAllow, _T("AllowDownload"));
 	if (dwAllow == FALSE)
 		return TRUE;	
 
@@ -484,19 +482,19 @@ XULSDK_PRBool CFDMForFirefox::TransferUrlToFDM(IFDMUrl *url)
 	return bAdded;
 }
 
-NS_IMETHODIMP CFDMForFirefox::SetProxyType(PRInt32 nType)
+NS_IMETHODIMP CFDMForFirefox::SetProxyType(int32_t nType)
 {
-	m_keyFDMFfStgs.SetValue (nType, "ProxyType");
+	m_keyFDMFfStgs.SetValue (nType, _T("ProxyType"));
     return NS_OK;
 }
 
-NS_IMETHODIMP CFDMForFirefox::SetProxy(const char *strProtocol, const char *strAddr, PRInt32 nPort)
+NS_IMETHODIMP CFDMForFirefox::SetProxy(const char *strProtocol, const char *strAddr, int32_t nPort)
 {
-	fsString str = strProtocol;
-	fsString strAddrName = str; strAddrName += "_addr";
-	fsString strPortName = str; strPortName += "_port";
+	fsString str = tstringFromString (strProtocol).c_str ();
+	fsString strAddrName = str; strAddrName += _T("_addr");
+	fsString strPortName = str; strPortName += _T("_port");
 
-	m_keyFDMFfStgs.SetValue (strAddr, strAddrName);
+	m_keyFDMFfStgs.SetValue (tstringFromString (strAddr).c_str (), strAddrName);
 	m_keyFDMFfStgs.SetValue (nPort, strPortName);
 	
     return NS_OK;
@@ -547,6 +545,19 @@ NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl3(const PRUnicharIDL *ws
 {
 	*_retval = TRUE;
 
+	if (vmsIsYouTubeVideoPage (pwchar_t_IDL_to_pwchar_t (wstrUrl)))
+	{
+		IFDMFlashVideoDownloadsPtr spFVDownloads;
+		spFVDownloads.CreateInstance (__uuidof (FDMFlashVideoDownloads));
+		assert (spFVDownloads != NULL);
+		if (spFVDownloads)
+		{
+			spFVDownloads->CreateFromUrl (
+				SysAllocString (pwchar_t_IDL_to_pwchar_t (wstrUrl)));
+			return NS_OK;
+		}		
+	}
+
 	_threadOnDownloadItBtnClicked_param *p = new _threadOnDownloadItBtnClicked_param;
 	p->pthis = this;
 	this->AddRef ();
@@ -567,14 +578,18 @@ NS_IMETHODIMP CFDMForFirefox::CreateVideoDownloadFromUrl3(const PRUnicharIDL *ws
 	DWORD dw;
 	CloseHandle (
 		CreateThread (NULL, 0, _threadOnDownloadItBtnClicked, p, 0, &dw));
-	
-	
 
     return NS_OK;
 }
 
 NS_IMETHODIMP CFDMForFirefox::IsVideoFlash(const PRUnicharIDL *wstrUrl, const PRUnicharIDL *wstrFrameUrl, const PRUnicharIDL *wstrSwfUrl, const PRUnicharIDL *wstrFlashVars, const PRUnicharIDL *wstrOtherSwfUrls, const PRUnicharIDL *wstrOtherFlashVars, XULSDK_PRBool *_retval)
 {
+	if (vmsIsYouTubeVideoPage (pwchar_t_IDL_to_pwchar_t (wstrUrl)))
+	{
+		*_retval = TRUE;
+		return NS_OK;
+	}
+
 	if (!wstrFrameUrl)
 		wstrFrameUrl = pwchar_t_to_pwchar_t_IDL (L"");
 	if (!wstrSwfUrl)
@@ -616,9 +631,9 @@ DWORD WINAPI CFDMForFirefox::_threadOnDownloadItBtnClicked(LPVOID lp)
 	dlg.m_strMsg = vmsFdmTranslations::o ().GetString (L_SEARCHING_FLVS);
 	if (dlg.m_strMsg.empty ())
 		dlg.m_strMsg = _T ("Searching flash videos...");
-	dlg.m_hIcon = (HICON)LoadImage (GetModuleHandle ("vmsfdmff.dll"), MAKEINTRESOURCE (IDI_FDM),
+	dlg.m_hIcon = (HICON)LoadImage (GetModuleHandle (_T("vmsfdmff.dll")), MAKEINTRESOURCE (IDI_FDM),
 		IMAGE_ICON, 16, 16, 0);
-	if (dlg.Create (GetModuleHandle ("vmsfdmff.dll"), MAKEINTRESOURCE (IDD_WAIT), p->hwndParent))
+	if (dlg.Create (GetModuleHandle (_T("vmsfdmff.dll")), MAKEINTRESOURCE (IDD_WAIT), p->hwndParent))
 	{
 		ShowWindow (dlg.m_hwnd, SW_SHOW);
 		BringWindowToTop (dlg.m_hwnd);

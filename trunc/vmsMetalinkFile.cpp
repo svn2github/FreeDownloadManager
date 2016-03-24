@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -24,7 +24,7 @@ vmsMetalinkFile::~vmsMetalinkFile()
 	CoUninitialize ();
 }
 
-BOOL vmsMetalinkFile::Parse(LPCSTR pszFile)
+BOOL vmsMetalinkFile::Parse(LPCTSTR pszFile)
 {
 	USES_CONVERSION;
 
@@ -66,7 +66,7 @@ BOOL vmsMetalinkFile::Parse(LPCSTR pszFile)
 		{
 			CComBSTR bstrText;
 			spItem->get_text (&bstrText);
-			m_strDescription = W2A (bstrText);
+			m_strDescription = W2T (bstrText);
 		}
 
 		else if (bstrName == L"files")
@@ -133,7 +133,7 @@ BOOL vmsMetalinkFile::ReadFileNode(IXMLDOMNode *pFile)
 			spFileName->get_nodeValue (&vt);
 			ASSERT (vt.vt == VT_BSTR);
 			if (vt.vt == VT_BSTR)
-				file.strName = W2A (vt.bstrVal);
+				file.strName = W2T (vt.bstrVal);
 		}
 	}
 
@@ -157,7 +157,7 @@ BOOL vmsMetalinkFile::ReadFileNode(IXMLDOMNode *pFile)
 		{
 			CComBSTR bstrText;
 			spItem->get_text (&bstrText);
-			file.strOS = W2A (bstrText);
+			file.strOS = W2T (bstrText);
 		}
 
 		spItem = NULL;
@@ -243,14 +243,14 @@ BOOL vmsMetalinkFile::ReadHashNode(IXMLDOMNode *pNode, vmsMetalinkFile_File_Hash
 	spType->get_nodeValue (&vt);
 	ASSERT (vt.vt == VT_BSTR);
 	if (vt.vt == VT_BSTR)
-		hash->strAlgorithm = W2A (vt.bstrVal);
+		hash->strAlgorithm = W2T (vt.bstrVal);
 	
 	CComBSTR bstrText;
 	pNode->get_text (&bstrText);
 	if (bstrText.Length () == 0)
 		return FALSE;
 
-	hash->strChecksum = W2A (bstrText);
+	hash->strChecksum = W2T (bstrText);
 
 	return TRUE;
 }
@@ -273,19 +273,19 @@ BOOL vmsMetalinkFile::ReadUrlNode(IXMLDOMNode *pNode, vmsMetalinkFile_File_Url *
 	spType->get_nodeValue (&vt);
 	ASSERT (vt.vt == VT_BSTR);
 	if (vt.vt == VT_BSTR)
-		url->strProtocol = W2A (vt.bstrVal);
+		url->strProtocol = W2T (vt.bstrVal);
 	
 	CComBSTR bstrText;
 	pNode->get_text (&bstrText);
 	if (bstrText.Length () == 0)
 		return FALSE;
 
-	url->strUrl = W2A (bstrText);
+	url->strUrl = W2T (bstrText);
 
 	return TRUE;
 }
 
-LPCSTR vmsMetalinkFile::get_Description()
+LPCTSTR vmsMetalinkFile::get_Description()
 {
 	return m_strDescription;
 }

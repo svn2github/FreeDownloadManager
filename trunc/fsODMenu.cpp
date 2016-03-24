@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -93,7 +93,7 @@ fsODMenuItemData* fsODMenu::AttachMenuItem(CMenu *pMenu, UINT iPos, BOOL bByPos)
 		uState = MF_POPUP;
 
 	
-	pMenu->ModifyMenu (iPos, uState | MF_OWNERDRAW | nByPosFl, nID, (LPCSTR)pData);
+	pMenu->ModifyMenu (iPos, uState | MF_OWNERDRAW | nByPosFl, nID, (LPCTSTR)pData);
 
 	pData->iImage = pData->iCheckImage = -1;
 	pData->bBold = pData->bMenuBar = FALSE;
@@ -181,7 +181,7 @@ void fsODMenu::OnMeasureItem(LPMEASUREITEMSTRUCT pmis)
 		if (pmis->itemHeight < mincy)
 			pmis->itemHeight = mincy;
 
-		if (strchr (pData->strMenuText, '\t') != NULL)
+		if (_tcschr (pData->strMenuText, _T('\t')) != NULL)
 			pmis->itemWidth += 15;
 	}
 	else
@@ -284,7 +284,7 @@ void fsODMenu::OnDrawItem(LPDRAWITEMSTRUCT pdis)
 
 		
 
-		LPCSTR pszTab = strchr (pData->strMenuText, '\t');
+		LPCTSTR pszTab = _tcschr (pData->strMenuText, _T('\t'));
 		int left = pszTab ? pszTab - pData->strMenuText : pData->strMenuText.GetLength ();
 
 		rcItem.left += 9; rcItem.right -= 15;
@@ -324,7 +324,7 @@ void fsODMenu::OnDrawItem(LPDRAWITEMSTRUCT pdis)
 		else
 		{
 			CFont font;
-			char check;
+			TCHAR check;
 			int fsize;
 
 			switch (pData->iCheckImage)
@@ -340,7 +340,7 @@ void fsODMenu::OnDrawItem(LPDRAWITEMSTRUCT pdis)
 				{
 					check = 105;
 					fsize = m_cyIcon;
-					font.CreateFont (fsize, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, "Marlett");
+					font.CreateFont (fsize, 0, 0, 0, FW_NORMAL, 0, 0, 0, DEFAULT_CHARSET, 0, 0, 0, 0, _T("Marlett"));
 					CFont* oldfont = dc->SelectObject (&font);
 					dc->DrawText (&check, 1, &rcIcon, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 					dc->SelectObject (oldfont);
@@ -441,7 +441,7 @@ HMENU fsODMenu::CopyMenu(HMENU hMenu)
 	{
 		UINT uState = GetMenuState (hMenu, i, MF_BYPOSITION);
 		UINT nID;
-		char szMenuText [100];
+		TCHAR szMenuText [100];
 
 		if (uState & MF_POPUP)
 		{
@@ -482,7 +482,7 @@ void fsODMenu::SetImages(fsSetImage *pImages, int cImages, CMenu *pMenu, BOOL fB
 	}
 }
 
-fsODMenuItemData* fsODMenu::AddItem(CMenu *pMenu, UINT nID, LPCSTR pszItem)
+fsODMenuItemData* fsODMenu::AddItem(CMenu *pMenu, UINT nID, LPCTSTR pszItem)
 {
 	pMenu->AppendMenu (pszItem ? MF_STRING : MF_SEPARATOR, nID, pszItem);
 	return AttachMenuItem (pMenu, nID, FALSE);
@@ -494,13 +494,13 @@ void fsODMenu::RemoveMenuItem(CMenu *pMenu, UINT nID, BOOL bByPos)
 	pMenu->RemoveMenu (nID, bByPos ? MF_BYPOSITION : MF_BYCOMMAND);
 }
 
-void fsODMenu::InsertMenuItem(CMenu* pMenu, LPCSTR pszItem, UINT nID, UINT uWhere, BOOL bByPos)
+void fsODMenu::InsertMenuItem(CMenu* pMenu, LPCTSTR pszItem, UINT nID, UINT uWhere, BOOL bByPos)
 {
 	pMenu->InsertMenu (uWhere, bByPos ? MF_BYPOSITION : MF_BYCOMMAND, nID, pszItem);
 	AttachMenuItem (pMenu, nID, FALSE);
 }
 
-void fsODMenu::SetMenuItemText(CMenu *pMenu, LPCSTR pszText, UINT nID, BOOL bByPos)
+void fsODMenu::SetMenuItemText(CMenu *pMenu, LPCTSTR pszText, UINT nID, BOOL bByPos)
 {
 	MENUITEMINFO info;
 	ZeroMemory (&info, sizeof (info));
@@ -514,7 +514,7 @@ void fsODMenu::SetMenuItemText(CMenu *pMenu, LPCSTR pszText, UINT nID, BOOL bByP
 	
 	UINT nFlags = bByPos ? MF_BYPOSITION : MF_BYCOMMAND;
 	pMenu->ModifyMenu (nID, nFlags|MF_STRING, info.wID, pszText);
-	pMenu->ModifyMenu (nID, nFlags|MF_OWNERDRAW, info.wID, (LPCSTR)pData);
+	pMenu->ModifyMenu (nID, nFlags|MF_OWNERDRAW, info.wID, (LPCTSTR)pData);
 
 	pData->strMenuText = pszText;
 }

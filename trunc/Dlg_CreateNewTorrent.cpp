@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -56,8 +56,8 @@ BOOL CDlg_CreateNewTorrent::OnInitDialog()
 	
 	int ai_bt_PS [] = {0, 16*1024, 32*1024, 64*1024, 128*1024, 256*1024,
 		512*1024, 1024*1024, 2*1024*1024, 4*1024*1024, 8*1024*1024};
-	LPCSTR apsz_bt_PS [] = {LS (L_AUTO_WQ), "16 KB", "32 KB", "64 KB", "128 KB", "256 KB", 
-		"512 KB", "1024 KB", "2048 KB", "4096 KB", "8192 KB"};
+	LPCTSTR apsz_bt_PS [] = {LS (L_AUTO_WQ), _T("16 KB"), _T("32 KB"), _T("64 KB"), _T("128 KB"), _T("256 KB"), 
+		_T("512 KB"), _T("1024 KB"), _T("2048 KB"), _T("4096 KB"), _T("8192 KB")};
 	for (int i = 0; i < sizeof (ai_bt_PS)/sizeof (int); i++)
 	{
 		m_wndPS.AddString (apsz_bt_PS [i]);
@@ -78,9 +78,9 @@ BOOL CDlg_CreateNewTorrent::OnInitDialog()
 void CDlg_CreateNewTorrent::OnFile() 
 {
 	CString strFilter;
-	strFilter.Format ("%s (*.*)|*.*||", LS (L_ALLFILES));
+	strFilter.Format (_T("%s (*.*)|*.*||"), LS (L_ALLFILES));
 	
-	CFileDialog dlg (TRUE, "", NULL, OFN_HIDEREADONLY|OFN_NOCHANGEDIR, strFilter, this);
+	CFileDialog dlg (TRUE, _T(""), NULL, OFN_HIDEREADONLY|OFN_NOCHANGEDIR, strFilter, this);
 	if (_DlgMgr.DoModal (&dlg) != IDOK)
 		return;
 	m_wndSource.SetWindowText (dlg.GetPathName ());
@@ -134,9 +134,9 @@ void CDlg_CreateNewTorrent::OnSaveTrackers()
 	int len = 1;
 	POSITION pos = sl.GetHeadPosition ();
 	while (pos)
-		len += sl.GetNext (pos).GetLength () + 1;
-	LPSTR psz = (LPSTR)_alloca (len);
-	LPSTR psz2 = psz;
+		len += (sl.GetNext (pos).GetLength () + 1) * sizeof(TCHAR);
+	LPTSTR psz = (LPTSTR)_alloca (len);
+	LPTSTR psz2 = psz;
 	pos = sl.GetHeadPosition ();
 	while (pos)
 	{
@@ -145,17 +145,17 @@ void CDlg_CreateNewTorrent::OnSaveTrackers()
 		psz += str.GetLength () + 1;
 	}
 	*psz = 0;
-	AfxGetApp ()->WriteProfileBinary ("Settings\\Torrents", "DefaultTrackerListForNewTorrent", (LPBYTE)psz2, len);
+	AfxGetApp ()->WriteProfileBinary (_T("Settings\\Torrents"), _T("DefaultTrackerListForNewTorrent"), (LPBYTE)psz2, len);
 }
 
 void CDlg_CreateNewTorrent::OnRestoreTrackers() 
 {
-	LPSTR psz = NULL;
+	LPTSTR psz = NULL;
 	UINT len = 0;
-	AfxGetApp ()->GetProfileBinary ("Settings\\Torrents", "DefaultTrackerListForNewTorrent", (LPBYTE*)&psz, &len); 
+	AfxGetApp ()->GetProfileBinary (_T("Settings\\Torrents"), _T("DefaultTrackerListForNewTorrent"), (LPBYTE*)&psz, &len); 
 	if (psz == NULL || len == 0)
 		return;
-	LPCSTR psz2 = psz;
+	LPCTSTR psz2 = psz;
 	m_wndTrackerList.ResetContent ();
 	while (*psz2)
 	{
@@ -192,15 +192,6 @@ void CDlg_CreateNewTorrent::OnOK()
 		return;
 	}
 	
-	CStringList sl;
-	getTrackerList (sl);
-	if (sl.IsEmpty ())
-	{
-		MessageBox (LS (L_INPERR), LS (L_ERR), MB_ICONERROR);
-		m_wndTrackerList.SetFocus ();
-		return;
-	}
-
 	UINT aids [] = {IDC__SOURCE, IDC_SOURCE, IDC_FILE, IDC_FOLDER, IDC__PIECE_SIZE,
 		IDC_PIECE_SIZE, IDC__TRACKERS, IDC_TRACKERS, IDC_ADD_TRACKER, IDC_REMOVE_TRACKER,
 		IDC_SAVE_TRACKERS, IDC_RESTORE_TRACKERS, IDC_CLEAR_TRACKERS, IDC_TRACKER_LIST,
@@ -228,27 +219,33 @@ DWORD WINAPI CDlg_CreateNewTorrent::_threadCreateNewTorrent(LPVOID lp)
 	CDlg_CreateNewTorrent *pthis = (CDlg_CreateNewTorrent*)lp;
 
 	CString strSrcFile; pthis->m_wndSource.GetWindowText (strSrcFile);
+
+#ifdef UNICODE
+	LPCWSTR lpcwstrSrcFile = (LPCWSTR)strSrcFile;
+#else
 	USES_CONVERSION;
 	LPCWSTR lpcwstrSrcFile = A2CW (strSrcFile);
+#endif
 	CString strComment; pthis->GetDlgItemText (IDC_COMMENT, strComment);
 		
+	std::vector <char> trackers;
+
 	CStringList sl;
 	pthis->getTrackerList (sl);
-	
-	int len = 1;
-	POSITION pos = sl.GetHeadPosition ();
-	while (pos)
-		len += sl.GetNext (pos).GetLength () + 1;
-	LPSTR psz = (LPSTR)_alloca (len);
-	LPSTR pszTrackers = psz;
-	pos = sl.GetHeadPosition ();
-	while (pos)
+
+	if (!sl.IsEmpty ())
 	{
-		CString str = sl.GetNext (pos);
-		lstrcpy (psz, str);
-		psz += str.GetLength () + 1;
+		POSITION pos = sl.GetHeadPosition ();
+		while (pos)
+		{
+			std::string str = stringFromTstring ((LPCTSTR)sl.GetNext (pos));
+			std::copy (str.begin (), str.end (), 
+				std::back_inserter (trackers));
+			trackers.push_back (0);
+		}
 	}
-	*psz = 0;
+
+	trackers.push_back (0);
 	
 	BOOL bRes = FALSE;
 
@@ -256,7 +253,8 @@ DWORD WINAPI CDlg_CreateNewTorrent::_threadCreateNewTorrent(LPVOID lp)
 	
 	if (pBtFile)
 	{
-		bRes = pBtFile->CreateNewTorrent2 (lpcwstrSrcFile, pszTrackers, NULL, NULL, strComment, 
+		bRes = pBtFile->CreateNewTorrent2 (lpcwstrSrcFile, &trackers.front (), NULL, NULL, 
+			stringFromTstring ((LPCTSTR)strComment).c_str (), 
 			pthis->m_wndPS.GetItemData (pthis->m_wndPS.GetCurSel ()), &pthis->m_nProgress,
 			&pthis->m_bNeedCancel);
 	}
@@ -273,8 +271,8 @@ DWORD WINAPI CDlg_CreateNewTorrent::_threadCreateNewTorrent(LPVOID lp)
 		else
 		{
 			BOOL bOk = FALSE;
-			CString str; str.Format ("%s (*.torrent)|*.torrent||", LS (L_TORRENT_FILES));
-			CFileDialog dlg (FALSE, "torrent", NULL, OFN_OVERWRITEPROMPT|OFN_NOCHANGEDIR, str, pthis);
+			CString str; str.Format (_T("%s (*.torrent)|*.torrent||"), LS (L_TORRENT_FILES));
+			CFileDialog dlg (FALSE, _T("torrent"), NULL, OFN_OVERWRITEPROMPT|OFN_NOCHANGEDIR, str, pthis);
 			if (dlg.DoModal () == IDOK)
 			{
 				HANDLE hFile = CreateFile (dlg.GetPathName (), GENERIC_WRITE, 0, NULL, CREATE_ALWAYS,

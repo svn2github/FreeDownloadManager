@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "StdAfx.h"
@@ -58,7 +58,7 @@ void CImportManager::Init(informer fnWizardInformer, initializer fnWizardInitial
 	CUtorrentSupplier* pUtorrentSupplier = pUtorrentSupplierGuard.get();
 	if (pUtorrentSupplier == 0) {
 		CString sMsg = LS (L_OUTOFMEMORY);
-		throw std::runtime_error((const char*)sMsg);
+		throw std::runtime_error("Out of memory");
 	}
 
 	
@@ -71,7 +71,7 @@ void CImportManager::Init(informer fnWizardInformer, initializer fnWizardInitial
 	COrbitSupplier* pOrbitSupplier = pOrbitSupplierGuard.get();
 	if (pOrbitSupplier == 0) {
 		CString sMsg = LS (L_OUTOFMEMORY);
-		throw std::runtime_error((const char*)sMsg);
+		throw std::runtime_error("Out of memory");
 	}
 
 	
@@ -179,7 +179,7 @@ void CImportManager::Run()
 			} 
 			catch (std::runtime_error& exc) 
 			{
-				vmsLogger::WriteLog("CImportManager::Run std::runtime_error " + tstring(exc.what()));
+				vmsLogger::WriteLog("CImportManager::Run std::runtime_error " + std::string(exc.what()));
 
 				if (procErr(exc, sSupplierName, bIsLast) != IDYES)
 					break;
@@ -189,7 +189,7 @@ void CImportManager::Run()
 				tstring bufa;
 				bufa.resize(1024);
 				pExc->GetErrorMessage(&bufa.front(), 1024);
-				vmsLogger::WriteLog("CImportManager::Run " + tstring(bufa));
+				vmsLogger::WriteLog(_T("CImportManager::Run ") + bufa);
 
 				if (procErr(pExc, sSupplierName, bIsLast) != IDYES)
 					break;

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -35,7 +35,7 @@ BOOL vmsHttpRequest::Receive(SOCKET sConnection)
 		strRequest += sz;
 	}
 	
-	while (lstrcmp (strRequest.c_str () + strRequest.length () - 4, "\r\n\r\n"));
+	while (lstrcmpA (strRequest.c_str () + strRequest.length () - 4, "\r\n\r\n"));
 
 	return ParseRequest (strRequest.c_str ());
 }
@@ -59,7 +59,7 @@ BOOL vmsHttpRequest::ParseRequest(LPCSTR pszReq)
 	LPCSTR psz = strstr (pszReq, "Authorization: ");
 	if (psz)
 	{
-		psz += lstrlen ("Authorization: ");
+		psz += lstrlenA ("Authorization: ");
 		if (strnicmp (psz, "Basic ", 6) == 0)
 		{
 			psz += 6;

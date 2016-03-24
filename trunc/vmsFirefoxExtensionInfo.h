@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #pragma once
@@ -32,9 +32,9 @@ public:
 
 		tstring tstrQ = _T ("SELECT * FROM addon WHERE id==\"");
 		tstrQ += ptszExtensionId;
-		tstrQ += "\";";
+		tstrQ += _T("\";");
 
-		bool bOK = SQLITE_OK == sqlite3_exec (db, _t2utf8 (tstrQ.c_str ()).c_str (), _onAddonRecordEnum, this, NULL);
+		bool bOK = SQLITE_OK == sqlite3_exec (db, stringFromTstring (tstrQ).c_str (), _onAddonRecordEnum, this, NULL);
 
 		sqlite3_close (db);
 
@@ -78,6 +78,8 @@ public:
 		if(!file)
 			return false;
 
+		auto strExtensionId = stringFromTstring(ptszExtensionId);
+
 		std::istream_iterator<char> input(file);
 		picojson::value v;
 		std::string err;
@@ -90,8 +92,11 @@ public:
 		for(auto addon = addons.begin(); addon != addons.end(); ++addon)
 		{
 			picojson::object obj = (*addon).get<picojson::object>();
-			if(obj["id"].to_str() == std::string(ptszExtensionId))
+			if(obj["id"].to_str() == strExtensionId)
 			{
+				if (obj.count ("visible") && !obj["visible"].get<bool>())
+					continue; 
+
 				if(obj.count("softDisabled") && obj.count("appDisabled") && obj.count("userDisabled"))
 				{
 					m_iSoftDisabled = obj["softDisabled"].get<bool>();

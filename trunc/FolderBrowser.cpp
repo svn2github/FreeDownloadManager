@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -48,7 +48,7 @@ BEGIN_MESSAGE_MAP(CFolderBrowser, CWinThread)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-CFolderBrowser* CFolderBrowser::Create(LPCSTR pszTitle, LPCSTR pszPath, LPCSTR pszRoot, CWnd *pWndParent)
+CFolderBrowser* CFolderBrowser::Create(LPCTSTR pszTitle, LPCTSTR pszPath, LPCTSTR pszRoot, CWnd *pWndParent)
 {
 	CFolderBrowser* pThis = (CFolderBrowser*) RUNTIME_CLASS (CFolderBrowser)->CreateObject ();
 	pThis->m_bAutoDelete = FALSE;
@@ -86,7 +86,7 @@ CFolderBrowser* CFolderBrowser::Create(LPCSTR pszTitle, LPCSTR pszPath, LPCSTR p
 	return NULL;
 }
 
-LPCSTR CFolderBrowser::GetPath()
+LPCTSTR CFolderBrowser::GetPath()
 {
 	return m_strResPath;
 }

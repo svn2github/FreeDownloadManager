@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -184,8 +184,8 @@ BOOL CWPDS_GeneralPage::WriteAuthorization()
 	}
 	else
 	{
-		m_wpds->strUserName = "";
-		m_wpds->strPassword = "";
+		m_wpds->strUserName = _T("");
+		m_wpds->strPassword = _T("");
 	}
 
 	if (m_wpds->m_ppoOwner)

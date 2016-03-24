@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -19,9 +19,9 @@ vmsTpDownloadMgr::vmsTpDownloadMgr()
 	m_info.bDone = FALSE;
 	m_info.fPercentDone = 0;
 	m_info.nDownloadedBytes = 0;
-	m_info.strOutputPath = "";
-	m_info.strTorrentUrl = "";
-	m_info.strFileName = "";
+	m_info.strOutputPath = _T("");
+	m_info.strTorrentUrl = _T("");
+	m_info.strFileName = _T("");
 	m_uRetryTime = 5000;
 	m_bRename_CheckIfRenamed = FALSE;
 	m_bDontQueryStoringDownloadList = false;
@@ -75,6 +75,7 @@ int vmsTpDownloadMgr::get_ConnectionCount()
 
 DWORD WINAPI vmsTpDownloadMgr::_threadDownloadMgr(LPVOID lp)
 {
+	USES_CONVERSION;
 	vmsTpDownloadMgr *pThis = (vmsTpDownloadMgr*) lp;
 	TransportProtocolStateEx enPrevState =STREAMING_FINISHED;
 
@@ -98,18 +99,18 @@ DWORD WINAPI vmsTpDownloadMgr::_threadDownloadMgr(LPVOID lp)
 		TransportProtocolStateEx enCurrState = pThis->get_State ();
 		if (enCurrState != enPrevState)
 		{
-			CHAR szEv [1000];
+			TCHAR tszEv [1000];
 			switch (enCurrState)
 			{
 				case STREAMING_HANDSHAKING:
-					sprintf (szEv, LS (L_CONNECTING));
-					pThis->RaiseEvent (szEv);
+					_stprintf (tszEv, LS (L_CONNECTING));
+					pThis->RaiseEvent (tszEv);
 					pThis->m_bDlThreadNeedStop = false;
 					break;
 
 				case STREAMING_DOWNLOADING:
-					sprintf (szEv, LS (L_DOWNLOADING));
-					pThis->RaiseEvent (szEv);
+					_stprintf (tszEv, LS (L_DOWNLOADING));
+					pThis->RaiseEvent (tszEv);
 					pThis->m_bDlThreadNeedStop = false;
 					break;
 
@@ -138,11 +139,11 @@ DWORD WINAPI vmsTpDownloadMgr::_threadDownloadMgr(LPVOID lp)
 					break;
 				case STREAMING_FAILED:
 					pThis->RaiseEvent (DE_EXTERROR, DMEE_FATALERROR);
-					CHAR szStr [1000];
-					strcpy(szStr, pThis->get_LastError ());
-					pThis->RaiseEvent (szStr);
-					sprintf (szStr, LS (L_PAUSESECS), pThis->m_uRetryTime/1000);
-					pThis->RaiseEvent (szStr);
+					TCHAR tszStr [1000];
+					_tcscpy(tszStr, CA2CT(pThis->get_LastError ()));
+					pThis->RaiseEvent (tszStr);
+					_stprintf (tszStr, LS (L_PAUSESECS), pThis->m_uRetryTime/1000);
+					pThis->RaiseEvent (tszStr);
 					if (pThis->SleepInterval () == FALSE)
 						break; 
 					
@@ -157,8 +158,8 @@ DWORD WINAPI vmsTpDownloadMgr::_threadDownloadMgr(LPVOID lp)
 							pThis->RaiseEvent (DE_EXTERROR, DMEE_FATALERROR);
 							break;
 						}
-						sprintf (szEv, LS (L_CONNECTING));
-						pThis->RaiseEvent (szEv);
+						_stprintf (tszEv, LS (L_CONNECTING));
+						pThis->RaiseEvent (tszEv);
 						continue;
 					}
 					pThis->m_bDlThreadNeedStop = true;
@@ -197,19 +198,19 @@ DWORD vmsTpDownloadMgr::RaiseEvent(fsDownloaderEvent ev, DWORD dw)
 	return m_pfnEvHandler (this, ev, dw, m_lpEvParam);
 }
 
-void vmsTpDownloadMgr::RaiseEvent(LPCSTR pszEvent, fsDownloadMgr_EventDescType enType)
+void vmsTpDownloadMgr::RaiseEvent(LPCTSTR pszEvent, fsDownloadMgr_EventDescType enType)
 {
 	if (m_pfnEventDesc && *pszEvent)
 		m_pfnEventDesc (this, enType, pszEvent, m_lpEvParam);
 }
 
-std::string vmsTpDownloadMgr::getTPDllFileName(void)
+tstring vmsTpDownloadMgr::getTPDllFileName(void)
 {
 	tstring tstrDll;
 
 	TCHAR tsz [MAX_PATH] = _T ("");
 	GetModuleFileName (NULL, tsz, MAX_PATH);
-	LPTSTR ptsz = _tcsrchr (tsz, '\\');
+	LPTSTR ptsz = _tcsrchr (tsz, _T('\\'));
 	if (ptsz)
 	{
 		_tcscpy (ptsz + 1, _T ("msdl.dll"));
@@ -253,7 +254,7 @@ TransferProtocolDownloader* vmsTpDownloadMgr::CreateTransferProtocolDownloader()
 	return _pfnCreateTransferProtocolDownloaderObject ();
 }
 
-BOOL vmsTpDownloadMgr::CreateTPDownload(LPCSTR pszUrl, LPCSTR pszOutputPath, LPCSTR pszFileName, int nStreamingSpeed)
+BOOL vmsTpDownloadMgr::CreateTPDownload(LPCTSTR pszUrl, LPCTSTR pszOutputPath, LPCTSTR pszFileName, int nStreamingSpeed)
 {
 	assert (pszUrl != NULL);
 	if (!pszUrl)
@@ -269,8 +270,10 @@ BOOL vmsTpDownloadMgr::CreateTPDownload(LPCSTR pszUrl, LPCSTR pszOutputPath, LPC
 	m_info.strTorrentUrl = pszUrl;
 	m_info.strOutputPath = pszOutputPath;
 	m_info.strFileName = pszFileName;
+
+	USES_CONVERSION;
 	
-	m_dldr->InitTpStream(pszUrl, m_info.strOutputPath + m_info.strFileName, nStreamingSpeed);
+	m_dldr->InitTpStream(CT2CA(pszUrl), CT2CA((LPCTSTR)(m_info.strOutputPath + m_info.strFileName)), nStreamingSpeed);
 
 	return TRUE;
 }
@@ -314,10 +317,10 @@ BOOL vmsTpDownloadMgr::IsDownloading()
 
 fsString vmsTpDownloadMgr::get_OutputFilePathName()
 {
-	char sz [10000] = "";
-	strcpy(sz, m_info.strOutputPath);
-	strcat(sz, m_info.strFileName);
-	return sz;
+	TCHAR tsz [10000] = _T("");
+	_tcscpy(tsz, m_info.strOutputPath);
+	_tcscat(tsz, m_info.strFileName);
+	return tsz;
 }
 
 fsString vmsTpDownloadMgr::get_FileName()
@@ -451,9 +454,9 @@ void vmsTpDownloadMgr::getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bo
 	LPBYTE lpBuffer = pb;
 
 	DWORD dwNeedSize;
-	dwNeedSize = sizeof (int) + m_info.strTorrentUrl.GetLength();
-	dwNeedSize += sizeof (int) + m_info.strOutputPath.GetLength();
-	dwNeedSize += sizeof (int) + m_info.strFileName.GetLength();
+	dwNeedSize = sizeof (int) + m_info.strTorrentUrl.GetLength() * sizeof(TCHAR);
+	dwNeedSize += sizeof (int) + m_info.strOutputPath.GetLength() * sizeof(TCHAR);
+	dwNeedSize += sizeof (int) + m_info.strFileName.GetLength() * sizeof(TCHAR);
 	dwNeedSize += sizeof (int); 
 	dwNeedSize += sizeof (int); 
 	dwNeedSize += sizeof (UINT64); 
@@ -475,31 +478,31 @@ void vmsTpDownloadMgr::getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bo
 	int i;
 
 	
-	i = strlen(m_info.strTorrentUrl);
+	i = _tcslen(m_info.strTorrentUrl);
 	CHECK_SIZE (sizeof (int));
 	CopyMemory (lpBuffer, &i, sizeof (int));
 	lpBuffer += sizeof (int);
-	CHECK_SIZE (i);
-	CopyMemory (lpBuffer, m_info.strTorrentUrl, i);
-	lpBuffer += i;
+	CHECK_SIZE (i * sizeof(TCHAR));
+	CopyMemory (lpBuffer, (const void*)(LPCTSTR)m_info.strTorrentUrl, i * sizeof(TCHAR));
+	lpBuffer += i * sizeof(TCHAR);
 	
 	
-	i = strlen(m_info.strOutputPath);
+	i = _tcslen(m_info.strOutputPath);
 	CHECK_SIZE (sizeof (int));
 	CopyMemory (lpBuffer, &i, sizeof (int));
 	lpBuffer += sizeof (int);
-	CHECK_SIZE (i);
-	CopyMemory (lpBuffer, m_info.strOutputPath, i);
-	lpBuffer += i;
+	CHECK_SIZE (i * sizeof(TCHAR));
+	CopyMemory (lpBuffer, (const void*)(LPCTSTR)m_info.strOutputPath, i * sizeof(TCHAR));
+	lpBuffer += i * sizeof(TCHAR);
 
 	
-	i = strlen(m_info.strFileName);
+	i = _tcslen(m_info.strFileName);
 	CHECK_SIZE (sizeof (int));
 	CopyMemory (lpBuffer, &i, sizeof (int));
 	lpBuffer += sizeof (int);
-	CHECK_SIZE (i);
-	CopyMemory (lpBuffer, m_info.strFileName, i);
-	lpBuffer += i;
+	CHECK_SIZE (i * sizeof(TCHAR));
+	CopyMemory (lpBuffer, (const void*)(LPCTSTR)m_info.strFileName, i * sizeof(TCHAR));
+	lpBuffer += i * sizeof(TCHAR);
 	
 
 	
@@ -543,7 +546,10 @@ void vmsTpDownloadMgr::getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bo
 bool vmsTpDownloadMgr::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer)
 {
 	vmsAUTOLOCKSECTION (m_csDownload);
-	ASSERT (dwVer >= 14);
+	ASSERT (dwVer >= LAST_ANSI_DL_FILE_VERSION);
+
+	if (dwVer < LAST_ANSI_DL_FILE_VERSION)
+		return false;
 
 	#define CHECK_BOUNDS(need) if (need < 0 || need > int(*pdwSize) - (pB - pb)) return FALSE;
 
@@ -551,36 +557,84 @@ bool vmsTpDownloadMgr::loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSiz
 	
 	int i;
 	char sz [10000];
+	TCHAR tsz [10000];
+
+	fsString pszUrl;
+	fsString pszOutputPath;
+	fsString pszFileName;
 
 	
-	CHECK_BOUNDS (sizeof (int));
-	CopyMemory (&i, pB, sizeof (int));
-	pB += sizeof (int);
-	CHECK_BOUNDS (int (i));
-	CopyMemory (sz, pB, i);
-	sz [i] = 0;
-	fsString pszUrl = sz;
-	pB += i;
+
+	if (dwVer <= LAST_ANSI_DL_FILE_VERSION) {
+
+		
+
+		USES_CONVERSION;
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i));
+		CopyMemory (sz, pB, i);
+		sz [i] = 0;
+		pszUrl = CA2CT(&sz[0]);
+		pB += i;
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i));
+		CopyMemory (sz, pB, i);
+		sz [i] = 0;
+		pszOutputPath = CA2CT(&sz[0]);
+		pB += i;
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i));
+		CopyMemory (sz, pB, i);
+		sz [i] = 0;
+		pszFileName = CA2CT(&sz[0]);
+		pB += i;
+
+	} else {
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i) * sizeof(TCHAR));
+		CopyMemory (tsz, pB, i * sizeof(TCHAR));
+		tsz [i] = 0;
+		pszUrl = tsz;
+		pB += i * sizeof(TCHAR);
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i) * sizeof(TCHAR));
+		CopyMemory (tsz, pB, i * sizeof(TCHAR));
+		tsz [i] = 0;
+		pszOutputPath = tsz;
+		pB += i * sizeof(TCHAR);
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i) * sizeof(TCHAR));
+		CopyMemory (tsz, pB, i * sizeof(TCHAR));
+		tsz [i] = 0;
+		pszFileName = tsz;
+		pB += i * sizeof(TCHAR);
+	}
 
 	
-	CHECK_BOUNDS (sizeof (int));
-	CopyMemory (&i, pB, sizeof (int));
-	pB += sizeof (int);
-	CHECK_BOUNDS (int (i));
-	CopyMemory (sz, pB, i);
-	sz [i] = 0;
-	fsString pszOutputPath = sz;
-	pB += i;
-
-	
-	CHECK_BOUNDS (sizeof (int));
-	CopyMemory (&i, pB, sizeof (int));
-	pB += sizeof (int);
-	CHECK_BOUNDS (int (i));
-	CopyMemory (sz, pB, i);
-	sz [i] = 0;
-	fsString pszFileName = sz;
-	pB += i;
 
 	
 	CHECK_BOUNDS (sizeof (int));
@@ -629,36 +683,80 @@ BOOL vmsTpDownloadMgr::LoadState(LPBYTE lpBuffer, LPDWORD pdwSize, WORD wVer)
 	
 	int i;
 	char sz [10000];
+	TCHAR tsz [10000];
 
-	
-	CHECK_BOUNDS (sizeof (int));
-	CopyMemory (&i, pB, sizeof (int));
-	pB += sizeof (int);
-	CHECK_BOUNDS (int (i));
-	CopyMemory (sz, pB, i);
-	sz [i] = 0;
-	fsString pszUrl = sz;
-	pB += i;
+	fsString pszUrl;
+	fsString pszOutputPath;
+	fsString pszFileName;
 
-	
-	CHECK_BOUNDS (sizeof (int));
-	CopyMemory (&i, pB, sizeof (int));
-	pB += sizeof (int);
-	CHECK_BOUNDS (int (i));
-	CopyMemory (sz, pB, i);
-	sz [i] = 0;
-	fsString pszOutputPath = sz;
-	pB += i;
+	if (wVer <= LAST_ANSI_DL_FILE_VERSION) {
 
-	
-	CHECK_BOUNDS (sizeof (int));
-	CopyMemory (&i, pB, sizeof (int));
-	pB += sizeof (int);
-	CHECK_BOUNDS (int (i));
-	CopyMemory (sz, pB, i);
-	sz [i] = 0;
-	fsString pszFileName = sz;
-	pB += i;
+		
+
+		USES_CONVERSION;
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i));
+		CopyMemory (sz, pB, i);
+		sz [i] = 0;
+		pszUrl = CA2CT(&sz[0]);
+		pB += i;
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i));
+		CopyMemory (sz, pB, i);
+		sz [i] = 0;
+		pszOutputPath = CA2CT(&sz[0]);
+		pB += i;
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i));
+		CopyMemory (sz, pB, i);
+		sz [i] = 0;
+		pszFileName = CA2CT(&sz[0]);
+		pB += i;
+
+	} else {
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i) * sizeof(TCHAR));
+		CopyMemory (tsz, pB, i * sizeof(TCHAR));
+		tsz [i] = 0;
+		pszUrl = tsz;
+		pB += i * sizeof(TCHAR);
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i) * sizeof(TCHAR));
+		CopyMemory (tsz, pB, i * sizeof(TCHAR));
+		tsz [i] = 0;
+		pszOutputPath = tsz;
+		pB += i * sizeof(TCHAR);
+
+		
+		CHECK_BOUNDS (sizeof (int));
+		CopyMemory (&i, pB, sizeof (int));
+		pB += sizeof (int);
+		CHECK_BOUNDS (int (i) * sizeof(TCHAR));
+		CopyMemory (tsz, pB, i * sizeof(TCHAR));
+		tsz [i] = 0;
+		pszFileName = tsz;
+		pB += i * sizeof(TCHAR);
+	}
 
 	
 	CHECK_BOUNDS (sizeof (int));
@@ -772,9 +870,9 @@ BOOL vmsTpDownloadMgr::DeleteFile()
 	USES_CONVERSION;
 
 	
-	std::wstring wstrSrcPath = A2W (m_info.strOutputPath);
-	if (wstrSrcPath [wstrSrcPath.length () - 1] != '\\')
-		wstrSrcPath += '\\';
+	std::wstring wstrSrcPath = T2W (m_info.strOutputPath);
+	if (wstrSrcPath [wstrSrcPath.length () - 1] != _T('\\'))
+		wstrSrcPath += _T('\\');
 
 	return ::DeleteFile (get_OutputFilePathName());
 }
@@ -786,28 +884,28 @@ int vmsTpDownloadMgr::GetDownloadingSectionCount()
 	return m_dldr->get_DownloadingSectionCount ();
 }
 
-BOOL vmsTpDownloadMgr::MoveToFolder(LPCSTR pszPath)
+BOOL vmsTpDownloadMgr::MoveToFolder(LPCTSTR pszPath)
 {
 	CString str = pszPath;
 	
 
-	char szNewFile [MY_MAX_PATH];
-	lstrcpy (szNewFile, str);
+	TCHAR tszNewFile [MY_MAX_PATH];
+	lstrcpy (tszNewFile, str);
 
-	if (szNewFile [lstrlen (szNewFile) - 1] != '\\' &&
-			szNewFile [lstrlen (szNewFile) - 1] != '/')
-		lstrcat (szNewFile, "\\");
+	if (tszNewFile [lstrlen (tszNewFile) - 1] != _T('\\') &&
+			tszNewFile [lstrlen (tszNewFile) - 1] != _T('/'))
+		lstrcat (tszNewFile, _T("\\"));
 
-	lstrcat (szNewFile, m_info.strFileName);
+	lstrcat (tszNewFile, m_info.strFileName);
 
-	BOOL bRes = MoveFile (szNewFile);
+	BOOL bRes = MoveFile (tszNewFile);
 
 	m_info.strOutputPath = pszPath;
 	setDirty();
 	return bRes;
 }
 
-BOOL vmsTpDownloadMgr::MoveFile(LPCSTR pszNewFileName)
+BOOL vmsTpDownloadMgr::MoveFile(LPCTSTR pszNewFileName)
 {
 	if (IsRunning ()) 
 	{
@@ -913,15 +1011,15 @@ void vmsTpDownloadMgr::RenameFile(BOOL bFormat1)
 {
 	int i = 1;
 	DWORD dwResult;
-	CHAR szFileWE [MY_MAX_PATH]; 
+	TCHAR tszFileWE [MY_MAX_PATH]; 
 	CString strFile;
 
 	
 
-	strcpy (szFileWE, m_info.strOutputPath + m_info.strFileName);
+	_tcscpy (tszFileWE, m_info.strOutputPath + m_info.strFileName);
 
-	LPSTR pszExt = strrchr (szFileWE, '.');	
-	LPSTR pszDirEnd = strrchr (szFileWE, '\\');	
+	LPTSTR pszExt = _tcsrchr (tszFileWE, _T('.'));	
+	LPTSTR pszDirEnd = _tcsrchr (tszFileWE, _T('\\'));	
 
 	if (pszExt != NULL && pszDirEnd > pszExt)
 		pszExt = NULL;	
@@ -931,13 +1029,13 @@ void vmsTpDownloadMgr::RenameFile(BOOL bFormat1)
 
 	if (m_bRename_CheckIfRenamed)
 	{
-		int l = lstrlen (szFileWE);
-		if (szFileWE [l-1] == ')')
+		int l = lstrlen (tszFileWE);
+		if (tszFileWE [l-1] == _T(')'))
 		{
-			LPSTR psz = szFileWE + l - 2;
-			while (*psz && *psz >= '0' && *psz <= '9')
+			LPTSTR psz = tszFileWE + l - 2;
+			while (*psz && *psz >= _T('0') && *psz <= _T('9'))
 				psz--;
-			if (*psz == '(')
+			if (*psz == _T('('))
 				
 				
 				*psz = 0;
@@ -949,33 +1047,33 @@ void vmsTpDownloadMgr::RenameFile(BOOL bFormat1)
 	do
 	{
 		if (pszExt)
-			strFile.Format ("%s(%d).%s", szFileWE, i++, pszExt+1);
+			strFile.Format (_T("%s(%d).%s"), tszFileWE, i++, pszExt+1);
 		else
-			strFile.Format ("%s(%d)", szFileWE, i++);
+			strFile.Format (_T("%s(%d)"), tszFileWE, i++);
 
 		dwResult = GetFileAttributes (strFile);
 	}
 	while (dwResult != DWORD (-1));
 
-	char* szFileNameNew;
-	fsnew (szFileNameNew, CHAR, strFile.GetLength () + 1);
-	strcpy (szFileNameNew, strFile);
+	TCHAR* tszFileNameNew;
+	fsnew (tszFileNameNew, TCHAR, strFile.GetLength () + 1);
+	_tcscpy (tszFileNameNew, strFile);
 	
-	HANDLE hFile = CreateFile (szFileNameNew, GENERIC_WRITE, 0, NULL, 
+	HANDLE hFile = CreateFile (tszFileNameNew, GENERIC_WRITE, 0, NULL, 
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile != INVALID_HANDLE_VALUE)
 		CloseHandle (hFile);
 
 	
-	CHAR szFileName [MY_MAX_PATH];
-	fsGetFileName (strFile, szFileName);
+	TCHAR tszFileName [MY_MAX_PATH];
+	fsGetFileName (strFile, tszFileName);
 	CString strEv;
 	if (bFormat1)
-		strEv.Format ("%s \"%s\"", LS (L_FILEALREXISTSRENAMING), szFileName);
+		strEv.Format (_T("%s \"%s\""), LS (L_FILEALREXISTSRENAMING), tszFileName);
 	else
-		strEv.Format ("%s %s", LS (L_RENAMINGTO), szFileName);
+		strEv.Format (_T("%s %s"), LS (L_RENAMINGTO), tszFileName);
 
-	m_info.strFileName = szFileName;
+	m_info.strFileName = tszFileName;
 	
 	setDirty();
 
@@ -1002,7 +1100,8 @@ BOOL vmsTpDownloadMgr::CheckDstFileExists()
 			SetToRestartState ();
 
 		RaiseEvent (LS (L_OPENINGFILE));
-		m_dldr->InitTpStream(m_info.strTorrentUrl, m_info.strOutputPath + m_info.strFileName, GetStreamingSpeed ());
+		USES_CONVERSION;
+		m_dldr->InitTpStream(CT2CA(m_info.strTorrentUrl), CT2CA(m_info.strOutputPath + m_info.strFileName), GetStreamingSpeed ());
 		RaiseEvent (LS (L_SUCCESS), EDT_RESPONSE_S);
 	}
 

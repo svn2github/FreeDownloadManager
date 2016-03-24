@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -181,7 +181,7 @@ void fsAppSettings::RestartSpeedLow(BOOL b)
 
 CString fsAppSettings::Agent()
 {
-	CString str = m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("Agent"), "");
+	CString str = m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("Agent"), _T(""));
 	if (str == "")
 		str = vmsFdmAppMgr::getAppAgentName ();
 	if (str == "FDM 1.x") 
@@ -189,10 +189,10 @@ CString fsAppSettings::Agent()
 	return str;
 }
 
-void fsAppSettings::Agent(LPCSTR psz)
+void fsAppSettings::Agent(LPCTSTR psz)
 {
 	if (lstrcmpi (psz, vmsFdmAppMgr::getAppAgentName ()) == 0)
-		psz = "";
+		psz = _T("");
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("Agent"), psz);
 }
 
@@ -218,120 +218,120 @@ void fsAppSettings::Timeout(UINT u)
 
 CString fsAppSettings::HttpProxy_Name()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpProxy_Name"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpProxy_Name"), _T(""));
 }
 
-void fsAppSettings::HttpProxy_Name(LPCSTR psz)
+void fsAppSettings::HttpProxy_Name(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("HttpProxy_Name"), psz);
 }
 
 CString fsAppSettings::HttpProxy_UserName()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpProxy_UserName"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpProxy_UserName"), _T(""));
 }
 
-void fsAppSettings::HttpProxy_UserName(LPCSTR psz)
+void fsAppSettings::HttpProxy_UserName(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("HttpProxy_UserName"), psz);
 }
 
 CString fsAppSettings::HttpProxy_Password()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpProxy_Password"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpProxy_Password"), _T(""));
 }
 
-void fsAppSettings::HttpProxy_Password(LPCSTR psz)
+void fsAppSettings::HttpProxy_Password(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("HttpProxy_Password"), psz);
 }
 
 CString fsAppSettings::HttpsProxy_Name()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpsProxy_Name"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpsProxy_Name"), _T(""));
 }
 
-void fsAppSettings::HttpsProxy_Name(LPCSTR psz)
+void fsAppSettings::HttpsProxy_Name(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("HttpsProxy_Name"), psz);
 }
 
 CString fsAppSettings::HttpsProxy_UserName()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpsProxy_UserName"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpsProxy_UserName"), _T(""));
 }
 
-void fsAppSettings::HttpsProxy_UserName(LPCSTR psz)
+void fsAppSettings::HttpsProxy_UserName(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("HttpsProxy_UserName"), psz);
 }
 
 CString fsAppSettings::HttpsProxy_Password()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpsProxy_Password"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("HttpsProxy_Password"), _T(""));
 }
 
-void fsAppSettings::HttpsProxy_Password(LPCSTR psz)
+void fsAppSettings::HttpsProxy_Password(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("HttpsProxy_Password"), psz);
 }
 
 CString fsAppSettings::FtpProxy_Name()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("FtpProxy_Name"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("FtpProxy_Name"), _T(""));
 }
 
-void fsAppSettings::FtpProxy_Name(LPCSTR psz)
+void fsAppSettings::FtpProxy_Name(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("FtpProxy_Name"), psz);
 }
 
 CString fsAppSettings::FtpProxy_UserName()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("FtpProxy_UserName"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("FtpProxy_UserName"), _T(""));
 }
 
-void fsAppSettings::FtpProxy_UserName(LPCSTR psz)
+void fsAppSettings::FtpProxy_UserName(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("FtpProxy_UserName"), psz);
 }
 
 CString fsAppSettings::FtpProxy_Password()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("FtpProxy_Password"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("FtpProxy_Password"), _T(""));
 }
 
-void fsAppSettings::FtpProxy_Password(LPCSTR psz)
+void fsAppSettings::FtpProxy_Password(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("FtpProxy_Password"), psz);
 }
 
 CString fsAppSettings::SocksProxy_Name()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("SocksProxy_Name"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("SocksProxy_Name"), _T(""));
 }
 
-void fsAppSettings::SocksProxy_Name(LPCSTR psz)
+void fsAppSettings::SocksProxy_Name(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("SocksProxy_Name"), psz);
 }
 
 CString fsAppSettings::SocksProxy_UserName()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("SocksProxy_UserName"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("SocksProxy_UserName"), _T(""));
 }
 
-void fsAppSettings::SocksProxy_UserName(LPCSTR psz)
+void fsAppSettings::SocksProxy_UserName(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("SocksProxy_UserName"), psz);
 }
 
 CString fsAppSettings::SocksProxy_Password()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("SocksProxy_Password"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("SocksProxy_Password"), _T(""));
 }
 
-void fsAppSettings::SocksProxy_Password(LPCSTR psz)
+void fsAppSettings::SocksProxy_Password(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("SocksProxy_Password"), psz);
 }
@@ -398,10 +398,10 @@ void fsAppSettings::SizeChangeReaction(fsSizeChangeReaction val)
 
 CString fsAppSettings::AdditionalExtension()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("AddExt"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"), _T ("AddExt"), _T(""));
 }
 
-void fsAppSettings::AdditionalExtension(LPCSTR pszExt)
+void fsAppSettings::AdditionalExtension(LPCTSTR pszExt)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Network"), _T ("AddExt"), pszExt);
 }
@@ -523,10 +523,10 @@ void fsAppSettings::HFE_FtpPassiveMode(BOOL b)
 CString fsAppSettings::Monitor_SkipExts()
 {
 	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("SkipExtensions"), 
-		"pls m3u");
+		_T("pls m3u"));
 }
 
-void fsAppSettings::Monitor_SkipExts(LPCSTR psz)
+void fsAppSettings::Monitor_SkipExts(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Monitor"), _T ("SkipExtensions"), psz);
 }
@@ -604,10 +604,10 @@ void fsAppSettings::Prg_MinToTray(BOOL b)
 CString fsAppSettings::Update_URL()
 {
 	
-	return _T ("http://www.freedownloadmanager.org/update/");
+	return _T ("http://up.freedownloadmanager.org/update/");
 }
 
-void fsAppSettings::Update_URL(LPCSTR psz)
+void fsAppSettings::Update_URL(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Update"), _T ("URL"), psz);
 }
@@ -635,6 +635,16 @@ BOOL fsAppSettings::Update_LastCheck(SYSTEMTIME *time)
 void fsAppSettings::Update_LastCheck(SYSTEMTIME time)
 {
 	m_stgs.WriteProfileBinary (_T ("Settings\\Update"), _T ("LastCheck"), (LPBYTE) &time, sizeof (time));
+}
+
+BOOL fsAppSettings::Update_CheckedOnce ()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\Update"), _T ("CheckedOnce"), FALSE);
+}
+
+void fsAppSettings::Update_CheckedOnce (BOOL value)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\Update"), _T ("CheckedOnce"), value);
 }
 
 BOOL fsAppSettings::Update_LastCheck2(SYSTEMTIME *time)
@@ -732,7 +742,7 @@ void fsAppSettings::View_Statusbar(BOOL b)
 	m_stgs.WriteProfileInt (_T ("Settings\\View"), _T ("StatusBar"), b);
 }
 
-void fsAppSettings::View_SaveWndSize(CWnd *pWnd, LPCSTR pszName)
+void fsAppSettings::View_SaveWndSize(CWnd *pWnd, LPCTSTR pszName)
 {
 	CRect rc;
 	pWnd->GetWindowRect (&rc);
@@ -742,7 +752,7 @@ void fsAppSettings::View_SaveWndSize(CWnd *pWnd, LPCSTR pszName)
 	m_stgs.WriteProfileInt (_T ("Settings\\View\\Windows"), stry, rc.bottom-rc.top);
 }
 
-void fsAppSettings::View_ReadWndSize(CWnd *pWnd, LPCSTR pszName)
+void fsAppSettings::View_ReadWndSize(CWnd *pWnd, LPCTSTR pszName)
 {
 	
 
@@ -761,7 +771,7 @@ void fsAppSettings::View_ReadWndSize(CWnd *pWnd, LPCSTR pszName)
 		pWnd->MoveWindow (0, 0, cx, cy);
 }
 
-void fsAppSettings::View_SaveWndPlacement(CWnd *pWnd, LPCSTR pszName)
+void fsAppSettings::View_SaveWndPlacement(CWnd *pWnd, LPCTSTR pszName)
 {
 	WINDOWPLACEMENT wp;
 	wp.length = sizeof (wp);
@@ -772,7 +782,7 @@ void fsAppSettings::View_SaveWndPlacement(CWnd *pWnd, LPCSTR pszName)
 	m_stgs.WriteProfileBinary (_T ("Settings\\View\\Windows"), pszName, (LPBYTE)&wp, sizeof (wp));
 }
 
-void fsAppSettings::View_ReadWndPlacement(CWnd *pWnd, LPCSTR pszName, ReadWndPlacementAdjustment enRWPA)
+void fsAppSettings::View_ReadWndPlacement(CWnd *pWnd, LPCTSTR pszName, ReadWndPlacementAdjustment enRWPA)
 {
 	WINDOWPLACEMENT *wp;
 	LPBYTE lp;
@@ -850,12 +860,12 @@ void fsAppSettings::View_ReadWndPlacement(CWnd *pWnd, LPCSTR pszName, ReadWndPla
 	}
 }
 
-void fsAppSettings::View_SplitterRatio(LPCSTR pszName, float fRatio)
+void fsAppSettings::View_SplitterRatio(LPCTSTR pszName, float fRatio)
 {
 	m_stgs.WriteProfileBinary (_T ("Settings\\View\\Splitters"), pszName, (LPBYTE)&fRatio, sizeof (fRatio));
 }
 
-float fsAppSettings::View_SplitterRatio(LPCSTR pszName)
+float fsAppSettings::View_SplitterRatio(LPCTSTR pszName)
 {
 	LPBYTE pf;
 	UINT nSize;
@@ -877,7 +887,7 @@ float fsAppSettings::View_SplitterRatio(LPCSTR pszName)
 	return f;
 }
 
-void fsAppSettings::View_Language(LPCSTR pszLang)
+void fsAppSettings::View_Language(LPCTSTR pszLang)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\View"), _T ("Language"), pszLang);	
 }
@@ -898,10 +908,10 @@ CString fsAppSettings::View_Language()
 
 CString fsAppSettings::Dial_LastEntry()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Dial"), _T ("LastEntry"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Dial"), _T ("LastEntry"), _T(""));
 }
 
-void fsAppSettings::Dial_LastEntry(LPCSTR psz)
+void fsAppSettings::Dial_LastEntry(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Dial"), _T ("LastEntry"), psz);
 }
@@ -928,10 +938,10 @@ void fsAppSettings::View_SpiderTree(BOOL b)
 
 CString fsAppSettings::Spider_HTMLExts()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Spider"), _T ("HTMLExts"), "html htm shtm shtml phml dhtml php hta htc cgi asp");
+	return m_stgs.GetProfileString (_T ("Settings\\Spider"), _T ("HTMLExts"), _T("html htm shtm shtml phml dhtml php hta htc cgi asp"));
 }
 
-void fsAppSettings::Spider_HTMLExts(LPCSTR psz)
+void fsAppSettings::Spider_HTMLExts(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Spider"), _T ("HTMLExts"), psz);
 }
@@ -998,10 +1008,10 @@ void fsAppSettings::Spider_Depth(int i)
 
 CString fsAppSettings::Spider_Exts()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Spider"), _T ("Exts"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Spider"), _T ("Exts"), _T(""));
 }
 
-void fsAppSettings::Spider_Exts(LPCSTR psz)
+void fsAppSettings::Spider_Exts(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Spider"), _T ("Exts"), psz);
 }
@@ -1028,10 +1038,10 @@ void fsAppSettings::Spider_DownloadStyles(BOOL b)
 
 CString fsAppSettings::Spider_ImgExts()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Spider"), _T ("ImgExts"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Spider"), _T ("ImgExts"), _T(""));
 }
 
-void fsAppSettings::Spider_ImgExts(LPCSTR psz)
+void fsAppSettings::Spider_ImgExts(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Spider"), _T ("ImgExts"), psz);
 }
@@ -1118,30 +1128,30 @@ void fsAppSettings::DetLog(BOOL b)
 
 CString fsAppSettings::Monitor_OperaPDInstalledTo()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("OPDI"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("OPDI"), _T(""));
 }
 
-void fsAppSettings::Monitor_OperaPDInstalledTo(LPCSTR psz)
+void fsAppSettings::Monitor_OperaPDInstalledTo(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Monitor"), _T ("OPDI"), psz);
 }
 
 CString fsAppSettings::Monitor_NetscapePDInstalledTo()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("NPDI"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("NPDI"), _T(""));
 }
 
-void fsAppSettings::Monitor_NetscapePDInstalledTo(LPCSTR psz)
+void fsAppSettings::Monitor_NetscapePDInstalledTo(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Monitor"), _T ("NPDI"), psz);
 }
 
 CString fsAppSettings::Monitor_FirefoxPDInstalledTo()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("FPDI"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("FPDI"), _T(""));
 }
 
-void fsAppSettings::Monitor_FirefoxPDInstalledTo(LPCSTR psz)
+void fsAppSettings::Monitor_FirefoxPDInstalledTo(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Monitor"), _T ("FPDI"), psz);
 }
@@ -1158,12 +1168,12 @@ void fsAppSettings::Monitor_AllowDownload(BOOL b)
 
 CString fsAppSettings::Download_CreateExt()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Network"),"CreateExt", "");
+	return m_stgs.GetProfileString (_T ("Settings\\Network"),_T("CreateExt"), _T(""));
 }
 
-void fsAppSettings::Download_CreateExt(LPCSTR psz)
+void fsAppSettings::Download_CreateExt(LPCTSTR psz)
 {
-	m_stgs.WriteProfileString (_T ("Settings\\Network"),"CreateExt", psz);
+	m_stgs.WriteProfileString (_T ("Settings\\Network"),_T("CreateExt"), psz);
 }
 
 BOOL fsAppSettings::View_SizesInBytes()
@@ -1188,20 +1198,20 @@ void fsAppSettings::Avir_Perform(BOOL b)
 
 CString fsAppSettings::Avir_Name()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Avir"), _T ("Name"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Avir"), _T ("Name"), _T(""));
 }
 
-void fsAppSettings::Avir_Name(LPCSTR psz)
+void fsAppSettings::Avir_Name(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Avir"), _T ("Name"), psz);
 }
 
 CString fsAppSettings::Avir_Args()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Avir"), _T ("Args"), "%file%");
+	return m_stgs.GetProfileString (_T ("Settings\\Avir"), _T ("Args"), _T("%file%"));
 }
 
-void fsAppSettings::Avir_Args(LPCSTR psz)
+void fsAppSettings::Avir_Args(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Avir"), _T ("Args"), psz);
 }
@@ -1209,10 +1219,10 @@ void fsAppSettings::Avir_Args(LPCSTR psz)
 CString fsAppSettings::Avir_Exts()
 {
 	return m_stgs.GetProfileString (_T ("Settings\\Avir"), _T ("Exts"), 
-		"exe com msi zip rar arj tar t?z bin cab doc");
+		_T("exe com msi zip rar arj tar t?z bin cab doc"));
 }
 
-void fsAppSettings::Avir_Exts(LPCSTR psz)
+void fsAppSettings::Avir_Exts(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Avir"), _T ("Exts"), psz);
 }
@@ -1350,14 +1360,14 @@ UINT fsAppSettings::NewDL_GroupId()
 		-1);
 }
 
-void fsAppSettings::NewDL_Group_old(LPCSTR psz)
+void fsAppSettings::NewDL_Group_old(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\New Download"), _T ("Group"), psz);
 }
 
 CString fsAppSettings::NewDL_Group_old()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\New Download"), _T ("Group"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\New Download"), _T ("Group"), _T(""));
 }
 
 BOOL fsAppSettings::Monitor_Silent()
@@ -1416,60 +1426,60 @@ BOOL fsAppSettings::Monitor_IEMenu_DLSelected()
 
 CString fsAppSettings::Snd_DownloadComplete()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("DownloadComplete"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("DownloadComplete"), _T(""));
 }
 
-void fsAppSettings::Snd_DownloadComplete(LPCSTR psz)
+void fsAppSettings::Snd_DownloadComplete(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Sounds"), _T ("DownloadComplete"), psz);
 }
 
 CString fsAppSettings::Snd_DownloadAdded()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("DownloadAdded"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("DownloadAdded"), _T(""));
 }
 
-void fsAppSettings::Snd_DownloadAdded(LPCSTR psz)
+void fsAppSettings::Snd_DownloadAdded(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Sounds"), _T ("DownloadAdded"), psz);
 }
 
 CString fsAppSettings::Snd_NoActiveDownloads()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("NoActiveDownloads"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("NoActiveDownloads"), _T(""));
 }
 
-void fsAppSettings::Snd_NoActiveDownloads(LPCSTR psz)
+void fsAppSettings::Snd_NoActiveDownloads(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Sounds"), _T ("NoActiveDownloads"), psz);
 }
 
 CString fsAppSettings::Snd_DialingOK()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("DialingOK"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("DialingOK"), _T(""));
 }
 
-void fsAppSettings::Snd_DialingOK(LPCSTR psz)
+void fsAppSettings::Snd_DialingOK(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Sounds"), _T ("DialingOK"), psz);
 }
 
 CString fsAppSettings::Snd_DialingFailed()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("DialingFailed"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("DialingFailed"), _T(""));
 }
 
-void fsAppSettings::Snd_DialingFailed(LPCSTR psz)
+void fsAppSettings::Snd_DialingFailed(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Sounds"), _T ("DialingFailed"), psz);
 }
 
 CString fsAppSettings::Snd_DownloadFailed()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("DownloadFailed"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Sounds"), _T ("DownloadFailed"), _T(""));
 }
 
-void fsAppSettings::Snd_DownloadFailed(LPCSTR psz)
+void fsAppSettings::Snd_DownloadFailed(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Sounds"), _T ("DownloadFailed"), psz);
 }
@@ -1634,14 +1644,14 @@ void fsAppSettings::History_Downloads_CompletedOnly(BOOL b)
 	m_stgs.WriteProfileInt (_T ("Settings\\History\\Downloads"), _T ("CompOnly"), b);
 }
 
-void fsAppSettings::Find_What(LPCSTR psz)
+void fsAppSettings::Find_What(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Find"), _T ("What"), psz);
 }
 
 CString fsAppSettings::Find_What()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Find"), _T ("What"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Find"), _T ("What"), _T(""));
 }
 
 DWORD fsAppSettings::Find_Flags()
@@ -1878,7 +1888,7 @@ void fsAppSettings::CheckHistorySize(BOOL b)
 
 CString fsAppSettings::Skin_Current()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Skins"), _T ("Current"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Skins"), _T ("Current"), _T(""));
 }
 
 void fsAppSettings::Skin_Current(CString str)
@@ -1889,12 +1899,12 @@ void fsAppSettings::Skin_Current(CString str)
 DWORD fsAppSettings::Skin_Flags()
 {
 	
-	return m_stgs.GetProfileInt ("Settings\\Skins", "Flags", 3);
+	return m_stgs.GetProfileInt (_T("Settings\\Skins"), _T("Flags"), 3);
 }
 
 void fsAppSettings::Skin_Flags(DWORD dw)
 {
-	m_stgs.WriteProfileInt ("Settings\\Skins", "Flags", dw);
+	m_stgs.WriteProfileInt (_T("Settings\\Skins"), _T("Flags"), dw);
 }
 
 BOOL fsAppSettings::SM_KeepPasswords()
@@ -1957,16 +1967,16 @@ void fsAppSettings::NewDL_GenerateNameAutomatically(BOOL b)
 	m_stgs.WriteProfileInt (_T ("Settings\\New Download"), _T ("GenerateNameAutomatically"), b);
 }
 
-void fsAppSettings::SaveStringList(LPCSTR pszSubKey, LPCSTR pszValue, CStringList &v)
+void fsAppSettings::SaveStringList(LPCTSTR pszSubKey, LPCTSTR pszValue, CStringList &v)
 {
 	int lt = 0;
 	int i = 0;
 	for (i = 0; i < v.GetCount (); i++)
-		lt += v.GetAt (v.FindIndex (i)).GetLength ();
-	lt += v.GetCount ()+1;
+		lt += (v.GetAt (v.FindIndex (i)).GetLength ()) * sizeof(TCHAR);
+	lt += (v.GetCount ()+1) * sizeof(TCHAR);
 
 	LPBYTE pb = new BYTE [lt];
-	LPSTR pbp = (LPSTR)pb;
+	LPTSTR pbp = (LPTSTR)pb;
 
 	for (i = 0; i < v.GetCount (); i++)
 	{
@@ -1979,7 +1989,7 @@ void fsAppSettings::SaveStringList(LPCSTR pszSubKey, LPCSTR pszValue, CStringLis
 	m_stgs.WriteProfileBinary (pszSubKey, pszValue, pb, lt);
 }
 
-BOOL fsAppSettings::LoadStringList(LPCSTR pszSubKey, LPCSTR pszValue, CStringList *v)
+BOOL fsAppSettings::LoadStringList(LPCTSTR pszSubKey, LPCTSTR pszValue, CStringList *v)
 {
 	LPBYTE pb = NULL;
 	UINT lt = 0;
@@ -1991,7 +2001,7 @@ BOOL fsAppSettings::LoadStringList(LPCSTR pszSubKey, LPCSTR pszValue, CStringLis
 	if (pb == NULL || lt == 0)
 		return FALSE;
 
-	LPCSTR pbp = (LPCSTR)pb;
+	LPCTSTR pbp = (LPCTSTR)pb;
 
 	while ((int)lt > 1)
 	{
@@ -2007,12 +2017,12 @@ BOOL fsAppSettings::LoadStringList(LPCSTR pszSubKey, LPCSTR pszValue, CStringLis
 
 BOOL fsAppSettings::FilesToDelete(CStringList &v)
 {
-	return LoadStringList ("FilesToDelete", "", &v);
+	return LoadStringList (_T("FilesToDelete"), _T(""), &v);
 }
 
 void fsAppSettings::FilesToDelete_save(CStringList &v)
 {
-	SaveStringList ("FilesToDelete", "", v);
+	SaveStringList (_T("FilesToDelete"), _T(""), v);
 }
 
 vmsSpreadHelpRemind fsAppSettings::View_SpreadHelpDialog()
@@ -2051,30 +2061,30 @@ void fsAppSettings::View_SpreadHelpDialog_LastTimeShown_save(FILETIME &time)
 
 BOOL fsAppSettings::View_GCVButton()
 {
-	return m_stgs.GetProfileInt ("Settings\\View", "GCVButton", TRUE);
+	return m_stgs.GetProfileInt (_T("Settings\\View"), _T("GCVButton"), TRUE);
 }
 
 void fsAppSettings::View_GCVButton(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\View", "GCVButton", b);
+	m_stgs.WriteProfileInt (_T("Settings\\View"), _T("GCVButton"), b);
 }
 
 BOOL fsAppSettings::View_TUMChanged()
 {
-	return m_stgs.GetProfileInt ("Settings\\View", "TUMChanged", TRUE);
+	return m_stgs.GetProfileInt (_T("Settings\\View"), _T("TUMChanged"), TRUE);
 }
 
 void fsAppSettings::View_TUMChanged(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\View", "TUMChanged", b);
+	m_stgs.WriteProfileInt (_T("Settings\\View"), _T("TUMChanged"), b);
 }
 
 CString fsAppSettings::DldListDlg_Filter_LastExts()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Last\\DldListDlg"), _T ("Exts"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Last\\DldListDlg"), _T ("Exts"), _T(""));
 }
 
-void fsAppSettings::DldListDlg_Filter_LastExts(LPCSTR psz)
+void fsAppSettings::DldListDlg_Filter_LastExts(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Last\\DldListDlg"), _T ("Exts"), psz);
 }
@@ -2208,50 +2218,50 @@ void fsAppSettings::OnDlHasBeenCreatedByUser()
 
 UINT fsAppSettings::ConfTimeout_Hangup()
 {
-	return m_stgs.GetProfileInt ("Settings\\Scheduler\\ConfTimeouts", "Hangup", 30);
+	return m_stgs.GetProfileInt (_T("Settings\\Scheduler\\ConfTimeouts"), _T("Hangup"), 30);
 }
 
 void fsAppSettings::ConfTimeout_Hangup(UINT u)
 {
-	m_stgs.WriteProfileInt ("Settings\\Scheduler\\ConfTimeouts", "Hangup", u);
+	m_stgs.WriteProfileInt (_T("Settings\\Scheduler\\ConfTimeouts"), _T("Hangup"), u);
 }
 
 UINT fsAppSettings::ConfTimeout_Exit()
 {
-	return m_stgs.GetProfileInt ("Settings\\Scheduler\\ConfTimeouts", "Exit", 30);
+	return m_stgs.GetProfileInt (_T("Settings\\Scheduler\\ConfTimeouts"), _T("Exit"), 30);
 }
 
 void fsAppSettings::ConfTimeout_Exit(UINT u)
 {
-	m_stgs.WriteProfileInt ("Settings\\Scheduler\\ConfTimeouts", "Exit", u);
+	m_stgs.WriteProfileInt (_T("Settings\\Scheduler\\ConfTimeouts"), _T("Exit"), u);
 }
 
 UINT fsAppSettings::ConfTimeout_Shutdown()
 {
-	return m_stgs.GetProfileInt ("Settings\\Scheduler\\ConfTimeouts", "Shutdown", 30);
+	return m_stgs.GetProfileInt (_T("Settings\\Scheduler\\ConfTimeouts"), _T("Shutdown"), 30);
 }
 
 void fsAppSettings::ConfTimeout_Shutdown(UINT u)
 {
-	m_stgs.WriteProfileInt ("Settings\\Scheduler\\ConfTimeouts", "Shutdown", u);
+	m_stgs.WriteProfileInt (_T("Settings\\Scheduler\\ConfTimeouts"), _T("Shutdown"), u);
 }
 
 UINT fsAppSettings::ConfTimeout_LaunchDld()
 {
-	return m_stgs.GetProfileInt ("Settings\\Scheduler\\ConfTimeouts", "LaunchDld", 30);
+	return m_stgs.GetProfileInt (_T("Settings\\Scheduler\\ConfTimeouts"), _T("LaunchDld"), 30);
 }
 
 void fsAppSettings::ConfTimeout_LaunchDld(UINT u)
 {
-	m_stgs.WriteProfileInt ("Settings\\Scheduler\\ConfTimeouts", "LaunchDld", u);
+	m_stgs.WriteProfileInt (_T("Settings\\Scheduler\\ConfTimeouts"), _T("LaunchDld"), u);
 }
 
 CString fsAppSettings::CreateBD_LastNumbers()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Last\\CBD"), _T ("Numbers"), "1-100");
+	return m_stgs.GetProfileString (_T ("Settings\\Last\\CBD"), _T ("Numbers"), _T("1-100"));
 }
 
-void fsAppSettings::CreateBD_LastNumbers(LPCSTR psz)
+void fsAppSettings::CreateBD_LastNumbers(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Last\\CBD"), _T ("Numbers"), psz);
 }
@@ -2306,12 +2316,12 @@ void fsAppSettings::TotalTraffic_PrevMonth(UINT64 u)
 
 int fsAppSettings::TotalTraffic_CurrMonth()
 {
-	return m_stgs.GetProfileInt ("Stat", "TotalTraffic_CurrMonth", -1);
+	return m_stgs.GetProfileInt (_T("Stat"), _T("TotalTraffic_CurrMonth"), -1);
 }
 
 void fsAppSettings::TotalTraffic_CurrMonth(int i)
 {
-	m_stgs.WriteProfileInt ("Stat", "TotalTraffic_CurrMonth", i);
+	m_stgs.WriteProfileInt (_T("Stat"), _T("TotalTraffic_CurrMonth"), i);
 }
 
 BOOL fsAppSettings::WD_DisableAfterExec()
@@ -2326,27 +2336,27 @@ void fsAppSettings::WD_DisableAfterExec(BOOL b)
 
 BOOL fsAppSettings::IsArchivePackInstalled()
 {
-	return m_stgs.GetProfileInt ("", "apinstalled", FALSE);
+	return m_stgs.GetProfileInt (_T(""), _T("apinstalled"), FALSE);
 }
 
 BOOL fsAppSettings::DontShowInstallAP()
 {
-	return m_stgs.GetProfileInt ("Settings\\View", "DontShowInstallAP", FALSE);
+	return m_stgs.GetProfileInt (_T("Settings\\View"), _T("DontShowInstallAP"), FALSE);
 }
 
 void fsAppSettings::DontShowInstallAP(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\View", "DontShowInstallAP", b);
+	m_stgs.WriteProfileInt (_T("Settings\\View"), _T("DontShowInstallAP"), b);
 }
 
 CString fsAppSettings::Hash_LastAlgorithm()
 {
-	return m_stgs.GetProfileString ("Settings\\Hash", "LastAlgorithm", "MD5");
+	return m_stgs.GetProfileString (_T("Settings\\Hash"), _T("LastAlgorithm"), _T("MD5"));
 }
 
-void fsAppSettings::Hash_LastAlgorithm(LPCSTR psz)
+void fsAppSettings::Hash_LastAlgorithm(LPCTSTR psz)
 {
-	m_stgs.WriteProfileString ("Settings\\Hash", "LastAlgorithm", psz);
+	m_stgs.WriteProfileString (_T("Settings\\Hash"), _T("LastAlgorithm"), psz);
 }
 
 BOOL fsAppSettings::View_DontShowHashCheckResultIfOK()
@@ -2361,72 +2371,72 @@ void fsAppSettings::View_DontShowHashCheckResultIfOK(BOOL b)
 
 CString fsAppSettings::CreateBD_SaveAs_Template()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Last\\CBD"), _T ("SaveAsTemplate"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Last\\CBD"), _T ("SaveAsTemplate"), _T(""));
 }
 
-void fsAppSettings::CreateBD_SaveAs_Template(LPCSTR psz)
+void fsAppSettings::CreateBD_SaveAs_Template(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Last\\CBD"), _T ("SaveAsTemplate"), psz);
 }
 
 BOOL fsAppSettings::App_2_0_SchedulerFixPerformed()
 {
-	return m_stgs.GetProfileInt ("", "sfp_2.0", FALSE);
+	return m_stgs.GetProfileInt (_T(""), _T("sfp_2.0"), FALSE);
 }
 
 void fsAppSettings::App_2_0_SchedulerFixPerformed(BOOL b)
 {
-	m_stgs.WriteProfileInt ("", "sfp_2.0", b);
+	m_stgs.WriteProfileInt (_T(""), _T("sfp_2.0"), b);
 }
 
 CString fsAppSettings::Monitor_MozillaSuitePDInstalledTo()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("MozSPDI"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("MozSPDI"), _T(""));
 }
 
-void fsAppSettings::Monitor_MozillaSuitePDInstalledTo(LPCSTR psz)
+void fsAppSettings::Monitor_MozillaSuitePDInstalledTo(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Monitor"), _T ("MozSPDI"), psz);
 }
 
 CString fsAppSettings::View_SpreadHelpDialog_LinkToUsText()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\View"), _T ("SpreadHelpDialog_ltut"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\View"), _T ("SpreadHelpDialog_ltut"), _T(""));
 }
 
-void fsAppSettings::View_SpreadHelpDialog_LinkToUsText(LPCSTR psz)
+void fsAppSettings::View_SpreadHelpDialog_LinkToUsText(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\View"), _T ("SpreadHelpDialog_ltut"), psz);
 }
 
 CString fsAppSettings::View_SpreadHelpDialog_RadioButton1Text()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\View"), _T ("SpreadHelpDialog_rb1t"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\View"), _T ("SpreadHelpDialog_rb1t"), _T(""));
 }
 
-void fsAppSettings::View_SpreadHelpDialog_RadioButton1Text(LPCSTR psz)
+void fsAppSettings::View_SpreadHelpDialog_RadioButton1Text(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\View"), _T ("SpreadHelpDialog_rb1t"), psz);
 }
 
 CString fsAppSettings::View_SpreadHelpDialog_RadioButton2Text()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\View"), _T ("SpreadHelpDialog_rb2t"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\View"), _T ("SpreadHelpDialog_rb2t"), _T(""));
 }
 
-void fsAppSettings::View_SpreadHelpDialog_RadioButton2Text(LPCSTR psz)
+void fsAppSettings::View_SpreadHelpDialog_RadioButton2Text(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\View"), _T ("SpreadHelpDialog_rb2t"), psz);
 }
 
 BOOL fsAppSettings::Community_SwitchToOpinions()
 {
-	return m_stgs.GetProfileInt ("Settings\\Community", "SwitchToOpinions", TRUE);
+	return m_stgs.GetProfileInt (_T("Settings\\Community"), _T("SwitchToOpinions"), TRUE);
 }
 
 void fsAppSettings::Community_SwitchToOpinions(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\Community", "SwitchToOpinions", b);
+	m_stgs.WriteProfileInt (_T("Settings\\Community"), _T("SwitchToOpinions"), b);
 }
 
 BOOL fsAppSettings::ModifyIEUserAgent()
@@ -2451,22 +2461,22 @@ void fsAppSettings::View_DontShowMalOpinionOKReport(BOOL b)
 
 BOOL fsAppSettings::Community_CheckIfMalBeforeDlding()
 {
-	return m_stgs.GetProfileInt ("Settings\\Community", "CheckIfMalBeforeDlding", TRUE);
+	return m_stgs.GetProfileInt (_T("Settings\\Community"), _T("CheckIfMalBeforeDlding"), TRUE);
 }
 
 void fsAppSettings::Community_CheckIfMalBeforeDlding(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\Community", "CheckIfMalBeforeDlding", b);
+	m_stgs.WriteProfileInt (_T("Settings\\Community"), _T("CheckIfMalBeforeDlding"), b);
 }
 
 BOOL fsAppSettings::Community_DisplayOpinionsAtDlding()
 {
-	return m_stgs.GetProfileInt ("Settings\\Community", "DisplayOpinionsAtDlding", TRUE);
+	return m_stgs.GetProfileInt (_T("Settings\\Community"), _T("DisplayOpinionsAtDlding"), TRUE);
 }
 
 void fsAppSettings::Community_DisplayOpinionsAtDlding(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\Community", "DisplayOpinionsAtDlding", b);
+	m_stgs.WriteProfileInt (_T("Settings\\Community"), _T("DisplayOpinionsAtDlding"), b);
 }
 
 DWORD fsAppSettings::FileWriteCacheSize()
@@ -2502,12 +2512,52 @@ BOOL fsAppSettings::Monitor_Chrome()
 	return m_stgs.GetProfileInt (_T ("Settings\\Monitor"), _T ("Chrome"), FALSE);
 }
 
-CString fsAppSettings::View_LastDldMoveToFolder()
+BOOL fsAppSettings::Monitor_Chrome_Cancel()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\View"), _T ("LastDldMoveToFolder"), "");
+	return m_stgs.GetProfileInt(_T("Settings\\Monitor"), _T("ChromeIntegrationCancel"), TRUE);
 }
 
-void fsAppSettings::View_LastDldMoveToFolder(LPCSTR psz)
+void fsAppSettings::Monitor_Chrome_Cancel(BOOL b)
+{
+	m_stgs.WriteProfileInt(_T("Settings\\Monitor"), _T("ChromeIntegrationCancel"), b);
+}
+
+void fsAppSettings::MonitorChrome_Cancel_HKLM(BOOL b)
+{
+	if (IsUserAnAdmin())
+	{
+		CRegKey rAppKey;
+		BOOL bOK = ERROR_SUCCESS == rAppKey.Open(HKEY_LOCAL_MACHINE, _T("Software\\FreeDownloadManager.ORG\\Free Download Manager\\Settings\\Monitor"), KEY_WRITE);
+
+		if (!bOK)
+			bOK = ERROR_SUCCESS == rAppKey.Create(HKEY_LOCAL_MACHINE, _T("Software\\FreeDownloadManager.ORG\\Free Download Manager\\Settings\\Monitor"));
+
+		DWORD chromeIntegrationCancel = b;
+		if (bOK)
+		{
+			rAppKey.SetDWORDValue(_T("ChromeIntegrationCancel"), chromeIntegrationCancel);
+		}
+	}
+}
+BOOL fsAppSettings::MonitorChrome_Cancel_HKLM()
+{
+	CRegKey rAppKey;
+	BOOL bOK = ERROR_SUCCESS == rAppKey.Open(HKEY_LOCAL_MACHINE, _T("Software\\FreeDownloadManager.ORG\\Free Download Manager\\Settings\\Monitor"), KEY_READ);
+
+	DWORD chromeIntegrationCancel = 1;
+	if (bOK)
+	{
+		rAppKey.QueryDWORDValue(_T("ChromeIntegrationCancel"), chromeIntegrationCancel);
+	}
+	return chromeIntegrationCancel;
+}
+
+CString fsAppSettings::View_LastDldMoveToFolder()
+{
+	return m_stgs.GetProfileString (_T ("Settings\\View"), _T ("LastDldMoveToFolder"), _T(""));
+}
+
+void fsAppSettings::View_LastDldMoveToFolder(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\View"), _T ("LastDldMoveToFolder"), psz);
 }
@@ -2525,32 +2575,32 @@ void fsAppSettings::Monitor_IEMenu_Enable(BOOL b)
 
 DWORD fsAppSettings::DNPFlags()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network", "DNPFlags", 0);
+	return m_stgs.GetProfileInt (_T("Settings\\Network"), _T("DNPFlags"), 0);
 }
 
 void fsAppSettings::DNPFlags(DWORD dw)
 {
-	m_stgs.WriteProfileInt ("Settings\\Network", "DNPFlags", dw);
+	m_stgs.WriteProfileInt (_T("Settings\\Network"), _T("DNPFlags"), dw);
 }
 
 WORD fsAppSettings::LowSpeed_Duration()
 {
-	return (WORD)m_stgs.GetProfileInt ("Settings\\Network", "LowSpeed_Duration", 3);
+	return (WORD)m_stgs.GetProfileInt (_T("Settings\\Network"), _T("LowSpeed_Duration"), 3);
 }
 
 void fsAppSettings::LowSpeed_Duration(WORD w)
 {
-	m_stgs.WriteProfileInt ("Settings\\Network", "LowSpeed_Duration", w);
+	m_stgs.WriteProfileInt (_T("Settings\\Network"), _T("LowSpeed_Duration"), w);
 }
 
 WORD fsAppSettings::LowSpeed_Factor()
 {
-	return (WORD)m_stgs.GetProfileInt ("Settings\\Network", "LowSpeed_Factor", 3);
+	return (WORD)m_stgs.GetProfileInt (_T("Settings\\Network"), _T("LowSpeed_Factor"), 3);
 }
 
 void fsAppSettings::LowSpeed_Factor(WORD w)
 {
-	m_stgs.WriteProfileInt ("Settings\\Network", "LowSpeed_Factor", w);
+	m_stgs.WriteProfileInt (_T("Settings\\Network"), _T("LowSpeed_Factor"), w);
 }
 
 DWORD fsAppSettings::Monitor_UserSwitchedOn()
@@ -2576,7 +2626,7 @@ BOOL fsAppSettings::Monitor_ForceEnableChromeOnce()
 
 void fsAppSettings::Scheduler_LastTask_save(fsSchedule *task)
 {
-	m_stgs.WriteProfileBinary ("Settings\\Scheduler", "LastTask", (LPBYTE)task, sizeof (*task));
+	m_stgs.WriteProfileBinary (_T("Settings\\Scheduler"), _T("LastTask"), (LPBYTE)task, sizeof (*task));
 
 	switch (task->wts.enType)
 	{
@@ -2592,15 +2642,15 @@ void fsAppSettings::Scheduler_LastTask_read(fsSchedule *task)
 	LPBYTE pb = NULL;
 	UINT uSize = 0;
 
-	if (FALSE == m_stgs.GetProfileBinary ("Settings\\Scheduler", "LastTask", &pb, &uSize) ||
+	if (FALSE == m_stgs.GetProfileBinary (_T("Settings\\Scheduler"), _T("LastTask"), &pb, &uSize) ||
 			uSize != sizeof (*task))
 	{
 		task->wts.enType = WTS_PROGRAM;
 
 		CString strProg = Scheduler_LastTask_ProgName (),
 				strArgs = Scheduler_LastTask_ProgArgs ();
-		fsnew (task->wts.prog.pszName, char, strProg.GetLength () + 1);
-		fsnew (task->wts.prog.pszArgs, char, strArgs.GetLength () + 1);
+		fsnew (task->wts.prog.pszName, TCHAR, strProg.GetLength () + 1);
+		fsnew (task->wts.prog.pszArgs, TCHAR, strArgs.GetLength () + 1);
 		lstrcpy (task->wts.prog.pszName, strProg);
 		lstrcpy (task->wts.prog.pszArgs, strArgs);
 		
@@ -2644,8 +2694,8 @@ void fsAppSettings::Scheduler_LastTask_read(fsSchedule *task)
 		{
 			CString strProg = Scheduler_LastTask_ProgName (),
 				strArgs = Scheduler_LastTask_ProgArgs ();
-			fsnew (task->wts.prog.pszName, char, strProg.GetLength () + 1);
-			fsnew (task->wts.prog.pszArgs, char, strArgs.GetLength () + 1);
+			fsnew (task->wts.prog.pszName, TCHAR, strProg.GetLength () + 1);
+			fsnew (task->wts.prog.pszArgs, TCHAR, strArgs.GetLength () + 1);
 			lstrcpy (task->wts.prog.pszName, strProg);
 			lstrcpy (task->wts.prog.pszArgs, strArgs);
 		}
@@ -2673,20 +2723,20 @@ void fsAppSettings::Scheduler_LastTask_read(fsSchedule *task)
 
 CString fsAppSettings::Scheduler_LastTask_ProgName()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Scheduler"), _T ("LastTask_ProgName"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Scheduler"), _T ("LastTask_ProgName"), _T(""));
 }
 
-void fsAppSettings::Scheduler_LastTask_ProgName(LPCSTR psz)
+void fsAppSettings::Scheduler_LastTask_ProgName(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Scheduler"), _T ("LastTask_ProgName"), psz);
 }
 
 CString fsAppSettings::Scheduler_LastTask_ProgArgs()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Scheduler"), _T ("LastTask_ProgArgs"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Scheduler"), _T ("LastTask_ProgArgs"), _T(""));
 }
 
-void fsAppSettings::Scheduler_LastTask_ProgArgs(LPCSTR psz)
+void fsAppSettings::Scheduler_LastTask_ProgArgs(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Scheduler"), _T ("LastTask_ProgArgs"), psz);
 }
@@ -2709,22 +2759,22 @@ vmsAppSettingsStore* fsAppSettings::get_SettingsStore()
 
 BOOL fsAppSettings::View_DropBoxIntro()
 {
-	return m_stgs.GetProfileInt ("Settings\\View", "DropBoxIntro", TRUE);
+	return m_stgs.GetProfileInt (_T("Settings\\View"), _T("DropBoxIntro"), TRUE);
 }
 
 void fsAppSettings::View_DropBoxIntro(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\View", "DropBoxIntro", b);
+	m_stgs.WriteProfileInt (_T("Settings\\View"), _T("DropBoxIntro"), b);
 }
 
 BOOL fsAppSettings::View_ImportMtorrentInfo()
 {
-	return m_stgs.GetProfileInt ("Settings\\View", "ImportMtorrentInfo", TRUE);
+	return m_stgs.GetProfileInt (_T("Settings\\View"), _T("ImportMtorrentInfo"), TRUE);
 }
 
 void fsAppSettings::View_ImportMtorrentInfo(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\View", "ImportMtorrentInfo", b);
+	m_stgs.WriteProfileInt (_T("Settings\\View"), _T("ImportMtorrentInfo"), b);
 }
 
 BOOL fsAppSettings::Notif_DisableForBatchDownloads()
@@ -2739,52 +2789,52 @@ void fsAppSettings::Notif_DisableForBatchDownloads(BOOL b)
 
 CString fsAppSettings::Monitor_SkipServers()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("SkipServers"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("SkipServers"), _T(""));
 }
 
-void fsAppSettings::Monitor_SkipServers(LPCSTR psz)
+void fsAppSettings::Monitor_SkipServers(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Monitor"), _T ("SkipServers"), psz);
 }
 
 BOOL fsAppSettings::Download_CheckIntegrityWhenDone()
 {
-	return m_stgs.GetProfileInt (_T ("Settings\\Integrity"),"CheckWhenDone", TRUE);
+	return m_stgs.GetProfileInt (_T ("Settings\\Integrity"),_T("CheckWhenDone"), TRUE);
 }
 
 void fsAppSettings::Download_CheckIntegrityWhenDone(BOOL b)
 {
-	m_stgs.WriteProfileInt (_T ("Settings\\Integrity"),"CheckWhenDone", b);
+	m_stgs.WriteProfileInt (_T ("Settings\\Integrity"),_T("CheckWhenDone"), b);
 }
 
 int fsAppSettings::Download_IntegrityCheckFailedReaction()
 {
-	return m_stgs.GetProfileInt (_T ("Settings\\Integrity"),"ICFR", 0);
+	return m_stgs.GetProfileInt (_T ("Settings\\Integrity"),_T("ICFR"), 0);
 }
 
 void fsAppSettings::Download_IntegrityCheckFailedReaction(int i)
 {
-	m_stgs.WriteProfileInt (_T ("Settings\\Integrity"),"ICFR", i);
+	m_stgs.WriteProfileInt (_T ("Settings\\Integrity"),_T("ICFR"), i);
 }
 
 int fsAppSettings::FirefoxSettings_Proxy_Type()
 {
 	
-	return AfxGetApp ()->GetProfileInt ("FirefoxSettings\\Proxy", "ProxyType", 0);
+	return AfxGetApp ()->GetProfileInt (_T("FirefoxSettings\\Proxy"), _T("ProxyType"), 0);
 }
 
-CString fsAppSettings::FirefoxSettings_Proxy_Addr(LPCSTR pszProtocol)
+CString fsAppSettings::FirefoxSettings_Proxy_Addr(LPCTSTR pszProtocol)
 {
-	CString str = pszProtocol; str += "_addr";
+	CString str = pszProtocol; str += _T("_addr");
 	
-	return AfxGetApp ()->GetProfileString ("FirefoxSettings\\Proxy", str, "");
+	return AfxGetApp ()->GetProfileString (_T("FirefoxSettings\\Proxy"), str, _T(""));
 }
 
-int fsAppSettings::FirefoxSettings_Proxy_Port(LPCSTR pszProtocol)
+int fsAppSettings::FirefoxSettings_Proxy_Port(LPCTSTR pszProtocol)
 {
-	CString str = pszProtocol; str += "_port";
+	CString str = pszProtocol; str += _T("_port");
 	
-	return AfxGetApp ()->GetProfileInt ("FirefoxSettings\\Proxy", str, 80);
+	return AfxGetApp ()->GetProfileInt (_T("FirefoxSettings\\Proxy"), str, 80);
 }
 
 BOOL fsAppSettings::View_SetOutputFolderAsDefForAllGrpsChecked()
@@ -2819,60 +2869,60 @@ void fsAppSettings::View_UploadsLog(BOOL b)
 
 BOOL fsAppSettings::Bittorrent_Enable()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "Enable", FALSE);
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), _T("Enable"), FALSE);
 }
 
 void fsAppSettings::Bittorrent_Enable(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "Enable", b);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), _T("Enable"), b);
 }
 
 int fsAppSettings::Bittorrent_UploadTrafficLimit(int mode)
 {
 	ASSERT (mode >= 0 && mode <= 2); 
-	CString str; str.Format ("UploadTrafficLimit%d", mode);
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", str, -1);
+	CString str; str.Format (_T("UploadTrafficLimit%d"), mode);
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), str, -1);
 }
 
 void fsAppSettings::Bittorrent_UploadTrafficLimit(int mode, int limit)
 {
 	ASSERT (mode >= 0 && mode <= 2); 
-	CString str; str.Format ("UploadTrafficLimit%d", mode);
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", str, limit);
+	CString str; str.Format (_T("UploadTrafficLimit%d"), mode);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), str, limit);
 }
 
 int fsAppSettings::Bittorrent_UploadConnectionLimit(int mode)
 {
 	ASSERT (mode >= 0 && mode <= 2); 
-	CString str; str.Format ("UploadConnectionLimit%d", mode);
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", str, -1);
+	CString str; str.Format (_T("UploadConnectionLimit%d"), mode);
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), str, -1);
 }
 
 void fsAppSettings::Bittorrent_UploadConnectionLimit(int mode, int limit)
 {
 	ASSERT (mode >= 0 && mode <= 2); 
-	CString str; str.Format ("UploadConnectionLimit%d", mode);
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", str, limit);
+	CString str; str.Format (_T("UploadConnectionLimit%d"), mode);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), str, limit);
 }
 
 int fsAppSettings::Bittorrent_ListenPort_From()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "ListenPortFrom", 1500);
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), _T("ListenPortFrom"), 1500);
 }
 
 void fsAppSettings::Bittorrent_ListenPort_From(int i)
 {
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "ListenPortFrom", i);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), _T("ListenPortFrom"), i);
 }
 
 int fsAppSettings::Bittorrent_ListenPort_To()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "ListenPortTo", 1600);
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), _T("ListenPortTo"), 1600);
 }
 
 void fsAppSettings::Bittorrent_ListenPort_To(int i)
 {
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "ListenPortTo", i);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), _T("ListenPortTo"), i);
 }
 
 CString fsAppSettings::Bittorrent_OldMagnetAssociation()
@@ -2897,52 +2947,72 @@ void fsAppSettings::Bittorrent_OldMagnetUrlProtocol(LPCTSTR psz)
 
 BOOL fsAppSettings::Bittorrent_EnableDHT()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "EnableDHT", TRUE);
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), _T("EnableDHT"), TRUE);
 }
 
 void fsAppSettings::Bittorrent_EnableDHT(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "EnableDHT", b);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), _T("EnableDHT"), b);
 }
 
 BOOL fsAppSettings::Bittorrent_EnableLocalPeerDiscovery()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "EnableLocalPeer", TRUE);
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), _T("EnableLocalPeer"), TRUE);
 }
 
 void fsAppSettings::Bittorrent_EnableLocalPeerDiscovery(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "EnableLocalPeer", b);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), _T("EnableLocalPeer"), b);
 }
 
 BOOL fsAppSettings::Bittorrent_EnableUPnP()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "EnableUPnP", TRUE);
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), _T("EnableUPnP"), TRUE);
 }
 
 void fsAppSettings::Bittorrent_EnableUPnP(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "EnableUPnP", b);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), _T("EnableUPnP"), b);
 }
 
 BOOL fsAppSettings::Bittorrent_EnableNATPMP()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "EnableNATPMP", TRUE);
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), _T("EnableNATPMP"), TRUE);
 }
 
 void fsAppSettings::Bittorrent_EnableNATPMP(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "EnableNATPMP", b);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), _T("EnableNATPMP"), b);
+}
+
+BOOL fsAppSettings::Bittorrent_EnableUTPEX()
+{
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), _T("EnableUTPeerExchange"), FALSE);
+}
+
+void fsAppSettings::Bittorrent_EnableUTPEX(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), _T("EnableUTPeerExchange"), b);
+}
+
+BOOL fsAppSettings::Bittorrent_EnableSequentialDownloading()
+{
+	return m_stgs.GetProfileInt(_T("Settings\\Network\\Bittorrent"), _T("EnableSequential"), FALSE);
+}
+
+void fsAppSettings::Bittorrent_EnableSequentialDownloading(BOOL b)
+{
+	m_stgs.WriteProfileInt(_T("Settings\\Network\\Bittorrent"), _T("EnableSequential"), b);
 }
 
 CString fsAppSettings::Bittorrent_OldTorrentAssociation()
 {
-	return m_stgs.GetProfileString ("Settings\\Network\\Bittorrent", "OldTorrentAssocString", "");
+	return m_stgs.GetProfileString (_T("Settings\\Network\\Bittorrent"), _T("OldTorrentAssocString"), _T(""));
 }
 
-void fsAppSettings::Bittorrent_OldTorrentAssociation(LPCSTR psz)
+void fsAppSettings::Bittorrent_OldTorrentAssociation(LPCTSTR psz)
 {
-	m_stgs.WriteProfileString ("Settings\\Network\\Bittorrent", "OldTorrentAssocString", psz);
+	m_stgs.WriteProfileString (_T("Settings\\Network\\Bittorrent"), _T("OldTorrentAssocString"), psz);
 }
 
 BOOL fsAppSettings::View_AskRemoveFromAutostartAtAppExit()
@@ -2957,22 +3027,22 @@ void fsAppSettings::View_AskRemoveFromAutostartAtAppExit(BOOL b)
 
 CString fsAppSettings::DataFolder()
 {
-	return m_stgs.GetProfileString ("Settings", "DataFolder", "");
+	return m_stgs.GetProfileString (_T("Settings"), _T("DataFolder"), _T(""));
 }
 
-void fsAppSettings::DataFolder(LPCSTR psz)
+void fsAppSettings::DataFolder(LPCTSTR psz)
 {
-	m_stgs.WriteProfileString ("Settings", "DataFolder", psz);
+	m_stgs.WriteProfileString (_T("Settings"), _T("DataFolder"), psz);
 }
 
 BOOL fsAppSettings::View_DontAskEnableBittorrent()
 {
-	return m_stgs.GetProfileInt ("Settings\\View", "DontAskEnableBt", FALSE);
+	return m_stgs.GetProfileInt (_T("Settings\\View"), _T("DontAskEnableBt"), FALSE);
 }
 
 void fsAppSettings::View_DontAskEnableBittorrent(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\View", "DontAskEnableBt", b);
+	m_stgs.WriteProfileInt (_T("Settings\\View"), _T("DontAskEnableBt"), b);
 }
 
 vmsNewGroupSelectWay fsAppSettings::NewGrp_SelectWay()
@@ -2998,103 +3068,103 @@ void fsAppSettings::Monitor_IEMenu_DLFlashVideo(BOOL b)
 	ApplySettingsToMutexes ();
 }
 
-void fsAppSettings::WriteTranslatedStringToRegistry(LPCSTR pszStringId, LPCSTR pszString)
+void fsAppSettings::WriteTranslatedStringToRegistry(LPCTSTR pszStringId, LPCTSTR pszString)
 {
-	AfxGetApp ()->WriteProfileString ("Settings\\View\\Loc", pszStringId, pszString);
+	AfxGetApp ()->WriteProfileString (_T("Settings\\View\\Loc"), pszStringId, pszString);
 }
 
 BOOL fsAppSettings::View_CreateFVDownload_SetupAdvStgs()
 {
-	return m_stgs.GetProfileInt ("Settings\\View", "CreateFVDownload_SetupAdvStgs", FALSE);
+	return m_stgs.GetProfileInt (_T("Settings\\View"), _T("CreateFVDownload_SetupAdvStgs"), FALSE);
 }
 
 void fsAppSettings::View_CreateFVDownload_SetupAdvStgs(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\View", "CreateFVDownload_SetupAdvStgs", b);
+	m_stgs.WriteProfileInt (_T("Settings\\View"), _T("CreateFVDownload_SetupAdvStgs"), b);
 }
 
 CString fsAppSettings::Convert_Format()
 {
-	return m_stgs.GetProfileString ("Settings\\Convert", "Format", "avi");
+	return m_stgs.GetProfileString (_T("Settings\\Convert"), _T("Format"), _T("avi"));
 }
 
-void fsAppSettings::Convert_Format(LPCSTR psz)
+void fsAppSettings::Convert_Format(LPCTSTR psz)
 {
-	m_stgs.WriteProfileString ("Settings\\Convert", "Format", psz);
+	m_stgs.WriteProfileString (_T("Settings\\Convert"), _T("Format"), psz);
 }
 
 CSize fsAppSettings::Convert_VideoSize()
 {
 	CSize s;
-	s.cx = m_stgs.GetProfileInt ("Settings\\Convert", "VideoSize_w", -1);
-	s.cy = m_stgs.GetProfileInt ("Settings\\Convert", "VideoSize_h", -1);
+	s.cx = m_stgs.GetProfileInt (_T("Settings\\Convert"), _T("VideoSize_w"), -1);
+	s.cy = m_stgs.GetProfileInt (_T("Settings\\Convert"), _T("VideoSize_h"), -1);
 	return s;
 }
 
 void fsAppSettings::Convert_VideoSize(CSize s)
 {
-	m_stgs.WriteProfileInt ("Settings\\Convert", "VideoSize_w", s.cx);
-	m_stgs.WriteProfileInt ("Settings\\Convert", "VideoSize_h", s.cy);
+	m_stgs.WriteProfileInt (_T("Settings\\Convert"), _T("VideoSize_w"), s.cx);
+	m_stgs.WriteProfileInt (_T("Settings\\Convert"), _T("VideoSize_h"), s.cy);
 }
 
 int fsAppSettings::Convert_AudioBitrate()
 {
-	return m_stgs.GetProfileInt ("Settings\\Convert", "AudioBitrate", 96);
+	return m_stgs.GetProfileInt (_T("Settings\\Convert"), _T("AudioBitrate"), 96);
 }
 
 void fsAppSettings::Convert_AudioBitrate(int n)
 {
-	m_stgs.WriteProfileInt ("Settings\\Convert", "AudioBitrate", n);
+	m_stgs.WriteProfileInt (_T("Settings\\Convert"), _T("AudioBitrate"), n);
 }
 
 int fsAppSettings::Convert_VideoBitrate()
 {
-	return m_stgs.GetProfileInt ("Settings\\Convert", "VideoBitrate", 800);
+	return m_stgs.GetProfileInt (_T("Settings\\Convert"), _T("VideoBitrate"), 800);
 }
 
 void fsAppSettings::Convert_VideoBitrate(int n)
 {
-	m_stgs.WriteProfileInt ("Settings\\Convert", "VideoBitrate", n);
+	m_stgs.WriteProfileInt (_T("Settings\\Convert"), _T("VideoBitrate"), n);
 }
 
 CString fsAppSettings::Convert_AudioCodec()
 {
-	return m_stgs.GetProfileString ("Settings\\Convert", "AudioCodec", "mp3");
+	return m_stgs.GetProfileString (_T("Settings\\Convert"), _T("AudioCodec"), _T("mp3"));
 }
 
-void fsAppSettings::Convert_AudioCodec(LPCSTR psz)
+void fsAppSettings::Convert_AudioCodec(LPCTSTR psz)
 {
-	m_stgs.WriteProfileString ("Settings\\Convert", "AudioCodec", psz);
+	m_stgs.WriteProfileString (_T("Settings\\Convert"), _T("AudioCodec"), psz);
 }
 
 CString fsAppSettings::Convert_VideoCodec()
 {
-	return m_stgs.GetProfileString ("Settings\\Convert", "VideoCodec", "msmpeg4v2");
+	return m_stgs.GetProfileString (_T("Settings\\Convert"), _T("VideoCodec"), _T("msmpeg4v2"));
 }
 
-void fsAppSettings::Convert_VideoCodec(LPCSTR psz)
+void fsAppSettings::Convert_VideoCodec(LPCTSTR psz)
 {
-	m_stgs.WriteProfileString ("Settings\\Convert", "VideoCodec", psz);
+	m_stgs.WriteProfileString (_T("Settings\\Convert"), _T("VideoCodec"), psz);
 }
 
 CString fsAppSettings::Convert_Extension()
 {
-	return m_stgs.GetProfileString ("Settings\\Convert", "Extension", "avi");
+	return m_stgs.GetProfileString (_T("Settings\\Convert"), _T("Extension"), _T("avi"));
 }
 
-void fsAppSettings::Convert_Extension(LPCSTR psz)
+void fsAppSettings::Convert_Extension(LPCTSTR psz)
 {
-	m_stgs.WriteProfileString ("Settings\\Convert", "Extension", psz);
+	m_stgs.WriteProfileString (_T("Settings\\Convert"), _T("Extension"), psz);
 }
 
 BOOL fsAppSettings::FVDownloads_AutoConvertVideo()
 {
-	return m_stgs.GetProfileInt ("Settings\\Convert", "FVDownloads_AutoConvertVideo", FALSE);
+	return m_stgs.GetProfileInt (_T("Settings\\Convert"), _T("FVDownloads_AutoConvertVideo"), FALSE);
 }
 
 void fsAppSettings::FVDownloads_AutoConvertVideo(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\Convert", "FVDownloads_AutoConvertVideo", b);
+	m_stgs.WriteProfileInt (_T("Settings\\Convert"), _T("FVDownloads_AutoConvertVideo"), b);
 }
 
 BOOL fsAppSettings::View_AutoSwitchToMediaPreview()
@@ -3157,62 +3227,62 @@ void fsAppSettings::TotalUpldTraffic_PrevMonth(UINT64 u)
 
 BOOL fsAppSettings::View_NOMShown()
 {
-	return m_stgs.GetProfileInt ("Settings\\View", "NOMShown", FALSE);
+	return m_stgs.GetProfileInt (_T("Settings\\View"), _T("NOMShown"), FALSE);
 }
 
 void fsAppSettings::View_NOMShown(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\View", "NOMShown", b);
+	m_stgs.WriteProfileInt (_T("Settings\\View"), _T("NOMShown"), b);
 }
 
 BOOL fsAppSettings::Bittorrent_DisableSeedingByDef()
 {
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", "DisableSeedingByDef", FALSE);
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), _T("DisableSeedingByDef"), FALSE);
 }
 
 void fsAppSettings::Bittorrent_DisableSeedingByDef(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", "DisableSeedingByDef", b);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), _T("DisableSeedingByDef"), b);
 }
 
 BOOL fsAppSettings::View_MoreTabs()
 {
-	return m_stgs.GetProfileInt ("Settings\\View", "MoreTabs", FALSE);
+	return m_stgs.GetProfileInt (_T("Settings\\View"), _T("MoreTabs"), FALSE);
 }
 
 void fsAppSettings::View_MoreTabs(BOOL b)
 {
-	m_stgs.WriteProfileInt ("Settings\\View", "MoreTabs", b);
+	m_stgs.WriteProfileInt (_T("Settings\\View"), _T("MoreTabs"), b);
 }
 
 int fsAppSettings::Community_MalReportsMinPerc()
 {
-	return m_stgs.GetProfileInt ("Settings\\Community", "MalReportsMinPerc", 10);
+	return m_stgs.GetProfileInt (_T("Settings\\Community"), _T("MalReportsMinPerc"), 10);
 }
 
 void fsAppSettings::Community_MalReportsMinPerc(int i)
 {
-	m_stgs.WriteProfileInt ("Settings\\Community", "MalReportsMinPerc", i);
+	m_stgs.WriteProfileInt (_T("Settings\\Community"), _T("MalReportsMinPerc"), i);
 }
 
 BOOL fsAppSettings::PreventStandbyWhileDownloading()
 {
 	if (m_bPreventStandbyWhileDownloading == BOOL (-1))
-		m_bPreventStandbyWhileDownloading = m_stgs.GetProfileInt ("Settings", "PreventStandbyWhileDownloading", TRUE);
+		m_bPreventStandbyWhileDownloading = m_stgs.GetProfileInt (_T("Settings"), _T("PreventStandbyWhileDownloading"), TRUE);
 	return m_bPreventStandbyWhileDownloading;
 }
 
 void fsAppSettings::PreventStandbyWhileDownloading(BOOL b)
 {
 	m_bPreventStandbyWhileDownloading = b;
-	m_stgs.WriteProfileInt ("Settings", "PreventStandbyWhileDownloading", b);
+	m_stgs.WriteProfileInt (_T("Settings"), _T("PreventStandbyWhileDownloading"), b);
 }
 
 int fsAppSettings::Bittorrent_MaxHalfConnections(int mode)
 {
 	ASSERT (mode >= 0 && mode <= 2); 
-	CString str; str.Format ("MaxHalfConnections%d", mode);
-	int i = m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", str, 0);
+	CString str; str.Format (_T("MaxHalfConnections%d"), mode);
+	int i = m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), str, 0);
 	if (i <= 0 || i > 200)
 	{
 		if (mode == 2)
@@ -3228,8 +3298,8 @@ int fsAppSettings::Bittorrent_MaxHalfConnections(int mode)
 void fsAppSettings::Bittorrent_MaxHalfConnections(int mode, int max)
 {
 	ASSERT (mode >= 0 && mode <= 2); 
-	CString str; str.Format ("MaxHalfConnections%d", mode);
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", str, max);
+	CString str; str.Format (_T("MaxHalfConnections%d"), mode);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), str, max);
 }
 
 void fsAppSettings::View_DontShowPauseAlldldsEnabled(BOOL b)
@@ -3268,7 +3338,7 @@ float fsAppSettings::Bittorrent_RequiredRatio()
 	UINT nSize;
 	float f = 0;
 	
-	if (m_stgs.GetProfileBinary (_T ("Settings\\Network\\Bittorrent"), "ReqiuredRatio", &pf, &nSize))
+	if (m_stgs.GetProfileBinary (_T ("Settings\\Network\\Bittorrent"), _T("ReqiuredRatio"), &pf, &nSize))
 	{
 		CopyMemory (&f, pf, sizeof (f));
 		delete [] pf;
@@ -3279,35 +3349,35 @@ float fsAppSettings::Bittorrent_RequiredRatio()
 
 void fsAppSettings::Bittorrent_RequiredRatio(float f)
 {
-	m_stgs.WriteProfileBinary (_T ("Settings\\Network\\Bittorrent"), "ReqiuredRatio", (LPBYTE)&f, sizeof (f));
+	m_stgs.WriteProfileBinary (_T ("Settings\\Network\\Bittorrent"), _T("ReqiuredRatio"), (LPBYTE)&f, sizeof (f));
 }
 
 CString fsAppSettings::Firefox_PortableVersionPath()
 {
-	return m_stgs.GetProfileString ("FirefoxSettings", "PortableVersionPath", "");
+	return m_stgs.GetProfileString (_T("FirefoxSettings"), _T("PortableVersionPath"), _T(""));
 }
 
-void fsAppSettings::Firefox_PortableVersionPath(LPCSTR psz)
+void fsAppSettings::Firefox_PortableVersionPath(LPCTSTR psz)
 {
-	m_stgs.WriteProfileString ("FirefoxSettings", "PortableVersionPath", psz);
+	m_stgs.WriteProfileString (_T("FirefoxSettings"), _T("PortableVersionPath"), psz);
 }
 
 CString fsAppSettings::Monitor_SafariPDInstalledTo()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("SafariPDI"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("SafariPDI"), _T(""));
 }
 
-void fsAppSettings::Monitor_SafariPDInstalledTo(LPCSTR psz)
+void fsAppSettings::Monitor_SafariPDInstalledTo(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Monitor"), _T ("SafariPDI"), psz);
 }
 
 CString fsAppSettings::Monitor_ChromePDInstalledTo()
 {
-	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("ChromePDI"), "");
+	return m_stgs.GetProfileString (_T ("Settings\\Monitor"), _T ("ChromePDI"), _T(""));
 }
 
-void fsAppSettings::Monitor_ChromePDInstalledTo(LPCSTR psz)
+void fsAppSettings::Monitor_ChromePDInstalledTo(LPCTSTR psz)
 {
 	m_stgs.WriteProfileString (_T ("Settings\\Monitor"), _T ("ChromePDI"), psz);
 }
@@ -3332,7 +3402,7 @@ void fsAppSettings::ApplySettingsToMutexes()
 	if (Monitor_IEMenu_Enable () == FALSE)
 	{
 		if (_hmxDisableBrMenu == NULL)
-			_hmxDisableBrMenu = CreateMutex (NULL, FALSE, "mx::fdm: brmenu_disable");
+			_hmxDisableBrMenu = CreateMutex (NULL, FALSE, _T("mx::fdm: brmenu_disable"));
 	}
 	else if (_hmxDisableBrMenu)
 	{
@@ -3345,7 +3415,7 @@ void fsAppSettings::ApplySettingsToMutexes()
 	if (Monitor_IEMenu_DLThis () == FALSE)
 	{
 		if (_hmxDisableDlLink == NULL)
-			_hmxDisableDlLink = CreateMutex (NULL, FALSE, "mx::fdm: dllink_disable");
+			_hmxDisableDlLink = CreateMutex (NULL, FALSE, _T("mx::fdm: dllink_disable"));
 	}
 	else if (_hmxDisableDlLink)
 	{
@@ -3357,7 +3427,7 @@ void fsAppSettings::ApplySettingsToMutexes()
 	if (Monitor_IEMenu_DLAll () == FALSE)
 	{
 		if (_hmxDisableDlAll == NULL)
-			_hmxDisableDlAll = CreateMutex (NULL, FALSE, "mx::fdm: dlall_disable");
+			_hmxDisableDlAll = CreateMutex (NULL, FALSE, _T("mx::fdm: dlall_disable"));
 	}
 	else if (_hmxDisableDlAll)
 	{
@@ -3369,7 +3439,7 @@ void fsAppSettings::ApplySettingsToMutexes()
 	if (Monitor_IEMenu_DLSelected () == FALSE)
 	{
 		if (_hmxDisableDlSelected == NULL)
-			_hmxDisableDlSelected = CreateMutex (NULL, FALSE, "mx::fdm: dlselected_disable");
+			_hmxDisableDlSelected = CreateMutex (NULL, FALSE, _T("mx::fdm: dlselected_disable"));
 	}
 	else if (_hmxDisableDlSelected)
 	{
@@ -3381,7 +3451,7 @@ void fsAppSettings::ApplySettingsToMutexes()
 	if (Monitor_IEMenu_DLFlashVideo () == FALSE)
 	{
 		if (_hmxDisableDlVideo == NULL)
-			_hmxDisableDlVideo = CreateMutex (NULL, FALSE, "mx::fdm: dlvideo_disable");
+			_hmxDisableDlVideo = CreateMutex (NULL, FALSE, _T("mx::fdm: dlvideo_disable"));
 	}
 	else if (_hmxDisableDlVideo)
 	{
@@ -3510,15 +3580,15 @@ void fsAppSettings::FlvMonitoring_ShowDownloadItButton(BOOL b)
 int fsAppSettings::Bittorrent_MaxConnections(int mode)
 {
 	ASSERT (mode >= 0 && mode <= 2); 
-	CString str; str.Format ("MaxConnections%d", mode);
-	return m_stgs.GetProfileInt ("Settings\\Network\\Bittorrent", str, -1);
+	CString str; str.Format (_T("MaxConnections%d"), mode);
+	return m_stgs.GetProfileInt (_T("Settings\\Network\\Bittorrent"), str, -1);
 }
 
 void fsAppSettings::Bittorrent_MaxConnections(int mode, int max)
 {
 	ASSERT (mode >= 0 && mode <= 2); 
-	CString str; str.Format ("MaxConnections%d", mode);
-	m_stgs.WriteProfileInt ("Settings\\Network\\Bittorrent", str, max);
+	CString str; str.Format (_T("MaxConnections%d"), mode);
+	m_stgs.WriteProfileInt (_T("Settings\\Network\\Bittorrent"), str, max);
 }
 
 BOOL fsAppSettings::SmallTips_Show()
@@ -3641,4 +3711,64 @@ void fsAppSettings::RecentVersionRun (const tstring& val)
 tstring fsAppSettings::RecentVersionRun ()
 {
 	return (LPCTSTR) m_stgs.GetProfileString (_T (""), _T ("RecentVersionRun"), _T (""));
+}
+
+BOOL fsAppSettings::UserOnly()
+{
+	return m_stgs.GetProfileInt (_T (""), _T ("UserOnly"), FALSE);
+}
+
+void fsAppSettings::UserOnly(BOOL b)
+{
+	m_stgs.WriteProfileInt (_T (""), _T ("UserOnly"), b);
+}
+
+void fsAppSettings::Monitor_FirefoxInstalled (BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\Monitor"), _T ("FirefoxInstalled"), b);
+}
+
+BOOL fsAppSettings::Monitor_FirefoxInstalled()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\Monitor"), _T ("FirefoxInstalled"), FALSE);
+}
+
+void fsAppSettings::Monitor_FirefoxExtensionSuggested(BOOL b)
+{
+	m_stgs.WriteProfileInt(_T("Settings\\Monitor"), _T("FirefoxExtensionSuggested"), b);
+}
+
+BOOL fsAppSettings::Monitor_FirefoxExtensionSuggested()
+{
+	return m_stgs.GetProfileInt(_T("Settings\\Monitor"), _T("FirefoxExtensionSuggested"), FALSE);
+}
+
+void fsAppSettings::Monitor_ChromeInstalled (BOOL b)
+{
+	m_stgs.WriteProfileInt (_T ("Settings\\Monitor"), _T ("ChromeInstalled"), b);
+}
+
+BOOL fsAppSettings::Monitor_ChromeInstalled()
+{
+	return m_stgs.GetProfileInt (_T ("Settings\\Monitor"), _T ("ChromeInstalled"), FALSE);
+}
+
+void fsAppSettings::Monitor_ChromeExtensionSuggested(BOOL b)
+{
+	m_stgs.WriteProfileInt(_T("Settings\\Monitor"), _T("ChromeExtensionSuggested"), b);
+}
+
+BOOL fsAppSettings::Monitor_ChromeExtensionSuggested()
+{
+	return m_stgs.GetProfileInt(_T("Settings\\Monitor"), _T("ChromeExtensionSuggested"), FALSE);
+}
+
+void fsAppSettings::ShowUserNotification (LPCTSTR notificationId, BOOL show)
+{
+	m_stgs.WriteProfileInt (L"View\\UserNotification\\Show", notificationId, show);
+}
+
+BOOL fsAppSettings::ShowUserNotification (LPCTSTR notificationId)
+{
+	return m_stgs.GetProfileInt (L"View\\UserNotification\\Show", notificationId, TRUE);
 }

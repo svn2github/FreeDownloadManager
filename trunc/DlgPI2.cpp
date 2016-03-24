@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -72,10 +72,10 @@ BOOL CDlgPI2::OnInitDialog()
 	pFont->GetLogFont (&lf);
 	
 	CString strHTML;
-	strHTML.Format ("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\
+	strHTML.Format (_T("<html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\
 </head><style type=\"text/css\"><!--\nbody {margin-left: 0px; margin-top: 0px; margin-right: 0px;\
 margin-bottom: 0px; font-size: %dpx; font-family: %s; } \n-->\n</style><body bgcolor='#%s'>\
-<p align='justify'>%s</p></body></html>", abs (lf.lfHeight), lf.lfFaceName, (LPCTSTR)str2, (LPCSTR)str.c_str ());
+<p align='justify'>%s</p></body></html>"), abs (lf.lfHeight), lf.lfFaceName, (LPCTSTR)str2, (LPCSTR)str.c_str ());
 	
 	CStdioFile file;
 	TCHAR tszTmpPath [MAX_PATH];
@@ -130,11 +130,11 @@ CString getDefaultBrowserName ()
 void CDlgPI2::getHtml(std::string &str)
 {
 	str = vmsXmlHelper::toUtf8 (LS (L_PI_ABOUT_0));
-	str += _T ("<br><br>");
+	str += "<br><br>";
 	str += vmsXmlHelper::toUtf8 (LS (L_PI_ABOUT_1));
-	str += _T (" <a href=\"cmd://10000\">");
+	str += " <a href=\"cmd://10000\">";
 	str += vmsXmlHelper::toUtf8 (LS (L_FAVORITE_SITES));
-	str += _T ("</a> ");
+	str += "</a> ";
 	str += vmsXmlHelper::toUtf8 (LS (L_PI_ABOUT_2));
 	str += ' ';
 	str += vmsXmlHelper::toUtf8 ((LPCTSTR)getDefaultBrowserName ());

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -191,7 +191,7 @@ BOOL CDlg_Options_General_History::Apply()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDlg_Options_General_History::Apply " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDlg_Options_General_History::Apply " + std::string(ex.what()));
 	}
 	catch (...)
 	{

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -167,7 +167,7 @@ BOOL CDownloadProperties_ProxyPage::OnInitDialog()
 		
 		m_pvDlds = pvDlds;
 		m_vProxies.add (pi);	
-		m_wndProtocols.AddString ("HTTP"); 
+		m_wndProtocols.AddString (_T("HTTP")); 
 	}
 
 	if (m_vHttps.size ())
@@ -213,7 +213,7 @@ BOOL CDownloadProperties_ProxyPage::OnInitDialog()
 		
 		m_pvDlds = pvDlds;
 		m_vProxies.add (pi);
-		m_wndProtocols.AddString ("HTTPS");
+		m_wndProtocols.AddString (_T("HTTPS"));
 	}
 
 	if (m_vFtp.size ())
@@ -259,7 +259,7 @@ BOOL CDownloadProperties_ProxyPage::OnInitDialog()
 		
 		m_pvDlds = pvDlds;
 		m_vProxies.add (pi);
-		m_wndProtocols.AddString ("FTP");
+		m_wndProtocols.AddString (_T("FTP"));
 	}
 
 	if (m_vHttp.size () == 0 && m_vHttps.size () == 0 && m_vFtp.size () == 0)
@@ -281,7 +281,7 @@ BOOL CDownloadProperties_ProxyPage::OnInitDialog()
 	else
 	{
 		CheckDlgButton (IDC_USEROLLBACK, BST_INDETERMINATE);
-		SetDlgItemText (IDC_ROLLBACKSIZE, "");
+		SetDlgItemText (IDC_ROLLBACKSIZE, _T(""));
 	}
 
 	m_wndProtocols.SetCurSel (0);
@@ -414,16 +414,16 @@ void CDownloadProperties_ProxyPage::OnChangePassword()
 	}
 }
 
-BOOL CDownloadProperties_ProxyPage::CrackProxyName(LPCSTR pszName, CString &strName, USHORT &uPort)
+BOOL CDownloadProperties_ProxyPage::CrackProxyName(LPCTSTR pszName, CString &strName, USHORT &uPort)
 {
-	CHAR szName [1000];
+	TCHAR szName [1000];
 
 	
-	LPCSTR pszPort = strrchr (pszName, ':');
+	LPCTSTR pszPort = _tcsrchr (pszName, _T(':'));
 
 	
-	if (strstr (pszName, ":/") == pszPort ||
-		strstr (pszName, ":\\") == pszPort )
+	if (_tcsstr (pszName, _T(":/")) == pszPort ||
+			_tcsstr (pszName, _T(":\\")) == pszPort )
 		pszPort = NULL;
 
 	if (pszPort == NULL)
@@ -432,15 +432,15 @@ BOOL CDownloadProperties_ProxyPage::CrackProxyName(LPCSTR pszName, CString &strN
 		return FALSE;
 	}
 
-	strcpy (szName, pszName);
+	_tcscpy (szName, pszName);
 	szName [pszPort - pszName] = 0;
 
 	strName = szName;
 
-	if (pszPort - pszName + 1 == (int) strlen (pszName))
+	if (pszPort - pszName + 1 == (int) _tcslen (pszName))
 		return FALSE;
 
-	uPort = (USHORT) atoi (pszPort+1);
+	uPort = (USHORT) _tstoi (pszPort+1);
 
 	return TRUE;
 }
@@ -453,17 +453,17 @@ BOOL CDownloadProperties_ProxyPage::OnApply()
 	{
 		fsInternetAccessTypeEx type = IATE_PRECONFIGPROXY;
 		DNP_SET (enAccType, FALSE, &type);
-		DNP_SET (pszProxyName, TRUE, "");
-		DNP_SET (pszProxyUserName, TRUE, "");
-		DNP_SET (pszProxyPassword, TRUE, "");
+		DNP_SET (pszProxyName, TRUE, _T(""));
+		DNP_SET (pszProxyUserName, TRUE, _T(""));
+		DNP_SET (pszProxyPassword, TRUE, _T(""));
 	}
 	else if (IsDlgButtonChecked (IDC_FROMFIREFOX) == BST_CHECKED)
 	{
 		fsInternetAccessTypeEx type = IATE_FIREFOXPROXY;
 		DNP_SET (enAccType, FALSE, &type);
-		DNP_SET (pszProxyName, TRUE, "");
-		DNP_SET (pszProxyUserName, TRUE, "");
-		DNP_SET (pszProxyPassword, TRUE, "");
+		DNP_SET (pszProxyName, TRUE, _T(""));
+		DNP_SET (pszProxyUserName, TRUE, _T(""));
+		DNP_SET (pszProxyPassword, TRUE, _T(""));
 	}
 	else if (IsDlgButtonChecked (IDC_MANUALLY) == BST_CHECKED)
 	{
@@ -488,9 +488,9 @@ BOOL CDownloadProperties_ProxyPage::OnApply()
 	{
 		fsInternetAccessTypeEx type = IATE_NOPROXY;
 		DNP_SET (enAccType, FALSE, &type);
-		DNP_SET (pszProxyName, TRUE, "");
-		DNP_SET (pszProxyUserName, TRUE, "");
-		DNP_SET (pszProxyPassword, TRUE, "");
+		DNP_SET (pszProxyName, TRUE, _T(""));
+		DNP_SET (pszProxyUserName, TRUE, _T(""));
+		DNP_SET (pszProxyPassword, TRUE, _T(""));
 	}
 
 	UINT u = IsDlgButtonChecked (IDC_USEROLLBACK);
@@ -553,7 +553,7 @@ BOOL CDownloadProperties_ProxyPage::ReadPS()
 				goto _lErr;
 			}
 
-			str.Format (":%d", u);
+			str.Format (_T(":%d"), u);
 			m_vProxies [m_iCurProtocol].strName += str;
 		}
 	}
@@ -601,7 +601,7 @@ void CDownloadProperties_ProxyPage::UpdatePS()
 	if (CrackProxyName (m_vProxies [m_iCurProtocol].strName, strProxy, uPort))
 		SetDlgItemInt (IDC_PORT, uPort, FALSE);
 	else
-		SetDlgItemText (IDC_PORT, "");
+		SetDlgItemText (IDC_PORT, _T(""));
 
 	SetDlgItemText (IDC_PROXYNAME, strProxy);
 
@@ -628,8 +628,8 @@ void CDownloadProperties_ProxyPage::ApplyPS(DLDS_LIST *pvDlds, ProxyInfo* pi)
 
 	if (pi->uAuthorization == BST_UNCHECKED)
 	{
-		DNP_SET (pszProxyUserName, TRUE, "");
-		DNP_SET (pszProxyPassword, TRUE, "");
+		DNP_SET (pszProxyUserName, TRUE, _T(""));
+		DNP_SET (pszProxyPassword, TRUE, _T(""));
 	}
 	else
 	{

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -47,8 +47,8 @@ BOOL CDlgDL::OnInitDialog()
 	fsDownload_NetworkProperties *dnp = m_dldr.GetDNP ();
 	
 	SAFE_DELETE_ARRAY (dp->pszFileName);
-	fsnew (dp->pszFileName, char, m_strFile.GetLength () + 1);
-	strcpy (dp->pszFileName, m_strFile);
+	fsnew (dp->pszFileName, TCHAR, m_strFile.GetLength () + 1);
+	_tcscpy (dp->pszFileName, m_strFile);
 	dp->uMaxSections = 1;
 	dp->uMaxAttempts = 1;
 	dp->dwFlags |= DPF_DONTRESTARTIFNORESUME;
@@ -57,7 +57,7 @@ BOOL CDlgDL::OnInitDialog()
 	*dp->pszAdditionalExt = 0;
 	
 	SAFE_DELETE_ARRAY (dnp->pszReferer);
-	fsnew (dnp->pszReferer, char, 1);
+	fsnew (dnp->pszReferer, TCHAR, 1);
 	*dnp->pszReferer = 0;
 
 	m_dldr.StartDownloading ();

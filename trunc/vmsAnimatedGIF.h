@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSANIMATEDGIF_H__8893A64A_E91C_4E1D_8F5E_768AE18C7CB8__INCLUDED_)
@@ -28,7 +28,7 @@ struct TFrame
 	
 	
 	
-	int SaveGIFFrames (LPCSTR pszFileTemplate);
+	int SaveGIFFrames (LPCTSTR pszFileTemplate);
 
 #pragma pack(1)   
 
@@ -144,7 +144,7 @@ struct TGIFImageDescriptor
 
 	
 	
-	BOOL Load (LPCSTR pszFile);
+	BOOL Load (LPCTSTR pszFile);
 	
 	BOOL Load(HGLOBAL hGlobal, DWORD dwSize);
 
@@ -155,7 +155,7 @@ protected:
 	
 	std::vector <TFrame> m_vFramesInfo;
 	
-	BOOL WriteDataOnDisk (LPCSTR pszFile, HGLOBAL hData, DWORD dwSize);
+	BOOL WriteDataOnDisk (LPCTSTR pszFile, HGLOBAL hData, DWORD dwSize);
 	
 	BOOL Load();
 	HGLOBAL m_hGIF;	

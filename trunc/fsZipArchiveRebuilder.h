@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSZIPARCHIVEREBUILDER_H__223E1FEF_5709_4CAD_A80F_FE09EFF660B4__INCLUDED_)
@@ -88,7 +88,7 @@ enum fsZipArchiveRebuilderResult
 struct fsZipLocalFile
 {
 	fsZipLocalFileHeader hdr;
-	fsString strFileName;
+	fsStringA strFileName;
 	LPBYTE pbExtraInfo;
 	fsZipDataDescriptor descriptor;
 	UINT32 sigAfter;
@@ -116,9 +116,9 @@ struct fsZipLocalFile
 struct fsZipFile 
 {
 	fsZipFileHeader hdr;
-	fsString strFileName;
+	fsStringA strFileName;
 	LPBYTE pbExtraInfo;
-	fsString strComment;
+	fsStringA strComment;
 
 	fsZipFile () {}
 
@@ -144,9 +144,9 @@ class fsZipArchiveRebuilder : public fsArchiveRebuilder
 public:
 	
 	const fsArchiveFilePosition* GetFilePosition (int iFile);
-	virtual fsString GetFileName (int iFile);
+	virtual fsStringA GetFileName (int iFile);
 	virtual int GetFileCount();
-	virtual BOOL RebuildArchive (fs::list <fsString> vFileNames);
+	virtual BOOL RebuildArchive (fs::list <fsStringA> vFileNames);
 	fsZipArchiveRebuilder();
 	virtual ~fsZipArchiveRebuilder();
 
@@ -170,7 +170,7 @@ protected:
 	fs::list <fsZipLocalFile> m_vLocalFiles;
 	fs::list <fsZipFile> m_vFiles;
 	fsZipEndOfCentralDirHdr m_hdrEndOfCDir;
-	fsString m_strZipComment;
+	fsStringA m_strZipComment;
 };
 
 #pragma pack (pop)

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -45,15 +45,46 @@ STDAPI DllGetClassObject(REFCLSID rclsid, REFIID riid, LPVOID* ppv)
     return _Module.GetClassObject(rclsid, riid, ppv);
 }
 
+bool RegisterBho (HKEY hkRoot, bool register_)
+{
+	LPCTSTR key_path = _T ("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Browser Helper Objects\\{CC59E0F9-7E43-44FA-9FAA-8377850BF205}");
+	
+	if (!register_)
+		return SHDeleteKey (hkRoot, key_path) == ERROR_SUCCESS;
+
+	CRegKey key;
+	auto result = key.Create (hkRoot, key_path, nullptr, 0, KEY_WRITE);
+	if (result != ERROR_SUCCESS)
+		return result == ERROR_ALREADY_EXISTS;
+
+	key.SetDWORDValue (_T ("NoExplorer"), 1);
+
+	return true;
+}
+
+bool RegisterBho (bool register_)
+{
+	bool per_user = false;
+	AtlGetPerUserRegistration (&per_user);
+	return RegisterBho (per_user ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE, 
+		register_);
+}
+
 STDAPI DllRegisterServer(void)
 {
     
-    return _Module.RegisterServer(TRUE);
+    HRESULT hr = _Module.RegisterServer(TRUE);
+	if (FAILED (hr))
+		return hr;
+	return RegisterBho (true) ? S_OK : E_FAIL;
 }
 
 STDAPI DllUnregisterServer(void)
 {
-    return _Module.UnregisterServer(TRUE);
+	HRESULT hr = _Module.UnregisterServer(TRUE);
+	if (FAILED (hr))
+		return hr;
+	return RegisterBho (false) ? S_OK : E_FAIL;
 }
 
 BSTR WINAPI fdmbho_getTabUrl (DWORD dwThreadId)
@@ -65,4 +96,17 @@ BSTR WINAPI fdmbho_getTabUrl (DWORD dwThreadId)
 	CFDMIEBHO *bho = CFDMIEBHO::_vInstances [nIndex].pBHO;
 	vmsCriticalSectionAutoLock csal2 (&bho->m_cswstrPageUrl);
 	return SysAllocString (bho->m_wstrPageUrl.c_str ());
+}
+
+STDAPI vmsInstaller (bool bInstall, bool bCurrentUserOnly)
+{
+	if (bCurrentUserOnly)
+		AtlSetPerUserRegistration (true);
+
+	HRESULT hrRes = bInstall ? DllRegisterServer () : DllUnregisterServer ();
+
+	if (bCurrentUserOnly)
+		AtlSetPerUserRegistration (false);
+
+	return hrRes;
 }

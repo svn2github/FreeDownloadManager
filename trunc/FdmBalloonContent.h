@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FDMBALLOONCONTENT_H__FE26D01C_35BE_44BD_B630_81D31E201D88__INCLUDED_)

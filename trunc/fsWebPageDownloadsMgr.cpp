@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -74,10 +74,11 @@ void fsWebPageDownloadsMgr::Delete(fsWebPageDownloader *wpd)
 
 BOOL fsWebPageDownloadsMgr::Save()
 {
+
 	if (!isDirty())
 		return TRUE;
 
-	HANDLE hFile = CreateFile (fsGetDataFilePath ("spider.sav"), GENERIC_WRITE, FILE_SHARE_READ, NULL,
+	HANDLE hFile = CreateFile (fsGetDataFilePath (_T("spider.sav")), GENERIC_WRITE, FILE_SHARE_READ, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -123,7 +124,7 @@ BOOL fsWebPageDownloadsMgr::Save()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsWebPageDownloadsMgr::Save " + tstring(ex.what()));
+		vmsLogger::WriteLog(_T ("fsWebPageDownloadsMgr::Save ") + tstringFromString(ex.what()));
 		if (hFile != INVALID_HANDLE_VALUE)
 			CloseHandle (hFile);
 		return FALSE;
@@ -131,7 +132,7 @@ BOOL fsWebPageDownloadsMgr::Save()
 	catch (...)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsWebPageDownloadsMgr::Save unknown exception");
+		vmsLogger::WriteLog(_T("fsWebPageDownloadsMgr::Save unknown exception"));
 		if (hFile != INVALID_HANDLE_VALUE)
 			CloseHandle (hFile);
 		return FALSE;
@@ -162,7 +163,7 @@ BOOL fsWebPageDownloadsMgr::Load()
 {
 	m_vWPDs.clear ();
 
-	HANDLE hFile = CreateFile (fsGetDataFilePath ("spider.sav"), GENERIC_READ, FILE_SHARE_READ, NULL,
+	HANDLE hFile = CreateFile (fsGetDataFilePath (_T("spider.sav")), GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -224,6 +225,11 @@ BOOL fsWebPageDownloadsMgr::Load()
 
 	}
 
+	if (dwRequiredSize == 0) {
+		CloseHandle (hFile);
+		return TRUE;
+	}
+
 	std::auto_ptr<BYTE> pbtBufferGuard( new BYTE[dwRequiredSize] );
 	LPBYTE pbtBuffer = pbtBufferGuard.get();
 	if (pbtBuffer == 0) {
@@ -275,7 +281,7 @@ BOOL fsWebPageDownloadsMgr::OnDownloadRestored(vmsDownloadSmartPtr dld)
 	for (int i = m_vWPDs.size () - 1; i >= 0; i--)
 	{
 		fsWebPageDownloader* wpd = m_vWPDs [i];
-		if (fsWebPageDownloader::_DldEvents (dld, NULL, DME_DLDRESTORED, wpd))
+		if (fsWebPageDownloader::_DldEvents (dld, NULL, DME_DLDRESTORED, 0, wpd))
 			return TRUE;
 	}
 

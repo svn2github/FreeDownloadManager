@@ -1,11 +1,11 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 #include "vmsFirefoxExtensionUpdateMgr.h"
 #include "vmsAppFileUpdateInfo.h"
-#include "vmsFirefoxExtensionInstaller.h"
+#include "common/vmsFirefoxExtensionInstaller.h"
 #include "vmsSecurity.h"
 #include "FdmApp.h"
 
@@ -122,7 +122,7 @@ void vmsFirefoxExtensionUpdateMgr::LocateFirefoxExtension(void)
 			ver.FromString (wfd.cFileName);
 			if (ver.empty ())
 				continue;
-			if (verMax < ver)
+			if (verMax.CompareVersions (ver, vmsAppVersion::CT_FLOATING) < 0)
 			{
 				verMax = ver;
 				tstrExtensionPath = tstrPath + _T ("\\") + wfd.cFileName;
@@ -165,15 +165,17 @@ void vmsFirefoxExtensionUpdateMgr::GetExtensionsInstallationPath(tstring& tstrRe
 
 bool vmsFirefoxExtensionUpdateMgr::CheckForUpdates(void)
 {
+	LOGFN ("vmsFirefoxExtensionUpdateMgr::CheckForUpdates");
 	m_tstrExtensionNewVerURL = _T ("");
-	vmsAppFileUpdateInfo fui (_T ("http://freedownloadmanager.org/update/ffext.xml"), _T ("ffext"), _AppMgr.getBuildNumber ());
+	vmsAppFileUpdateInfo fui (_T ("http://up.freedownloadmanager.org/update/ffext.xml"), _AppMgr.getBuildNumber ());
 	if (!fui.Retrieve ())
 		return false;
 	if (fui.getResult ()->tstrFileURL.empty ())
 		return true;
 	vmsAppVersion ver; 
 	ver.FromString (fui.getResult ()->tstrVersion.c_str ());
-	if (ver > m_extensionVersion)
+	LOG ("new version: %s", stringFromTstring (fui.getResult ()->tstrVersion).c_str ());
+	if (ver.CompareVersions (m_extensionVersion, vmsAppVersion::CT_FLOATING) > 0)
 	{
 		m_tstrExtensionNewVerURL = fui.getResult ()->tstrFileURL;
 		m_extensionNewVer = ver;
@@ -211,10 +213,11 @@ bool vmsFirefoxExtensionUpdateMgr::PerformUpdate(void)
 	fsBuildPathToFile ((tstr + _T ("\\1")).c_str ());
 
 	vmsUnZip unzip;
-	if (FALSE == unzip.Unpack (tmpFile, tstr.c_str ()))
+	vmsError err;
+	if (FALSE == unzip.Unpack (tmpFile, tstr.c_str (), err))
 		return false;
 
-	if (GetFileAttributes ((tstr + _T ("\\install.rdf")).c_str ()) == DWORD (-1))
+	if (!AdjustInstallConfig(tstr))
 		return false;
 
 	m_tstrExtensionPath = tstr;
@@ -228,4 +231,32 @@ bool vmsFirefoxExtensionUpdateMgr::PerformUpdate(void)
 	m_extensionNewVer.clear ();	
 
 	return true;
+}
+
+bool vmsFirefoxExtensionUpdateMgr::AdjustInstallConfig(const std::wstring& installationPath)
+{
+	std::wstring rdfPath = installationPath;
+	rdfPath += _T("\\install.rdf");
+	if (GetFileAttributes(rdfPath.c_str()) == DWORD(-1))
+		return false;
+
+	
+	HANDLE hFile = CreateFile(rdfPath.c_str(), FILE_WRITE_ATTRIBUTES, FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+	if (hFile == INVALID_HANDLE_VALUE)
+	{
+		return false;
+	}
+	
+	SYSTEMTIME st;
+	GetSystemTime(&st);
+	
+	FILETIME ft;
+	SystemTimeToFileTime(&st, &ft);
+	
+	BOOL res = SetFileTime(hFile,
+		(LPFILETIME)NULL, 
+		&ft,	
+		&ft);	
+
+	return res == TRUE;
 }

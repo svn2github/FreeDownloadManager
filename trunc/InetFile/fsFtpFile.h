@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSFTPFILE_H__12AF861F_17DB_4F84_8679_7B8EBDCD4D75__INCLUDED_)
@@ -28,11 +28,11 @@ public:
 	
 	
 	
-	fsInternetResult OpenEx (LPCSTR pszFilePath, UINT64 uStartPos, UINT64 uUploadPartSize = _UI64_MAX, UINT64 uUploadTotalSize = _UI64_MAX);
+	fsInternetResult OpenEx (LPCTSTR pszFilePath, UINT64 uStartPos, UINT64 uUploadPartSize = _UI64_MAX, UINT64 uUploadTotalSize = _UI64_MAX);
 	fsFtpTransferType GetTransferType();
 	void SetDontUseLIST (BOOL b);
 	
-	virtual fsInternetResult QuerySize (LPCSTR pszFilePath);
+	virtual fsInternetResult QuerySize (LPCTSTR pszFilePath);
 	
 	virtual void CloseHandle();
 	
@@ -40,16 +40,16 @@ public:
 	
 	fsInternetResult Read (LPBYTE pBuffer, DWORD dwToRead, DWORD *pdwRead);
 	
-	fsInternetResult Open (LPCSTR pszFilePath, UINT64 uStartPos);
+	fsInternetResult Open (LPCTSTR pszFilePath, UINT64 uStartPos);
 	fsFtpFile();
 	virtual ~fsFtpFile();
 
 protected:
-	static BOOL FtpCommand (HINTERNET hConnect, BOOL fExpectResponse, DWORD dwFlags, LPCSTR pszCommand, DWORD_PTR dwContext, HINTERNET* phFtpCommand);
-	BOOL Send_LIST (LPSTR pszCmd, LPCSTR pszFile);
+	static BOOL FtpCommand (HINTERNET hConnect, BOOL fExpectResponse, DWORD dwFlags, LPCTSTR pszCommand, DWORD_PTR dwContext, HINTERNET* phFtpCommand);
+	BOOL Send_LIST (LPTSTR pszCmd, LPCTSTR pszFile);
 	BOOL m_bDontUseLIST;
 	
-	BOOL IsDigit (char c);
+	BOOL IsDigit (TCHAR c);
 	
 	
 	fsInternetResult PASV_ConnectSocket();

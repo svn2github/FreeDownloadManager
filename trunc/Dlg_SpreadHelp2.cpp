@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -40,7 +40,7 @@ BOOL CDlg_SpreadHelp2::OnInitDialog()
 	CDialog::OnInitDialog();
 
 	m_wbe.Attach ();
-	m_wb.Navigate ("about:blank", 0, 0, 0, 0);
+	m_wb.Navigate (_T("about:blank"), 0, 0, 0, 0);
 
 	CString strHTML;
 	CString strNewHTML = _App.View_SpreadHelpDialog_LinkToUsText ();
@@ -48,7 +48,7 @@ BOOL CDlg_SpreadHelp2::OnInitDialog()
 	if (strNewHTML == "")
 	{
 		CString str2;
-		str2.Format ("%x", GetSysColor (COLOR_3DFACE));
+		str2.Format (_T("%x"), GetSysColor (COLOR_3DFACE));
 
 		char c0 = str2[0], c1 = str2[1];
 		str2.SetAt (0, str2 [4]);
@@ -57,7 +57,7 @@ BOOL CDlg_SpreadHelp2::OnInitDialog()
 		str2.SetAt (5, c1);
 
 		CString str5 = LS (L_SHDLG_M5);
-		str5.Replace ("\n", "<br>");
+		str5.Replace (_T("\n"), _T("<br>"));
 
 		UINT nM3 = L_SHDLG_M3;
 		SYSTEMTIME time;
@@ -66,20 +66,20 @@ BOOL CDlg_SpreadHelp2::OnInitDialog()
 			nM3 = L_SHDLG_M3_BEFORE_AUG16_2006;
 
 		CString str;
-		str.Format ("<html><style type=\"text/css\"><!--\nbody {margin-left: 0px;	margin-top: 0px; margin-right: 0px;\
+		str.Format (_T("<html><style type=\"text/css\"><!--\nbody {margin-left: 0px;	margin-top: 0px; margin-right: 0px;\
 margin-bottom: 0px; } \n-->\n</style><body bgcolor='#%s'>\
-<font face='ms sans serif' size='-8pt'>%s<br><br>%s<br><br>%s<br><br>%s<br><br>%s<br><br>%s</font></body></html>", 
+<font face='ms sans serif' size='-8pt'>%s<br><br>%s<br><br>%s<br><br>%s<br><br>%s<br><br>%s</font></body></html>"), 
 			str2, LS (L_DEARFOLK), LS (L_SHDLG_M1),
 			LS (L_SHDLG_M2), LS (nM3), LS (L_SHDLG_M4), str5);
 
 		CMainFrame* pFrm = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
 
 		CString str3;
-		str3.Format ("<a href='http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%s_%d'>%s</a>", 
+		str3.Format (_T("<a href='http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%s_%d'>%s</a>"), 
 			vmsFdmAppMgr::getBuildNumberAsString (), pFrm->m_Customizations.get_AffiliateID (), LS (L_FDMBUZZ));
 
 		CString str4;
-		str4.Format ("<a href='http://fdm.freedownloadmanager.org/fromfdm/blog.php3?from=%s_%d'>%s</a>",
+		str4.Format (_T("<a href='http://fdm.freedownloadmanager.org/fromfdm/blog.php3?from=%s_%d'>%s</a>"),
 			vmsFdmAppMgr::getBuildNumberAsString (), pFrm->m_Customizations.get_AffiliateID (), LS (L_BLOG));
 
 		strHTML.Format (str, str3, str4);
@@ -87,7 +87,7 @@ margin-bottom: 0px; } \n-->\n</style><body bgcolor='#%s'>\
 	else
 	{
 		CString str2;
-		str2.Format ("%x", GetSysColor (COLOR_3DFACE));
+		str2.Format (_T("%x"), GetSysColor (COLOR_3DFACE));
 
 		char c0 = str2[0], c1 = str2[1];
 		str2.SetAt (0, str2 [4]);
@@ -96,36 +96,36 @@ margin-bottom: 0px; } \n-->\n</style><body bgcolor='#%s'>\
 		str2.SetAt (5, c1);
 
 		CString str;
-		str.Format ("<html><style type=\"text/css\"><!--\nbody {margin-left: 0px;	margin-top: 0px; margin-right: 0px;\
+		str.Format (_T("<html><style type=\"text/css\"><!--\nbody {margin-left: 0px;	margin-top: 0px; margin-right: 0px;\
 margin-bottom: 0px; } \n-->\n</style><body bgcolor='#%s'>\
-<font face='ms sans serif' size='-8pt'>%s</font></body></html>", 
+<font face='ms sans serif' size='-8pt'>%s</font></body></html>"), 
 			str2, strNewHTML);
 
 		CMainFrame* pFrm = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
 
 		CString str3;
-		str3.Format ("http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%s_%d", 
+		str3.Format (_T("http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%s_%d"), 
 			vmsFdmAppMgr::getBuildNumberAsString (), pFrm->m_Customizations.get_AffiliateID ());
 
 		CString str4;
-		str4.Format ("http://fdm.freedownloadmanager.org/fromfdm/blog.php3?from=%s_%d",
+		str4.Format (_T("http://fdm.freedownloadmanager.org/fromfdm/blog.php3?from=%s_%d"),
 			vmsFdmAppMgr::getBuildNumberAsString (), pFrm->m_Customizations.get_AffiliateID ());
 
 		strHTML.Format (str, str3, str4);
 	}
 
 	CStdioFile file;
-	char szTmpPath [MY_MAX_PATH];
-	char szTmpFile [MY_MAX_PATH];
+	TCHAR szTmpPath [MY_MAX_PATH];
+	TCHAR szTmpFile [MY_MAX_PATH];
 	GetTempPath (MY_MAX_PATH, szTmpPath);
-	GetTempFileName (szTmpPath, "fdm", 0, szTmpFile);
+	GetTempFileName (szTmpPath, _T("fdm"), 0, szTmpFile);
 	m_strFile = szTmpFile;
 	file.Open (m_strFile, CFile::modeCreate | CFile::modeWrite);
 	file.WriteString (strHTML);
 	file.Close ();
 
 	CString str;
-	str.Format ("file://%s", m_strFile);
+	str.Format (_T("file://%s"), m_strFile);
 
 	m_wb.Navigate (str, 0, 0, 0, 0);
 
@@ -173,7 +173,7 @@ void CDlg_SpreadHelp2::OnOK()
 	CString str;
 	CMainFrame* pFrm = (CMainFrame*) AfxGetApp ()->m_pMainWnd;
 
-	str.Format ("http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%s_%d",
+	str.Format (_T("http://fdm.freedownloadmanager.org/fromfdm/buzz.php3?from=%s_%d"),
 		vmsFdmAppMgr::getBuildNumberAsString (), pFrm->m_Customizations.get_AffiliateID ());
 
 	fsOpenUrlInBrowser (str);

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_DLGEXPORTDOWNLOADS_H__5B1FA9EB_3411_4A64_8ECE_DFE914184E18__INCLUDED_)
@@ -15,9 +15,9 @@ class CDlgExportDownloads : public CDialog
 public:
 	
 	
-	static BOOL ExportDownloads_ToURLListFile (LPCSTR pszFile, DLDS_LIST* pvpDlds, BOOL bAppend);
+	static BOOL ExportDownloads_ToURLListFile (LPCTSTR pszFile, DLDS_LIST* pvpDlds, BOOL bAppend);
 	
-	static BOOL ExportDownloads_ToDLInfoListFile (LPCSTR pszFile, DLDS_LIST* pvpDlds, BOOL bAppend);
+	static BOOL ExportDownloads_ToDLInfoListFile (LPCTSTR pszFile, DLDS_LIST* pvpDlds, BOOL bAppend);
 	
 	
 	

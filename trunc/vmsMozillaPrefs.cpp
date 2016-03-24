@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -15,7 +15,7 @@ vmsMozillaPrefs::~vmsMozillaPrefs()
 
 }
 
-bool vmsMozillaPrefs::LoadPrefs(LPCSTR pszFile)
+bool vmsMozillaPrefs::LoadPrefs(LPCTSTR pszFile)
 {
 	Free ();
 
@@ -27,11 +27,13 @@ bool vmsMozillaPrefs::LoadPrefs(LPCSTR pszFile)
 		return false;
 	
 	int n = GetFileSize (hFile, NULL);
-	m_strPrefs.pszString = new char [n+1];
+	std::auto_ptr<char> apchPrefsGuard( new char [n+1] );
+	char* szPrefs = apchPrefsGuard.get();
+	memset(szPrefs, 0, n + 1);
 
 	DWORD dw;
-	ReadFile (hFile, m_strPrefs.pszString, n, &dw, NULL);
-	m_strPrefs.pszString [n] = 0;
+	ReadFile (hFile, szPrefs, n, &dw, NULL);
+	m_strPrefs = szPrefs;
 
 	CloseHandle (hFile);
 
@@ -40,30 +42,27 @@ bool vmsMozillaPrefs::LoadPrefs(LPCSTR pszFile)
 
 void vmsMozillaPrefs::Free()
 {
-	if (m_strPrefs.pszString) {
-		delete [] m_strPrefs.pszString;
-		m_strPrefs.pszString = 0;
-	}
+	m_strPrefs = "";
 }
 
-fsString vmsMozillaPrefs::get_Value(LPCSTR pszPrefName) const
+std::string vmsMozillaPrefs::get_Value(LPCSTR pszPrefName) const
 {
-	LPCSTR pszPrefs = m_strPrefs.pszString;
+	LPCSTR pszPrefs = m_strPrefs.c_str();
 
-	fsString strPrefName; 
+	std::string strPrefName; 
 	strPrefName = "\""; 
 	strPrefName += pszPrefName;
 	strPrefName += "\""; 
 
 	
 
-	while (*pszPrefs && strnicmp (pszPrefs, strPrefName, strPrefName.Length ()))
+	while (*pszPrefs && strnicmp (pszPrefs, strPrefName.c_str(), strPrefName.length ()))
 		pszPrefs++;
 
 	if (*pszPrefs == 0)
 		return MOZILLAPREFS_VALUE_NOT_FOUND;
 
-	pszPrefs += strPrefName.Length ();
+	pszPrefs += strPrefName.length ();
 	
 	
 	while (*pszPrefs && *pszPrefs != ',')
@@ -83,7 +82,7 @@ fsString vmsMozillaPrefs::get_Value(LPCSTR pszPrefName) const
 		bInQ = true;
 	}
 
-	fsString strValue;
+	std::string strValue;
 
 	
 	

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -9,6 +9,7 @@
 #include "MainFrm.h"
 #include "UIThread.h"
 #include "inetutil.h"
+#include "vmsYouTubeParserDllMgr.h"
 
 #include "DownloadsWnd.h"
 #include "SpiderWnd.h"
@@ -47,7 +48,7 @@ STDMETHODIMP CWGUrlReceiver::AddDownload()
 		{
 			USES_CONVERSION;
 			fsDownloadMgr mgr (NULL);
-			mgr.CreateByUrl (W2A (m_dlInfo.bstrUrl), TRUE);
+			mgr.CreateByUrl (W2T (m_dlInfo.bstrUrl), TRUE);
 			mgr.QuerySize ();
 			UINT64 uSize = mgr.GetDownloader ()->GetSSFileSize ();
 			if (iSize >= uSize)
@@ -55,6 +56,7 @@ STDMETHODIMP CWGUrlReceiver::AddDownload()
 		}
 	}
 
+	CheckYouTubePicture();
 	StartJobThread (_threadAddDownload);
 	return S_OK;
 }
@@ -152,15 +154,15 @@ HRESULT CWGUrlReceiver::AddDownload_imp(_ic_DownloadInfo* dlinfo)
 
 	ap.pUiWindow = dlinfo->pUiWindow;
 
-	BOOL bAdded = UINT_MAX != _pwndDownloads->CreateDownload (W2A (dlinfo->bstrUrl), TRUE, 
-			W2A (dlinfo->bstrComment), W2A (dlinfo->bstrReferer), bSilent, 
+	BOOL bAdded = UINT_MAX != _pwndDownloads->CreateDownload (W2T (dlinfo->bstrUrl), TRUE, 
+			W2T (dlinfo->bstrComment), W2T (dlinfo->bstrReferer), bSilent, 
 			DWCD_NOFORCEAUTOLAUNCH, NULL, &ap, &res);
 
 	if (bAdded && bSilent)
-		CMainFrame::ShowTimeoutBalloon (W2A (dlinfo->bstrUrl), "Download added", NIIF_INFO, TRUE);
+		CMainFrame::ShowTimeoutBalloon (W2T (dlinfo->bstrUrl), _T("Download added"), NIIF_INFO, TRUE);
 
 	
-	if (res == ID_DLNOTADDED)
+	if (res == ID_DLNOTADDED_EXISTS || res == ID_DLNOTADDED_NEEDSPECIFICCREATION)
 		bAdded = TRUE;
 
 	return bAdded ? S_OK : S_FALSE;
@@ -207,17 +209,17 @@ BOOL CWGUrlReceiver::is_ExtToSkip()
 	USES_CONVERSION;
 	fsURL url;
 
-	if (url.Crack (W2A (m_dlInfo.bstrUrl)) != IR_SUCCESS)
+	if (url.Crack (W2T (m_dlInfo.bstrUrl)) != IR_SUCCESS)
 		return TRUE;
 
-	char szFile [MY_MAX_PATH];
+	TCHAR szFile [MY_MAX_PATH];
 	fsFileNameFromUrlPath (url.GetPath (), url.GetInternetScheme () == INTERNET_SCHEME_FTP,
 		TRUE, szFile, sizeof (szFile));
 
 	if (*szFile == 0)
 		return FALSE;
 
-	LPCSTR pszExt = strrchr (szFile, '.');
+	LPCTSTR pszExt = _tcsrchr (szFile, _T('.'));
 	if (pszExt == NULL) 
 		return FALSE;
 
@@ -441,27 +443,49 @@ STDMETHODIMP CWGUrlReceiver::put_FileSize(BSTR newVal)
 void CWGUrlReceiver::CheckRapidshare()
 {
 	USES_CONVERSION;
-	extern LPCSTR strcmpi_m (LPCSTR pszWhere, LPCSTR pszWhat);
+	extern LPCTSTR strcmpi_m (LPCTSTR pszWhere, LPCTSTR pszWhat);
 	fsURL url;
-	if (IR_SUCCESS != url.Crack (W2CA (m_dlInfo.bstrUrl)))
+	if (IR_SUCCESS != url.Crack (W2CT (m_dlInfo.bstrUrl)))
 		return;
-	if (stricmp (url.GetHostName (), "rapidshare.com") == 0 ||
-			strcmpi_m (url.GetHostName (), "*.rapidshare.com") == 0)
+	if (_tcsicmp (url.GetHostName (), _T("rapidshare.com")) == 0 ||
+			strcmpi_m (url.GetHostName (), _T("*.rapidshare.com")) == 0)
 	{
-		std::string strPath = url.GetPath ();
-		LPCSTR psz = strrchr (strPath.c_str (), '#');
+		tstring strPath = url.GetPath ();
+		LPCTSTR psz = _tcsrchr (strPath.c_str (), _T('#'));
 		if (psz)
 		{
 			strPath.erase (strPath.begin () + (psz-strPath.c_str ()), strPath.end ());
 			fsURL url2;
-			char szUrl [10000] = "";
-			DWORD dwSize = 10000;
+			TCHAR szUrl [10000] = _T("");
+			DWORD dwSize = _countof (szUrl);
 			if (IR_SUCCESS == url2.Create (url.GetInternetScheme (), url.GetHostName (), url.GetPort (), 
 					url.GetUserName (), url.GetPassword (), strPath.c_str (), szUrl, &dwSize))
 			{
-				m_dlInfo.bstrUrl = A2CW (szUrl);
+				m_dlInfo.bstrUrl = T2CW (szUrl);
 			}
 		}
+	}
+}
+
+void CWGUrlReceiver::CheckYouTubePicture(){
+	if (m_dlInfo.bstrUrl.Length() == 0)
+		return;
+
+	fsURL url;
+	if (IR_SUCCESS != url.Crack(W2CT(m_dlInfo.bstrUrl)))
+		return;
+
+	std::wstring sUrl(m_dlInfo.bstrUrl);
+	auto youTubeParserDllMgr = vmsYouTubeParserDllMgr::get();
+	if (!youTubeParserDllMgr)
+	{
+		return;
+	}
+	auto extractor = youTubeParserDllMgr->objectsHolder()->createResourceObject(L"");
+	std::wstring youTubeID;
+	if (extractor && extractor->object()->extractIDFromImageURL(sUrl, youTubeID)){
+		std::wstring youTubeDownloadURL = extractor->object()->createDownloadURLFromID(youTubeID);
+		m_dlInfo.bstrUrl = T2CW(youTubeDownloadURL.c_str());
 	}
 }
 

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -45,9 +45,9 @@ BOOL CDownloads_Log::Create(CWnd *pParent)
 
 	SetExtendedStyle (LVS_EX_FULLROWSELECT|LVS_EX_HEADERDRAGDROP);
 
-	InsertColumn (0, "Time", LVCFMT_LEFT, 85, 0);
-	InsertColumn (1, "Date", LVCFMT_LEFT, 70, 0);
-	InsertColumn (2, "Information", LVCFMT_LEFT, 300, 0);
+	InsertColumn (0, _T("Time"), LVCFMT_LEFT, 85, 0);
+	InsertColumn (1, _T("Date"), LVCFMT_LEFT, 70, 0);
+	InsertColumn (2, _T("Information"), LVCFMT_LEFT, 300, 0);
 
 	m_images.Create (16, 15, ILC_COLOR24 | ILC_MASK, 6, 1);
 	CBitmap bmp;
@@ -55,7 +55,7 @@ BOOL CDownloads_Log::Create(CWnd *pParent)
 	m_images.Add (&bmp, RGB (255, 0, 255));
 	SetImageList (&m_images, LVSIL_SMALL);
 
-	ReadState ("DownloadsLog");
+	ReadState (_T("DownloadsLog"));
 
 	ShowWindow (SW_SHOW);
 
@@ -65,16 +65,16 @@ BOOL CDownloads_Log::Create(CWnd *pParent)
 void CDownloads_Log::AddRecord(fsDownloadEvents *event)
 {
 	SYSTEMTIME time;
-	CHAR strTime [1000], strDate [1000];
+	TCHAR strTime [1000], strDate [1000];
 
 	FileTimeToSystemTime (&event->timeEvent, &time);
 
 	
 	SystemTimeToStr (&time, strDate, strTime);
 
-	char szEv [10000];
-	LPCSTR pszEvent = event->strEvent;
-	LPCSTR pszEv2 = pszEvent;
+	TCHAR szEv [10000];
+	LPCTSTR pszEvent = event->strEvent;
+	LPCTSTR pszEv2 = pszEvent;
 
 	int iItem = 0;
 	BOOL bFirst = TRUE;
@@ -83,17 +83,17 @@ void CDownloads_Log::AddRecord(fsDownloadEvents *event)
 	while (pszEvent)
 	{
 		
-		pszEvent = strstr (pszEvent, "\r\n");
+		pszEvent = _tcsstr (pszEvent, _T("\r\n"));
 		if (pszEvent)
 		{
 			
-			strncpy (szEv, pszEv2, pszEvent - pszEv2);
+			_tcsncpy (szEv, pszEv2, pszEvent - pszEv2);
 			szEv [pszEvent - pszEv2] = 0;
 			if (*szEv)
 			{
 				
-				iItem = AddItem (bFirst ? strTime : "", event->clrBg, event->clrText, bFirst ? event->iImage : -1);
-				SetItemText (iItem, 1, bFirst ? strDate : "");
+				iItem = AddItem (bFirst ? strTime : _T(""), event->clrBg, event->clrText, bFirst ? event->iImage : -1);
+				SetItemText (iItem, 1, bFirst ? strDate : _T(""));
 				SetItemText (iItem, 2, szEv);
 			}
 			
@@ -107,7 +107,7 @@ void CDownloads_Log::AddRecord(fsDownloadEvents *event)
 	
 	if (*pszEv2)
 	{
-		iItem = AddItem (bFirst ? strTime : "", event->clrBg, event->clrText, bFirst ? event->iImage : -1);
+		iItem = AddItem (bFirst ? strTime : _T(""), event->clrBg, event->clrText, bFirst ? event->iImage : -1);
 		if (bFirst)
 			SetItemText (iItem, 1, strDate);
 		SetItemText (iItem, 2, pszEv2);
@@ -141,7 +141,7 @@ void CDownloads_Log::SetActiveDownload(vmsDownloadSmartPtr dld)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloads_Log::SetActiveDownload " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloads_Log::SetActiveDownload " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -262,7 +262,7 @@ void CDownloads_Log::OnForceUpdate()
 void CDownloads_Log::OnCopyToCb() 
 {
 	SYSTEMTIME time;
-	CHAR strTime [1000], strDate [1000];
+	TCHAR strTime [1000], strDate [1000];
 
 	CString strText;
 
@@ -273,10 +273,10 @@ void CDownloads_Log::OnCopyToCb()
 		FileTimeToSystemTime (&event->timeEvent, &time);
 		SystemTimeToStr (&time, strDate, strTime);
 
-		strText += strTime; strText += ' '; 
-		strText += strDate; strText += ' ';
+		strText += strTime; strText += _T(' '); 
+		strText += strDate; strText += _T(' ');
 		strText += event->strEvent;
-		strText += "\r\n";
+		strText += _T("\r\n");
 	}
 
 	_ClipbrdMgr.Text (strText);	

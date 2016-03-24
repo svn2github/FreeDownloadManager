@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -53,7 +53,7 @@ int CDownloads_Downloads::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_splitter.SetWnd1 (m_tasks.m_hWnd);
 	m_splitter.SetWnd2 (m_info.m_hWnd);
 	m_splitter.SetMinDimensions (50, 50);
-	float fRatio = _App.View_SplitterRatio ("Downloads_DL_LOG");
+	float fRatio = _App.View_SplitterRatio (_T("Downloads_DL_LOG"));
 	if (fRatio < 0.1f)
 		fRatio = 0.1f;
 	m_splitter.SetRatio (fRatio);
@@ -96,8 +96,8 @@ void CDownloads_Downloads::ShowDLInfo(BOOL bShow)
 
 void CDownloads_Downloads::SaveState()
 {
-	_App.View_SplitterRatio ("Downloads_DL_LOG", m_splitter.GetRatio ());
-	m_tasks.SaveState ("DownloadsList");
+	_App.View_SplitterRatio (_T("Downloads_DL_LOG"), m_splitter.GetRatio ());
+	m_tasks.SaveState (_T("DownloadsList"));
 	m_info.SaveState ();
 }
 

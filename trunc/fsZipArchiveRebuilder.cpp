@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -61,7 +61,7 @@ DWORD fsZipArchiveRebuilder::RetreiveArchiveContent()
 
 		dwPos += sizeof (hdr);
 
-		fsString strFileName;
+		fsStringA strFileName;
 		strFileName.alloc (hdr.wFileNameLen);
 
 		if (m_in->Read (strFileName, hdr.wFileNameLen) != hdr.wFileNameLen)
@@ -170,7 +170,7 @@ DWORD fsZipArchiveRebuilder::RetreiveArchiveContent()
 		if (m_in->Read (&hdr, sizeof (hdr)) != sizeof (hdr))
 			return m_in->GetLastError () != ASE_NOMOREDATA ? ARR_STREAMERROR : ARR_BADARCHIVE;;
 
-		fsString strFileName;
+		fsStringA strFileName;
 		strFileName.alloc (hdr.wFileNameLen);
 
 		if (m_in->Read (strFileName, hdr.wFileNameLen) != hdr.wFileNameLen)
@@ -186,7 +186,7 @@ DWORD fsZipArchiveRebuilder::RetreiveArchiveContent()
 				return m_in->GetLastError () != ASE_NOMOREDATA ? ARR_STREAMERROR : ARR_BADARCHIVE;;
 		}
 
-		fsString strComment;
+		fsStringA strComment;
 		strComment.alloc (hdr.wFileCommentLen);
 		
 		if (m_in->Read (strComment, hdr.wFileCommentLen) != hdr.wFileCommentLen)
@@ -226,7 +226,7 @@ DWORD fsZipArchiveRebuilder::RetreiveArchiveContent()
 	return NOERROR;
 }
 
-BOOL fsZipArchiveRebuilder::RebuildArchive(fs::list <fsString> vFileNames)
+BOOL fsZipArchiveRebuilder::RebuildArchive(fs::list <fsStringA> vFileNames)
 {
 	for (int i = 0; i < m_vLocalFiles.size (); i++)
 	{
@@ -248,7 +248,7 @@ int fsZipArchiveRebuilder::GetFileCount()
 	return m_vLocalFiles.size ();
 }
 
-fsString fsZipArchiveRebuilder::GetFileName(int iFile)
+fsStringA fsZipArchiveRebuilder::GetFileName(int iFile)
 {
 	return m_vLocalFiles [iFile].strFileName;
 }

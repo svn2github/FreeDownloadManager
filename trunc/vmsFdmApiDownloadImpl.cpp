@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -90,14 +90,14 @@ void vmsFdmApiDownloadImpl::DeleteFileOnDisk()
 	m_dld->pMgr->DeleteFile ();
 }
 
-void vmsFdmApiDownloadImpl::getFileName(LPSTR pszFileName)
+void vmsFdmApiDownloadImpl::getFileName(LPTSTR pszFileName)
 {
-	strcpy (pszFileName, m_dld->pMgr->get_OutputFilePathName ());
+	_tcscpy (pszFileName, m_dld->pMgr->get_OutputFilePathName ());
 }
 
-void vmsFdmApiDownloadImpl::getUrl(LPSTR pszUrl)
+void vmsFdmApiDownloadImpl::getUrl(LPTSTR pszUrl)
 {
-	strcpy (pszUrl, m_dld->pMgr->get_URL ());
+	_tcscpy (pszUrl, m_dld->pMgr->get_URL ());
 }
 
 float vmsFdmApiDownloadImpl::getProgress()

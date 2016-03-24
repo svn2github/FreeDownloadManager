@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -7,7 +7,6 @@
 #include "FdmApp.h"
 #include "DlgElevateRequired.h"
 #include "vmsElevatedFdm.h"
-#include "VistaFx/VistaFx.h"
 
 vmsFdmFilesDeleter::vmsFdmFilesDeleter(void)
 {
@@ -20,6 +19,7 @@ vmsFdmFilesDeleter::~vmsFdmFilesDeleter(void)
 bool vmsFdmFilesDeleter::DeleteBrowserPluginFiles(std::vector <std::auto_ptr <vmsBrowserPluginFileDeleter> >& vFiles)
 {
 	bool bOK = true;
+	vmsWinOsVersion osver;
 
 	std::vector <vmsKnownBrowsers::Browser> vPluginsToDeleteElevated;
 
@@ -31,7 +31,8 @@ bool vmsFdmFilesDeleter::DeleteBrowserPluginFiles(std::vector <std::auto_ptr <vm
 			continue;
 
 		
-		if (vFiles [i]->getErrorType () == vmsFileDeleter::NotEnoughRights && VistaFx::IsVistaOrHigher () && !IsUserAnAdmin ())
+		if (vFiles [i]->getErrorType () == vmsFileDeleter::NotEnoughRights && 
+			osver.isVistaOrHigher () && !IsUserAnAdmin ())
 		{
 			vPluginsToDeleteElevated.push_back (vFiles [i]->getBrowser ());
 			continue;

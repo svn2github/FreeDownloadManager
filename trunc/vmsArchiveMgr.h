@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSARCHIVEMGR_H__EA5080C6_6467_4666_AF70_639ECE5CD370__INCLUDED_)
@@ -17,7 +17,7 @@ class vmsArchiveMgr
 public:
 	vmsArchiveExtractError get_LastExtractError();
 	void set_ArchiveCallback (vmsArchiveCallback* pAC);
-	bool Extract (LPCSTR pszArchive, LPCSTR pszOutFolder);
+	bool Extract (LPCTSTR pszArchive, LPCTSTR pszOutFolder);
 	vmsArchiveMgr();
 	virtual ~vmsArchiveMgr();
 

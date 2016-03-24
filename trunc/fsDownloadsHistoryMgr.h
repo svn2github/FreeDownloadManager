@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSDOWNLOADSHISTORYMGR_H__EDB70A83_62F7_4001_8C36_E948F4B569BF__INCLUDED_)
@@ -55,7 +55,7 @@ enum fsDownloadsHistoryMgrEvent
 
 typedef void (*fntDHMEEventFunc)(fsDownloadsHistoryMgrEvent ev, fsDLHistoryRecord *rec, LPVOID);
 
-#define DLHISTFILE_CURRENT_VERSION	(1)
+#define DLHISTFILE_CURRENT_VERSION	(2)
 #define DLHISTFILE_SIG "FDM Downloads History"
 
 struct fsDownloadsHistMgrFileHdr
@@ -78,14 +78,16 @@ public:
 	fsDLHistoryRecord* GetRecord (int iIndex);
 	BOOL LoadHistory();
 	BOOL SaveHistory();
+	BOOL LoadRecord(HANDLE hFile, fsDLHistoryRecordPtr& rec);
+	BOOL LoadRecord_old(HANDLE hFile, fsDLHistoryRecordPtr& rec);
 	int GetRecordCount();
 	void AddToHistory (vmsDownloadSmartPtr dld);
 	void SetEventFunc (fntDHMEEventFunc pfn, LPVOID lpParam);
 	void ClearHistory ();
 	
 	void ReadSettings();
-	void Lock () {EnterCriticalSection (&m_csRecords);}
-	void Unlock () {LeaveCriticalSection (&m_csRecords);}
+	void Lock () {EnterCriticalSection (m_csRecords);}
+	void Unlock () {LeaveCriticalSection (m_csRecords);}
 
 	virtual void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
 	virtual bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);

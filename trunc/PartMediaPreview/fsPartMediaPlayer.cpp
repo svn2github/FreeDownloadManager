@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsPartMediaPlayer.h"
@@ -255,7 +255,7 @@ HRESULT fsPartMediaPlayer::Set_Volume(long lVolume)
 	return S_OK;
 }
 
-HRESULT fsPartMediaPlayer::Open2(LPCSTR pszFile)
+HRESULT fsPartMediaPlayer::Open2(LPCTSTR pszFile)
 {
 	HRESULT hr;
 
@@ -264,7 +264,13 @@ HRESULT fsPartMediaPlayer::Open2(LPCSTR pszFile)
 	RIF (CoCreateInstance (CLSID_FilterGraph, NULL, CLSCTX_INPROC_SERVER, IID_IGraphBuilder, (void**) &m_pGB));
 
 	WCHAR wszFile [MAX_PATH];
+	memset(wszFile, 0, MAX_PATH * sizeof(WCHAR));
+
+#ifdef UNICODE
+	wcscpy_s(wszFile, MAX_PATH, pszFile);
+#else
 	MultiByteToWideChar (CP_ACP, 0, pszFile, -1, wszFile, MAX_PATH);
+#endif
 
 	RIF (m_pGB->RenderFile (wszFile, NULL));
 

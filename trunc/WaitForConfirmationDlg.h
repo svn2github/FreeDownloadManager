@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_WAITFORCONFIRMATIONDLG_H__F6E1B9F6_A68E_4939_9F4B_CAD4C5616BD6__INCLUDED_)
@@ -14,11 +14,11 @@ class CWaitForConfirmationDlg : public CDialog
 
 public:
 	BOOL m_bDontAsk;
-	LPCSTR m_pszIcon;
+	LPCTSTR m_pszIcon;
 	
 	
 	
-	void Init (LPCSTR pszMsg, UINT uWait = UINT_MAX, BOOL bShowDontAsk = FALSE, BOOL bNoIsDefault = FALSE, LPCSTR pszDontAskAgainText = NULL, LPCSTR pszMsgIfDontAskAgain = NULL);
+	void Init (LPCTSTR pszMsg, UINT uWait = UINT_MAX, BOOL bShowDontAsk = FALSE, BOOL bNoIsDefault = FALSE, LPCTSTR pszDontAskAgainText = NULL, LPCTSTR pszMsgIfDontAskAgain = NULL);
 	CWaitForConfirmationDlg(CWnd* pParent = NULL);   
 
 	//{{AFX_DATA(CWaitForConfirmationDlg)

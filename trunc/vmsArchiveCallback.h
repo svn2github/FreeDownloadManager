@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSARCHIVECALLBACK_H__7EC4DC57_1869_4484_84A2_DFBEB2BE063C__INCLUDED_)
@@ -21,7 +21,7 @@ enum vmsAC_OverwriteMode {
 };
 
 struct vmsOverwriteFileInfo {
-	LPCSTR pszFile;
+	LPCTSTR pszFile;
 	UINT64* puNewSize;	
 	FILETIME* ptimeNewLastWrite;
 };
@@ -33,9 +33,9 @@ public:
 	
 	virtual void AskOverwrite (vmsOverwriteFileInfo& ofi, vmsAC_OverwriteMode& enOM, bool& bForAll) = NULL;
 	
-	virtual bool BeforeExtract (LPCSTR pszFile) = NULL;
+	virtual bool BeforeExtract (LPCTSTR pszFile) = NULL;
 	
-	virtual bool AfterExtract (LPCSTR pszFile, vmsAC_ExtractResult res) = NULL;
+	virtual bool AfterExtract (LPCTSTR pszFile, vmsAC_ExtractResult res) = NULL;
 	
 	virtual bool SetProgress (int nProgress) = NULL;
 

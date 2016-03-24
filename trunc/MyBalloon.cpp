@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -47,7 +47,7 @@ BOOL vmsSetLayeredWindowAttributes (HWND hWnd, COLORREF clrKey, BYTE bAlpha, DWO
 		HMODULE hDll = LoadLibrary (_T ("User32.Dll"));
 		
 		if (hDll)
-			_pfnSetLWA = (fntSetLayeredWndAttr) GetProcAddress (hDll, _T ("SetLayeredWindowAttributes"));
+			_pfnSetLWA = (fntSetLayeredWndAttr) GetProcAddress (hDll, "SetLayeredWindowAttributes");
 		
 		if (_pfnSetLWA == NULL)
 			return FALSE;
@@ -98,7 +98,7 @@ void CMyBalloon::Create(CWnd *pwndParent, bool bTrayBalloon, BYTE byteTrancparen
 	{	
 		CRect rc (0,0,0,0);
 		CWnd::Create (AfxRegisterWndClass (0, LoadCursor (NULL, IDC_ARROW), NULL, NULL), 
-			"", WS_POPUP, rc, pwndParent, 0);
+			_T(""), WS_POPUP, rc, pwndParent, 0);
 	}
 
 	CRect rc;

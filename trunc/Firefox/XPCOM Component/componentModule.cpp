@@ -1,8 +1,8 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
-#include <Windows.h>
+#include "common.h"
 
 #include "mozilla/ModuleUtils.h"
 
@@ -12,10 +12,8 @@
 #include "FDMForFirefox.h"
 #include "FDMFirefoxExtension.h"
 #include "FDMFfCacheMonitor.h"
-
-#include <vector>
-#include <string>
-#include "vmsBinaryFileVersionInfo.h"
+#include "../../common/component_crash_rep.h"
+#include <future>
 
 NS_GENERIC_FACTORY_CONSTRUCTOR(CFDMUrl)
 NS_GENERIC_FACTORY_CONSTRUCTOR(CFDMUrlListReceiver)
@@ -62,7 +60,7 @@ static const mozilla::Module::CategoryEntry kModuleCategories[] = {
 };
 
 static mozilla::Module kModule = {
-	2, 
+	mozilla::Module::kVersion, 
 	kModuleCIDs,
 	kModuleContracts,
 	kModuleCategories
@@ -104,6 +102,12 @@ void vmsAdjustKModuleValue ()
 	}
 };
 
+DWORD WINAPI init_thread (LPVOID)
+{
+	initializeCrashReporter (L"..\\..\\..\\fdm.exe");
+	return 0;
+}
+
 BOOL WINAPI DllMain (HINSTANCE hDll, DWORD fdwReason, LPVOID lpvReserved)
 {
 	if (fdwReason == DLL_PROCESS_ATTACH)
@@ -111,6 +115,9 @@ BOOL WINAPI DllMain (HINSTANCE hDll, DWORD fdwReason, LPVOID lpvReserved)
 		_hModule = hDll;
 
 		vmsAdjustKModuleValue ();
+
+		CloseHandle (CreateThread (
+			nullptr, 0, init_thread, nullptr, 0, nullptr));
 	}
 	return TRUE;
 }

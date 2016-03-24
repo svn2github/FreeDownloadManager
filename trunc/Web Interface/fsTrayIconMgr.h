@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSTRAYICONMGR_H__0CFF722C_1D89_4E91_9892_4EEAE26390A1__INCLUDED_)
@@ -20,7 +20,7 @@ public:
 	
 	
 	
-	BOOL Create (HWND hWnd, UINT *pIcons, UINT cIcons, LPCSTR pszTooltip, UINT uCallbackMsg);
+	BOOL Create (HWND hWnd, UINT *pIcons, UINT cIcons, LPCTSTR pszTooltip, UINT uCallbackMsg);
 	
 	void TestIcon();
 	
@@ -31,7 +31,7 @@ public:
 	
 	
 	
-	BOOL ShowBalloon (LPCSTR pszInfo, LPCSTR pszInfoTitle, DWORD dwNiifIcon = NIIF_INFO);
+	BOOL ShowBalloon (LPCTSTR pszInfo, LPCTSTR pszInfoTitle, DWORD dwNiifIcon = NIIF_INFO);
 
 	fsTrayIconMgr();
 	virtual ~fsTrayIconMgr();

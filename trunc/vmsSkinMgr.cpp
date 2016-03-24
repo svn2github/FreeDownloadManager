@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -38,7 +38,7 @@ void vmsSkinMgr::Scan()
 	{
 		if (wfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 		{
-			if (lstrcmp (wfd.cFileName, ".") && lstrcmp (wfd.cFileName, ".."))
+			if (lstrcmp (wfd.cFileName, _T(".")) && lstrcmp (wfd.cFileName, _T("..")))
 			{
 				
 				Scan_TryFolder (strSkinDir + "\\" + wfd.cFileName);
@@ -50,48 +50,48 @@ void vmsSkinMgr::Scan()
 	FindClose (hFind);
 }
 
-void vmsSkinMgr::Scan_TryFolder(LPCSTR pszFolder)
+void vmsSkinMgr::Scan_TryFolder(LPCTSTR pszFolder)
 {
 	CFile file;
 	CString strIni = pszFolder;
-	strIni += "\\skin.ini";
+	strIni += _T("\\skin.ini");
 
 	if (GetFileAttributes (strIni) == DWORD (-1))
 		return; 
 
-	char szValues [30000] = "";
-	GetPrivateProfileSection ("Skin", szValues, sizeof (szValues), strIni);
+	TCHAR szValues [30000] = _T("");
+	GetPrivateProfileSection (_T("Skin"), szValues, sizeof (szValues), strIni);
 	if (*szValues == 0)
 		return;
 
 	vmsSkinInfo skin;
 	skin.strSkinFolder = pszFolder;
 
-	LPCSTR pszValue = szValues;
+	LPCTSTR pszValue = szValues;
 
 	while (*pszValue)
 	{
 		
 		
 		
-		LPSTR pszVVal = const_cast<LPSTR>(strchr (pszValue, '='));
+		LPTSTR pszVVal = const_cast<LPTSTR>(_tcschr (pszValue, _T('=')));
 		*pszVVal = 0;
 		pszVVal++;
 
-		if (lstrcmpi (pszValue, "Name") == 0)
+		if (lstrcmpi (pszValue, _T("Name")) == 0)
 			skin.strName = pszVVal;
 
-		else if (lstrcmpi (pszValue, "tbSizeX") == 0)
-			skin.tbSizeX = atoi (pszVVal);
+		else if (lstrcmpi (pszValue, _T("tbSizeX")) == 0)
+			skin.tbSizeX = _tstoi (pszVVal);
 
-		else if (lstrcmpi (pszValue, "tbSizeY") == 0)
-			skin.tbSizeY = atoi (pszVVal);
+		else if (lstrcmpi (pszValue, _T("tbSizeY")) == 0)
+			skin.tbSizeY = _tstoi (pszVVal);
 
-		else if (lstrcmpi (pszValue, "tbUseAlpha") == 0)
-			skin.tbUseAlpha = lstrcmpi (pszVVal, "yes") == 0;
+		else if (lstrcmpi (pszValue, _T("tbUseAlpha")) == 0)
+			skin.tbUseAlpha = lstrcmpi (pszVVal, _T("yes")) == 0;
 
-		else if (lstrcmpi (pszValue, "fdmBuild") == 0)
-			skin.nFDMBuild = atoi (pszVVal);
+		else if (lstrcmpi (pszValue, _T("fdmBuild")) == 0)
+			skin.nFDMBuild = _tstoi (pszVVal);
 
 		pszValue = pszVVal;
 		while (*pszValue++);	

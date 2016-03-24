@@ -32,5 +32,5 @@
 #include "rmff.h"
 #include "asmrule.h"
 
-#include "../Include.Add/vmsCriticalSection.h"
+#include "../common/vms_sifdm_cl/vmsCriticalSection.h"
 #include "../Include.Add/vmsObject.h"

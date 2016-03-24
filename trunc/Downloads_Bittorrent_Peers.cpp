@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -38,10 +38,10 @@ BOOL CDownloads_Bittorrent_Peers::Create(CWnd *pwndParent)
 
 	SetExtendedStyle (LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 
-	InsertColumn (0, "", LVCFMT_LEFT, 50);
-	InsertColumn (1, "", LVCFMT_LEFT, 50);
-	InsertColumn (2, "", LVCFMT_LEFT, 150);
-	InsertColumn (3, "", LVCFMT_LEFT, 150);
+	InsertColumn (0, _T(""), LVCFMT_LEFT, 50);
+	InsertColumn (1, _T(""), LVCFMT_LEFT, 50);
+	InsertColumn (2, _T(""), LVCFMT_LEFT, 150);
+	InsertColumn (3, _T(""), LVCFMT_LEFT, 150);
 
 	return TRUE;
 }
@@ -159,11 +159,11 @@ void CDownloads_Bittorrent_Peers::UpdatePeersDetails()
 
 		CString str;
 
-		str.Format ("%s, %s/%s", BytesToString (peer.uBytesDownloaded),
+		str.Format (_T("%s, %s/%s"), BytesToString (peer.uBytesDownloaded),
 			BytesToString (peer.uDownloadSpeed), LS (L_S));
 		SetItemText (i, 2, str);
 
-		str.Format ("%s, %s/%s", BytesToString (peer.uBytesUploaded),
+		str.Format (_T("%s, %s/%s"), BytesToString (peer.uBytesUploaded),
 			BytesToString (peer.uUploadSpeed), LS (L_S));
 		SetItemText (i, 3, str);
 
@@ -187,15 +187,15 @@ void CDownloads_Bittorrent_Peers::ApplyLanguage()
 	HDITEM item;
 	item.mask = HDI_TEXT;
 
-	item.pszText = (LPSTR) "IP";
+	item.pszText = (LPTSTR) _T("IP");
 	GetHeaderCtrl ()->SetItem (0, &item);
 
-	item.pszText = (LPSTR) LS (L_CLIENT);
+	item.pszText = (LPTSTR) LS (L_CLIENT);
 	GetHeaderCtrl ()->SetItem (1, &item);
 
-	item.pszText = (LPSTR) LS (L_DOWNLOADED);
+	item.pszText = (LPTSTR) LS (L_DOWNLOADED);
 	GetHeaderCtrl ()->SetItem (2, &item);
 
-	item.pszText = (LPSTR) LS (L_UPLOADED);
+	item.pszText = (LPTSTR) LS (L_UPLOADED);
 	GetHeaderCtrl ()->SetItem (3, &item);
 }

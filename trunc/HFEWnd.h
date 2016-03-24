@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_HFEWND_H__1BCAA1E5_6ACC_458E_B378_DACBA9BDE111__INCLUDED_)
@@ -34,11 +34,11 @@ public:
 	static HMENU Plugin_GetViewMenu();
 	static HMENU Plugin_GetMainMenu();
 	
-	void LogFailedMessage (LPCSTR pszMsg);
+	void LogFailedMessage (LPCTSTR pszMsg);
 	void ClearHistory();
 	
 	static void Plugin_SetLanguage (wgLanguage, HMENU hMenuMain, HMENU);
-	static void Plugin_GetPluginNames(LPCSTR *ppszLong, LPCSTR *ppszShort);
+	static void Plugin_GetPluginNames(LPCTSTR *ppszLong, LPCTSTR *ppszShort);
 	static void Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int *cItems);
 	static void Plugin_GetMenuImages(fsSetImage **ppImages, int *pcImages);
 	static void Plugin_GetToolBarInfo(wgTButtonInfo **ppButtons, int *pcButtons);

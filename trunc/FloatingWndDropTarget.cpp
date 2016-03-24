@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -36,12 +36,19 @@ DROPEFFECT CFloatingWndDropTarget::OnDragEnter(CWnd* pWnd, COleDataObject* pData
 
 DROPEFFECT CFloatingWndDropTarget::OnDragOver(CWnd*, COleDataObject* pData, DWORD , CPoint )
 {
-	if (pData->IsDataAvailable (CF_TEXT))
+	CLIPFORMAT cfmt;
+#ifdef UNICODE
+	cfmt = CF_UNICODETEXT;
+#else
+	cfmt = CF_TEXT;
+#endif
+
+	if (pData->IsDataAvailable (cfmt))
 	{
-		HGLOBAL hMem = pData->GetGlobalData (CF_TEXT);
+		HGLOBAL hMem = pData->GetGlobalData (cfmt);
 		if (hMem)
 		{
-			LPCSTR psz = (LPCSTR) GlobalLock (hMem);
+			LPCTSTR psz = (LPCTSTR) GlobalLock (hMem);
 			fsURL url;
 			BOOL bOk = url.Crack (psz) == IR_SUCCESS;
 			GlobalUnlock (hMem);
@@ -60,9 +67,16 @@ DROPEFFECT CFloatingWndDropTarget::OnDragOver(CWnd*, COleDataObject* pData, DWOR
 
 BOOL CFloatingWndDropTarget::OnDrop(CWnd*, COleDataObject *pData, DROPEFFECT, CPoint)
 {
+	CLIPFORMAT cfmtText;
+#ifdef UNICODE
+	cfmtText = CF_UNICODETEXT;
+#else
+	cfmtText = CF_TEXT;
+#endif
+
 	CLIPFORMAT cf;
-	if (pData->IsDataAvailable (CF_TEXT))
-		cf = CF_TEXT;
+	if (pData->IsDataAvailable (cfmtText))
+		cf = cfmtText;
 	else if (pData->IsDataAvailable (CF_HDROP))
 		cf = CF_HDROP;
 	else
@@ -74,9 +88,9 @@ BOOL CFloatingWndDropTarget::OnDrop(CWnd*, COleDataObject *pData, DROPEFFECT, CP
 		std::vector <fsString> vUrls;
 		LPVOID pvLock = GlobalLock (hMem);
 
-		if (cf == CF_TEXT)
+		if (cf == cfmtText)
 		{
-			LPCSTR pszUrl = (LPCSTR) pvLock;
+			LPCTSTR pszUrl = (LPCTSTR) pvLock;
 			fsURL url;
 			if (url.Crack (pszUrl) == IR_SUCCESS)
 				vUrls.push_back (pszUrl);
@@ -87,25 +101,30 @@ BOOL CFloatingWndDropTarget::OnDrop(CWnd*, COleDataObject *pData, DROPEFFECT, CP
 			int cFiles = DragQueryFile (hDrop, 0xFFFFFFFF, NULL, 0);
 			for (int i = 0; i < cFiles; i++)
 			{
-				char szFile [MY_MAX_PATH];
+				TCHAR szFile [MY_MAX_PATH];
 				DragQueryFile (hDrop, i, szFile, sizeof (szFile));
-				fsString strUrl = "file://";
+				fsString strUrl = _T("file://");
 				strUrl += szFile;
 				vUrls.push_back (strUrl);
 			}
 		}
 		
-		if (vUrls.size ())
+		if (!vUrls.empty ())
 		{
 			BOOL bSilent = _App.Monitor_Silent ();
 
+			auto p = new std::vector <std::pair <vmsNewDownloadInfo, bool>> ();
+
 			for (size_t i = 0; i < vUrls.size (); i++)
 			{
-				LPCSTR pszUrl = vUrls [i];
-				BOOL bAdded = UINT_MAX != _pwndDownloads->CreateDownload (pszUrl, TRUE, NULL, NULL, bSilent);
-				if (bAdded && bSilent)
-					CMainFrame::ShowTimeoutBalloon (pszUrl, "Download added", NIIF_INFO, TRUE);
+				vmsNewDownloadInfo dl;
+				dl.strUrl = vUrls [i];
+				dl.bAddSilent = bSilent;
+				dl.useSpecificCreationMethod = vmsNewDownloadInfo::scm_use;
+				p->push_back (std::make_pair (dl, bSilent != FALSE));
 			}
+
+			_pwndDownloads->PostMessage (WM_DW_CREATE_DOWNLOADS, TRUE, (LPARAM)p);
 		}
 
 		GlobalUnlock (hMem);

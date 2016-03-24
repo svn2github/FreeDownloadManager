@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSIECONTEXTMENUMGR_H__AFA1D7C8_15DB_4504_8070_5518A59CF257__INCLUDED_)
@@ -46,9 +46,9 @@ protected:
 	
 	
 	
-	BOOL AddContextMenu (LPCSTR pszMenuName, LPCSTR pszMenuUrl, DWORD dwContext = 0);
+	BOOL AddContextMenu (LPCTSTR pszMenuName, LPCTSTR pszMenuUrl, DWORD dwContext = 0);
 	
-	BOOL DeleteContextMenu (LPCSTR pszMenuName);
+	BOOL DeleteContextMenu (LPCTSTR pszMenuName);
 
 	BOOL m_bDLPageMenu;	
 	BOOL m_bDLThisMenu;	
@@ -57,7 +57,7 @@ protected:
 	BOOL m_bDLFlashVideoMenu;
 
 	
-	BOOL IsContextMenuPresent (LPCSTR pszMenuName);
+	BOOL IsContextMenuPresent (LPCTSTR pszMenuName);
 };
 
 #endif 

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSMIRRORURLSMGR_H__F477E452_F0BB_4580_AEB8_54D9454478AD__INCLUDED_)
@@ -30,18 +30,18 @@ public:
 	
 	fsInternetResult SearchForMirrors();
 	
-	LPCSTR Get_MirrorURL (int iIndex);
+	LPCTSTR Get_MirrorURL (int iIndex);
 	
 	int Get_MirrorURLCount();
 	
 	
 	
-	void Set_SearchURL (LPCSTR pszUrl);
+	void Set_SearchURL (LPCTSTR pszUrl);
 	
 	
 	
 	
-	void Initialize (LPCSTR pszFileName, UINT64 uSize, LPCSTR pszBaseServer, fsInternetSession* pSession);
+	void Initialize (LPCTSTR pszFileName, UINT64 uSize, LPCTSTR pszBaseServer, fsInternetSession* pSession);
 	fsMirrorURLsMgr();
 	virtual ~fsMirrorURLsMgr();
 
@@ -50,7 +50,7 @@ protected:
 	BOOL m_bAbort;
 	
 	
-	virtual BOOL IsMirrorURLGood (LPCSTR pszURL);
+	virtual BOOL IsMirrorURLGood (LPCTSTR pszURL);
 	
 	virtual fsInternetResult OnSearchScriptResultsReceived();
 	

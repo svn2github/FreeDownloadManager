@@ -36,14 +36,14 @@ BEGIN
     GROUPBOX        "Passwords",IDC__PASSWORDS,0,0,313,99
 END
 
-IDD_ELEVATE_REQ DIALOG 0, 0, 202, 65
+IDD_ELEVATE_REQ DIALOGEX 0, 0, 202, 65
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Not enough rights"
-FONT 8, "MS Sans Serif"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "Continue",IDOK,89,44,52,14
+    DEFPUSHBUTTON   "Continue",IDOK,54,44,87,14
     PUSHBUTTON      "Cancel",IDCANCEL,143,44,52,14
-    ICON            "",IDC__ICON,7,7,21,20
+    ICON            "",IDC__ICON,7,7,20,20
     LTEXT           "You'll need to provide administrator permission",IDC__MSG,39,7,156,25
 END
 
@@ -1069,16 +1069,18 @@ BEGIN
     LTEXT           "Use ports in range from",IDC__USEPORTS,0,117,113,10
     EDITTEXT        IDC_PORT_FROM,117,115,37,13,ES_AUTOHSCROLL | ES_NUMBER
     EDITTEXT        IDC_PORT_TO,188,115,37,13,ES_AUTOHSCROLL | ES_NUMBER
-    CONTROL         "Enable DHT",IDC_USE_DHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,135,160,9
-    CONTROL         ".torrent",IDC_ASSOCWITHTORRENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,166,295,10
-    CONTROL         ".torrent",IDC_ASSOCWITHMAGNET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,181,295,10
+    CONTROL         "Enable DHT",IDC_USE_DHT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,135,175,9
+    CONTROL         ".torrent",IDC_ASSOCWITHTORRENT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,193,295,10
+    CONTROL         ".torrent",IDC_ASSOCWITHMAGNET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,208,295,10
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,0,14,313,1
     CONTROL         "Spin1",IDC_PORT_FROM_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,146,115,11,13
     CONTROL         "Spin1",IDC_PORT_TO_SPIN,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_ARROWKEYS | UDS_NOTHOUSANDS,217,115,11,13
     LTEXT           "to",IDC__TO,164,117,21,9
-    CONTROL         "Enable Local Peer Discovery",IDC_LOCAL_PEER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,148,160,10
+    CONTROL         "Enable Local Peer Discovery",IDC_LOCAL_PEER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,148,175,10
     CONTROL         "Enable UPnP",IDC_ENABLE_UPNP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,188,135,120,10
     CONTROL         "Enable NAT-PMP",IDC_ENABLE_NATPMP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,188,149,119,10
+    CONTROL         "Enable uTorrent Peer Exchange",IDC_UTPEX,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,161,175,10
+    CONTROL         "Sequential downloads",IDC_SEQUENTIAL,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,174,175,10
 END
 
 IDD_OPTIONS_DOWNLOADS_MIRRORS DIALOG 0, 0, 313, 228
@@ -1241,35 +1243,37 @@ IDD_OPTIONS_DOWNLOADS_FLV DIALOGEX 0, 0, 313, 228
 STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    CONTROL         "Monitor flash downloads in browsers",IDC_ENABLE_MONITORING,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,0,0,313,8
-    CONTROL         "Internet Explorer",IDC_M_IE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,48,276,11
-    CONTROL         "Firefox",IDC_M_FIREFOX,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,62,276,11
-    CONTROL         "Opera",IDC_M_OPERA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,76,276,11
-    CONTROL         "Netscape",IDC_M_NETSCAPE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,90,276,11
-    CONTROL         "Apple Safari",IDC_M_SAFARI,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,104,276,11
-    CONTROL         "SeaMonkey (Mozilla Suite)",IDC_M_SEAMONKEY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,118,276,8
-    CONTROL         "Google Chrome",IDC_M_CHROME,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,131,276,11
     CONTROL         "Show ""Get It"" button (Internet Explorer and Firefox only)",IDC_SHOWGETITBTN,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,174,276,11
-    LTEXT           "Using this feature can cause conflicts with other software installed on your PC. If you experience problems you will have to disable this feature in FDM or try to resolve conflicts by removing conflicting software or disabling some of its features.",IDC__WARNING,7,14,306,32
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,0,287,11
+    LTEXT           "A tiny button which helps to download videos from YouTube.com with few clicks.\nIn order to enable this button for other video sites - please enable ""Monitor flash downloads in browsers"" option.",IDC__GETIT_DESC,12,18,299,32
+    GROUPBOX        "",IDC_STATIC,0,55,313,152
+    CONTROL         "Monitor flash downloads in browsers",IDC_ENABLE_MONITORING,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,56,201,8
+    CONTROL         "Internet Explorer",IDC_M_IE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,104,276,11
+    CONTROL         "Firefox",IDC_M_FIREFOX,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,118,276,11
+    CONTROL         "Opera",IDC_M_OPERA,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,132,276,11
+    CONTROL         "Netscape",IDC_M_NETSCAPE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,146,276,11
+    CONTROL         "Apple Safari",IDC_M_SAFARI,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,160,276,11
+    CONTROL         "SeaMonkey (Mozilla Suite)",IDC_M_SEAMONKEY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,174,276,8
+    CONTROL         "Google Chrome",IDC_M_CHROME,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,187,276,11
+    LTEXT           "Using this feature can cause conflicts with other software installed on your PC. If you experience problems you will have to disable this feature in FDM or try to resolve conflicts by removing conflicting software or disabling some of its features.",IDC__WARNING,12,70,299,32
 END
 
-IDD_CREATEFLVDOWNLOADS DIALOGEX 0, 0, 336, 177
+IDD_CREATEFLVDOWNLOADS DIALOGEX 0, 0, 412, 251
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Create flash video downloads"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     LTEXT           "Web page:",IDC__WEBPAGE,7,8,55,9
-    EDITTEXT        IDC_WPURL,65,7,264,12,ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "Flash videos found on this page:",IDC__FLVONTHISPAGE,7,24,322,10
-    CONTROL         "List1",IDC_FLVLIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,7,36,322,57
-    LTEXT           "Save to folder:",IDC__SAVETO,7,96,304,9
-    COMBOBOX        IDC_OUTFOLDER,7,107,322,114,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "Automatically convert",IDC_USE_AUTO_CONVERT,"Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,127,253,11
-    PUSHBUTTON      "Customize",IDC_CNVRT_SETTINGS,265,126,64,14,WS_DISABLED
-    DEFPUSHBUTTON   "OK",IDOK,227,156,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,279,156,50,14
+    EDITTEXT        IDC_WPURL,70,7,335,12,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Flash videos found on this page:",IDC__FLVONTHISPAGE,7,24,398,10
+    CONTROL         "List1",IDC_FLVLIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,7,36,398,131
+    LTEXT           "Save to folder:",IDC__SAVETO,7,176,304,9
+    COMBOBOX        IDC_OUTFOLDER,7,187,398,114,CBS_DROPDOWN | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Automatically convert",IDC_USE_AUTO_CONVERT,"Button",BS_AUTOCHECKBOX | BS_TOP | BS_MULTILINE | WS_TABSTOP,7,207,253,11
+    PUSHBUTTON      "Customize",IDC_CNVRT_SETTINGS,341,206,64,14,WS_DISABLED
+    DEFPUSHBUTTON   "OK",IDOK,302,230,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,355,230,50,14
 END
 
 IDD_CREATEFLVDOWNLOADS_BY_WEBPAGE_URL DIALOG 0, 0, 277, 92
@@ -1688,9 +1692,9 @@ BEGIN
     IDD_CREATEFLVDOWNLOADS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 329
+        RIGHTMARGIN, 405
         TOPMARGIN, 7
-        BOTTOMMARGIN, 170
+        BOTTOMMARGIN, 244
     END
 
     IDD_CREATEFLVDOWNLOADS_BY_WEBPAGE_URL, DIALOG
@@ -2507,7 +2511,7 @@ BEGIN
     LTEXT           "Copyright (c)",IDC_STATIC,36,31,40,9
     LTEXT           "Version",IDC__VER,36,18,160,9
     LTEXT           "FreeDownloadManager.ORG",IDC__FIRM,78,31,92,9,SS_NOTIFY
-    LTEXT           ", 2003-2014",IDC_STATIC,173,31,40,8
+    LTEXT           ", 2003-2015",IDC_STATIC,173,31,40,8
     LTEXT           "-",IDC__WARN,7,80,266,31
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,6,73,266,1
     LTEXT           "Click here to contact us",IDC__SUPPORT,36,45,239,8,SS_NOTIFY
@@ -2672,25 +2676,6 @@ FONT 8, "MS Shell Dlg"
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,167,140,50,14
     CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_NOCOLUMNHEADER | WS_BORDER | WS_TABSTOP,7,7,210,128
-END
-
-IDD_UNHEXC DIALOG 0, 0, 325, 171
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Free Download Manager - fatal error occured"
-FONT 8, "MS Shell Dlg"
-BEGIN
-    DEFPUSHBUTTON   "Send report",IDOK,188,150,64,14
-    ICON            "",IDC__UEICON,7,7,20,20
-    PUSHBUTTON      "Don't send",IDCANCEL,254,150,64,14
-    LTEXT           "Free Download Manager (fdm.exe) - fatal error (bug) occurred. Free Download Manager will be terminated.",IDC__MSG1,36,7,282,20
-    LTEXT           "This fatal error is the result of unforeseen work of the program. You can help us fix this error by reporting it.",IDC__MSG2,36,34,282,17
-    LTEXT           "Please report this error to us.",IDC__MSG3,36,57,252,9
-    LTEXT           "To do that, do the following:",IDC__MSG4,36,69,252,9
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,36,28,282,1
-    LTEXT           "1. Try to describe the sequence of actions resulting in the bug.",IDC__MSG5,40,80,252,9
-    LTEXT           "2. -",IDC__MSG6,40,90,278,34
-    LTEXT           "3. Make the subject of your letter ""Bug in FDM build %d found"".",IDC__MSG7,40,124,252,9
-    LTEXT           "4. Send the letter to bugs@freedownloadmanager.org.",IDC__MSG8,40,134,252,9
 END
 
 IDD_DLDALREXISTS DIALOGEX 0, 0, 294, 70
@@ -2982,6 +2967,10 @@ BEGIN
     BEGIN
     END
 
+    IDD_WAITER, DIALOG
+    BEGIN
+    END
+
     IDD_DLDGROUP, DIALOG
     BEGIN
     END
@@ -3018,10 +3007,6 @@ BEGIN
     BEGIN
     END
 
-    IDD_UNHEXC, DIALOG
-    BEGIN
-    END
-
     IDD_DLDALREXISTS, DIALOG
     BEGIN
     END
@@ -3040,6 +3025,23 @@ BEGIN
 END
 #endif    // APSTUDIO_INVOKED
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// REGISTRY
+//
+
+IDR_FDMAPP              REGISTRY                "FdmApp.rgs"
+IDR_WGURLRECEIVER       REGISTRY                "WGUrlReceiver.rgs"
+IDR_WGURLLISTRECEIVER   REGISTRY                "WgUrlListReceiver.rgs"
+IDR_FDM                 REGISTRY                "FDM.rgs"
+IDR_FDMDOWNLOADSSTAT    REGISTRY                "FDMDownloadsStat.rgs"
+IDR_FDMDOWNLOAD         REGISTRY                "FDMDownload.rgs"
+IDR_FDMUPLOADER         REGISTRY                "FDMUploader.rgs"
+IDR_FDMUPLOADPACKAGE    REGISTRY                "FDMUploadPackage.rgs"
+IDR_FDMTORRENTFILESRCVR REGISTRY                "FdmTorrentFilesRcvr.rgs"
+IDR_FDMFLASHVIDEODOWNLOADS REGISTRY                "FDMFlashVideoDownloads.rgs"
+IDR_FDMUIWINDOW         REGISTRY                "FdmUiWindow.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3522,23 +3524,6 @@ IDI_TRAY_ERRORS         ICON                    "res\\tray_err.ico"
 IDI_TRAY_UNKNOWN        ICON                    "res\\tray_unk.ico"
 IDI_CLOSEBTN            ICON                    "res\\closebtn.ico"
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// REGISTRY
-//
-
-IDR_FDMAPP              REGISTRY                "FdmApp.rgs"
-IDR_WGURLRECEIVER       REGISTRY                "WGUrlReceiver.rgs"
-IDR_WGURLLISTRECEIVER   REGISTRY                "WgUrlListReceiver.rgs"
-IDR_FDM                 REGISTRY                "FDM.rgs"
-IDR_FDMDOWNLOADSSTAT    REGISTRY                "FDMDownloadsStat.rgs"
-IDR_FDMDOWNLOAD         REGISTRY                "FDMDownload.rgs"
-IDR_FDMUPLOADER         REGISTRY                "FDMUploader.rgs"
-IDR_FDMUPLOADPACKAGE    REGISTRY                "FDMUploadPackage.rgs"
-IDR_FDMTORRENTFILESRCVR REGISTRY                "FdmTorrentFilesRcvr.rgs"
-IDR_FDMFLASHVIDEODOWNLOADS REGISTRY                "FDMFlashVideoDownloads.rgs"
-IDR_FDMUIWINDOW         REGISTRY                "FdmUiWindow.rgs"
-
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -3589,8 +3574,8 @@ IDC_HAND_               CURSOR                  "res\\hand.cur"
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 3,9,1473,0
- PRODUCTVERSION 3,9,1473,0
+ FILEVERSION 3,9,1627,0
+ PRODUCTVERSION 3,9,1627,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -3607,10 +3592,10 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "FreeDownloadManager.ORG"
             VALUE "FileDescription", "Free Download Manager"
-            VALUE "FileVersion", "3.9.1473.0"
-            VALUE "LegalCopyright", "Copyright © 2003-2014"
+            VALUE "FileVersion", "3.9.1627.0"
+            VALUE "LegalCopyright", "Copyright © 2003-2015"
             VALUE "ProductName", "Free Download Manager"
-            VALUE "ProductVersion", "3.9.4 "
+            VALUE "ProductVersion", "3.9.7 "
         END
     END
     BLOCK "VarFileInfo"
@@ -3881,22 +3866,14 @@ BEGIN
     PUSHBUTTON      "Measure again",IDC_MEASUREAGAIN,59,82,115,14
 END
 
-IDD_UNHEXC2 DIALOGEX 0, 0, 325, 207
+IDD_WAITER2 DIALOGEX 0, 0, 222, 57
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Free Download Manager - fatal error occured"
+CAPTION "Dialog"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "Send report",IDOK,188,186,64,14
-    ICON            "",IDC__UEICON,6,7,21,20
-    PUSHBUTTON      "Don't send",IDCANCEL,254,186,64,14
-    LTEXT           "Free Download Manager (fdm.exe) - fatal error (bug) occurred. Free Download Manager was terminated.",IDC__MSG1,36,7,282,20
-    LTEXT           "This fatal error is the result of unforeseen work of the program. You can help us fix this error by reporting it.",IDC__MSG2,36,34,282,17
-    LTEXT           "Please report this error to us.",IDC__MSG3,36,57,252,9
-    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,36,28,281,1
-    LTEXT           "Please provide description (if possible) of steps that leads to the bug (optional):",IDC__MSG9,36,70,283,16
-    EDITTEXT        IDC_DESCRIPTION,36,87,282,75,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_WANTRETURN | WS_VSCROLL | WS_HSCROLL
-    CONTROL         "Restart Free Download Manager automatically",IDC_RESTART,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,36,168,283,9
+    DEFPUSHBUTTON   "Cancel",IDCANCEL,167,35,48,15
+    CONTROL         "-",IDC_MESSAGE,"Static",SS_LEFTNOWORDWRAP | SS_CENTERIMAGE | WS_GROUP,7,3,208,10
+    CONTROL         "",IDC_PROGRESS,"msctls_progress32",WS_BORDER,7,20,208,10
 END
 
 
@@ -3999,12 +3976,12 @@ BEGIN
         BOTTOMMARGIN, 96
     END
 
-    IDD_UNHEXC2, DIALOG
+    IDD_WAITER2, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 319
+        RIGHTMARGIN, 215
         TOPMARGIN, 7
-        BOTTOMMARGIN, 176
+        BOTTOMMARGIN, 50
     END
 END
 #endif    // APSTUDIO_INVOKED

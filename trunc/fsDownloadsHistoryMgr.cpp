@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -111,7 +111,7 @@ void fsDownloadsHistoryMgr::AddToHistory(vmsDownloadSmartPtr dld)
 	else
 		ZeroMemory (&r->dateDownloaded, sizeof (FILETIME));
 
-	char sz [MY_MAX_PATH];
+	TCHAR sz [MY_MAX_PATH];
 	CDownloads_Tasks::GetFileName (dld, sz);
 	r->strFileName = sz;
 
@@ -143,7 +143,7 @@ BOOL fsDownloadsHistoryMgr::SaveHistory()
 	if (!isDirty())
 		return TRUE;
 
-	HANDLE hFile = CreateFile (fsGetDataFilePath ("downloads.his.sav"), GENERIC_WRITE, 0, NULL,
+	HANDLE hFile = CreateFile (fsGetDataFilePath (_T("downloads.his.sav")), GENERIC_WRITE, 0, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_HIDDEN, NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -182,60 +182,95 @@ BOOL fsDownloadsHistoryMgr::SaveHistory()
 	onStateSavedSuccessfully();
 
 	return TRUE;
+}
 
+BOOL fsDownloadsHistoryMgr::LoadRecord(HANDLE hFile, fsDLHistoryRecordPtr& rec)
+{
+	DWORD dw;
+	if (FALSE == fsReadStrFromFile (&rec->strFileName.pszString, hFile))
+		return FALSE;
+
+	if (FALSE == fsReadStrFromFile (&rec->strSavedTo.pszString, hFile))
+		return FALSE;
+
+	if (FALSE == fsReadStrFromFile (&rec->strURL.pszString, hFile))
+		return FALSE;
+
+	if (FALSE == fsReadStrFromFile (&rec->strComment.pszString, hFile))
+		return FALSE;
+
+	if (FALSE == ReadFile (hFile, &rec->dateAdded, sizeof (FILETIME), &dw, NULL))
+		return FALSE;
+
+	if (FALSE == ReadFile (hFile, &rec->dateDownloaded, sizeof (FILETIME), &dw, NULL))
+		return FALSE;
+
+	if (FALSE == ReadFile (hFile, &rec->dateRecordAdded, sizeof (FILETIME), &dw, NULL))
+		return FALSE;
+
+	if (FALSE == ReadFile (hFile, &rec->uFileSize, sizeof (UINT64), &dw, NULL))
+		return FALSE;
+
+	return TRUE;
+}
+
+BOOL fsDownloadsHistoryMgr::LoadRecord_old(HANDLE hFile, fsDLHistoryRecordPtr& rec)
+{
+	USES_CONVERSION;
+
+	DWORD dw;
+	LPSTR pszStr = 0;
+	if (FALSE == fsReadStrFromFileA (&pszStr, hFile))
+		return FALSE;
+
+	rec->strFileName = CA2CT(pszStr);
+	delete pszStr;
+	pszStr = 0;
 	
+	if (FALSE == fsReadStrFromFileA (&pszStr, hFile))
+		return FALSE;
+
+	rec->strSavedTo = CA2CT(pszStr);
+	delete pszStr;
+	pszStr = 0;
 	
+	if (FALSE == fsReadStrFromFileA (&pszStr, hFile))
+		return FALSE;
 	
+	rec->strURL = CA2CT(pszStr);
+	delete pszStr;
+	pszStr = 0;
 	
+	if (FALSE == fsReadStrFromFileA (&pszStr, hFile))
+		return FALSE;
+
+	rec->strComment = CA2CT(pszStr);
+	delete pszStr;
+	pszStr = 0;
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	if (FALSE == ReadFile (hFile, &rec->dateAdded, sizeof (FILETIME), &dw, NULL))
+		return FALSE;
+
+	if (FALSE == ReadFile (hFile, &rec->dateDownloaded, sizeof (FILETIME), &dw, NULL))
+		return FALSE;
+
+	if (FALSE == ReadFile (hFile, &rec->dateRecordAdded, sizeof (FILETIME), &dw, NULL))
+		return FALSE;
+
+	if (FALSE == ReadFile (hFile, &rec->uFileSize, sizeof (UINT64), &dw, NULL))
+		return FALSE;
+
+	return TRUE;
 }
 
 BOOL fsDownloadsHistoryMgr::LoadHistory()
 {
 	vmsAUTOLOCKSECTION (m_csRecords);
 
-	if (GetFileAttributes (fsGetDataFilePath ("downloads.his.sav")) == UINT (-1))
+	if (GetFileAttributes (fsGetDataFilePath (_T("downloads.his.sav"))) == UINT (-1))
 		return TRUE;
 
-	HANDLE hFile = CreateFile (fsGetDataFilePath ("downloads.his.sav"), GENERIC_READ, FILE_SHARE_READ, NULL,
+	HANDLE hFile = CreateFile (fsGetDataFilePath (_T("downloads.his.sav")), GENERIC_READ, FILE_SHARE_READ, NULL,
 		OPEN_EXISTING, 0, NULL);
 
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -271,59 +306,38 @@ BOOL fsDownloadsHistoryMgr::LoadHistory()
 	dwRequiredSize -= sizeof(hdr);
 
 	
-	if (hdr.wVer != DLHISTFILE_CURRENT_VERSION ||
+	if (hdr.wVer < 1 || hdr.wVer > DLHISTFILE_CURRENT_VERSION ||
 			strnicmp (hdr.szSig, DLHISTFILE_SIG, strlen (DLHISTFILE_SIG)))
 	{
 		CloseHandle (hFile);
 		return FALSE;
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	if (hdr.wVer == 1) {
+
+		int cRecs;
+		if (!ReadFile (hFile, &cRecs, sizeof (int), &dw, NULL)) {
+			CloseHandle (hFile);
+			return FALSE;
+		}
+		
+		int i = 0;
+		for (i = 0; i < cRecs; i++) {
+			fsDLHistoryRecordPtr rec; rec.CreateInstance ();
+
+			if (!LoadRecord_old(hFile, rec))
+				break;
+
+			m_vRecords.push_back (rec);
+		}
+		
+		CloseHandle (hFile);
+		
+		if (i != cRecs)
+			return FALSE;
+
+		return TRUE;
+	}
 
 	std::auto_ptr<BYTE> apbtBufferGuard( new BYTE[dwRequiredSize] );
 	LPBYTE pbtBuffer = apbtBufferGuard.get();
@@ -336,6 +350,7 @@ BOOL fsDownloadsHistoryMgr::LoadHistory()
 		CloseHandle (hFile);
 		return FALSE;
 	}
+
 	CloseHandle (hFile);
 
 	loadFromStateBuffer(pbtBuffer, &dwRequiredSize, hdr.wVer);
@@ -494,4 +509,3 @@ bool fsDownloadsHistoryMgr::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LP
 
 	return true;
 }
-

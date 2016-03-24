@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSCONTEXTHELPMGR_H__2385DB0D_FC49_463B_8734_9BEA2D1AE6BC__INCLUDED_)
@@ -12,9 +12,9 @@
 struct fsCtrlContextHelp
 {
 	UINT nIDCtrl;	
-	LPCSTR pszDesc;	
+	LPCTSTR pszDesc;	
 
-	fsCtrlContextHelp (UINT nID, LPCSTR pszContextHelp) : nIDCtrl (nID), pszDesc (pszContextHelp) {}
+	fsCtrlContextHelp (UINT nID, LPCTSTR pszContextHelp) : nIDCtrl (nID), pszDesc (pszContextHelp) {}
 	fsCtrlContextHelp () {};
 };
 

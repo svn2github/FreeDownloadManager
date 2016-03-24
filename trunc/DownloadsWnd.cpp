@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -10,7 +10,6 @@
 #include "fsDownloadMgr.h"
 #include "plugins.h"
 #include "DownloadPropertiesSheet.h"
-#include "DownloaderPropertiesSheet.h"
 #include "NOWDlg.h"
 #include "ShedulerWnd.h"
 #include "plugincmds.h"
@@ -35,6 +34,7 @@
 #include "FdmUiWindow.h"
 #include "TpDldSheet.h"
 #include "vmsLogger.h"
+#include "vmsDownloaderSecCheckFailureHandler.h"
 
 extern CSpiderWnd* _pwndSpider;
 
@@ -48,7 +48,11 @@ CDownloadsWnd* _pwndDownloads;
 
 extern CShedulerWnd *_pwndScheduler;
 
-CDownloadsWnd::CDownloadsWnd()
+CDownloadsWnd::CDownloadsWnd() :
+	m_dldrSecCheckFailureHandler (
+		new vmsDownloaderSecCheckFailureHandler (
+			_DldrSecCheckFailureIgnoreList,
+			std::make_shared <vmsDownloaderSecCheckFailureIgnoreList> ()))
 {
 	m_wndGroups.m_pWndDownloads = this;
 	m_wndDownloads.m_tasks.m_pDownloadsWnd = this;
@@ -138,6 +142,7 @@ BEGIN_MESSAGE_MAP(CDownloadsWnd, CWnd)
 	ON_MESSAGE (WM_DW_DLDSMGR_EVENT, OnDwDldsMgrEvent)
 	ON_MESSAGE (WM_DW_ONDLDSADDED, OnWmDwDldsAdded)
 	ON_MESSAGE (WM_DW_ONSUCHTORRENTEXISTSALREADY, OnDwSuchTorrentExistsAlready)
+	ON_MESSAGE (WM_DW_CREATE_DOWNLOADS, OnDwCreateDownloads)
 
 END_MESSAGE_MAP()
 
@@ -203,7 +208,7 @@ int CDownloadsWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	SetTimer (1, 1000, NULL);
 
 	
-	_App.View_ReadWndSize (&m_wndGroups, "DownloadsGroups");
+	_App.View_ReadWndSize (&m_wndGroups, _T("DownloadsGroups"));
 
 	ShowAllGroups (m_bShowGroups);
 	UpdateNumbersOfDownloadsInGroups ();
@@ -237,19 +242,19 @@ void CDownloadsWnd::OnSize(UINT, int cx, int cy)
 
 void CDownloadsWnd::OnDownloadCreate() 
 {
-	CreateDownload ((LPCSTR)NULL);
+	CreateDownload ((LPCTSTR)NULL);
 }
 
 void CDownloadsWnd::OnTpDownloadCreate()
 {
-	LPCSTR pszStartUrl = _ClipbrdMgr.Text ();
+	LPCTSTR pszStartUrl = _ClipbrdMgr.Text ();
 	if (pszStartUrl)
 	{
-		if (_tcsstr (pszStartUrl, "rtsp://") == 0 &&
-			_tcsstr (pszStartUrl, "mmsh://") == 0 &&
-			_tcsstr (pszStartUrl, "mmst://") == 0 &&
-			_tcsstr (pszStartUrl, "mms://") == 0)
-			pszStartUrl = "";
+		if (_tcsstr (pszStartUrl, _T("rtsp://")) == 0 &&
+			_tcsstr (pszStartUrl, _T("mmsh://")) == 0 &&
+			_tcsstr (pszStartUrl, _T("mmst://")) == 0 &&
+			_tcsstr (pszStartUrl, _T("mms://")) == 0)
+			pszStartUrl = _T("");
 	}
 
 	vmsDownloadSmartPtr dld;
@@ -390,7 +395,7 @@ void CDownloadsWnd::OnTimer(UINT )
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloadsWnd::OnTimer " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloadsWnd::OnTimer " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -419,7 +424,7 @@ void CDownloadsWnd::SetActiveDownload(vmsDownloadSmartPtr dld)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloadsWnd::SetActiveDownload " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloadsWnd::SetActiveDownload " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -471,6 +476,8 @@ BOOL CDownloadsWnd::LoadDownloads()
 	}
 
 	_MediaConvertMgr.LoadState ();
+
+	_YouTubeDldsMgr.processYouTubeDownloadsOnStart ();
 
 	for (int i = _DldsMgr.Get_DeletedDownloadCount ()-1; i >= 0; i--)
 		m_wndDeleted.AddDownload (_DldsMgr.Get_DeletedDownload (i));
@@ -612,7 +619,7 @@ BOOL CDownloadsWnd::DeleteGroup(vmsDownloadsGroupSmartPtr pGroup)
 	return TRUE;
 }
 
-DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDLHistoryRecord *rec, fsDownloadsMgrEvent ev, LPVOID lp)
+DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDLHistoryRecord *rec, fsDownloadsMgrEvent ev, UINT_PTR info, LPVOID lp)
 {
 	assert (_pwndDownloads != NULL);
 	if (!_pwndDownloads)
@@ -620,7 +627,19 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 
 	CDownloadsWnd* pthis = (CDownloadsWnd*) lp;
 
-	
+	if (ev == DME_DOWNLOADEREVENTRECEIVED2)
+	{
+		auto evinfo = reinterpret_cast <fsDownloaderEventReceived2Info*> (info);
+		if (evinfo->ev == DE_SEC_CHECK_FAILURE)
+		{
+			assert (evinfo->secCheckFailureInfo);
+			assert (evinfo->secCheckFailureInfo->dnp);
+			assert (evinfo->secCheckFailureInfo->dnp->pszServerName);
+			return pthis->m_dldrSecCheckFailureHandler->onSecCheckFailure (
+				evinfo->secCheckFailureInfo->dnp->pszServerName,
+				evinfo->secCheckFailureInfo->sctFlags);
+		}
+	}
 
 	
 
@@ -636,11 +655,11 @@ DWORD CDownloadsWnd::_Events(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 		p.iDldLogEntry = p.dld->vEvents.size () - 1;
 	}
 
-	EnterCriticalSection (&pthis->m_csDldsMgrEvents);
+	EnterCriticalSection(pthis->m_csDldsMgrEvents);
 	pthis->m_vDldsMgrEvents.push_back (p);
 	if (pthis->m_vDldsMgrEvents.size () == 1 && pthis->m_hWnd != NULL)		
 		pthis->PostMessage (WM_DW_DLDSMGR_EVENT);
-	LeaveCriticalSection (&pthis->m_csDldsMgrEvents);
+	LeaveCriticalSection (pthis->m_csDldsMgrEvents);
 
 	return TRUE;
 }
@@ -661,9 +680,9 @@ void CDownloadsWnd::OnDownloadDefProperties()
 	ftp.CreateInstance ();
 	ftp->pMgr->Attach (new fsDownloadMgr);
 
-	http->pMgr->GetDownloadMgr ()->CreateByUrl ("http://");
-	https->pMgr->GetDownloadMgr ()->CreateByUrl ("https://");
-	ftp->pMgr->GetDownloadMgr ()->CreateByUrl ("ftp://");
+	http->pMgr->GetDownloadMgr ()->CreateByUrl (_T("http://"));
+	https->pMgr->GetDownloadMgr ()->CreateByUrl (_T("https://"));
+	ftp->pMgr->GetDownloadMgr ()->CreateByUrl (_T("ftp://"));
 
 	vDlds.push_back (http);
 	vDlds.push_back (https);
@@ -732,15 +751,7 @@ void CDownloadsWnd::OnDownloadDefProperties()
 
 void CDownloadsWnd::OnDownloaderProperties()
 {
-	CDownloaderPropertiesSheet sheet (LS (L_DLDR_OPTIONS), this);
-
-	sheet.Init ();
-     _DlgMgr.OnDoModal (&sheet);
-	sheet.DoModal ();
-    _DlgMgr.OnEndDialog (&sheet);
-	_TumMgr.SaveSettings ();
-	_DldsMgr.SaveSettings ();
-	_DldsMgr.setNeedProcessDownloads ();
+	ASSERT (!"expected");
 }
 
 void CDownloadsWnd::OnOptimizationWizard()
@@ -812,23 +823,88 @@ void CDownloadsWnd::OnDldstop()
 	m_wndDownloads.m_tasks.OnDldstop ();	
 }
 
-UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, LPCSTR pszComment, LPCSTR pszReferer, 
-	BOOL bSilent, DWORD dwForceAutoLaunch, BOOL *pbAutoStart, vmsDWCD_AdditionalParameters* pParams, UINT* pRes)
+UINT CDownloadsWnd::CreateDownload(LPCTSTR pszStartUrl, BOOL bReqTopMostDialog, LPCTSTR pszComment, LPCTSTR pszReferer, 
+	BOOL bSilent, DWORD dwForceAutoLaunch, BOOL *pbAutoStart, vmsDWCD_AdditionalParameters* pParams, UINT* pRes,
+	vmsNewDownloadInfo::UseSpecificCreationMethod useSpecificCreationMethod)
 {
-	std::string strUrlTmp;
+	if (useSpecificCreationMethod == vmsNewDownloadInfo::scm_use)
+	{
+		if (CreateDownloadUsingSpecificMethod (true, pszStartUrl, bReqTopMostDialog != FALSE))
+		{
+			if (pRes)
+				*pRes = IDCANCEL;
+			return UINT_MAX;
+		}
+	}
+
+	if (pParams && (pParams->dwMask & DWCDAP_FLAGS) && 
+		(pParams->dwFlags & DWDCDAP_F_CHECK_DOWNLOAD_EXISTS))
+	{
+		
+		assert (pParams->dwMask & DWCDAP_YT_DOWNLOAD_DETAILS);
+		if (!(pParams->dwMask & DWCDAP_YT_DOWNLOAD_DETAILS))
+			return UINT_MAX; 
+		auto download = _DldsMgr.findYouTubeDownload (pParams->ytDownloadDetails.youTubeID, 
+			pParams->ytDownloadDetails.format, pParams->ytDownloadDetails.mediaType);
+		if (download)
+		{
+			bool dont_add = true;
+
+			if (!pParams->ytDownloadDetails.isHidden)
+			{
+				download->youTubeDetails.isHidden = false;
+				download->setDirty ();
+			}
+
+			if (pParams->dwFlags & DWDCDAP_F_NEED_FILE)
+			{
+				assert (download->pMgr);
+				if (download->pMgr->IsDone ())
+				{
+					if (GetFileAttributes (download->pMgr->get_OutputFilePathName ()) == DWORD (-1))
+					{
+						if (pParams->dwFlags & DWDCDAP_F_NO_RESTART)
+						{
+							DeleteDownload (download, FALSE, TRUE);
+							dont_add = false;
+						}
+						else
+						{
+							RestartDownload (download, FALSE);
+						}
+					}
+				}
+				else if (!download->bAutoStart)
+				{
+					download->bAutoStart = TRUE;
+					download->setDirty ();
+				}
+			}
+
+			if (dont_add)
+			{
+				if (pRes)
+					*pRes = IDCANCEL;
+
+				return UINT_MAX; 
+			}
+		}
+	}
+
+	tstring strUrlTmp;
 	if (pszStartUrl == NULL || *pszStartUrl == NULL)
 	{
-		pszStartUrl = "http://";
+		pszStartUrl = _T("http://");
 
 		if (!bSilent)
 		{
-			LPCSTR psz = _ClipbrdMgr.Text ();
+			LPCTSTR psz = _ClipbrdMgr.Text ();
 			if (psz)
 			{
 				strUrlTmp = psz;
 			}
 			
-			if (strUrlTmp.find("magnet:") == 0)
+			if (strUrlTmp.find(_T("magnet:")) == 0)
 			{
 				pszStartUrl = strUrlTmp.c_str();
 			}
@@ -872,12 +948,15 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 	if (pszReferer)
 	{
 		SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszReferer);
-		dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszReferer = new char [strlen (pszReferer) + 1];
-		strcpy (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszReferer, pszReferer);
+		dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszReferer = new TCHAR [_tcslen (pszReferer) + 1];
+		_tcscpy (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszReferer, pszReferer);
 	}
 
 	if (pszComment)
 		dld->strComment = pszComment;
+
+	if (pParams && pParams->maxSectionCount)
+		dld->pMgr->GetDownloadMgr ()->GetDP ()->uMaxSections = pParams->maxSectionCount;
 
 	OnDownloadPreCreate (dld, pParams);
 
@@ -887,6 +966,7 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 		dlg.m_bReqTopMostDialog = bReqTopMostDialog;
 		if (pParams)
 			dlg.m_pUiWindow = pParams->pUiWindow;
+		dlg.m_useSpecificCreationMethodIfApplicable = useSpecificCreationMethod != vmsNewDownloadInfo::scm_dont_use;
 		
 		if (pParams)
 		{
@@ -901,6 +981,14 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 		}
 		
 		res = _DlgMgr.DoModal (&dlg);
+
+		if (res == ID_DLNOTADDED_NEEDSPECIFICCREATION && 
+			CreateDownloadUsingSpecificMethod (false, dlg.m_strUrl, bReqTopMostDialog != FALSE))
+		{
+			if (pRes)
+				*pRes = IDCANCEL;
+			return UINT_MAX;
+		}
 
 		if (res == IDOK && !dlg.m_strUrl.Find (_T ("magnet:")))
 		{
@@ -927,10 +1015,10 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 				{
 					SAFE_DELETE_ARRAY (dnp->pszUserName);
 					SAFE_DELETE_ARRAY (dnp->pszPassword);
-					fsnew (dnp->pszUserName, CHAR, site->strUser.GetLength ()+1);
-					fsnew (dnp->pszPassword, CHAR, site->strPassword.GetLength ()+1);
-					strcpy (dnp->pszUserName, site->strUser);
-					strcpy (dnp->pszPassword, site->strPassword);
+					fsnew (dnp->pszUserName, TCHAR, site->strUser.GetLength ()+1);
+					fsnew (dnp->pszPassword, TCHAR, site->strPassword.GetLength ()+1);
+					_tcscpy (dnp->pszUserName, site->strUser);
+					_tcscpy (dnp->pszPassword, site->strPassword);
 				}
 			}
 		}
@@ -1002,21 +1090,21 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 
 		if (strDstFolder.IsEmpty () == FALSE)
 		{
-			LPCSTR pszFolder = strDstFolder;
+			LPCTSTR pszFolder = strDstFolder;
 			delete [] dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
-			dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new char [lstrlen (pszFolder) + 2];
+			dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new TCHAR [(lstrlen (pszFolder) + 2) * sizeof(TCHAR)];
 			lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, pszFolder);
-			if (pszFolder [lstrlen (pszFolder) - 1] != '\\')
-				lstrcat (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, "\\");
+			if (pszFolder [lstrlen (pszFolder) - 1] != _T('\\'))
+				lstrcat (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, _T("\\"));
 		}
 
 		if (pParams->dwMask & DWCDAP_FILENAME)
 		{
 			fsDownload_Properties *dp = dld->pMgr->GetDownloadMgr ()->GetDP ();
-			if (dp->pszFileName [lstrlen (dp->pszFileName) - 1] == '\\' ||
-					dp->pszFileName [lstrlen (dp->pszFileName) - 1] == '/')
+			if (dp->pszFileName [lstrlen (dp->pszFileName) - 1] == _T('\\') ||
+					dp->pszFileName [lstrlen (dp->pszFileName) - 1] == _T('/'))
 			{
-				LPSTR psz = new char [lstrlen (dp->pszFileName) + pParams->strFileName.GetLength () + 1];
+				LPTSTR psz = new TCHAR [(lstrlen (dp->pszFileName) + pParams->strFileName.GetLength () + 1) * sizeof(TCHAR)];
 				lstrcpy (psz, dp->pszFileName);
 				lstrcat (psz, pParams->strFileName);
 				delete [] dp->pszFileName;
@@ -1028,24 +1116,24 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 		{
 			if (pParams->dwFlags & DWDCDAP_F_SAVETODESKTOP)
 			{
-				char szDesktop [MY_MAX_PATH];
+				TCHAR szDesktop [MY_MAX_PATH];
 				LPITEMIDLIST pidl = NULL;
 				SHGetSpecialFolderLocation (NULL, CSIDL_DESKTOP, &pidl);
 				SHGetPathFromIDList (pidl, szDesktop);
-				if (szDesktop [lstrlen (szDesktop) - 1] != '\\')
-					lstrcat (szDesktop, "\\");
+				if (szDesktop [lstrlen (szDesktop) - 1] != _T('\\'))
+					lstrcat (szDesktop, _T("\\"));
 				delete [] dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
-				dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new char [lstrlen (szDesktop) + 1];
+				dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new TCHAR [(lstrlen (szDesktop) + 1) * sizeof(TCHAR)];
 				lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, szDesktop);
 			}
 			else if (pParams->dwFlags & DWDCDAP_F_SAVETOTEMPFLDR)
 			{
-				char szTmpFolder [MY_MAX_PATH];
+				TCHAR szTmpFolder [MY_MAX_PATH];
 				GetTempPath (MY_MAX_PATH, szTmpFolder);
-				if (szTmpFolder [lstrlen (szTmpFolder) - 1] != '\\')
-					lstrcat (szTmpFolder, "\\");
+				if (szTmpFolder [lstrlen (szTmpFolder) - 1] != _T('\\'))
+					lstrcat (szTmpFolder, _T("\\"));
 				delete [] dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName;
-				dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new char [lstrlen (szTmpFolder) + 1];
+				dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new TCHAR [(lstrlen (szTmpFolder) + 1) * sizeof(TCHAR)];
 				lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, szTmpFolder);
 			}
 
@@ -1077,7 +1165,7 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 		if (pParams->dwMask & DWCDAP_COOKIES)
 		{
 			SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies);
-			dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies = new char [pParams->strCookies.GetLength () + 1];
+			dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies = new TCHAR [pParams->strCookies.GetLength () + 1];
 			lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszCookies, pParams->strCookies);
 		}
 
@@ -1085,7 +1173,7 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 		{
 			SAFE_DELETE_ARRAY (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszPostData);
 			dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszPostData = new char [pParams->strPostData.GetLength () + 1];
-			lstrcpy (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszPostData, pParams->strPostData);
+			strcpy (dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszPostData, pParams->strPostData);
 		}
 
 		if (pParams->dwMask & DWCDAP_MEDIA_CONVERT_SETTINGS)
@@ -1093,9 +1181,24 @@ UINT CDownloadsWnd::CreateDownload(LPCSTR pszStartUrl, BOOL bReqTopMostDialog, L
 			dld->dwFlags |= DLD_MF_AUTO_CONVERT;
 			_MediaConvertMgr.AddTask (dld, pParams->stgsMediaConvert);
 		}
+
+		if (pParams->dwMask & DWCDAP_YT_DOWNLOAD_DETAILS)
+		{
+			dld->youTubeDetails = pParams->ytDownloadDetails;
+			dld->dwFlags |= DLD_YOUTUBE_RELOAD_URL_IF_START_FAILED;
+		}
+
+		if (pParams->dwMask & DWCDAP_DOWNLOAD_ADDITIONAL_FLAGS)
+		{
+			dld->dwFlags |= pParams->dwDownloadAdditionalFlags;
+		}
 	}
 
 	OnDownloadPostCreate (dld);
+
+	if (dld->isYouTube()){
+		dld->pMgr->GetDownloadMgr()->GetDP()->aEP[DFE_ACCDENIED] = DFEP_ONLYNOTIFY;
+	}
 
 	CreateDownload (dld, bScheduled ? &task : NULL, FALSE, bPlaceToTop);
 
@@ -1275,10 +1378,10 @@ void CDownloadsWnd::SaveAll(DWORD dwWhat)
 		{
 			ASSERT (::IsWindow (m_hWnd));
 
-			_App.View_SaveWndSize (&m_wndGroups, "DownloadsGroups");
+			_App.View_SaveWndSize (&m_wndGroups, _T("DownloadsGroups"));
 			m_wndDownloads.SaveState ();
-			m_wndHistory.SaveState ("DownloadsHistory");
-			m_wndDeleted.SaveState ("DownloadsDeleted");
+			m_wndHistory.SaveState (_T("DownloadsHistory"));
+			m_wndDeleted.SaveState (_T("DownloadsDeleted"));
 			_App.View_SizesInBytes (m_wndDownloads.m_tasks.m_bSizesInBytes);
 			_App.View_DWWN (m_enDWWN);
 		}
@@ -1286,7 +1389,7 @@ void CDownloadsWnd::SaveAll(DWORD dwWhat)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloadsWnd::SaveAll " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloadsWnd::SaveAll " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1377,7 +1480,7 @@ void CDownloadsWnd::UpdateTrayIconPlusOthers()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloadsWnd::UpdateTrayIconPlusOthers " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloadsWnd::UpdateTrayIconPlusOthers " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1501,8 +1604,8 @@ void CDownloadsWnd::Plugin_GetMenuImages(fsSetImage **ppImages, int *pcImages)
 void CDownloadsWnd::Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int *cItems)
 {
 	static wgMenuViewItem aItems [] = {
-		wgMenuViewItem ("", &_pwndDownloads->m_bShowGroups),
-		wgMenuViewItem ("", &_pwndDownloads->m_wndDownloads.m_bShowDLInfo),
+		wgMenuViewItem (_T(""), &_pwndDownloads->m_bShowGroups),
+		wgMenuViewItem (_T(""), &_pwndDownloads->m_wndDownloads.m_bShowDLInfo),
 	};
 
 	aItems [0].pszName = LS (L_DLGROUPS);
@@ -1512,10 +1615,10 @@ void CDownloadsWnd::Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int *cItem
 	*cItems = sizeof (aItems) / sizeof (wgMenuViewItem);
 }
 
-void CDownloadsWnd::Plugin_GetPluginNames(LPCSTR *ppszLong, LPCSTR *ppszShort)
+void CDownloadsWnd::Plugin_GetPluginNames(LPCTSTR *ppszLong, LPCTSTR *ppszShort)
 {
 	static CString strName;
-	strName = LSNP (L_DOWNLOADS);
+	strName = LSNP (L_DOWNLOADS).c_str ();
 	*ppszLong = *ppszShort = strName;
 }
 
@@ -1523,13 +1626,13 @@ void CDownloadsWnd::Plugin_GetToolBarInfo(wgTButtonInfo **ppButtons, int *pcButt
 {
 	static wgTButtonInfo btns [] = 
 	{
-		wgTButtonInfo (ID_DLDCREATE, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_DLDSTART, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_DLDSTOP, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_DLDSCHEDULE, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (0, TBSTYLE_SEP, ""),
-		wgTButtonInfo (ID_DLDMOVEUP, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_DLDMOVEDOWN, TBSTYLE_BUTTON, ""),
+		wgTButtonInfo (ID_DLDCREATE, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_DLDSTART, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_DLDSTOP, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_DLDSCHEDULE, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (0, TBSTYLE_SEP, _T("")),
+		wgTButtonInfo (ID_DLDMOVEUP, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_DLDMOVEDOWN, TBSTYLE_BUTTON, _T("")),
 	};
 
 	btns [0].pszToolTip = LS (L_NEWDLD);
@@ -1561,7 +1664,7 @@ void CDownloadsWnd::ApplyLanguageToMenuView(CMenu *menu)
 
 	UINT aCmds [] = {ID_DLLIST_1, ID_DLLIST_2, ID_DLLIST_3, ID_DLLIST_4, ID_DLLIST_5, 
 		ID_DLLIST_6, ID_DLLIST_7, ID_DLLIST_8, ID_DLOG_1, ID_DLOG_2, ID_DLOG_3 };
-	LPCSTR apszCmds [] = {LS (L_FILENAME), LS (L_SIZE), LS (L_DOWNLOADED),
+	LPCTSTR apszCmds [] = {LS (L_FILENAME), LS (L_SIZE), LS (L_DOWNLOADED),
 		LS (L_TIMELEFT), LS (L_SECTIONS), LS (L_SPEED), LS (L_COMMENT), LS (L_ADDED),
 		LS (L_TIME), LS (L_DATE), LS (L_INFORMATION)};
 	
@@ -1696,7 +1799,7 @@ void CDownloadsWnd::FilterDownloads2(fsDldFilter *filter, int *pProgress)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloadsWnd::FilterDownloads2 " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloadsWnd::FilterDownloads2 " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -1734,7 +1837,7 @@ BOOL CDownloadsWnd::IsSizesInBytes()
 	return m_wndDownloads.m_tasks.m_bSizesInBytes;
 }
 
-BOOL CDownloadsWnd::CreateDownloadWithDefSettings(vmsDownloadSmartPtr dld, LPCSTR pszUrl)
+BOOL CDownloadsWnd::CreateDownloadWithDefSettings(vmsDownloadSmartPtr dld, LPCTSTR pszUrl)
 {
 	if (dld->pMgr == NULL)
 		dld->setDownloadMgr (new vmsDownloadMgrEx);
@@ -1766,16 +1869,16 @@ BOOL CDownloadsWnd::CreateDownloadWithDefSettings(vmsDownloadSmartPtr dld, LPCST
 		}
 		else
 		{
-			CHAR szFile [10000];
+			TCHAR szFile [10000];
 			*szFile = 0;
 
 			
 			bool isMagnet = false;
-			const char* magnetStart = _tcsstr (pszUrl, _T("magnet:"));
+			LPCTSTR magnetStart = _tcsstr (pszUrl, _T("magnet:"));
 			if (magnetStart != 0 && pszUrl == magnetStart)
 			{
 				isMagnet = true;
-				strcpy(szFile, pszUrl);
+				_tcscpy(szFile, pszUrl);
 			}
 			else
 			{
@@ -1783,20 +1886,20 @@ BOOL CDownloadsWnd::CreateDownloadWithDefSettings(vmsDownloadSmartPtr dld, LPCST
 					dnp->pszPathName, dnp->enProtocol == NP_FTP, TRUE, szFile, sizeof (szFile));
 			}
 
-			int len = strlen (szFile);
+			int len = _tcslen (szFile);
 
 			if (len && isMagnet == false)
 			{
 				int i;
 				for (i = len-1; i > 0; i--)
-					if (szFile [i] == '.')	
+					if (szFile [i] == _T('.'))	
 						break;
 
 				if (i && i < len-1)
 				{
 					i++;
-					CHAR szExt [1000];
-					strcpy (szExt, szFile + i);
+					TCHAR szExt [1000];
+					_tcscpy (szExt, szFile + i);
 					pGroup = _DldsGrps.FindGroupByExt (szExt);
 				}
 			}
@@ -1816,12 +1919,12 @@ BOOL CDownloadsWnd::CreateDownloadWithDefSettings(vmsDownloadSmartPtr dld, LPCST
 
 	if (strFolder.GetLength () == 0)
 		strFolder = pGroup->strOutFolder;
-	if (strFolder.Right (1) != '\\' && strFolder.Right (1) != '/')
-		strFolder += '\\';
+	if (strFolder.Right (1) != _T('\\') && strFolder.Right (1) != _T('/'))
+		strFolder += _T('\\');
 
 	SAFE_DELETE (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName);
-	dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new char [strFolder.GetLength () + 1];
-	strcpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, strFolder);
+	dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName = new TCHAR [strFolder.GetLength () + 1];
+	_tcscpy (dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName, strFolder);
 
 	return TRUE;
 }
@@ -1986,7 +2089,12 @@ void CDownloadsWnd::RestartDownload(vmsDownloadSmartPtr dld, BOOL bSelThisDld)
 	if (dld->pMgr->IsRunning () == FALSE)
 	{
 		dld->removeStateFlags (DLDS_FILE_WAS_LAUNCHED_AT_LEAST_ONCE);
-		dld->pMgr->RestartDownloading ();
+		if (dld->isYouTube() && ((dld->getState() & DLDS_YOUTUBE_URL_RELOADING) == 0)){
+			dld->setStateFlags(DLDS_YOUTUBE_URL_RELOADING);
+			_YouTubeDldsMgr.reloadURL( dld );
+		}
+		else
+			dld->pMgr->RestartDownloading ();
 
 		SYSTEMTIME time;
 		GetLocalTime (&time);
@@ -2052,6 +2160,15 @@ LRESULT CDownloadsWnd::OnDWCloseDldDialog(WPARAM, LPARAM lp)
 	dld->Release (); 
 	if (dld->pdlg)
 	{
+		{
+			auto lock = dld->pdlg->Lock ();
+			if (dld->pdlg->ui_locked ())
+			{
+				dld->pdlg->schedule_close ();
+				return 0;
+			}
+		}
+
 		dld->pdlg->DestroyWindow ();
 		SAFE_DELETE (dld->pdlg);
 	}
@@ -2086,8 +2203,12 @@ UINT CDownloadsWnd::getTotalDownloadingSpeed()
 
 UINT CDownloadsWnd::getTotalUploadingSpeed()
 {
+	_BT.LockSession(true);
 	vmsBtSession *pS = _BT.is_Initialized () ? _BT.get_Session () : NULL;
-	return pS ? pS->get_TotalUploadSpeed () : 0;
+	UINT uSpeed = pS ? pS->get_TotalUploadSpeed() : 0;	
+	_BT.UnlockSession(true);
+
+	return uSpeed;
 }
 
 void CDownloadsWnd::OnDldmovedown() 
@@ -2129,14 +2250,14 @@ DWORD WINAPI CDownloadsWnd::_threadCheckDldHasOpinions(LPVOID lp)
 	if (dld == NULL)
 		goto _lExit;
 
-	strUrl.Format ("http://fdm.freedownloadmanager.org/fromfdm/checkurl.php?url=%s",
+	strUrl.Format (_T("http://fdm.freedownloadmanager.org/fromfdm/checkurl.php?url=%s"),
 		vmsMaliciousDownloadChecker::EncodeUrl (dld->pMgr->get_URL ()));
 
-	char szTmpPath [MY_MAX_PATH];
-	char szTmpFile [MY_MAX_PATH];
+	TCHAR szTmpPath [MY_MAX_PATH];
+	TCHAR szTmpFile [MY_MAX_PATH];
 
-	GetTempPath (sizeof (szTmpPath), szTmpPath);
-	GetTempFileName (szTmpPath, "fdm", 0, szTmpFile);
+	GetTempPath (_countof (szTmpPath), szTmpPath);
+	GetTempFileName (szTmpPath, _T("fdm"), 0, szTmpFile);
 
 	dldr.Download (strUrl, szTmpFile);
 	while (pthis->m_bExiting == FALSE && dldr.IsRunning ())
@@ -2148,7 +2269,7 @@ DWORD WINAPI CDownloadsWnd::_threadCheckDldHasOpinions(LPVOID lp)
 		goto _lExit;
 
 	bool bHasOpinions;
-	bHasOpinions = dldr.GetLastError () == IR_SUCCESS;
+	bHasOpinions = dldr.GetLastError ().first == IR_SUCCESS;
 
 	dld->dwFlags &= ~ (DLD_HASOPINIONS_YES | DLD_HASOPINIONS_NO);
 
@@ -2245,7 +2366,7 @@ void CDownloadsWnd::DeleteDeadDownloadsInList()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloadsWnd::DeleteDeadDownloadsInList " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloadsWnd::DeleteDeadDownloadsInList " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -2334,7 +2455,7 @@ BOOL CDownloadsWnd::CreateBtDownload(
 	if (_App.NewDL_GroupId () != -1)
 		dld->pGroup = _DldsGrps.FindGroup (_App.NewDL_GroupId ());
 	if (dld->pGroup == NULL)
-		dld->pGroup = _DldsGrps.FindGroupByExt ("torrent");
+		dld->pGroup = _DldsGrps.FindGroupByExt (_T("torrent"));
 	if (dld->pGroup == NULL)
 		dld->pGroup = _DldsGrps.FindGroup (GRP_OTHER_ID);
 	dld->bAutoStart = _App.NewDL_AutoStart ();
@@ -2342,7 +2463,7 @@ BOOL CDownloadsWnd::CreateBtDownload(
 	vmsBtDownloadManager *pMgr = dld->pMgr->GetBtDownloadMgr ();
 
 	BOOL isMagnet = FALSE;
-	const char* magnetStart = _tcsstr (pszFile, _T("magnet:"));
+	LPCTSTR magnetStart = _tcsstr (pszFile, _T("magnet:"));
 	if (magnetStart != 0 && pszFile == magnetStart)
 	{
 		isMagnet = TRUE;
@@ -2462,7 +2583,7 @@ void CDownloadsWnd::ShowDownloads(DLDS_LIST_REF vDlds)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloadsWnd::ShowDownloads " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloadsWnd::ShowDownloads " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -2484,7 +2605,7 @@ int CDownloadsWnd::DeleteDownloads(DLDS_LIST_REF v, BOOL bByUser, BOOL bDontConf
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloadsWnd::DeleteDownloads " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloadsWnd::DeleteDownloads " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -2516,7 +2637,7 @@ void CDownloadsWnd::OnDldconvert()
 BOOL CDownloadsWnd::IsMediaDownload(vmsDownloadSmartPtr dld)
 {
 	fsString strFile = dld->pMgr->get_OutputFilePathName ();
-	LPCSTR pszExt = strrchr (strFile, '.');
+	LPCTSTR pszExt = _tcsrchr (strFile, _T('.'));
 	if (pszExt++ == NULL)
 		return FALSE;
 	return IsExtInExtsStr (vmsDownloadsGroupsMgr::GetVideoExts (), pszExt) ||
@@ -2675,12 +2796,21 @@ LRESULT CDownloadsWnd::OnShowOnDlDoneNotification(WPARAM wp, LPARAM lp)
 
 UINT CDownloadsWnd::CreateDownload(vmsNewDownloadInfo *pDld, BOOL bReqTopMostDialog)
 {
-	return CreateDownload (pDld->strUrl, bReqTopMostDialog, 
-		pDld->strComment.IsEmpty () ? NULL : (LPCSTR)pDld->strComment, 
-		pDld->strReferer.IsEmpty () ? NULL : (LPCSTR)pDld->strReferer,
+	UINT id = CreateDownload (pDld->strUrl, bReqTopMostDialog, 
+		pDld->strComment.IsEmpty () ? NULL : (LPCTSTR)pDld->strComment, 
+		pDld->strReferer.IsEmpty () ? NULL : (LPCTSTR)pDld->strReferer,
 		pDld->bAddSilent, pDld->dwForceAutoLaunch, 
 		pDld->dwWhatIsValid & NDIV_AUTOSTART ? &pDld->bAutoStart : NULL,
-		pDld->dwWhatIsValid & NDIV_AP ? &pDld->ap : NULL, pDld->pnCreateNewDownloadResult);
+		pDld->dwWhatIsValid & NDIV_AP ? &pDld->ap : NULL, pDld->pnCreateNewDownloadResult,
+		pDld->useSpecificCreationMethod);
+
+	if (id != UINT_MAX)
+	{
+		if (pDld->additionalDownload)
+			CreateDownload (pDld->additionalDownload.get (), bReqTopMostDialog);
+	}
+
+	return id;
 }
 
 void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownloadsMgrEvent ev, int iDldLogEntry)
@@ -2690,6 +2820,7 @@ void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 
 	BOOL bUpdateTIPO = TRUE;
 	bool bApplyNotGroupFilterForDownload = dld != NULL;
+	bool checkNeedNotifyAboutDownloadCompletion = false;
 
 	try 
 	{
@@ -2821,47 +2952,12 @@ void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 				((CMainFrame*)AfxGetApp ()->m_pMainWnd)->RebuidDownloadsList ();
 				BOOL bNoBalloon = FALSE;
 
-				char szFile [MY_MAX_PATH];
+				TCHAR szFile [MY_MAX_PATH];
 				CDownloads_Tasks::GetFileName (dld, szFile);
-
-				tstring tstrMsg;
-				bool bOnDoneBalloon = false;
 
 				if (dld->pMgr->IsDone ())
 				{
-					bOnDoneBalloon = true;
-					tstrMsg = LS (L_DONE);
-
-					bool bNotif = true; 
-
-					if (dld->dwFlags & DLD_NOTIFICATIONS_LL)
-						bNotif = false;
-					else if ((dld->dwFlags & DLD_BATCH) && _App.Notif_DisableForBatchDownloads ())
-						bNotif = false;
-
-					if (bNotif)
-						_Snds.Event (SME_DOWNLOADCOMPLETE);
-					else
-						bNoBalloon = TRUE;
-
-					if (m_wndDownloads.m_info.Get_ActiveDownload () == dld)
-					{
-						BOOL bDontSwitchToMedia = FALSE;
-
-						if (m_wndDownloads.m_info.get_CurTab () == DIT_OPINIONS)
-							m_wndDownloads.m_info.m_opinions.UpdateContent ();
-						else if (_App.Community_SwitchToOpinions ())
-						{
-							m_wndDownloads.m_info.m_opinions.UpdateContent (true);
-							bDontSwitchToMedia = TRUE;
-						}
-
-						if (bDontSwitchToMedia == FALSE && _App.View_AutoSwitchToMediaPreview ())
-						{
-							if (IsMediaDownload (dld))
-								m_wndDownloads.m_info.set_CurTab (DIT_MEDIAPREVIEW);
-						}
-					}
+					checkNeedNotifyAboutDownloadCompletion = true;
 				}
 				else if (dld->pMgr->IsStoppedByUser ())
 				{
@@ -2871,6 +2967,8 @@ void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 				}
 				else
 				{
+					tstring tstrMsg;
+
 					if (dld->bAutoStart == FALSE)
 					{
 						tstrMsg = LS (L_STOPPED);
@@ -2888,27 +2986,11 @@ void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 						else if ((dld->dwFlags & DLD_BATCH) && _App.Notif_DisableForBatchDownloads ())
 							bNoBalloon = TRUE;
 					}
-				}
 
-				if (bNoBalloon == FALSE)
-				{
-					bool bShowUsualBalloon = true;
-
-					if (bOnDoneBalloon)
-					{
-						if (_App.Notif_UseOnDoneWnds ())
-						{
-							dld->AddRef (); 
-							PostMessage (WM_DLD_SHOW_ON_DONE_NOTIFICATION, 0, (LPARAM)(fsDownload*)dld);
-							bShowUsualBalloon = false;
-							
-						}
-					}
-
-					if (bShowUsualBalloon)
+					if (!bNoBalloon)
 					{
 						CString str;
-						str.Format ("%s - %s", szFile, tstrMsg.c_str ());
+						str.Format (_T("%s - %s"), szFile, tstrMsg.c_str ());
 						CMainFrame::ShowTimeoutBalloon (str, vmsFdmAppMgr::getAppName ());
 					}
 				}
@@ -3030,7 +3112,14 @@ void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 			if (_pwndTorrents && dld == _pwndTorrents->m_wndTasks.getActiveDownload  ())
 				_pwndTorrents->SetActiveDownload (dld);
 			break;
+
+		case DME_POST_DOWNLOAD_TASK_FINISHED:
+			checkNeedNotifyAboutDownloadCompletion = true;
+			break;
 		}
+
+		if (dld && dld->isYouTube ())
+			_YouTubeDldsMgr.handleEvent (dld, rec, ev);
 
 		if (bApplyNotGroupFilterForDownload)
 			m_wndGroups.ApplyNotGroupFilterForDownload (dld);
@@ -3038,11 +3127,17 @@ void CDownloadsWnd::onEvents(fsDownload* dld, fsDLHistoryRecord *rec, fsDownload
 		if (bUpdateTIPO)
 			UpdateTrayIconPlusOthers ();
 
+		if (dld && checkNeedNotifyAboutDownloadCompletion)
+		{
+			assert (dld->pMgr->IsDone ());
+			if (dld->postDownloadTasks.empty ())
+				NotifyUserAboutDownloadCompletion (dld);
+		}
 	}
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloadsWnd::onEvents " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloadsWnd::onEvents " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -3081,7 +3176,7 @@ void CDownloadsWnd::OnDownloadPreCreate_AdjustFileSharingSiteSupport(fsDownload*
 	if (!dld->pMgr->GetDownloadMgr ())
 		return;
 
-	LPCSTR pszKnownSite = isKnownFileSharingSite (dld);
+	LPCTSTR pszKnownSite = isKnownFileSharingSite (dld);
 	if (!pszKnownSite)
 		return;
 
@@ -3091,7 +3186,7 @@ void CDownloadsWnd::OnDownloadPreCreate_AdjustFileSharingSiteSupport(fsDownload*
 	pMgr->GetDNP ()->dwFlags |= DNPF_IMMEDIATELY_SEND_AUTH_AS_BASIC;
 	pMgr->setDirty();
 
-	if (!strcmp (pszKnownSite, "filesonic.com"))
+	if (!_tcscmp (pszKnownSite, _T("filesonic.com")))
 	{
 		if (pParams)
 		{
@@ -3100,8 +3195,8 @@ void CDownloadsWnd::OnDownloadPreCreate_AdjustFileSharingSiteSupport(fsDownload*
 			if (!pParams->strUserAgent.IsEmpty ())
 			{
 				SAFE_DELETE_ARRAY (pMgr->GetDNP ()->pszAgent);
-				pMgr->GetDNP ()->pszAgent = new char [pParams->strUserAgent.GetLength () + 1];
-				strcpy (pMgr->GetDNP ()->pszAgent, pParams->strUserAgent);
+				pMgr->GetDNP ()->pszAgent = new TCHAR [pParams->strUserAgent.GetLength () + 1];
+				_tcscpy (pMgr->GetDNP ()->pszAgent, pParams->strUserAgent);
 			}
 		}
 		pMgr->GetDNP ()->dwFlags |= DNPF_DONT_UPDATE_ORIGINAL_URL_AFTER_REDIRECT;
@@ -3109,26 +3204,26 @@ void CDownloadsWnd::OnDownloadPreCreate_AdjustFileSharingSiteSupport(fsDownload*
 	}
 }
 
-LPCSTR CDownloadsWnd::isKnownFileSharingSite(fsDownload* dld)
+LPCTSTR CDownloadsWnd::isKnownFileSharingSite(fsDownload* dld)
 {
-	static LPCSTR apszKnownSites [] = {
-		"rapidshare.com", "filesonic.com"
+	static LPCTSTR apszKnownSites [] = {
+		_T("rapidshare.com"), _T("filesonic.com")
 	};
 
-	LPCSTR pszHost = dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszServerName;
-	int nHostNameLen = strlen (pszHost);
+	LPCTSTR pszHost = dld->pMgr->GetDownloadMgr ()->GetDNP ()->pszServerName;
+	int nHostNameLen = _tcslen (pszHost);
 
 	for (int i = 0; i < _countof (apszKnownSites); i++)
 	{
-		LPCSTR pszKnownSite = apszKnownSites [i];
-		int nKnownSiteNameLen = strlen (pszKnownSite);
+		LPCTSTR pszKnownSite = apszKnownSites [i];
+		int nKnownSiteNameLen = _tcslen (pszKnownSite);
 
-		if (strcmp (pszKnownSite, pszHost) == 0)
+		if (_tcscmp (pszKnownSite, pszHost) == 0)
 			return apszKnownSites [i];
 		
 		if (nHostNameLen > nKnownSiteNameLen+1 && 
-				pszHost [nHostNameLen - nKnownSiteNameLen - 1] == '.' &&
-				strcmp (pszHost + nHostNameLen - nKnownSiteNameLen, pszKnownSite) == 0)
+				pszHost [nHostNameLen - nKnownSiteNameLen - 1] == _T('.') &&
+				_tcscmp (pszHost + nHostNameLen - nKnownSiteNameLen, pszKnownSite) == 0)
 			return apszKnownSites [i];
 	}
 
@@ -3148,5 +3243,105 @@ void CDownloadsWnd::onBtDownloadWithSameInfoHashExistsAlready ()
 LRESULT CDownloadsWnd::OnDwSuchTorrentExistsAlready (WPARAM, LPARAM)
 {
 	MessageBox (LS (L_SUCHTORRENTEXISTSALREADY), NULL, MB_ICONEXCLAMATION);
+	return 0;
+}
+
+void CDownloadsWnd::NotifyUserAboutDownloadCompletion(vmsDownloadSmartPtr dld)
+{
+	assert (dld->pMgr->IsDone ());
+	if (!dld->pMgr->IsDone ())
+		return;
+
+	BOOL bNoBalloon = false;
+	tstring tstrMsg = LS (L_DONE);
+
+	bool bNotif = true; 
+
+	if (dld->dwFlags & DLD_NOTIFICATIONS_LL)
+		bNotif = false;
+	else if ((dld->dwFlags & DLD_BATCH) && _App.Notif_DisableForBatchDownloads ())
+		bNotif = false;
+
+	if (bNotif)
+		_Snds.Event (SME_DOWNLOADCOMPLETE);
+	else
+		bNoBalloon = TRUE;
+
+	if (m_wndDownloads.m_info.Get_ActiveDownload () == dld)
+	{
+		BOOL bDontSwitchToMedia = FALSE;
+
+		if (m_wndDownloads.m_info.get_CurTab () == DIT_OPINIONS)
+			m_wndDownloads.m_info.m_opinions.UpdateContent ();
+		else if (_App.Community_SwitchToOpinions ())
+		{
+			m_wndDownloads.m_info.m_opinions.UpdateContent (true);
+			bDontSwitchToMedia = TRUE;
+		}
+
+		if (bDontSwitchToMedia == FALSE && _App.View_AutoSwitchToMediaPreview ())
+		{
+			if (IsMediaDownload (dld))
+				m_wndDownloads.m_info.set_CurTab (DIT_MEDIAPREVIEW);
+		}
+	}
+
+	if (bNoBalloon == FALSE)
+	{
+		bool bShowUsualBalloon = true;
+
+		if (_App.Notif_UseOnDoneWnds ())
+		{
+			dld->AddRef (); 
+			PostMessage (WM_DLD_SHOW_ON_DONE_NOTIFICATION, 0, (LPARAM)(fsDownload*)dld);
+		}
+		else
+		{
+			TCHAR szFile [MY_MAX_PATH];
+			CDownloads_Tasks::GetFileName (dld, szFile);
+
+			CString str;
+			str.Format (_T("%s - %s"), szFile, tstrMsg.c_str ());
+			CMainFrame::ShowTimeoutBalloon (str, vmsFdmAppMgr::getAppName ());
+		}
+	}
+}
+
+bool CDownloadsWnd::CreateDownloadUsingSpecificMethod(bool ask_user, LPCTSTR url, bool topmostUi)
+{
+	auto type = CCreateDownloadDlg::GetDownloadType (url);
+	if (type != DownloadType::UNKNOWN)
+	{
+		if (!ask_user || 
+			CCreateDownloadDlg::AskUserToUseSpecificCreationMethod (this, type, topmostUi))
+		{
+			assert (type == DownloadType::YOUTUBE_DOWNLOAD);
+			if (type == DownloadType::YOUTUBE_DOWNLOAD)
+			{
+				_pwndFVDownloads->CreateDownload (url, topmostUi);
+				return true;
+			}
+
+		}
+	}
+	return false;
+}
+
+LRESULT CDownloadsWnd::OnDwCreateDownloads (WPARAM wp, LPARAM lp)
+{
+	std::unique_ptr <std::vector <std::pair <vmsNewDownloadInfo, bool>>> p (
+		reinterpret_cast <std::vector <std::pair <vmsNewDownloadInfo, bool>>*> (lp));
+	assert (p);
+
+	const BOOL topmostUI = wp;
+
+	for (auto it = p->begin (); it != p->end (); ++it)
+	{
+		BOOL bAdded = UINT_MAX != CreateDownload (&it->first, topmostUI);
+		bool showAddedBalloon = it->second;
+		if (bAdded && showAddedBalloon)
+			CMainFrame::ShowTimeoutBalloon (it->first.strUrl, _T("Download added"), NIIF_INFO, TRUE);
+	}
+
 	return 0;
 }

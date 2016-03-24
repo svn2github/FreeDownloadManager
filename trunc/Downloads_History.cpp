@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -64,15 +64,15 @@ BOOL CDownloads_History::Create(CWnd *pParent)
 	m_selimages.Add (&bmp2, RGB (255, 0, 255));
 	SetSelectedImages (&m_selimages);
 
-	InsertColumn (0, "file", LVCFMT_LEFT, 100, 0);
-	InsertColumn (1, "url", LVCFMT_LEFT, 100, 0);
-	InsertColumn (2, "added", LVCFMT_LEFT, 80, 0);
-	InsertColumn (3, "dlded", LVCFMT_LEFT, 80, 0);
-	InsertColumn (4, "size", LVCFMT_LEFT, 80, 0);
-	InsertColumn (5, "savedto", LVCFMT_LEFT, 100, 0);
-	InsertColumn (6, "comment", LVCFMT_LEFT, 90, 0);
+	InsertColumn (0, _T("file"), LVCFMT_LEFT, 100, 0);
+	InsertColumn (1, _T("url"), LVCFMT_LEFT, 100, 0);
+	InsertColumn (2, _T("added"), LVCFMT_LEFT, 80, 0);
+	InsertColumn (3, _T("dlded"), LVCFMT_LEFT, 80, 0);
+	InsertColumn (4, _T("size"), LVCFMT_LEFT, 80, 0);
+	InsertColumn (5, _T("savedto"), LVCFMT_LEFT, 100, 0);
+	InsertColumn (6, _T("comment"), LVCFMT_LEFT, 90, 0);
 
-	ReadState ("DownloadsHistory");
+	ReadState (_T("DownloadsHistory"));
 	
 
 	return TRUE;
@@ -81,7 +81,7 @@ BOOL CDownloads_History::Create(CWnd *pParent)
 void CDownloads_History::ApplyLanguage()
 {
 	SetColumnText (0, LS (L_FILE));
-	SetColumnText (1, "URL");
+	SetColumnText (1, _T("URL"));
 	SetColumnText (2, LS (L_ADDED));
 	SetColumnText (3, LS (L_DOWNLOADED));
 	SetColumnText (4, LS (L_SIZE));
@@ -94,7 +94,7 @@ void CDownloads_History::AddRecord(fsDLHistoryRecord *rec)
 	m_mxAddDel.Lock ();
 
 	
-	int iItem = AddItem ("", GetSysColor (COLOR_WINDOW), GetSysColor (COLOR_WINDOWTEXT), 0, TRUE);
+	int iItem = AddItem (_T(""), GetSysColor (COLOR_WINDOW), GetSysColor (COLOR_WINDOWTEXT), 0, TRUE);
 
 	SetItemData (iItem, (DWORD) rec);
 
@@ -127,7 +127,7 @@ void CDownloads_History::UpdateRecord(int iItem)
 
 	SetItemText (iItem, 1, rec->strURL);
 
-	char sz [1000];
+	TCHAR sz [1000];
 	
 	FileTimeToStr (&rec->dateAdded, sz, NULL);
 	SetItemText (iItem, 2, sz);
@@ -141,9 +141,9 @@ void CDownloads_History::UpdateRecord(int iItem)
 	{
 		CString str = LS (L_WASDELETED_);
 		FileTimeToStr (&rec->dateRecordAdded, sz, NULL);
-		str += " (";
+		str += _T(" (");
 		str += sz;
-		str += ')';
+		str += _T(')');
 		SetItemText (iItem, 3, str);
 	}
 
@@ -153,9 +153,9 @@ void CDownloads_History::UpdateRecord(int iItem)
 		if (FALSE == _pwndDownloads->IsSizesInBytes ())
 		{
 			float val;
-			char szDim [10];
+			TCHAR szDim [100];
 			BytesToXBytes (rec->uFileSize, &val, szDim);
-			str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+			str.Format (_T("%.*g %s"), val > 999 ? 4 : 3, val, szDim);
 		}
 		else
 			str = fsBytesToStr (rec->uFileSize);
@@ -168,8 +168,8 @@ void CDownloads_History::UpdateRecord(int iItem)
 	SetItemText (iItem, 5, rec->strSavedTo);
 	
 	str = rec->strComment;
-	str.Replace ("\r", " ");
-	str.Replace ("\n", " ");
+	str.Replace (_T("\r"), _T(" "));
+	str.Replace (_T("\n"), _T(" "));
 	SetItemText (iItem, 6, str);
 
 	SetItemImage (iItem, GetRecordImage (rec));
@@ -235,7 +235,7 @@ void CDownloads_History::ApplyFilter_imp(fsDldHistRecFilter *f, int *piProgress)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloads_History::ApplyFilter_imp " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloads_History::ApplyFilter_imp " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -368,10 +368,10 @@ int CALLBACK CDownloads_History::_sortFunc(LPARAM item1, LPARAM item2, LPARAM lp
 	switch (pThis->m_iSortCol)
 	{
 		case 0:	
-			return stricmp (rec1->strFileName, rec2->strFileName);
+			return _tcsicmp (rec1->strFileName, rec2->strFileName);
 		
 		case 1:	
-			return stricmp (rec1->strURL, rec2->strURL);
+			return _tcsicmp (rec1->strURL, rec2->strURL);
 
 		case 2:	
 			return CompareFileTime (&rec2->dateAdded, &rec1->dateAdded);
@@ -406,7 +406,7 @@ int CALLBACK CDownloads_History::_sortFunc(LPARAM item1, LPARAM item2, LPARAM lp
 			return size1 > size2 ? -1 : 1;
 
 		case 5:	
-			return stricmp (rec1->strSavedTo, rec2->strSavedTo);
+			return _tcsicmp (rec1->strSavedTo, rec2->strSavedTo);
 	}
 
 	return 0;
@@ -416,7 +416,7 @@ void CDownloads_History::OnLaunch()
 {
 	fsDLHistoryRecord* rec = get_SelectedRecord ();
 	if (rec)
-		ShellExecute (::GetDesktopWindow (), "open", rec->strSavedTo, NULL, NULL, SW_SHOW);
+		ShellExecute (::GetDesktopWindow (), _T("open"), rec->strSavedTo, NULL, NULL, SW_SHOW);
 }
 
 void CDownloads_History::OnOpenfolder() 
@@ -425,15 +425,15 @@ void CDownloads_History::OnOpenfolder()
 
 	if (GetFileAttributes (rec->strSavedTo) == DWORD (-1))
 	{
-		char szPath [MY_MAX_PATH];
+		TCHAR szPath [MY_MAX_PATH];
 		fsGetPath (rec->strSavedTo, szPath);
-		ShellExecute (m_hWnd, "explore", szPath, NULL, NULL, SW_SHOW);
+		ShellExecute (m_hWnd, _T("explore"), szPath, NULL, NULL, SW_SHOW);
 	}
 	else
 	{
 		CString strCmd;
-		strCmd.Format ("/select,\"%s\"", rec->strSavedTo);
-		ShellExecute (m_hWnd, "open", "explorer.exe", strCmd, NULL, SW_SHOW);
+		strCmd.Format (_T("/select,\"%s\""), rec->strSavedTo);
+		ShellExecute (m_hWnd, _T("open"), _T("explorer.exe"), strCmd, NULL, SW_SHOW);
 	}
 }
 
@@ -482,7 +482,7 @@ void CDownloads_History::OnHstitemDelete()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CDownloads_History::OnHstitemDelete " + tstring(ex.what()));
+		vmsLogger::WriteLog("CDownloads_History::OnHstitemDelete " + std::string(ex.what()));
 	}
 	catch (...)
 	{

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -120,7 +120,7 @@ BOOL CSpiderAddPageDlg::OnInitDialog()
 
 	if (m_strStartUrl.GetLength () == 0)
 	{
-		LPCSTR pszUrl = _ClipbrdMgr.Text ();
+		LPCTSTR pszUrl = _ClipbrdMgr.Text ();
 		if (pszUrl)
 		{
 			fsURL url;
@@ -129,7 +129,7 @@ BOOL CSpiderAddPageDlg::OnInitDialog()
 		}
 		
 		if (m_strUrl.GetLength () == 0)
-			m_strUrl = "http://";
+			m_strUrl = _T("http://");
 	}
 	else
 		m_strUrl = m_strStartUrl;
@@ -351,7 +351,7 @@ void CSpiderAddPageDlg::OnOK()
 	if (FALSE == CCreateDownloadDlg::_CheckFolderName (this, IDC_OUTFOLDER))
 		return;
 
-	fsPathToGoodPath ((LPSTR)(LPCSTR)strOutFolder);
+	fsPathToGoodPath ((LPTSTR)(LPCTSTR)strOutFolder);
 
 	if (strOutFolder.GetLength () == 0)
 	{
@@ -493,7 +493,7 @@ void CSpiderAddPageDlg::ReadAutostart()
 	}
 }
 
-BOOL CSpiderAddPageDlg::IsOkUrl(LPCSTR pszUrl, LPCSTR , BOOL *pbMustAddSlash)
+BOOL CSpiderAddPageDlg::IsOkUrl(LPCTSTR pszUrl, LPCTSTR , BOOL *pbMustAddSlash)
 {
 	if (pbMustAddSlash)
 		*pbMustAddSlash = FALSE;
@@ -619,7 +619,7 @@ void CSpiderAddPageDlg::OnSelchangeOutfolder()
 
 void CSpiderAddPageDlg::BuildOutFolder()
 {
-	CHAR szFile [10000];
+	TCHAR szFile [10000];
         *szFile = 0;
 	fsURL url;
 
@@ -644,7 +644,7 @@ void CSpiderAddPageDlg::BuildOutFolder()
 
 	CString str = m_strBaseFolder;
 	str += url.GetHostName ();
-	str += '\\';
+	str += _T('\\');
 	
 	SetDlgItemText (IDC_OUTFOLDER, str);
 }

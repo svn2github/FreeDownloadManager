@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -89,10 +89,10 @@ void CSpiderWnd::Plugin_GetToolBarInfo(wgTButtonInfo **ppButtons, int *pcButtons
 {
 	static wgTButtonInfo btns [] = 
 	{
-		wgTButtonInfo (ID_SPIDER_DL, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_SPIDER_STARTDL, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_SPIDER_STOPDL, TBSTYLE_BUTTON, ""),
-		wgTButtonInfo (ID_SPIDER_SCHEDULE, TBSTYLE_BUTTON, ""),
+		wgTButtonInfo (ID_SPIDER_DL, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_SPIDER_STARTDL, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_SPIDER_STOPDL, TBSTYLE_BUTTON, _T("")),
+		wgTButtonInfo (ID_SPIDER_SCHEDULE, TBSTYLE_BUTTON, _T("")),
 	};
 
 	btns [0].pszToolTip = LS (L_DLWEBPAGE);
@@ -123,7 +123,7 @@ void CSpiderWnd::Plugin_GetMenuImages(fsSetImage **ppImages, int *pcImages)
 void CSpiderWnd::Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int *cItems)
 {
 	static wgMenuViewItem aItems [] = {
-		wgMenuViewItem ("", &_pwndSpider->m_bShowTree),
+		wgMenuViewItem (_T(""), &_pwndSpider->m_bShowTree),
 	};
 
 	aItems [0].pszName = LS (L_WEBPAGETREE);
@@ -132,7 +132,7 @@ void CSpiderWnd::Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int *cItems)
 	*cItems = sizeof (aItems) / sizeof (wgMenuViewItem);
 }
 
-void CSpiderWnd::Plugin_GetPluginNames(LPCSTR *ppszLong, LPCSTR *ppszShort)
+void CSpiderWnd::Plugin_GetPluginNames(LPCTSTR *ppszLong, LPCTSTR *ppszShort)
 {
 	*ppszLong = *ppszShort = LS (L_HTMLSPIDER);
 }
@@ -153,7 +153,7 @@ int CSpiderWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	m_wndSplitter.SetWnd1 (m_wndTasks);
 	m_wndSplitter.SetWnd2 (m_wndTaskTree);
-	m_wndSplitter.SetRatio (_App.View_SplitterRatio ("Spider_T_TT"));
+	m_wndSplitter.SetRatio (_App.View_SplitterRatio (_T("Spider_T_TT")));
 
 	m_bShowTree = _App.View_SpiderTree ();
 	ShowTree (m_bShowTree);
@@ -219,8 +219,8 @@ void CSpiderWnd::SaveAll(DWORD dwWhat)
 {
 	if (dwWhat & 2)
 	{
-		_App.View_SplitterRatio ("Spider_T_TT", m_wndSplitter.GetRatio ());
-		m_wndTasks.SaveState ("SpiderTasks");
+		_App.View_SplitterRatio (_T("Spider_T_TT"), m_wndSplitter.GetRatio ());
+		m_wndTasks.SaveState (_T("SpiderTasks"));
 	}
 	if (dwWhat & 1)
 	{
@@ -293,7 +293,7 @@ void CSpiderWnd::OnTimer(UINT nIDEvent)
 		catch (const std::exception& ex)
 		{
 			ASSERT (FALSE);
-			vmsLogger::WriteLog("CSpiderWnd::OnTimer " + tstring(ex.what()));
+			vmsLogger::WriteLog("CSpiderWnd::OnTimer " + std::string(ex.what()));
 		}
 		catch (...)
 		{
@@ -429,7 +429,7 @@ void CSpiderWnd::ApplyLanguageToMenuView(CMenu *menu)
 	menu->ModifyMenu (0, MF_BYPOSITION | MF_STRING, 0, LS (L_LISTOFPAGES));
 
 	UINT aCmds [] = {ID_LOW_1, ID_LOW_2, ID_LOW_3};
-	LPCSTR apszCmds [] = {LS (L_WEBPAGEURL), LS (L_PROGRESS), LS (L_FILES)};
+	LPCTSTR apszCmds [] = {LS (L_WEBPAGEURL), LS (L_PROGRESS), LS (L_FILES)};
 	
 	for (int i = 0; i < sizeof (aCmds) / sizeof (UINT); i++)
 		menu->ModifyMenu (aCmds [i], MF_BYCOMMAND|MF_STRING, aCmds [i], apszCmds [i]);
@@ -515,9 +515,9 @@ void CSpiderWnd::onDownloaderEvents(fsWebPageDownloader *dldr, fsWPDEvent ev, fs
 
 	case WPDE_DONE:
 		CString strtmp;
-		char szUrl [10000];
+		TCHAR szUrl [10000];
 		dldr->GetDownloadingSiteName (szUrl);
-		strtmp.Format ("%s - %s", szUrl, LS (L_DONE));
+		strtmp.Format (_T("%s - %s"), szUrl, LS (L_DONE));
 		CMainFrame::ShowTimeoutBalloon (strtmp, vmsFdmAppMgr::getAppName ());
 		break;
 	}

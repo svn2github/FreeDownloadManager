@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -13,7 +13,7 @@ static char THIS_FILE[]=__FILE__;
 #define new DEBUG_NEW
 #endif
 
-vms7zipFormatDLL::vms7zipFormatDLL(LPCSTR pszDll)
+vms7zipFormatDLL::vms7zipFormatDLL(LPCTSTR pszDll)
 {
 	m_hDll = NULL;
 	m_pfnCreateObject = NULL;
@@ -28,7 +28,7 @@ vms7zipFormatDLL::~vms7zipFormatDLL()
 	Free ();
 }
 
-bool vms7zipFormatDLL::Load(LPCSTR pszDll)
+bool vms7zipFormatDLL::Load(LPCTSTR pszDll)
 {
 	Free ();
 	m_hDll = LoadLibrary (pszDll);
@@ -66,10 +66,10 @@ HRESULT vms7zipFormatDLL::GetHandlerProperty(PROPID propID, PROPVARIANT *value)
 	return m_pfnGetHandlerProperty (propID, value);
 }
 
-bool vms7zipFormatDLL::IsSupportedArchive(LPCSTR pszArchive)
+bool vms7zipFormatDLL::IsSupportedArchive(LPCTSTR pszArchive)
 {
-	LPCSTR pszExt;
-	pszExt = strrchr (pszArchive, '.');
+	LPCTSTR pszExt;
+	pszExt = _tcsrchr (pszArchive, _T('.'));
 	if (pszExt == NULL)
 		return false;
 	pszExt++;

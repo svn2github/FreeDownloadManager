@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -59,13 +59,13 @@ BOOL CDownloads_Deleted::Create(CWnd *pParent)
 	m_selimages.Add (&bmp2, RGB (255, 0, 255));
 	SetSelectedImages (&m_selimages);
 
-	InsertColumn (0, "", LVCFMT_LEFT, 200, 0);
-	InsertColumn (1, "", LVCFMT_LEFT, 50, 0);
-	InsertColumn (2, "", LVCFMT_LEFT, 100, 0);
-	InsertColumn (3, "", LVCFMT_LEFT, 58, 0);
-	InsertColumn (4, "", LVCFMT_LEFT, 200, 0);
+	InsertColumn (0, _T(""), LVCFMT_LEFT, 200, 0);
+	InsertColumn (1, _T(""), LVCFMT_LEFT, 50, 0);
+	InsertColumn (2, _T(""), LVCFMT_LEFT, 100, 0);
+	InsertColumn (3, _T(""), LVCFMT_LEFT, 58, 0);
+	InsertColumn (4, _T(""), LVCFMT_LEFT, 200, 0);
 
-	ReadState ("DownloadsDeleted");
+	ReadState (_T("DownloadsDeleted"));
 
 	
 
@@ -84,7 +84,7 @@ void CDownloads_Deleted::ApplyLanguage()
 void CDownloads_Deleted::AddDownload(vmsDownloadSmartPtr dld)
 {
 	
-	int iItem = AddItem ("", GetSysColor (COLOR_WINDOW), GetSysColor (COLOR_WINDOWTEXT), 0, TRUE);
+	int iItem = AddItem (_T(""), GetSysColor (COLOR_WINDOW), GetSysColor (COLOR_WINDOWTEXT), 0, TRUE);
 
 	SetItemData (iItem, (DWORD) (fsDownload*) dld);
 
@@ -104,9 +104,9 @@ void CDownloads_Deleted::UpdateDownload(int iItem)
 {
 	vmsDownloadSmartPtr dld = (fsDownload*)GetItemData (iItem);
 
-	std::stringstream ssFile;	
-	ssFile << CDownloads_Tasks::GetFileName (dld) << " (" << 
-		dld->pMgr->get_URL () << ")";
+	tstringstream ssFile;	
+	ssFile << CDownloads_Tasks::GetFileName (dld) << _T(" (") << 
+		dld->pMgr->get_URL () << _T(")");
 	SetItemText (iItem, 0, ssFile.str ().c_str ());
 
 	int cSects = dld->pMgr->GetNumberOfSections ();
@@ -123,7 +123,7 @@ void CDownloads_Deleted::UpdateDownload(int iItem)
 	uDone = dld->pMgr->GetDownloadedBytesCount ();
 
 	CString str;
-	CHAR szDim [10];
+	TCHAR szDim [100];
 	float val;
 
 	
@@ -138,7 +138,7 @@ void CDownloads_Deleted::UpdateDownload(int iItem)
 			{
 				
 				BytesToXBytes (uSize, &val, szDim);
-				str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+				str.Format (_T("%.*g %s"), val > 999 ? 4 : 3, val, szDim);
 			}
 			else
 			{
@@ -149,7 +149,7 @@ void CDownloads_Deleted::UpdateDownload(int iItem)
 			SetItemText (iItem, 1, str);
 		}
 		else
-			SetItemText (iItem, 1, "?");	
+			SetItemText (iItem, 1, _T("?"));	
 
 		
 
@@ -157,15 +157,15 @@ void CDownloads_Deleted::UpdateDownload(int iItem)
 		{
 			BytesToXBytes (uDone, &val, szDim);
 			if (uSize != _UI64_MAX)
-				str.Format ("%d%% [%.*g %s]", (int)((double)(INT64)uDone / (INT64)uSize * 100), val > 999 ? 4 : 3, val, szDim);
+				str.Format (_T("%d%% [%.*g %s]"), (int)((double)(INT64)uDone / (INT64)uSize * 100), val > 999 ? 4 : 3, val, szDim);
 			else
-				str.Format ("%.*g %s", val > 999 ? 4 : 3, val, szDim);
+				str.Format (_T("%.*g %s"), val > 999 ? 4 : 3, val, szDim);
 		}
 		else
 		{
 			CString s = fsBytesToStr (uDone);
 			if (uSize != _UI64_MAX)
-				str.Format ("%d%% [%s]", (int)((double)(INT64)uDone / (INT64)uSize * 100), s);
+				str.Format (_T("%d%% [%s]"), (int)((double)(INT64)uDone / (INT64)uSize * 100), s);
 			else
 				str = s;
 		}
@@ -173,19 +173,19 @@ void CDownloads_Deleted::UpdateDownload(int iItem)
 	}
 	else
 	{
-		SetItemText (iItem, 1, "");
-		SetItemText (iItem, 2, "");
+		SetItemText (iItem, 1, _T(""));
+		SetItemText (iItem, 2, _T(""));
 	}
 
 	
 
-	str.Format ("%d", cSects);
+	str.Format (_T("%d"), cSects);
 	SetItemText (iItem, 3, str);
 
 	
 	str = dld->strComment;
-	str.Replace ("\r", " ");
-	str.Replace ("\n", " ");
+	str.Replace (_T("\r"), _T(" "));
+	str.Replace (_T("\n"), _T(" "));
 	SetItemText (iItem, 4, str);
 }
 
@@ -267,7 +267,7 @@ void CDownloads_Deleted::OnDeletedDelete()
 			catch (const std::exception& ex)
 			{
 				ASSERT (FALSE);
-				vmsLogger::WriteLog("CDownloads_Deleted::OnDeletedDelete " + tstring(ex.what()));
+				vmsLogger::WriteLog("CDownloads_Deleted::OnDeletedDelete " + std::string(ex.what()));
 			}
 			catch (...)
 			{
@@ -303,7 +303,7 @@ void CDownloads_Deleted::OnDeletedRestore()
 		catch (const std::exception& ex)
 		{
 			ASSERT (FALSE);
-			vmsLogger::WriteLog("CDownloads_Deleted::OnDeletedRestore " + tstring(ex.what()));
+			vmsLogger::WriteLog("CDownloads_Deleted::OnDeletedRestore " + std::string(ex.what()));
 		}
 		catch (...)
 		{
@@ -396,10 +396,10 @@ int CALLBACK CDownloads_Deleted::_sortFunc(LPARAM item1, LPARAM item2, LPARAM lp
 	switch (pThis->m_iSortCol)
 	{
 		case 0:
-			char szFile1 [10000];  char szFile2 [10000];
+			TCHAR szFile1 [10000];  TCHAR szFile2 [10000];
 			CDownloads_Tasks::GetFileName (dld1, szFile1);
 			CDownloads_Tasks::GetFileName (dld2, szFile2);
-			return stricmp (szFile1, szFile2);
+			return _tcsicmp (szFile1, szFile2);
 		
 		case 1:
 			UINT64 size1;

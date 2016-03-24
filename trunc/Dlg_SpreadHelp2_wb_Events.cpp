@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -31,7 +31,7 @@ void CDlg_SpreadHelp2_wb_Events::OnBeforeNavigate2(LPDISPATCH, VARIANT *vtUrl, V
 {
 	CString strUrl = vtUrl->bstrVal;
 
-	if (strUrl.Left (4).CompareNoCase ("http") == 0) 
+	if (strUrl.Left (4).CompareNoCase (_T("http")) == 0) 
 	{
 		*pbCancel = TRUE;
 		fsOpenUrlInBrowser (strUrl);

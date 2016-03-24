@@ -1,8 +1,9 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
+#include <tchar.h>
 #include <stdio.h>
 
 BOOL APIENTRY DllMain( HANDLE hModule, 
@@ -15,10 +16,10 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 
 DWORD _stdcall GetSystemDefaultLanguageId ()
 {
-	char sz [10] = "";
+	TCHAR sz [10] = _T("");
 	GetLocaleInfo (LOCALE_USER_DEFAULT, LOCALE_IDEFAULTLANGUAGE, sz, sizeof (sz));
 	DWORD dw = 0;
-	sscanf (sz, "%x", &dw);
+	_stscanf_s (sz, _T("%x"), &dw);
 	return dw;
 }
 

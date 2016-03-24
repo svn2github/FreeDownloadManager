@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_SHEDULERWND_H__6C83160D_AC85_4A7F_A1A4_78EF69C3E03D__INCLUDED_)
@@ -16,6 +16,22 @@
 #include "fsEventsMgr.h"
 #include "plugins.h"
 #include "vmsPersistObject.h"
+
+#define SCHEDULER_TASKS_FILE_CURRENT_VERSION	(1)
+
+#define SCHEDULER_TASKS_SIG "Scheduler Tasks"
+
+struct fsSchedulerTasksFileHdr
+{
+	char szSig [sizeof (SCHEDULER_TASKS_SIG) + 1];
+	WORD wVer;
+
+	fsSchedulerTasksFileHdr ()
+	{
+		strcpy (szSig, SCHEDULER_TASKS_SIG);
+		wVer = SCHEDULER_TASKS_FILE_CURRENT_VERSION;
+	}
+};
 
 class CShedulerWnd : public CWnd, public vmsPersistObject
 {
@@ -37,7 +53,7 @@ public:
 	static HMENU Plugin_GetMainMenu();
 	
 	static void Plugin_SetLanguage (wgLanguage, HMENU hMenuMain, HMENU);
-	static void Plugin_GetPluginNames(LPCSTR *ppszLong, LPCSTR *ppszShort);
+	static void Plugin_GetPluginNames(LPCTSTR *ppszLong, LPCTSTR *ppszShort);
 	static void Plugin_GetMenuViewItems(wgMenuViewItem **ppItems, int *cItems);
 	static void Plugin_GetMenuImages(fsSetImage **ppImages, int *pcImages);
 	static void Plugin_GetToolBarInfo(wgTButtonInfo **ppButtons, int *pcButtons);
@@ -76,6 +92,7 @@ public:
 	BOOL Create (CWnd *pParent);
 	void getObjectItselfStateBuffer(LPBYTE pb, LPDWORD pdwSize, bool bSaveToStorage);
 	bool loadObjectItselfFromStateBuffer(LPBYTE pb, LPDWORD pdwSize, DWORD dwVer);
+	void LoadTasks_old(HANDLE hFile);
 	virtual ~CShedulerWnd();
 
 protected:
@@ -99,7 +116,7 @@ protected:
 	BOOL m_bShowLog;			
 	fsEventsMgr m_evMgr;
 	
-	static void _ScheduleMgrEventDesc (LPCSTR pszEvent, fsScheduleMgrEventType enType, LPVOID lp);
+	static void _ScheduleMgrEventDesc (LPCTSTR pszEvent, fsScheduleMgrEventType enType, LPVOID lp);
 	
 	void LoadTasks();
 

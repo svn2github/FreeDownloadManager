@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSTORRENTEXTENSION_H__027AF6AC_9BCC_4ED2_BF22_2168E5F6E080__INCLUDED_)
@@ -14,7 +14,7 @@ class vmsTorrentExtension
 public:
 	static BOOL CheckAccessRights ();
 	
-	static BOOL AssociateWith (LPCSTR pszCmdLine);
+	static BOOL AssociateWith (LPCTSTR pszCmdLine);
 	static fsString GetCurrentAssociation();
 	static BOOL IsAssociatedWithUs();
 	

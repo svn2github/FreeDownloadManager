@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -22,11 +22,11 @@ fsIEContextMenuMgr::~fsIEContextMenuMgr()
 
 }
 
-BOOL fsIEContextMenuMgr::AddContextMenu(LPCSTR pszMenuName, LPCSTR pszMenuUrl, DWORD dwContext)
+BOOL fsIEContextMenuMgr::AddContextMenu(LPCTSTR pszMenuName, LPCTSTR pszMenuUrl, DWORD dwContext)
 {
 	CRegKey key;
 
-	CString strKey = "Software\\Microsoft\\Internet Explorer\\MenuExt\\";
+	CString strKey = _T("Software\\Microsoft\\Internet Explorer\\MenuExt\\");
 	strKey += pszMenuName;
 
 	if (ERROR_SUCCESS != key.Create (HKEY_CURRENT_USER, strKey))
@@ -37,22 +37,22 @@ BOOL fsIEContextMenuMgr::AddContextMenu(LPCSTR pszMenuName, LPCSTR pszMenuUrl, D
 
 	if (dwContext)
 	{
-		if (ERROR_SUCCESS != key.SetValue (dwContext, "Contexts"))
+		if (ERROR_SUCCESS != key.SetValue (dwContext, _T("Contexts")))
 			return FALSE;
 	}
 
 	
 	
-	key.SetValue (1, "Free Download Manager");
+	key.SetValue (1, _T("Free Download Manager"));
 
 	return TRUE;
 }
 
-BOOL fsIEContextMenuMgr::IsContextMenuPresent(LPCSTR pszMenuName)
+BOOL fsIEContextMenuMgr::IsContextMenuPresent(LPCTSTR pszMenuName)
 {
 	CRegKey key;
 
-	CString strKey = "Software\\Microsoft\\Internet Explorer\\MenuExt\\";
+	CString strKey = _T("Software\\Microsoft\\Internet Explorer\\MenuExt\\");
 	strKey += pszMenuName;
 
 	if (ERROR_SUCCESS != key.Open (HKEY_CURRENT_USER, strKey))
@@ -133,12 +133,12 @@ BOOL fsIEContextMenuMgr::AddIEMenus()
 
 	if (m_bDLFlashVideoMenu == FALSE && _App.Monitor_IEMenu_DLFlashVideo ())
 	{
-		CString str = strUrl + "dlfvideo.htm";
+		CString str = strUrl + _T("dlfvideo.htm");
 		if (AddContextMenu (LS (L_DLFLASHVIDEOIEMENU), str, IEMENU_CONTEXT_DEFAULT|IEMENU_CONTEXT_SELECTEDTEXT|IEMENU_CONTEXT_LINK|IEMENU_CONTEXT_IMAGE))
 			m_bDLFlashVideoMenu = TRUE;
 		else
 			bOk = FALSE;
-		_App.WriteTranslatedStringToRegistry ("dlfvideoiemenu", LS (L_DLFLASHVIDEOIEMENU));
+		_App.WriteTranslatedStringToRegistry (_T("dlfvideoiemenu"), LS (L_DLFLASHVIDEOIEMENU));
 	}
 
 	return bOk;
@@ -185,20 +185,20 @@ BOOL fsIEContextMenuMgr::DeleteIEMenus()
 	}
 
 	
-	DeleteContextMenu ("Download all by Free Download Manager");
-	DeleteContextMenu ("Download by Free Download Manager");
-	DeleteContextMenu ("Download selected by Free Download Manager");
-	DeleteContextMenu ("Download web site by Free Download Manager");
+	DeleteContextMenu (_T("Download all by Free Download Manager"));
+	DeleteContextMenu (_T("Download by Free Download Manager"));
+	DeleteContextMenu (_T("Download selected by Free Download Manager"));
+	DeleteContextMenu (_T("Download web site by Free Download Manager"));
 	
 
 	return bOk;
 }
 
-BOOL fsIEContextMenuMgr::DeleteContextMenu(LPCSTR pszMenuName)
+BOOL fsIEContextMenuMgr::DeleteContextMenu(LPCTSTR pszMenuName)
 {
 	CRegKey key;
 
-	CString strKey = "Software\\Microsoft\\Internet Explorer\\MenuExt";
+	CString strKey = _T("Software\\Microsoft\\Internet Explorer\\MenuExt");
 
 	if (ERROR_SUCCESS != key.Open (HKEY_CURRENT_USER, strKey))
 		return FALSE;
@@ -223,12 +223,12 @@ void fsIEContextMenuMgr::DeleteAllFDMsIEMenus()
 {
 	CRegKey key;
 
-	CString strKey = "Software\\Microsoft\\Internet Explorer\\MenuExt";
+	CString strKey = _T("Software\\Microsoft\\Internet Explorer\\MenuExt");
 
 	if (ERROR_SUCCESS != key.Open (HKEY_CURRENT_USER, strKey))
 		return;
 
-	char szSubKey [1000]; DWORD dwszSubKey = sizeof (szSubKey);
+	TCHAR szSubKey [1000]; DWORD dwszSubKey = sizeof (szSubKey);
 	FILETIME ft;
 
 	fs::list <fsString> vSubKeys;
@@ -244,7 +244,7 @@ void fsIEContextMenuMgr::DeleteAllFDMsIEMenus()
 			continue;
 
 		DWORD dwFDM = FALSE;
-		key2.QueryValue (dwFDM, "Free Download Manager");
+		key2.QueryValue (dwFDM, _T("Free Download Manager"));
 
 		if (dwFDM)
 			vSubKeys.add (szSubKey);

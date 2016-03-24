@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSMOZILLAPREFS_H__7F8AC419_31D2_40FF_BF85_7A989BBE494D__INCLUDED_)
@@ -19,10 +19,10 @@ class vmsMozillaPrefs
 {
 public:
 	
-	bool LoadPrefs (LPCSTR pszFile);
+	bool LoadPrefs (LPCTSTR pszFile);
 	
 	
-	fsString get_Value (LPCSTR pszPrefName) const;
+	std::string get_Value (LPCSTR pszPrefName) const;
 	
 	void Free();
 	
@@ -31,7 +31,7 @@ public:
 
 protected:
 	
-	fsString m_strPrefs;
+	std::string m_strPrefs;
 };
 
 #endif 

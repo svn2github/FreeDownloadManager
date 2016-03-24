@@ -1,7 +1,10 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
+#include <memory>
+#include <string>
+#include "Utils.h"
 #include "fsHttpFiles.h"
 #include "fsURL.h"
 #include "common.h"
@@ -20,7 +23,7 @@ fsHttpFiles::~fsHttpFiles()
 	SAFE_DELETE_ARRAY (m_pszFileBuffer);
 }
 
-fsInternetResult fsHttpFiles::GetList(LPCSTR pszPath)
+fsInternetResult fsHttpFiles::GetList(LPCTSTR pszPath)
 {
 	fsInternetResult ir;
 	BOOL bRedirected = FALSE;
@@ -28,7 +31,7 @@ fsInternetResult fsHttpFiles::GetList(LPCSTR pszPath)
 	m_bAbort = FALSE;
 
 	m_strPath = pszPath;
-	LPSTR pszNewUrl;
+	LPTSTR pszNewUrl;
 
 	m_httpFile.UseSecure (m_bUseSecure);
 
@@ -97,6 +100,7 @@ fsInternetResult fsHttpFiles::LoadFile()
 		uMax = 100000;		
 
 	SAFE_DELETE_ARRAY (m_pszFileBuffer);
+	CHAR* pszFileBuffer = 0;
 
 	fsnew (m_pszFileBuffer, char, int (uMax+1));
 
@@ -163,15 +167,22 @@ fsInternetResult fsHttpFiles::BuildFileList()
 
 	html.ParseHTML (m_pszFileBuffer); 
 
-	m_pszBaseURL = html.Get_BaseURL ();
+	TCHAR tszBaseUrl[10000] = {0,};
+#ifdef UNICODE
+	DWORD dwSize = sizeof(tszBaseUrl);
+	vmsAnsiUrlToUnicode(html.Get_BaseURL(), tszBaseUrl, &dwSize);
+#else
+	strcpy_s(tszBaseUrl, 10000, html.Get_BaseURL());
+#endif
+	m_pszBaseURL = &tszBaseUrl[0];
 
 	UINT cUrls = html.GetUrlCount ();
 
 	m_vFiles.clear ();
 
 	fsURL url;
-	CHAR szUrl [10000];
-	DWORD dwLen = 10000;
+	TCHAR szUrl [10000];
+	DWORD dwLen = _countof (szUrl);
 	url.Create (INTERNET_SCHEME_HTTP, m_pServer->GetServerName (), m_pServer->GetServerPort (),
 		NULL, NULL, m_strPath, szUrl, &dwLen);
 	m_strFullPath = szUrl;
@@ -179,9 +190,16 @@ fsInternetResult fsHttpFiles::BuildFileList()
 	for (UINT i = 0; i < cUrls && m_bAbort == FALSE; i++)
 	{
 		fsFileInfo file;
-		LPCSTR pszUrl = html.GetUrl (i);
+		TCHAR tszUrl[10000] = {0,};
+#ifdef UNICODE
+		DWORD dwSize = sizeof(tszUrl);
+		vmsAnsiUrlToUnicode(html.GetUrl (i), tszUrl, &dwSize);
+#else
+		strcpy_s(tszUrl, 10000, html.GetUrl (i));
+#endif
+		
 		fsURL url;
-		if (url.Crack (pszUrl, FALSE) == IR_SUCCESS) 
+		if (url.Crack (tszUrl, FALSE) == IR_SUCCESS) 
 		{
 			INTERNET_SCHEME scheme = url.GetInternetScheme ();
 			
@@ -193,12 +211,12 @@ fsInternetResult fsHttpFiles::BuildFileList()
 		file.bFolder = FALSE;
 
 		
-		LPCSTR ppszBadUrls [] = {"/..", "../", "./", "/.", "\\..", "..\\", ".\\", "\\."};
+		LPCTSTR ppszBadUrls [] = {_T("/.."), _T("../"), _T("./"), _T("/."), _T("\\.."), _T("..\\"), _T(".\\"), _T("\\.")};
 		BOOL bBad = FALSE;
 
 		for (int s = 0; s < sizeof (ppszBadUrls) / sizeof (LPSTR); s++)
 		{
-			if (strcmp (pszUrl, ppszBadUrls [s]) == 0)
+			if (_tcscmp (tszUrl, ppszBadUrls [s]) == 0)
 			{
 				bBad = TRUE;
 				break;
@@ -208,13 +226,13 @@ fsInternetResult fsHttpFiles::BuildFileList()
 		if (bBad)
 			continue;
 
-		CalcUrl (&file, pszUrl);
+		CalcUrl (&file, tszUrl);
 		CheckFolder (&file); 
 
 		
-		if (m_bGetInfo == FALSE || GetUrlInfo (pszUrl, &file) != IR_SUCCESS)
+		if (m_bGetInfo == FALSE || GetUrlInfo (tszUrl, &file) != IR_SUCCESS)
 		{
-			CalcUrl (&file, pszUrl);
+			CalcUrl (&file, tszUrl);
 			file.date.dwHighDateTime = file.date.dwLowDateTime = UINT_MAX; 
 			file.uSize = _UI64_MAX;
 		}
@@ -234,7 +252,7 @@ fsInternetResult fsHttpFiles::BuildFileList()
 	return m_bAbort ? IR_S_FALSE : IR_SUCCESS;
 }
 
-fsInternetResult fsHttpFiles::GetUrlInfo(LPCSTR pszUrl, fsFileInfo *pInfo)
+fsInternetResult fsHttpFiles::GetUrlInfo(LPCTSTR pszUrl, fsFileInfo *pInfo)
 {
 	fsInternetResult ir;
 
@@ -253,7 +271,7 @@ fsInternetResult fsHttpFiles::GetUrlInfo(LPCSTR pszUrl, fsFileInfo *pInfo)
 
 	fsURL url;
 	
-	LPSTR pszNewUrl = NULL; 
+	LPTSTR pszNewUrl = NULL; 
 	BOOL bRedirInner;
 
 	if (url.Crack (pszUrl) == IR_SUCCESS) 
@@ -305,24 +323,24 @@ void fsHttpFiles::CheckFolder(fsFileInfo *file)
 	UINT uLen = file->strName.Length ();
 
 	
-	if (file->strName [uLen-1] == '\\' || file->strName [uLen - 1] == '/')
+	if (file->strName [uLen-1] == _T('\\') || file->strName [uLen - 1] == _T('/'))
 	{
 		file->strName [uLen - 1] = 0;
 		file->bFolder = TRUE;
 	}
 
-	LPCSTR pszSlash = strrchr (file->strName, '\\');
-	pszSlash = max (pszSlash, strrchr (file->strName, '/'));
-	LPCSTR pszExt = strrchr (file->strName, '.');
+	LPCTSTR pszSlash = _tcsrchr (file->strName, _T('\\'));
+	pszSlash = max (pszSlash, _tcsrchr (file->strName, _T('/')));
+	LPCTSTR pszExt = _tcsrchr (file->strName, _T('.'));
 
 	
 	file->bFolder = pszSlash >= pszExt;
 
 	
 	if (file->bFolder) {
-		LPCSTR pszNumber = strrchr (file->strName, '#');
-		LPCSTR pszQuestion = strrchr (file->strName, '?');
-		if (pszSlash == 0 && (pszNumber == (LPCSTR)file->strName || pszQuestion == (LPCSTR)file->strName)) {
+		LPCTSTR pszNumber = _tcsrchr (file->strName, _T('#'));
+		LPCTSTR pszQuestion = _tcsrchr (file->strName, _T('?'));
+		if (pszSlash == 0 && (pszNumber == (LPCTSTR)file->strName || pszQuestion == (LPCTSTR)file->strName)) {
 			file->bFolder = FALSE;
 		} else if (pszSlash + 1 == pszNumber || pszSlash + 1 == pszQuestion) {
 			file->bFolder = FALSE;
@@ -344,7 +362,7 @@ void fsHttpFiles::SetServer(fsHttpConnection *pServer)
 	m_pServer = pServer;
 }
 
-void fsHttpFiles::CalcUrl(fsFileInfo *pInfo, LPCSTR pszSomeUrl)
+void fsHttpFiles::CalcUrl(fsFileInfo *pInfo, LPCTSTR pszSomeUrl)
 {
 	fsURL url1, url2;
 
@@ -358,7 +376,7 @@ void fsHttpFiles::CalcUrl(fsFileInfo *pInfo, LPCSTR pszSomeUrl)
 		fsURL urlBase;
 		if (IR_SUCCESS != urlBase.Crack (m_pszBaseURL))
 		{
-			strResUrl = "http://";
+			strResUrl = _T("http://");
 			strResUrl += m_pszBaseURL;
 		}
 		else
@@ -366,8 +384,8 @@ void fsHttpFiles::CalcUrl(fsFileInfo *pInfo, LPCSTR pszSomeUrl)
 			strResUrl = m_pszBaseURL;
 		}
 
-		if (strResUrl [strResUrl.Length ()-1] != '/' && strResUrl [strResUrl.Length ()-1] != '\\')
-			strResUrl += "/";
+		if (strResUrl [strResUrl.Length ()-1] != _T('/') && strResUrl [strResUrl.Length ()-1] != _T('\\'))
+			strResUrl += _T("/");
 
 		ir = urlBase.Crack (strResUrl);
 		if (ir == IR_SUCCESS)
@@ -386,8 +404,8 @@ void fsHttpFiles::CalcUrl(fsFileInfo *pInfo, LPCSTR pszSomeUrl)
 			url1.GetInternetScheme () == url2.GetInternetScheme () &&
 			url1.GetPort () == url2.GetPort ())
 		{
-			LPCSTR p1 = url1.GetPath ();
-			LPCSTR p2 = url2.GetPath ();
+			LPCTSTR p1 = url1.GetPath ();
+			LPCTSTR p2 = url2.GetPath ();
 
 			while (*p1 && *p1++ == *p2)
 				p2++;
@@ -403,7 +421,7 @@ void fsHttpFiles::CalcUrl(fsFileInfo *pInfo, LPCSTR pszSomeUrl)
 	pInfo->strName = strResUrl;
 
 	
-	if (pInfo->strName [pInfo->strName.Length () - 1] == '\\' ||  pInfo->strName [pInfo->strName.Length () - 1] == '/')
+	if (pInfo->strName [pInfo->strName.Length () - 1] == _T('\\') ||  pInfo->strName [pInfo->strName.Length () - 1] == _T('/'))
 	{
 		
 		pInfo->strName [pInfo->strName.Length () - 1] = 0;
@@ -411,7 +429,7 @@ void fsHttpFiles::CalcUrl(fsFileInfo *pInfo, LPCSTR pszSomeUrl)
 	}
 }
 
-LPCSTR fsHttpFiles::GetLastError()
+LPCTSTR fsHttpFiles::GetLastError()
 {
 	return m_pServer->GetLastError ();
 }

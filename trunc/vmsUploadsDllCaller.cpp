@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -24,7 +24,7 @@ vmsUploadsDllCaller::~vmsUploadsDllCaller()
 
 }
 
-LPCSTR vmsUploadsDllCaller::GetTranslatedString(int nId)
+LPCTSTR vmsUploadsDllCaller::GetTranslatedString(int nId)
 {
 	return LS (nId);
 }
@@ -34,9 +34,9 @@ vmsUploadsDll::vmsDllCallerSettings* vmsUploadsDllCaller::GetSettings()
 	return &m_stgs;
 }
 
-void vmsUploadsDllCaller::IRToStr(int ir, char *sz, UINT cch)
+void vmsUploadsDllCaller::IRToStr(int ir, TCHAR *tsz, UINT cch)
 {
-	fsIRToStr ((fsInternetResult)ir, sz, cch);
+	fsIRToStr ((fsInternetResult)ir, tsz, cch);
 }
 
 HBITMAP vmsUploadsDllCaller::GetBitmap(vmsUploadsDll::vmsWhichBitmap enBmp)
@@ -81,12 +81,12 @@ vmsUploadsDll::vmsDllPersist* vmsUploadsDllCaller::GetPersist()
 	return &m_persist;
 }
 
-void vmsUploadsDllCaller::GetDataFilePath(LPCSTR pszName, LPSTR pszResult)
+void vmsUploadsDllCaller::GetDataFilePath(LPCTSTR pszName, LPTSTR pszResult)
 {
 	lstrcpy (pszResult, fsGetDataFilePath (pszName));
 }
 
-void vmsUploadsDllCaller::GetCommonFilesFolder(LPSTR psz)
+void vmsUploadsDllCaller::GetCommonFilesFolder(LPTSTR psz)
 {
 	lstrcpy (psz, fsGetFumProgramFilesFolder ());
 }

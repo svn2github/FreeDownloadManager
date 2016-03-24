@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -67,7 +67,7 @@ void fsSoundsMgr::Event(fsSoundsMgrEvent ev)
 	}
 }
 
-void fsSoundsMgr::PlaySnd(LPCSTR pszSoundFile)
+void fsSoundsMgr::PlaySnd(LPCTSTR pszSoundFile)
 {
 	if (pszSoundFile == NULL || *pszSoundFile == 0)
 		return;

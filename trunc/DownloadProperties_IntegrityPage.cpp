@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -74,9 +74,9 @@ BOOL CDownloadProperties_IntegrityPage::OnInitDialog()
 	if (DP_EQ (enICFR, FALSE))
 		m_wndICFR.SetCurSel (dp0->enICFR);
 
-	LPCSTR ppszAlgs [] = {
-		"MD5", "SHA-1", "SHA-2 256", "SHA-2 384", "SHA-2 512",
-		"CRC 32"
+	LPCTSTR ppszAlgs [] = {
+		_T("MD5"), _T("SHA-1"), _T("SHA-2 256"), _T("SHA-2 384"), _T("SHA-2 512"),
+		_T("CRC 32")
 	};
 
 	DWORD adwAlgs [] = {
@@ -233,7 +233,7 @@ BOOL CDownloadProperties_IntegrityPage::OnApply()
 		SAFE_DELETE_ARRAY (dp0->pszCheckSum);
 		CString str; GetDlgItemText (IDC_CHECKSUM, str);
 		MakeChecksumValid (str);
-		dp0->pszCheckSum = new char [str.GetLength () + 1];
+		dp0->pszCheckSum = new TCHAR [str.GetLength () + 1];
 		lstrcpy (dp0->pszCheckSum, str);
 
 		dp0->dwIntegrityCheckAlgorithm = m_wndAlgorithm.GetItemData (m_wndAlgorithm.GetCurSel ());
@@ -248,11 +248,11 @@ void CDownloadProperties_IntegrityPage::MakeChecksumValid(CString &str)
 	str.MakeLower ();
 
 	CString str2;
-	LPCSTR psz = str;
+	LPCTSTR psz = str;
 	while (*psz)
 	{
-		if ((*psz >= '0' && *psz <= '9') ||
-				(*psz >= 'a' && *psz <= 'f') )
+		if ((*psz >= _T('0') && *psz <= _T('9')) ||
+				(*psz >= _T('a') && *psz <= _T('f')) )
 			str2 += *psz;
 
 		psz++;

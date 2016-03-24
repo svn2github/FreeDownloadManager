@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -22,12 +22,12 @@ vmsUploaderDllPersist::~vmsUploaderDllPersist()
 
 }
 
-BOOL vmsUploaderDllPersist::GetProfileBinary(LPCSTR pszSection, LPCSTR pszName, LPBYTE *ppData, UINT *pnDataSize)
+BOOL vmsUploaderDllPersist::GetProfileBinary(LPCTSTR pszSection, LPCTSTR pszName, LPBYTE *ppData, UINT *pnDataSize)
 {
 	return _App.get_SettingsStore ()->GetProfileBinary (pszSection, pszName, ppData, pnDataSize);
 }
 
-void vmsUploaderDllPersist::WriteProfileBinary(LPCSTR pszSection, LPCSTR pszName, LPVOID pvData, UINT nDataSize)
+void vmsUploaderDllPersist::WriteProfileBinary(LPCTSTR pszSection, LPCTSTR pszName, LPVOID pvData, UINT nDataSize)
 {
 	_App.get_SettingsStore ()->WriteProfileBinary (pszSection, pszName, (LPBYTE)pvData, nDataSize);
 }
@@ -37,17 +37,17 @@ void vmsUploaderDllPersist::FreeBuffer(LPBYTE pb)
 	delete [] pb;
 }
 
-UINT vmsUploaderDllPersist::GetProfileInt(LPCSTR pszSection, LPCSTR pszName, UINT nDefValue)
+UINT vmsUploaderDllPersist::GetProfileInt(LPCTSTR pszSection, LPCTSTR pszName, UINT nDefValue)
 {
 	return _App.get_SettingsStore ()->GetProfileInt (pszSection, pszName, nDefValue);
 }
 
-void vmsUploaderDllPersist::WriteProfileInt(LPCSTR pszSection, LPCSTR pszName, UINT nValue)
+void vmsUploaderDllPersist::WriteProfileInt(LPCTSTR pszSection, LPCTSTR pszName, UINT nValue)
 {
 	_App.get_SettingsStore ()->WriteProfileInt (pszSection, pszName, nValue);
 }
 
-BOOL vmsUploaderDllPersist::GetProfileString (LPCSTR pszSection, LPCSTR pszName, LPCSTR pszDefValue, LPSTR pszValue, DWORD *pdwValueSize)
+BOOL vmsUploaderDllPersist::GetProfileString (LPCTSTR pszSection, LPCTSTR pszName, LPCTSTR pszDefValue, LPTSTR pszValue, DWORD *pdwValueSize)
 {
 	CString str = _App.get_SettingsStore ()->GetProfileString (pszSection, pszName, pszDefValue);
 	if (*pdwValueSize <= (DWORD)str.GetLength ())
@@ -59,7 +59,7 @@ BOOL vmsUploaderDllPersist::GetProfileString (LPCSTR pszSection, LPCSTR pszName,
 	return TRUE;
 }
 
-void vmsUploaderDllPersist::WriteProfileString (LPCSTR pszSection, LPCSTR pszName, LPCSTR pszValue)
+void vmsUploaderDllPersist::WriteProfileString (LPCTSTR pszSection, LPCTSTR pszName, LPCTSTR pszValue)
 {
 	_App.get_SettingsStore ()->WriteProfileString (pszSection, pszName, pszValue);
 }

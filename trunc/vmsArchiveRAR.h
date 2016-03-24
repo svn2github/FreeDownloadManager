@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSARCHIVERAR_H__520A98B5_957C_4390_84BF_6D20F164985C__INCLUDED_)
@@ -15,7 +15,7 @@
 class vmsArchiveRAR : public vmsArchive  
 {
 public:
-	virtual bool Extract (LPCSTR pszArchive, LPCSTR pszOutFolder);
+	virtual bool Extract (LPCTSTR pszArchive, LPCTSTR pszOutFolder);
 	vmsArchiveRAR();
 	virtual ~vmsArchiveRAR();
 

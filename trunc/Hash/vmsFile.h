@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSFILE_H__CC4F8BEC_228B_4CED_9F88_1B186737F773__INCLUDED_)
@@ -19,8 +19,8 @@ public:
 	DWORD Read (LPVOID lp, DWORD dwSize);
 	DWORD Write (LPCVOID pb, DWORD dwSize);
 	UINT64 get_Size();
-	void Create (LPCSTR pszFile);
-	void Open (LPCSTR pszFile, BOOL bRead);
+	void Create (LPCTSTR pszFile);
+	void Open (LPCTSTR pszFile, BOOL bRead);
 	void Close();
 	operator HANDLE() const;
 	vmsFile();

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -71,7 +71,7 @@ BOOL CSheduler_Tasks::Create(CWnd *pParent)
 	InsertColumn (2, LS (L_NEXTSTART), LVCFMT_LEFT, 100, 0);
 	InsertColumn (3, LS (L_LASTSTART), LVCFMT_LEFT, 100, 0);
 
-	ReadState ("SchedulerTasks");
+	ReadState (_T("SchedulerTasks"));
 
 	ShowWindow (SW_SHOW);
 

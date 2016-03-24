@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -121,7 +121,7 @@ void CDlgSounds::ApplyLanguage()
 
 void CDlgSounds::PrepareCHMgr(CPoint point)
 {
-	LPCSTR pszSoundsHere = LS (L_SNDEVENTSHERE);
+	LPCTSTR pszSoundsHere = LS (L_SNDEVENTSHERE);
 
 	CPoint pt = point;
 	m_wndSnds.ScreenToClient (&pt);
@@ -217,11 +217,11 @@ void CDlgSounds::OnDblclkSounds(NMHDR* , LRESULT* pResult)
 void CDlgSounds::OnSetsound() 
 {
 	CString strFilter;
-	strFilter.Format ("%s (*.wav)|*.wav||", LS (L_SOUNDFILES));
+	strFilter.Format (_T("%s (*.wav)|*.wav||"), LS (L_SOUNDFILES));
 
 	CString strFile = GetSndFile (GetCurSelSnd ());
 
-	CFileDialog dlg (TRUE, "wav", strFile, OFN_HIDEREADONLY|OFN_NOCHANGEDIR, strFilter, this);
+	CFileDialog dlg (TRUE, _T("wav"), strFile, OFN_HIDEREADONLY|OFN_NOCHANGEDIR, strFilter, this);
 
 	if (_DlgMgr.DoModal (&dlg) == IDCANCEL)
 		return;

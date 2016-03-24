@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -147,7 +147,7 @@ fsInternetResult fsArchiveInternetStream::Open_imp(UINT64 uStartPos)
 			return ir;
 		}
 	
-		m_dldr->ApplyProxySettings (pSession, dnp);
+		m_dldr->ApplyProxySettings (pSession, dnp, m_dldr->Get_Timeout ());
 
 		ir = m_file.Initialize (pSession, TRUE);
 		if (ir != IR_SUCCESS)
@@ -160,7 +160,7 @@ fsInternetResult fsArchiveInternetStream::Open_imp(UINT64 uStartPos)
 	m_dldr->ApplyProperties (&m_file, dnp);
 	m_file.FtpSetTransferType (FTT_BINARY);
 	
-	LPCSTR pszHost = m_bOpened ? NULL : dnp->pszServerName;
+	LPCTSTR pszHost = m_bOpened ? NULL : dnp->pszServerName;
 	if (dnp->enProtocol != NP_FTP)
 		pszHost = dnp->pszServerName;
 
@@ -181,30 +181,30 @@ fsInternetResult fsArchiveInternetStream::Open_imp(UINT64 uStartPos)
 			if (m_dldr->GetNumberOfSections ())
 				return IR_SERVERUNKERROR;
 
-			LPCSTR pszUrlTo = m_file.GetLastError ();
+			LPCTSTR pszUrlTo = m_file.GetLastError ();
 
 			fsURL url;
-			LPSTR pszUrl = new char [10000];
-			DWORD dwLen = 10000;
+			LPTSTR pszUrl = new TCHAR [10000];
+			DWORD dwLen = 10000/sizeof(TCHAR);
 
 			if (url.Crack (pszUrlTo) != IR_SUCCESS) 
 			{
-				LPSTR pszUrlPath = new char [10000];
+				LPTSTR pszUrlPath = new TCHAR [10000];
 
 				if (*pszUrlTo == 0)
-					strcpy (pszUrlPath, "/");
-				else if (*pszUrlTo != '/' && *pszUrlTo != '\\')
+					_tcscpy (pszUrlPath, _T("/"));
+				else if (*pszUrlTo != _T('/') && *pszUrlTo != _T('\\'))
 				{
 					fsPathFromUrlPath (dnp->pszPathName, dnp->enProtocol == NP_FTP, FALSE, pszUrlPath, 10000);
 
-					if (pszUrlPath [lstrlen (pszUrlPath)-1] != '\\' &&
-							pszUrlPath [lstrlen (pszUrlPath)-1] != '/')
-						lstrcat (pszUrlPath, "\\");
+					if (pszUrlPath [lstrlen (pszUrlPath)-1] != _T('\\') &&
+							pszUrlPath [lstrlen (pszUrlPath)-1] != _T('/'))
+						lstrcat (pszUrlPath, _T("\\"));
 					
-					strcat (pszUrlPath, pszUrlTo);
+					_tcscat (pszUrlPath, pszUrlTo);
 				}
 				else
-					strcpy (pszUrlPath, pszUrlTo);
+					_tcscat (pszUrlPath, pszUrlTo);
 
 				url.Create (fsNPToScheme (dnp->enProtocol), dnp->pszServerName, dnp->uServerPort, 
 					dnp->pszUserName, dnp->pszPassword, pszUrlPath, pszUrl, &dwLen);
@@ -212,16 +212,16 @@ fsInternetResult fsArchiveInternetStream::Open_imp(UINT64 uStartPos)
 				delete [] pszUrlPath;
 			}
 			else
-				strcpy (pszUrl, pszUrlTo);	
+				_tcscpy (pszUrl, pszUrlTo);	
 
-			LPSTR pszUser = new char [10000], pszPassword = new char [10000];	
+			LPTSTR pszUser = new TCHAR [10000], pszPassword = new TCHAR [10000];	
 			if (dnp->pszUserName)
-				strcpy (pszUser, dnp->pszUserName);
+				_tcscpy (pszUser, dnp->pszUserName);
 			else
 				*pszUser = 0;
 
 			if (dnp->pszPassword)
-				strcpy (pszPassword, dnp->pszPassword);
+				_tcscpy (pszPassword, dnp->pszPassword);
 			else
 				*pszPassword = 0;
 
@@ -237,12 +237,12 @@ fsInternetResult fsArchiveInternetStream::Open_imp(UINT64 uStartPos)
 			if (dnp->pszUserName == NULL || *dnp->pszUserName == 0)
 			{
 				SAFE_DELETE_ARRAY (dnp->pszUserName);
-				dnp->pszUserName = new char [strlen (pszUser) + 1];
-				strcpy (dnp->pszUserName, pszUser);
+				dnp->pszUserName = new TCHAR [_tcslen (pszUser) + 1];
+				_tcscpy (dnp->pszUserName, pszUser);
 
 				SAFE_DELETE_ARRAY (dnp->pszPassword);
-				dnp->pszPassword = new char [strlen (pszPassword) + 1];
-				strcpy (dnp->pszPassword, pszPassword);
+				dnp->pszPassword = new TCHAR [_tcslen (pszPassword) + 1];
+				_tcscpy (dnp->pszPassword, pszPassword);
 				m_dldr->setDirty();
 			}
 

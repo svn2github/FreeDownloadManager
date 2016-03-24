@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef ORBIT_DOWNLOAD_INCLUDED_FILE
@@ -19,6 +19,6 @@ struct TOrbitDownload
 
 typedef CArray<TOrbitDownload, TOrbitDownload&> OrbitDownloadsArray;
 
-void parseOrbitDownloadsList(const CString& sDldList, OrbitDownloadsArray& arrDownloads);
+void parseOrbitDownloadsList(const CStringA& sDldList, OrbitDownloadsArray& arrDownloads);
 
 #endif

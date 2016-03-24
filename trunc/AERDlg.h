@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_AERDLG_H__E965C146_EC84_4EC8_89ED_2736E7E67231__INCLUDED_)
@@ -16,7 +16,7 @@ class CAERDlg : public CDialog
 public:
 	BOOL m_bDontAskAgain;	
 	fsAlreadyExistReaction m_enAER;	
-	LPCSTR m_pszFile;		
+	LPCTSTR m_pszFile;		
 	void DisableStopAndResume();	
 	CAERDlg(CWnd* pParent = NULL);   
 

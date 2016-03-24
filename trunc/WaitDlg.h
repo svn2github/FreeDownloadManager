@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_WAITDLG_H__C786669C_04B0_4433_9DBB_C631CAD1F94D__INCLUDED_)
@@ -31,7 +31,7 @@ public:
 	
 	
 	
-	UINT StartWaiting (LPCSTR pszMessage, LPTHREAD_START_ROUTINE procWait, BOOL bEnableCancel, 
+	UINT StartWaiting (LPCTSTR pszMessage, LPTHREAD_START_ROUTINE procWait, BOOL bEnableCancel, 
 		LPVOID lpParam1 = NULL, LPVOID lpParam2 = NULL, LPVOID lpParam3 = NULL, 
 		LPVOID lpParam4 = NULL, LPVOID lpParam5 = NULL, LPVOID lpParam6 = NULL, 
 		BOOL bModal = TRUE);

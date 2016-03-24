@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -40,7 +40,7 @@ BEGIN_MESSAGE_MAP(CWaitForConfirmationDlg, CDialog)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
-void CWaitForConfirmationDlg::Init(LPCSTR pszMsg, UINT uWait, BOOL bShowDontAsk, BOOL bNoIsDefault, LPCSTR pszDontAskAgainText, LPCSTR pszMsgIfDontAskAgain)
+void CWaitForConfirmationDlg::Init(LPCTSTR pszMsg, UINT uWait, BOOL bShowDontAsk, BOOL bNoIsDefault, LPCTSTR pszDontAskAgainText, LPCTSTR pszMsgIfDontAskAgain)
 {
 	m_msg = pszMsg;
 	m_wait = uWait;
@@ -50,12 +50,12 @@ void CWaitForConfirmationDlg::Init(LPCSTR pszMsg, UINT uWait, BOOL bShowDontAsk,
 	if (pszDontAskAgainText)
 		m_strDontAskAgainText = pszDontAskAgainText;
 	else
-		m_strDontAskAgainText = "";
+		m_strDontAskAgainText = _T("");
 
 	if (pszMsgIfDontAskAgain)
 		m_strMsgIfDontAskAfain = pszMsgIfDontAskAgain;
 	else
-		m_strMsgIfDontAskAfain = "";
+		m_strMsgIfDontAskAfain = _T("");
 }
 
 BOOL CWaitForConfirmationDlg::OnInitDialog() 
@@ -106,15 +106,15 @@ void CWaitForConfirmationDlg::OnTimer(UINT nIDEvent)
 void CWaitForConfirmationDlg::SetTimerText()
 {
 	CString str;
-	str.Format ("%s (%d)", m_bNoIsDefault ? LS (L_NO) : LS (L_YES), m_wait);
+	str.Format (_T("%s (%d)"), m_bNoIsDefault ? LS (L_NO) : LS (L_YES), m_wait);
 	SetDlgItemText (m_bNoIsDefault ? IDCANCEL : IDOK, str);
 }
 
 void CWaitForConfirmationDlg::OnContextMenu(CWnd* , CPoint point) 
 {
 	fsCtrlContextHelp aCH1 [] = {
-		fsCtrlContextHelp (IDOK, "Perform operation"),
-		fsCtrlContextHelp (IDCANCEL, "Cancel operation"),
+		fsCtrlContextHelp (IDOK, _T("Perform operation")),
+		fsCtrlContextHelp (IDCANCEL, _T("Cancel operation")),
 	};
 
         static fsCtrlContextHelp aCH [sizeof (aCH1) / sizeof (fsCtrlContextHelp)];

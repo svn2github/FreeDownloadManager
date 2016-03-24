@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSIEUSERAGENT_H__6C5C6FE2_1F1F_4061_9F72_E74E38639298__INCLUDED_)
@@ -12,8 +12,8 @@
 class fsIEUserAgent  
 {
 public:
-	void RemovePP (LPCSTR pszPP);
-	void SetPP (LPCSTR pszPP);
+	void RemovePP (LPCTSTR pszPP);
+	void SetPP (LPCTSTR pszPP);
 	
 	
 	

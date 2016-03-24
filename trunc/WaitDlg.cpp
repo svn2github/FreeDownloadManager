@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -43,7 +43,7 @@ void CWaitDlg::OnCancel()
 	GetDlgItem (IDCANCEL)->EnableWindow (FALSE);
 }
 
-UINT CWaitDlg::StartWaiting(LPCSTR pszMessage, LPTHREAD_START_ROUTINE procWait, BOOL bEnableCancel, LPVOID lpParam1, LPVOID lpParam2, LPVOID lpParam3, LPVOID lpParam4, LPVOID lpParam5, LPVOID lpParam6, BOOL bModal)
+UINT CWaitDlg::StartWaiting(LPCTSTR pszMessage, LPTHREAD_START_ROUTINE procWait, BOOL bEnableCancel, LPVOID lpParam1, LPVOID lpParam2, LPVOID lpParam3, LPVOID lpParam4, LPVOID lpParam5, LPVOID lpParam6, BOOL bModal)
 {
 	m_info.hwndDlg = NULL;
 	m_info.bNeedStop = FALSE;

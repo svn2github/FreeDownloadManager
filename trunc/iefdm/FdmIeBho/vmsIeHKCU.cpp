@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -23,7 +23,7 @@ LONG vmsIeHKCU::Open(LPCTSTR ptszPath, REGSAM samDesired)
 	if (!IsIeInProtectedMode ())
 		return m_key.Open (HKEY_CURRENT_USER, ptszPath, samDesired);
 	
-	std::string str = _T ("Software\\Microsoft\\Internet Explorer\\LowRegistry\\");
+	tstring str = _T ("Software\\Microsoft\\Internet Explorer\\LowRegistry\\");
 	str += ptszPath;
 	return m_key.Open (HKEY_CURRENT_USER, str.c_str (), samDesired);
 }
@@ -35,7 +35,7 @@ LONG vmsIeHKCU::Create(LPCTSTR ptszPath, REGSAM samDesired)
 	if (!IsIeInProtectedMode ())
 		return m_key.Create (HKEY_CURRENT_USER, ptszPath, NULL, 0, samDesired, NULL, NULL);
 	
-	std::string str = _T ("Software\\Microsoft\\Internet Explorer\\LowRegistry\\");
+	tstring str = _T ("Software\\Microsoft\\Internet Explorer\\LowRegistry\\");
 	str += ptszPath;
 	return m_key.Create (HKEY_CURRENT_USER, str.c_str (), NULL, 0, samDesired, NULL, NULL);
 }
@@ -52,7 +52,7 @@ bool vmsIeHKCU::IsIeInProtectedMode()
 	if (_iRes != 2)
 		return _iRes != 0;
 
-	HMODULE hDll = GetModuleHandle ("ieframe.dll");
+	HMODULE hDll = GetModuleHandle (_T("ieframe.dll"));
 	if (!hDll)
 	{
 		_iRes = 0;

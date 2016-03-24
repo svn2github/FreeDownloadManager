@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -28,30 +28,30 @@ fsString vmsFileExtensionInOs::GetAssociation(LPCTSTR pszExt, LPCTSTR pszVerb, B
 
 	CRegKey key;
 	if (ERROR_SUCCESS != key.Open (HKEY_CLASSES_ROOT, strExt, KEY_READ))
-		return "";
+		return _T("");
 
-	char sz [1000];
-	DWORD dw = sizeof (sz);
+	TCHAR sz [1000];
+	DWORD dw = sizeof (sz) * sizeof(TCHAR);
 	if (ERROR_SUCCESS == key.QueryValue (sz, NULL, &dw) && appendDot == TRUE)
 		return GetAssociation_2 (sz, pszVerb);
 	else
 		return GetAssociation_2 (strExt, pszVerb);
 }
 
-fsString vmsFileExtensionInOs::GetAssociation_2(LPCSTR pszProgId, LPCSTR pszVerb)
+fsString vmsFileExtensionInOs::GetAssociation_2(LPCTSTR pszProgId, LPCTSTR pszVerb)
 {
 	fsString str = pszProgId;
-	str += "\\shell\\"; str += pszVerb; str += "\\command";
+	str += _T("\\shell\\"); str += pszVerb; str += _T("\\command");
 
 	CRegKey key;
 	
 	if (ERROR_SUCCESS != key.Open (HKEY_CLASSES_ROOT, str, KEY_READ))
-		return "";
+		return _T("");
 
-	char sz [MY_MAX_PATH];
+	TCHAR sz [MY_MAX_PATH];
 	DWORD dw = sizeof (sz);
 	if (ERROR_SUCCESS != key.QueryValue (sz, NULL, &dw))
-		return "";
+		return _T("");
 	
 	return sz;
 }
@@ -72,18 +72,18 @@ BOOL vmsFileExtensionInOs::SetAssociation(LPCTSTR pszExt, LPCTSTR pszVerb, LPCTS
 		}
 	}
 
-	char sz [1000];
-	DWORD dw = sizeof (sz);
+	TCHAR sz [1000];
+	DWORD dw = sizeof (sz) * sizeof(TCHAR);
 	if (ERROR_SUCCESS == key.QueryValue (sz, NULL, &dw) && *sz && appendDot)
 		return SetAssociation_2 (sz, pszVerb, pszValue);
 	else
 		return SetAssociation_2 (strExt, pszVerb, pszValue);
 }
 
-BOOL vmsFileExtensionInOs::SetAssociation_2(LPCSTR pszProgId, LPCSTR pszVerb, LPCSTR pszValue)
+BOOL vmsFileExtensionInOs::SetAssociation_2(LPCTSTR pszProgId, LPCTSTR pszVerb, LPCTSTR pszValue)
 {
 	fsString str = pszProgId;
-	str += "\\shell\\"; str += pszVerb; str += "\\command";
+	str += _T("\\shell\\"); str += pszVerb; str += _T("\\command");
 
 	CRegKey key;
 	LONG lErr;
@@ -105,9 +105,9 @@ BOOL vmsFileExtensionInOs::SetAssociation_2(LPCSTR pszProgId, LPCSTR pszVerb, LP
 	return lErr == ERROR_SUCCESS;
 }
 
-BOOL vmsFileExtensionInOs::CreateAssociation(LPCSTR pszExt, LPCSTR pszProgId)
+BOOL vmsFileExtensionInOs::CreateAssociation(LPCTSTR pszExt, LPCTSTR pszProgId)
 {
-	fsString strExt; strExt = "."; strExt += pszExt;
+	fsString strExt; strExt = _T("."); strExt += pszExt;
 
 	CRegKey key;
 

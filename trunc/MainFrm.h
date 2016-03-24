@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_MAINFRM_H__AC3FA611_4FF2_4779_82DF_504A2BF21D9A__INCLUDED_)
@@ -31,7 +31,9 @@
 
 #define ID_APP_EXIT_2	40000
 
-class CMainFrame : public CFrameWnd
+class CMainFrame : 
+	public CFrameWnd,
+	public vmsCreatesThreads
 {
 	friend class CFloatingWnd;
 	friend class CFdmApp;
@@ -73,7 +75,7 @@ public:
 	void RebuidDownloadsList();
 	
 	
-	static void ShowTimeoutBalloon (LPCSTR pszInfo, LPCSTR pszTitle, DWORD dwIcon = NIIF_INFO, BOOL bClear = FALSE);
+	static void ShowTimeoutBalloon (LPCTSTR pszInfo, LPCTSTR pszTitle, DWORD dwIcon = NIIF_INFO, BOOL bClear = FALSE);
 	
 	
 	void ShowTrayMenu(BOOL bModeTray = TRUE);
@@ -135,10 +137,8 @@ protected:
 		FBCT_ON_DOWNLOAD_DONE,
 	} m_enFdmBalloonContentType;
 	void ShowFdmBalloon (CFdmBalloonContent*, FdmBalloonContentType);
-	LONG m_cThreadsRunning;
-	HANDLE m_hevShuttingDown;
 	vmsCriticalSection m_csSaveAllData;
-	static DWORD WINAPI _threadAutosave (LPVOID);
+	static unsigned WINAPI _threadAutosave (vmsCreatesThreads *pthis2);
 	int GetTumMenuPosition();
 	UINT m_nUploadsMsg1;
 	UINT m_nShutdownMsg;
@@ -163,11 +163,11 @@ protected:
 	
 	bool m_bDontShowSHD;
 	
-	BOOL ImportListOfDownloads_FromDLInfoListFile(LPCSTR pszFile);
+	BOOL ImportListOfDownloads_FromDLInfoListFile(LPCTSTR pszFile);
 	BOOL ImportDownload (IXMLDOMNode* pNode, DLDS_LIST_REF v);
 	
 	
-	BOOL ImportListOfDownloads_FromURLListFile (LPCSTR pszFile);
+	BOOL ImportListOfDownloads_FromURLListFile (LPCTSTR pszFile);
 	
 	afx_msg void OnTUMChanged();
 	
@@ -199,7 +199,7 @@ protected:
 	
 	
 	
-	void ShowBalloon (LPCSTR pszInfo, LPCSTR pszTitle, BOOL bCheckSettings = TRUE, DWORD dwIcon = NIIF_INFO);
+	void ShowBalloon (LPCTSTR pszInfo, LPCTSTR pszTitle, BOOL bCheckSettings = TRUE, DWORD dwIcon = NIIF_INFO);
 	void HideBalloon();
 	BOOL m_bBalloonShowing;		
 	int m_balloonX, m_balloonY;  
@@ -236,7 +236,7 @@ protected:
 	
 	afx_msg void OnSpiderDefSettings();
 	
-	static DWORD WINAPI _threadUpdate (LPVOID lp);
+	static unsigned WINAPI _threadUpdate (vmsCreatesThreads *pthis2);
 	
 	void SetMenuImages();
 	
@@ -368,6 +368,7 @@ protected:
 	afx_msg void OnLoadatstartup();
 	afx_msg void OnUpdateLoadatstartup(CCmdUI* pCmdUI);
 	afx_msg void OnDldCreateflvdld();
+	afx_msg void OnActivate(UINT nState, CWnd* pWndOther,BOOL bMinimized );
 	
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
@@ -375,6 +376,7 @@ protected:
 protected:
 	vmsCriticalSection m_csExit;
 	bool m_bExitHandlerPerformed;
+	bool m_bBrowserPluginsSuggestionDeferred;
 
 public:
 	bool onExit(bool bQueryExit);

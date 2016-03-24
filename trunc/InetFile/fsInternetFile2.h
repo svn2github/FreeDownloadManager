@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #ifndef NOCURL
@@ -19,28 +19,30 @@
 class fsInternetFile2 : public fsSpeaking 
 {
 public:
-	void setInterface (LPCSTR psz);
+	void setInterface (LPCTSTR psz);
 	void setUseFtpAsciiMode (bool bUse);
 	UINT64 GetFileSize();
-	LPCSTR get_SuggestedFileName();
+	LPCTSTR get_SuggestedFileName();
 	fsResumeSupportType IsResumeSupported();
 	BOOL GetLastModifiedDate(FILETIME *pTime);
-	LPCSTR get_ContentType();
+	LPCTSTR get_ContentType();
 	
 	void set_PostData (LPCSTR psz);
-	void set_Proxy (LPCSTR pszProxy, LPCSTR pszUser, LPCSTR pszPwd);
-	void set_Auth (LPCSTR pszUser, LPCSTR pszPwd);
-	void set_Cookie (LPCSTR psz);
-	void set_Referer (LPCSTR psz);
+	void set_Proxy (LPCTSTR pszProxy, LPCTSTR pszUser, LPCTSTR pszPwd);
+	void set_Auth (LPCTSTR pszUser, LPCTSTR pszPwd);
+	void set_Cookie (LPCTSTR psz);
+	void set_Referer (LPCTSTR psz);
 	void set_UseHttp11 (BOOL bUse);
-	void set_UserAgent (LPCSTR psz);
+	void set_UserAgent (LPCTSTR psz);
 	void set_ResumeFrom (UINT64 uStart);
 	void StopDownloading();
 	fsInternetResult Read(LPBYTE pBuffer, DWORD dwToRead, DWORD *pdwRead);
 	fsInternetResult StartDownloading ();
 	
-	void set_URL (LPCSTR pszURL);
+	void set_URL (LPCTSTR pszURL);
 	fsInternetResult Initialize();
+	void SetSecurityCheckIgnoreFlags (DWORD flags);
+	fsSecurityCheckType get_lastSctFailure () const;
 	fsInternetFile2();
 	virtual ~fsInternetFile2();
 
@@ -54,6 +56,7 @@ protected:
 	static size_t _WriteHeader(void *ptr, size_t size, size_t nmemb, void *stream);
 	long m_fileTime;
 	void ExtractFileInfoFromResponse();
+	void ExtractSuggestedFileName ();
 	
 	size_t OnWriteData (LPBYTE ptr, size_t size);
 	
@@ -65,6 +68,7 @@ protected:
 	
 	HANDLE m_hevReadDataReq, m_hevReadDataDone;
 	static fsInternetResult CURLcodeToIR (int code);
+	static fsSecurityCheckType CURLcodeToSCT(int code);
 	fsInternetResult m_irLastError;
 	
 	static DWORD WINAPI _threadDownload (LPVOID lp);
@@ -79,6 +83,8 @@ protected:
 	
 	bool m_bNeedStop;
 	fsString m_strContentType;
+	DWORD m_sctIgnoreFlags = 0;
+	fsSecurityCheckType m_lastSctFailure = SCT_NONE;
 };
 
 #endif 

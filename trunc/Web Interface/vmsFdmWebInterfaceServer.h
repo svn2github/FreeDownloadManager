@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSFDMWEBINTERFACESERVER_H__B258E06E_3C7B_4F7C_BAA1_A448FDCE8D18__INCLUDED_)
@@ -9,6 +9,7 @@
 #pragma once
 #endif 
 
+#include "StdAfx.h"
 #include "vmsHttpResourceContainer.h"
 
 class vmsFdmWebInterfaceServer : public vmsHttpResourceContainer  
@@ -30,10 +31,10 @@ protected:
 	
 	BOOL RequestCreateNewDownload (LPCSTR pszRes, vmsHttpResponse &response);
 	
-	std::string m_strRootHtml;
-	std::string m_strAddDownloadRes_ok;
-	std::string m_strAddDownloadRes_err;
-	std::string m_strCompDldsHtml;
+	tstring m_strRootHtml;
+	tstring m_strAddDownloadRes_ok;
+	tstring m_strAddDownloadRes_err;
+	tstring m_strCompDldsHtml;
 	
 	BOOL RequestRootPage (vmsHttpResponse &response);
 };

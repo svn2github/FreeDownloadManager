@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -79,7 +79,7 @@ BOOL CUrlWithLoginDlg::OnInitDialog()
 
 	if (m_strUrl.GetLength () == 0)
 	{
-		LPCSTR pszUrl = _ClipbrdMgr.Text ();
+		LPCTSTR pszUrl = _ClipbrdMgr.Text ();
 		if (pszUrl && *pszUrl)
 		{
 			fsURL url;
@@ -88,13 +88,13 @@ BOOL CUrlWithLoginDlg::OnInitDialog()
 		}
 		
 		if (m_strUrl.GetLength () == 0)
-			m_strUrl = "http://";
+			m_strUrl = _T("http://");
 	}
 
 	ASSERT (m_dld->pMgr->GetDownloadMgr () != NULL);
 
 	if (IR_SUCCESS != m_dld->pMgr->GetDownloadMgr ()->CreateByUrl (m_strUrl, TRUE))
-		m_dld->pMgr->GetDownloadMgr ()->CreateByUrl ("http://", TRUE);
+		m_dld->pMgr->GetDownloadMgr ()->CreateByUrl (_T("http://"), TRUE);
 
 	SetDlgItemText (IDC_URL, m_strUrl);
 	((CEdit*) GetDlgItem (IDC_URL))->SetSel (0, -1);

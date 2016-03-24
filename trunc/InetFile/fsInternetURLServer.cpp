@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "fsInternetURLServer.h"
@@ -15,7 +15,7 @@ fsInternetURLServer::~fsInternetURLServer()
 
 }
 
-fsInternetResult fsInternetURLServer::Connect(LPCSTR pszUrl, LPCSTR pszUser, LPCSTR pszPassword, INTERNET_PORT nPort)
+fsInternetResult fsInternetURLServer::Connect(LPCTSTR pszUrl, LPCTSTR pszUser, LPCTSTR pszPassword, INTERNET_PORT nPort)
 {
 	fsInternetResult ir;
 
@@ -84,7 +84,7 @@ INTERNET_SCHEME fsInternetURLServer::GetScheme()
 	return m_scheme;
 }
 
-LPCSTR fsInternetURLServer::GetServerName()
+LPCTSTR fsInternetURLServer::GetServerName()
 {
 	return m_pServer ? m_pServer->GetServerName () : NULL;
 }

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSIECATCHMGR_H__02D75EC6_6354_488F_BCC9_5689F5137467__INCLUDED_)
@@ -32,7 +32,7 @@ public:
 	
 	
 	
-	BOOL InstallIeIntegration (BOOL bInstall = TRUE, BOOL bCurrentUserOnly = FALSE, BOOL bOverrideHKCR = TRUE);
+	BOOL InstallIeIntegration (BOOL bInstall, BOOL bCurrentUserOnly);
 	BOOL IsIE2Active();
 	void SetEventsFunc (fntIECatchMgrEvents pfn,  LPVOID lpParam);
 	
@@ -69,7 +69,7 @@ protected:
 	
 	
 	
-	BOOL OnBeforeNavigate (LPCSTR pszUrl, BOOL bCheckALT = TRUE);
+	BOOL OnBeforeNavigate (LPCTSTR pszUrl, BOOL bCheckALT = TRUE);
 };
 
 #endif 

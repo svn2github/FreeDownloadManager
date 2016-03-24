@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -78,7 +78,7 @@ BOOL CSpiderTasks::Create(CWnd *pParent)
 	InsertColumn (1, LS (L_PROGRESS), LVCFMT_LEFT, 150, 0);
 	InsertColumn (2, LS (L_FILES), LVCFMT_LEFT, 150, 0);
 
-	ReadState ("SpiderTasks");
+	ReadState (_T("SpiderTasks"));
 
 	ShowWindow (SW_SHOW);
 
@@ -233,10 +233,10 @@ void CSpiderTasks::UpdateWebPage(int iItem)
 	SetItemText (iItem, 0, wpd->GetStartURL ());
 	
 	CString str;
-	str.Format ("%d%%", (int) wpd->GetPercentDone ());
+	str.Format (_T("%d%%"), (int) wpd->GetPercentDone ());
 	SetItemText (iItem, 1, str);
 	
-	str.Format ("%d/%d", wpd->GetDoneFileCount (), wpd->GetFileCount ());
+	str.Format (_T("%d/%d"), wpd->GetDoneFileCount (), wpd->GetFileCount ());
 	SetItemText (iItem, 2, str);
 
 	SetItemImage (iItem, GetWebPageImage (wpd));
@@ -453,7 +453,7 @@ void CSpiderTasks::OnSpiderOpenfolder()
 	if (pos)
 	{
 		fsWebPageDownloader *wpd = (fsWebPageDownloader*) GetItemData (GetNextSelectedItem (pos));
-		ShellExecute (m_hWnd, "explore", wpd->GetWDPS ()->strFolderSaveTo, NULL, NULL, SW_SHOW);
+		ShellExecute (m_hWnd, _T("explore"), wpd->GetWDPS ()->strFolderSaveTo, NULL, NULL, SW_SHOW);
 	}
 }
 
@@ -489,7 +489,7 @@ void CSpiderTasks::OnSpiderDelete()
 			catch (const std::exception& ex)
 			{
 				ASSERT (FALSE);
-				vmsLogger::WriteLog("CSpiderTasks::OnSpiderDelete " + tstring(ex.what()));
+				vmsLogger::WriteLog("CSpiderTasks::OnSpiderDelete " + std::string(ex.what()));
 			}
 			catch (...)
 			{
@@ -642,8 +642,8 @@ void CSpiderTasks::OnSpiderOpenpage()
 		fsWebPageDownloader *wpd = (fsWebPageDownloader*) GetItemData (GetNextSelectedItem (pos));
 		
 		fsDLWebPage* wp = wpd->GetRootPage ()->GetData ();
-		LPCSTR pszFile = wp->dld ? wp->dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName : wp->strFile;
-		ShellExecute (m_hWnd, "open", pszFile, NULL, NULL, SW_SHOW);
+		LPCTSTR pszFile = wp->dld ? wp->dld->pMgr->GetDownloadMgr ()->GetDP ()->pszFileName : wp->strFile;
+		ShellExecute (m_hWnd, _T("open"), pszFile, NULL, NULL, SW_SHOW);
 	}
 }
 

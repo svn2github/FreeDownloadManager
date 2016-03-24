@@ -1,12 +1,12 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "StdAfx.h"
 
 #include "vmsFlvSniffDll.h"
 #include <string>
-#include "vmsFdmTranslations.h"
+#include "../../common/vmsFdmTranslations.h"
 
 vmsFlvSniffDll::vmsFlvSniffDll()
 {
@@ -23,7 +23,7 @@ void vmsFlvSniffDll::OnDownloadItBtnClicked (const char* pszWebPageUrl, LPCSTR p
 											 LPCSTR pszSwfUrl, LPCSTR pszFlashVars,
 											 LPCSTR pszOtherSwfUrls, LPCSTR pszOtherFlashVars)
 {
-	HMODULE hDll = GetModuleHandle ("flvsniff.dll");
+	HMODULE hDll = GetModuleHandle (_T("flvsniff.dll"));
 	if (!hDll)
 	{
 		m_enBR = ButtonResult::E_SNIFF_MODULE_NOT_FOUND;
@@ -51,35 +51,35 @@ void vmsFlvSniffDll::OnDownloadItBtnClicked (const char* pszWebPageUrl, LPCSTR p
 
 void vmsFlvSniffDll::OnDownloadItBtnClicked_ShowMsgIfReq(HWND hwndParent) const
 {
-	std::string strMsg;
+	tstring strMsg;
 
 	switch (m_enBR)
 	{
 	case E_SNIFF_MODULE_NOT_FOUND:
 		strMsg = vmsFdmTranslations::o ().GetString (L_FLVSNIFFMODULE_NOTFOUND);
 		if (strMsg.empty ())
-			strMsg = "Flash video monitoring module is not loaded. Make sure FDM is running and you've enabled this option in FDM (see Options | Downloads | Flash Video).";
+			strMsg = _T("Flash video monitoring module is not loaded. Make sure FDM is running and you've enabled this option in FDM (see Options | Downloads | Flash Video).");
 		break;
 		
 	case E_FAILED:
 		strMsg = vmsFdmTranslations::o ().GetString (L_FAILEDTRANSFERDLDSTOFDM);
 		if (strMsg.empty ())
-			strMsg = "An error occurred while trying to transfer downloads to FDM.\nError: 0x%x.";
-		char sz [300]; *sz = 0;
-		sprintf (sz, strMsg.c_str (), m_hrLast);
+			strMsg = _T("An error occurred while trying to transfer downloads to FDM.\nError: 0x%x.");
+		TCHAR sz [300]; *sz = 0;
+		_stprintf_s (sz, 300, strMsg.c_str (), m_hrLast);
 		strMsg = sz;
 		break;
 		
 	case E_NO_FLV_FOUND:
 		strMsg = vmsFdmTranslations::o ().GetString (L_NOFLVSFOUND);
 		if (strMsg.empty ())
-			strMsg = "There were no flash videos found on this page. Make sure the videos on this page are playing or try to reload it (refresh page or clear browser's cache).";
+			strMsg = _T("There were no flash videos found on this page. Make sure the videos on this page are playing or try to reload it (refresh page or clear browser's cache).");
 		break;
 		
 	case E_URL_NOT_FOUND:
 		strMsg = vmsFdmTranslations::o ().GetString (L_FLVWEBPAGENOTFOUND);
 		if (strMsg.empty ())
-			strMsg = "Failed to found information about this web page. Please force your browser to reload it.";
+			strMsg = _T("Failed to found information about this web page. Please force your browser to reload it.");
 		break;		
 	}
 
@@ -89,7 +89,7 @@ void vmsFlvSniffDll::OnDownloadItBtnClicked_ShowMsgIfReq(HWND hwndParent) const
 
 BOOL vmsFlvSniffDll::IsVideoFlash (const char* pszWebPageUrl, const char* pszFrameUrl, const char* pszSwfUrl, const char* pszFlashVars, const char* pszOtherSwfUrls, const char* pszOtherFlashVars)
 {
-	HMODULE hDll = GetModuleHandle ("flvsniff.dll");
+	HMODULE hDll = GetModuleHandle (_T("flvsniff.dll"));
 	if (!hDll)
 		return FALSE;
 	typedef BOOL (WINAPI *FNIVF)(LPCSTR, LPCSTR, LPCSTR, LPCSTR, LPCSTR, LPCSTR);

@@ -1,11 +1,12 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
 #include "FdmApp.h"
 #include "vmsMaliciousDownloadChecker.h"
 #include "vmsSimpleFileDownloader.h"
+#include "Utils.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -24,19 +25,19 @@ vmsMaliciousDownloadChecker::~vmsMaliciousDownloadChecker()
 
 }
 
-fsInternetResult vmsMaliciousDownloadChecker::Check(LPCSTR pszUrl)
+fsInternetResult vmsMaliciousDownloadChecker::Check(LPCTSTR pszUrl)
 {
-	char szTmpPath [MY_MAX_PATH];
-	char szTmpFile [MY_MAX_PATH];
+	TCHAR szTmpPath [MY_MAX_PATH];
+	TCHAR szTmpFile [MY_MAX_PATH];
 
 	m_bNeedStop = false;
 
-	GetTempPath (sizeof (szTmpPath), szTmpPath);
-	GetTempFileName (szTmpPath, "fdm", 0, szTmpFile);
+	GetTempPath (_countof (szTmpPath), szTmpPath);
+	GetTempFileName (szTmpPath, _T("fdm"), 0, szTmpFile);
 
 	
 	CString strUrl;
-	strUrl.Format ("http://fdm.freedownloadmanager.org/fromfdm/url.php?url=%s", EncodeUrl (pszUrl));
+	strUrl.Format (_T("http://fdm.freedownloadmanager.org/fromfdm/url.php?url=%s"), EncodeUrl (pszUrl));
 
 	
 	vmsSimpleFileDownloader dldr;
@@ -49,9 +50,9 @@ fsInternetResult vmsMaliciousDownloadChecker::Check(LPCSTR pszUrl)
 	while (dldr.IsRunning ())
 		Sleep (50);
 	m_dldr = NULL;
-	if (dldr.GetLastError () != IR_SUCCESS) {
+	if (dldr.GetLastError ().first != IR_SUCCESS) {
 		DeleteFile (szTmpFile);
-		return dldr.GetLastError ();
+		return dldr.GetLastError ().first;
 	}
 	if (m_bNeedStop) {
 		DeleteFile (szTmpFile);
@@ -79,7 +80,7 @@ fsInternetResult vmsMaliciousDownloadChecker::Check(LPCSTR pszUrl)
 		m_cOpinions = 0;
 		m_cMalOpinions = 0;
 		m_fRating = 0;
-		m_strVirusCheckResult = "";
+		m_strVirusCheckResult = _T("");
 	}
 	else
 	{
@@ -90,21 +91,27 @@ fsInternetResult vmsMaliciousDownloadChecker::Check(LPCSTR pszUrl)
 
 		char szVCR [10000];
 		sscanf (szBuf, "%d %f %d %s", &m_cOpinions, &m_fRating, &m_cMalOpinions, szVCR);
-		m_strVirusCheckResult = szVCR;
+
+		std::wstring sRes;
+		AnsiToUni(szBuf, sRes);
+
+		m_strVirusCheckResult = sRes.c_str();
 	}
 
 	return IR_SUCCESS;
 }
 
-CString vmsMaliciousDownloadChecker::EncodeUrl(LPCSTR pszUrl)
+CString vmsMaliciousDownloadChecker::EncodeUrl(LPCTSTR pszUrl)
 {
 	CString str;
 
-	while (*pszUrl)
+	auto utf8url = stringFromTstring (pszUrl);
+
+	for (auto it = utf8url.begin (); it != utf8url.end (); ++it)
 	{
-		char c = *pszUrl++;
+		CHAR c = *it;
 		if ((c >= 'a' && c <= 'z') ||
-				(c >= 'A' && c <='Z') ||
+				(c >= 'A' && c <= 'Z') ||
 				(c >= '0' && c <= '9'))
 		{
 			str += c;
@@ -113,8 +120,8 @@ CString vmsMaliciousDownloadChecker::EncodeUrl(LPCSTR pszUrl)
 		{
 			
 			
-			char szHex [10];
-			sprintf (szHex, "%%%x", (int)(BYTE)c);
+			TCHAR szHex [10];
+			_stprintf_s (szHex, 10, _T("%%%x"), (int)(BYTE)c);
 			str += szHex;
 		}
 	}
@@ -137,7 +144,7 @@ float vmsMaliciousDownloadChecker::get_AverageRating()
 	return m_fRating;
 }
 
-LPCSTR vmsMaliciousDownloadChecker::get_VirusCheckResult()
+LPCTSTR vmsMaliciousDownloadChecker::get_VirusCheckResult()
 {
 	return m_strVirusCheckResult;
 }

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSARCHIVEREBUILDER_H__12229CAE_4DBE_4E89_875D_4378C0C6E8FD__INCLUDED_)
@@ -49,9 +49,9 @@ public:
 	
 	virtual int GetFileCount () = NULL;
 	
-	virtual fsString GetFileName (int iFile) = NULL;
+	virtual fsStringA GetFileName (int iFile) = NULL;
 	
-	virtual BOOL RebuildArchive (fs::list <fsString> vFileNames) = NULL;
+	virtual BOOL RebuildArchive (fs::list <fsStringA> vFileNames) = NULL;
 	
 	virtual const fsArchiveFilePosition* GetFilePosition (int iFile) = NULL;
 	

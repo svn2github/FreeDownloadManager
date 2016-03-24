@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -42,7 +42,7 @@ BOOL CDlg_WPD_IL_Add::OnInitDialog()
 
 	if (m_strURL.GetLength () == 0)
 	{
-		LPCSTR pszURL = _ClipbrdMgr.Text ();
+		LPCTSTR pszURL = _ClipbrdMgr.Text ();
 		fsURL url;
 		if (pszURL && url.Crack (pszURL) == IR_SUCCESS)
 			m_strURL = pszURL;

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include <windows.h>
@@ -8,7 +8,7 @@
 
 fsInternetFiles::fsInternetFiles()
 {
-	m_strPath = "";
+	m_strPath = _T("");
 }
 
 fsInternetFiles::~fsInternetFiles()
@@ -26,7 +26,7 @@ fsFileInfo* fsInternetFiles::GetFileInfo(UINT uIndex)
 	return &m_vFiles [uIndex];
 }
 
-LPCSTR fsInternetFiles::GetCurrentPath()
+LPCTSTR fsInternetFiles::GetCurrentPath()
 {
 	return m_strPath;
 }

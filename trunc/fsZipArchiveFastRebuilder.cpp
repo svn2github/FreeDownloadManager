@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -121,7 +121,7 @@ DWORD fsZipArchiveFastRebuilder::RetreiveArchiveContent()
 		if (m_in->Read (&hdr, sizeof (hdr)) != sizeof (hdr))
 			return m_in->GetLastError () != ASE_NOMOREDATA ? ARR_STREAMERROR : ARR_BADARCHIVE;;
 
-		fsString strFileName;
+		fsStringA strFileName;
 		strFileName.alloc (hdr.wFileNameLen);
 
 		if (m_in->Read (strFileName, hdr.wFileNameLen) != hdr.wFileNameLen)
@@ -137,7 +137,7 @@ DWORD fsZipArchiveFastRebuilder::RetreiveArchiveContent()
 				return m_in->GetLastError () != ASE_NOMOREDATA ? ARR_STREAMERROR : ARR_BADARCHIVE;;
 		}
 
-		fsString strComment;
+		fsStringA strComment;
 		strComment.alloc (hdr.wFileCommentLen);
 		
 		if (m_in->Read (strComment, hdr.wFileCommentLen) != hdr.wFileCommentLen)
@@ -173,7 +173,7 @@ int fsZipArchiveFastRebuilder::GetFileCount()
 	return m_vFiles.size ();
 }
 
-fsString fsZipArchiveFastRebuilder::GetFileName(int iIndex)
+fsStringA fsZipArchiveFastRebuilder::GetFileName(int iIndex)
 {
 	return m_vFiles [iIndex].strFileName;
 }
@@ -184,7 +184,7 @@ void fsZipArchiveFastRebuilder::RemoveFile(int iIndex)
 	m_vFiles.del (iIndex);
 }
 
-BOOL fsZipArchiveFastRebuilder::RebuildArchive(fs::list <fsString> vFileNames)
+BOOL fsZipArchiveFastRebuilder::RebuildArchive(fs::list <fsStringA> vFileNames)
 {
 	for (int i = 0; i < m_vFiles.size (); i++)
 	{

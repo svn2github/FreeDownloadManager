@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -56,12 +56,12 @@ void CDownloaderProperties_MonitorPage_SkipList::OnOK()
 	_App.Monitor_SkipExts (str);
 
 	GetDlgItemText (IDC_SERVERS, str);
-	str.Replace ("\r\n", " ");
-	str.Replace ("\r", " ");
-	str.Replace ("\n", " ");
-	str.Replace ("http://", "");
-	str.Replace ("https://", "");
-	str.Replace ("ftp://", "");
+	str.Replace (_T("\r\n"), _T(" "));
+	str.Replace (_T("\r"), _T(" "));
+	str.Replace (_T("\n"), _T(" "));
+	str.Replace (_T("http://"), _T(""));
+	str.Replace (_T("https://"), _T(""));
+	str.Replace (_T("ftp://"), _T(""));
 	_App.Monitor_SkipServers (str);
 	
 	CDialog::OnOK();

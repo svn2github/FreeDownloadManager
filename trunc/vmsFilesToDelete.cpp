@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -40,7 +40,7 @@ void vmsFilesToDelete::Process()
 
 	for (int i = sl.GetCount () - 1; i >= 0; i--)
 	{
-		LPCSTR psz = sl.GetAt (sl.FindIndex (i));
+		LPCTSTR psz = sl.GetAt (sl.FindIndex (i));
 		BOOL bOK = TRUE;
 		if (GetFileAttributes (psz) != DWORD (-1))
 			bOK = DeleteFile (psz);

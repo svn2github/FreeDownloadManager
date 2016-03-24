@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -48,7 +48,7 @@ BOOL CDlg_SpreadHelp_LinkCode::OnInitDialog()
 	m_bRunning = TRUE;
 
 	m_fntFDM.CreateFont (15, 0, 0, 0, FW_NORMAL, 0, TRUE, 0, DEFAULT_CHARSET,
-		0, 0, 0, 0, "MS Sans Serif");
+		0, 0, 0, 0, _T("MS Sans Serif"));
 
 	m_bRunning = TRUE;
 	m_dwThrJob = IMGT_DRAW;
@@ -97,7 +97,7 @@ DWORD WINAPI CDlg_SpreadHelp_LinkCode::_threadImage(LPVOID lp)
 
 	pThis->m_bRunning = TRUE;
 
-	pThis->m_img.Load ("fdm_01.gif");
+	pThis->m_img.Load (_T("fdm_01.gif"));
 	pThis->m_bImgLoaded = TRUE;
 
 	if (pThis->m_img.get_FrameCount ())
@@ -190,13 +190,13 @@ void CDlg_SpreadHelp_LinkCode::OnCopytoclipboard()
 
 void CDlg_SpreadHelp_LinkCode::OnMoreexamples() 
 {
-	fsOpenUrlInBrowser ("http://www.freedownloadmanager.org/linktous.htm");
+	fsOpenUrlInBrowser (_T("http://www.freedownloadmanager.org/linktous.htm"));
 }
 
 CString CDlg_SpreadHelp_LinkCode::get_HTMLCode()
 {
-	return "<!--Free Download Manager code//--> <A href=\"http://www.freedownloadmanager.org/\" title=\"Free Download Manager\">\
-<img src=\"http://www.freedownloadmanager.org/images/fdm_01.gif\" width=\"88\" height=\"31\" border=\"0\" alt = \"Free Download Manager\" > <br>Free Download Manager </A> <!--End of Free Download Manager code//-->";
+	return _T("<!--Free Download Manager code//--> <A href=\"http://www.freedownloadmanager.org/\" title=\"Free Download Manager\">\
+<img src=\"http://www.freedownloadmanager.org/images/fdm_01.gif\" width=\"88\" height=\"31\" border=\"0\" alt = \"Free Download Manager\" > <br>Free Download Manager </A> <!--End of Free Download Manager code//-->");
 }
 
 void CDlg_SpreadHelp_LinkCode::ApplyLanguage()

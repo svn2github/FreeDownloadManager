@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -52,7 +52,7 @@ CSize CFdmBalloon_OnDownloadDone::getRequiredSize()
 	CFont *pFont = CFont::FromHandle((HFONT)::GetStockObject(DEFAULT_GUI_FONT));
 	pdc->SelectObject (pFont);
 
-	CString strDone; strDone.Format (" - %s", LS (L_DONE));
+	CString strDone; strDone.Format (_T(" - %s"), LS (L_DONE));
 	CSize sDone = pdc->GetTextExtent (strDone);
 
 	pdc->SelectObject (&m_fntUnderline);
@@ -85,7 +85,7 @@ void CFdmBalloon_OnDownloadDone::OnPaint()
 
 	int y = 7;
 
-	CString strDone; strDone.Format (" - %s", LS (L_DONE));
+	CString strDone; strDone.Format (_T(" - %s"), LS (L_DONE));
 
 	for (size_t i = 0; i < m_vItems.size (); i++)
 	{
@@ -134,7 +134,7 @@ void CFdmBalloon_OnDownloadDone::OnLButtonDown(UINT nFlags, CPoint point)
 	int nIndex = FindLinkIndexUnderCursor ();
 	if (nIndex != -1)
 	{
-		ShellExecute (NULL, "open", m_vItems [nIndex].strFile, NULL, NULL, SW_SHOW);
+		ShellExecute (NULL, _T("open"), m_vItems [nIndex].strFile, NULL, NULL, SW_SHOW);
 		m_vWasLaunched [nIndex] = true;
 	}
 	bool bClose = nIndex == -1;

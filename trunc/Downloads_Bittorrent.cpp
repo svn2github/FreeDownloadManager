@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -72,13 +72,13 @@ void CDownloads_Bittorrent::ApplyLanguage()
 	ZeroMemory (&item, sizeof (item));
 
 	item.mask = TCIF_TEXT;
-	item.pszText = (LPSTR) LS (L_GENERAL);
+	item.pszText = (LPTSTR) LS (L_GENERAL);
 	SetItem (0, &item);
 
-	item.pszText = (LPSTR) LS (L_PEERS);
+	item.pszText = (LPTSTR) LS (L_PEERS);
 	SetItem (1, &item);
 
-	item.pszText = (LPSTR) LS (L_FILES);
+	item.pszText = (LPTSTR) LS (L_FILES);
 	SetItem (2, &item);
 
 	m_general.ApplyLanguage ();
@@ -95,9 +95,9 @@ int CDownloads_Bittorrent::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_peers.Create (this);
 	m_files.Create (this);
 
-	InsertItem (0, ""); 
-	InsertItem (1, ""); 
-	InsertItem (2, ""); 
+	InsertItem (0, _T("")); 
+	InsertItem (1, _T("")); 
+	InsertItem (2, _T("")); 
 
 	set_ActiveTab (0);
 	

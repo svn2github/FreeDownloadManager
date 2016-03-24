@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -9,14 +9,14 @@
 STDMETHODIMP CFDMDownload::get_Url(BSTR *pVal)
 {
 	USES_CONVERSION;
-	*pVal = SysAllocString (A2W (m_strUrl));
+	*pVal = SysAllocString (T2W (m_strUrl));
 	return S_OK;
 }
 
 STDMETHODIMP CFDMDownload::put_Url(BSTR newVal)
 {
 	USES_CONVERSION;
-	m_strUrl = W2A (newVal);
+	m_strUrl = W2T (newVal);
 	return S_OK;
 }
 
@@ -34,7 +34,7 @@ STDMETHODIMP CFDMDownload::get_DownloadText(long nTextIndex, BSTR *pVal)
 		return E_INVALIDARG;
 
 	USES_CONVERSION;
-	*pVal = SysAllocString (A2W (m_astrDldTexts [nTextIndex]));
+	*pVal = SysAllocString (T2W (m_astrDldTexts [nTextIndex]));
 
 	return S_OK;
 }

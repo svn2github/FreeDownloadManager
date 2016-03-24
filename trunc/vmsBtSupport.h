@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSBTSUPPORT_H__0E2B5DB4_43BC_4761_ABB5_28573A27F8F0__INCLUDED_)
@@ -13,7 +13,7 @@
 #include "Bittorrent\fdmbtsupp\vmsBtSession.h"
 #include "Bittorrent\fdmbtsupp\vmsUTorrentDownloadsDb.h"
 
-#define BTSUPP_DLL_MINVERREQ	1026
+#define BTSUPP_DLL_MINVERREQ	1049
 
 class vmsBtSupport  
 {
@@ -31,12 +31,17 @@ public:
 	void ApplyAdditionalTorrentSettings();
 	void ApplyListenPortSettings();
 	void ApplyProxySettings();
+	void ApplyExtensions();
 	
 	BOOL is_Initialized();
 	
 	vmsBtSession* get_Session();
+	vmsBtSession* create_Session();
 	
 	BOOL Initialize();
+	void LockSession(bool bForRead);
+	void UnlockSession(bool bForRead);
+	void RemoveSession();
 
 	vmsBtSupport();
 	virtual ~vmsBtSupport();
@@ -55,8 +60,10 @@ protected:
 	DWORD m_dwDHTstateSize;
 	
 	HMODULE m_hBtDll;
+	vmsReaderWriterLock m_rwlSession;
+	vmsBtSession *m_pSession;
 public:
-	static std::string getBtDllFileName(void);
+	static tstring getBtDllFileName(void);
 	static bool isBtDllValid(void);
 };
 

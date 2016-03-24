@@ -13,7 +13,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Русский (Россия) resources
+// Russian (Russia) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
 LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
@@ -51,8 +51,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 963,0,0,0
- PRODUCTVERSION 963,0,0,0
+ FILEVERSION 965,0,0,0
+ PRODUCTVERSION 965,0,0,0
  FILEFLAGSMASK 0x0L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -72,13 +72,13 @@ BEGIN
             VALUE "FileDescription", "Free Download Manager Click Catcher Plug-In for Netscape, Opera, Mozilla"
             VALUE "FileExtents", "nope"
             VALUE "FileOpenName", "Not Applicable (*.nope)"
-            VALUE "FileVersion", "963.0.0.0"
+            VALUE "FileVersion", "965.0.0.0"
             VALUE "InternalName", "npfdm"
-            VALUE "LegalCopyright", "Copyright (c) 2003-2009, FreeDownloadManager.org"
+            VALUE "LegalCopyright", "Copyright (c) 2003-2015, FreeDownloadManager.org"
             VALUE "MIMEType", "application/x-msdownload|application/x-compressed|application/zip|application/octet-stream|application/x-zip-compressed|application/arj|application/rar|application/x-tar|audio/mpeg|audio/x-mpeg|audio/mp3|video/msvideo|video/x-msvideo|video/mpeg|video/x-mpeg|video/quicktime|application/x-rar-compressed|application/x-msdos-program|audio/x-ms-wma|audio/x-mpeg|video/divx|video/x-ms-wm|video/x-ms-wmv|video/x-ms-wmx|application/x-7z-compressed|application/msi|application/exe|application/x-exe|application/dos-exe|application/x-winexe|application/msdos-windows|application/metalink+xml"
             VALUE "OriginalFilename", "npfdm.dll"
             VALUE "ProductName", "Free Download Manager Click Catcher Plug-In for Netscape, Opera, Mozilla"
-            VALUE "ProductVersion", "963.0.0.0"
+            VALUE "ProductVersion", "965.0.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -96,7 +96,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_FDM                 ICON                    "fdm.ico"
-#endif    // Русский (Россия) resources
+#endif    // Russian (Russia) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

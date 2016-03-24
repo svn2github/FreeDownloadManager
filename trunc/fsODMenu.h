@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_FSODMENU_H__96CA51C4_937D_4832_A83D_65A4A3C7E117__INCLUDED_)
@@ -28,9 +28,9 @@ typedef wgMenuItemImage fsSetImage;
 struct fsSetText 
 {
 	UINT nIDItem;		
-	LPCSTR pszText;		
+	LPCTSTR pszText;		
 
-	fsSetText (UINT nID, LPCSTR psz) : nIDItem (nID), pszText (psz) {}
+	fsSetText (UINT nID, LPCTSTR psz) : nIDItem (nID), pszText (psz) {}
 };
 
 class fsODMenu
@@ -61,9 +61,9 @@ public:
 	
 	
 	
-	void InsertMenuItem (CMenu* pMenu, LPCSTR pszItem, UINT nID, UINT uWhere, BOOL bByPos);
+	void InsertMenuItem (CMenu* pMenu, LPCTSTR pszItem, UINT nID, UINT uWhere, BOOL bByPos);
 	
-	fsODMenuItemData* AddItem (CMenu *pMenu, UINT nID, LPCSTR pszItem);
+	fsODMenuItemData* AddItem (CMenu *pMenu, UINT nID, LPCTSTR pszItem);
 	
 	void RemoveMenuItem (CMenu* pMenu, UINT nID, BOOL bByPos);
 	
@@ -72,7 +72,7 @@ public:
 	
 	void SetMenuItemsText (CMenu* pMenu, fsSetText* pTexts, UINT nSize, BOOL bByPos);
 	
-	void SetMenuItemText (CMenu* pMenu, LPCSTR pszText, UINT nID, BOOL bByPos = FALSE);
+	void SetMenuItemText (CMenu* pMenu, LPCTSTR pszText, UINT nID, BOOL bByPos = FALSE);
 	
 	
 	

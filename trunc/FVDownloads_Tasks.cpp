@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -74,16 +74,16 @@ BOOL CFVDownloads_Tasks::Create(CWnd *pwndParent)
 	m_selimages.Add (&bmp2, RGB (255, 0, 255));
 	SetSelectedImages (&m_selimages);
 
-	InsertColumn (0, "", LVCFMT_LEFT, 200, 0);
-	InsertColumn (1, "", LVCFMT_LEFT, 50, 0);
-	InsertColumn (2, "", LVCFMT_LEFT, 100, 0);
-	InsertColumn (3, "", LVCFMT_LEFT, 60, 0);
-	InsertColumn (4, "", LVCFMT_LEFT, 58, 0);
-	InsertColumn (5, "", LVCFMT_LEFT, 70, 0);
-	InsertColumn (6, "", LVCFMT_LEFT, 200, 0);
-	InsertColumn (7, "", LVCFMT_LEFT, 120, 0);
+	InsertColumn (0, _T(""), LVCFMT_LEFT, 200, 0);
+	InsertColumn (1, _T(""), LVCFMT_LEFT, 50, 0);
+	InsertColumn (2, _T(""), LVCFMT_LEFT, 100, 0);
+	InsertColumn (3, _T(""), LVCFMT_LEFT, 60, 0);
+	InsertColumn (4, _T(""), LVCFMT_LEFT, 58, 0);
+	InsertColumn (5, _T(""), LVCFMT_LEFT, 70, 0);
+	InsertColumn (6, _T(""), LVCFMT_LEFT, 200, 0);
+	InsertColumn (7, _T(""), LVCFMT_LEFT, 120, 0);
 	
-	ReadState ("FVDownloadsTasks");
+	ReadState (_T("FVDownloadsTasks"));
 	
 
 	ShowWindow (SW_SHOW);
@@ -128,7 +128,7 @@ void CFVDownloads_Tasks::OnGetdispinfo(NMHDR* pNMHDR, LRESULT* pResult)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CFVDownloads_Tasks::OnGetdispinfo " + tstring(ex.what()));
+		vmsLogger::WriteLog("CFVDownloads_Tasks::OnGetdispinfo " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -667,7 +667,7 @@ int CFVDownloads_Tasks::OnUpdateToolBar(UINT nID)
 
 void CFVDownloads_Tasks::SaveState()
 {
-	CListCtrlEx::SaveState ("FVDownloadsTasks");
+	CListCtrlEx::SaveState (_T("FVDownloadsTasks"));
 }
 
 void CFVDownloads_Tasks::UpdateActiveDownload(int adjSelected)
@@ -720,7 +720,7 @@ void CFVDownloads_Tasks::UpdateActiveDownload(int adjSelected)
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("CFVDownloads_Tasks::UpdateActiveDownload " + tstring(ex.what()));
+		vmsLogger::WriteLog("CFVDownloads_Tasks::UpdateActiveDownload " + std::string(ex.what()));
 	}
 	catch (...)
 	{

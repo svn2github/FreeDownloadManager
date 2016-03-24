@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -24,18 +24,15 @@ vmsFlvSniffInjector::vmsFlvSniffInjector()
 	_tcsrchr (tsz, '\\') [1] = 0;
 
 	tstring tstr = tsz;
-	m_vtstrDllsToInject.push_back (tstr + _T ("AppWinSockSniffDll\\detoured.dll"));
+	
 	m_vtstrDllsToInject.push_back (tstr + _T ("bin\\debug\\flvsniff.dll"));
-
-	for (size_t i = 0; i < m_vtstrDllsToInject.size (); i++)
-		ASSERT (GetFileAttributes (m_vtstrDllsToInject [i].c_str ()) != DWORD (-1));
 #else
 	TCHAR tsz [MAX_PATH] = _T ("");
 	GetModuleFileName (NULL, tsz, MAX_PATH);
 	_tcsrchr (tsz, '\\') [1] = 0;
 
 	tstring tstr = tsz;
-	m_vtstrDllsToInject.push_back (tstr + _T ("detoured.dll"));
+	
 	m_vtstrDllsToInject.push_back (tstr + _T ("flvsniff.dll"));
 #endif
 
@@ -59,7 +56,7 @@ vmsFlvSniffInjector& vmsFlvSniffInjector::o()
 
 void vmsFlvSniffInjector::setProcessList(std::vector <tstring> &v)
 {
-	EnterCriticalSection (&m_csProcessList);
+	EnterCriticalSection(&m_csProcessList);
 	m_vtstrNamesOfProcesesToMonitor = v;
 	LeaveCriticalSection (&m_csProcessList);
 }

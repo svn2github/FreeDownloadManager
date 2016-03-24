@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -24,9 +24,9 @@ vmsFileRecentList::~vmsFileRecentList()
 	DeleteCriticalSection (&m_cs);
 }
 
-void vmsFileRecentList::Add(LPCSTR pszFileDispName, LPCSTR pszFilePathName, bool bDontQueryStoringStateInformation)
+void vmsFileRecentList::Add(LPCTSTR pszFileDispName, LPCTSTR pszFilePathName, bool bDontQueryStoringStateInformation)
 {
-	EnterCriticalSection (&m_cs);
+	EnterCriticalSection(&m_cs);
 
 	_inc_FileInfo fi;
 	fi.strDispName = pszFileDispName;
@@ -62,7 +62,7 @@ void vmsFileRecentList::Add(LPCSTR pszFileDispName, LPCSTR pszFilePathName, bool
 
 BOOL vmsFileRecentList::Save(HANDLE hFile)
 {
-	EnterCriticalSection (&m_cs);
+	EnterCriticalSection(&m_cs);
 
 	size_t c = m_vList.size ();
 	
@@ -93,7 +93,7 @@ BOOL vmsFileRecentList::Save(HANDLE hFile)
 	return TRUE;
 }
 
-BOOL vmsFileRecentList::Load(HANDLE hFile)
+BOOL vmsFileRecentList::Load(HANDLE hFile, WORD wVer)
 {
 	Clear (true);
 
@@ -107,13 +107,34 @@ BOOL vmsFileRecentList::Load(HANDLE hFile)
 
 	for (size_t i = 0; i < c; i++)
 	{
-		LPSTR pszDisp, pszPath;
+		LPTSTR pszDisp, pszPath;
 
-		if (FALSE == fsReadStrFromFile (&pszDisp, hFile))
+		if (wVer > 1) {
+
+			ASSERT(false);
 			return FALSE;
 
-		if (FALSE == fsReadStrFromFile (&pszPath, hFile))
-			return FALSE;
+		}
+
+		if (wVer == 1) {
+
+			LPSTR pszValue = 0;
+
+			if (FALSE == fsReadStrFromFileA (&pszValue, hFile))
+				return FALSE;
+
+			CopyString(&pszDisp, pszValue);
+			delete pszValue;
+			pszValue = 0;
+
+			if (FALSE == fsReadStrFromFileA (&pszValue, hFile))
+				return FALSE;
+
+			CopyString(&pszPath, pszValue);
+			delete pszValue;
+			pszValue = 0;
+
+		}
 
 		Add (pszDisp, pszPath, true);
 
@@ -126,7 +147,7 @@ BOOL vmsFileRecentList::Load(HANDLE hFile)
 
 void vmsFileRecentList::Clear(bool bDontQueryStoringStateInformation)
 {
-	EnterCriticalSection (&m_cs);
+	EnterCriticalSection(&m_cs);
 	size_t szCount =  m_vList.size();
 	m_vList.clear ();
 	if (!bDontQueryStoringStateInformation) {
@@ -139,12 +160,12 @@ void vmsFileRecentList::Clear(bool bDontQueryStoringStateInformation)
 	LeaveCriticalSection (&m_cs);
 }
 
-LPCSTR vmsFileRecentList::get_FileDispName(int nIndex) const
+LPCTSTR vmsFileRecentList::get_FileDispName(int nIndex) const
 {
 	return m_vList [nIndex].strDispName;
 }
 
-LPCSTR vmsFileRecentList::get_FilePathName(int nIndex) const
+LPCTSTR vmsFileRecentList::get_FilePathName(int nIndex) const
 {
 	return m_vList [nIndex].strPathName;
 }
@@ -171,7 +192,7 @@ void vmsFileRecentList::setMaxSize(int i)
 
 void vmsFileRecentList::getObjectItselfStateBuffer(LPBYTE pbtBuffer, LPDWORD pdwSize, bool bSaveToStorage)
 {
-	EnterCriticalSection (&m_cs);
+	EnterCriticalSection(&m_cs);
 
 	DWORD dwRequiredSize = 0;
 	LPBYTE pbtCurrentPos = pbtBuffer;
@@ -220,7 +241,8 @@ bool vmsFileRecentList::loadObjectItselfFromStateBuffer(LPBYTE pbtBuffer, LPDWOR
 		return false;
 
 	for (size_t i = 0; i < c; i++) {
-		LPSTR pszDisp, pszPath;
+
+		LPTSTR pszDisp, pszPath;
 
 		if (!getStrFromBuffer(&pszDisp, pbtCurrentPos, pbtBuffer, *pdwSize))
 			return false;

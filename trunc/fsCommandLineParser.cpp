@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -27,11 +27,11 @@ BOOL fsCommandLineParser::Parse()
 {
 	m_vPars.clear ();
 
-	LPCSTR pszCmdLine = GetCommandLine ();
+	LPCTSTR pszCmdLine = GetCommandLine ();
 
-	if (*pszCmdLine == '"')
+	if (*pszCmdLine == _T('"'))
 	{
-		pszCmdLine = strchr (pszCmdLine+1, '"');
+		pszCmdLine = _tcschr (pszCmdLine+1, _T('"'));
 		if (pszCmdLine)
 			pszCmdLine++;
 		else
@@ -39,7 +39,7 @@ BOOL fsCommandLineParser::Parse()
 	}
 	else
 	{
-		while (*pszCmdLine && *pszCmdLine != ' ')
+		while (*pszCmdLine && *pszCmdLine != _T(' '))
 			pszCmdLine++;
 	}
 
@@ -47,7 +47,7 @@ BOOL fsCommandLineParser::Parse()
 	{
 		while (*pszCmdLine)
 		{
-			char szParam [10000], szValue [10000];
+			TCHAR szParam [10000], szValue [10000];
 			*szParam = *szValue = 0;
 			bool bHasValue = true;
 
@@ -63,7 +63,7 @@ BOOL fsCommandLineParser::Parse()
 
 				szParam [i] = 0;
 
-				while (*pszCmdLine == ' ')
+				while (*pszCmdLine == _T(' '))
 					pszCmdLine++;
 
 				
@@ -114,7 +114,7 @@ BOOL fsCommandLineParser::Parse()
 	catch (const std::exception& ex)
 	{
 		ASSERT (FALSE);
-		vmsLogger::WriteLog("fsCommandLineParser::Parse " + tstring(ex.what()));
+		vmsLogger::WriteLog("fsCommandLineParser::Parse " + std::string(ex.what()));
 	}
 	catch (...)
 	{
@@ -130,12 +130,12 @@ int fsCommandLineParser::Get_ParameterCount()
 	return m_vPars.size ();
 }
 
-LPCSTR fsCommandLineParser::Get_Parameter(int iIndex)
+LPCTSTR fsCommandLineParser::Get_Parameter(int iIndex)
 {
 	return m_vPars [iIndex].strParam;
 }
 
-LPCSTR fsCommandLineParser::Get_ParameterValue(int iIndex)
+LPCTSTR fsCommandLineParser::Get_ParameterValue(int iIndex)
 {
 	return m_vPars [iIndex].strValue;
 }

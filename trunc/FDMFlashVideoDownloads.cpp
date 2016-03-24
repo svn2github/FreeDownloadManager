@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -28,14 +28,14 @@ STDMETHODIMP CFDMFlashVideoDownloads::ProcessIeDocument(IDispatch *pDispatch)
 	BSTR bstrHost = NULL;
 	spDoc->get_URL (&bstrHost);
 	fsURL url;
-	if (url.Crack (W2A (bstrHost)) != IR_SUCCESS)
+	if (url.Crack (W2T (bstrHost)) != IR_SUCCESS)
 		return E_FAIL;
 	SysFreeString (bstrHost);
 
-	char szPath [MY_MAX_PATH];
-	GetTempPath (sizeof (szPath), szPath);
-	char szFile [MY_MAX_PATH];
-	GetTempFileName (szPath, "fdm", 0, szFile);
+	TCHAR szPath [MY_MAX_PATH];
+	GetTempPath (_countof (szPath), szPath);
+	TCHAR szFile [MY_MAX_PATH];
+	GetTempFileName (szPath, _T("fdm"), 0, szFile);
 
 	COleVariant vaFile (szFile);
 	if (FAILED (spFile->Save (vaFile.bstrVal, FALSE)))
@@ -54,7 +54,8 @@ STDMETHODIMP CFDMFlashVideoDownloads::ProcessIeDocument(IDispatch *pDispatch)
 	CloseHandle (hFile);
 	DeleteFile (szFile);
 
-	ProcessHtml (url.GetHostName (), pszHtml);
+	std::string sUrl = T2CA(url.GetHostName ());
+	ProcessHtml (sUrl.c_str(), pszHtml);
 	delete [] pszHtml;
 
 	return S_OK;
@@ -81,7 +82,7 @@ void CFDMFlashVideoDownloads::ProcessHtml(LPCSTR pszHost, LPCSTR pszHtml)
 
 	if (vshcp.get_IsVideoUrlDirectLink ())
 	{
-		CString str = vshcp.get_VideoTitle ();
+		CStringA str = vshcp.get_VideoTitle ();
 		str += "."; str += vshcp.get_VideoType ();
 		spRcvr->put_FileName (A2W (str));
 
@@ -99,7 +100,7 @@ DWORD WINAPI CFDMFlashVideoDownloads::_threadCreateDownload(LPVOID lp)
 
 	BSTR bstrUrl = (BSTR) lp;
 
-	_pwndFVDownloads->CreateDownload (W2A (bstrUrl), true);
+	_pwndFVDownloads->CreateDownload (bstrUrl, true);
 
 	SysFreeString (bstrUrl);
 
@@ -184,10 +185,10 @@ STDMETHODIMP CFDMFlashVideoDownloads::ShowAddDownloadsDialog(BSTR bstrSrcWebPage
 
 		vmsNewDownloadInfo dlInfo;
 
-		dlInfo.strUrl = W2CA (bstr);
+		dlInfo.strUrl = bstr;
 
 		spUrl->get_Referer (&bstr);
-		dlInfo.strReferer = W2CA (bstr);
+		dlInfo.strReferer = bstr;
 
 		spUrl->get_Comment (&bstr);
 		dlInfo.strComment = bstr;
@@ -201,7 +202,7 @@ STDMETHODIMP CFDMFlashVideoDownloads::ShowAddDownloadsDialog(BSTR bstrSrcWebPage
 		if (bstr.Length ())
 		{
 			dlInfo.ap.dwMask |= DWCDAP_COOKIES;
-			dlInfo.ap.strCookies = W2CA (bstr);
+			dlInfo.ap.strCookies = bstr;
 		}
 
 		spUrl->get_PostData (&bstr);
@@ -215,7 +216,7 @@ STDMETHODIMP CFDMFlashVideoDownloads::ShowAddDownloadsDialog(BSTR bstrSrcWebPage
 		if (bstr.Length ())
 		{
 			dlInfo.ap.dwMask |= DWCDAP_FILENAME;
-			dlInfo.ap.strFileName = W2CA (bstr);
+			dlInfo.ap.strFileName = bstr;
 		}
 
 		spUrl->get_FileSize (&bstr);
@@ -230,7 +231,7 @@ STDMETHODIMP CFDMFlashVideoDownloads::ShowAddDownloadsDialog(BSTR bstrSrcWebPage
 
 	CFlashVideoDownloadsWnd::WmFvdwLparam *lp = new CFlashVideoDownloadsWnd::WmFvdwLparam;
 	lp->strSrcWebPageUrl = W2CA(bstrSrcWebPageUrl);
-	lp->pvDlds = pvDlds;
+	lp->pvDlds.reset (pvDlds);
 	lp->pUiWindow = pUiWindow; 
 	if (pUiWindow)
 		pUiWindow->AddRef ();

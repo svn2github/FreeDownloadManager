@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #include "stdafx.h"
@@ -32,7 +32,7 @@ vmsFdmApiImpl& vmsFdmApiImpl::o()
 
 UINT vmsFdmApiImpl::getFdmBuildNumber()
 {
-	return atoi (vmsFdmAppMgr::getBuildNumberAsString ());
+	return _tstoi (vmsFdmAppMgr::getBuildNumberAsString ());
 }
 
 void vmsFdmApiImpl::ShutdownFdm()

@@ -1,5 +1,5 @@
 /*
-  Free Download Manager Copyright (c) 2003-2014 FreeDownloadManager.ORG
+  Free Download Manager Copyright (c) 2003-2016 FreeDownloadManager.ORG
 */
 
 #if !defined(AFX_VMSMALICIOUSDOWNLOADCHECKER_H__4A03DA08_7975_488C_A08E_022F1B19DCB1__INCLUDED_)
@@ -13,12 +13,12 @@ class vmsMaliciousDownloadChecker
 {
 public:
 	
-	fsInternetResult Check (LPCSTR pszUrl);
+	fsInternetResult Check (LPCTSTR pszUrl);
 	
 	void Stop();
 	
 	
-	LPCSTR get_VirusCheckResult();
+	LPCTSTR get_VirusCheckResult();
 	
 	float get_AverageRating();
 	
@@ -30,7 +30,7 @@ public:
 	virtual ~vmsMaliciousDownloadChecker();
 
 	
-	static CString EncodeUrl (LPCSTR pszUrl);
+	static CString EncodeUrl (LPCTSTR pszUrl);
 
 protected:
 	bool m_bNeedStop;
