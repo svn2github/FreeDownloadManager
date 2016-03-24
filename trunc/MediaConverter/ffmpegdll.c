@@ -1,6 +1,6 @@
 #include <windows.h>
-#include <stdlib.h> 
-
+#include <stdlib.h>   
+ 
 
 BOOL APIENTRY DllMain( HANDLE hModule, 
                        DWORD  ul_reason_for_call, 
@@ -21,24 +21,52 @@ int kbhit ()
 {
 	return _bCancel ? 1 : 0;
 }
-
+ 
 int getch ()
 {
 	return _bCancel ? 'q' : 0;
 }
 
 #include "ffmpeg.c"
-
+  
 DWORD WINAPI _threadConvert (LPVOID lp)
-{
+{	 
     char **ppszArgs = (char**)lp;
-	int cArgs = 0;
+	int cArgs = 0; 
 	while (ppszArgs [cArgs])
-		cArgs++;
+		cArgs++;	 
     return main (cArgs, ppszArgs);
-}
+}   
+ 
+static LONG _lDllUsed = 0;   
+ 
 
-static LONG _lDllUsed = 0;
+__declspec(dllexport) int launchFFMPEG (int argc, char **commandLine, BOOL *pbCancel)
+{	 	
+    if (InterlockedIncrement (&_lDllUsed) != 1)
+    	return -1; // DLL was used already, and can't be used again
+    	// it's required to reload it
+    	// (this makes it easier to make changes in this DLL on further changes in FFMPEG)
+
+	 
+	//input_files [0] = NULL;	 
+    DWORD dw;	
+    HANDLE hThread = CreateThread (NULL, 0, _threadConvert, commandLine, 0, &dw);
+    if (!hThread)
+    	return 1; // error 
+
+    while (WAIT_TIMEOUT == WaitForSingleObject (hThread, 200))
+	{
+		if (pbCancel && *pbCancel)
+			_bCancel = TRUE;//TerminateThread (hThread, (DWORD)-2);			
+	} 
+    
+    dw = 0;
+    GetExitCodeThread (hThread, &dw);
+	CloseHandle (hThread);
+
+    return dw;
+}
 
 enum ConvertResult
 {
@@ -167,7 +195,8 @@ __declspec(dllexport) int Convert (LPCSTR pszSrcFile, LPCSTR pszDstFile, LPCSTR 
 
 	apszArgs [i] = NULL; // end of arguments
 
-	input_files [0] = NULL;
+	if ( input_files )
+		input_files [0] = NULL;
 
     DWORD dw;
     HANDLE hThread = CreateThread (NULL, 0, _threadConvert, apszArgs, 0, &dw);
@@ -176,10 +205,10 @@ __declspec(dllexport) int Convert (LPCSTR pszSrcFile, LPCSTR pszDstFile, LPCSTR 
 	if (pnProgress)
 		*pnProgress = 0;
 
-    while (WAIT_TIMEOUT == WaitForSingleObject (hThread, 200))
+	while (WAIT_TIMEOUT == WaitForSingleObject (hThread, 200))
 	{
-    	if (pnProgress && input_files[0] && input_files[0]->file_size && input_files[0]->pb)
-			*pnProgress = (int) (input_files[0]->pb->pos * 100 / input_files[0]->file_size);
+    	if (pnProgress && input_files && input_files[0] && input_files[0]->ctx && input_files[0]->ctx->pb && avio_size( input_files[0]->ctx->pb ) )
+			*pnProgress = (int) (input_files[0]->ctx->pb->pos * 100 / avio_size( input_files[0]->ctx->pb ));
 		if (pbCancel && *pbCancel)
 			_bCancel = TRUE;//TerminateThread (hThread, (DWORD)-2);
 			
@@ -195,3 +224,7 @@ __declspec(dllexport) int Convert (LPCSTR pszSrcFile, LPCSTR pszDstFile, LPCSTR 
 	return dw == 0 ? CR_OK : CR_FAILED;
 }
 
+__declspec(dllexport) int GetErrorCodeDescription (int error, char *errbuf, size_t errbuf_size)
+{
+	return av_strerror (error, errbuf, errbuf_size);
+}

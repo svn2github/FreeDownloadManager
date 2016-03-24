@@ -6,60 +6,77 @@
 all: all-yes
 
 ifndef SUBDIR
-vpath %.c   $(SRC_DIR)
-vpath %.h   $(SRC_DIR)
-vpath %.S   $(SRC_DIR)
-vpath %.asm $(SRC_DIR)
-vpath %.v   $(SRC_DIR)
-
-ifeq ($(SRC_DIR),$(SRC_PATH_BARE))
-BUILD_ROOT_REL = .
-else
-BUILD_ROOT_REL = ..
-endif
 
 ifndef V
 Q      = @
 ECHO   = printf "$(1)\t%s\n" $(2)
-BRIEF  = CC AS YASM AR LD HOSTCC STRIP CP
-SILENT = DEPCC YASMDEP RM RANLIB
+BRIEF  = CC CXX HOSTCC HOSTLD AS YASM AR LD STRIP CP WINDRES
+SILENT = DEPCC DEPHOSTCC DEPAS DEPYASM RANLIB RM
+
 MSG    = $@
 M      = @$(call ECHO,$(TAG),$@);
 $(foreach VAR,$(BRIEF), \
-    $(eval $(VAR) = @$$(call ECHO,$(VAR),$$(MSG)); $($(VAR))))
-$(foreach VAR,$(SILENT),$(eval $(VAR) = @$($(VAR))))
+    $(eval override $(VAR) = @$$(call ECHO,$(VAR),$$(MSG)); $($(VAR))))
+$(foreach VAR,$(SILENT),$(eval override $(VAR) = @$($(VAR))))
 $(eval INSTALL = @$(call ECHO,INSTALL,$$(^:$(SRC_DIR)/%=%)); $(INSTALL))
 endif
 
-ALLFFLIBS = avcodec avdevice avfilter avformat avutil postproc swscale
+ALLFFLIBS = avcodec avdevice avfilter avformat avresample avutil postproc swscale swresample
 
-CPPFLAGS := -I$(BUILD_ROOT_REL) -I$(SRC_PATH) $(CPPFLAGS)
-CFLAGS   += $(ECFLAGS)
+# NASM requires -I path terminated with /
+IFLAGS     := -I. -I$(SRC_PATH)/
+CPPFLAGS   := $(IFLAGS) $(CPPFLAGS)
+CFLAGS     += $(ECFLAGS)
+CCFLAGS     = $(CPPFLAGS) $(CFLAGS)
+ASFLAGS    := $(CPPFLAGS) $(ASFLAGS)
+CXXFLAGS   += $(CPPFLAGS) $(CFLAGS)
+YASMFLAGS  += $(IFLAGS:%=%/) -Pconfig.asm
+
+HOSTCCFLAGS = $(IFLAGS) $(HOSTCPPFLAGS) $(HOSTCFLAGS)
+LDFLAGS    := $(ALLFFLIBS:%=$(LD_PATH)lib%) $(LDFLAGS)
+
+define COMPILE
+       $(call $(1)DEP,$(1))
+       $($(1)) $($(1)FLAGS) $($(1)_DEPFLAGS) $($(1)_C) $($(1)_O) $<
+endef
+
+COMPILE_C = $(call COMPILE,CC)
+COMPILE_CXX = $(call COMPILE,CXX)
+COMPILE_S = $(call COMPILE,AS)
+COMPILE_HOSTC = $(call COMPILE,HOSTCC)
 
 %.o: %.c
-	$(CCDEP)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(CC_DEPFLAGS) -c $(CC_O) $<
+	$(COMPILE_C)
+
+%.o: %.cpp
+	$(COMPILE_CXX)
+
+%.s: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -S -o $@ $<
 
 %.o: %.S
-	$(ASDEP)
-	$(AS) $(CPPFLAGS) $(ASFLAGS) $(AS_DEPFLAGS) -c -o $@ $<
+	$(COMPILE_S)
 
-%.ho: %.h
-	$(CC) $(CPPFLAGS) $(CFLAGS) -Wno-unused -c -o $@ -x c $<
+%_host.o: %.c
+	$(COMPILE_HOSTC)
 
-%$(EXESUF): %.c
+%.o: %.rc
+	$(WINDRES) $(IFLAGS) --preprocessor "$(DEPWINDRES) -E -xc-header -DRC_INVOKED $(CC_DEPFLAGS)" -o $@ $<
+
+%.i: %.c
+	$(CC) $(CCFLAGS) $(CC_E) $<
+
+%.h.c:
+	$(Q)echo '#include "$*.h"' >$@
 
 %.ver: %.v
 	$(Q)sed 's/$$MAJOR/$($(basename $(@F))_VERSION_MAJOR)/' $^ > $@
 
 %.c %.h: TAG = GEN
 
-install: install-libs install-headers
-install-libs: install-libs-yes
-
-uninstall: uninstall-libs uninstall-headers
-
-.PHONY: all depend dep *clean install* uninstall* examples testprogs
+# Dummy rule to stop make trying to rebuild removed or renamed headers
+%.h:
+	@:
 
 # Disable suffix rules.  Most of the builtin rules are suffix rules,
 # so this saves some time on slow systems.
@@ -69,41 +86,66 @@ uninstall: uninstall-libs uninstall-headers
 $(OBJS):
 endif
 
-OBJS-$(HAVE_MMX) +=  $(MMX-OBJS-yes)
+include $(SRC_PATH)/arch.mak
 
-CFLAGS    += $(CFLAGS-yes)
 OBJS      += $(OBJS-yes)
+SLIBOBJS  += $(SLIBOBJS-yes)
 FFLIBS    := $(FFLIBS-yes) $(FFLIBS)
 TESTPROGS += $(TESTPROGS-yes)
 
-FFEXTRALIBS := $(addprefix -l,$(addsuffix $(BUILDSUF),$(FFLIBS))) $(EXTRALIBS)
-FFLDFLAGS   := $(addprefix -L$(BUILD_ROOT)/lib,$(ALLFFLIBS)) $(LDFLAGS)
+LDLIBS       = $(FFLIBS:%=%$(BUILDSUF))
+FFEXTRALIBS := $(LDLIBS:%=$(LD_LIB)) $(EXTRALIBS)
 
-EXAMPLES  := $(addprefix $(SUBDIR),$(addsuffix -example$(EXESUF),$(EXAMPLES)))
-OBJS      := $(addprefix $(SUBDIR),$(sort $(OBJS)))
-TESTOBJS  := $(addprefix $(SUBDIR),$(TESTOBJS))
-TESTPROGS := $(addprefix $(SUBDIR),$(addsuffix -test$(EXESUF),$(TESTPROGS)))
-HOSTOBJS  := $(addprefix $(SUBDIR),$(addsuffix .o,$(HOSTPROGS)))
-HOSTPROGS := $(addprefix $(SUBDIR),$(addsuffix $(HOSTEXESUF),$(HOSTPROGS)))
+OBJS      := $(sort $(OBJS:%=$(SUBDIR)%))
+SLIBOBJS  := $(sort $(SLIBOBJS:%=$(SUBDIR)%))
+TESTOBJS  := $(TESTOBJS:%=$(SUBDIR)%) $(TESTPROGS:%=$(SUBDIR)%-test.o)
+TESTPROGS := $(TESTPROGS:%=$(SUBDIR)%-test$(EXESUF))
+HOSTOBJS  := $(HOSTPROGS:%=$(SUBDIR)%.o)
+HOSTPROGS := $(HOSTPROGS:%=$(SUBDIR)%$(HOSTEXESUF))
+TOOLS     += $(TOOLS-yes)
+TOOLOBJS  := $(TOOLS:%=tools/%.o)
+TOOLS     := $(TOOLS:%=tools/%$(EXESUF))
+HEADERS   += $(HEADERS-yes)
 
-DEP_LIBS := $(foreach NAME,$(FFLIBS),$(BUILD_ROOT_REL)/lib$(NAME)/$($(CONFIG_SHARED:yes=S)LIBNAME))
+PATH_LIBNAME = $(foreach NAME,$(1),lib$(NAME)/$($(CONFIG_SHARED:yes=S)LIBNAME))
+DEP_LIBS := $(foreach lib,$(FFLIBS),$(call PATH_LIBNAME,$(lib)))
 
+SRC_DIR    := $(SRC_PATH)/lib$(NAME)
 ALLHEADERS := $(subst $(SRC_DIR)/,$(SUBDIR),$(wildcard $(SRC_DIR)/*.h $(SRC_DIR)/$(ARCH)/*.h))
-SKIPHEADERS += $(addprefix $(ARCH)/,$(ARCH_HEADERS))
-SKIPHEADERS := $(addprefix $(SUBDIR),$(SKIPHEADERS-) $(SKIPHEADERS))
-checkheaders: $(filter-out $(SKIPHEADERS:.h=.ho),$(ALLHEADERS:.h=.ho))
+SKIPHEADERS += $(ARCH_HEADERS:%=$(ARCH)/%) $(SKIPHEADERS-)
+SKIPHEADERS := $(SKIPHEADERS:%=$(SUBDIR)%)
+HOBJS        = $(filter-out $(SKIPHEADERS:.h=.h.o),$(ALLHEADERS:.h=.h.o))
+checkheaders: $(HOBJS)
+.SECONDARY:   $(HOBJS:.o=.c)
+
+alltools: $(TOOLS)
 
 $(HOSTOBJS): %.o: %.c
-	$(HOSTCC) $(HOSTCFLAGS) -c -o $@ $<
+	$(COMPILE_HOSTC)
 
 $(HOSTPROGS): %$(HOSTEXESUF): %.o
-	$(HOSTCC) $(HOSTLDFLAGS) -o $@ $< $(HOSTLIBS)
+	$(HOSTLD) $(HOSTLDFLAGS) $(HOSTLD_O) $^ $(HOSTLIBS)
 
-DEPS := $(OBJS:.o=.d)
-depend dep: $(DEPS)
+$(OBJS):     | $(sort $(dir $(OBJS)))
+$(HOBJS):    | $(sort $(dir $(HOBJS)))
+$(HOSTOBJS): | $(sort $(dir $(HOSTOBJS)))
+$(SLIBOBJS): | $(sort $(dir $(SLIBOBJS)))
+$(TESTOBJS): | $(sort $(dir $(TESTOBJS)))
+$(TOOLOBJS): | tools
 
-CLEANSUFFIXES     = *.d *.o *~ *.ho *.map *.ver
+OBJDIRS := $(OBJDIRS) $(dir $(OBJS) $(HOBJS) $(HOSTOBJS) $(SLIBOBJS) $(TESTOBJS))
+
+CLEANSUFFIXES     = *.d *.o *~ *.h.c *.map *.ver *.ho *.gcno *.gcda
 DISTCLEANSUFFIXES = *.pc
-LIBSUFFIXES       = *.a *.lib *.so *.so.* *.dylib *.dll *.def *.dll.a *.exp
+LIBSUFFIXES       = *.a *.lib *.so *.so.* *.dylib *.dll *.def *.dll.a
 
--include $(wildcard $(DEPS))
+define RULES
+clean::
+	$(RM) $(OBJS) $(OBJS:.o=.d)
+	$(RM) $(HOSTPROGS)
+	$(RM) $(TOOLS)
+endef
+
+$(eval $(RULES))
+
+-include $(wildcard $(OBJS:.o=.d) $(HOSTOBJS:.o=.d) $(TESTOBJS:.o=.d) $(HOBJS:.o=.d) $(SLIBOBJS:.o=.d))

@@ -18,15 +18,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
+#include "config.h"
+#if HAVE_UNISTD_H
 #include <unistd.h>             /* getopt */
+#endif
+#include <stdio.h>
+#include <string.h>
 
-#undef HAVE_AV_CONFIG_H
+#include "libavutil/channel_layout.h"
+#include "libavutil/mem.h"
 #include "libavutil/pixdesc.h"
-#include "libavfilter/graphparser.h"
+#include "libavfilter/avfilter.h"
+
+#if !HAVE_GETOPT
+#include "compat/getopt.c"
+#endif
 
 static void usage(void)
 {
-    printf("Convert a libavfilter graph to a dot file\n");
+    printf("Convert a libavfilter graph to a dot file.\n");
     printf("Usage: graph2dot [OPTIONS]\n");
     printf("\n"
            "Options:\n"
@@ -48,27 +58,47 @@ static void print_digraph(FILE *outfile, AVFilterGraph *graph)
     fprintf(outfile, "node [shape=box]\n");
     fprintf(outfile, "rankdir=LR\n");
 
-    for (i = 0; i < graph->filter_count; i++) {
+    for (i = 0; i < graph->nb_filters; i++) {
         char filter_ctx_label[128];
         const AVFilterContext *filter_ctx = graph->filters[i];
 
-        snprintf(filter_ctx_label, sizeof(filter_ctx_label), "%s (%s)",
+        snprintf(filter_ctx_label, sizeof(filter_ctx_label), "%s\\n(%s)",
                  filter_ctx->name,
                  filter_ctx->filter->name);
 
-        for (j = 0; j < filter_ctx->output_count; j++) {
+        for (j = 0; j < filter_ctx->nb_outputs; j++) {
             AVFilterLink *link = filter_ctx->outputs[j];
             if (link) {
                 char dst_filter_ctx_label[128];
                 const AVFilterContext *dst_filter_ctx = link->dst;
 
-                snprintf(dst_filter_ctx_label, sizeof(dst_filter_ctx_label), "%s (%s)",
+                snprintf(dst_filter_ctx_label, sizeof(dst_filter_ctx_label),
+                         "%s\\n(%s)",
                          dst_filter_ctx->name,
                          dst_filter_ctx->filter->name);
 
-                fprintf(outfile, "\"%s\" -> \"%s\"", filter_ctx_label, dst_filter_ctx_label);
-                fprintf(outfile, " [ label= \"fmt:%s w:%d h:%d\"];\n",
-                        av_pix_fmt_descriptors[link->format].name, link->w, link->h);
+                fprintf(outfile, "\"%s\" -> \"%s\" [ label= \"inpad:%s -> outpad:%s\\n",
+                        filter_ctx_label, dst_filter_ctx_label,
+                        link->srcpad->name, link->dstpad->name);
+
+                if (link->type == AVMEDIA_TYPE_VIDEO) {
+                    const AVPixFmtDescriptor *desc = av_pix_fmt_desc_get(link->format);
+                    fprintf(outfile,
+                            "fmt:%s w:%d h:%d tb:%d/%d",
+                            desc->name,
+                            link->w, link->h,
+                            link->time_base.num, link->time_base.den);
+                } else if (link->type == AVMEDIA_TYPE_AUDIO) {
+                    char buf[255];
+                    av_get_channel_layout_string(buf, sizeof(buf), -1,
+                                                 link->channel_layout);
+                    fprintf(outfile,
+                            "fmt:%s sr:%d cl:%s tb:%d/%d",
+                            av_get_sample_fmt_name(link->format),
+                            link->sample_rate, buf,
+                            link->time_base.num, link->time_base.den);
+                }
+                fprintf(outfile, "\" ];\n");
             }
         }
     }
@@ -78,17 +108,17 @@ static void print_digraph(FILE *outfile, AVFilterGraph *graph)
 int main(int argc, char **argv)
 {
     const char *outfilename = NULL;
-    const char *infilename = NULL;
-    FILE *outfile = NULL;
-    FILE *infile = NULL;
-    char *graph_string = NULL;
+    const char *infilename  = NULL;
+    FILE *outfile           = NULL;
+    FILE *infile            = NULL;
+    char *graph_string      = NULL;
     AVFilterGraph *graph = av_mallocz(sizeof(AVFilterGraph));
     char c;
 
     av_log_set_level(AV_LOG_DEBUG);
 
     while ((c = getopt(argc, argv, "hi:o:")) != -1) {
-        switch(c) {
+        switch (c) {
         case 'h':
             usage();
             return 0;
@@ -107,7 +137,8 @@ int main(int argc, char **argv)
         infilename = "/dev/stdin";
     infile = fopen(infilename, "r");
     if (!infile) {
-        fprintf(stderr, "Impossible to open input file '%s': %s\n", infilename, strerror(errno));
+        fprintf(stderr, "Failed to open input file '%s': %s\n",
+                infilename, strerror(errno));
         return 1;
     }
 
@@ -115,7 +146,8 @@ int main(int argc, char **argv)
         outfilename = "/dev/stdout";
     outfile = fopen(outfilename, "w");
     if (!outfile) {
-        fprintf(stderr, "Impossible to open output file '%s': %s\n", outfilename, strerror(errno));
+        fprintf(stderr, "Failed to open output file '%s': %s\n",
+                outfilename, strerror(errno));
         return 1;
     }
 
@@ -130,7 +162,7 @@ int main(int argc, char **argv)
             struct line *new_line = av_malloc(sizeof(struct line));
             count += strlen(last_line->data);
             last_line->next = new_line;
-            last_line = new_line;
+            last_line       = new_line;
         }
         last_line->next = NULL;
 
@@ -147,13 +179,11 @@ int main(int argc, char **argv)
     avfilter_register_all();
 
     if (avfilter_graph_parse(graph, graph_string, NULL, NULL, NULL) < 0) {
-        fprintf(stderr, "Impossible to parse the graph description\n");
+        fprintf(stderr, "Failed to parse the graph description\n");
         return 1;
     }
 
-    if (avfilter_graph_check_validity(graph, NULL) ||
-        avfilter_graph_config_formats(graph, NULL) ||
-        avfilter_graph_config_links  (graph, NULL))
+    if (avfilter_graph_config(graph, NULL) < 0)
         return 1;
 
     print_digraph(outfile, graph);
